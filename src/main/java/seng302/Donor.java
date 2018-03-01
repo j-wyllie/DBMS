@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Donor {
     private String givenNames;
@@ -16,6 +19,8 @@ public class Donor {
     private String bloodType;
     private String address;
     private String region;
+
+    private ArrayList<Organ> organs = new ArrayList<Organ>();
 
     private int donorID; // Not being used at the moment, not sure how we want to make donor's unique
     private LocalDateTime timeOfCreation;
@@ -44,6 +49,14 @@ public class Donor {
         System.out.println("Address: " + address);
         System.out.println("Region: " + region);
         System.out.println("Time of Creation: " + timeOfCreation.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
+    }
+
+    public void addOrgans(ArrayList<Organ> organs) {
+        this.organs.addAll(organs);
+    }
+
+    public ArrayList<Organ> getOrgans() {
+        return organs;
     }
 
     public LocalDateTime getTimeOfCreation() {
