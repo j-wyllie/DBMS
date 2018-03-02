@@ -1,4 +1,4 @@
-package seng302;
+package ODMS;
 
 public class App 
 {
