@@ -1,12 +1,10 @@
-package seng302;
+package ODMS.Donor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Donor {
     private String givenNames;
