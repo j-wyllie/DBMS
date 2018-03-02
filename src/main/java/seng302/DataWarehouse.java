@@ -65,7 +65,7 @@ public class DataWarehouse {
 
             String testString = DataWarehouse.fileToString(path);
 
-            Clients test = gson.fromJson(testString, Clients.class);
+            ClientDatabase test = gson.fromJson(testString, ClientDatabase.class);
 
             for (Client client : test.clients) {
                 System.out.println(client.client + " " + client.id);

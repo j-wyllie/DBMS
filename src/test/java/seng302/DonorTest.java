@@ -1,9 +1,10 @@
 package seng302;
 
+import odms.Donor.Donor;
+import odms.Donor.Organ;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 

@@ -1,0 +1,21 @@
+{
+  "clients": [
+    {
+      "client": "John Wayne",
+      "id": 0,
+      "organs": {
+        "heart": false,
+        "brain": true
+      }
+    },
+
+    {
+      "client": "Sam Sick",
+      "id": 1,
+      "organs": {
+        "heart": true,
+        "brain": false
+      }
+    }
+  ]
+}
