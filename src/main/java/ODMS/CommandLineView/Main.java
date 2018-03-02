@@ -10,7 +10,7 @@ public class Main {
         System.out.println("Starting Organ Donor Management System...");
         System.out.println("\nPlease enter your commands below:");
 
-        String expression = scanner.next();
+        String expression = scanner.nextLine();
 
         while (!(expression.equals("quit")))
         {
