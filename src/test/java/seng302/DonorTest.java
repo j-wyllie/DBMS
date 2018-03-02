@@ -2,6 +2,8 @@ package seng302;
 
 import ODMS.Donor.Donor;
 import ODMS.Donor.Organ;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +23,7 @@ public class DonorTest {
 
     @Test
     public void testAddDonatableOrgans() {
-        ArrayList<Organ> someOrgans = new ArrayList<>();
+        Set<Organ> someOrgans = new HashSet<>();
         someOrgans.add(Organ.BONE);
         someOrgans.add(Organ.HEART);
         someOrgans.add(Organ.CORNEA);

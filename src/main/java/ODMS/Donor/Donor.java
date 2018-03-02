@@ -1,12 +1,17 @@
 package ODMS.Donor;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Donor {
+
     private String givenNames;
     private String lastName;
     private LocalDate dateOfBirth;
@@ -18,7 +23,7 @@ public class Donor {
     private String address;
     private String region;
 
-    private ArrayList<Organ> organs = new ArrayList<Organ>();
+    private Set<Organ> organs = new HashSet<Organ>();
 
     private int donorID; // Not being used at the moment, not sure how we want to make donor's unique
     private LocalDateTime timeOfCreation;
@@ -32,28 +37,57 @@ public class Donor {
     }
 
     public void viewAttributes() {
-        System.out.println("Given Names: " + givenNames);
-        System.out.println("Last Name: " + lastName);
+        if (givenNames != null) {
+            System.out.println("Given Names: " + givenNames);
+        }
+
+        if (lastName != null) {
+            System.out.println("Last Name: " + lastName);
+        }
+
         System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ISO_DATE));
+
         if (dateOfDeath != null) {
             System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ISO_DATE));
-        } else {
-            System.out.println("Date Of Death: null");
         }
-        System.out.println("Gender: " + gender);
-        System.out.println("Height: " + height);
-        System.out.println("Weight: " + weight);
-        System.out.println("Blood Type: " + bloodType);
-        System.out.println("Address: " + address);
-        System.out.println("Region: " + region);
-        System.out.println("Time of Creation: " + timeOfCreation.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
+
+        if (gender != null) {
+            System.out.println("Gender: " + gender);
+        }
+
+        if (height != 0.0) {
+            System.out.println("Height: " + height);
+        }
+
+        if (weight != 0.0) {
+            System.out.println("Weight: " + weight);
+        }
+
+        if (bloodType != null) {
+            System.out.println("Blood Type: " + bloodType);
+        }
+
+        if (address != null) {
+            System.out.println("Address: " + address);
+        }
+
+        if (region != null) {
+            System.out.println("Region: " + region);
+        }
+
+        System.out.println("Time of Creation: " + timeOfCreation
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
     }
 
-    public void addOrgans(ArrayList<Organ> organs) {
+    public void addOrgans(Set<Organ> organs) {
         this.organs.addAll(organs);
     }
 
-    public ArrayList<Organ> getOrgans() {
+    public void removeOrgans(Set<Organ> organs) {
+        this.organs.removeAll(organs);
+    }
+
+    public Set<Organ> getOrgans() {
         return organs;
     }
 
