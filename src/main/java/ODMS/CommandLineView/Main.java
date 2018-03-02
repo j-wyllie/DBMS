@@ -8,11 +8,11 @@ public class Main {
     {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Starting Organ Donor Management System...");
-        System.out.println("\nPlease enter your commands below:\n");
+        System.out.println("\nPlease enter your commands below:");
 
         String expression = scanner.next();
 
-        while (expression != "quit")
+        while (!(expression.equals("quit")))
         {
             if (expression.contains("create-profile")) {
                 //create profile.
@@ -26,6 +26,8 @@ public class Main {
             else {
                 System.out.println("Please enter a valid command.");
             }
+
+            expression = scanner.next().trim();
         }
     }
 }
