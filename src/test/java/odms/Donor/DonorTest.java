@@ -1,9 +1,5 @@
-package seng302;
+package odms.Donor;
 
-import odms.Donor.Donor;
-import odms.Donor.Organ;
-
-import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;

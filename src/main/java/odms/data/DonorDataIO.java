@@ -1,4 +1,4 @@
-package seng302;
+package odms.data;
 
 // TODO All IO sort of stuff here
 
@@ -8,22 +8,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import odms.Donor.Donor;
 
-public class DataWarehouse {
+public class DonorDataIO {
 
-    public static void saveData() {
+    private static void saveDonors(String file) {
+        try {
+            Gson gson = new Gson();
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void saveClients() {
-
-    }
-
-    private void saveClientsHistory() {
-
-    }
-
-    public void saveClient() {
+    private static void saveDonorsHistory() {
 
     }
 
@@ -57,18 +56,18 @@ public class DataWarehouse {
 
     }
 
-    public void loadData(String path, ClientDatabase clientDB) {
-        ArrayList<Client> clientsBuffer = new ArrayList<>();
+    public void loadData(String path, DonorDatabase donorDB) {
+        ArrayList<odms.Donor.Donor> clientsBuffer = new ArrayList<>();
 
         try {
             Gson gson = new Gson();
 
-            String testString = DataWarehouse.fileToString(path);
+            String testString = DonorDataIO.fileToString(path);
 
-            ClientDatabase test = gson.fromJson(testString, ClientDatabase.class);
+            DonorDatabase test = gson.fromJson(testString, DonorDatabase.class);
 
-            for (Client client : test.clients) {
-                System.out.println(client.client + " " + client.id);
+            for (Donor donor : test.donors) {
+                System.out.println(donor.getGivenNames() + " " + donor.getId());
             }
 
         } catch (Exception e) {
@@ -79,8 +78,8 @@ public class DataWarehouse {
 
         public static void main(String[] args) {
 
-        DataWarehouse testDW = new DataWarehouse();
-        ClientDatabase testCD = new ClientDatabase();
+        DonorDataIO testDW = new DonorDataIO();
+        DonorDatabase testCD = new DonorDatabase();
 
         // testing style to be determined
         System.out.println("test main");

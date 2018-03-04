@@ -1,4 +1,4 @@
-package ODMS.CommandLineView;
+package odms.CommandLineView;
 
 public enum Attribute {
     GIVENNAMES("given-names"),
