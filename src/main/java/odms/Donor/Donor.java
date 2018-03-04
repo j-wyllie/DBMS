@@ -1,7 +1,6 @@
-package ODMS.Donor;
+package odms.Donor;
 
-import ODMS.CommandLineView.Attribute;
-import com.sun.org.apache.xpath.internal.operations.Or;
+import odms.CommandLineView.Attribute;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +27,8 @@ public class Donor {
 
     private String IRD; // Not being used at the moment, not sure how we want to make donor's unique
     private LocalDateTime timeOfCreation;
+
+    private Integer id;
 
     public Donor(String givenNames, String lastNames, LocalDate dateOfBirth, String IRD, ArrayList<String> attributes) {
         this.givenNames = givenNames;
@@ -228,5 +229,13 @@ public class Donor {
 
     public void setIRD(String IRD) {
         this.IRD = IRD;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
