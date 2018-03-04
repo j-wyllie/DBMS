@@ -2,6 +2,8 @@ package seng302;
 
 import ODMS.Donor.Donor;
 import ODMS.Donor.Organ;
+
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
@@ -17,8 +19,19 @@ public class DonorTest {
 
     @Before
     public  void setUp() {
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("first-names=John");
+        donorAttr.add("last-names=Smithy Smith Face");
+        donorAttr.add("blood-type=O+");
+        donorAttr.add("gender=male");
+        donorAttr.add("region=Christchurch");
+        donorAttr.add("weight=83.2");
+
         LocalDate dob = LocalDate.of(1997, 7, 24);
-        testDonor = new Donor("John James", "Smith", dob);
+        testDonor = new Donor("John James", "Smith", dob, "321856156", donorAttr);
+
+        testDonor.viewAttributes();
     }
 
     @Test
