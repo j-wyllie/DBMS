@@ -12,7 +12,7 @@ public class DonorDataIOTest {
     private Donor donorOne;
 
     @Before
-    public void setUp() {
+    public void setup() {
         // Create Donor Database with basic Donor
         donorDB = new DonorDatabase();
         donorOne = new Donor("John", "Wayne", LocalDate.now(), "");
@@ -28,8 +28,8 @@ public class DonorDataIOTest {
         loadedDb = DonorDataIO.loadData("test.json");
 
         assertEquals(
-            donorDB.getClient(0).getGivenNames(),
-            loadedDb.getClient(0).getGivenNames()
+            donorDB.getDonor(0).getGivenNames(),
+            loadedDb.getDonor(0).getGivenNames()
         );
     }
 
