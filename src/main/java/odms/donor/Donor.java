@@ -28,6 +28,7 @@ public class Donor {
 
     private Integer irdNumber;
     private LocalDateTime timeOfCreation;
+    private LocalDateTime lastUpdated;
 
     private Integer id;
 
@@ -311,8 +312,14 @@ public class Donor {
         return updateActions;
     }
 
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
     private void generateUpdateInfo(String property) {
-        String output = property + " updated at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
+        LocalDateTime currentTime = LocalDateTime.now();
+        lastUpdated = currentTime;
+        String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
         updateActions.add(output);
     }
 }
