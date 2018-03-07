@@ -34,13 +34,13 @@ public class DonorDatabaseTest {
 
         try {
             donorOne = new Donor(donorOneAttr);
-        } catch (InstantiationException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 
         try {
             donorTwo = new Donor(donorTwoAttr);
-        } catch (InstantiationException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 

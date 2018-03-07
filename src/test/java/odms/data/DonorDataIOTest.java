@@ -25,7 +25,7 @@ public class DonorDataIOTest {
 
         try {
             donorOne = new Donor(donorOneAttr);
-        } catch (InstantiationException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 

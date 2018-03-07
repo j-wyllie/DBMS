@@ -1,5 +1,9 @@
 package odms.donor;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.Array;
+import java.util.Collections;
 import odms.commandlineview.Attribute;
 
 import java.time.LocalDate;
@@ -24,6 +28,8 @@ public class Donor {
     private String address;
     private String region;
 
+    private ArrayList<String> updateActions = new ArrayList<>();
+
     private Set<Organ> organs = new HashSet<>();
 
     private String IRD; // Not being used at the moment, not sure how we want to make donor's unique
@@ -31,39 +37,16 @@ public class Donor {
 
     private Integer id;
 
-    /*
-    public Donor(String givenNames, String lastNames, LocalDate dateOfBirth, String IRD, ArrayList<String> attributes) {
-        this.givenNames = givenNames;
-        this.lastNames = lastNames;
-        this.dateOfBirth = dateOfBirth;
-        this.IRD = IRD;
-
-        setExtraAttributes(attributes);
-
-        timeOfCreation = LocalDateTime.now();
-    }
-
-    public Donor(String givenNames, String lastNames, LocalDate dateOfBirth, String IRD) {
-        this.givenNames = givenNames;
-        this.lastNames = lastNames;
-        this.dateOfBirth = dateOfBirth;
-        this.IRD = IRD;
-
-        timeOfCreation = LocalDateTime.now();
-    }*/
-
-    // This is probably the ideal way to do this
-
     /**
      * Instantiates the Donor class
      * @param attributes the list of attributes in attribute="value" form
-     * @throws InstantiationException when a required attribute is not included or spelt wrong
+     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public Donor (ArrayList<String> attributes) throws InstantiationException {
+    public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIRD() == null) {
-            throw new InstantiationException();
+            throw new IllegalArgumentException();
         }
 
         timeOfCreation = LocalDateTime.now();
@@ -74,7 +57,7 @@ public class Donor {
      * @param attributes the attributes given in the constructor
      * @throws InstantiationException when a required attribute is not included or spelt wrong
      */
-    private void setExtraAttributes(ArrayList<String> attributes) throws InstantiationException {
+    private void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
             setGivenAttribute(parts);
@@ -84,9 +67,9 @@ public class Donor {
     /**
      * Calls the relevant method to set the attribute
      * @param parts a list with an attribute and value
-     * @throws InstantiationException thrown when an attribute that isn't valid is given
+     * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
-    private void setGivenAttribute(String[] parts) throws InstantiationException {
+    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = parts[1].substring(1, parts[1].length() - 1); // get rid of the speech marks
 
@@ -117,7 +100,7 @@ public class Donor {
         } else if (attrName.equals(Attribute.IRD.getText())) {
             setIRD(value);
         } else {
-            throw new InstantiationException();
+            throw new IllegalArgumentException();
         }
     }
 
@@ -187,8 +170,14 @@ public class Donor {
      * Add a set of organs to the list of organs that the donor wants to donate
      * @param organs a set of organs they want to donate
      */
-    public void addOrgans(Set<Organ> organs) {
-        this.organs.addAll(organs);
+    public void addOrgans(Set<Organ> organs) throws IllegalArgumentException {
+        if (Collections.disjoint(organs, this.organs)) {
+            generateUpdateInfo("organs");
+            this.organs.addAll(organs);
+        } else {
+            throw new IllegalArgumentException();
+        }
+
     }
 
     /**
@@ -196,10 +185,12 @@ public class Donor {
      * @param organs a set of organs to be removed
      */
     public void removeOrgans(Set<Organ> organs) {
+        generateUpdateInfo("organs");
         this.organs.removeAll(organs);
     }
 
     public Set<Organ> getOrgans() {
+
         return organs;
     }
 
@@ -212,6 +203,7 @@ public class Donor {
     }
 
     public void setGivenNames(String givenNames) {
+        generateUpdateInfo("given-names");
         this.givenNames = givenNames;
     }
 
@@ -220,6 +212,7 @@ public class Donor {
     }
 
     public void setLastNames(String lastNames) {
+        generateUpdateInfo("last-names");
         this.lastNames = lastNames;
     }
 
@@ -228,6 +221,7 @@ public class Donor {
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
+        generateUpdateInfo("dob");
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -236,6 +230,7 @@ public class Donor {
     }
 
     public void setDateOfDeath(LocalDate dateOfDeath) {
+        generateUpdateInfo("dod");
         this.dateOfDeath = dateOfDeath;
     }
 
@@ -244,6 +239,7 @@ public class Donor {
     }
 
     public void setGender(String gender) {
+        generateUpdateInfo("gender");
         this.gender = gender;
     }
 
@@ -252,6 +248,7 @@ public class Donor {
     }
 
     public void setHeight(double height) {
+        generateUpdateInfo("height");
         this.height = height;
     }
 
@@ -260,6 +257,7 @@ public class Donor {
     }
 
     public void setWeight(double weight) {
+        generateUpdateInfo("weight");
         this.weight = weight;
     }
 
@@ -268,6 +266,7 @@ public class Donor {
     }
 
     public void setBloodType(String bloodType) {
+        generateUpdateInfo("blood-type");
         this.bloodType = bloodType;
     }
 
@@ -276,6 +275,7 @@ public class Donor {
     }
 
     public void setAddress(String address) {
+        generateUpdateInfo("address");
         this.address = address;
     }
 
@@ -284,6 +284,7 @@ public class Donor {
     }
 
     public void setRegion(String region) {
+        generateUpdateInfo("region");
         this.region = region;
     }
 
@@ -292,6 +293,7 @@ public class Donor {
     }
 
     public void setIRD(String IRD) {
+        generateUpdateInfo("ird");
         this.IRD = IRD;
     }
 
@@ -301,5 +303,14 @@ public class Donor {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public ArrayList<String> getUpdateActions() {
+        return updateActions;
+    }
+
+    private void generateUpdateInfo(String property) {
+        String output = property + " updated at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
+        updateActions.add(output);
     }
 }

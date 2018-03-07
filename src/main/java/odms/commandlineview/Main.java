@@ -50,7 +50,7 @@ public class Main {
                         Donor newDonor = new Donor(attrArray);
                         currentDatabase.addDonor(newDonor);
                     }
-                    catch (InstantiationException e) {
+                    catch (IllegalArgumentException e) {
                         System.out.println("Please enter the required attributes correctly.");
                     }
                     break;
