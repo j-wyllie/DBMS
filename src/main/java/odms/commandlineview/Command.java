@@ -33,25 +33,37 @@ public class Command {
         else if (cmd.matches(cmdRegexDonorView)) {
 
             if (cmd.substring(0, 5).equals("donor")) {
-                //search profiles.
-                return 5;
+
+                if (cmd.substring(cmd.indexOf('>')).trim().equals("view")) {
+                    //view profiles.
+                    return 5;
+                }
+                else if (cmd.substring(cmd.indexOf('>')).trim().equals("date-created")) {
+                    return 6;
+                }
+                else if (cmd.substring(cmd.indexOf('>')).trim().equals("donations")) {
+                    return 7;
+                }
+                else {
+                    return 9;
+                }
             }
             else {
-                return 7;
+                return 9;
             }
         }
         else if (cmd.matches(cmdRegexDonorUpdate)) {
 
             if (cmd.substring(0, 5).equals("donor")) {
                 //set attributes of a profile.
-                return 6;
+                return 8;
             }
             else {
-                return 7;
+                return 9;
             }
         }
         else {
-            return 7;
+            return 9;
         }
     }
 }
