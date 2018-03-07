@@ -1,6 +1,7 @@
 package odms.data;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,16 +27,15 @@ public class DonorDatabase {
      *
      * @param donor new donor object
      */
-    public void addDonor(Donor donor) {
-        try {
-            lastID += 1;
-            donor.setId(lastID);
+    public void addDonor(Donor donor) throws IllegalArgumentException {
+        lastID += 1;
+        donor.setId(lastID);
 
-            donorDb.put(lastID, donor);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (checkIRDNumberExists(donor.getIRD())) {
+            throw new IllegalArgumentException("IRD number already in use");
         }
+
+        donorDb.put(lastID, donor);
     }
 
     /**
@@ -44,7 +44,7 @@ public class DonorDatabase {
      * @param irdNumber the number to be checked
      * @return boolean of whether or not it exists already.
      */
-    public boolean checkIRDNumberExists(Integer irdNumber) {
+    private boolean checkIRDNumberExists(Integer irdNumber) {
         Set<Integer> irdNumbers = new HashSet<>();
 
         donorDb.forEach((id, donor) -> irdNumbers.add(donor.getIRD()));
@@ -124,6 +124,36 @@ public class DonorDatabase {
         });
 
         return results;
+    }
+
+    /**
+     * Generate a list of donors ordered by last names.
+     * Parameter to specify whether or not the list contains every donor or only donors that
+     * are currently donating organs.
+     *
+     * @param donating specify donating organs or not
+     * @return list of donors ordered by last name
+     */
+    public ArrayList<Donor> getDonors(boolean donating) {
+        ArrayList<Donor> donors = new ArrayList<>();
+
+        donorDb.forEach((id, donor) -> {
+            if (donating) {
+                if (donor.getOrgans().size() > 0) {
+                    donors.add(donor);
+                }
+            } else {
+                donors.add(donor);
+            }
+        });
+
+        donors.sort(Comparator.comparing(Donor::getLastNames));
+
+        return donors;
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }

@@ -7,7 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class DonorDatabaseTest {
     private DonorDatabase donorDB;
@@ -45,6 +47,9 @@ public class DonorDatabaseTest {
 
     }
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testAddDonor() {
         donorDB.addDonor(donorOne);
@@ -78,7 +83,7 @@ public class DonorDatabaseTest {
     }
 
     @Test
-    public void testgetDonorPopulation() {
+    public void testGetDonorPopulation() {
         donorDB.addDonor(donorOne);
         donorDB.addDonor(donorTwo);
         assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
@@ -86,6 +91,32 @@ public class DonorDatabaseTest {
         donorDB.deleteDonor(0);
         assertTrue("Population should be 1", donorDB.getDonorPopulation() == 1);
 
+    }
+
+    @Test
+    public void testGetDonors() {
+        ArrayList<Donor> testResults;
+
+        donorDB.addDonor(donorOne);
+        donorDB.addDonor(donorTwo);
+        testResults = donorDB.getDonors(false);
+        assertTrue("Should be 2 results", testResults.size() == 2);
+
+        // Check sorting works as intended
+        assertEquals(testResults.get(0).getLastNames(), "Sick");
+        assertEquals(testResults.get(1).getLastNames(), "Wayne");
+
+        testResults = donorDB.getDonors(true);
+        assertTrue("Should be 0 results", testResults.size() == 0);
+    }
+
+    @Test
+    public void testCheckIRDNumberExists() throws IllegalArgumentException {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("IRD number already in use");
+
+        donorDB.addDonor(donorOne);
+        donorDB.addDonor(donorOne);
     }
 
 }
