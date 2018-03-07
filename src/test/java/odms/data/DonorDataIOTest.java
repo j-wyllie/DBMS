@@ -3,6 +3,7 @@ package odms.data;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,19 @@ public class DonorDataIOTest {
     public void setup() {
         // Create donor Database with basic donor
         donorDB = new DonorDatabase();
-        donorOne = new Donor("John", "Wayne", LocalDate.now(), "");
+
+        ArrayList<String> donorOneAttr = new ArrayList<String>();
+        donorOneAttr.add("given-names=John");
+        donorOneAttr.add("last-names=Wayne");
+        donorOneAttr.add("dob=17-01-1998");
+        donorOneAttr.add("ird=123456879");
+
+        try {
+            donorOne = new Donor(donorOneAttr);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
         donorDB.addDonor(donorOne);
 
     }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,30 @@ public class DonorDatabaseTest {
     public void setup() {
         // Create donor Database with basic donor
         donorDB = new DonorDatabase();
-        donorOne = new Donor("John", "Wayne", LocalDate.now(), "");
-        donorTwo = new Donor("Sam", "Sick", LocalDate.now(), "");
+
+        ArrayList<String> donorOneAttr = new ArrayList<String>();
+        donorOneAttr.add("given-names=John");
+        donorOneAttr.add("last-names=Wayne");
+        donorOneAttr.add("dob=17-01-1998");
+        donorOneAttr.add("ird=123456879");
+
+        ArrayList<String> donorTwoAttr = new ArrayList<String>();
+        donorTwoAttr.add("given-names=Sam");
+        donorTwoAttr.add("last-names=Sick");
+        donorTwoAttr.add("dob=17-01-1997");
+        donorTwoAttr.add("ird=123456878");
+
+        try {
+            donorOne = new Donor(donorOneAttr);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            donorTwo = new Donor(donorTwoAttr);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
 
     }
 
