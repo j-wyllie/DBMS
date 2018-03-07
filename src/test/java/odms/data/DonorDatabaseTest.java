@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
@@ -20,13 +19,13 @@ public class DonorDatabaseTest {
         // Create donor Database with basic donor
         donorDB = new DonorDatabase();
 
-        ArrayList<String> donorOneAttr = new ArrayList<String>();
+        ArrayList<String> donorOneAttr = new ArrayList<>();
         donorOneAttr.add("given-names=\"John\"");
         donorOneAttr.add("last-names=\"Wayne\"");
         donorOneAttr.add("dob=\"17-01-1998\"");
         donorOneAttr.add("ird=\"123456879\"");
 
-        ArrayList<String> donorTwoAttr = new ArrayList<String>();
+        ArrayList<String> donorTwoAttr = new ArrayList<>();
         donorTwoAttr.add("given-names=\"Sam\"");
         donorTwoAttr.add("last-names=\"Sick\"");
         donorTwoAttr.add("dob=\"17-01-1997\"");

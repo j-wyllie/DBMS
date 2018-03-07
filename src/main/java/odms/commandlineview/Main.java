@@ -80,6 +80,18 @@ public class Main {
                     break;
 
                 case 9:
+                    //add organs to a donors profile.
+                    System.out.println("Adding organs to profile...");
+                    //carry out method call in command.
+                    break;
+
+                case 10:
+                    //remove organs from a donors profile.
+                    System.out.println("Removing organs from profile...");
+                    //carry out method call in command.
+                    break;
+
+                case 11:
                     System.out.println("Please enter a valid command.");
                     break;
             }
