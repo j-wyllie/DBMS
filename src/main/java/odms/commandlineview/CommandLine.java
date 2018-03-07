@@ -69,6 +69,7 @@ public class CommandLine {
                     //search profiles (donor > date-created).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
+                    CommandUtils.ViewDateTimeCreatedBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 7:
