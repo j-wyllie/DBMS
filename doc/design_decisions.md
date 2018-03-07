@@ -9,6 +9,10 @@ For the sake of readability JSON has been chosen for storing the donor data upon
 was explored but found to be less readable to a user.
 * GSON library chosen for helping handle JSON related functions. 
 
+## Code Style
+We agreed to conform to the Google Style Guide for Java with the exception of 4 spaces instead of 2 
+for indentation and 8 spaces instead of 4 for continuation.
+
 ## Testing
 ###Setters & Getters
 * If a setter/getter performs no additional functionality above simply adjusting or retrieving a 

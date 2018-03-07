@@ -18,5 +18,6 @@ This will bring you into the application which can be terminated at any time by 
 `quit` command.
 
 ## Usage
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
-et dolore magna aliqua.
+Upon executing ODMS (Organ Donor Management System), ODMS will begin to expect commands. A list of 
+commands can be accessed at any time by executing `help`
+
