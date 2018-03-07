@@ -21,16 +21,16 @@ public class DonorDatabaseTest {
         donorDB = new DonorDatabase();
 
         ArrayList<String> donorOneAttr = new ArrayList<String>();
-        donorOneAttr.add("given-names=John");
-        donorOneAttr.add("last-names=Wayne");
-        donorOneAttr.add("dob=17-01-1998");
-        donorOneAttr.add("ird=123456879");
+        donorOneAttr.add("given-names=\"John\"");
+        donorOneAttr.add("last-names=\"Wayne\"");
+        donorOneAttr.add("dob=\"17-01-1998\"");
+        donorOneAttr.add("ird=\"123456879\"");
 
         ArrayList<String> donorTwoAttr = new ArrayList<String>();
-        donorTwoAttr.add("given-names=Sam");
-        donorTwoAttr.add("last-names=Sick");
-        donorTwoAttr.add("dob=17-01-1997");
-        donorTwoAttr.add("ird=123456878");
+        donorTwoAttr.add("given-names=\"Sam\"");
+        donorTwoAttr.add("last-names=\"Sick\"");
+        donorTwoAttr.add("dob=\"17-01-1997\"");
+        donorTwoAttr.add("ird=\"123456878\"");
 
         try {
             donorOne = new Donor(donorOneAttr);

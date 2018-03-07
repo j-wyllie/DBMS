@@ -16,10 +16,10 @@ public class DonorTest {
         Donor testDonor = null;
 
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=John");
-        donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("dob=17-01-1998");
-        donorAttr.add("ird=123456879");
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
 
         try {
             testDonor = new Donor(donorAttr);
@@ -33,9 +33,9 @@ public class DonorTest {
     @Test(expected = InstantiationException.class)
     public void testCreateUserNoIRD() throws InstantiationException {
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=John");
-        donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("dob=17-01-1998");
+        donorAttr.add("\"given-names=John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
 
         Donor donorOnlyAttr = new Donor(donorAttr);
     }
@@ -43,9 +43,9 @@ public class DonorTest {
     @Test(expected = InstantiationException.class)
     public void testCreateUserNoDOB() throws InstantiationException {
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=John");
-        donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("ird=123456879");;
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("ird=\"123456879\"");;
 
         Donor donorOnlyAttr = new Donor(donorAttr);
     }
@@ -53,9 +53,9 @@ public class DonorTest {
     @Test(expected = InstantiationException.class)
     public void testCreateUserNoFirstName() throws InstantiationException {
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("dob=17-01-1998");
-        donorAttr.add("ird=123456879");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
 
         Donor donorOnlyAttr = new Donor(donorAttr);
     }
@@ -63,9 +63,20 @@ public class DonorTest {
     @Test(expected = InstantiationException.class)
     public void testCreateUserNoLastName() throws InstantiationException {
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=John");
-        donorAttr.add("dob=17-01-1998");
-        donorAttr.add("ird=123456879");
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor donorOnlyAttr = new Donor(donorAttr);
+    }
+
+    @Test(expected = InstantiationException.class)
+    public void testCreateUserBadAttr() throws InstantiationException {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-na=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
 
         Donor donorOnlyAttr = new Donor(donorAttr);
     }
@@ -73,10 +84,10 @@ public class DonorTest {
     @Test
     public void testAddDonatableOrgans() {
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=John");
-        donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("dob=17-01-1998");
-        donorAttr.add("ird=123456879");
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
 
         Donor testDonor = null;
         try {

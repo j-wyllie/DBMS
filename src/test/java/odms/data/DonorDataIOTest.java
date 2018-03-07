@@ -18,10 +18,10 @@ public class DonorDataIOTest {
         donorDB = new DonorDatabase();
 
         ArrayList<String> donorOneAttr = new ArrayList<String>();
-        donorOneAttr.add("given-names=John");
-        donorOneAttr.add("last-names=Wayne");
-        donorOneAttr.add("dob=17-01-1998");
-        donorOneAttr.add("ird=123456879");
+        donorOneAttr.add("given-names=\"John\"");
+        donorOneAttr.add("last-names=\"Wayne\"");
+        donorOneAttr.add("dob=\"17-01-1998\"");
+        donorOneAttr.add("ird=\"123456879\"");
 
         try {
             donorOne = new Donor(donorOneAttr);

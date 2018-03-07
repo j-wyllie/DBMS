@@ -63,42 +63,45 @@ public class Donor {
         timeOfCreation = LocalDateTime.now();
     }
 
-    private void setExtraAttributes(ArrayList<String> attributes) {
+    private void setExtraAttributes(ArrayList<String> attributes) throws InstantiationException {
         for (String val : attributes) {
             String[] parts = val.split("=");
             setGivenAttribute(parts);
         }
     }
 
-    private void setGivenAttribute(String[] parts) {
+    private void setGivenAttribute(String[] parts) throws InstantiationException {
         String attrName = parts[0];
+        String value = parts[1].substring(1, parts[1].length() - 1); // get rid of the speech marks
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
-            setGivenNames(parts[1]);
+            setGivenNames(value);
         } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
-            setLastNames(parts[1]);
+            setLastNames(value);
         } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
-            String[] dates = parts[1].split("-");
+            String[] dates = value.split("-");
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            String[] dates = parts[1].split("-");
+            String[] dates = value.split("-");
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfDeath(date);
         } else if (attrName.equals(Attribute.GENDER.getText()) ){
-            setGender(parts[1]);
+            setGender(value);
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
-            setHeight(Double.valueOf(parts[1]));
+            setHeight(Double.valueOf(value));
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
-            setWeight(Double.valueOf(parts[1]));
+            setWeight(Double.valueOf(value));
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            setBloodType(parts[1]);
+            setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
-            setAddress(parts[1]);
+            setAddress(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
-            setRegion(parts[1]);
+            setRegion(value);
         } else if (attrName.equals(Attribute.IRD.getText())) {
-            setIRD(parts[1]);
+            setIRD(value);
+        } else {
+            throw new InstantiationException();
         }
     }
 
