@@ -32,7 +32,7 @@ public class Donor {
 
     private Set<Organ> organs = new HashSet<>();
 
-    private String IRD; // Not being used at the moment, not sure how we want to make donor's unique
+    private Integer IRD;
     private LocalDateTime timeOfCreation;
 
     private Integer id;
@@ -98,7 +98,7 @@ public class Donor {
         } else if (attrName.equals(Attribute.REGION.getText())) {
             setRegion(value);
         } else if (attrName.equals(Attribute.IRD.getText())) {
-            setIRD(value);
+            setIRD(Integer.valueOf(value));
         } else {
             throw new IllegalArgumentException();
         }
@@ -161,9 +161,6 @@ public class Donor {
         }
 
         System.out.println("IRD: " + IRD);
-
-        System.out.println("Time of Creation: " + timeOfCreation
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
     }
 
     /**
@@ -288,11 +285,11 @@ public class Donor {
         this.region = region;
     }
 
-    public String getIRD() {
+    public Integer getIRD() {
         return IRD;
     }
 
-    public void setIRD(String IRD) {
+    public void setIRD(Integer IRD) {
         generateUpdateInfo("ird");
         this.IRD = IRD;
     }
