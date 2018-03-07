@@ -34,6 +34,10 @@ public class CommandUtils {
             //Show available commands.
             return 3;
         }
+        else if (cmd.contains("import")) {
+
+            return 12;
+        }
         else if (cmd.matches(cmdRegexCreate)) {
 
             if (cmd.substring(0, 14).equals("create-profile")) {
