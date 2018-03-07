@@ -136,7 +136,7 @@ public class Donor {
         }
 
         if (height != 0.0) {
-            System.out.println("Height: " + height);
+            System.out.println("Height: " + height + "cm");
         }
 
         if (weight != 0.0) {
