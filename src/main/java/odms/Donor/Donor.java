@@ -1,6 +1,6 @@
-package odms.Donor;
+package odms.donor;
 
-import odms.CommandLineView.Attribute;
+import odms.commandlineview.Attribute;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class Donor {
     private String address;
     private String region;
 
-    private Set<Organ> organs = new HashSet<Organ>();
+    private Set<Organ> organs = new HashSet<>();
 
     private String IRD; // Not being used at the moment, not sure how we want to make donor's unique
     private LocalDateTime timeOfCreation;
@@ -37,6 +37,15 @@ public class Donor {
         this.IRD = IRD;
 
         setExtraAttributes(attributes);
+
+        timeOfCreation = LocalDateTime.now();
+    }
+
+    public Donor(String givenNames, String lastNames, LocalDate dateOfBirth, String IRD) {
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dateOfBirth;
+        this.IRD = IRD;
 
         timeOfCreation = LocalDateTime.now();
     }
@@ -62,9 +71,13 @@ public class Donor {
         } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
             setLastNames(parts[1]);
         } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
-            //setDateOfBirth(parts[1]); how are we entering dates?
+            String[] dates = parts[1].split("-");
+            LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+            setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            //setDateOfDeath(parts[1]); how are we entering dates?
+            String[] dates = parts[1].split("-");
+            LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+            setDateOfDeath(date);
         } else if (attrName.equals(Attribute.GENDER.getText()) ){
             setGender(parts[1]);
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
@@ -80,7 +93,16 @@ public class Donor {
         }
     }
 
+    public void viewOrgans() {
+        String output = "Organs to donate: ";
 
+        for (Organ org : organs) {
+            output += org.getName() + ", ";
+        }
+
+        // Did this to make the output look nicer with commas
+        System.out.println(output.substring(0, output.length() - 2));
+    }
 
     public void viewAttributes() {
         if (givenNames != null) {
@@ -91,10 +113,10 @@ public class Donor {
             System.out.println("Last Name: " + lastNames);
         }
 
-        System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ISO_DATE));
+        System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         if (dateOfDeath != null) {
-            System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ISO_DATE));
+            System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
 
         if (gender != null) {

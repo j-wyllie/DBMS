@@ -1,4 +1,4 @@
-package odms.Donor;
+package odms.donor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +24,10 @@ public class DonorTest {
         donorAttr.add("region=Christchurch");
         donorAttr.add("weight=83.2");
 
+        // going to assume that we are accepting dates like this dd-mm-yyyy
+        // can change this pretty easily so it doesn't matter too much
+        donorAttr.add("dod=5-3-2018");
+
         LocalDate dob = LocalDate.of(1997, 7, 24);
         testDonor = new Donor("John James", "Smith", dob, "321856156", donorAttr);
 
@@ -38,6 +42,7 @@ public class DonorTest {
         someOrgans.add(Organ.CORNEA);
 
         testDonor.addOrgans(someOrgans);
+        testDonor.viewOrgans();
         assertEquals(someOrgans, testDonor.getOrgans());
     }
 }

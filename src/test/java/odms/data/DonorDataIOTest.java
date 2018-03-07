@@ -3,7 +3,7 @@ package odms.data;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
-import odms.Donor.Donor;
+import odms.donor.Donor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class DonorDataIOTest {
 
     @Before
     public void setup() {
-        // Create Donor Database with basic Donor
+        // Create donor Database with basic donor
         donorDB = new DonorDatabase();
         donorOne = new Donor("John", "Wayne", LocalDate.now(), "");
         donorDB.addDonor(donorOne);

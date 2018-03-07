@@ -18,7 +18,7 @@ public enum Attribute {
         return text;
     }
 
-    private Attribute(String text) {
+    Attribute(String text) {
         this.text = text;
     }
 }

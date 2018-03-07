@@ -1,4 +1,4 @@
-package ODMS;
+package odms;
 
 public class App 
 {

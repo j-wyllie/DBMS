@@ -16,7 +16,7 @@ public class DonorDatabaseTest {
 
     @Before
     public void setup() {
-        // Create Donor Database with basic Donor
+        // Create donor Database with basic donor
         donorDB = new DonorDatabase();
         donorOne = new Donor("John", "Wayne", LocalDate.now(), "");
         donorTwo = new Donor("Sam", "Sick", LocalDate.now(), "");

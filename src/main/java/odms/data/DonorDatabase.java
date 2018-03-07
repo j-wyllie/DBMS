@@ -2,7 +2,7 @@ package odms.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import odms.Donor.Donor;
+import odms.donor.Donor;
 
 public class DonorDatabase {
     private HashMap<Integer, Donor> donorDb = new HashMap<>();
@@ -13,7 +13,7 @@ public class DonorDatabase {
      * Find donor by ID
      *
      * @param donorID unique ID for requested donor
-     * @return Donor object
+     * @return donor object
      */
     public Donor getDonor(Integer donorID) {
         return donorDb.get(donorID);
