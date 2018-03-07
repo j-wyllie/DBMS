@@ -11,46 +11,86 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class DonorTest {
-    private Donor testDonor;
-
-    @Before
-    public  void setUp() {
+    @Test
+    public void testCreateUser() throws InstantiationError {
+        Donor testDonor = null;
 
         ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("first-names=John");
+        donorAttr.add("given-names=John");
         donorAttr.add("last-names=Smithy Smith Face");
-        donorAttr.add("blood-type=O+");
-        donorAttr.add("gender=male");
-        donorAttr.add("region=Christchurch");
-        donorAttr.add("weight=83.2");
+        donorAttr.add("dob=17-01-1998");
+        donorAttr.add("ird=123456879");
 
-        // going to assume that we are accepting dates like this dd-mm-yyyy
-        // can change this pretty easily so it doesn't matter too much
-        donorAttr.add("dod=5-3-2018");
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (InstantiationException e) {
+            //pass
+        }
 
-        LocalDate dob = LocalDate.of(1997, 7, 24);
-        testDonor = new Donor("John James", "Smith", dob, "321856156", donorAttr);
+        assertTrue(testDonor != null);
+    }
 
-        testDonor.viewAttributes();
+    @Test(expected = InstantiationException.class)
+    public void testCreateUserNoIRD() throws InstantiationException {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=John");
+        donorAttr.add("last-names=Smithy Smith Face");
+        donorAttr.add("dob=17-01-1998");
+
+        Donor donorOnlyAttr = new Donor(donorAttr);
+    }
+
+    @Test(expected = InstantiationException.class)
+    public void testCreateUserNoDOB() throws InstantiationException {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=John");
+        donorAttr.add("last-names=Smithy Smith Face");
+        donorAttr.add("ird=123456879");;
+
+        Donor donorOnlyAttr = new Donor(donorAttr);
+    }
+
+    @Test(expected = InstantiationException.class)
+    public void testCreateUserNoFirstName() throws InstantiationException {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("last-names=Smithy Smith Face");
+        donorAttr.add("dob=17-01-1998");
+        donorAttr.add("ird=123456879");
+
+        Donor donorOnlyAttr = new Donor(donorAttr);
+    }
+
+    @Test(expected = InstantiationException.class)
+    public void testCreateUserNoLastName() throws InstantiationException {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=John");
+        donorAttr.add("dob=17-01-1998");
+        donorAttr.add("ird=123456879");
+
+        Donor donorOnlyAttr = new Donor(donorAttr);
     }
 
     @Test
     public void testAddDonatableOrgans() {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=John");
+        donorAttr.add("last-names=Smithy Smith Face");
+        donorAttr.add("dob=17-01-1998");
+        donorAttr.add("ird=123456879");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (InstantiationException e) {
+            // pass
+        }
+
         Set<Organ> someOrgans = new HashSet<>();
         someOrgans.add(Organ.BONE);
         someOrgans.add(Organ.HEART);
         someOrgans.add(Organ.CORNEA);
-
         testDonor.addOrgans(someOrgans);
-        testDonor.viewOrgans();
+
         assertEquals(someOrgans, testDonor.getOrgans());
     }
-
-    @Test
-    public void testCreateUserWithoutAttr() {
-        Donor donorWithoutAttr = new Donor("John", "Wayne", LocalDate.now(), "");
-
-        assertTrue("Donor object creation failed", donorWithoutAttr != null);
-    }
-
 }

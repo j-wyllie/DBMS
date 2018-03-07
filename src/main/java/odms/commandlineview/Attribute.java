@@ -10,7 +10,8 @@ public enum Attribute {
     WEIGHT("weight"),
     BLOODTYPE("blood-type"),
     ADDRESS("address"),
-    REGION("region");
+    REGION("region"),
+    IRD("ird");
 
     private String text;
 

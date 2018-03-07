@@ -9,6 +9,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import org.w3c.dom.Attr;
 
 public class Donor {
 
@@ -30,6 +31,7 @@ public class Donor {
 
     private Integer id;
 
+    /*
     public Donor(String givenNames, String lastNames, LocalDate dateOfBirth, String IRD, ArrayList<String> attributes) {
         this.givenNames = givenNames;
         this.lastNames = lastNames;
@@ -48,11 +50,16 @@ public class Donor {
         this.IRD = IRD;
 
         timeOfCreation = LocalDateTime.now();
-    }
+    }*/
 
     // This is probably the ideal way to do this
-    public Donor (ArrayList<String> attributes) {
+    public Donor (ArrayList<String> attributes) throws InstantiationException {
         setExtraAttributes(attributes);
+
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIRD() == null) {
+            throw new InstantiationException();
+        }
+
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -90,6 +97,8 @@ public class Donor {
             setAddress(parts[1]);
         } else if (attrName.equals(Attribute.REGION.getText())) {
             setRegion(parts[1]);
+        } else if (attrName.equals(Attribute.IRD.getText())) {
+            setIRD(parts[1]);
         }
     }
 
