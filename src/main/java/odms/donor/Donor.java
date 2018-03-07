@@ -127,12 +127,16 @@ public class Donor {
      * Outputs the donor's attributes
      */
     public void viewAttributes() {
+        if (IRD != null) {
+            System.out.println("IRD: " + IRD);
+        }
+
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
         }
 
         if (lastNames != null) {
-            System.out.println("Last Name: " + lastNames);
+            System.out.println("Last Names: " + lastNames);
         }
 
         System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
