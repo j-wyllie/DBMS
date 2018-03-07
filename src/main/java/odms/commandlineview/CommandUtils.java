@@ -160,7 +160,7 @@ public class CommandUtils {
     }
 
 
-    public static void ViewDateTimeCreatedBySearchCriteria(String expression, DonorDatabase currentDatabase)
+    public static void ViewDateTimeCreatedBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
         if (expression.substring(expression.indexOf("\\s") + 1, 11).equals("given-names"))
         {
