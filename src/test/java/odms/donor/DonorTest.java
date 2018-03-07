@@ -18,7 +18,7 @@ public class DonorTest {
      * @throws InstantiationError
      */
     @Test
-    public void testCreateUser() throws InstantiationError {
+    public void testCreateUser() throws IllegalArgumentException {
         Donor testDonor = null;
 
         ArrayList<String> donorAttr = new ArrayList<>();
@@ -38,10 +38,10 @@ public class DonorTest {
 
     /**
      * Test to create an invalid user with no IRD no
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
      */
-    @Test(expected = InstantiationException.class)
-    public void testCreateUserNoIRD() throws InstantiationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserNoIRD() throws IllegalArgumentException {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("\"given-names=John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
@@ -52,10 +52,10 @@ public class DonorTest {
 
     /**
      * Test to create an invalid user with no DOB
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
      */
-    @Test(expected = InstantiationException.class)
-    public void testCreateUserNoDOB() throws InstantiationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserNoDOB() throws IllegalArgumentException {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
@@ -66,10 +66,10 @@ public class DonorTest {
 
     /**
      * Test to create an invalid user with no first-name
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
      */
-    @Test(expected = InstantiationException.class)
-    public void testCreateUserNoFirstName() throws InstantiationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserNoFirstName() throws IllegalArgumentException {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"17-01-1998\"");
@@ -80,10 +80,10 @@ public class DonorTest {
 
     /**
      * Test to create an invalid user with no last name
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
      */
-    @Test(expected = InstantiationException.class)
-    public void testCreateUserNoLastName() throws InstantiationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserNoLastName() throws IllegalArgumentException {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("dob=\"17-01-1998\"");
@@ -94,10 +94,10 @@ public class DonorTest {
 
     /**
      * Test to create an invalid user with an incorrectly spelt attribute
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
      */
-    @Test(expected = InstantiationException.class)
-    public void testCreateUserBadAttr() throws InstantiationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserBadAttr() throws IllegalArgumentException {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-na=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
