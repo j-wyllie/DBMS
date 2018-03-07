@@ -170,7 +170,7 @@ public class CommandUtils {
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIRD());
+                    System.out.println("IRD: " + donor.getIrdNumber());
                     System.out.println("Given Names: " + donor.getGivenNames());
                     System.out.println("Last Names: " + donor.getLastNames());
                     System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
@@ -189,7 +189,7 @@ public class CommandUtils {
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIRD());
+                    System.out.println("IRD: " + donor.getIrdNumber());
                     System.out.println("Given Names: " + donor.getGivenNames());
                     System.out.println("Last Names: " + donor.getLastNames());
                     System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
@@ -208,7 +208,7 @@ public class CommandUtils {
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIRD());
+                    System.out.println("IRD: " + donor.getIrdNumber());
                     System.out.println("Given Names: " + donor.getGivenNames());
                     System.out.println("Last Names: " + donor.getLastNames());
                     System.out.println("Date/Time Created: " + donor.getTimeOfCreation());

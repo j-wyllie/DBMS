@@ -127,8 +127,8 @@ public class Donor {
      * Outputs the donor's attributes
      */
     public void viewAttributes() {
-        if (IRD != null) {
-            System.out.println("IRD: " + IRD);
+        if (irdNumber != null) {
+            System.out.println("IRD: " + irdNumber);
         }
 
         if (givenNames != null) {
