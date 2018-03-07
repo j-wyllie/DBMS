@@ -4,10 +4,19 @@ public class Command {
 
     public static int ValidateCommandType(String cmd)
     {
-        String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?)+)[\"]))*";
-        String cmdRegexDonorView = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?)+)[\"]))*(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
-        String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+))?)([=][\"]([a-zA-Z0-9][-]?)+[\"]))*";
-        String cmdRegexOrganUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+))?)([=][\"](([a-zA-Z]([,](\\s)?)*)+)[\"]))*";
+        String cmdRegexCreate = "([a-z]+)[-]([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
+
+        String cmdRegexDonorView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                   + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
+
+        String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]"
+                                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
+
+        String cmdRegexOrganUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]"
+                                     + "([a-z]+))?)([=][\"](([a-zA-Z]([,](\\s)?)*)+)[\"]))*";
 
         if (cmd.equals("print all")) {
             //print all profiles.
@@ -33,47 +42,55 @@ public class Command {
         }
         else if (cmd.matches(cmdRegexDonorView)) {
 
-            if (cmd.substring(0, 5).equals("donor")) {
+            try {
+                if (cmd.substring(0, 5).equals("donor")) {
 
-                if (cmd.substring(cmd.indexOf('>')).trim().equals("view")) {
-                    //view profiles.
-                    return 5;
-                }
-                else if (cmd.substring(cmd.indexOf('>')).trim().equals("date-created")) {
-                    return 6;
-                }
-                else if (cmd.substring(cmd.indexOf('>')).trim().equals("donations")) {
-                    return 7;
+                    if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("view")) {
+                        //view profiles.
+                        return 5;
+                    } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("date-created")) {
+                        return 6;
+                    } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("donations")) {
+                        return 7;
+                    } else {
+                        return 11;
+                    }
                 }
                 else {
                     return 11;
                 }
-            }
-            else {
+            } catch (Exception e) {
                 return 11;
             }
         }
         else if (cmd.matches(cmdRegexDonorUpdate)) {
 
-            if (cmd.substring(0, 5).equals("donor")) {
-                //set attributes of a profile.
-                return 8;
-            }
-            else {
-                return 11;
+            try {
+                if (cmd.substring(0, 5).equals("donor")) {
+                    //set attributes of a profile.
+                    return 8;
+                } else {
+                    return 11;
+                }
+            } catch (Exception e) {
+                return  11;
             }
         }
         else if (cmd.matches(cmdRegexOrganUpdate)) {
 
-            if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
-                //view profiles.
-                return 9;
-            }
-            else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("delete-organ")) {
-                //view profiles.
-                return 10;
-            }
-            else {
+            try {
+                if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
+                    //view profiles.
+                    return 9;
+                }
+                else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
+                    //view profiles.
+                    return 10;
+                }
+                else {
+                    return 11;
+                }
+            } catch (Exception e) {
                 return 11;
             }
         }
@@ -102,6 +119,14 @@ public class Command {
         System.out.println("donor {attributes to search donors by} > {attributes to update}");
         System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\"");
 
+        System.out.println("\nAdd an organ to donate:");
+        System.out.println("donor {attributes to search donors by} > add-organ=\" {list of organs to donate} \"");
+        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"");
+
+        System.out.println("\nRemove an organ to donate:");
+        System.out.println("donor {attributes to search donors by} > remove-organ=\" {list of organs to remove} \"");
+        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"");
+
         System.out.print("\nPrint all profiles: ");
         System.out.println("print all");
 
@@ -113,5 +138,8 @@ public class Command {
 
         System.out.println("\nAttributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region");
+
+        System.out.println("\nOrgans:");
+        System.out.println("Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue");
     }
 }

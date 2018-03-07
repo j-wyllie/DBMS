@@ -88,9 +88,17 @@ public class Donor {
         } else if (attrName.equals(Attribute.GENDER.getText()) ){
             setGender(value);
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
-            setHeight(Double.valueOf(value));
+            try {
+                setHeight(Double.valueOf(value));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException();
+            }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
-            setWeight(Double.valueOf(value));
+            try {
+                setWeight(Double.valueOf(value));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException();
+            }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
             setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
@@ -98,7 +106,11 @@ public class Donor {
         } else if (attrName.equals(Attribute.REGION.getText())) {
             setRegion(value);
         } else if (attrName.equals(Attribute.IRD.getText())) {
-            setIRD(Integer.valueOf(value));
+            try {
+                setIRD(Integer.valueOf(value));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException();
+            }
         } else {
             throw new IllegalArgumentException();
         }
