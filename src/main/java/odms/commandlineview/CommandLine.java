@@ -1,5 +1,6 @@
 package odms.commandlineview;
 
+import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
 import odms.donor.Donor;
 import java.util.ArrayList;
@@ -100,6 +101,14 @@ public class CommandLine {
                 case 11:
                     System.out.println("Please enter a valid command.");
                     break;
+
+                case 12:
+                    try {
+                        String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
+                        DonorDataIO.loadData(filepath);
+                    } catch (Exception e) {
+                        System.out.println("Please enter the correct file path.");
+                    }
             }
             expression = scanner.nextLine().trim();
         }
