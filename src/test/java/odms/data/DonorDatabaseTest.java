@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import odms.Donor.Donor;
+import odms.donor.Donor;
 import org.junit.Before;
 import org.junit.Test;
 

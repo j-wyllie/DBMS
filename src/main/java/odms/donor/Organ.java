@@ -1,4 +1,4 @@
-package ODMS.Donor;
+package odms.donor;
 
 public enum Organ {
     LIVER("Liver"),

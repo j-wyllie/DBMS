@@ -1,6 +1,6 @@
-package odms.CommandLineView;
+package odms.commandlineview;
 
-import ODMS.Donor.Donor;
+import odms.donor.Donor;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args)
     {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Starting Organ Donor Management System...");
+        System.out.println("Starting Organ donor Management System...");
         System.out.println("\nPlease enter your commands below:\n");
 
         String expression = scanner.nextLine().trim();

@@ -1,6 +1,6 @@
-package ODMS.Search;
+package odms.data;
 
-import ODMS.Donor.Donor;
+import odms.donor.Donor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
