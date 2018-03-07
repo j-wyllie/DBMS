@@ -45,4 +45,12 @@ public class DonorTest {
         testDonor.viewOrgans();
         assertEquals(someOrgans, testDonor.getOrgans());
     }
+
+    @Test
+    public void testCreateUserWithoutAttr() {
+        Donor donorWithoutAttr = new Donor("John", "Wayne", LocalDate.now(), "");
+
+        assertTrue("Donor object creation failed", donorWithoutAttr != null);
+    }
+
 }
