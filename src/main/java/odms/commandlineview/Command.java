@@ -66,4 +66,37 @@ public class Command {
             return 9;
         }
     }
+
+
+    public static void Help()
+    {
+        System.out.println("\nCreate a new donor:");
+        System.out.println("create-profile {attributes (given-names, last-names, and dob is required)}");
+        System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"");
+
+        System.out.println("\nView a donor:");
+        System.out.println("donor {attributes to search donors by} > view");
+
+        System.out.println("\nView the date a donor was created:");
+        System.out.println("donor {attributes to search donors by} > date-created");
+
+        System.out.println("\nView a donors past donations:");
+        System.out.println("donor {attributes to search donors by} > donations");
+
+        System.out.println("\nUpdate a donors attributes:");
+        System.out.println("donor {attributes to search donors by} > {attributes to update}");
+        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\"");
+
+        System.out.print("\nPrint all profiles: ");
+        System.out.println("print all");
+
+        System.out.print("\nPrint all donors: ");
+        System.out.println("print donors");
+
+        System.out.print("\nClose the app: ");
+        System.out.println("quit");
+
+        System.out.println("\nAttributes:");
+        System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region");
+    }
 }

@@ -1,10 +1,13 @@
 package odms.commandlineview;
 
+import odms.data.DonorDatabase;
 import odms.donor.Donor;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+
+    private static DonorDatabase currentDatabase = new DonorDatabase();
 
     public static void main(String[] args)
     {
@@ -30,6 +33,7 @@ public class Main {
 
                 case 3:
                     //show available commands (help).
+                    Command.Help();
                     break;
 
                 case 4:
@@ -41,9 +45,14 @@ public class Main {
                     for (String attr : attrList) {
                         attrArray.add(attr);
                     }
-                    Donor newDonor = new Donor(attrArray);
-                    DonorDatabase.add(newDonor);
-                    //store the donor.
+
+                    try {
+                        Donor newDonor = new Donor(attrArray);
+                        currentDatabase.addDonor(newDonor);
+                    }
+                    catch (InstantiationException e) {
+                        System.out.println("Please enter the required attributes correctly.");
+                    }
                     break;
 
                 case 5:
