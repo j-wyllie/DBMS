@@ -55,7 +55,7 @@ public class Donor {
     /**
      * Sets the attributes that are passed into the constructor
      * @param attributes the attributes given in the constructor
-     * @throws InstantiationException when a required attribute is not included or spelt wrong
+     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     private void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
