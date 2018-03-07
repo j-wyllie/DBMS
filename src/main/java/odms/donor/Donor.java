@@ -173,6 +173,8 @@ public class Donor {
         }
 
         System.out.println("IRD: " + irdNumber);
+
+        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm dd-MM-yyyy")));
     }
 
     /**
