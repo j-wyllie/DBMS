@@ -41,9 +41,8 @@ public class CommandLine {
 
                 case 4:
                     //create a new profile.
-                    System.out.println("Creating new profile...");
 
-                    String[] attrList = expression.substring(15).split("\\s");
+                    String[] attrList = expression.substring(15).split("\"\\s");
                     ArrayList<String> attrArray = new ArrayList<>();
                     for (String attr : attrList) {
                         attrArray.add(attr);
@@ -52,10 +51,12 @@ public class CommandLine {
                     try {
                         Donor newDonor = new Donor(attrArray);
                         currentDatabase.addDonor(newDonor);
+                        System.out.println("Profile created.");
                     }
                     catch (IllegalArgumentException e) {
                         System.out.println("Please enter the required attributes correctly.");
                     }
+
                     break;
 
                 case 5:

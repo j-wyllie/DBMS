@@ -70,7 +70,7 @@ public class Donor {
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].substring(1, parts[1].length() - 1); // get rid of the speech marks
+        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             setGivenNames(value);
