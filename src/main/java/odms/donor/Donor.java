@@ -25,6 +25,8 @@ public class Donor {
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private Set<Organ> organs = new HashSet<>();
+    private Set<Organ> donatedOrgans = new HashSet<>();
+
 
     private Integer irdNumber;
     private LocalDateTime timeOfCreation;
@@ -188,6 +190,15 @@ public class Donor {
     }
 
     /**
+     * Add a set of organs to the list of organs that the donor has donated
+     * @param organs a set of organs that the donor has donated
+     */
+    public void addDonations(Set<Organ> organs) {
+        generateUpdateInfo("donatedOrgans");
+        this.organs.addAll(organs);
+    }
+
+    /**
      * Remove a set of organs from the list of organs that the use wants to donate
      * @param organs a set of organs to be removed
      */
@@ -196,8 +207,24 @@ public class Donor {
         this.organs.removeAll(organs);
     }
 
-    public Set<Organ> getOrgans() {
 
+    /**
+     * Logs which property was updated and the time it was updated
+     * Also changes the last updated property
+     * @param property the property that was updated
+     */
+    private void generateUpdateInfo(String property) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        lastUpdated = currentTime;
+        String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
+        updateActions.add(output);
+    }
+
+    public Set<Organ> getDonatedOrgans() {
+        return donatedOrgans;
+    }
+
+    public Set<Organ> getOrgans() {
         return organs;
     }
 
@@ -318,12 +345,5 @@ public class Donor {
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
-    }
-
-    private void generateUpdateInfo(String property) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        lastUpdated = currentTime;
-        String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
-        updateActions.add(output);
     }
 }
