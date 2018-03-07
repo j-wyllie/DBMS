@@ -53,6 +53,12 @@ public class Donor {
     }*/
 
     // This is probably the ideal way to do this
+
+    /**
+     * Instantiates the Donor class
+     * @param attributes the list of attributes in attribute="value" form
+     * @throws InstantiationException when a required attribute is not included or spelt wrong
+     */
     public Donor (ArrayList<String> attributes) throws InstantiationException {
         setExtraAttributes(attributes);
 
@@ -63,6 +69,11 @@ public class Donor {
         timeOfCreation = LocalDateTime.now();
     }
 
+    /**
+     * Sets the attributes that are passed into the constructor
+     * @param attributes the attributes given in the constructor
+     * @throws InstantiationException when a required attribute is not included or spelt wrong
+     */
     private void setExtraAttributes(ArrayList<String> attributes) throws InstantiationException {
         for (String val : attributes) {
             String[] parts = val.split("=");
@@ -70,6 +81,11 @@ public class Donor {
         }
     }
 
+    /**
+     * Calls the relevant method to set the attribute
+     * @param parts a list with an attribute and value
+     * @throws InstantiationException thrown when an attribute that isn't valid is given
+     */
     private void setGivenAttribute(String[] parts) throws InstantiationException {
         String attrName = parts[0];
         String value = parts[1].substring(1, parts[1].length() - 1); // get rid of the speech marks
@@ -105,6 +121,9 @@ public class Donor {
         }
     }
 
+    /**
+     * Outputs the donor's organs that they want to donate
+     */
     public void viewOrgans() {
         String output = "Organs to donate: ";
 
@@ -116,6 +135,9 @@ public class Donor {
         System.out.println(output.substring(0, output.length() - 2));
     }
 
+    /**
+     * Outputs the donor's attributes
+     */
     public void viewAttributes() {
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
@@ -161,10 +183,18 @@ public class Donor {
                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
     }
 
+    /**
+     * Add a set of organs to the list of organs that the donor wants to donate
+     * @param organs a set of organs they want to donate
+     */
     public void addOrgans(Set<Organ> organs) {
         this.organs.addAll(organs);
     }
 
+    /**
+     * Remove a set of organs from the list of organs that the use wants to donate
+     * @param organs a set of organs to be removed
+     */
     public void removeOrgans(Set<Organ> organs) {
         this.organs.removeAll(organs);
     }
