@@ -1,6 +1,11 @@
 package odms.commandlineview;
 
-public class Command {
+import com.sun.javafx.scene.layout.region.Margins.Converter;
+import java.util.ArrayList;
+import odms.data.DonorDatabase;
+import odms.donor.Donor;
+
+public class CommandUtils {
 
     public static int ValidateCommandType(String cmd)
     {
@@ -96,6 +101,64 @@ public class Command {
         }
         else {
             return 11;
+        }
+    }
+
+
+    public static void ViewAttrBySearchCriteria(String expression)
+    {
+        DonorDatabase currentDatabase = Main.currentDatabase;
+
+        if (expression.substring(expression.indexOf("\\s") + 1, 11).equals("given-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+
+                for (Donor donor : donorList) {
+                    donor.viewAttributes();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(expression.indexOf("\\s") + 1, 10).equals("last-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+
+                for (Donor donor : donorList) {
+                    donor.viewAttributes();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(expression.indexOf("\\s") + 1, 3).equals("ird"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+
+                for (Donor donor : donorList) {
+                    donor.viewAttributes();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else {
+            System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
         }
     }
 

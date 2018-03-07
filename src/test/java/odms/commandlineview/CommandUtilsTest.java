@@ -1,12 +1,12 @@
 package odms.commandlineview;
 
-import static odms.commandlineview.Command.*;
+import static odms.commandlineview.CommandUtils.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class CommandTest {
+public class CommandUtilsTest {
 
     private String createProfileTest;
     private String viewDonorTest;

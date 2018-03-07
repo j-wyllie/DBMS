@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static DonorDatabase currentDatabase = new DonorDatabase();
+    public static DonorDatabase currentDatabase = new DonorDatabase();
 
     public static void main(String[] args)
     {
@@ -19,7 +19,7 @@ public class Main {
 
         while (!(expression.equals("quit")))
         {
-            int cmd = Command.ValidateCommandType(expression);
+            int cmd = CommandUtils.ValidateCommandType(expression);
 
             switch (cmd) {
 
@@ -33,7 +33,7 @@ public class Main {
 
                 case 3:
                     //show available commands (help).
-                    Command.Help();
+                    CommandUtils.Help();
                     break;
 
                 case 4:
@@ -59,6 +59,7 @@ public class Main {
                     //search profiles (donor > view).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
+                    CommandUtils.ViewAttrBySearchCriteria(expression);
                     break;
 
                 case 6:
