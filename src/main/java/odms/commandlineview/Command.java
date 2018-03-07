@@ -4,11 +4,11 @@ public class Command {
 
     public static int ValidateCommandType(String cmd)
     {
-        String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+        String cmdRegexCreate = "([a-z]+)[-]([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                 + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
-        
-        String cmdRegexDonorView = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
-                                   + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
+
+        String cmdRegexDonorView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                   + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
 
         String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                      + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]"
@@ -42,47 +42,55 @@ public class Command {
         }
         else if (cmd.matches(cmdRegexDonorView)) {
 
-            if (cmd.substring(0, 5).equals("donor")) {
+            try {
+                if (cmd.substring(0, 5).equals("donor")) {
 
-                if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("view")) {
-                    //view profiles.
-                    return 5;
-                }
-                else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("date-created")) {
-                    return 6;
-                }
-                else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("donations")) {
-                    return 7;
+                    if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("view")) {
+                        //view profiles.
+                        return 5;
+                    } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("date-created")) {
+                        return 6;
+                    } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("donations")) {
+                        return 7;
+                    } else {
+                        return 11;
+                    }
                 }
                 else {
                     return 11;
                 }
-            }
-            else {
+            } catch (Exception e) {
                 return 11;
             }
         }
         else if (cmd.matches(cmdRegexDonorUpdate)) {
 
-            if (cmd.substring(0, 5).equals("donor")) {
-                //set attributes of a profile.
-                return 8;
-            }
-            else {
-                return 11;
+            try {
+                if (cmd.substring(0, 5).equals("donor")) {
+                    //set attributes of a profile.
+                    return 8;
+                } else {
+                    return 11;
+                }
+            } catch (Exception e) {
+                return  11;
             }
         }
         else if (cmd.matches(cmdRegexOrganUpdate)) {
 
-            if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
-                //view profiles.
-                return 9;
-            }
-            else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
-                //view profiles.
-                return 10;
-            }
-            else {
+            try {
+                if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
+                    //view profiles.
+                    return 9;
+                }
+                else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
+                    //view profiles.
+                    return 10;
+                }
+                else {
+                    return 11;
+                }
+            } catch (Exception e) {
                 return 11;
             }
         }

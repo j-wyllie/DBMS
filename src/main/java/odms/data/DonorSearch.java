@@ -14,7 +14,7 @@ public class DonorSearch {
         for (Donor don : donorList) {
             fName.put(don.getGivenNames(), don.getId());
             lName.put(don.getLastNames(), don.getId());
-            IRD.put(don.getIRD(), don.getId());
+            //IRD.put(don.getIRD(), don.getId());
         }
     }
 
@@ -36,6 +36,6 @@ public class DonorSearch {
     public void addDonor(Donor newDonor) {
         fName.put(newDonor.getGivenNames(), newDonor.getId());
         lName.put(newDonor.getLastNames(), newDonor.getId());
-        IRD.put(newDonor.getIRD(), newDonor.getId());
+        //IRD.put(newDonor.getIRD(), newDonor.getId());
     }
 }
