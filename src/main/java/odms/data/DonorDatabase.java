@@ -31,7 +31,7 @@ public class DonorDatabase {
         lastID += 1;
         donor.setId(lastID);
 
-        if (checkIRDNumberExists(donor.getIRD())) {
+        if (checkIRDNumberExists(donor.getIrdNumber())) {
             throw new IllegalArgumentException("IRD number already in use");
         }
 
@@ -47,7 +47,7 @@ public class DonorDatabase {
     private boolean checkIRDNumberExists(Integer irdNumber) {
         Set<Integer> irdNumbers = new HashSet<>();
 
-        donorDb.forEach((id, donor) -> irdNumbers.add(donor.getIRD()));
+        donorDb.forEach((id, donor) -> irdNumbers.add(donor.getIrdNumber()));
 
         return irdNumbers.contains(irdNumber);
     }
@@ -118,7 +118,7 @@ public class DonorDatabase {
         ArrayList<Donor> results = new ArrayList<>();
 
         donorDb.forEach((id, donor) -> {
-            if (donor.getIRD().equals(searchTerm)) {
+            if (donor.getIrdNumber().equals(searchTerm)) {
                 results.add(donor);
             }
         });

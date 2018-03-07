@@ -160,6 +160,61 @@ public class CommandUtils {
     }
 
 
+    public static void ViewDateTimeCreatedBySearchCriteria(DonorDatabase currentDatabase, String expression)
+    {
+        if (expression.substring(expression.indexOf("\\s") + 1, 11).equals("given-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+
+                for (Donor donor : donorList) {
+                    donor.getTimeOfCreation();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(expression.indexOf("\\s") + 1, 10).equals("last-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+
+                for (Donor donor : donorList) {
+                    donor.getTimeOfCreation();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(expression.indexOf("\\s") + 1, 3).equals("ird"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+
+                for (Donor donor : donorList) {
+                    donor.getTimeOfCreation();
+                    System.out.println("\n");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else {
+            System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+        }
+    }
+
     public static void Help()
     {
         System.out.println("\nCreate a new donor:");

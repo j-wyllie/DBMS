@@ -1,19 +1,13 @@
 package odms.donor;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.Array;
 import java.util.Collections;
-import odms.commandlineview.Attribute;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import org.w3c.dom.Attr;
 
 public class Donor {
 
@@ -32,7 +26,7 @@ public class Donor {
 
     private Set<Organ> organs = new HashSet<>();
 
-    private Integer IRD;
+    private Integer irdNumber;
     private LocalDateTime timeOfCreation;
 
     private Integer id;
@@ -45,7 +39,7 @@ public class Donor {
     public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIRD() == null) {
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
@@ -106,7 +100,7 @@ public class Donor {
             setRegion(value);
         } else if (attrName.equals(Attribute.IRD.getText())) {
             try {
-                setIRD(Integer.valueOf(value));
+                setIrdNumber(Integer.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
@@ -171,7 +165,7 @@ public class Donor {
             System.out.println("Region: " + region);
         }
 
-        System.out.println("IRD: " + IRD);
+        System.out.println("IRD: " + irdNumber);
     }
 
     /**
@@ -296,17 +290,17 @@ public class Donor {
         this.region = region;
     }
 
-    public Integer getIRD() {
-        return IRD;
+    public Integer getIrdNumber() {
+        return irdNumber;
     }
 
-    public void setIRD(Integer IRD) {
+    public void setIrdNumber(Integer irdNumber) {
         generateUpdateInfo("ird");
-        this.IRD = IRD;
+        this.irdNumber = irdNumber;
     }
 
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Integer id) {
