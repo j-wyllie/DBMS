@@ -48,7 +48,6 @@ public class Donor {
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIRD() == null) {
             throw new IllegalArgumentException();
         }
-
         timeOfCreation = LocalDateTime.now();
     }
 

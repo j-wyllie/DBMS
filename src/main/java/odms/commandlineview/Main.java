@@ -40,7 +40,7 @@ public class Main {
                     //create a new profile.
                     System.out.println("Creating new profile...");
 
-                    String[] attrList = expression.substring(14).split("\\s");
+                    String[] attrList = expression.substring(15).split("\\s");
                     ArrayList<String> attrArray = new ArrayList<>();
                     for (String attr : attrList) {
                         attrArray.add(attr);
