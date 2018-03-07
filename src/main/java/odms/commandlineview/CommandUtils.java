@@ -1,6 +1,5 @@
 package odms.commandlineview;
 
-import com.sun.javafx.scene.layout.region.Margins.Converter;
 import java.util.ArrayList;
 import odms.data.DonorDatabase;
 import odms.donor.Donor;
@@ -105,10 +104,8 @@ public class CommandUtils {
     }
 
 
-    public static void ViewAttrBySearchCriteria(String expression)
+    public static void ViewAttrBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
-        DonorDatabase currentDatabase = Main.currentDatabase;
-
         if (expression.substring(expression.indexOf("\\s") + 1, 11).equals("given-names"))
         {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {

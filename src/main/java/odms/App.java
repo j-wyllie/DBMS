@@ -1,9 +1,20 @@
 package odms;
 
-public class App 
+import odms.commandlineview.CommandLine;
+import odms.data.DonorDatabase;
+
+public class App
 {
-    public static void main( String[] args )
-    {
-        System.out.println( "Welcome to SENG302" );
+    private static DonorDatabase donorDb = new DonorDatabase();
+    private static CommandLine commandLine = new CommandLine(donorDb);
+
+    public static void main( String[] args ) {
+
+        try {
+            commandLine.beginCommandEntry();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

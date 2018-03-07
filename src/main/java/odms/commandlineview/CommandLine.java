@@ -5,19 +5,22 @@ import odms.donor.Donor;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class CommandLine {
 
-    public static DonorDatabase currentDatabase = new DonorDatabase();
+    private DonorDatabase currentDatabase;
 
-    public static void main(String[] args)
-    {
+    public CommandLine (DonorDatabase currentDatabase) {
+        this.currentDatabase = currentDatabase;
+    }
+
+    public void beginCommandEntry() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Starting Organ Donor Management System...");
         System.out.println("\nPlease enter your commands below:");
 
         String expression = scanner.nextLine().trim();
 
-        while (!(expression.equals("quit")))
+        while (!(expression.equals("quit")) && !(expression.equals("exit")))
         {
             int cmd = CommandUtils.ValidateCommandType(expression);
 
@@ -59,7 +62,7 @@ public class Main {
                     //search profiles (donor > view).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
-                    CommandUtils.ViewAttrBySearchCriteria(expression);
+                    CommandUtils.ViewAttrBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 6:
