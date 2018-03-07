@@ -4,10 +4,19 @@ public class Command {
 
     public static int ValidateCommandType(String cmd)
     {
-        String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
-        String cmdRegexDonorView = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
-        String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
-        String cmdRegexOrganUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+))?)([=][\"](([a-zA-Z]([,](\\s)?)*)+)[\"]))*";
+        String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
+        
+        String cmdRegexDonorView = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                   + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>]\\s([a-z]+)([-]([a-z]+))?)";
+
+        String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]"
+                                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
+
+        String cmdRegexOrganUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]"
+                                     + "([a-z]+))?)([=][\"](([a-zA-Z]([,](\\s)?)*)+)[\"]))*";
 
         if (cmd.equals("print all")) {
             //print all profiles.
