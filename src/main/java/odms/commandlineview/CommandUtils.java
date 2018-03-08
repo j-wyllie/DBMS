@@ -42,6 +42,10 @@ public class CommandUtils {
             //import a file of donors.
             return 12;
         }
+        else if (cmd.contains("export")) {
+            // export the Donor Database to files
+            return 14;
+        }
         else if (cmd.matches(cmdRegexCreate)) {
 
             try {
@@ -577,7 +581,7 @@ public class CommandUtils {
             System.out.println("Given Names: " + donor.getGivenNames());
             System.out.println("Last Names: " + donor.getLastNames());
             System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
-            System.out.println("\n");
+            System.out.println();
         }
     }
 
@@ -589,7 +593,7 @@ public class CommandUtils {
             System.out.println("Given Names: " + donor.getGivenNames());
             System.out.println("Last Names: " + donor.getLastNames());
             donor.viewDonations();
-            System.out.println("\n");
+            System.out.println();
         }
     }
 

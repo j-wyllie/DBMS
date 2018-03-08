@@ -26,12 +26,6 @@
             <version>2.8.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>3.5.1</version>
-        </dependency>
-
     </dependencies>
 
     <build>

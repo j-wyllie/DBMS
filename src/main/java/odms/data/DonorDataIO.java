@@ -28,7 +28,7 @@ public class DonorDataIO {
 
             writeFile.close();
 
-            System.out.println("File " + file.getName() + " saved successfully!");
+            System.out.println("File " + file.getName() + " exported successfully!");
 
         } catch (IOException e) {
             System.out.println("IO exception, please check the specified file");
