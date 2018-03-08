@@ -8,7 +8,7 @@ public class CommandUtils {
 
     public static int ValidateCommandType(String cmd)
     {
-        String cmdRegexCreate = "([a-z]+)[-]([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+        String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                 + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*";
 
         String cmdRegexDonorView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
@@ -35,7 +35,7 @@ public class CommandUtils {
             return 3;
         }
         else if (cmd.contains("import")) {
-
+            //import a file of donors.
             return 12;
         }
         else if (cmd.matches(cmdRegexCreate)) {
@@ -43,6 +43,10 @@ public class CommandUtils {
             if (cmd.substring(0, 14).equals("create-profile")) {
                 //create a new profile.
                 return 4;
+            }
+            else if (cmd.substring(0, 6).equals("delete")) {
+                //delete a profile.
+                return 13;
             }
             else {
                 return 11;

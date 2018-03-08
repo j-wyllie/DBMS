@@ -29,10 +29,30 @@ public class CommandLine {
 
                 case 1:
                     //print all profiles (print all).
+                    ArrayList<Donor> allProfiles = currentDatabase.getDonors(false);
+                    if (allProfiles.size() > 0) {
+                        for (Donor profile : allProfiles) {
+                            profile.viewAttributes();
+                            System.out.println("\n");
+                        }
+                    }
+                    else {
+                        System.out.println("There are no profiles to show.");
+                    }
                     break;
 
                 case 2:
                     //print all profiles that are donors (print donors).
+                    ArrayList<Donor> allDonors = currentDatabase.getDonors(true);
+                    if (allDonors.size() > 0) {
+                        for (Donor donor : allDonors) {
+                            donor.viewAttributes();
+                            System.out.println("\n");
+                        }
+                    }
+                    else {
+                        System.out.println("There are no donor profiles to show.");
+                    }
                     break;
 
                 case 3:
@@ -103,12 +123,18 @@ public class CommandLine {
                     break;
 
                 case 12:
+                    //import a file of profiles.
                     try {
                         String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
                         DonorDataIO.loadData(filepath);
                     } catch (Exception e) {
                         System.out.println("Please enter the correct file path.");
                     }
+                    break;
+
+                case 13:
+                    //delete a profile.
+
             }
             expression = scanner.nextLine().trim();
         }
