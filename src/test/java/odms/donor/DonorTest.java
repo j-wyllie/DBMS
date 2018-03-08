@@ -15,7 +15,7 @@ public class DonorTest {
 
     /**
      * Test to create a valid user
-     * @throws InstantiationError
+     * @throws IllegalArgumentException
      */
     @Test
     public void testCreateBasicUser() throws IllegalArgumentException {
@@ -36,6 +36,10 @@ public class DonorTest {
         assertTrue(testDonor != null);
     }
 
+    /**
+     * Test creating a users with every attribute
+     * @throws IllegalArgumentException
+     */
     @Test
     public void testCreateFullUser() throws IllegalArgumentException {
         Donor testDonor = null;
@@ -192,6 +196,9 @@ public class DonorTest {
         assertEquals(testDonor.getOrgans(), new HashSet<>(Arrays.asList(Organ.CORNEA)));
     }
 
+    /**
+     * Test to add check that an existing organ can't be added
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testAddExistingOrgan() {
         ArrayList<String> donorAttr = new ArrayList<>();
@@ -215,6 +222,9 @@ public class DonorTest {
 
     }
 
+    /**
+     * Check that the property changes are recorded
+     */
     @Test
     public void testPropertyChangeEvent() {
         ArrayList<String> donorAttr = new ArrayList<String>();

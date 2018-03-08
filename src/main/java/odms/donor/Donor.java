@@ -126,6 +126,9 @@ public class Donor {
         System.out.println(output.substring(0, output.length() - 2));
     }
 
+    /**
+     * View the list of donations that the donor has made
+     */
     public void viewDonations() {
         String output = "Organs donated: ";
 
