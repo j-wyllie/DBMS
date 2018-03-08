@@ -140,6 +140,7 @@ public class CommandLine {
                     try {
                         String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
                         DonorDataIO.loadData(filepath);
+                        System.out.println("Imported " + filepath + "successfully");
                     } catch (Exception e) {
                         System.out.println("Please enter the correct file path.");
                     }
@@ -148,6 +149,17 @@ public class CommandLine {
                 case 13:
                     //delete a profile.
                     CommandUtils.DeleteDonorBySearchCriteria(currentDatabase, expression);
+                    break;
+
+                case 14:
+                    // export donor database to file
+                    try {
+                        String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
+                        DonorDataIO.saveDonors(currentDatabase, filepath);
+                        System.out.println("Exported " + filepath + "successfully");
+                    } catch (Exception e) {
+                        System.out.println("Please check file path.");
+                    }
 
             }
             expression = scanner.nextLine().trim();
