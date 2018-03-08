@@ -79,7 +79,7 @@ public class CommandLine {
                         Donor errorDonor = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
 
                         System.out.println("Error: IRD Number " + errorIrdNumber +
-                                "already in use by donor " +
+                                " already in use by donor " +
                                 errorDonor.getGivenNames() + " " +
                                 errorDonor.getLastNames());
                     }
