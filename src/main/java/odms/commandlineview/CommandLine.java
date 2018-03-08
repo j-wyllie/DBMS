@@ -35,7 +35,7 @@ public class CommandLine {
                     if (allProfiles.size() > 0) {
                         for (Donor profile : allProfiles) {
                             profile.viewAttributes();
-                            System.out.println("\n");
+                            System.out.println();
                         }
                     }
                     else {
@@ -50,7 +50,7 @@ public class CommandLine {
                         for (Donor donor : allDonors) {
                             donor.viewAttributes();
                             donor.viewOrgans();
-                            System.out.println("\n");
+                            System.out.println("");
                         }
                     }
                     else {
@@ -113,23 +113,23 @@ public class CommandLine {
 
                 case 8:
                     //search profiles.
-                    System.out.println("Updating profiles...");
                     //carry out method call in command.
                     CommandUtils.UpdateDonorsBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Profile(s) successfully updated.");
                     break;
 
                 case 9:
                     //add organs to a donors profile.
-                    System.out.println("Adding organs to profile...");
                     //carry out method call in command.
                     CommandUtils.AddOrgansBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Organ successfully added to profile(s).");
                     break;
 
                 case 10:
                     //remove organs from a donors profile.
-                    System.out.println("Organ suc");
                     //carry out method call in command.
                     CommandUtils.RemoveOrgansBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Organ successfully removed from profile(s).");
                     break;
 
                 case 11:
@@ -161,10 +161,12 @@ public class CommandLine {
                     } catch (Exception e) {
                         System.out.println("Please check file path.");
                     }
+                    break;
                 case 15:
                     //add to donations made by a donor.
                     CommandUtils.AddDonationsMadeBySearchCriteria(currentDatabase, expression);
                     System.out.println("Donation successfully added to profile.");
+                    break;
             }
             expression = scanner.nextLine().trim();
         }

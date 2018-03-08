@@ -35,12 +35,11 @@ The current database can be saved and exported by executing
 
     export-changes path\file.json
     
-### Example
-An example database can be imported by executing 
+### Example Database
+An example database can be found in the example directory.
     
-    import example
-    
-This example database is a database containing 10 donors
+This example database is a database containing 10 donors of varying organ donation status and other 
+mixed attributes.
 
 ## Donor Management
 ODMS refers to the specifics of a donor as attributes, such as names, date of birth, organs they opt
@@ -103,11 +102,32 @@ Updating a donor:
 
     donor given-names="Marion Mitchell" > age="84" blood-type="O+"
 
-#### Viewing a donor's creation time
+##### Viewing a donor's creation time
+`date-created` will display the donor's creation time.
 
-#### View a donor's previous donations
+    donor given-names="Marion Mitchell" > date-created
+
+##### View a donor's previous donations
+`donations` will display the previous donations made by a donor.
+
+    donor given-names="Marion Mitchell" > donations
 
 #### Managing a donor's organ donation status
+The organs that are
+`liver`
+`kidney`
+`pancreas`
+`heart`
+`lung`
+`intestine`
+`cornea`
+`middle-ear`
+`skin`
+`bone`
+`bone-marrow`
+`connective-tissue`
+
+
 
 #### Displaying all donor's
 You can display all donor profiles at any time with the following command:
