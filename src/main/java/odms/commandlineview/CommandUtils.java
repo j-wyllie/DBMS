@@ -191,19 +191,13 @@ public class CommandUtils {
     {
         if (expression.substring(6, 17).equals("given-names"))
         {
-            int i1 = expression.lastIndexOf("=");
-            int i2 = expression.indexOf("=");
-
-            System.out.println(i1);
-            System.out.println(i2);
-
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
 
                 String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
-                    printDonorList(donorList);
+                    PrintDonorList(donorList);
                 }
                 else {
                     System.out.println("There are no donors that match this criteria.");
@@ -221,7 +215,7 @@ public class CommandUtils {
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
-                    printDonorList(donorList);
+                    PrintDonorList(donorList);
                 }
                 else {
                     System.out.println("There are no donors that match this criteria.");
@@ -239,7 +233,7 @@ public class CommandUtils {
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
-                    printDonorList(donorList);
+                    PrintDonorList(donorList);
                 }
                 else {
                     System.out.println("There are no donors that match this criteria.");
@@ -254,7 +248,70 @@ public class CommandUtils {
         }
     }
 
-    private static void printDonorList(ArrayList<Donor> donorList) {
+
+    public static void ViewDonationsBySearchCriteria(DonorDatabase currentDatabase, String expression)
+    {
+        if (expression.substring(6, 17).equals("given-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+
+                if (donorList.size() > 0) {
+                    PrintDonorDonations(donorList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 16).equals("last-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+
+                if (donorList.size() > 0) {
+                    PrintDonorDonations(donorList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 9).equals("ird"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+
+                if (donorList.size() > 0) {
+                    PrintDonorDonations(donorList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else {
+            System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+        }
+    }
+
+
+    private static void PrintDonorList(ArrayList<Donor> donorList) {
         for (Donor donor : donorList) {
             System.out.println("IRD: " + donor.getIrdNumber());
             System.out.println("Given Names: " + donor.getGivenNames());
@@ -263,6 +320,18 @@ public class CommandUtils {
             System.out.println("\n");
         }
     }
+
+
+    private static void PrintDonorDonations(ArrayList<Donor> donorList) {
+        for (Donor donor : donorList) {
+            System.out.println("IRD: " + donor.getIrdNumber());
+            System.out.println("Given Names: " + donor.getGivenNames());
+            System.out.println("Last Names: " + donor.getLastNames());
+            donor.viewDonations();
+            System.out.println("\n");
+        }
+    }
+
 
     public static void Help()
     {
