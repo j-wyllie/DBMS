@@ -49,10 +49,6 @@ public class CommandUtils {
                     //create a new profile.
                     return 4;
                 }
-                else if (cmd.substring(0, 6).equals("delete")) {
-                    //delete a profile.
-                    return 13;
-                }
                 else {
                     return 11;
                 }
@@ -72,6 +68,8 @@ public class CommandUtils {
                         return 6;
                     } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("donations")) {
                         return 7;
+                    } else if (cmd.substring(cmd.indexOf('>') + 1).trim().equals("delete")) {
+                        return 13;
                     } else {
                         return 11;
                     }
@@ -307,7 +305,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -325,7 +323,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -343,7 +341,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
@@ -373,7 +371,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -391,7 +389,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -409,7 +407,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
@@ -439,7 +437,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -457,7 +455,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -475,7 +473,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
@@ -583,8 +581,9 @@ public class CommandUtils {
 
     private static void UpdateDonorAttr(ArrayList<Donor> donorList, String[] attrList) {
 
+        ArrayList<String> attrArray = new ArrayList(Arrays.asList(attrList));
         for (Donor donor : donorList) {
-            donor.setGivenAttribute(attrList);
+            donor.setExtraAttributes(attrArray);
         }
     }
 
