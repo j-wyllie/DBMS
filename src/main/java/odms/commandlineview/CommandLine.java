@@ -138,9 +138,9 @@ public class CommandLine {
                 case 12:
                     //import a file of profiles.
                     try {
-                        String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
-                        DonorDataIO.loadData(filepath);
-                        System.out.println("Imported " + filepath + "successfully");
+                        String filepath = expression.substring(7).trim();
+                        currentDatabase = DonorDataIO.loadData(filepath);
+                        System.out.println("File " + filepath + " imported successfully!");
                     } catch (Exception e) {
                         System.out.println("Please enter the correct file path.");
                     }
@@ -154,9 +154,8 @@ public class CommandLine {
                 case 14:
                     // export donor database to file
                     try {
-                        String filepath = expression.substring(expression.indexOf("\\s") + 1).trim();
+                        String filepath = expression.substring(7).trim();
                         DonorDataIO.saveDonors(currentDatabase, filepath);
-                        System.out.println("Exported " + filepath + "successfully");
                     } catch (Exception e) {
                         System.out.println("Please check file path.");
                     }
