@@ -85,7 +85,7 @@ public class CommandUtils {
                 return 11;
             }
         }
-        else if (cmd.matches(cmdRegexOrganUpdate)) {
+        else if (cmd.matches(cmdRegexOrganUpdate) && cmd.contains("organ")) {
 
             try {
                 if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
