@@ -35,7 +35,7 @@ public class CommandLine {
                     if (allProfiles.size() > 0) {
                         for (Donor profile : allProfiles) {
                             profile.viewAttributes();
-                            System.out.println("\n");
+                            System.out.println();
                         }
                     }
                     else {
@@ -50,7 +50,7 @@ public class CommandLine {
                         for (Donor donor : allDonors) {
                             donor.viewAttributes();
                             donor.viewOrgans();
-                            System.out.println("\n");
+                            System.out.println("");
                         }
                     }
                     else {
@@ -161,10 +161,12 @@ public class CommandLine {
                     } catch (Exception e) {
                         System.out.println("Please check file path.");
                     }
+                    break;
                 case 15:
                     //add to donations made by a donor.
                     CommandUtils.AddDonationsMadeBySearchCriteria(currentDatabase, expression);
                     System.out.println("Donation successfully added to profile.");
+                    break;
             }
             expression = scanner.nextLine().trim();
         }
