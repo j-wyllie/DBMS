@@ -8,11 +8,11 @@ public enum Organ {
     LUNG("lung"),
     INTESTINE("intestine"),
     CORNEA("cornea"),
-    MIDDLE_EAR("middle ear"),
+    MIDDLE_EAR("middle-ear"),
     SKIN("skin"),
     BONE("bone"),
-    BONE_MARROW("bone marrow"),
-    CONNECTIVE_TISSUE("connective tissue");
+    BONE_MARROW("bone-marrow"),
+    CONNECTIVE_TISSUE("connective-tissue");
 
     private String name;
 
