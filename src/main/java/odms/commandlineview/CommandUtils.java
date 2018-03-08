@@ -40,15 +40,19 @@ public class CommandUtils {
         }
         else if (cmd.matches(cmdRegexCreate)) {
 
-            if (cmd.substring(0, 14).equals("create-profile")) {
-                //create a new profile.
-                return 4;
-            }
-            else if (cmd.substring(0, 6).equals("delete")) {
-                //delete a profile.
-                return 13;
-            }
-            else {
+            try {
+                if (cmd.substring(0, 14).equals("create-profile")) {
+                    //create a new profile.
+                    return 4;
+                }
+                else if (cmd.substring(0, 6).equals("delete")) {
+                    //delete a profile.
+                    return 13;
+                }
+                else {
+                    return 11;
+                }
+            } catch (Exception e) {
                 return 11;
             }
         }
