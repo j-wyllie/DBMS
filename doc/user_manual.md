@@ -35,7 +35,6 @@ The current database can be saved and exported by executing
 
     export-changes path\file.json
     
-
 ### Example
 An example database can be imported by executing 
     
@@ -44,3 +43,78 @@ An example database can be imported by executing
 This example database is a database containing 10 donors
 
 ## Donor Management
+ODMS refers to the specifics of a donor as attributes, such as names, date of birth, organs they opt
+ to donate, etc.
+
+### Donors
+#### Creating a donor
+A donor profile can be created from the base command `create-profile` followed by the desired 
+attributes you wish to set at time of creation.
+
+**Note: **Profiles must be created with `given-names`, `last-names`, `dob`, and `ird`
+
+The following attributes are available within ODMS:
+
+| Attribute     | Value                   | Example                                |
+| ------------- | ----------------------- | -------------------------------------- |
+| `given-names` | All given (first) names | `given-names="Marion Mitchell"`        |
+| `last-names`  | All last (family) names | `last-names="Morrison"`                |
+| `dob`         | Date of birth           | `dob="dd-mm-yyyy"`                     |
+| `ird`         | IRD number              | `ird="123546789"`                      |
+| `dod`         | Date of death           | `dod="dd-mm-yyyy"`                     |
+| `gender`      | Gender                  | `gender="Male"`                        |
+| `height`      | Height in centimetres   | `height="180"`                         |
+| `weight`      | Weight in kilograms     | `weight="104"`                         |
+| `blood-type`  | Blood type              | `blood-type="O-"`                      |
+| `address`     | Address                 | `address="123 Fake St, Faketon, Chch"` |
+| `region`      | Region                  | `region="Canterbury"`                  |
+
+When using attributes the format is always `attribute="value"`
+
+##### Examples
+Basic donor profile creation
+
+    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789"
+    
+More detailed donor profile creation
+
+    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789" gender="male" height="180" weight="104"
+
+#### Viewing or updating a donor
+A donor profile can be selected by searching via the `donor` command and providing attributes 
+`given-names`, `last-names`, or `ird`. After selecting these attributes follow them with ` > ` and 
+either `view` or the attributes you wish to modify.
+
+##### Examples
+Viewing a donor:
+    
+    donor given-names"michell marion" > view
+    
+This will result in a summary of all donors that match the criteria:
+
+    IRD: 123456789
+    Given Names: Marion Mitchell
+    Last Names: Morrison
+    Date Of Birth: 01-08-1989
+    IRD: 123456789
+    Last updated at: 03:10 PM 08-03-2018
+    
+Updating a donor:
+
+    donor given-names="Marion Mitchell" > age="84" blood-type="O+"
+
+#### Viewing a donor's creation time
+
+#### View a donor's previous donations
+
+#### Managing a donor's organ donation status
+
+#### Displaying all donor's
+You can display all donor profiles at any time with the following command:
+
+    print all
+    
+This can be limited to only those donor profiles that currently are registered to donate an organ 
+with the following command:
+    
+    print donors
