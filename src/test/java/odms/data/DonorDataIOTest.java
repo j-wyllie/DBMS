@@ -2,6 +2,8 @@ package odms.data;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
@@ -43,6 +45,12 @@ public class DonorDataIOTest {
             donorDB.getDonor(0).getGivenNames(),
             loadedDb.getDonor(0).getGivenNames()
         );
+
+        try {
+            Files.deleteIfExists(Paths.get("test.json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

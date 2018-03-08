@@ -21,3 +21,26 @@ This will bring you into the application which can be terminated at any time by 
 Upon executing ODMS (Organ Donor Management System), ODMS will begin to expect commands. A list of 
 commands can be accessed at any time by executing `help`
 
+## Data
+### Importing Data
+When ODMS executed the database will be blank, a JSON file can be imported to the database by 
+executing
+
+    import path\file.json
+
+**The database is not automatically saved.** Please see below about exporting/saving the database. 
+
+### Exporting Data
+The current database can be saved and exported by executing
+
+    export-changes path\file.json
+    
+
+### Example
+An example database can be imported by executing 
+    
+    import example
+    
+This example database is a database containing 10 donors
+
+## Donor Management
