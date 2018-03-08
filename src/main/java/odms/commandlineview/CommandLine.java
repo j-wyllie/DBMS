@@ -64,11 +64,9 @@ public class CommandLine {
 
                 case 4:
                     //create a new profile.
-
-                    String[] attrList = expression.substring(15).split("\"\\s");
-                    ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-
                     try {
+                        String[] attrList = expression.substring(15).split("\"\\s");
+                        ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
                         Donor newDonor = new Donor(attrArray);
                         currentDatabase.addDonor(newDonor);
                         System.out.println("Profile created.");
@@ -82,6 +80,8 @@ public class CommandLine {
                                 " already in use by donor " +
                                 errorDonor.getGivenNames() + " " +
                                 errorDonor.getLastNames());
+                    } catch (Exception e) {
+                        System.out.println("Please enter a valid command.");
                     }
 
                     break;
