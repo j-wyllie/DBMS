@@ -155,10 +155,10 @@ public class DonorTest {
             // pass
         }
 
-        Set<Organ> someOrgans = new HashSet<>();
-        someOrgans.add(Organ.BONE);
-        someOrgans.add(Organ.HEART);
-        someOrgans.add(Organ.CORNEA);
+        Set<String> someOrgans = new HashSet<>();
+        someOrgans.add("bone");
+        someOrgans.add("heart");
+        someOrgans.add("cornea");
         testDonor.addOrgans(someOrgans);
 
         assertEquals(someOrgans, testDonor.getOrgans());
@@ -182,15 +182,15 @@ public class DonorTest {
             // pass
         }
 
-        Set<Organ> someOrgans = new HashSet<>();
-        someOrgans.add(Organ.BONE);
-        someOrgans.add(Organ.HEART);
-        someOrgans.add(Organ.CORNEA);
+        Set<String> someOrgans = new HashSet<>();
+        someOrgans.add("bone");
+        someOrgans.add("heart");
+        someOrgans.add("cornea");
         testDonor.addOrgans(someOrgans);
 
-        Set<Organ> removeOrgans = new HashSet<>();
-        removeOrgans.add(Organ.BONE);
-        removeOrgans.add(Organ.HEART);
+        Set<String> removeOrgans = new HashSet<>();
+        someOrgans.add("bone");
+        someOrgans.add("heart");
         testDonor.removeOrgans(removeOrgans);
 
         assertEquals(testDonor.getOrgans(), new HashSet<>(Arrays.asList(Organ.CORNEA)));
@@ -214,8 +214,8 @@ public class DonorTest {
             // pass
         }
 
-        Set<Organ> someOrgans = new HashSet<>();
-        someOrgans.add(Organ.BONE);
+        Set<String> someOrgans = new HashSet<>();
+        someOrgans.add("bone");
 
         testDonor.addOrgans(someOrgans);
         testDonor.addOrgans(someOrgans);

@@ -1,18 +1,18 @@
 package odms.donor;
 
 public enum Organ {
-    LIVER("Liver"),
-    KIDNEY("Kidney"),
-    PANCREAS("Pancreas"),
-    HEART("Heart"),
-    LUNG("Lung"),
-    INTESTINE("Intestine"),
-    CORNEA("Cornea"),
-    MIDDLE_EAR("Middle Ear"),
-    SKIN("Skin"),
-    BONE("Bone"),
-    BONE_MARROW("Bone Marrow"),
-    CONNECTIVE_TISSUE("Connective Tissue");
+    LIVER("liver"),
+    KIDNEY("kidney"),
+    PANCREAS("pancreas"),
+    HEART("heart"),
+    LUNG("lung"),
+    INTESTINE("intestine"),
+    CORNEA("cornea"),
+    MIDDLE_EAR("middle ear"),
+    SKIN("skin"),
+    BONE("bone"),
+    BONE_MARROW("bone marrow"),
+    CONNECTIVE_TISSUE("connective tissue");
 
     private String name;
 

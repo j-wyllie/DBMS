@@ -383,7 +383,6 @@ public class CommandUtils {
     {
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
 
-
         if (expression.substring(6, 17).equals("given-names"))
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
@@ -614,18 +613,26 @@ public class CommandUtils {
 
     private static void AddOrgans(ArrayList<Donor> donorList, String[] organList) {
 
-        Set<Organ> organSet = new HashSet(Arrays.asList(organList));
+        Set<String> organSet = new HashSet(Arrays.asList(organList));
         for (Donor donor : donorList) {
-            donor.addOrgans(organSet);
+            try {
+                donor.addOrgans(organSet);
+            } catch (IllegalArgumentException e) {
+                System.out.println("This organ already exists.");
+            }
         }
     }
 
 
     private static void RemoveOrgans(ArrayList<Donor> donorList, String[] organList) {
 
-        Set<Organ> organSet = new HashSet(Arrays.asList(organList));
+        Set<String> organSet = new HashSet(Arrays.asList(organList));
         for (Donor donor : donorList) {
-            donor.removeOrgans(organSet);
+            try {
+                donor.removeOrgans(organSet);
+            } catch (IllegalArgumentException e) {
+                System.out.println("This organ doesn't exists.");
+            }
         }
     }
 
