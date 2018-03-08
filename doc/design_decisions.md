@@ -17,3 +17,9 @@ for indentation and 8 spaces instead of 4 for continuation.
 ###Setters & Getters
 * If a setter/getter performs no additional functionality above simply adjusting or retrieving a 
 class property then it does not require testing as this provides no real benefits.
+
+## Constants
+### Enums
+Enums have been used for any constants throughout the program such as the organs, blood-types 
+and the attributes of a donor. This will prevent any errors that could occur from repeating 
+definitions across multiple files.
