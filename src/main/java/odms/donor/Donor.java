@@ -186,6 +186,10 @@ public class Donor {
             System.out.println("Region: " + region);
         }
 
+        if (organs.size() > 0) {
+            viewOrgans();
+        }
+
         System.out.println("IRD: " + irdNumber);
 
         System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
@@ -195,10 +199,41 @@ public class Donor {
      * Add a set of organs to the list of organs that the donor wants to donate
      * @param organs a set of organs they want to donate
      */
-    public void addOrgans(Set<Organ> organs) throws IllegalArgumentException {
+    public void addOrgans(Set<String> organs) throws IllegalArgumentException {
         if (Collections.disjoint(organs, this.organs)) {
             generateUpdateInfo("organs");
-            this.organs.addAll(organs);
+
+            for (String org : organs) {
+                if (org.equals(Organ.BONE.getName())) {
+                    this.organs.add(Organ.BONE);
+                } else if (org.equals(Organ.LIVER.getName())) {
+                    this.organs.add(Organ.LIVER);
+                } else if (org.equals(Organ.KIDNEY.getName())) {
+                    this.organs.add(Organ.KIDNEY);
+                } else if (org.equals(Organ.PANCREAS.getName())) {
+                    this.organs.add(Organ.PANCREAS);
+                } else if (org.equals(Organ.HEART.getName())) {
+                    this.organs.add(Organ.HEART);
+                } else if (org.equals(Organ.LUNG.getName())) {
+                    this.organs.add(Organ.LUNG);
+                } else if (org.equals(Organ.INTESTINE.getName())) {
+                    this.organs.add(Organ.INTESTINE);
+                } else if (org.equals(Organ.CORNEA.getName())) {
+                    this.organs.add(Organ.CORNEA);
+                } else if (org.equals(Organ.MIDDLE_EAR.getName())) {
+                    this.organs.add(Organ.MIDDLE_EAR);
+                } else if (org.equals(Organ.SKIN.getName())) {
+                    this.organs.add(Organ.SKIN);
+                } else if (org.equals(Organ.BONE.getName())) {
+                    this.organs.add(Organ.BONE);
+                } else if (org.equals(Organ.BONE_MARROW.getName())) {
+                    this.organs.add(Organ.BONE_MARROW);
+                } else if (org.equals(Organ.CONNECTIVE_TISSUE.getName())) {
+                    this.organs.add(Organ.CONNECTIVE_TISSUE);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -218,9 +253,39 @@ public class Donor {
      * Remove a set of organs from the list of organs that the use wants to donate
      * @param organs a set of organs to be removed
      */
-    public void removeOrgans(Set<Organ> organs) {
+    public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("organs");
-        this.organs.removeAll(organs);
+        for (String org : organs) {
+            if (org.equals(Organ.BONE.getName())) {
+                this.organs.remove(Organ.BONE);
+            } else if (org.equals(Organ.LIVER.getName())) {
+                this.organs.remove(Organ.LIVER);
+            } else if (org.equals(Organ.KIDNEY.getName())) {
+                this.organs.remove(Organ.KIDNEY);
+            } else if (org.equals(Organ.PANCREAS.getName())) {
+                this.organs.remove(Organ.PANCREAS);
+            } else if (org.equals(Organ.HEART.getName())) {
+                this.organs.remove(Organ.HEART);
+            } else if (org.equals(Organ.LUNG.getName())) {
+                this.organs.remove(Organ.LUNG);
+            } else if (org.equals(Organ.INTESTINE.getName())) {
+                this.organs.remove(Organ.INTESTINE);
+            } else if (org.equals(Organ.CORNEA.getName())) {
+                this.organs.remove(Organ.CORNEA);
+            } else if (org.equals(Organ.MIDDLE_EAR.getName())) {
+                this.organs.remove(Organ.MIDDLE_EAR);
+            } else if (org.equals(Organ.SKIN.getName())) {
+                this.organs.remove(Organ.SKIN);
+            } else if (org.equals(Organ.BONE.getName())) {
+                this.organs.remove(Organ.BONE);
+            } else if (org.equals(Organ.BONE_MARROW.getName())) {
+                this.organs.remove(Organ.BONE_MARROW);
+            } else if (org.equals(Organ.CONNECTIVE_TISSUE.getName())) {
+                this.organs.remove(Organ.CONNECTIVE_TISSUE);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
     }
 
 
