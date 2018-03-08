@@ -301,7 +301,6 @@ public class CommandUtils {
 
     public static void UpdateDonorsBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
-        expression = expression.substring(expression.indexOf(">"));
         String[] attrList = expression.trim().split("\"\\s");
 
         if (expression.substring(6, 17).equals("given-names"))
