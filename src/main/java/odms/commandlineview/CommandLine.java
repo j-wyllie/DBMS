@@ -147,6 +147,7 @@ public class CommandLine {
 
                 case 13:
                     //delete a profile.
+                    CommandUtils.DeleteDonorBySearchCriteria(currentDatabase, expression);
 
             }
             expression = scanner.nextLine().trim();
