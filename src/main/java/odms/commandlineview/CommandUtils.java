@@ -307,7 +307,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -583,8 +583,9 @@ public class CommandUtils {
 
     private static void UpdateDonorAttr(ArrayList<Donor> donorList, String[] attrList) {
 
+        ArrayList<String> attrArray = new ArrayList(Arrays.asList(attrList));
         for (Donor donor : donorList) {
-            donor.setGivenAttribute(attrList);
+            donor.setExtraAttributes(attrArray);
         }
     }
 
