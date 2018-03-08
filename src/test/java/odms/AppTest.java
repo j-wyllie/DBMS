@@ -1,4 +1,4 @@
-package seng302;
+package odms;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
