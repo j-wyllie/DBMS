@@ -299,7 +299,7 @@ public class CommandUtils {
 
     public static void UpdateDonorsBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
-        String[] attrList = expression.trim().split("\"\\s");
+        String[] attrList = expression.substring(expression.indexOf('>') + 1).trim().split("\"\\s");
 
         if (expression.substring(6, 17).equals("given-names"))
         {
