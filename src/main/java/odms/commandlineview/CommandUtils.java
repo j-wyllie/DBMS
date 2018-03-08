@@ -24,7 +24,7 @@ public class CommandUtils {
 
         String cmdRegexOrganUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                      + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]"
-                                     + "([a-z]+))?)([=][\"](([a-zA-Z][-]([,](\\s)?)*)+)[\"]))*";
+                                     + "([a-z]+))?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)[\"]))*";
 
         if (cmd.equals("print all")) {
             //print all profiles.

@@ -245,9 +245,40 @@ public class Donor {
      * Add a set of organs to the list of organs that the donor has donated
      * @param organs a set of organs that the donor has donated
      */
-    public void addDonations(Set<Organ> organs) {
+    public void addDonations(Set<String> organs) {
         generateUpdateInfo("donatedOrgans");
-        this.organs.addAll(organs);
+        for (String org : organs) {
+            String newOrgan = org.trim().toLowerCase();
+            if (newOrgan.equals(Organ.BONE.getName())) {
+                this.donatedOrgans.add(Organ.BONE);
+            } else if (newOrgan.equals(Organ.LIVER.getName())) {
+                this.donatedOrgans.add(Organ.LIVER);
+            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
+                this.donatedOrgans.add(Organ.KIDNEY);
+            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
+                this.donatedOrgans.add(Organ.PANCREAS);
+            } else if (newOrgan.equals(Organ.HEART.getName())) {
+                this.donatedOrgans.add(Organ.HEART);
+            } else if (newOrgan.equals(Organ.LUNG.getName())) {
+                this.donatedOrgans.add(Organ.LUNG);
+            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
+                this.donatedOrgans.add(Organ.INTESTINE);
+            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
+                this.donatedOrgans.add(Organ.CORNEA);
+            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
+                this.donatedOrgans.add(Organ.MIDDLE_EAR);
+            } else if (newOrgan.equals(Organ.SKIN.getName())) {
+                this.donatedOrgans.add(Organ.SKIN);
+            } else if (newOrgan.equals(Organ.BONE.getName())) {
+                this.donatedOrgans.add(Organ.BONE);
+            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
+                this.donatedOrgans.add(Organ.BONE_MARROW);
+            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
+                this.donatedOrgans.add(Organ.CONNECTIVE_TISSUE);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
     }
 
     /**
