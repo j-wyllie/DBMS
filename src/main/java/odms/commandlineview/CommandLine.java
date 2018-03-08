@@ -127,7 +127,7 @@ public class CommandLine {
 
                 case 10:
                     //remove organs from a donors profile.
-                    System.out.println("Removing organs from profile...");
+                    System.out.println("Organ suc");
                     //carry out method call in command.
                     CommandUtils.RemoveOrgansBySearchCriteria(currentDatabase, expression);
                     break;
@@ -161,7 +161,10 @@ public class CommandLine {
                     } catch (Exception e) {
                         System.out.println("Please check file path.");
                     }
-
+                case 15:
+                    //add to donations made by a donor.
+                    CommandUtils.AddDonationsMadeBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Donation successfully added to profile.");
             }
             expression = scanner.nextLine().trim();
         }
