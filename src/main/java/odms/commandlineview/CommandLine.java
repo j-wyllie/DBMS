@@ -121,12 +121,14 @@ public class CommandLine {
                     //add organs to a donors profile.
                     System.out.println("Adding organs to profile...");
                     //carry out method call in command.
+                    CommandUtils.AddOrgansBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 10:
                     //remove organs from a donors profile.
                     System.out.println("Removing organs from profile...");
                     //carry out method call in command.
+                    CommandUtils.RemoveOrgansBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 11:

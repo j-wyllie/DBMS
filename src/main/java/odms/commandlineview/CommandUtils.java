@@ -1,10 +1,12 @@
 package odms.commandlineview;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import odms.data.DonorDatabase;
 import odms.donor.Donor;
+import odms.donor.Organ;
 
 public class CommandUtils {
 
@@ -362,6 +364,138 @@ public class CommandUtils {
     }
 
 
+    public static void AddOrgansBySearchCriteria(DonorDatabase currentDatabase, String expression)
+    {
+        expression = expression.substring(expression.indexOf(">"));
+        String[] organList = expression.substring(expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
+
+
+        if (expression.substring(6, 17).equals("given-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+
+                if (donorList.size() > 0) {
+                    AddOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 16).equals("last-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+
+                if (donorList.size() > 0) {
+                    AddOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 9).equals("ird"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+
+                if (donorList.size() > 0) {
+                    AddOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else {
+            System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+        }
+    }
+
+
+    public static void RemoveOrgansBySearchCriteria(DonorDatabase currentDatabase, String expression)
+    {
+        expression = expression.substring(expression.indexOf(">"));
+        String[] organList = expression.substring(expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
+
+
+        if (expression.substring(6, 17).equals("given-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+
+                if (donorList.size() > 0) {
+                    RemoveOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 16).equals("last-names"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+
+                if (donorList.size() > 0) {
+                    RemoveOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else if (expression.substring(6, 9).equals("ird"))
+        {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+
+                String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
+                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+
+                if (donorList.size() > 0) {
+                    RemoveOrgans(donorList, organList);
+                }
+                else {
+                    System.out.println("There are no donors that match this criteria.");
+                }
+            }
+            else {
+                System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+            }
+        }
+        else {
+            System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+        }
+    }
+
+
     private static void PrintDonorList(ArrayList<Donor> donorList) {
 
         for (Donor donor : donorList) {
@@ -390,6 +524,23 @@ public class CommandUtils {
 
         for (Donor donor : donorList) {
             donor.setGivenAttribute(attrList);
+        }
+    }
+
+    private static void AddOrgans(ArrayList<Donor> donorList, String[] organList) {
+
+        Set<Organ> organSet = new HashSet(Arrays.asList(organList));
+        for (Donor donor : donorList) {
+            donor.addOrgans(organSet);
+        }
+    }
+
+
+    private static void RemoveOrgansOrgans(ArrayList<Donor> donorList, String[] organList) {
+
+        Set<Organ> organSet = new HashSet(Arrays.asList(organList));
+        for (Donor donor : donorList) {
+            donor.removeOrgans(organSet);
         }
     }
 

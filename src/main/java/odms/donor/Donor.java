@@ -130,7 +130,7 @@ public class Donor {
      * View the list of donations that the donor has made
      */
     public void viewDonations() {
-        String output = "Organs donated: ";
+        String output = "Organs donated:  ";
 
         for (Organ org : donatedOrgans) {
             output += org.getName() + ", ";
