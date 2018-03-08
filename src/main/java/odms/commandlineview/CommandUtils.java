@@ -118,7 +118,7 @@ public class CommandUtils {
 
     public static void ViewAttrBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
-        if (expression.substring(expression.indexOf("\\s") + 1, 11).equals("given-names"))
+        if (expression.substring(expression.indexOf("\\s") + 1, 12).equals("given-names"))
         {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
 
