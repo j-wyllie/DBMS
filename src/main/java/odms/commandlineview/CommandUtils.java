@@ -536,7 +536,7 @@ public class CommandUtils {
     }
 
 
-    private static void RemoveOrgansOrgans(ArrayList<Donor> donorList, String[] organList) {
+    private static void RemoveOrgans(ArrayList<Donor> donorList, String[] organList) {
 
         Set<Organ> organSet = new HashSet(Arrays.asList(organList));
         for (Donor donor : donorList) {
