@@ -1,7 +1,9 @@
 package odms.commandlineview;
 
+import java.util.Arrays;
 import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
+import odms.data.IrdNumberConflictException;
 import odms.donor.Donor;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -64,18 +66,22 @@ public class CommandLine {
                     //create a new profile.
 
                     String[] attrList = expression.substring(15).split("\"\\s");
-                    ArrayList<String> attrArray = new ArrayList<>();
-                    for (String attr : attrList) {
-                        attrArray.add(attr);
-                    }
+                    ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
 
                     try {
                         Donor newDonor = new Donor(attrArray);
                         currentDatabase.addDonor(newDonor);
                         System.out.println("Profile created.");
-                    }
-                    catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         System.out.println("Please enter the required attributes correctly.");
+                    } catch (IrdNumberConflictException e) {
+                        Integer errorIrdNumber = e.getIrdNumber();
+                        Donor errorDonor = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
+
+                        System.out.println("Error: IRD Number " + errorIrdNumber +
+                                "already in use by donor " +
+                                errorDonor.getGivenNames() + " " +
+                                errorDonor.getLastNames());
                     }
 
                     break;

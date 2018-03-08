@@ -181,13 +181,7 @@ public class CommandUtils {
                 String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
-                for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIrdNumber());
-                    System.out.println("Given Names: " + donor.getGivenNames());
-                    System.out.println("Last Names: " + donor.getLastNames());
-                    System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
-                    System.out.println("\n");
-                }
+                printDonorList(donorList);
             }
             else {
                 System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
@@ -200,13 +194,7 @@ public class CommandUtils {
                 String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
-                for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIrdNumber());
-                    System.out.println("Given Names: " + donor.getGivenNames());
-                    System.out.println("Last Names: " + donor.getLastNames());
-                    System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
-                    System.out.println("\n");
-                }
+                printDonorList(donorList);
             }
             else {
                 System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
@@ -219,13 +207,7 @@ public class CommandUtils {
                 String attr = expression.substring(expression.indexOf("\"") + 1, expression.lastIndexOf("\""));
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-                for (Donor donor : donorList) {
-                    System.out.println("IRD: " + donor.getIrdNumber());
-                    System.out.println("Given Names: " + donor.getGivenNames());
-                    System.out.println("Last Names: " + donor.getLastNames());
-                    System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
-                    System.out.println("\n");
-                }
+                printDonorList(donorList);
             }
             else {
                 System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
@@ -233,6 +215,16 @@ public class CommandUtils {
         }
         else {
             System.out.println("Please enter only one search criteria (given-names, last-names, ird).");
+        }
+    }
+
+    private static void printDonorList(ArrayList<Donor> donorList) {
+        for (Donor donor : donorList) {
+            System.out.println("IRD: " + donor.getIrdNumber());
+            System.out.println("Given Names: " + donor.getGivenNames());
+            System.out.println("Last Names: " + donor.getLastNames());
+            System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
+            System.out.println("\n");
         }
     }
 
