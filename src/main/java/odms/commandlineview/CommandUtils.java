@@ -231,8 +231,8 @@ public class CommandUtils {
     public static void Help()
     {
         System.out.println("\nCreate a new donor:");
-        System.out.println("create-profile {attributes (given-names, last-names, and dob is required)}");
-        System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"");
+        System.out.println("create-profile {attributes (given-names, last-names, dob and ird is required)}");
+        System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"");
 
         System.out.println("\nView a donor:");
         System.out.println("donor {attributes to search donors by} > view");
@@ -265,7 +265,7 @@ public class CommandUtils {
         System.out.println("quit");
 
         System.out.println("\nAttributes:");
-        System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region");
+        System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region, ird");
 
         System.out.println("\nOrgans:");
         System.out.println("Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue");
