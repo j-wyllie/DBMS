@@ -24,11 +24,11 @@ public class DonorDataIOTest {
 
         try {
             donorOne = new Donor(donorOneAttr);
-        } catch (IllegalArgumentException e) {
+            donorDB.addDonor(donorOne);
+
+        } catch (IrdNumberConflictException e) {
             e.printStackTrace();
         }
-
-        donorDB.addDonor(donorOne);
 
     }
 

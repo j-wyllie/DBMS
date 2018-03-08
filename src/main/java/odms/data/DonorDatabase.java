@@ -27,12 +27,12 @@ public class DonorDatabase {
      *
      * @param donor new donor object
      */
-    public void addDonor(Donor donor) throws IllegalArgumentException {
+    public void addDonor(Donor donor) throws IrdNumberConflictException {
         lastID += 1;
         donor.setId(lastID);
 
         if (checkIRDNumberExists(donor.getIrdNumber())) {
-            throw new IllegalArgumentException("IRD number already in use");
+            throw new IrdNumberConflictException("IRD number already in use", donor.getIrdNumber());
         }
 
         donorDb.put(lastID, donor);
@@ -150,10 +150,6 @@ public class DonorDatabase {
         donors.sort(Comparator.comparing(Donor::getLastNames));
 
         return donors;
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }
