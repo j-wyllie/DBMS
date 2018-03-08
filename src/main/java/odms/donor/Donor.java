@@ -126,6 +126,17 @@ public class Donor {
         System.out.println(output.substring(0, output.length() - 2));
     }
 
+    public void viewDonations() {
+        String output = "Organs donated: ";
+
+        for (Organ org : donatedOrgans) {
+            output += org.getName() + ", ";
+        }
+
+        // Did this to make the output look nicer with commas
+        System.out.println(output.substring(0, output.length() - 2));
+    }
+
     /**
      * Outputs the donor's attributes
      */
