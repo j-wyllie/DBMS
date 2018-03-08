@@ -75,8 +75,6 @@ public class DonorDataIO {
      */
     public static DonorDatabase loadData(String path) {
         File file = new File(path);
-
-        // TODO investigate better way to handle db creation.
         DonorDatabase donorDb = new DonorDatabase();
 
         try {

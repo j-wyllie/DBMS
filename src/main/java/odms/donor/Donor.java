@@ -82,7 +82,7 @@ public class Donor {
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfDeath(date);
         } else if (attrName.equals(Attribute.GENDER.getText()) ){
-            setGender(value);
+            setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
                 setHeight(Double.valueOf(value));
