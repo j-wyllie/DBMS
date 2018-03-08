@@ -104,6 +104,7 @@ public class CommandLine {
                     //search profiles (donor > donations).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
+                    CommandUtils.ViewDonationsBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 8:
