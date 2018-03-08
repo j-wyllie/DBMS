@@ -18,7 +18,7 @@ public class DonorTest {
      * @throws InstantiationError
      */
     @Test
-    public void testCreateUser() throws IllegalArgumentException {
+    public void testCreateBasicUser() throws IllegalArgumentException {
         Donor testDonor = null;
 
         ArrayList<String> donorAttr = new ArrayList<>();
@@ -26,6 +26,32 @@ public class DonorTest {
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
+
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            //pass
+        }
+
+        assertTrue(testDonor != null);
+    }
+
+    @Test
+    public void testCreateFullUser() throws IllegalArgumentException {
+        Donor testDonor = null;
+
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+        donorAttr.add("dod=\"6-3-2018\"");
+        donorAttr.add("gender=\"male\"");
+        donorAttr.add("height=\"86.0\"");
+        donorAttr.add("weight=\"72.0\"");
+        donorAttr.add("blood-type=\"O+\"");
+        donorAttr.add("address=\"Riccarton\"");
+        donorAttr.add("region=\"Christchurch\"");
 
         try {
             testDonor = new Donor(donorAttr);
