@@ -381,7 +381,6 @@ public class CommandUtils {
 
     public static void AddOrgansBySearchCriteria(DonorDatabase currentDatabase, String expression)
     {
-        expression = expression.substring(expression.indexOf(">"));
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
 
 
