@@ -113,23 +113,23 @@ public class CommandLine {
 
                 case 8:
                     //search profiles.
-                    System.out.println("Updating profiles...");
                     //carry out method call in command.
                     CommandUtils.UpdateDonorsBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Profile(s) successfully updated.");
                     break;
 
                 case 9:
                     //add organs to a donors profile.
-                    System.out.println("Adding organs to profile...");
                     //carry out method call in command.
                     CommandUtils.AddOrgansBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Organ successfully added to profile(s).");
                     break;
 
                 case 10:
                     //remove organs from a donors profile.
-                    System.out.println("Organ suc");
                     //carry out method call in command.
                     CommandUtils.RemoveOrgansBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Organ successfully removed from profile(s).");
                     break;
 
                 case 11:
