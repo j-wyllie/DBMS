@@ -204,31 +204,32 @@ public class Donor {
             generateUpdateInfo("organs");
 
             for (String org : organs) {
-                if (org.trim().equals(Organ.BONE.getName())) {
+                String newOrgan = org.trim().toLowerCase();
+                if (newOrgan.equals(Organ.BONE.getName())) {
                     this.organs.add(Organ.BONE);
-                } else if (org.trim().equals(Organ.LIVER.getName())) {
+                } else if (newOrgan.equals(Organ.LIVER.getName())) {
                     this.organs.add(Organ.LIVER);
-                } else if (org.trim().equals(Organ.KIDNEY.getName())) {
+                } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
                     this.organs.add(Organ.KIDNEY);
-                } else if (org.trim().equals(Organ.PANCREAS.getName())) {
+                } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
                     this.organs.add(Organ.PANCREAS);
-                } else if (org.trim().equals(Organ.HEART.getName())) {
+                } else if (newOrgan.equals(Organ.HEART.getName())) {
                     this.organs.add(Organ.HEART);
-                } else if (org.trim().equals(Organ.LUNG.getName())) {
+                } else if (newOrgan.equals(Organ.LUNG.getName())) {
                     this.organs.add(Organ.LUNG);
-                } else if (org.trim().equals(Organ.INTESTINE.getName())) {
+                } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
                     this.organs.add(Organ.INTESTINE);
-                } else if (org.trim().equals(Organ.CORNEA.getName())) {
+                } else if (newOrgan.equals(Organ.CORNEA.getName())) {
                     this.organs.add(Organ.CORNEA);
-                } else if (org.trim().equals(Organ.MIDDLE_EAR.getName())) {
+                } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
                     this.organs.add(Organ.MIDDLE_EAR);
-                } else if (org.trim().equals(Organ.SKIN.getName())) {
+                } else if (newOrgan.equals(Organ.SKIN.getName())) {
                     this.organs.add(Organ.SKIN);
-                } else if (org.trim().equals(Organ.BONE.getName())) {
+                } else if (newOrgan.equals(Organ.BONE.getName())) {
                     this.organs.add(Organ.BONE);
-                } else if (org.trim().equals(Organ.BONE_MARROW.getName())) {
+                } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
                     this.organs.add(Organ.BONE_MARROW);
-                } else if (org.trim().equals(Organ.CONNECTIVE_TISSUE.getName())) {
+                } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
                     this.organs.add(Organ.CONNECTIVE_TISSUE);
                 } else {
                     throw new IllegalArgumentException();
@@ -256,31 +257,32 @@ public class Donor {
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("organs");
         for (String org : organs) {
-            if (org.trim().equals(Organ.BONE.getName())) {
+            String newOrgan = org.trim().toLowerCase();
+            if (newOrgan.equals(Organ.BONE.getName())) {
                 this.organs.remove(Organ.BONE);
-            } else if (org.trim().equals(Organ.LIVER.getName())) {
+            } else if (newOrgan.equals(Organ.LIVER.getName())) {
                 this.organs.remove(Organ.LIVER);
-            } else if (org.trim().equals(Organ.KIDNEY.getName())) {
+            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
                 this.organs.remove(Organ.KIDNEY);
-            } else if (org.trim().equals(Organ.PANCREAS.getName())) {
+            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
                 this.organs.remove(Organ.PANCREAS);
-            } else if (org.trim().equals(Organ.HEART.getName())) {
+            } else if (newOrgan.equals(Organ.HEART.getName())) {
                 this.organs.remove(Organ.HEART);
-            } else if (org.trim().equals(Organ.LUNG.getName())) {
+            } else if (newOrgan.equals(Organ.LUNG.getName())) {
                 this.organs.remove(Organ.LUNG);
-            } else if (org.trim().equals(Organ.INTESTINE.getName())) {
+            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
                 this.organs.remove(Organ.INTESTINE);
-            } else if (org.trim().equals(Organ.CORNEA.getName())) {
+            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
                 this.organs.remove(Organ.CORNEA);
-            } else if (org.trim().equals(Organ.MIDDLE_EAR.getName())) {
+            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
                 this.organs.remove(Organ.MIDDLE_EAR);
-            } else if (org.trim().equals(Organ.SKIN.getName())) {
+            } else if (newOrgan.equals(Organ.SKIN.getName())) {
                 this.organs.remove(Organ.SKIN);
-            } else if (org.trim().equals(Organ.BONE.getName())) {
+            } else if (newOrgan.equals(Organ.BONE.getName())) {
                 this.organs.remove(Organ.BONE);
-            } else if (org.trim().equals(Organ.BONE_MARROW.getName())) {
+            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
                 this.organs.remove(Organ.BONE_MARROW);
-            } else if (org.trim().equals(Organ.CONNECTIVE_TISSUE.getName())) {
+            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
                 this.organs.remove(Organ.CONNECTIVE_TISSUE);
             } else {
                 throw new IllegalArgumentException();
