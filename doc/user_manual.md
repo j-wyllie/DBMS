@@ -113,7 +113,8 @@ Updating a donor:
     donor given-names="Marion Mitchell" > donations
 
 #### Managing a donor's organ donation status
-The organs that are
+The organs that are available to be added to a donor are:
+
 `liver`
 `kidney`
 `pancreas`
@@ -127,8 +128,19 @@ The organs that are
 `bone-marrow`
 `connective-tissue`
 
+Please be explicit when adding organs that are available to be donated to a donor, explicitly use an
+ IRD number for best accuracy.
 
+    donor ird="123456789" > add-organ="heart"
 
+Multiple organs can be added by either space or comma delimitation
+
+    donor ird="123456789" > add-organ="liver,kidney"
+    
+To remove an organ from the opted donation list use the `remove-organ` command
+
+    donor ird="123456789" > remove-organ="liver"
+    
 #### Displaying all donor's
 You can display all donor profiles at any time with the following command:
 
