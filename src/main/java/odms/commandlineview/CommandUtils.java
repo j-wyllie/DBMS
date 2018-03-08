@@ -127,6 +127,10 @@ public class CommandUtils {
                     //view profiles.
                     return 10;
                 }
+                else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
+                    //view profiles.
+                    return 10;
+                }
                 else {
                     return 11;
                 }

@@ -49,6 +49,7 @@ public class CommandLine {
                     if (allDonors.size() > 0) {
                         for (Donor donor : allDonors) {
                             donor.viewAttributes();
+                            donor.viewOrgans();
                             System.out.println("\n");
                         }
                     }
