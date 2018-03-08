@@ -307,7 +307,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -325,7 +325,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -343,7 +343,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
@@ -373,7 +373,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -391,7 +391,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -409,7 +409,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
@@ -439,7 +439,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
 
                 if (donorList.size() > 0) {
@@ -457,7 +457,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
 
                 if (donorList.size() > 0) {
@@ -475,7 +475,7 @@ public class CommandUtils {
         {
             if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") == expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
 
-                String attr = expression.substring(expression.indexOf("\"") + 1, expression.indexOf(">") - 2);
+                String attr = expression.substring(expression.indexOf(" ") + 1, expression.indexOf(">") - 2);
                 ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
                 if (donorList.size() > 0) {
