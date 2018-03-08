@@ -53,7 +53,7 @@ public class Donor {
      * @param attributes the attributes given in the constructor
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    private void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
+    public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
             setGivenAttribute(parts);
@@ -65,7 +65,7 @@ public class Donor {
      * @param parts a list with an attribute and value
      * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
-    public void setGivenAttribute(String[] parts) throws IllegalArgumentException {
+    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 
@@ -188,7 +188,7 @@ public class Donor {
 
         System.out.println("IRD: " + irdNumber);
 
-        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm dd-MM-yyyy")));
+        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
     /**
@@ -232,7 +232,7 @@ public class Donor {
     private void generateUpdateInfo(String property) {
         LocalDateTime currentTime = LocalDateTime.now();
         lastUpdated = currentTime;
-        String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss dd-MM-yyyy"));
+        String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"));
         updateActions.add(output);
     }
 
