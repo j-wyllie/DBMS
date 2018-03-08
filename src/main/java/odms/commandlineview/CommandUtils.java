@@ -116,28 +116,6 @@ public class CommandUtils {
                 return  11;
             }
         }
-        else if (cmd.matches(cmdRegexOrganUpdate)) {
-
-            try {
-                if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("add-organ")) {
-                    //view profiles.
-                    return 9;
-                }
-                else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
-                    //view profiles.
-                    return 10;
-                }
-                else if (cmd.substring(cmd.indexOf('>') + 1, cmd.lastIndexOf('=')).trim().equals("remove-organ")) {
-                    //view profiles.
-                    return 10;
-                }
-                else {
-                    return 11;
-                }
-            } catch (Exception e) {
-                return 11;
-            }
-        }
         else {
             return 11;
         }

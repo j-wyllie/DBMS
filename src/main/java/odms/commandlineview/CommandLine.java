@@ -150,6 +150,7 @@ public class CommandLine {
                 case 13:
                     //delete a profile.
                     CommandUtils.DeleteDonorBySearchCriteria(currentDatabase, expression);
+                    System.out.println("Profile(s) successfully deleted.");
                     break;
 
                 case 14:
