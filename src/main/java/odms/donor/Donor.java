@@ -65,7 +65,7 @@ public class Donor {
      * @param parts a list with an attribute and value
      * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
-    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
+    public void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 

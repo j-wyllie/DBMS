@@ -70,8 +70,10 @@ public class CommandLine {
                         Donor newDonor = new Donor(attrArray);
                         currentDatabase.addDonor(newDonor);
                         System.out.println("Profile created.");
+
                     } catch (IllegalArgumentException e) {
                         System.out.println("Please enter the required attributes correctly.");
+
                     } catch (IrdNumberConflictException e) {
                         Integer errorIrdNumber = e.getIrdNumber();
                         Donor errorDonor = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
@@ -80,6 +82,7 @@ public class CommandLine {
                                 " already in use by donor " +
                                 errorDonor.getGivenNames() + " " +
                                 errorDonor.getLastNames());
+
                     } catch (Exception e) {
                         System.out.println("Please enter a valid command.");
                     }
@@ -111,6 +114,7 @@ public class CommandLine {
                     //search profiles.
                     System.out.println("Updating profiles...");
                     //carry out method call in command.
+                    CommandUtils.UpdateDonorsBySearchCriteria(currentDatabase, expression);
                     break;
 
                 case 9:
