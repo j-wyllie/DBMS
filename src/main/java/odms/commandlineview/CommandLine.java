@@ -25,12 +25,12 @@ public class CommandLine {
 
         while (!(expression.equals("quit")) && !(expression.equals("exit")))
         {
-            int cmd = CommandUtils.ValidateCommandType(expression);
+            Commands cmd = CommandUtils.ValidateCommandType(expression);
 
             switch (cmd) {
 
-                case 1:
-                    //print all profiles (print all).
+                case PRINTALL:
+                    // Print all profiles (print all).
                     ArrayList<Donor> allProfiles = currentDatabase.getDonors(false);
                     if (allProfiles.size() > 0) {
                         for (Donor profile : allProfiles) {
@@ -43,8 +43,8 @@ public class CommandLine {
                     }
                     break;
 
-                case 2:
-                    //print all profiles that are donors (print donors).
+                case PRINTDONORS:
+                    // Print all profiles that are donors (print donors).
                     ArrayList<Donor> allDonors = currentDatabase.getDonors(true);
                     if (allDonors.size() > 0) {
                         for (Donor donor : allDonors) {
@@ -58,13 +58,13 @@ public class CommandLine {
                     }
                     break;
 
-                case 3:
-                    //show available commands (help).
-                    CommandUtils.Help();
+                case HELP:
+                    // Show available commands (help).
+                    CommandUtils.help();
                     break;
 
-                case 4:
-                    //create a new profile.
+                case PROFILECREATE:
+                    // Create a new profile.
                     try {
                         String[] attrList = expression.substring(15).split("\"\\s");
                         ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
@@ -90,54 +90,54 @@ public class CommandLine {
 
                     break;
 
-                case 5:
-                    //search profiles (donor > view).
+                case PROFILEVIEW:
+                    // Search profiles (donor > view).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
                     CommandUtils.ViewAttrBySearchCriteria(currentDatabase, expression);
                     break;
 
-                case 6:
-                    //search profiles (donor > date-created).
+                case DONORDATECREATED:
+                    // Search profiles (donor > date-created).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
                     CommandUtils.ViewDateTimeCreatedBySearchCriteria(currentDatabase, expression);
                     break;
 
-                case 7:
-                    //search profiles (donor > donations).
+                case DONORDONATIONS:
+                    // Search profiles (donor > donations).
                     System.out.println("Searching for profiles...");
                     //carry out method call in command.
                     CommandUtils.ViewDonationsBySearchCriteria(currentDatabase, expression);
                     break;
 
-                case 8:
-                    //search profiles.
-                    //carry out method call in command.
+                case DONORUPDATE:
+                    // Search profiles.
+                    // Carry out method call in command.
                     CommandUtils.UpdateDonorsBySearchCriteria(currentDatabase, expression);
                     System.out.println("Profile(s) successfully updated.");
                     break;
 
-                case 9:
-                    //add organs to a donors profile.
-                    //carry out method call in command.
+                case ORGANADD:
+                    // Add organs to a donors profile.
+                    // Carry out method call in command.
                     CommandUtils.AddOrgansBySearchCriteria(currentDatabase, expression);
                     System.out.println("Organ successfully added to profile(s).");
                     break;
 
-                case 10:
-                    //remove organs from a donors profile.
-                    //carry out method call in command.
-                    CommandUtils.RemoveOrgansBySearchCriteria(currentDatabase, expression);
+                case ORGANREMOVE:
+                    // Remove organs from a donors profile.
+                    // Carry out method call in command.
+                    CommandUtils.removeOrgansBySearchCriteria(currentDatabase, expression);
                     System.out.println("Organ successfully removed from profile(s).");
                     break;
 
-                case 11:
+                case INVALID:
                     System.out.println("Please enter a valid command.");
                     break;
 
-                case 12:
-                    //import a file of profiles.
+                case IMPORT :
+                    // Import a file of profiles.
                     try {
                         String filepath = expression.substring(7).trim();
                         currentDatabase = DonorDataIO.loadData(filepath);
@@ -147,14 +147,14 @@ public class CommandLine {
                     }
                     break;
 
-                case 13:
-                    //delete a profile.
-                    CommandUtils.DeleteDonorBySearchCriteria(currentDatabase, expression);
+                case PROFILEDELETE:
+                    // Delete a profile.
+                    CommandUtils.deleteDonorBySearchCriteria(currentDatabase, expression);
                     System.out.println("Profile(s) successfully deleted.");
                     break;
 
-                case 14:
-                    // export donor database to file
+                case EXPORT:
+                    // Export donor database to file
                     try {
                         String filepath = expression.substring(7).trim();
                         DonorDataIO.saveDonors(currentDatabase, filepath);
@@ -162,9 +162,9 @@ public class CommandLine {
                         System.out.println("Please check file path.");
                     }
                     break;
-                case 15:
-                    //add to donations made by a donor.
-                    CommandUtils.AddDonationsMadeBySearchCriteria(currentDatabase, expression);
+                case ORGANDONATE:
+                    // Add to donations made by a donor.
+                    CommandUtils.addDonationsMadeBySearchCriteria(currentDatabase, expression);
                     System.out.println("Donation successfully added to profile.");
                     break;
             }
