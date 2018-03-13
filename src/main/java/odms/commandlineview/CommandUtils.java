@@ -34,7 +34,7 @@ public class CommandUtils {
             //print all profiles that are donors.
             return 2;
         }
-        else if (cmd.equals("help")) {
+        else if (cmd.contains("help")) {
             //Show available commands.
             return 3;
         }
@@ -745,5 +745,26 @@ public class CommandUtils {
 
         System.out.println("\nOrgans:");
         System.out.println("Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue");
+
+    }
+
+    public static void helpSpecific(String cmd)
+    {
+        String[] cmdArray = {"create-profile","view","date-created","donations","update","add-organ","remove-organ","print all","print donors","quit","attributes","organs"};
+        String[] definitionArray = {"\nCreate a new donor","\nView a donor","\nView the date a donor was created","\nView a donors past donations","\nUpdate a donors attributes",
+                "\nAdd an organ to donate","\nRemove an organ to donate","\nPrint all profiles ","\nPrint all donors ","\nClose the app ","The possible attriubtes are : given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region, ird",
+                "The possible organs are : Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue"};
+        String[] exampleArray = {"create-profile {attributes (given-names, last-names, dob and ird is required)}", "donor {attributes to search donors by} > view","donor {attributes to search donors by} > date-created","donor {attributes to search donors by} > donations","donor {attributes to search donors by} > {attributes to update}"
+        ,"donor {attributes to search donors by} > add-organ=\" {list of organs to donate} \"","donor {attributes to search donors by} > remove-organ=\" {list of organs to remove} \"","print all: ","print donors","quit"};
+        if(Arrays.asList(cmdArray).contains(cmd)) {
+            int position = Arrays.asList(cmdArray).indexOf(cmd);
+            System.out.println(definitionArray[position]);
+            if(position < 10) {
+                System.out.println("The command is entered in this format:");
+                System.out.println(exampleArray[position]);
+            }
+        } else {
+            System.out.println("Invalid command");
+        }
     }
 }

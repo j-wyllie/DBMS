@@ -60,7 +60,12 @@ public class CommandLine {
 
                 case 3:
                     //show available commands (help).
-                    CommandUtils.Help();
+                    if(expression.equals("help")) {
+                        CommandUtils.Help();
+                    } else {
+                        //shows details about specific command (help 'command')
+                        CommandUtils.helpSpecific(expression.substring(5));
+                    }
                     break;
 
                 case 4:
