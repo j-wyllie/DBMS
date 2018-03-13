@@ -20,7 +20,6 @@ public class CommandUtilsTest {
     private String deleteOrganTest;
     private String invalidCommandTest;
 
-
     @Before
     public void setup() {
         createProfileTest = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"";
@@ -36,22 +35,18 @@ public class CommandUtilsTest {
         invalidCommandTest = "This is not a command";
     }
 
-
     @Test
     public void TestCommandValidation() {
-
-        assertEquals(1, ValidateCommandType(printAllTest));
-        assertEquals(2, ValidateCommandType(printDonorsTest));
-        assertEquals(3, ValidateCommandType(helpTest));
-        assertEquals(4, ValidateCommandType(createProfileTest));
-        assertEquals(5, ValidateCommandType(viewDonorTest));
-        assertEquals(6, ValidateCommandType(viewDateCreatedTest));
-        assertEquals(7, ValidateCommandType(viewDonationsTest));
-        assertEquals(8, ValidateCommandType(updateDonorTest));
-        assertEquals(9, ValidateCommandType(addOrganTest));
-        assertEquals(10, ValidateCommandType(deleteOrganTest));
-        assertEquals(11, ValidateCommandType(invalidCommandTest));
-
-
+        assertEquals(Commands.PRINTALL, ValidateCommandType(printAllTest));
+        assertEquals(Commands.PRINTDONORS, ValidateCommandType(printDonorsTest));
+        assertEquals(Commands.HELP, ValidateCommandType(helpTest));
+        assertEquals(Commands.PROFILECREATE, ValidateCommandType(createProfileTest));
+        assertEquals(Commands.PROFILEVIEW, ValidateCommandType(viewDonorTest));
+        assertEquals(Commands.DONORDATECREATED, ValidateCommandType(viewDateCreatedTest));
+        assertEquals(Commands.DONORDONATIONS, ValidateCommandType(viewDonationsTest));
+        assertEquals(Commands.DONORUPDATE, ValidateCommandType(updateDonorTest));
+        assertEquals(Commands.ORGANADD, ValidateCommandType(addOrganTest));
+        assertEquals(Commands.ORGANREMOVE, ValidateCommandType(deleteOrganTest));
+        assertEquals(Commands.INVALID, ValidateCommandType(invalidCommandTest));
     }
 }
