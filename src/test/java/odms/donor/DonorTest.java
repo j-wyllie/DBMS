@@ -1,5 +1,6 @@
 package odms.donor;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -160,6 +161,38 @@ public class DonorTest {
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
+        testDonor.addDonations(someOrgans);
+
+        Set<Organ> expected = new HashSet<>();
+        expected.add(Organ.BONE);
+        expected.add(Organ.HEART);
+        expected.add(Organ.CORNEA);
+
+        assertEquals(expected, testDonor.getDonatedOrgans());
+    }
+
+    /**
+     * Test the ability to add an organ to the list of organs that the donor can donate
+     */
+    @Test
+    public void testAddOrgans() {
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        Set<String> someOrgans = new HashSet<>();
+        someOrgans.add("bone");
+        someOrgans.add("heart");
+        someOrgans.add("cornea");
         testDonor.addOrgans(someOrgans);
 
         Set<Organ> expected = new HashSet<>();
@@ -192,6 +225,42 @@ public class DonorTest {
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
+        testDonor.addDonations(someOrgans);
+
+        Set<String> removedOrgans = new HashSet<>();
+        removedOrgans.add("bone");
+        removedOrgans.add("heart");
+        testDonor.removeDonoations(removedOrgans);
+
+        Set<Organ> expected = new HashSet<>();
+        expected.add(Organ.CORNEA);
+
+        assertEquals(testDonor.getDonatedOrgans(), expected);
+    }
+
+    /*
+     * Tests the ability to remove an organ from the list of organs that the
+     * donor has donated
+     */
+    @Test
+    public void testRemoveOrgans() {
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        Set<String> someOrgans = new HashSet<>();
+        someOrgans.add("bone");
+        someOrgans.add("heart");
+        someOrgans.add("cornea");
         testDonor.addOrgans(someOrgans);
 
         Set<String> removedOrgans = new HashSet<>();
@@ -202,13 +271,13 @@ public class DonorTest {
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.CORNEA);
 
-        assertEquals(testDonor.getOrgans(), new HashSet<>(Arrays.asList(Organ.CORNEA)));
+        assertEquals(testDonor.getOrgans(), expected);
     }
 
     /**
-     * Test to add check that an existing organ can't be added
+     * Tests that when an existing organ is added it does not duplicate it
      */
-    /*@Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddExistingOrgan() {
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
@@ -228,7 +297,7 @@ public class DonorTest {
 
         testDonor.addOrgans(someOrgans);
         testDonor.addOrgans(someOrgans);
-    }*/
+    }
 
     /**
      * Check that the property changes are recorded
@@ -249,5 +318,31 @@ public class DonorTest {
         }
 
         assertEquals(testDonor.getUpdateActions().size(), 4);
+    }
+
+    /**
+     * Testing the bmi to check that it is accurate
+     */
+    @Test
+    public void testCalculateBMI() {
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+        donorAttr.add("weight=\"72.0\"");
+        donorAttr.add("height=\"175.0\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        double bmi = testDonor.calculateBMI();
+        assertEquals(df.format(bmi), "23.51");
     }
 }
