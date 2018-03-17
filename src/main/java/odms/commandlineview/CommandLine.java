@@ -4,13 +4,18 @@ import java.util.Arrays;
 import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
 import odms.data.IrdNumberConflictException;
+import odms.data.UserDatabase;
 import odms.donor.Donor;
 import java.util.ArrayList;
 import java.util.Scanner;
+import odms.user.User;
+import odms.user.UserType;
 
 public class CommandLine {
 
     private DonorDatabase currentDatabase;
+
+    private UserDatabase userDatabase = new UserDatabase();
 
     public CommandLine (DonorDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
@@ -20,6 +25,10 @@ public class CommandLine {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Starting Organ Donor Management System...");
         System.out.println("\nPlease enter your commands below:");
+        if(userDatabase.getClinician(0) == null){
+            User defaultClinician = new User(UserType.CLINICIAN, "default", "default");
+            userDatabase.addClinician(defaultClinician);
+        }
 
         String expression = scanner.nextLine().trim();
 
