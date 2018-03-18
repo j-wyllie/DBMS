@@ -71,6 +71,11 @@ public class CommandLine {
         }
     }
 
+    /**
+     * Take the input from the console commands and process them accordingly.
+     *
+     * @param input commands entered from console
+     */
     private void processInput(ArrayList<String> input) {
         Commands inputCommand = validateCommandType(String.join(" ", input).trim());
         String inputExpression = String.join(" ", input).trim();
@@ -140,41 +145,35 @@ public class CommandLine {
             case PROFILEVIEW:
                 // Search profiles (donor > view).
                 System.out.println("Searching for profiles...");
-                //carry out method call in command.
                 CommandUtils.viewAttrBySearch(currentDatabase, inputExpression);
                 break;
 
             case DONORDATECREATED:
                 // Search profiles (donor > date-created).
                 System.out.println("Searching for profiles...");
-                //carry out method call in command.
                 CommandUtils.viewDateTimeCreatedBySearch(currentDatabase, inputExpression);
                 break;
 
             case DONORDONATIONS:
                 // Search profiles (donor > donations).
                 System.out.println("Searching for profiles...");
-                //carry out method call in command.
                 CommandUtils.viewDonationsBySearch(currentDatabase, inputExpression);
                 break;
 
             case DONORUPDATE:
                 // Search profiles.
-                // Carry out method call in command.
                 CommandUtils.updateProfilesBySearch(currentDatabase, inputExpression);
                 System.out.println("Profile(s) successfully updated.");
                 break;
 
             case ORGANADD:
                 // Add organs to a donors profile.
-                // Carry out method call in command.
                 CommandUtils.addOrgansBySearch(currentDatabase, inputExpression);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case ORGANREMOVE:
                 // Remove organs from a donors profile.
-                // Carry out method call in command.
                 CommandUtils.removeOrgansBySearch(currentDatabase, inputExpression);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;

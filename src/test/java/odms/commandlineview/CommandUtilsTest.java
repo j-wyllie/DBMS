@@ -3,6 +3,9 @@ package odms.commandlineview;
 import static odms.commandlineview.CommandUtils.*;
 import static org.junit.Assert.assertEquals;
 
+import odms.data.DonorDataIO;
+import odms.data.DonorDatabase;
+import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +39,7 @@ public class CommandUtilsTest {
     }
 
     @Test
-    public void TestCommandValidation() {
+    public void testCommandValidation() {
         assertEquals(Commands.PRINTALL, validateCommandType(printAllTest));
         assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest));
         assertEquals(Commands.HELP, validateCommandType(helpTest));
@@ -49,4 +52,18 @@ public class CommandUtilsTest {
         assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest));
         assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest));
     }
+
+    @Test
+    public void testViewAttrBySearch() {
+        DonorDatabase testDb = DonorDataIO.loadData("example/example.json");
+
+//        CommandUtils.viewAttrBySearch();
+    }
+
+    @Test
+    public void testArgumentCompleter() {
+        ArgumentCompleter completer = Commands.commandAutoCompletion();
+        assertEquals(completer.getClass(), ArgumentCompleter.class);
+    }
+
 }
