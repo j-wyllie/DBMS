@@ -37,16 +37,16 @@ public class CommandUtilsTest {
 
     @Test
     public void TestCommandValidation() {
-        assertEquals(Commands.PRINTALL, ValidateCommandType(printAllTest));
-        assertEquals(Commands.PRINTDONORS, ValidateCommandType(printDonorsTest));
-        assertEquals(Commands.HELP, ValidateCommandType(helpTest));
-        assertEquals(Commands.PROFILECREATE, ValidateCommandType(createProfileTest));
-        assertEquals(Commands.PROFILEVIEW, ValidateCommandType(viewDonorTest));
-        assertEquals(Commands.DONORDATECREATED, ValidateCommandType(viewDateCreatedTest));
-        assertEquals(Commands.DONORDONATIONS, ValidateCommandType(viewDonationsTest));
-        assertEquals(Commands.DONORUPDATE, ValidateCommandType(updateDonorTest));
-        assertEquals(Commands.ORGANADD, ValidateCommandType(addOrganTest));
-        assertEquals(Commands.ORGANREMOVE, ValidateCommandType(deleteOrganTest));
-        assertEquals(Commands.INVALID, ValidateCommandType(invalidCommandTest));
+        assertEquals(Commands.PRINTALL, validateCommandType(printAllTest));
+        assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest));
+        assertEquals(Commands.HELP, validateCommandType(helpTest));
+        assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest));
+        assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest));
+        assertEquals(Commands.DONORDATECREATED, validateCommandType(viewDateCreatedTest));
+        assertEquals(Commands.DONORDONATIONS, validateCommandType(viewDonationsTest));
+        assertEquals(Commands.DONORUPDATE, validateCommandType(updateDonorTest));
+        assertEquals(Commands.ORGANADD, validateCommandType(addOrganTest));
+        assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest));
+        assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest));
     }
 }
