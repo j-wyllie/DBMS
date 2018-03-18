@@ -1,8 +1,8 @@
 package odms.user;
 
-import odms.donor.Donor;
 
-public class User extends Donor {
+
+public class User {
 
     private UserType userType;
     private String name;

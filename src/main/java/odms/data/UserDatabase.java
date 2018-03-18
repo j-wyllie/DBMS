@@ -1,7 +1,6 @@
 package odms.data;
 
 import java.util.HashMap;
-import odms.donor.Donor;
 import odms.user.User;
 
 public class UserDatabase {
@@ -18,11 +17,16 @@ public class UserDatabase {
         return userDb.get(id);
     }
 
+    /**
+     * Determine unique ID for donor and add the donor the the database
+     *
+     * @param user new user object
+     */
     public void addClinician(User user){
         lastID += 1;
+        System.out.println(lastID);
         user.setStaffId(lastID);
 
         userDb.put(lastID, user);
     }
-
 }

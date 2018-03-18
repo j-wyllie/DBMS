@@ -4,6 +4,7 @@ import java.util.Arrays;
 import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
 import odms.data.IrdNumberConflictException;
+import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import odms.donor.Donor;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class CommandLine {
 
     private DonorDatabase currentDatabase;
 
-    private UserDatabase userDatabase = new UserDatabase();
+    private UserDatabase userDatabase;
 
     public CommandLine (DonorDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
@@ -23,12 +24,20 @@ public class CommandLine {
 
     public void beginCommandEntry() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Starting Organ Donor Management System...");
-        System.out.println("\nPlease enter your commands below:");
-        if(userDatabase.getClinician(0) == null){
+        try {
+            userDatabase = UserDataIO.loadData();
+        } catch (NullPointerException e){
             User defaultClinician = new User(UserType.CLINICIAN, "default", "default");
+            System.out.print(defaultClinician.getName());
             userDatabase.addClinician(defaultClinician);
         }
+
+
+        System.out.println("Starting Organ Donor Management System...");
+        System.out.println("\nPlease enter your commands below:");
+
+
+
 
         String expression = scanner.nextLine().trim();
 
