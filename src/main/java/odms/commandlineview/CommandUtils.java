@@ -15,6 +15,7 @@ public class CommandUtils {
     private static final String cmdRegexCreate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                                                  + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                                                  + "[\"]))*";
+
     private static final String cmdRegexDonorView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                                                     + "([a-z]+)([-]([a-z]+))?)";
@@ -39,29 +40,37 @@ public class CommandUtils {
      * @param cmd the command being validated
      * @return the enum Commands appropriate value
      */
-    public static Commands validateCommandType(String cmd) {
+    public static Commands validateCommandType(ArrayList<String> cmd) {
 
         try {
-            switch (cmd.toLowerCase()) {
-                case "print all":
-                    return Commands.PRINTALL;
-                case "print donors":
-                    return Commands.PRINTDONORS;
+            switch (cmd.get(0).toLowerCase()) {
+                case "print":
+                    switch (cmd.get(1).toLowerCase()) {
+                        case "all":
+                            return Commands.PRINTALL;
+                        case "donors":
+                            return Commands.PRINTDONORS;
+                    }
+                    break;
                 case "help":
                     return Commands.HELP;
                 case "import":
                     return Commands.IMPORT;
                 case "export":
-                    return Commands.EXPORT;
+                    if (cmd.size() > 1) {
+                        return Commands.EXPORT;
+                    }
+                    break;
                 default:
-                    if (cmd.matches(cmdRegexCreate)) {
-                        if (cmd.substring(0, 14).equals("create-profile")) {
+                    String command = cmd.get(0).toLowerCase();
+                    if (command.matches(cmdRegexCreate)) {
+                        if (command.substring(0, 14).equals("create-profile")) {
                             return Commands.PROFILECREATE;
                         }
-                    } else if (cmd.matches(cmdRegexDonorView)) {
-                        if (cmd.substring(0, 5).equals("donor")) {
+                    } else if (command.matches(cmdRegexDonorView)) {
+                        if (command.substring(0, 5).equals("donor")) {
 
-                            switch (cmd.substring(cmd.indexOf('>') + 1).trim()) {
+                            switch (command.substring(command.indexOf('>') + 1).trim()) {
                                 case "view":
                                     return Commands.PROFILEVIEW;
                                 case "date-created":
@@ -73,11 +82,11 @@ public class CommandUtils {
                             }
                         }
 
-                    } else if (cmd.matches(cmdRegexOrganUpdate) && (cmd.contains("organ") ||
-                        cmd.contains("donate"))) {
+                    } else if (command.matches(cmdRegexOrganUpdate) && (command.contains("organ") ||
+                            command.contains("donate"))) {
 
-                        switch (cmd.substring(cmd.indexOf('>') + 1,
-                            cmd.lastIndexOf('=')).trim()) {
+                        switch (command.substring(cmd.indexOf('>') + 1,
+                                command.lastIndexOf('=')).trim()) {
                             case "add-organ":
                                 return Commands.ORGANADD;
                             case "remove-organ":
@@ -86,9 +95,9 @@ public class CommandUtils {
                                 return Commands.ORGANDONATE;
                         }
 
-                    } else if (cmd.matches(cmdRegexDonorUpdate)) {
+                    } else if (command.matches(cmdRegexDonorUpdate)) {
 
-                        if (cmd.substring(0, 5).equals("donor")) {
+                        if (command.substring(0, 5).equals("donor")) {
                             return Commands.DONORUPDATE;
                         }
                     }

@@ -31,8 +31,7 @@ public class DonorDataIO {
             System.out.println("File " + file.getName() + " exported successfully!");
 
         } catch (IOException e) {
-            System.out.println("IO exception, please check the specified file");
-            System.out.println("File requested: " + path);
+            System.out.println("IO exception, please check the specified " + path);
         }
     }
 
@@ -42,54 +41,45 @@ public class DonorDataIO {
      * @param file filename or path
      * @return String of contents of provided file
      */
-    private static String fileToString(File file) {
-        StringBuilder fileBuffer = new StringBuilder();
+    private static String fileToString(File file) throws FileNotFoundException, IOException {
         String lineBuffer;
 
-        try {
-            BufferedReader readFile = new BufferedReader(new FileReader(file));
+        StringBuilder fileBuffer = new StringBuilder();
+        BufferedReader readFile = new BufferedReader(new FileReader(file));
 
-            while ((lineBuffer = readFile.readLine()) != null) {
-                fileBuffer.append(lineBuffer);
-            }
-
-            readFile.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            System.out.println("File requested: " + file);
-        } catch (IOException e) {
-            System.out.println("IO exception, please check the specified file");
-            System.out.println("File requested: " + file);
+        while ((lineBuffer = readFile.readLine()) != null) {
+            fileBuffer.append(lineBuffer);
         }
 
-        return fileBuffer.toString();
+        readFile.close();
 
+        return fileBuffer.toString();
     }
 
     /**
      * Load the specified DonorDatabase JSON file instantiating a DonorDatabase Object.
      *
-     * @param path specified DonorDatabase JSON to load
+     * @param filepath specified DonorDatabase JSON to load
      * @return DonorDatabase
      */
-    public static DonorDatabase loadData(String path) {
-        File file = new File(path);
+    public static DonorDatabase loadData(String filepath) {
+        File file = new File(filepath);
         DonorDatabase donorDb = new DonorDatabase();
 
         try {
             Gson gson = new Gson();
 
-            return gson.fromJson(
+            donorDb = gson.fromJson(
                 DonorDataIO.fileToString(file),
                 DonorDatabase.class
             );
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("File " + filepath + " imported successfully!");
+        } catch (FileNotFoundException e) {
+            System.out.println("File '" + file + "' not found");
+        } catch (IOException e) {
+            System.out.println("IO exception, please check " + file);
         }
 
         return donorDb;
     }
-
 }

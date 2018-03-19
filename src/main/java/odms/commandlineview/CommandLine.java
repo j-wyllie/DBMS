@@ -32,7 +32,7 @@ public class CommandLine {
                 .terminal(terminal)
                 .appName("ODMS")
                 .completer(Commands.commandAutoCompletion())
-//                .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
+                // .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
                 .history(new DefaultHistory())
                 .parser(new DefaultParser())
                 .build();
@@ -77,10 +77,19 @@ public class CommandLine {
      * @param input commands entered from console
      */
     private void processInput(ArrayList<String> input) {
-        Commands inputCommand = validateCommandType(String.join(" ", input).trim());
+        Commands inputCommand = validateCommandType(input);
         String inputExpression = String.join(" ", input).trim();
 
         switch (inputCommand) {
+            case INVALID:
+                System.out.println("Please enter a valid command.");
+                break;
+
+            case HELP:
+                // Show available commands (help).
+                CommandUtils.help();
+                break;
+
             case PRINTALL:
                 // Print all profiles (print all).
                 ArrayList<Donor> allProfiles = currentDatabase.getDonors(false);
@@ -110,9 +119,26 @@ public class CommandLine {
                 }
                 break;
 
-            case HELP:
-                // Show available commands (help).
-                CommandUtils.help();
+            case EXPORT:
+                // Export donor database to file
+                if (input.size() == 2) {
+                    String filepath = input.get(1);
+                    DonorDataIO.saveDonors(currentDatabase, filepath);
+                } else {
+                    System.out.println("Error: Invalid arguments. Expected: 1, "
+                            + "Found: " + (input.size() - 1));
+                }
+                break;
+
+            case IMPORT :
+                // Import a file of profiles.
+                if (input.size() == 2) {
+                    String filepath = input.get(1);
+                    currentDatabase = DonorDataIO.loadData(filepath);
+                } else {
+                    System.out.println("Error: Invalid arguments. Expected: 1, "
+                            + "Found: " + (input.size() - 1));
+                }
                 break;
 
             case PROFILECREATE:
@@ -140,6 +166,12 @@ public class CommandLine {
                     System.out.println("Please enter a valid command.");
                 }
 
+                break;
+
+            case PROFILEDELETE:
+                // Delete a profile.
+                CommandUtils.deleteDonorBySearch(currentDatabase, inputExpression);
+                System.out.println("Profile(s) successfully deleted.");
                 break;
 
             case PROFILEVIEW:
@@ -178,36 +210,6 @@ public class CommandLine {
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 
-            case INVALID:
-                System.out.println("Please enter a valid command.");
-                break;
-
-            case IMPORT :
-                // Import a file of profiles.
-                try {
-                    String filepath = inputExpression.substring(7).trim();
-                    currentDatabase = DonorDataIO.loadData(filepath);
-                    System.out.println("File " + filepath + " imported successfully!");
-                } catch (Exception e) {
-                    System.out.println("Please enter the correct file path.");
-                }
-                break;
-
-            case PROFILEDELETE:
-                // Delete a profile.
-                CommandUtils.deleteDonorBySearch(currentDatabase, inputExpression);
-                System.out.println("Profile(s) successfully deleted.");
-                break;
-
-            case EXPORT:
-                // Export donor database to file
-                try {
-                    String filepath = inputExpression.substring(7).trim();
-                    DonorDataIO.saveDonors(currentDatabase, filepath);
-                } catch (Exception e) {
-                    System.out.println("Please check file path.");
-                }
-                break;
             case ORGANDONATE:
                 // Add to donations made by a donor.
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, inputExpression);

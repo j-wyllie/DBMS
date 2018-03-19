@@ -3,7 +3,7 @@
     <groupId>seng302</groupId>
     <artifactId>odms</artifactId>
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.2</version>
     <name>Organ Donor Management System</name>
     <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-4</url>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
-            <version>3.6.2</version>
+            <version>3.6.1</version>
         </dependency>
 
     </dependencies>
