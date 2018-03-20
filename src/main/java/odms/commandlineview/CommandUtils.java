@@ -136,7 +136,7 @@ public class CommandUtils {
     }
 
     /**
-     * View date & time of profile creation.
+     * View date and time of profile creation.
      *
      * @param currentDatabase Database reference
      * @param expression Search expression

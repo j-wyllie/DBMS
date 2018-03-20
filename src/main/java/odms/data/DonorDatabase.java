@@ -26,6 +26,7 @@ public class DonorDatabase {
      * Determine unique ID for donor and add the donor to the database
      *
      * @param donor new donor object
+     * @throws IrdNumberConflictException IRD number already in use by another profile
      */
     public void addDonor(Donor donor) throws IrdNumberConflictException {
         lastID += 1;
