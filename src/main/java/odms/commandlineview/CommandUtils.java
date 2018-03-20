@@ -62,7 +62,10 @@ public class CommandUtils {
                     }
                     break;
                 default:
-                    String command = cmd.get(0).toLowerCase();
+                    // Force casing of command
+                    String command = cmd.remove(0).toLowerCase();
+                    command = command + " " + String.join(" ", cmd);
+
                     if (command.matches(cmdRegexCreate)) {
                         if (command.substring(0, 14).equals("create-profile")) {
                             return Commands.PROFILECREATE;
@@ -85,7 +88,7 @@ public class CommandUtils {
                     } else if (command.matches(cmdRegexOrganUpdate) && (command.contains("organ") ||
                             command.contains("donate"))) {
 
-                        switch (command.substring(cmd.indexOf('>') + 1,
+                        switch (command.substring(command.indexOf('>') + 1,
                                 command.lastIndexOf('=')).trim()) {
                             case "add-organ":
                                 return Commands.ORGANADD;

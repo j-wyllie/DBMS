@@ -9,33 +9,36 @@ import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CommandUtilsTest {
 
-    private String createProfileTest;
-    private String viewDonorTest;
-    private String viewDonationsTest;
-    private String viewDateCreatedTest;
-    private String updateDonorTest;
-    private String printAllTest;
-    private String printDonorsTest;
-    private String helpTest;
-    private String addOrganTest;
-    private String deleteOrganTest;
-    private String invalidCommandTest;
+    private ArrayList<String> createProfileTest;
+    private ArrayList<String> viewDonorTest;
+    private ArrayList<String> viewDonationsTest;
+    private ArrayList<String> viewDateCreatedTest;
+    private ArrayList<String> updateDonorTest;
+    private ArrayList<String> printAllTest;
+    private ArrayList<String> printDonorsTest;
+    private ArrayList<String>  helpTest;
+    private ArrayList<String> addOrganTest;
+    private ArrayList<String> deleteOrganTest;
+    private ArrayList<String> invalidCommandTest;
 
     @Before
     public void setup() {
-        createProfileTest = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"";
-        viewDonorTest = "donor dob=\"03-03-1998\" > view";
-        viewDonationsTest = "donor dob=\"03-03-1998\" > donations";
-        viewDateCreatedTest = "donor dob=\"03-03-1998\" > date-created";
-        updateDonorTest = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
-        printAllTest = "print all";
-        printDonorsTest = "print donors";
-        helpTest = "help";
-        addOrganTest = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
-        deleteOrganTest = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
-        invalidCommandTest = "This is not a command";
+        createProfileTest = new ArrayList<>(Arrays.asList("create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"".split(" ")));
+        viewDonorTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > view".split(" ")));
+        viewDonationsTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > donations".split(" ")));
+        viewDateCreatedTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > date-created".split(" ")));
+        updateDonorTest = new ArrayList<>(Arrays.asList("donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"".split(" ")));
+        printAllTest = new ArrayList<>(Arrays.asList("print all".split(" ")));
+        printDonorsTest = new ArrayList<>(Arrays.asList("print donors".split(" ")));
+        helpTest = new ArrayList<>(Arrays.asList("help".split(" ")));
+        addOrganTest = new ArrayList<>(Arrays.asList("donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"".split(" ")));
+        deleteOrganTest = new ArrayList<>(Arrays.asList("donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"".split(" ")));
+        invalidCommandTest = new ArrayList<>(Arrays.asList("This is not a command".split(" ")));
     }
 
     @Test
