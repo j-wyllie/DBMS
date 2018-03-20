@@ -345,4 +345,102 @@ public class DonorTest {
         double bmi = testDonor.calculateBMI();
         assertEquals(df.format(bmi), "23.51");
     }
+
+    /**
+     * Tests the calculated age if the user is alive
+     * Also implicitly tests the calculation after the users birthday
+     * This test will depreciate in ~2000 years
+     * God forbid anyone finds this in ~2000 years
+     */
+    @Test
+    public void testCalculateAgeAlive() {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        int age = testDonor.calculateAge();
+        int year = LocalDate.now().getYear() - 2000;
+        assertEquals(age, year);
+    }
+
+
+    /**
+     * Tests the calculated age if the user is dead
+     * Implicitly tests the calculation before the users birthday
+     */
+    @Test
+    public void testCalculateAgeDead() {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"02-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        int age = testDonor.calculateAge();
+        assertEquals(age, 49);
+    }
+
+    /**
+     * Tests the calculated age if it is the donors birthday
+     */
+    @Test
+    public void testCalculateAgeOnBirthday() {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        int age = testDonor.calculateAge();
+        assertEquals(age, 50);
+    }
+
+
+    @Test
+    public void testGetBloodPressure() {
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.setBloodPressureSystolic(120);
+        testDonor.setBloodPressureDiastolic(80);
+
+        String bloodPressure = testDonor.getBloodPressure();
+        assertEquals(bloodPressure, "120/80");
+    }
 }

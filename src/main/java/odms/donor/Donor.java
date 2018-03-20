@@ -1,6 +1,7 @@
 package odms.donor;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
+import java.time.Period;
 import java.util.Collections;
 
 import java.time.LocalDate;
@@ -25,7 +26,8 @@ public class Donor {
 
     private Boolean smoker;
     private String alcoholComsumption;
-    private String bloodPressure;
+    private Integer bloodPressureSystolic;
+    private Integer bloodPressureDiastolic;
     private ArrayList<String> chronicDiseases = new ArrayList<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
@@ -272,8 +274,26 @@ public class Donor {
         }
     }
 
+    /**
+     * Calculates and returns the donors bmi
+     * @return BMI
+     */
     public double calculateBMI() {
         return this.weight / ((this.height / 100) * (this.height / 100));
+    }
+
+    /**
+     * Calculate the donors age if they are alive and their age at death if they are dead
+     * If the age is calculated on the users birthday they are the age they are turning that day
+     * e.g. if it's your 20th birthday you are 20
+     * @return donor age
+     */
+    public int calculateAge() {
+        if (dateOfDeath == null) {
+            return Period.between(dateOfBirth, LocalDate.now()).getYears();
+        } else {
+            return Period.between(dateOfBirth, dateOfDeath).getYears();
+        }
     }
 
 
@@ -432,12 +452,16 @@ public class Donor {
         this.alcoholComsumption = alcoholComsumption;
     }
 
-    public String getBloodPressure() {
-        return bloodPressure;
+    public void setBloodPressureSystolic(Integer bloodPressureSystolic) {
+        this.bloodPressureSystolic = bloodPressureSystolic;
     }
 
-    public void setBloodPressure(String bloodPressure) {
-        this.bloodPressure = bloodPressure;
+    public void setBloodPressureDiastolic(Integer bloodPressureDiastolic) {
+        this.bloodPressureDiastolic = bloodPressureDiastolic;
+    }
+
+    public String getBloodPressure() {
+        return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
 
     public ArrayList<String> getChronicDiseases() {
