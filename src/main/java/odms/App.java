@@ -11,7 +11,7 @@ public class App
     public static void main( String[] args ) {
 
         try {
-            commandLine.beginCommandEntry();
+            commandLine.initialiseConsole();
         } catch (Exception e) {
             e.printStackTrace();
         }
