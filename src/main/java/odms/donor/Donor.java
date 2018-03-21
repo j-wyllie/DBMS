@@ -1,5 +1,7 @@
 package odms.donor;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+import java.time.Period;
 import java.util.Collections;
 
 import java.time.LocalDate;
@@ -21,12 +23,21 @@ public class Donor {
     private String bloodType;
     private String address;
     private String region;
+    private Boolean registered;
+
+    private Boolean smoker;
+    private String alcoholComsumption;
+    private Integer bloodPressureSystolic;
+    private Integer bloodPressureDiastolic;
+    private ArrayList<String> chronicDiseases = new ArrayList<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
 
+    private String phone;
+    private String email;
 
     private Integer irdNumber;
     private LocalDateTime timeOfCreation;
@@ -39,7 +50,7 @@ public class Donor {
 
     }
     /**
-     * Instantiates the Donor class
+     * Instantiates the Donor class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
@@ -49,6 +60,30 @@ public class Donor {
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
+        timeOfCreation = LocalDateTime.now();
+    }
+
+    /**
+     * Instantiates the basic Donor class with a raw input of values
+     * @param givenNames Donor's given names as String
+     * @param lastNames Donor's last names as String
+     * @param dob Donor's date of birth as a string
+     * @param irdNumber Donor's IRD number as Integer
+     */
+    public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
+        // Build an arraylist so I can reuse the
+        ArrayList<String> attr = new ArrayList<>();
+        attr.add("given-names=\"" + givenNames + "\"");
+        attr.add("last-names=\"" + lastNames + "\"");
+        attr.add("ird=\"" + irdNumber + "\"");
+        attr.add("dob=\"" + dob + "\"");
+
+        setExtraAttributes(attr);
+
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+            throw new IllegalArgumentException();
+        }
+
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -228,41 +263,18 @@ public class Donor {
      * @param organs a set of organs they want to donate
      */
     public void addOrgans(Set<String> organs) throws IllegalArgumentException {
-        if (Collections.disjoint(organs, this.organs)) {
-            generateUpdateInfo("organs");
+        generateUpdateInfo("donatedOrgans");
 
-            for (String org : organs) {
-                String newOrgan = org.trim().toLowerCase();
-                if (newOrgan.equals(Organ.BONE.getName())) {
-                    this.organs.add(Organ.BONE);
-                } else if (newOrgan.equals(Organ.LIVER.getName())) {
-                    this.organs.add(Organ.LIVER);
-                } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
-                    this.organs.add(Organ.KIDNEY);
-                } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
-                    this.organs.add(Organ.PANCREAS);
-                } else if (newOrgan.equals(Organ.HEART.getName())) {
-                    this.organs.add(Organ.HEART);
-                } else if (newOrgan.equals(Organ.LUNG.getName())) {
-                    this.organs.add(Organ.LUNG);
-                } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
-                    this.organs.add(Organ.INTESTINE);
-                } else if (newOrgan.equals(Organ.CORNEA.getName())) {
-                    this.organs.add(Organ.CORNEA);
-                } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
-                    this.organs.add(Organ.MIDDLE_EAR);
-                } else if (newOrgan.equals(Organ.SKIN.getName())) {
-                    this.organs.add(Organ.SKIN);
-                } else if (newOrgan.equals(Organ.BONE.getName())) {
-                    this.organs.add(Organ.BONE);
-                } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
-                    this.organs.add(Organ.BONE_MARROW);
-                } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
-                    this.organs.add(Organ.CONNECTIVE_TISSUE);
-                } else {
-                    throw new IllegalArgumentException();
-                }
-            }
+        Set<Organ> newOrgans = new HashSet<>();
+
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+        }
+
+        if (Collections.disjoint(newOrgans, this.organs) && registered) {
+            this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
@@ -276,36 +288,22 @@ public class Donor {
     public void addDonations(Set<String> organs) {
         generateUpdateInfo("donatedOrgans");
         for (String org : organs) {
-            String newOrgan = org.trim().toLowerCase();
-            if (newOrgan.equals(Organ.BONE.getName())) {
-                this.donatedOrgans.add(Organ.BONE);
-            } else if (newOrgan.equals(Organ.LIVER.getName())) {
-                this.donatedOrgans.add(Organ.LIVER);
-            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
-                this.donatedOrgans.add(Organ.KIDNEY);
-            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
-                this.donatedOrgans.add(Organ.PANCREAS);
-            } else if (newOrgan.equals(Organ.HEART.getName())) {
-                this.donatedOrgans.add(Organ.HEART);
-            } else if (newOrgan.equals(Organ.LUNG.getName())) {
-                this.donatedOrgans.add(Organ.LUNG);
-            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
-                this.donatedOrgans.add(Organ.INTESTINE);
-            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
-                this.donatedOrgans.add(Organ.CORNEA);
-            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
-                this.donatedOrgans.add(Organ.MIDDLE_EAR);
-            } else if (newOrgan.equals(Organ.SKIN.getName())) {
-                this.donatedOrgans.add(Organ.SKIN);
-            } else if (newOrgan.equals(Organ.BONE.getName())) {
-                this.donatedOrgans.add(Organ.BONE);
-            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
-                this.donatedOrgans.add(Organ.BONE_MARROW);
-            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
-                this.donatedOrgans.add(Organ.CONNECTIVE_TISSUE);
-            } else {
-                throw new IllegalArgumentException();
-            }
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            this.donatedOrgans.add(organ);
+        }
+    }
+
+    /**
+     * Remove a set of organs from the list of organs that the donor has donated
+     * @param organs a set of organs to remove from the list
+     */
+    public void removeDonoations(Set<String> organs) {
+        generateUpdateInfo("donatedOrgans");
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            this.donatedOrgans.remove(organ);
         }
     }
 
@@ -351,37 +349,41 @@ public class Donor {
      */
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("organs");
+
+        Set<Organ> newOrgans = new HashSet<>();
+
         for (String org : organs) {
-            String newOrgan = org.trim().toLowerCase();
-            if (newOrgan.equals(Organ.BONE.getName())) {
-                this.organs.remove(Organ.BONE);
-            } else if (newOrgan.equals(Organ.LIVER.getName())) {
-                this.organs.remove(Organ.LIVER);
-            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
-                this.organs.remove(Organ.KIDNEY);
-            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
-                this.organs.remove(Organ.PANCREAS);
-            } else if (newOrgan.equals(Organ.HEART.getName())) {
-                this.organs.remove(Organ.HEART);
-            } else if (newOrgan.equals(Organ.LUNG.getName())) {
-                this.organs.remove(Organ.LUNG);
-            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
-                this.organs.remove(Organ.INTESTINE);
-            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
-                this.organs.remove(Organ.CORNEA);
-            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
-                this.organs.remove(Organ.MIDDLE_EAR);
-            } else if (newOrgan.equals(Organ.SKIN.getName())) {
-                this.organs.remove(Organ.SKIN);
-            } else if (newOrgan.equals(Organ.BONE.getName())) {
-                this.organs.remove(Organ.BONE);
-            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
-                this.organs.remove(Organ.BONE_MARROW);
-            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
-                this.organs.remove(Organ.CONNECTIVE_TISSUE);
-            } else {
-                throw new IllegalArgumentException();
-            }
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+        }
+
+        if (!Collections.disjoint(newOrgans, this.organs)) {
+            this.organs.removeAll(newOrgans);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Calculates and returns the donors bmi
+     * @return BMI
+     */
+    public double calculateBMI() {
+        return this.weight / ((this.height / 100) * (this.height / 100));
+    }
+
+    /**
+     * Calculate the donors age if they are alive and their age at death if they are dead
+     * If the age is calculated on the users birthday they are the age they are turning that day
+     * e.g. if it's your 20th birthday you are 20
+     * @return donor age
+     */
+    public int calculateAge() {
+        if (dateOfDeath == null) {
+            return Period.between(dateOfBirth, LocalDate.now()).getYears();
+        } else {
+            return Period.between(dateOfBirth, dateOfDeath).getYears();
         }
     }
 
@@ -523,5 +525,65 @@ public class Donor {
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
+    }
+
+    public Boolean getSmoker() {
+        return smoker;
+    }
+
+    public void setSmoker(Boolean smoker) {
+        this.smoker = smoker;
+    }
+
+    public String getAlcoholComsumption() {
+        return alcoholComsumption;
+    }
+
+    public void setAlcoholComsumption(String alcoholComsumption) {
+        this.alcoholComsumption = alcoholComsumption;
+    }
+
+    public void setBloodPressureSystolic(Integer bloodPressureSystolic) {
+        this.bloodPressureSystolic = bloodPressureSystolic;
+    }
+
+    public void setBloodPressureDiastolic(Integer bloodPressureDiastolic) {
+        this.bloodPressureDiastolic = bloodPressureDiastolic;
+    }
+
+    public String getBloodPressure() {
+        return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
+    }
+
+    public ArrayList<String> getChronicDiseases() {
+        return chronicDiseases;
+    }
+
+    public void setChronicDiseases(ArrayList<String> chronicDiseases) {
+        this.chronicDiseases = chronicDiseases;
+    }
+
+    public void setRegistered(Boolean registered) {
+        this.registered = registered;
+    }
+
+    public Boolean getRegistered() {
+        return registered;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
