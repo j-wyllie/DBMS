@@ -218,6 +218,100 @@ public class DonorTest {
         assertEquals(expected, testDonor.getOrgans());
     }
 
+    @Test
+    public void testAddOrgansFromString() {
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.setRegistered(true);
+        testDonor.addOrgansFromString("bone, heart, cornea");
+
+        Set<Organ> expected = new HashSet<>();
+        expected.add(Organ.BONE);
+        expected.add(Organ.HEART);
+        expected.add(Organ.CORNEA);
+
+        String expectedString = "heart, bone, cornea";
+        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getOrgansAsCSV().split(", ")));
+
+        assertEquals(expected, testDonor.getOrgans());
+        assertEquals(expectedStrings, outputStrings);
+    }
+
+
+    @Test
+    public void testAddDonationsFromString() {
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.setRegistered(true);
+        testDonor.addDonationFromString("bone, heart, cornea");
+
+        Set<Organ> expected = new HashSet<>();
+        expected.add(Organ.BONE);
+        expected.add(Organ.HEART);
+        expected.add(Organ.CORNEA);
+
+        String expectedString = "heart, bone, cornea";
+        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getDonationsAsCSV().split(", ")));
+
+        assertEquals(expected, testDonor.getDonatedOrgans());
+        assertEquals(expectedStrings, outputStrings);
+    }
+
+    @Test
+    public void testAddDiseases() {
+        ArrayList<String> donorAttr = new ArrayList<>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"17-01-1998\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.setRegistered(true);
+        testDonor.addChronicDiseases("cancer, more cancer, even more cancer");
+
+        Set<String> expected = new HashSet<>();
+        expected.add("cancer");
+        expected.add("more cancer");
+        expected.add("even more cancer");
+
+        String expectedString = "cancer, more cancer, even more cancer";
+        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getChronicDiseasesAsCSV().split(", ")));
+
+        assertEquals(expected, testDonor.getChronicDiseases());
+        assertEquals(expectedStrings, outputStrings);
+    }
+
     /**
      * Test the ability to remove organs from the list of donatable organs
      */
@@ -245,7 +339,7 @@ public class DonorTest {
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
         removedOrgans.add("heart");
-        testDonor.removeDonoations(removedOrgans);
+        testDonor.removeDonations(removedOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.CORNEA);

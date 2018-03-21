@@ -2,6 +2,7 @@ package odms.donor;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
 import java.time.Period;
+import java.util.Arrays;
 import java.util.Collections;
 
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class Donor {
     private String alcoholComsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private ArrayList<String> chronicDiseases = new ArrayList<>();
+    private Set<String> chronicDiseases = new HashSet<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
@@ -259,6 +260,98 @@ public class Donor {
     }
 
     /**
+     * This will add a csv list to the list of organs
+     * @param organs the organs to add as a csv
+     */
+    public void addOrgansFromString(String organs) {
+        String[] org = organs.split(",");
+        addOrgans(new HashSet<>(Arrays.asList(org)));
+    }
+
+    /**
+     * Adds a csv list to the list of donations
+     * @param organs the organs to add as a csv
+     */
+    public void addDonationFromString(String organs) {
+        String[] org = organs.split(",");
+        addDonations(new HashSet<>(Arrays.asList(org)));
+    }
+
+    /**
+     * Adds a csv list of diseases to the list of donations
+     * @param diseases the list of donations to add
+     */
+    public void addChronicDiseases(String diseases) {
+        String[] allDiseases = diseases.split(",");
+        for (String dis : allDiseases) {
+            String newDis = dis.trim();
+            chronicDiseases.add(newDis);
+        }
+    }
+
+    /**
+     * Returns the organs as a csv string
+     * @return string of the organs
+     */
+    public String getOrgansAsCSV() {
+        String out = "";
+        int count = 0;
+        int len = organs.size();
+
+        for (Organ org : organs) {
+            count++;
+            if (count == len) {
+                out += org.getName();
+            } else {
+                out += org.getName() + ", ";
+            }
+        }
+        return out;
+    }
+
+    /**
+     * returns the chronic diseases as a csv string
+     * @return list of chronic dieseases
+     */
+    public String getChronicDiseasesAsCSV() {
+        String out = "";
+        int count = 0;
+        int len = chronicDiseases.size();
+
+
+        for (String disease : chronicDiseases) {
+            count++;
+            if (count == len) {
+                out += disease;
+            } else {
+                out += disease + ", ";
+            }
+        }
+        return out;
+    }
+
+    /**
+     * returns the donations as a csv
+     * @return String of donations as csv
+     */
+    public String getDonationsAsCSV() {
+        String out = "";
+        int count = 0;
+        int len = donatedOrgans.size();
+
+
+        for (Organ org : donatedOrgans) {
+            count++;
+            if (count == len) {
+                out += org.getName();
+            } else {
+                out += org.getName() + ", ";
+            }
+        }
+        return out;
+    }
+
+    /**
      * Add a set of organs to the list of organs that the donor wants to donate
      * @param organs a set of organs they want to donate
      */
@@ -298,48 +391,12 @@ public class Donor {
      * Remove a set of organs from the list of organs that the donor has donated
      * @param organs a set of organs to remove from the list
      */
-    public void removeDonoations(Set<String> organs) {
+    public void removeDonations(Set<String> organs) {
         generateUpdateInfo("donatedOrgans");
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
             Organ organ = Organ.valueOf(newOrgan);
             this.donatedOrgans.remove(organ);
-        }
-    }
-
-    public void removeDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
-        for (String org : organs) {
-            String newOrgan = org.trim().toLowerCase();
-            if (newOrgan.equals(Organ.BONE.getName())) {
-                this.donatedOrgans.remove(Organ.BONE);
-            } else if (newOrgan.equals(Organ.LIVER.getName())) {
-                this.donatedOrgans.remove(Organ.LIVER);
-            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
-                this.donatedOrgans.remove(Organ.KIDNEY);
-            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
-                this.donatedOrgans.remove(Organ.PANCREAS);
-            } else if (newOrgan.equals(Organ.HEART.getName())) {
-                this.donatedOrgans.remove(Organ.HEART);
-            } else if (newOrgan.equals(Organ.LUNG.getName())) {
-                this.donatedOrgans.remove(Organ.LUNG);
-            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
-                this.donatedOrgans.remove(Organ.INTESTINE);
-            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
-                this.donatedOrgans.remove(Organ.CORNEA);
-            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
-                this.donatedOrgans.remove(Organ.MIDDLE_EAR);
-            } else if (newOrgan.equals(Organ.SKIN.getName())) {
-                this.donatedOrgans.remove(Organ.SKIN);
-            } else if (newOrgan.equals(Organ.BONE.getName())) {
-                this.donatedOrgans.remove(Organ.BONE);
-            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
-                this.donatedOrgans.remove(Organ.BONE_MARROW);
-            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
-                this.donatedOrgans.remove(Organ.CONNECTIVE_TISSUE);
-            } else {
-                throw new IllegalArgumentException();
-            }
         }
     }
 
@@ -555,11 +612,11 @@ public class Donor {
         return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
 
-    public ArrayList<String> getChronicDiseases() {
+    public Set<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
-    public void setChronicDiseases(ArrayList<String> chronicDiseases) {
+    public void setChronicDiseases(Set<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
 
