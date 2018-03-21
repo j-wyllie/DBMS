@@ -40,75 +40,60 @@ public class CommandUtils {
      * @param cmd the command being validated
      * @return the enum Commands appropriate value
      */
-    public static Commands validateCommandType(ArrayList<String> cmd) {
+    public static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
 
-        try {
-            switch (cmd.get(0).toLowerCase()) {
-                case "print":
-                    switch (cmd.get(1).toLowerCase()) {
-                        case "all":
-                            return Commands.PRINTALL;
-                        case "donors":
-                            return Commands.PRINTDONORS;
+        switch (cmd.get(0).toLowerCase()) {
+            case "print":
+                switch (cmd.get(1).toLowerCase()) {
+                    case "all":
+                        return Commands.PRINTALL;
+                    case "donors":
+                        return Commands.PRINTDONORS;
+                }
+                break;
+            case "help":
+                return Commands.HELP;
+            case "import":
+                return Commands.IMPORT;
+            case "export":
+                if (cmd.size() > 1) {
+                    return Commands.EXPORT;
+                }
+                break;
+            case "create-profile":
+                if (rawInput.matches(cmdRegexCreate)) {
+                    return Commands.PROFILECREATE;
+                }
+            case "donor":
+                if (rawInput.matches(cmdRegexDonorView)) {
+                    switch (cmd.get(2)) {
+                        case "view":
+                            return Commands.PROFILEVIEW;
+                        case "date-created":
+                            return Commands.DONORDATECREATED;
+                        case "donations":
+                            return Commands.DONORDONATIONS;
+                        case "delete":
+                            return Commands.PROFILEDELETE;
                     }
-                    break;
-                case "help":
-                    return Commands.HELP;
-                case "import":
-                    return Commands.IMPORT;
-                case "export":
-                    if (cmd.size() > 1) {
-                        return Commands.EXPORT;
+                } else if (rawInput.matches(cmdRegexOrganUpdate)
+                        && rawInput.contains("organ")) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 1,
+                            rawInput.lastIndexOf('=')).trim()) {
+                        case "add-organ":
+                            return Commands.ORGANADD;
+                        case "remove-organ":
+                            return Commands.ORGANREMOVE;
+                        case "donate":
+                            return Commands.ORGANDONATE;
                     }
-                    break;
-                default:
-                    // Force casing of command
-                    String command = cmd.remove(0).toLowerCase();
-                    command = command + " " + String.join(" ", cmd);
 
-                    if (command.matches(cmdRegexCreate)) {
-                        if (command.substring(0, 14).equals("create-profile")) {
-                            return Commands.PROFILECREATE;
-                        }
-                    } else if (command.matches(cmdRegexDonorView)) {
-                        if (command.substring(0, 5).equals("donor")) {
-
-                            switch (command.substring(command.indexOf('>') + 1).trim()) {
-                                case "view":
-                                    return Commands.PROFILEVIEW;
-                                case "date-created":
-                                    return Commands.DONORDATECREATED;
-                                case "donations":
-                                    return Commands.DONORDONATIONS;
-                                case "delete":
-                                    return Commands.PROFILEDELETE;
-                            }
-                        }
-
-                    } else if (command.matches(cmdRegexOrganUpdate) && (command.contains("organ") ||
-                            command.contains("donate"))) {
-
-                        switch (command.substring(command.indexOf('>') + 1,
-                                command.lastIndexOf('=')).trim()) {
-                            case "add-organ":
-                                return Commands.ORGANADD;
-                            case "remove-organ":
-                                return Commands.ORGANREMOVE;
-                            case "donate":
-                                return Commands.ORGANDONATE;
-                        }
-
-                    } else if (command.matches(cmdRegexDonorUpdate)) {
-
-                        if (command.substring(0, 5).equals("donor")) {
-                            return Commands.DONORUPDATE;
-                        }
-                    }
-            }
-            return Commands.INVALID;
-        } catch (Exception e) {
-            return Commands.INVALID;
+                } else if (rawInput.matches(cmdRegexDonorUpdate)
+                        && cmd.get(0).equals("donor")) {
+                    return Commands.DONORUPDATE;
+                }
         }
+        return Commands.INVALID;
     }
 
     /**
