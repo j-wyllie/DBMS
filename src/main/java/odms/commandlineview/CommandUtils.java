@@ -107,7 +107,6 @@ public class CommandUtils {
         return Commands.INVALID;
     }
 
-
     /**
      * Displays profiles attributes via the search methods
      *
@@ -125,6 +124,8 @@ public class CommandUtils {
                 printSearchResults(currentDatabase.searchLastNames(attr));
             } else if (expression.substring(6, 9).equals("ird")) {
                 printSearchResults(currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
+            } else {
+                System.out.println(searchErrorText);
             }
 
         } else {
@@ -181,28 +182,24 @@ public class CommandUtils {
     public static void viewDonationsBySearch(DonorDatabase currentDatabase, String expression) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.lastIndexOf("\""));
+        ArrayList<Donor> donorList = null;
+
         if (expression.substring(6, 17).equals("given-names")) {
 
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
-
-                printDonorDonations(donorList);
+                donorList = currentDatabase.searchGivenNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 16).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
-
-                printDonorDonations(donorList);
+                donorList = currentDatabase.searchLastNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 9).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
-
-                printDonorDonations(donorList);
+                donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
             } else {
                 System.out.println(searchErrorText);
             }
@@ -210,6 +207,13 @@ public class CommandUtils {
         } else {
             System.out.println(searchErrorText);
         }
+
+        if (donorList != null && donorList.size() > 0) {
+            printDonorDonations(donorList);
+        } else {
+            System.out.println("No matching profiles found.");
+        }
+
     }
 
     /**
