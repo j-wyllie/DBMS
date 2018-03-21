@@ -69,7 +69,7 @@ public class CommandLine {
                 exit = true;
             } else {
                 reader.getHighlighter();
-                processInput(new ArrayList<>(parsedInput.words()));
+                processInput(new ArrayList<>(parsedInput.words()),input);
             }
 
         }
@@ -80,9 +80,8 @@ public class CommandLine {
      *
      * @param input commands entered from console
      */
-    private void processInput(ArrayList<String> input) {
-        Commands inputCommand = validateCommandType(input);
-        String inputExpression = String.join(" ", input).trim();
+    private void processInput(ArrayList<String> input, String rawInput) {
+        Commands inputCommand = validateCommandType(input, rawInput);
 
         switch (inputCommand) {
             case INVALID:
@@ -91,10 +90,10 @@ public class CommandLine {
 
             case HELP:
                 // Show available commands (help).
-                if(inputExpression.equals("help")) {
+                if(rawInput.equals("help")) {
                     CommandUtils.help();
                 } else {
-                    CommandUtils.helpSpecific(inputExpression.substring(5));
+                    CommandUtils.helpSpecific(rawInput.substring(5));
                 }
                 break;
 
@@ -152,8 +151,7 @@ public class CommandLine {
             case PROFILECREATE:
                 // Create a new profile.
                 try {
-                    System.out.println("a");
-                    String[] attrList = inputExpression.substring(15).split("\"\\s");
+                    String[] attrList = rawInput.substring(15).split("\"\\s");
                     ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
                     Donor newDonor = new Donor(attrArray);
                     currentDatabase.addDonor(newDonor);
@@ -180,49 +178,49 @@ public class CommandLine {
 
             case PROFILEDELETE:
                 // Delete a profile.
-                CommandUtils.deleteDonorBySearch(currentDatabase, inputExpression);
+                CommandUtils.deleteDonorBySearch(currentDatabase, rawInput);
                 System.out.println("Profile(s) successfully deleted.");
                 break;
 
             case PROFILEVIEW:
                 // Search profiles (donor > view).
                 System.out.println("Searching for profiles...");
-                CommandUtils.viewAttrBySearch(currentDatabase, inputExpression);
+                CommandUtils.viewAttrBySearch(currentDatabase, rawInput);
                 break;
 
             case DONORDATECREATED:
                 // Search profiles (donor > date-created).
                 System.out.println("Searching for profiles...");
-                CommandUtils.viewDateTimeCreatedBySearch(currentDatabase, inputExpression);
+                CommandUtils.viewDateTimeCreatedBySearch(currentDatabase, rawInput);
                 break;
 
             case DONORDONATIONS:
                 // Search profiles (donor > donations).
                 System.out.println("Searching for profiles...");
-                CommandUtils.viewDonationsBySearch(currentDatabase, inputExpression);
+                CommandUtils.viewDonationsBySearch(currentDatabase, rawInput);
                 break;
 
             case DONORUPDATE:
                 // Search profiles.
-                CommandUtils.updateProfilesBySearch(currentDatabase, inputExpression);
+                CommandUtils.updateProfilesBySearch(currentDatabase, rawInput);
                 System.out.println("Profile(s) successfully updated.");
                 break;
 
             case ORGANADD:
                 // Add organs to a donors profile.
-                CommandUtils.addOrgansBySearch(currentDatabase, inputExpression);
+                CommandUtils.addOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case ORGANREMOVE:
                 // Remove organs from a donors profile.
-                CommandUtils.removeOrgansBySearch(currentDatabase, inputExpression);
+                CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 
             case ORGANDONATE:
                 // Add to donations made by a donor.
-                CommandUtils.addDonationsMadeBySearch(currentDatabase, inputExpression);
+                CommandUtils.addDonationsMadeBySearch(currentDatabase, rawInput);
                 System.out.println("Donation successfully added to profile.");
                 break;
 

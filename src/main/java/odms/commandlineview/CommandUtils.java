@@ -9,9 +9,11 @@ import odms.data.DonorDatabase;
 import odms.donor.Donor;
 
 public class CommandUtils {
-    private static ArrayList<String> currentSessionHistory = new ArrayList<>();
+    public static ArrayList<String> currentSessionHistory = new ArrayList<>();
+
     private static int historyPosition = 0;
     private static ArrayList<Donor> deletedDonors = new ArrayList<>();
+    private static ArrayList<Donor> unaddedDonors = new ArrayList<>();
 
     private static String searchErrorText = "Please enter only one search criteria "
                                             + "(given-names, last-names, ird).";
@@ -45,81 +47,66 @@ public class CommandUtils {
      * @param cmd the command being validated
      * @return the enum Commands appropriate value
      */
-    public static Commands validateCommandType(ArrayList<String> cmd) {
+    public static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
 
-        try {
-            switch (cmd.get(0).toLowerCase()) {
-                case "print":
-                    switch (cmd.get(1).toLowerCase()) {
-                        case "all":
-                            return Commands.PRINTALL;
-                        case "donors":
-                            return Commands.PRINTDONORS;
+        switch (cmd.get(0).toLowerCase()) {
+            case "print":
+                switch (cmd.get(1).toLowerCase()) {
+                    case "all":
+                        return Commands.PRINTALL;
+                    case "donors":
+                        return Commands.PRINTDONORS;
+                }
+                break;
+            case "help":
+                return Commands.HELP;
+            case "import":
+                return Commands.IMPORT;
+            case "export":
+                if (cmd.size() > 1) {
+                    return Commands.EXPORT;
+                }
+                break;
+            case "undo":
+                return Commands.UNDO;
+            case "redo":
+                return Commands.REDO;
+            case "create-profile":
+                if (rawInput.matches(cmdRegexCreate)) {
+                    return Commands.PROFILECREATE;
+                }
+            case "donor":
+                if (rawInput.matches(cmdRegexDonorView)) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
+                        case "view":
+                            return Commands.PROFILEVIEW;
+                        case "date-created":
+                            return Commands.DONORDATECREATED;
+                        case "donations":
+                            return Commands.DONORDONATIONS;
+                        case "delete":
+                            return Commands.PROFILEDELETE;
                     }
-                    break;
-                case "help":
-                    return Commands.HELP;
-                case "import":
-                    return Commands.IMPORT;
-                case "export":
-                    if (cmd.size() > 1) {
-                        return Commands.EXPORT;
+                } else if (rawInput.matches(cmdRegexOrganUpdate)
+                        && rawInput.contains("organ")) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 2,
+                            rawInput.lastIndexOf('=')).trim()) {
+                        case "add-organ":
+                            return Commands.ORGANADD;
+                        case "remove-organ":
+                            return Commands.ORGANREMOVE;
+                        case "donate":
+                            return Commands.ORGANDONATE;
                     }
-                    break;
-                case "undo":
-                    return Commands.UNDO;
-                case "redo":
-                    return Commands.REDO;
-                default:
-                    // Force casing of command
-                    String command = cmd.remove(0).toLowerCase();
-                    command = command + " " + String.join(" ", cmd);
 
-                    if (command.matches(cmdRegexCreate)) {
-                        if (command.substring(0, 14).equals("create-profile")) {
-                            System.out.println("a");
-                            return Commands.PROFILECREATE;
-                        }
-                    } else if (command.matches(cmdRegexDonorView)) {
-                        if (command.substring(0, 5).equals("donor")) {
-
-                            switch (command.substring(command.indexOf('>') + 1).trim()) {
-                                case "view":
-                                    return Commands.PROFILEVIEW;
-                                case "date-created":
-                                    return Commands.DONORDATECREATED;
-                                case "donations":
-                                    return Commands.DONORDONATIONS;
-                                case "delete":
-                                    return Commands.PROFILEDELETE;
-                            }
-                        }
-
-                    } else if (command.matches(cmdRegexOrganUpdate) && (command.contains("organ") ||
-                            command.contains("donate"))) {
-
-                        switch (command.substring(command.indexOf('>') + 1,
-                                command.lastIndexOf('=')).trim()) {
-                            case "add-organ":
-                                return Commands.ORGANADD;
-                            case "remove-organ":
-                                return Commands.ORGANREMOVE;
-                            case "donate":
-                                return Commands.ORGANDONATE;
-                        }
-
-                    } else if (command.matches(cmdRegexDonorUpdate)) {
-
-                        if (command.substring(0, 5).equals("donor")) {
-                            return Commands.DONORUPDATE;
-                        }
-                    }
-            }
-            return Commands.INVALID;
-        } catch (Exception e) {
-            return Commands.INVALID;
+                } else if (rawInput.matches(cmdRegexDonorUpdate)
+                        && cmd.get(0).equals("donor")) {
+                    return Commands.DONORUPDATE;
+                }
         }
+        return Commands.INVALID;
     }
+
 
     /**
      * Displays profiles attributes via the search methods
@@ -473,8 +460,10 @@ public class CommandUtils {
                 action = "Donor "+donor.getId()+"updated details previous = "+donor.getAttributesSummary()+" new = ";
                 donor.setExtraAttributes(attrArray);
                 action = action+donor.getAttributesSummary()+" at " + LocalDateTime.now();
-                if(historyPosition != 0) {
-                    currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+                if(currentSessionHistory.size()!=0){
+                    if(historyPosition != currentSessionHistory.size()-1){
+                        currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+                    }
                 }
                 currentSessionHistory.add(action);
                 historyPosition = currentSessionHistory.size()-1;
@@ -498,8 +487,10 @@ public class CommandUtils {
                 result = currentDatabase.deleteDonor(donor.getId());
                 if(result) {
                     deletedDonors.add(donor);
-                    if(historyPosition != 0) {
-                        currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+                    if(currentSessionHistory.size()!=0){
+                        if(historyPosition != currentSessionHistory.size()-1){
+                            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+                        }
                     }
                     currentSessionHistory.add("Donor "+donor.getId()+" deleted at "+ LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
@@ -525,8 +516,10 @@ public class CommandUtils {
             for (Donor donor : donorList) {
                 try {
                     donor.addOrgans(organSet);
-                    if(historyPosition != 0) {
-                        currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+                    if(currentSessionHistory.size()!=0){
+                        if(historyPosition != currentSessionHistory.size()-1){
+                            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+                        }
                     }
                     currentSessionHistory.add("Donor "+donor.getId()+" set organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
@@ -552,8 +545,10 @@ public class CommandUtils {
             for (Donor donor : donorList) {
                 try {
                     donor.addDonations(organSet);
-                    if(historyPosition != 0) {
-                        currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+                    if(currentSessionHistory.size()!=0){
+                        if(historyPosition != currentSessionHistory.size()-1){
+                            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+                        }
                     }
                     currentSessionHistory.add("Donor "+donor.getId()+" decided to donate these organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
@@ -579,8 +574,10 @@ public class CommandUtils {
             for (Donor donor : donorList) {
                 try {
                     donor.removeOrgans(organSet);
-                    if(historyPosition != 0) {
-                        currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+                    if(currentSessionHistory.size()!=0){
+                        if(historyPosition != currentSessionHistory.size()-1){
+                            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+                        }
                     }
                     currentSessionHistory.add("Donor "+donor.getId()+" removed these organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
@@ -664,8 +661,10 @@ public class CommandUtils {
         }
     }
     public static void addDonorHistory(int Id) {
-        if(historyPosition != 0) {
-            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()).clear();
+        if(currentSessionHistory.size()!=0){
+        if(historyPosition != currentSessionHistory.size()-1){
+            currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
+        }
         }
         currentSessionHistory.add("Donor "+Id+" added at "+ LocalDateTime.now());
         historyPosition = currentSessionHistory.size()-1;
@@ -681,19 +680,26 @@ public class CommandUtils {
             action = action.substring(0, action.indexOf(" at"));
             if (action.contains("added")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                Donor donor = currentDatabase.getDonor(id);
                 currentDatabase.deleteDonor(id);
+                unaddedDonors.add(donor);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
+                } else {
+                    historyPosition = 1;
                 }
             } else if (action.contains("deleted")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                for (int i = 0; i < deletedDonors.size(); i++) {
-                    if (deletedDonors.get(i).getId() == id) {
-                        currentDatabase.undeleteDonor(id, deletedDonors.get(i));
-                        if (historyPosition != 0) {
-                            historyPosition -= 1;
-                        }
+                int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                int id = currentDatabase.undeleteDonor(oldid, deletedDonors.get(deletedDonors.size()-1));
+                deletedDonors.remove(deletedDonors.get(deletedDonors.size()-1));
+                for(int i = 0; i < currentSessionHistory.size()-1; i++) {
+                    if(currentSessionHistory.get(i).contains("Donor "+oldid)) {
+                        currentSessionHistory.set(i,("Donor "+id+" "+currentSessionHistory.get(i).substring(action.indexOf("Donor "+oldid)+6+Integer.toString(id).length())));
                     }
+                }
+                currentSessionHistory.set(historyPosition, ("Donor "+id+" deleted at "+ LocalDateTime.now()));
+                if(historyPosition != 0) {
+                    historyPosition -= 1;
                 }
             } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
@@ -741,53 +747,51 @@ public class CommandUtils {
 
     public static void redo(DonorDatabase currentDatabase) {
         try {
+            System.out.println(historyPosition);
+            historyPosition +=1;
             if (historyPosition != currentSessionHistory.size()) {
-                String action = currentSessionHistory.get(historyPosition);
+                String action;
+                if(historyPosition == 0) {
+                    historyPosition = 1;
+                    action = currentSessionHistory.get(historyPosition);
+                    historyPosition = 0;
+                } else {
+                    action = currentSessionHistory.get(historyPosition);
+                }
                 action = action.substring(0, action.indexOf(" at"));
                 if (action.contains("added")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    for (int i = 0; i < deletedDonors.size(); i++) {
-                        if (deletedDonors.get(i).getId() == id) {
-                            currentDatabase.undeleteDonor(id, deletedDonors.get(i));
-                            if (historyPosition != 0) {
-                                historyPosition += 1;
-                            }
+                    int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    int id = currentDatabase.undeleteDonor(oldid, unaddedDonors.get(unaddedDonors.size()-1));
+                    unaddedDonors.remove(unaddedDonors.get(unaddedDonors.size()-1));
+                    for(int i = 0; i < currentSessionHistory.size()-1; i++) {
+                        if(currentSessionHistory.get(i).contains("Donor "+oldid)) {
+                            currentSessionHistory.set(i,("Donor "+id+currentSessionHistory.get(i).substring(action.indexOf("Donor "+oldid)+6+Integer.toString(id).length())));
                         }
                     }
-
+                    currentSessionHistory.set(historyPosition, ("Donor "+id+" added at "+ LocalDateTime.now()));
                 } else if (action.contains("deleted")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Donor donor = currentDatabase.getDonor(id);
                     currentDatabase.deleteDonor(id);
-                    if (historyPosition != 0) {
-                        historyPosition += 1;
-                    }
+                    deletedDonors.add(donor);
                 } else if (action.contains("removed")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Donor donor = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                     donor.removeOrgans(organSet);
-                    if (historyPosition != 0) {
-                        historyPosition += 1;
-                    }
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Donor donor = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                     donor.addOrgans(organSet);
-                    if (historyPosition != 0) {
-                        historyPosition += 1;
-                    }
                 } else if (action.contains("donate")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Donor donor = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                     donor.addDonations(organSet);
-                    if (historyPosition != 0) {
-                        historyPosition += 1;
-                    }
                 } else if (action.contains("update")) {
                     int id = Integer.parseInt(
                             action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
@@ -795,14 +799,12 @@ public class CommandUtils {
                     String newInfo = action.substring(action.indexOf("new"));
                     newInfo = action.substring(action.indexOf("ird"));
                     donor.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
-                    if (historyPosition != 0) {
-                        historyPosition += 1;
-                    }
                 }
                 System.out.println("Command redone");
             }
             else {
                 System.out.println("There are no commands to redo");
+                historyPosition-=1;
             }
         }
         catch(Exception e){

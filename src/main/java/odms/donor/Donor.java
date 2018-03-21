@@ -44,7 +44,6 @@ public class Donor {
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
-        System.out.println("A");
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -61,7 +60,6 @@ public class Donor {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            System.out.println(parts[0]);
             setGivenAttribute(parts);
         }
     }

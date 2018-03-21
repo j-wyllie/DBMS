@@ -26,9 +26,22 @@ public class CommandUtilsTest {
     private ArrayList<String> deleteOrganTest;
     private ArrayList<String> invalidCommandTest;
 
+    private String createProfileTestStr;
+    private String viewDonorTestStr;
+    private String viewDonationsTestStr;
+    private String viewDateCreatedTestStr;
+    private String updateDonorTestStr;
+    private String printAllTestStr;
+    private String printDonorsTestStr;
+    private String helpTestStr;
+    private String addOrganTestStr;
+    private String deleteOrganTestStr;
+    private String invalidCommandTestStr;
+
     @Before
     public void setup() {
-        createProfileTest = new ArrayList<>(Arrays.asList("create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\"".split(" ")));
+        // Command Arrays
+        createProfileTest = new ArrayList<>(Arrays.asList("create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"".split(" ")));
         viewDonorTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > view".split(" ")));
         viewDonationsTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > donations".split(" ")));
         viewDateCreatedTest = new ArrayList<>(Arrays.asList("donor dob=\"03-03-1998\" > date-created".split(" ")));
@@ -39,21 +52,34 @@ public class CommandUtilsTest {
         addOrganTest = new ArrayList<>(Arrays.asList("donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"".split(" ")));
         deleteOrganTest = new ArrayList<>(Arrays.asList("donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"".split(" ")));
         invalidCommandTest = new ArrayList<>(Arrays.asList("This is not a command".split(" ")));
+
+        // Command Strings
+        createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"";
+        viewDonorTestStr = "donor dob=\"03-03-1998\" > view";
+        viewDonationsTestStr = "donor dob=\"03-03-1998\" > donations";
+        viewDateCreatedTestStr = "donor dob=\"03-03-1998\" > date-created";
+        updateDonorTestStr = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
+        printAllTestStr = "print all";
+        printDonorsTestStr = "print donors";
+        helpTestStr = "help";
+        addOrganTestStr = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
+        deleteOrganTestStr = "donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
+        invalidCommandTestStr = "This is not a command";
     }
 
     @Test
     public void testCommandValidation() {
-        assertEquals(Commands.PRINTALL, validateCommandType(printAllTest));
-        assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest));
-        assertEquals(Commands.HELP, validateCommandType(helpTest));
-        assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest));
-        assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest));
-        assertEquals(Commands.DONORDATECREATED, validateCommandType(viewDateCreatedTest));
-        assertEquals(Commands.DONORDONATIONS, validateCommandType(viewDonationsTest));
-        assertEquals(Commands.DONORUPDATE, validateCommandType(updateDonorTest));
-        assertEquals(Commands.ORGANADD, validateCommandType(addOrganTest));
-        assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest));
-        assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest));
+        assertEquals(Commands.PRINTALL, validateCommandType(printAllTest, printAllTestStr));
+        assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest, printDonorsTestStr));
+        assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
+        assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
+        assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
+        assertEquals(Commands.DONORDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
+        assertEquals(Commands.DONORDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
+        assertEquals(Commands.DONORUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
+        assertEquals(Commands.ORGANADD, validateCommandType(addOrganTest, addOrganTestStr));
+        assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest, deleteOrganTestStr));
+        assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest, invalidCommandTestStr));
     }
 
     @Test

@@ -71,15 +71,18 @@ public class DonorDatabase {
         }
     }
 
-    public boolean undeleteDonor(Integer id, Donor donor) {
+    public int undeleteDonor(Integer id, Donor donor) {
         try {
             // Should deleted users simply be disabled for safety reasons?
+            lastID += 1;
+            donor.setId(lastID);
+            System.out.println("a");
+            donorDb.put(lastID, donor);
             deletedDonors.remove(id);
-            donorDb.put(id, donor);
-            return true;
+            return lastID;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return lastID;
         }
     }
 
