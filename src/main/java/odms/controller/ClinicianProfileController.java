@@ -16,20 +16,27 @@ public class ClinicianProfileController {
     @FXML
     private Label givenNamesLabel;
 
-
     /**
-     * Label to display the clinicians given names
+     * Label to display the clinicians last names.
      */
     @FXML
     private Label lastNamesLabel;
 
-
+    /**
+     * Label to display the clinicians staff ID.
+     */
     @FXML
     private Label staffIdLabel;
 
+    /**
+     * Label to display the clinicians work address.
+     */
     @FXML
     private Label addressLabel;
 
+    /**
+     * Label to display the clinicians region.
+     */
     @FXML
     private Label regionLabel;
 

@@ -2,9 +2,8 @@ package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
-import static odms.controller.UndoRedoController.undo;
-import static odms.controller.UndoRedoController.redo;
 
+import odms.donor.Donor;
 import java.io.Console;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -15,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.donor.Donor;
 
 public class DonorProfileController {
 
@@ -148,7 +146,7 @@ public class DonorProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("view/Login.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -163,7 +161,7 @@ public class DonorProfileController {
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         //TODO
-        undo();
+        //refresh scene.
     }
 
     /**
@@ -174,7 +172,6 @@ public class DonorProfileController {
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         //TODO
         //refresh scene.
-        redo();
     }
 
     /**
@@ -183,8 +180,7 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        //TODO
-        //refresh scene.
+
     }
 
     /**
@@ -237,9 +233,9 @@ public class DonorProfileController {
             /*if (currentDonor.getBloodPressure() != null) {
                 bloodPressureLabel.setText(bloodPressureLabel.getText() + currentDonor.getBloodPressure());
             }*/
-            if (currentDonor.getBloodPressure() != null) {
-                bloodPressureLabel.setText(bloodPressureLabel.getText() + currentDonor.getBloodPressure());
-            }
+            //chronic diseases.
+            //organs to donate.
+            //past donations.
         }
         catch (Exception e) {
             InvalidUsername();
