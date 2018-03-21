@@ -64,11 +64,20 @@ public class Donor {
      * @param irdNumber Donor's IRD number as Integer
      */
     public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
-        this.givenNames = givenNames;
-        this.lastNames = lastNames;
-        this.irdNumber = irdNumber;
-        String[] dates = dob.split("-");
-        this.dateOfBirth = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+        // Build an arraylist so I can reuse the
+        ArrayList<String> attr = new ArrayList<>();
+        attr.add("given-names=\"" + givenNames + "\"");
+        attr.add("last-names=\"" + lastNames + "\"");
+        attr.add("ird=\"" + irdNumber + "\"");
+        attr.add("dob=\"" + dob + "\"");
+
+        setExtraAttributes(attr);
+
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+            throw new IllegalArgumentException();
+        }
+
+        timeOfCreation = LocalDateTime.now();
     }
 
     /**
