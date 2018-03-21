@@ -36,6 +36,8 @@ public class Donor {
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
 
+    private String phone;
+    private String email;
 
     private Integer irdNumber;
     private LocalDateTime timeOfCreation;
@@ -503,5 +505,21 @@ public class Donor {
 
     public Boolean getRegistered() {
         return registered;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
