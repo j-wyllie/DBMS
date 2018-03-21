@@ -38,6 +38,19 @@ public class DonorTest {
         assertTrue(testDonor != null);
     }
 
+    @Test
+    public void testCreateBasicUserRawData() throws IllegalArgumentException {
+        Donor testDonor = null;
+
+        try {
+            testDonor = new Donor("John", "Smithy", "17-01-1998", 123456789);
+        } catch (IllegalArgumentException e) {
+            //pass
+        }
+
+        assertTrue(testDonor != null);
+    }
+
     /**
      * Test creating a users with every attribute
      * @throws IllegalArgumentException

@@ -43,7 +43,7 @@ public class Donor {
     private Integer id;
 
     /**
-     * Instantiates the Donor class
+     * Instantiates the Donor class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
@@ -54,6 +54,21 @@ public class Donor {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
+    }
+
+    /**
+     * Instantiates the basic Donor class with a raw input of values
+     * @param givenNames Donor's given names as String
+     * @param lastNames Donor's last names as String
+     * @param dob Donor's date of birth as a string
+     * @param irdNumber Donor's IRD number as Integer
+     */
+    public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.irdNumber = irdNumber;
+        String[] dates = dob.split("-");
+        this.dateOfBirth = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
     }
 
     /**
