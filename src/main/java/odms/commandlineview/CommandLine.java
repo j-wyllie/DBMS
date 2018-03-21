@@ -87,7 +87,11 @@ public class CommandLine {
 
             case HELP:
                 // Show available commands (help).
-                CommandUtils.help();
+                if(inputExpression.equals("help")) {
+                    CommandUtils.help();
+                } else {
+                    CommandUtils.helpSpecific(inputExpression.substring(5));
+                }
                 break;
 
             case PRINTALL:
