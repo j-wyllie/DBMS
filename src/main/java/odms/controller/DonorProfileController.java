@@ -2,7 +2,8 @@ package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
-import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.UndoRedoController.undo;
+import static odms.controller.UndoRedoController.redo;
 
 import java.io.Console;
 import java.io.IOException;
@@ -162,7 +163,7 @@ public class DonorProfileController {
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         //TODO
-        //refresh scene.
+        undo();
     }
 
     /**
@@ -173,6 +174,7 @@ public class DonorProfileController {
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         //TODO
         //refresh scene.
+        redo();
     }
 
     /**
