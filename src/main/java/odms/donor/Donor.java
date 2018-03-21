@@ -23,6 +23,7 @@ public class Donor {
     private String bloodType;
     private String address;
     private String region;
+    private Boolean registered;
 
     private Boolean smoker;
     private String alcoholComsumption;
@@ -242,7 +243,7 @@ public class Donor {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organs)) {
+        if (Collections.disjoint(newOrgans, this.organs) && registered) {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
@@ -494,5 +495,13 @@ public class Donor {
 
     public void setChronicDiseases(ArrayList<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
+    }
+
+    public void setRegistered(Boolean registered) {
+        this.registered = registered;
+    }
+
+    public Boolean getRegistered() {
+        return registered;
     }
 }
