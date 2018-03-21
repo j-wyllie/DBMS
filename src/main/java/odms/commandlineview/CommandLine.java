@@ -153,7 +153,7 @@ public class CommandLine {
                     ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
                     Donor newDonor = new Donor(attrArray);
                     currentDatabase.addDonor(newDonor);
-                    //CommandUtils.addDonorHistory(newDonor.getId());
+                    CommandUtils.addDonorHistory(newDonor.getId());
                     System.out.println("Profile created.");
 
                 } catch (IllegalArgumentException e) {
@@ -221,9 +221,15 @@ public class CommandLine {
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, inputExpression);
                 System.out.println("Donation successfully added to profile.");
                 break;
+
             case UNDO:
+                // Undoes the previously done action
                 CommandUtils.undo(currentDatabase);
-                System.out.println("Action undone");
+                break;
+
+            case REDO:
+                //Redoes the previously undone action
+                CommandUtils.redo(currentDatabase);
                 break;
         }
     }

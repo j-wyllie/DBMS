@@ -68,6 +68,8 @@ public class CommandUtils {
                     break;
                 case "undo":
                     return Commands.UNDO;
+                case "redo":
+                    return Commands.REDO;
                 default:
                     // Force casing of command
                     String command = cmd.remove(0).toLowerCase();
@@ -730,10 +732,83 @@ public class CommandUtils {
                     historyPosition -= 1;
                 }
             }
+            System.out.println("Action undo");
         }
         catch (Exception e){
             System.out.println("No commands have been entered");
         }
+    }
+
+    public static void redo(DonorDatabase currentDatabase) {
+        try {
+            if (historyPosition != currentSessionHistory.size()) {
+                String action = currentSessionHistory.get(historyPosition);
+                action = action.substring(0, action.indexOf(" at"));
+                if (action.contains("added")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    for (int i = 0; i < deletedDonors.size(); i++) {
+                        if (deletedDonors.get(i).getId() == id) {
+                            currentDatabase.undeleteDonor(id, deletedDonors.get(i));
+                            if (historyPosition != 0) {
+                                historyPosition += 1;
+                            }
+                        }
+                    }
+
+                } else if (action.contains("deleted")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    currentDatabase.deleteDonor(id);
+                    if (historyPosition != 0) {
+                        historyPosition += 1;
+                    }
+                } else if (action.contains("removed")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Donor donor = currentDatabase.getDonor(id);
+                    Set<String> organSet = new HashSet(Arrays.asList(
+                            action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                    donor.removeOrgans(organSet);
+                    if (historyPosition != 0) {
+                        historyPosition += 1;
+                    }
+                } else if (action.contains("set")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Donor donor = currentDatabase.getDonor(id);
+                    Set<String> organSet = new HashSet(Arrays.asList(
+                            action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                    donor.addOrgans(organSet);
+                    if (historyPosition != 0) {
+                        historyPosition += 1;
+                    }
+                } else if (action.contains("donate")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Donor donor = currentDatabase.getDonor(id);
+                    Set<String> organSet = new HashSet(Arrays.asList(
+                            action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                    donor.addDonations(organSet);
+                    if (historyPosition != 0) {
+                        historyPosition += 1;
+                    }
+                } else if (action.contains("update")) {
+                    int id = Integer.parseInt(
+                            action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
+                    Donor donor = currentDatabase.getDonor(id);
+                    String newInfo = action.substring(action.indexOf("new"));
+                    newInfo = action.substring(action.indexOf("ird"));
+                    donor.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+                    if (historyPosition != 0) {
+                        historyPosition += 1;
+                    }
+                }
+                System.out.println("Command redone");
+            }
+            else {
+                System.out.println("There are no commands to redo");
+            }
+        }
+        catch(Exception e){
+                System.out.println("No commands have been entered.");
+            }
+
     }
 
 }
