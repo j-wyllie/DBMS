@@ -148,10 +148,12 @@ public class CommandLine {
             case PROFILECREATE:
                 // Create a new profile.
                 try {
+                    System.out.println("a");
                     String[] attrList = inputExpression.substring(15).split("\"\\s");
                     ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
                     Donor newDonor = new Donor(attrArray);
                     currentDatabase.addDonor(newDonor);
+                    //CommandUtils.addDonorHistory(newDonor.getId());
                     System.out.println("Profile created.");
 
                 } catch (IllegalArgumentException e) {
@@ -218,6 +220,10 @@ public class CommandLine {
                 // Add to donations made by a donor.
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, inputExpression);
                 System.out.println("Donation successfully added to profile.");
+                break;
+            case UNDO:
+                CommandUtils.undo(currentDatabase);
+                System.out.println("Action undone");
                 break;
         }
     }

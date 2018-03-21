@@ -59,15 +59,30 @@ public class DonorDatabase {
      *
      * @param id unique donor ID
      */
-    public void deleteDonor(Integer id) {
+    public boolean deleteDonor(Integer id) {
         try {
             // Should deleted users simply be disabled for safety reasons?
             deletedDonors.add(id);
             donorDb.remove(id);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
+    public boolean undeleteDonor(Integer id, Donor donor) {
+        try {
+            // Should deleted users simply be disabled for safety reasons?
+            deletedDonors.remove(id);
+            donorDb.put(id, donor);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public Integer getDonorPopulation() {
         return donorDb.size();

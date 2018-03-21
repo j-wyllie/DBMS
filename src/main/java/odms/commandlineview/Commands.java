@@ -10,6 +10,7 @@ public enum Commands {
     HELP,
     PRINTALL,
     PRINTDONORS,
+    UNDO,
 
     // IO Commands
     EXPORT,

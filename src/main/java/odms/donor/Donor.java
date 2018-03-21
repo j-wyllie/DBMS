@@ -40,6 +40,7 @@ public class Donor {
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
+        System.out.println("A");
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -56,6 +57,7 @@ public class Donor {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
+            System.out.println(parts[0]);
             setGivenAttribute(parts);
         }
     }
@@ -78,9 +80,13 @@ public class Donor {
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            String[] dates = value.split("-");
-            LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
-            setDateOfDeath(date);
+            if(value.equals("null")){
+                setDateOfDeath(null);
+            } else {
+                String[] dates = value.split("-");
+                LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+                setDateOfDeath(date);
+            }
         } else if (attrName.equals(Attribute.GENDER.getText()) ){
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
@@ -96,6 +102,9 @@ public class Donor {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
+            if(value.equals("null")) {
+                value = null;
+            }
             setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
             setAddress(value);
@@ -195,6 +204,23 @@ public class Donor {
         System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
+    public String getAttributesSummary() {
+        String summary = "";
+        summary = summary +("ird=" + irdNumber);
+        summary = summary +"," +("given-names=" + givenNames);
+        summary = summary +"," +("last-names=" + lastNames);
+        summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        if(dateOfDeath==null){summary = summary +"," +("dod=" + null);}
+        else{summary = summary +"," +("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));}
+        summary = summary +"," +("gender=" + gender);
+        summary = summary +"," +("height=" + height);
+        summary = summary +"," +("weight=" + weight);
+        summary = summary +"," +("blood-type=" + bloodType);
+        summary = summary +"," +("address=" + address);
+        summary = summary +"," +("region=" + region);
+        return summary;
+    }
+
     /**
      * Add a set of organs to the list of organs that the donor wants to donate
      * @param organs a set of organs they want to donate
@@ -275,6 +301,42 @@ public class Donor {
                 this.donatedOrgans.add(Organ.BONE_MARROW);
             } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
                 this.donatedOrgans.add(Organ.CONNECTIVE_TISSUE);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    public void removeDonations(Set<String> organs) {
+        generateUpdateInfo("donatedOrgans");
+        for (String org : organs) {
+            String newOrgan = org.trim().toLowerCase();
+            if (newOrgan.equals(Organ.BONE.getName())) {
+                this.donatedOrgans.remove(Organ.BONE);
+            } else if (newOrgan.equals(Organ.LIVER.getName())) {
+                this.donatedOrgans.remove(Organ.LIVER);
+            } else if (newOrgan.equals(Organ.KIDNEY.getName())) {
+                this.donatedOrgans.remove(Organ.KIDNEY);
+            } else if (newOrgan.equals(Organ.PANCREAS.getName())) {
+                this.donatedOrgans.remove(Organ.PANCREAS);
+            } else if (newOrgan.equals(Organ.HEART.getName())) {
+                this.donatedOrgans.remove(Organ.HEART);
+            } else if (newOrgan.equals(Organ.LUNG.getName())) {
+                this.donatedOrgans.remove(Organ.LUNG);
+            } else if (newOrgan.equals(Organ.INTESTINE.getName())) {
+                this.donatedOrgans.remove(Organ.INTESTINE);
+            } else if (newOrgan.equals(Organ.CORNEA.getName())) {
+                this.donatedOrgans.remove(Organ.CORNEA);
+            } else if (newOrgan.equals(Organ.MIDDLE_EAR.getName())) {
+                this.donatedOrgans.remove(Organ.MIDDLE_EAR);
+            } else if (newOrgan.equals(Organ.SKIN.getName())) {
+                this.donatedOrgans.remove(Organ.SKIN);
+            } else if (newOrgan.equals(Organ.BONE.getName())) {
+                this.donatedOrgans.remove(Organ.BONE);
+            } else if (newOrgan.equals(Organ.BONE_MARROW.getName())) {
+                this.donatedOrgans.remove(Organ.BONE_MARROW);
+            } else if (newOrgan.equals(Organ.CONNECTIVE_TISSUE.getName())) {
+                this.donatedOrgans.remove(Organ.CONNECTIVE_TISSUE);
             } else {
                 throw new IllegalArgumentException();
             }
