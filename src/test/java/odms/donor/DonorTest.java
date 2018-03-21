@@ -202,6 +202,8 @@ public class DonorTest {
             // pass
         }
 
+        testDonor.setRegistered(true);
+
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
@@ -270,6 +272,8 @@ public class DonorTest {
             // pass
         }
 
+        testDonor.setRegistered(true);
+
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
@@ -304,6 +308,8 @@ public class DonorTest {
         } catch (IllegalArgumentException e) {
             // pass
         }
+
+        testDonor.setRegistered(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
