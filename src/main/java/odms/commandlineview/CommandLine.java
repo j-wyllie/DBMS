@@ -7,6 +7,8 @@ import java.util.Arrays;
 import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
 import odms.data.IrdNumberConflictException;
+import odms.data.UserDataIO;
+import odms.data.UserDatabase;
 import odms.donor.Donor;
 import java.util.ArrayList;
 import org.jline.reader.LineReader;
@@ -22,6 +24,8 @@ public class CommandLine {
     private DonorDatabase currentDatabase;
     private LineReader reader;
     private Terminal terminal;
+
+    private UserDatabase userDatabase;
 
     public CommandLine (DonorDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;

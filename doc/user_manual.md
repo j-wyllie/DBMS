@@ -33,7 +33,7 @@ executing
 ### Exporting Data
 The current database can be saved and exported by executing
 
-    export-changes path\file.json
+    export path\file.json
     
 ### Example Database
 An example database can be found in the example directory.
@@ -150,3 +150,12 @@ This can be limited to only those donor profiles that currently are registered t
 with the following command:
     
     print donors
+    
+#### UNDO/REDO Actions
+Undo undoes previously done actions in the command line and GUI.
+
+    undo
+    
+Redo redoes previously undone actions in the command line and GUI.
+
+    redo
