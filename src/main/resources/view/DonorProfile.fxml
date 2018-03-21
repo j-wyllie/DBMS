@@ -231,9 +231,9 @@
                                     </TilePane>
                                     <ToolBar maxWidth="170.0" prefHeight="66.0" prefWidth="170.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                       <items>
-                                        <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/undo.png); -fx-background-size: stretch;" />
-                                          <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/redo.png); -fx-background-size: stretch;" />
-                                          <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/edit.png); -fx-background-size: stretch;" />
+                                        <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
+                                          <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
+                                          <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/edit.png); -fx-background-size: stretch;" />
                                       </items>
                                        <GridPane.margin>
                                           <Insets bottom="30.0" left="20.0" />
@@ -366,9 +366,9 @@
                                                 </Label>
                                                 <ToolBar maxWidth="170.0" prefHeight="66.0" prefWidth="170.0" GridPane.columnIndex="6" GridPane.rowIndex="8">
                                                    <items>
-                                                      <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/undo.png); -fx-background-size: stretch;" />
-                                                      <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/redo.png); -fx-background-size: stretch;" />
-                                                      <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(../icons/edit.png); -fx-background-size: stretch;" />
+                                                      <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
+                                                      <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
+                                                      <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/edit.png); -fx-background-size: stretch;" />
                                                    </items>
                                                    <GridPane.margin>
                                                       <Insets bottom="10.0" right="10.0" />
@@ -440,7 +440,7 @@
                               <Insets left="40.0" />
                            </GridPane.margin>
                         </Label>
-                        <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="44.0" prefWidth="59.0" style="-fx-background-image: url(../icons/logout.png); -fx-background-size: stretch; -fx-background-color: #1fa98c;" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                        <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="44.0" prefWidth="59.0" style="-fx-background-image: url(icons/logout.png); -fx-background-size: stretch; -fx-background-color: #1fa98c;" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="15.0" />
                            </GridPane.margin>
