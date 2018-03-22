@@ -2,6 +2,8 @@ package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 import javafx.scene.control.TextField;
 import odms.donor.Donor;
@@ -171,6 +173,8 @@ public class DonorProfileController {
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         //TODO
         //refresh scene.
+        undo();
+        initialize();
     }
 
     /**
@@ -182,6 +186,8 @@ public class DonorProfileController {
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         //TODO
         //refresh scene.
+        redo();
+        initialize();
     }
 
     /**

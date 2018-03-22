@@ -46,10 +46,6 @@ public class Donor {
 
     private Integer id;
 
-
-    public Donor(){
-
-    }
     /**
      * Instantiates the Donor class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
