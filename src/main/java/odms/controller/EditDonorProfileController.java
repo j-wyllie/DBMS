@@ -9,9 +9,8 @@ import static odms.controller.Main.getCurrentDatabase;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.DonorDataIO;
+import odms.commandlineview.CommandUtils;
 import odms.donor.Donor;
 
 public class EditDonorProfileController {
@@ -198,6 +197,7 @@ public class EditDonorProfileController {
         boolean saveBool = DonorSaveChanges();
 
         if (saveBool) {
+            String action = "Donor "+currentDonor.getId()+" updated details previous = "+currentDonor.getAttributesSummary()+" new = ";
             currentDonor.setGivenNames(givenNamesField.getText());
             currentDonor.setLastNames(lastNamesField.getText());
             currentDonor.setIrdNumber(Integer.valueOf(irdField.getText()));
@@ -219,12 +219,17 @@ public class EditDonorProfileController {
             currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
-
-            String[] diseases = diseaseField.getText().split(", ");
-            Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-            currentDonor.setChronicDiseases(diseasesSet);
-
-            DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
+            action = action+currentDonor.getAttributesSummary()+" at " + LocalDateTime.now();
+            if(CommandUtils.getHistory().size()!=0){
+                if(CommandUtils.getPosition() != CommandUtils.getHistory().size()-1){
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(), CommandUtils.getHistory().size()-1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size()-1;
+            /*currentDonor.setChronicDiseases();
+            currentDonor.setOrgans();
+            currentDonor.setDonations();*/
         }
         else {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));

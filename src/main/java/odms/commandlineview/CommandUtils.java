@@ -11,7 +11,7 @@ import odms.donor.Donor;
 public class CommandUtils {
     public static ArrayList<String> currentSessionHistory = new ArrayList<>();
 
-    private static int historyPosition = 0;
+    public static int historyPosition = 0;
     private static ArrayList<Donor> deletedDonors = new ArrayList<>();
     private static ArrayList<Donor> unaddedDonors = new ArrayList<>();
 
@@ -752,8 +752,9 @@ public class CommandUtils {
     public static void redo(DonorDatabase currentDatabase) {
         try {
             System.out.println(historyPosition);
-            historyPosition +=1;
+
             if (historyPosition != currentSessionHistory.size()) {
+                historyPosition +=1;
                 String action;
                 if(historyPosition == 0) {
                     historyPosition = 1;
@@ -808,7 +809,6 @@ public class CommandUtils {
             }
             else {
                 System.out.println("There are no commands to redo");
-                historyPosition-=1;
             }
         }
         catch(Exception e){
@@ -816,5 +816,6 @@ public class CommandUtils {
             }
 
     }
+    public static int getPosition(){return historyPosition;}
 
 }

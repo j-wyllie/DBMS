@@ -60,7 +60,8 @@ public class CreateProfileController {
             String ird = irdField.getText();
 
            /* Donor newDonor = new Donor(givenNames, surnames, dob, ird);
-            currentDatabase.addDonor(newDonor);*/
+            currentDatabase.addDonor(newDonor)
+            CommandUtils.addDonorHistory(newDonor.getId());;*/
         }
         catch (IllegalArgumentException e) {
             //show error window.
