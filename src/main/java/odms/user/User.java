@@ -14,7 +14,7 @@ public class User {
     private String workAddress;
     private String region;
     private LocalDateTime lastUpdated;
-    private ArrayList<String> updateActions;
+    private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
 
 
@@ -35,12 +35,11 @@ public class User {
     }
 
     public User(UserType userType, String name, String region){
-        LocalDateTime currentTime = LocalDateTime.now();
+        timeOfCreation = LocalDateTime.now();
         this.userType = userType;
         this.name = name;
         this.region = region;
-        this.timeOfCreation = currentTime.now();
-        updateActions.add("Account for " + name + "created at " + currentTime);
+        this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
     }
 
     /**
