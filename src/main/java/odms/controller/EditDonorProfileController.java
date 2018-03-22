@@ -4,10 +4,14 @@ import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.Main.getCurrentDatabase;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.data.DonorDataIO;
 import odms.donor.Donor;
 
 public class EditDonorProfileController {
@@ -214,9 +219,19 @@ public class EditDonorProfileController {
             currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
-            /*currentDonor.setChronicDiseases();
-            currentDonor.setOrgans();
-            currentDonor.setDonations();*/
+
+            String[] diseases = diseaseField.getText().split(", ");
+            Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
+            currentDonor.setChronicDiseases(diseasesSet);
+
+            DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
+        }
+        else {
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.show();
         }
     }
 

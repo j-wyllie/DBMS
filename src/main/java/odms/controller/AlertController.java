@@ -36,7 +36,7 @@ public class AlertController {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);
 
-        saveAlert.show();
+        saveAlert.showAndWait();
 
         if (saveAlert.getResult() == ButtonType.NO) {
             saveAlert.close();
@@ -54,7 +54,8 @@ public class AlertController {
     public static boolean DonorCancelChanges() {
         Alert cancelAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to cancel your changes?",
                 ButtonType.NO, ButtonType.YES);
-        cancelAlert.show();
+
+        cancelAlert.showAndWait();
 
         if (cancelAlert.getResult() == ButtonType.NO) {
             cancelAlert.close();

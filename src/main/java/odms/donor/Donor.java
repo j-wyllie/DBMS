@@ -612,6 +612,7 @@ public class Donor {
         return chronicDiseases;
     }
 
+
     public void setChronicDiseases(Set<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
