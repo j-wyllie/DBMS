@@ -6,6 +6,7 @@ import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.Main.getCurrentDatabase;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -205,8 +206,8 @@ public class EditDonorProfileController {
             currentDonor.setGivenNames(givenNamesField.getText());
             currentDonor.setLastNames(lastNamesField.getText());
             currentDonor.setIrdNumber(Integer.valueOf(irdField.getText()));
-            currentDonor.setDateOfBirth(LocalDate.parse(dobField.getText()));
-            currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
+            //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
+            //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentDonor.setGender(genderField.getText());
             currentDonor.setHeight(Double.valueOf(heightField.getText()));
             currentDonor.setWeight(Double.valueOf(weightField.getText()));
@@ -215,12 +216,16 @@ public class EditDonorProfileController {
             currentDonor.setAddress(addressField.getText());
             currentDonor.setRegion(regionField.getText());
             currentDonor.setBloodType(bloodTypeField.getText());
-            String systolic = bloodPressureField.getText()
-                    .substring(0, bloodPressureField.getText().lastIndexOf('/')).trim();
-            currentDonor.setBloodPressureSystolic(Integer.valueOf(systolic));
-            String diastolic = bloodPressureField.getText()
-                    .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
-            currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+
+            if (bloodPressureField.getText().contains("/")) {
+                String systolic = bloodPressureField.getText()
+                        .substring(0, bloodPressureField.getText().indexOf("/")).trim();
+                currentDonor.setBloodPressureSystolic(Integer.valueOf(systolic));
+                String diastolic = bloodPressureField.getText()
+                        .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
+                currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+            }
+
             currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
             action = action + currentDonor.getAttributesSummary() + " at " + LocalDateTime.now();
@@ -234,11 +239,20 @@ public class EditDonorProfileController {
             CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             /*currentDonor.setOrgans();
             currentDonor.setDonations();*/
-            String[] diseases = diseaseField.getText().split(", ");
-            Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-            currentDonor.setChronicDiseases(diseasesSet);
+
+            if (diseaseField.getText().contains("/")) {
+                String[] diseases = diseaseField.getText().split(", ");
+                Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
+                currentDonor.setChronicDiseases(diseasesSet);
+            }
 
             DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
+
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.show();
         }
         else {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
