@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-public class Main extends Application {
+public class GuiMain extends Application {
 
     private static DonorDatabase donorDb = DonorDataIO.loadData("example/example.json");
 

@@ -3,7 +3,7 @@ package odms.controller;
 import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentDonor;
-import static odms.controller.Main.getCurrentDatabase;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.sql.Date;

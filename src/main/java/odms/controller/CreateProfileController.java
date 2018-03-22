@@ -1,9 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidEntry;
-import static odms.controller.Main.getCurrentDatabase;
-import static odms.controller.AlertController.InvalidEntry;
-import static odms.controller.Main.getCurrentDatabase;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 import odms.data.DonorDatabase;
 import java.io.IOException;
@@ -15,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.DonorDatabase;
 
 public class CreateProfileController {
 

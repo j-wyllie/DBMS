@@ -1,6 +1,6 @@
 package odms.controller;
 
-import static odms.controller.Main.getCurrentDatabase;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

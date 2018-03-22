@@ -5,11 +5,11 @@ import odms.commandlineview.CommandUtils;
 public class UndoRedoController {
 
     public static void undo(){
-        CommandUtils.undo(Main.getCurrentDatabase());
+        CommandUtils.undo(GuiMain.getCurrentDatabase());
     }
 
     public static void redo(){
-        CommandUtils.redo(Main.getCurrentDatabase());
+        CommandUtils.redo(GuiMain.getCurrentDatabase());
     }
 
 }
