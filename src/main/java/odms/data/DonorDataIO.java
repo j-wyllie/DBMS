@@ -105,4 +105,6 @@ public class DonorDataIO {
         return donorDb;
     }
 
+    public String getHistory() { return history;}
+
 }
