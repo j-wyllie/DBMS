@@ -27,7 +27,7 @@ public class Donor {
     private Boolean registered;
 
     private Boolean smoker;
-    private String alcoholComsumption;
+    private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
     private Set<String> chronicDiseases = new HashSet<>();
@@ -592,12 +592,12 @@ public class Donor {
         this.smoker = smoker;
     }
 
-    public String getAlcoholComsumption() {
-        return alcoholComsumption;
+    public String getAlcoholConsumption() {
+        return alcoholConsumption;
     }
 
-    public void setAlcoholComsumption(String alcoholComsumption) {
-        this.alcoholComsumption = alcoholComsumption;
+    public void setAlcoholConsumption(String alcoholConsumption) {
+        this.alcoholConsumption = alcoholConsumption;
     }
 
     public void setBloodPressureSystolic(Integer bloodPressureSystolic) {

@@ -3,6 +3,7 @@ package odms.controller;
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
 
+import javafx.scene.control.TextField;
 import odms.donor.Donor;
 import java.io.Console;
 import java.io.IOException;
@@ -24,6 +25,12 @@ public class DonorProfileController {
      */
     @FXML
     private Label donorFullNameLabel;
+
+    /**
+     * Label to display the user's donor status.
+     */
+    @FXML
+    private Label donorStatusLabel;
 
     /**
      * Label to display the user's given names.
@@ -142,6 +149,7 @@ public class DonorProfileController {
 
     /**
      * Scene change to log in view.
+     *
      * @param event clicking on the logout button.
      */
     @FXML
@@ -156,6 +164,7 @@ public class DonorProfileController {
 
     /**
      * Button handler to undo last action.
+     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -166,6 +175,7 @@ public class DonorProfileController {
 
     /**
      * Button handler to redo last undo action.
+     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -176,11 +186,16 @@ public class DonorProfileController {
 
     /**
      * Button handler to make fields editable.
+     *
      * @param event clicking on the edit button.
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -190,7 +205,8 @@ public class DonorProfileController {
     public void initialize() {
 
         try {
-            donorFullNameLabel.setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+            donorFullNameLabel
+                    .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
 
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -236,8 +252,7 @@ public class DonorProfileController {
             //chronic diseases.
             //organs to donate.
             //past donations.
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             InvalidUsername();
         }
     }
