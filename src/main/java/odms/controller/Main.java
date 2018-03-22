@@ -22,11 +22,14 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
     }
 
     public static DonorDatabase getCurrentDatabase() {
         return donorDb;
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
