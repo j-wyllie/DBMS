@@ -5,10 +5,16 @@ import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
+import com.google.gson.Gson;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import odms.commandlineview.CommandUtils;
+import odms.data.DonorDataIO;
 import odms.donor.Donor;
 import java.io.Console;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -146,6 +152,13 @@ public class DonorProfileController {
     @FXML
     private Label donationsLabel;
 
+    /**
+     * View to display history
+     */
+    @FXML
+    private TextArea historyView;
+
+
 
     /**
      * Scene change to log in view.
@@ -172,7 +185,7 @@ public class DonorProfileController {
         //TODO
         //refresh scene.
         undo();
-        initialize();
+        //initialize();
     }
 
     /**
@@ -185,7 +198,7 @@ public class DonorProfileController {
         //TODO
         //refresh scene.
         redo();
-        initialize();
+        //initialize();
     }
 
     /**
@@ -258,6 +271,28 @@ public class DonorProfileController {
             //chronic diseases.
             //organs to donate.
             //past donations.
+            String history = DonorDataIO.getHistory();
+            Gson gson = new Gson();
+
+
+            if(history.equals("")) {
+                history = gson.toJson(CommandUtils.getHistory());
+            } else {
+                history = history.substring(0, history.length()-1);
+                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+            }
+            history = history.substring(1, history.length()-1);
+            String[] actionHistory = history.split(",");
+
+            ArrayList<String> userHistory = new ArrayList<>();
+
+            for(String str : actionHistory){
+                if(str.contains("Donor " + getCurrentDonor().getId())){
+                    userHistory.add(str);
+                }
+            }
+
+            historyView.setText(userHistory.toString());
         } catch (Exception e) {
             InvalidUsername();
         }

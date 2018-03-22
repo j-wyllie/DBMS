@@ -461,7 +461,7 @@ public class CommandUtils {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             String action;
             for (Donor donor : profileList) {
-                action = "Donor "+donor.getId()+"updated details previous = "+donor.getAttributesSummary()+" new = ";
+                action = "Donor "+donor.getId()+" updated details previous = "+donor.getAttributesSummary()+" new = ";
                 donor.setExtraAttributes(attrArray);
                 action = action+donor.getAttributesSummary()+" at " + LocalDateTime.now();
                 if(currentSessionHistory.size()!=0){

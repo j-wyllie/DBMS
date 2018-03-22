@@ -91,6 +91,7 @@ public class DonorDataIO {
 
         try {
             history = fileToString(historyFile);
+            System.out.println(history);
             Gson gson = new Gson();
 
             return gson.fromJson(
@@ -104,5 +105,7 @@ public class DonorDataIO {
 
         return donorDb;
     }
+
+    public static String getHistory() { return history;}
 
 }

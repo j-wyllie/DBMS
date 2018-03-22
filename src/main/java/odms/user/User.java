@@ -42,6 +42,45 @@ public class User {
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
     }
 
+
+    /**
+     * Sets the attributes that are passed into the constructor
+     * @param attributes the attributes given in the constructor
+     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
+     */
+    public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
+        for (String val : attributes) {
+            String[] parts = val.split("=");
+            setGivenAttribute(parts);
+        }
+    }
+
+    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
+        String attrName = parts[0];
+        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+
+        if (attrName.equals("name")) {
+            setName(value);
+        } else if (attrName.equals("workAddress")) {
+            setWorkAddress(value);
+        } else if (attrName.equals("staffId")) {
+            setStaffId(Integer.parseInt(value));
+        } else if (attrName.equals("region")) {
+            setRegion(value);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public String getAttributesSummary() {
+        String summary = "";
+        summary = summary +("staffId=" + staffId);
+        summary = summary +"," +("name=" + name);
+        summary = summary +"," +("workAddress=" + workAddress);
+        summary = summary +"," +("region=" + region);
+        return summary;
+    }
+
     /**
      * Sets the name of the user
      * @param name name to be set
