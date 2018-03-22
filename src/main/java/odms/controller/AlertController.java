@@ -24,20 +24,48 @@ public class AlertController {
 
         Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid username.",
                 ButtonType.CLOSE);
+
+        invalidAlert.show();
+
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
             invalidAlert.close();
         }
     }
 
-    public static void DonorSaveChanges() {
+    public static boolean DonorSaveChanges() {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);
 
+        saveAlert.show();
+
         if (saveAlert.getResult() == ButtonType.NO) {
             saveAlert.close();
+            return false;
         }
         else if (saveAlert.getResult() == ButtonType.YES) {
-            //save.
+            saveAlert.close();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public static boolean DonorCancelChanges() {
+        Alert cancelAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to cancel your changes?",
+                ButtonType.NO, ButtonType.YES);
+        cancelAlert.show();
+
+        if (cancelAlert.getResult() == ButtonType.NO) {
+            cancelAlert.close();
+            return false;
+        }
+        else if (cancelAlert.getResult() == ButtonType.YES) {
+            cancelAlert.close();
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

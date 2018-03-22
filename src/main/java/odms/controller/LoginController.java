@@ -25,18 +25,6 @@ public class LoginController {
     private static Donor currentDonor;
 
     /**
-     * Button to log in with details entered in the password and username fields.
-     */
-    @FXML
-    private Button loginButton;
-
-    /**
-     * Link to create a new account with the odms.
-     */
-    @FXML
-    private Hyperlink createAccountLink;
-
-    /**
      * TextField to input username.
      */
     @FXML
@@ -61,6 +49,7 @@ public class LoginController {
             currentDonor = currentDatabase.getDonor(userId);
         }
         catch (Exception e) {
+            System.out.println(e);
             InvalidUsername();
         }
         finally {

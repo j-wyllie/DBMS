@@ -1,9 +1,13 @@
 package odms.controller;
 
+import static odms.controller.AlertController.DonorCancelChanges;
+import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -131,13 +135,13 @@ public class EditDonorProfileController {
      * Field to edit the user's region.
      */
     @FXML
-    private TextField chronicDiseasesField;
+    private TextField diseaseField;
 
     /**
      * Field to edit the user's organs to donate.
      */
     @FXML
-    private TextField organsField;
+    private TextField organField;
 
     /**
      * Field to edit the user's region.
@@ -186,7 +190,34 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
+        boolean saveBool = DonorSaveChanges();
 
+        if (saveBool) {
+            currentDonor.setGivenNames(givenNamesField.getText());
+            currentDonor.setLastNames(lastNamesField.getText());
+            currentDonor.setIrdNumber(Integer.valueOf(irdField.getText()));
+            currentDonor.setDateOfBirth(LocalDate.parse(dobField.getText()));
+            currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
+            currentDonor.setGender(genderField.getText());
+            currentDonor.setHeight(Double.valueOf(heightField.getText()));
+            currentDonor.setWeight(Double.valueOf(weightField.getText()));
+            currentDonor.setPhone(phoneField.getText());
+            currentDonor.setEmail(emailField.getText());
+            currentDonor.setAddress(addressField.getText());
+            currentDonor.setRegion(regionField.getText());
+            currentDonor.setBloodType(bloodTypeField.getText());
+            String systolic = bloodPressureField.getText()
+                    .substring(0, bloodPressureField.getText().lastIndexOf('/')).trim();
+            currentDonor.setBloodPressureSystolic(Integer.valueOf(systolic));
+            String diastolic = bloodPressureField.getText()
+                    .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
+            currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+            currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
+            currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
+            /*currentDonor.setChronicDiseases();
+            currentDonor.setOrgans();
+            currentDonor.setDonations();*/
+        }
     }
 
     /**
@@ -195,7 +226,16 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
+        boolean cancelBool = DonorCancelChanges();
+        System.out.println(cancelBool);
 
+        if (cancelBool) {
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.show();
+        }
     }
 
     /**
@@ -248,8 +288,8 @@ public class EditDonorProfileController {
             if (currentDonor.getBloodPressure() != null) {
                 bloodPressureField.setText(currentDonor.getBloodPressure());
             }
-            chronicDiseasesField.setText(currentDonor.getChronicDiseasesAsCSV());
-            organsField.setText(currentDonor.getOrgansAsCSV());
+            diseaseField.setText(currentDonor.getChronicDiseasesAsCSV());
+            organField.setText(currentDonor.getOrgansAsCSV());
             donationsField.setText(currentDonor.getDonationsAsCSV());
         }
         catch (Exception e) {

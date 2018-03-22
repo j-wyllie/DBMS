@@ -20,8 +20,6 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    private static Donor currentDonor = getCurrentDonor();
-
     /**
      * Label to display the user's full name.
      */
@@ -209,6 +207,8 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
+
+        Donor currentDonor = getCurrentDonor();
 
         try {
             donorFullNameLabel
