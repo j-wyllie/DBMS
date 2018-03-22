@@ -150,7 +150,24 @@ public class Donor {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
-        } else {
+        } else if (attrName.equals("smoker")) {
+            try {
+                setSmoker(Boolean.valueOf(value));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException();
+            }
+        } else if (attrName.equals("alcoholConsumption")) {
+            setAlcoholConsumption(value);
+        } else if (attrName.equals("bloodPressureSystolic")) {
+            setBloodPressureSystolic(Integer.valueOf(value));
+        }else if (attrName.equals("bloodPressureDiastolic")) {
+            setBloodPressureDiastolic(Integer.valueOf(value));
+        }else if (attrName.equals("phone")) {
+            setPhone(value);
+        }else if (attrName.equals("email")) {
+            setEmail(value);
+        }
+        else {
             throw new IllegalArgumentException();
         }
     }
@@ -252,6 +269,12 @@ public class Donor {
         summary = summary +"," +("blood-type=" + bloodType);
         summary = summary +"," +("address=" + address);
         summary = summary +"," +("region=" + region);
+        summary = summary +"," +("smoker=" + smoker);
+        summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
+        summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
+        summary = summary +"," +("bloodPressureDiastolic=" + bloodPressureDiastolic);
+        summary = summary +"," +("phone=" + phone);
+        summary = summary +"," +("email=" + email);
         return summary;
     }
 
