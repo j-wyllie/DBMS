@@ -227,6 +227,12 @@ public class DonorProfileController {
             donorFullNameLabel
                     .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
 
+            donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
+
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+                donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
+            }
+
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
             }

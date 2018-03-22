@@ -2,12 +2,10 @@ package odms.controller;
 
 import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
-import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.Main.getCurrentDatabase;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -278,6 +276,12 @@ public class EditDonorProfileController {
 
         try {
             donorFullNameLabel.setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+
+            donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
+
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+                donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
+            }
 
             if (currentDonor.getGivenNames() != null) {
                 givenNamesField.setText(currentDonor.getGivenNames());
