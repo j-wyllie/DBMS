@@ -24,9 +24,11 @@ public class CommandUtils {
                                                  + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                                                  + "[\"]))*";
 
-    private static final String cmdRegexDonorView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
+    private static final String cmdRegexProfileView = "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                                                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                                                     + "([a-z]+)([-]([a-z]+))?)";
+
+
 
     private static final String cmdRegexDonorUpdate = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                                                       + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
@@ -77,7 +79,7 @@ public class CommandUtils {
                     return Commands.PROFILECREATE;
                 }
             case "profile":
-                if (rawInput.matches(cmdRegexDonorView)) {
+                if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
                         case "view":
                             return Commands.PROFILEVIEW;
