@@ -3,7 +3,7 @@ package odms.controller;
 import static odms.controller.AlertController.InvalidEntry;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-import odms.data.DonorDatabase;
+import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 public class CreateProfileController {
 
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getCurrentDatabase();
 
     /**
      * TextField to input the new user's given names.
@@ -43,7 +43,7 @@ public class CreateProfileController {
     private TextField irdField;
 
     /**
-     * Scene change to donor profile view if all required fields are filled in.
+     * Scene change to profile profile view if all required fields are filled in.
      * @param event clicking on the create new account button.
      * @throws IOException
      */
@@ -56,7 +56,7 @@ public class CreateProfileController {
             String dob = dobField.getText();
             String ird = irdField.getText();
 
-           /* Donor newDonor = new Donor(givenNames, surnames, dob, ird);
+           /* Profile newDonor = new Profile(givenNames, surnames, dob, ird);
             currentDatabase.addDonor(newDonor)
             CommandUtils.addDonorHistory(newDonor.getId());;*/
         }

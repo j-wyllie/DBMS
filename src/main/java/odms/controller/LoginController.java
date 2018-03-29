@@ -13,13 +13,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.DonorDatabase;
-import odms.donor.Donor;
+import odms.data.ProfileDatabase;
+import odms.profile.Profile;
 
 public class LoginController {
-
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
-    private static Donor currentDonor;
+    private static ProfileDatabase currentDatabase = getCurrentDatabase();
+    private static Profile currentProfile;
 
     /**
      * TextField to input username.
@@ -34,7 +33,7 @@ public class LoginController {
     private TextField passwordField;
 
     /**
-     * Scene change to donor profile view if log in credentials are valid.
+     * Scene change to profile profile view if log in credentials are valid.
      * @param event clicking on the login button.
      * @throws IOException
      */
@@ -43,7 +42,7 @@ public class LoginController {
 
         try {
             int userId = Integer.valueOf(usernameField.getText());
-            currentDonor = currentDatabase.getDonor(userId);
+            currentProfile = currentDatabase.getDonor(userId);
         }
         catch (Exception e) {
             System.out.println(e);
@@ -72,7 +71,7 @@ public class LoginController {
         appStage.show();
     }
 
-    public static Donor getCurrentDonor() {
-        return currentDonor;
+    public static Profile getCurrentProfile() {
+        return currentProfile;
     }
 }

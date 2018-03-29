@@ -1,7 +1,7 @@
 package odms.controller;
 
-import odms.data.DonorDataIO;
-import odms.data.DonorDatabase;
+import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,8 +10,7 @@ import javafx.stage.Stage;
 
 
 public class GuiMain extends Application {
-
-    private static DonorDatabase donorDb = DonorDataIO.loadData("example/example.json");
+    private static ProfileDatabase donorDb = ProfileDataIO.loadData("example/example.json");
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -22,7 +21,7 @@ public class GuiMain extends Application {
 
     }
 
-    public static DonorDatabase getCurrentDatabase() {
+    public static ProfileDatabase getCurrentDatabase() {
         return donorDb;
     }
 

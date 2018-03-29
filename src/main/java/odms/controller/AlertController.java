@@ -1,15 +1,10 @@
 package odms.controller;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.data.DonorDatabase;
 
 public class AlertController {
-
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
 
     public static void InvalidEntry() {
 

@@ -5,21 +5,21 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import odms.donor.Donor;
+import odms.profile.Profile;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class DonorDatabaseTest {
-    private DonorDatabase donorDB;
-    private Donor donorOne;
-    private Donor donorTwo;
+public class ProfileDatabaseTest {
+    private ProfileDatabase donorDB;
+    private Profile profileOne;
+    private Profile profileTwo;
 
     @Before
     public void setup() {
-        // Create donor Database with basic donor
-        donorDB = new DonorDatabase();
+        // Create profile Database with basic profile
+        donorDB = new ProfileDatabase();
 
         ArrayList<String> donorOneAttr = new ArrayList<>();
         donorOneAttr.add("given-names=\"John\"");
@@ -34,13 +34,13 @@ public class DonorDatabaseTest {
         donorTwoAttr.add("ird=\"123456878\"");
 
         try {
-            donorOne = new Donor(donorOneAttr);
+            profileOne = new Profile(donorOneAttr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 
         try {
-            donorTwo = new Donor(donorTwoAttr);
+            profileTwo = new Profile(donorTwoAttr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -53,11 +53,11 @@ public class DonorDatabaseTest {
     @Test
     public void testAddDonor() {
         try {
-            donorDB.addDonor(donorOne);
+            donorDB.addDonor(profileOne);
 
             assertEquals(donorDB.getDonor(0).getGivenNames(), "John");
             assertEquals(donorDB.getDonor(0).getLastNames(), "Wayne");
-            donorDB.addDonor(donorTwo);
+            donorDB.addDonor(profileTwo);
 
             assertEquals(donorDB.getDonor(1).getGivenNames(), "Sam");
             assertEquals(donorDB.getDonor(1).getLastNames(), "Sick");
@@ -71,8 +71,8 @@ public class DonorDatabaseTest {
     @Test
     public void testDeleteDonor() {
         try {
-            donorDB.addDonor(donorOne);
-            donorDB.addDonor(donorTwo);
+            donorDB.addDonor(profileOne);
+            donorDB.addDonor(profileTwo);
             assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
 
             donorDB.deleteDonor(0);
@@ -93,8 +93,8 @@ public class DonorDatabaseTest {
     @Test
     public void testGetDonorPopulation() {
         try {
-            donorDB.addDonor(donorOne);
-            donorDB.addDonor(donorTwo);
+            donorDB.addDonor(profileOne);
+            donorDB.addDonor(profileTwo);
             assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
 
             donorDB.deleteDonor(0);
@@ -107,11 +107,11 @@ public class DonorDatabaseTest {
 
     @Test
     public void testGetDonors() {
-        ArrayList<Donor> testResults;
+        ArrayList<Profile> testResults;
 
         try {
-            donorDB.addDonor(donorOne);
-            donorDB.addDonor(donorTwo);
+            donorDB.addDonor(profileOne);
+            donorDB.addDonor(profileTwo);
             testResults = donorDB.getDonors(false);
             assertTrue("Should be 2 results", testResults.size() == 2);
 
@@ -132,8 +132,8 @@ public class DonorDatabaseTest {
         thrown.expect(IrdNumberConflictException.class);
         thrown.expectMessage("IRD number already in use");
 
-        donorDB.addDonor(donorOne);
-        donorDB.addDonor(donorOne);
+        donorDB.addDonor(profileOne);
+        donorDB.addDonor(profileOne);
     }
 
 }

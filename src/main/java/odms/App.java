@@ -1,13 +1,14 @@
 package odms;
 
 import javafx.application.Application;
-import odms.commandlineview.CommandLine;
-import odms.commandlineview.CommandUtils;
+import odms.cli.CommandLine;
+import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
-import odms.data.DonorDatabase;
+import odms.data.ProfileDatabase;
 
 public class App {
-    private static DonorDatabase donorDb = new DonorDatabase();
+
+    private static ProfileDatabase donorDb = new ProfileDatabase();
 
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");

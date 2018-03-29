@@ -2,12 +2,10 @@ package odms.controller;
 
 import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
-import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.util.Arrays;
@@ -22,13 +20,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
-import odms.donor.Donor;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
 
 public class EditDonorProfileController {
 
-    private static Donor currentDonor = getCurrentDonor();
+    private static Profile currentProfile = getCurrentProfile();
 
     /**
      * Label to display the user's full name.
@@ -37,7 +35,7 @@ public class EditDonorProfileController {
     private Label donorFullNameLabel;
 
     /**
-     * Label to display the user's donor status.
+     * Label to display the user's profile status.
      */
     @FXML
     private Label donorStatusLabel;
@@ -201,34 +199,34 @@ public class EditDonorProfileController {
 
         if (saveBool) {
             String action =
-                    "Donor " + currentDonor.getId() + " updated details previous = " + currentDonor
+                    "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
                             .getAttributesSummary() + " new = ";
-            currentDonor.setGivenNames(givenNamesField.getText());
-            currentDonor.setLastNames(lastNamesField.getText());
-            currentDonor.setIrdNumber(Integer.valueOf(irdField.getText()));
-            //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
-            //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
-            currentDonor.setGender(genderField.getText());
-            currentDonor.setHeight(Double.valueOf(heightField.getText()));
-            currentDonor.setWeight(Double.valueOf(weightField.getText()));
-            currentDonor.setPhone(phoneField.getText());
-            currentDonor.setEmail(emailField.getText());
-            currentDonor.setAddress(addressField.getText());
-            currentDonor.setRegion(regionField.getText());
-            currentDonor.setBloodType(bloodTypeField.getText());
+            currentProfile.setGivenNames(givenNamesField.getText());
+            currentProfile.setLastNames(lastNamesField.getText());
+            currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
+            //currentProfile.setDateOfBirth(Date.parse(dobField.getText()));
+            //currentProfile.setDateOfDeath(LocalDate.parse(dodField.getText()));
+            currentProfile.setGender(genderField.getText());
+            currentProfile.setHeight(Double.valueOf(heightField.getText()));
+            currentProfile.setWeight(Double.valueOf(weightField.getText()));
+            currentProfile.setPhone(phoneField.getText());
+            currentProfile.setEmail(emailField.getText());
+            currentProfile.setAddress(addressField.getText());
+            currentProfile.setRegion(regionField.getText());
+            currentProfile.setBloodType(bloodTypeField.getText());
 
             if (bloodPressureField.getText().contains("/")) {
                 String systolic = bloodPressureField.getText()
                         .substring(0, bloodPressureField.getText().indexOf("/")).trim();
-                currentDonor.setBloodPressureSystolic(Integer.valueOf(systolic));
+                currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
                 String diastolic = bloodPressureField.getText()
                         .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
-                currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+                currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
 
-            currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
-            currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
-            action = action + currentDonor.getAttributesSummary() + " at " + LocalDateTime.now();
+            currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
+            currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
+            action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
             if (CommandUtils.getHistory().size() != 0) {
                 if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
                     CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
@@ -237,16 +235,16 @@ public class EditDonorProfileController {
             }
             CommandUtils.currentSessionHistory.add(action);
             CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-            /*currentDonor.setOrgans();
-            currentDonor.setDonations();*/
+            /*currentProfile.setOrgans();
+            currentProfile.setDonations();*/
 
             if (diseaseField.getText().contains("/")) {
                 String[] diseases = diseaseField.getText().split(", ");
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-                currentDonor.setChronicDiseases(diseasesSet);
+                currentProfile.setChronicDiseases(diseasesSet);
             }
 
-            DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
+            ProfileDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
 
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
             Scene newScene = new Scene(parent);
@@ -283,64 +281,64 @@ public class EditDonorProfileController {
     }
 
     /**
-     * Sets the current donor attributes to the labels on start up.
+     * Sets the current profile attributes to the labels on start up.
      */
     @FXML
     public void initialize() {
 
         try {
-            donorFullNameLabel.setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+            donorFullNameLabel.setText(currentProfile.getGivenNames() + " " + currentProfile.getLastNames());
 
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentProfile.getRegistered() != null && currentProfile.getRegistered() == true) {
                 donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
             }
 
-            if (currentDonor.getGivenNames() != null) {
-                givenNamesField.setText(currentDonor.getGivenNames());
+            if (currentProfile.getGivenNames() != null) {
+                givenNamesField.setText(currentProfile.getGivenNames());
             }
-            if (currentDonor.getLastNames() != null) {
-                lastNamesField.setText(currentDonor.getLastNames());
+            if (currentProfile.getLastNames() != null) {
+                lastNamesField.setText(currentProfile.getLastNames());
             }
-            if (currentDonor.getIrdNumber() != null) {
-                irdField.setText(currentDonor.getIrdNumber().toString());
+            if (currentProfile.getIrdNumber() != null) {
+                irdField.setText(currentProfile.getIrdNumber().toString());
             }
-            if (currentDonor.getDateOfBirth() != null) {
-                dobField.setText(currentDonor.getDateOfBirth().toString());
+            if (currentProfile.getDateOfBirth() != null) {
+                dobField.setText(currentProfile.getDateOfBirth().toString());
             }
-            if (currentDonor.getDateOfDeath() != null) {
-                dodField.setText(currentDonor.getDateOfDeath().toString());
+            if (currentProfile.getDateOfDeath() != null) {
+                dodField.setText(currentProfile.getDateOfDeath().toString());
             }
-            if (currentDonor.getGender() != null) {
-                genderField.setText(currentDonor.getGender());
+            if (currentProfile.getGender() != null) {
+                genderField.setText(currentProfile.getGender());
             }
-            heightField.setText(String.valueOf(currentDonor.getHeight()));
-            weightField.setText(String.valueOf(currentDonor.getWeight()));
-            phoneField.setText(currentDonor.getPhone());
-            emailField.setText(currentDonor.getEmail());
+            heightField.setText(String.valueOf(currentProfile.getHeight()));
+            weightField.setText(String.valueOf(currentProfile.getWeight()));
+            phoneField.setText(currentProfile.getPhone());
+            emailField.setText(currentProfile.getEmail());
 
-            if (currentDonor.getAddress() != null) {
-                addressField.setText(currentDonor.getAddress());
+            if (currentProfile.getAddress() != null) {
+                addressField.setText(currentProfile.getAddress());
             }
-            if (currentDonor.getRegion() != null) {
-                regionField.setText(currentDonor.getRegion());
+            if (currentProfile.getRegion() != null) {
+                regionField.setText(currentProfile.getRegion());
             }
-            if (currentDonor.getBloodType() != null) {
-                bloodTypeField.setText(currentDonor.getBloodType());
+            if (currentProfile.getBloodType() != null) {
+                bloodTypeField.setText(currentProfile.getBloodType());
             }
-            if (currentDonor.getSmoker() != null) {
-                smokerField.setText(currentDonor.getSmoker().toString());
+            if (currentProfile.getSmoker() != null) {
+                smokerField.setText(currentProfile.getSmoker().toString());
             }
-            if (currentDonor.getAlcoholConsumption() != null) {
-                alcoholConsumptionField.setText(currentDonor.getAlcoholConsumption());
+            if (currentProfile.getAlcoholConsumption() != null) {
+                alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
             }
-            if (currentDonor.getBloodPressure() != null) {
-                bloodPressureField.setText(currentDonor.getBloodPressure());
+            if (currentProfile.getBloodPressure() != null) {
+                bloodPressureField.setText(currentProfile.getBloodPressure());
             }
-            diseaseField.setText(currentDonor.getChronicDiseasesAsCSV());
-            organField.setText(currentDonor.getOrgansAsCSV());
-            donationsField.setText(currentDonor.getDonationsAsCSV());
+            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
+            organField.setText(currentProfile.getOrgansAsCSV());
+            donationsField.setText(currentProfile.getDonationsAsCSV());
         }
         catch (Exception e) {
             System.out.println(e);

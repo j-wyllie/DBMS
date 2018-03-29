@@ -1,19 +1,20 @@
-package odms.commandlineview;
+package odms.cli;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import odms.data.DonorDatabase;
-import odms.donor.Donor;
+import odms.data.ProfileDatabase;
+import odms.profile.Profile;
 
 public class CommandUtils {
+
     public static ArrayList<String> currentSessionHistory = new ArrayList<>();
 
     public static int historyPosition = 0;
-    private static ArrayList<Donor> deletedDonors = new ArrayList<>();
-    private static ArrayList<Donor> unaddedDonors = new ArrayList<>();
+    private static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     private static String searchErrorText = "Please enter only one search criteria "
                                             + "(given-names, last-names, ird).";
@@ -75,7 +76,7 @@ public class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
-            case "donor":
+            case "profile":
                 if (rawInput.matches(cmdRegexDonorView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
                         case "view":
@@ -100,7 +101,7 @@ public class CommandUtils {
                     }
 
                 } else if (rawInput.matches(cmdRegexDonorUpdate)
-                        && cmd.get(0).equals("donor")) {
+                        && cmd.get(0).equals("profile")) {
                     return Commands.DONORUPDATE;
                 }
         }
@@ -113,7 +114,7 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression being used for searching
      */
-    public static void viewAttrBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void viewAttrBySearch(ProfileDatabase currentDatabase, String expression) {
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
@@ -139,31 +140,31 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void viewDateTimeCreatedBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void viewDateTimeCreatedBySearch(ProfileDatabase currentDatabase, String expression) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.lastIndexOf("\""));
 
         if (expression.substring(6, 17).equals("given-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                printProfileList(donorList);
+                printProfileList(profileList);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 16).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                printProfileList(donorList);
+                printProfileList(profileList);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 9).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-                printProfileList(donorList);
+                printProfileList(profileList);
             } else {
                 System.out.println(searchErrorText);
             }
@@ -179,27 +180,27 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void viewDonationsBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void viewDonationsBySearch(ProfileDatabase currentDatabase, String expression) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.lastIndexOf("\""));
-        ArrayList<Donor> donorList = null;
+        ArrayList<Profile> profileList = null;
 
         if (expression.substring(6, 17).equals("given-names")) {
 
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                donorList = currentDatabase.searchGivenNames(attr);
+                profileList = currentDatabase.searchGivenNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 16).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                donorList = currentDatabase.searchLastNames(attr);
+                profileList = currentDatabase.searchLastNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
         } else if (expression.substring(6, 9).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
             } else {
                 System.out.println(searchErrorText);
             }
@@ -208,8 +209,8 @@ public class CommandUtils {
             System.out.println(searchErrorText);
         }
 
-        if (donorList != null && donorList.size() > 0) {
-            printDonorDonations(donorList);
+        if (profileList != null && profileList.size() > 0) {
+            printDonorDonations(profileList);
         } else {
             System.out.println("No matching profiles found.");
         }
@@ -222,7 +223,7 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void updateProfilesBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void updateProfilesBySearch(ProfileDatabase currentDatabase, String expression) {
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
             .trim()
             .split("\"\\s");
@@ -233,17 +234,17 @@ public class CommandUtils {
                 expression.indexOf(">") - 2);
 
             if (expression.substring(6, 17).equals("given-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                updateProfileAttr(donorList, attrList);
+                updateProfileAttr(profileList, attrList);
             } else if (expression.substring(6, 16).equals("last-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                updateProfileAttr(donorList, attrList);
+                updateProfileAttr(profileList, attrList);
             } else if (expression.substring(6, 9).equals("ird")) {
-                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-                updateProfileAttr(donorList, attrList);
+                updateProfileAttr(profileList, attrList);
             }
 
         } else {
@@ -257,7 +258,7 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void addOrgansBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void addOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
         String[] organList = expression.substring(
             expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
 
@@ -267,14 +268,14 @@ public class CommandUtils {
                 expression.indexOf(">") - 2);
 
             if (expression.substring(6, 17).equals("given-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                addOrgans(donorList, organList);
+                addOrgans(profileList, organList);
             } else if (expression.substring(6, 16).equals("last-names")) {
 
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                addOrgans(donorList, organList);
+                addOrgans(profileList, organList);
             } else if (expression.substring(6, 9).equals("ird")) {
                 test(currentDatabase, expression, organList);
             }
@@ -285,12 +286,12 @@ public class CommandUtils {
     }
 
     /**
-     * Remove organs available for donation to a donor profile.
+     * Remove organs available for donation to a profile profile.
      *
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void removeOrgansBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void removeOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1).
             replace("\"", "")
             .split(",");
@@ -303,17 +304,17 @@ public class CommandUtils {
                 expression.indexOf(">") - 2);
 
             if (expression.substring(6, 17).equals("given-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                removeOrgans(donorList, organList);
+                removeOrgans(profileList, organList);
             } else if (expression.substring(6, 16).equals("last-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                removeOrgans(donorList, organList);
+                removeOrgans(profileList, organList);
             } else if (expression.substring(6, 9).equals("ird")) {
-                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-                removeOrgans(donorList, organList);
+                removeOrgans(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -321,12 +322,12 @@ public class CommandUtils {
     }
 
     /**
-     * Add organs available for donation to a donor profile.
+     * Add organs available for donation to a profile profile.
      *
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void addDonationsMadeBySearch(DonorDatabase currentDatabase,
+    public static void addDonationsMadeBySearch(ProfileDatabase currentDatabase,
         String expression) {
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
             .replace("\"", "").split(",");
@@ -337,19 +338,19 @@ public class CommandUtils {
                 expression.indexOf(">") - 2);
 
             if (expression.substring(6, 17).equals("given-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                if (donorList.size() > 0) {
-                    addDonation(donorList, organList);
+                if (profileList.size() > 0) {
+                    addDonation(profileList, organList);
                 } else {
                     System.out.println(searchNotFoundText);
                 }
 
             } else if (expression.substring(6, 16).equals("last-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                if (donorList.size() > 0) {
-                    addDonation(donorList, organList);
+                if (profileList.size() > 0) {
+                    addDonation(profileList, organList);
                 } else {
                     System.out.println(searchNotFoundText);
                 }
@@ -366,12 +367,12 @@ public class CommandUtils {
     }
 
     // TODO check what main purpose this serves and name appropriately
-    private static void test(DonorDatabase currentDatabase, String expression, String[] organList) {
+    private static void test(ProfileDatabase currentDatabase, String expression, String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
-        ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+        ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-        addOrgans(donorList, organList);
+        addOrgans(profileList, organList);
     }
 
     /**
@@ -379,23 +380,23 @@ public class CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void deleteDonorBySearch(DonorDatabase currentDatabase, String expression) {
+    public static void deleteDonorBySearch(ProfileDatabase currentDatabase, String expression) {
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
 
             if (expression.substring(6, 17).equals("given-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchGivenNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                deleteProfiles(donorList, currentDatabase);
+                deleteProfiles(profileList, currentDatabase);
             } else if (expression.substring(6, 16).equals("last-names")) {
-                ArrayList<Donor> donorList = currentDatabase.searchLastNames(attr);
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                deleteProfiles(donorList, currentDatabase);
+                deleteProfiles(profileList, currentDatabase);
             } else if (expression.substring(6, 9).equals("ird")) {
-                ArrayList<Donor> donorList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
-                deleteProfiles(donorList, currentDatabase);
+                deleteProfiles(profileList, currentDatabase);
             }
 
         } else {
@@ -408,41 +409,41 @@ public class CommandUtils {
      *
      * @param profileList List of profiles
      */
-    private static void printProfileList(ArrayList<Donor> profileList) {
-        for (Donor donor : profileList) {
-            System.out.println("IRD: " + donor.getIrdNumber());
-            System.out.println("Given Names: " + donor.getGivenNames());
-            System.out.println("Last Names: " + donor.getLastNames());
-            System.out.println("Date/Time Created: " + donor.getTimeOfCreation());
+    private static void printProfileList(ArrayList<Profile> profileList) {
+        for (Profile profile : profileList) {
+            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("Given Names: " + profile.getGivenNames());
+            System.out.println("Last Names: " + profile.getLastNames());
+            System.out.println("Date/Time Created: " + profile.getTimeOfCreation());
             System.out.println();
         }
     }
 
     /**
-     * Display and print donor donations.
+     * Display and print profile donations.
      *
-     * @param donorList list of donors
+     * @param profileList list of donors
      */
-    private static void printDonorDonations(ArrayList<Donor> donorList) {
-        for (Donor donor : donorList) {
-            System.out.println("IRD: " + donor.getIrdNumber());
-            System.out.println("Given Names: " + donor.getGivenNames());
-            System.out.println("Last Names: " + donor.getLastNames());
-            donor.viewDonations();
+    private static void printDonorDonations(ArrayList<Profile> profileList) {
+        for (Profile profile : profileList) {
+            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("Given Names: " + profile.getGivenNames());
+            System.out.println("Last Names: " + profile.getLastNames());
+            profile.viewDonations();
             System.out.println();
         }
     }
 
     /**
-     * Display and print all search results from Donor array.
+     * Display and print all search results from Profile array.
      * If array empty, no search results have been found.
      *
-     * @param donorList Results from searching
+     * @param profileList Results from searching
      */
-    private static void printSearchResults(ArrayList<Donor> donorList) {
-        if (donorList.size() > 0) {
-            for (Donor donor : donorList) {
-                donor.viewAttributes();
+    private static void printSearchResults(ArrayList<Profile> profileList) {
+        if (profileList.size() > 0) {
+            for (Profile profile : profileList) {
+                profile.viewAttributes();
                 System.out.println();
             }
         } else {
@@ -456,14 +457,14 @@ public class CommandUtils {
      * @param profileList List of profiles
      * @param attrList Attributes to be updated and their values
      */
-    private static void updateProfileAttr(ArrayList<Donor> profileList, String[] attrList) {
+    private static void updateProfileAttr(ArrayList<Profile> profileList, String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             String action;
-            for (Donor donor : profileList) {
-                action = "Donor "+donor.getId()+" updated details previous = "+donor.getAttributesSummary()+" new = ";
-                donor.setExtraAttributes(attrArray);
-                action = action+donor.getAttributesSummary()+" at " + LocalDateTime.now();
+            for (Profile profile : profileList) {
+                action = "Profile "+ profile.getId()+" updated details previous = "+ profile.getAttributesSummary()+" new = ";
+                profile.setExtraAttributes(attrArray);
+                action = action+ profile.getAttributesSummary()+" at " + LocalDateTime.now();
                 if(currentSessionHistory.size()!=0){
                     if(historyPosition != currentSessionHistory.size()-1){
                         currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
@@ -484,19 +485,19 @@ public class CommandUtils {
      * @param profileList list of profiles
      * @param currentDatabase Database reference
      */
-    private static void deleteProfiles(ArrayList<Donor> profileList, DonorDatabase currentDatabase) {
+    private static void deleteProfiles(ArrayList<Profile> profileList, ProfileDatabase currentDatabase) {
         boolean result;
         if (profileList.size() > 0) {
-            for (Donor donor : profileList) {
-                result = currentDatabase.deleteDonor(donor.getId());
+            for (Profile profile : profileList) {
+                result = currentDatabase.deleteDonor(profile.getId());
                 if(result) {
-                    deletedDonors.add(donor);
+                    deletedProfiles.add(profile);
                     if(currentSessionHistory.size()!=0){
                         if(historyPosition != currentSessionHistory.size()-1){
                             currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
                         }
                     }
-                    currentSessionHistory.add("Donor "+donor.getId()+" deleted at "+ LocalDateTime.now());
+                    currentSessionHistory.add("Profile "+ profile.getId()+" deleted at "+ LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
                 }
 
@@ -510,22 +511,22 @@ public class CommandUtils {
     /**
      * Add organ donations.
      *
-     * @param donorList list of donors
+     * @param profileList list of donors
      * @param organList list of organs to be added
      */
-    private static void addOrgans(ArrayList<Donor> donorList, String[] organList) {
-        if (donorList.size() > 0) {
+    private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
+        if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
-            for (Donor donor : donorList) {
+            for (Profile profile : profileList) {
                 try {
-                    donor.addOrgans(organSet);
+                    profile.addOrgans(organSet);
                     if(currentSessionHistory.size()!=0){
                         if(historyPosition != currentSessionHistory.size()-1){
                             currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
                         }
                     }
-                    currentSessionHistory.add("Donor "+donor.getId()+" set organs "+organSet+ " at " + LocalDateTime.now());
+                    currentSessionHistory.add("Profile "+ profile.getId()+" set organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
@@ -539,22 +540,22 @@ public class CommandUtils {
     /**
      * TODO Is this a duplicate function for a reason, unsure
      *
-     * @param donorList
+     * @param profileList
      * @param organList
      */
-    private static void addDonation(ArrayList<Donor> donorList, String[] organList) {
-        if (donorList.size() > 0) {
+    private static void addDonation(ArrayList<Profile> profileList, String[] organList) {
+        if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
-            for (Donor donor : donorList) {
+            for (Profile profile : profileList) {
                 try {
-                    donor.addDonations(organSet);
+                    profile.addDonations(organSet);
                     if(currentSessionHistory.size()!=0){
                         if(historyPosition != currentSessionHistory.size()-1){
                             currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
                         }
                     }
-                    currentSessionHistory.add("Donor "+donor.getId()+" decided to donate these organs "+organSet+ " at " + LocalDateTime.now());
+                    currentSessionHistory.add("Profile "+ profile.getId()+" decided to donate these organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
@@ -568,22 +569,22 @@ public class CommandUtils {
     /**
      * Remove organ from donations list for donors.
      *
-     * @param donorList list of donors
+     * @param profileList list of donors
      * @param organList list of organs to be removed
      */
-    private static void removeOrgans(ArrayList<Donor> donorList, String[] organList) {
-        if (donorList.size() > 0) {
+    private static void removeOrgans(ArrayList<Profile> profileList, String[] organList) {
+        if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
-            for (Donor donor : donorList) {
+            for (Profile profile : profileList) {
                 try {
-                    donor.removeOrgans(organSet);
+                    profile.removeOrgans(organSet);
                     if(currentSessionHistory.size()!=0){
                         if(historyPosition != currentSessionHistory.size()-1){
                             currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
                         }
                     }
-                    currentSessionHistory.add("Donor "+donor.getId()+" removed these organs "+organSet+ " at " + LocalDateTime.now());
+                    currentSessionHistory.add("Profile "+ profile.getId()+" removed these organs "+organSet+ " at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size()-1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
@@ -595,36 +596,36 @@ public class CommandUtils {
     }
 
     public static void help() {
-        System.out.println("\nCreate a new donor:");
+        System.out.println("\nCreate a new profile:");
         System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
                            + "required)}");
         System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" "
                            + "dob=\"03-03-1998\" ird=\"123456789\"");
 
-        System.out.println("\nView a donor:");
-        System.out.println("donor {attributes to search donors by} > view");
+        System.out.println("\nView a profile:");
+        System.out.println("profile {attributes to search donors by} > view");
 
-        System.out.println("\nView the date a donor was created:");
-        System.out.println("donor {attributes to search donors by} > date-created");
+        System.out.println("\nView the date a profile was created:");
+        System.out.println("profile {attributes to search donors by} > date-created");
 
         System.out.println("\nView a donors past donations:");
-        System.out.println("donor {attributes to search donors by} > donations");
+        System.out.println("profile {attributes to search donors by} > donations");
 
         System.out.println("\nUpdate a donors attributes:");
-        System.out.println("donor {attributes to search donors by} > {attributes to update}");
-        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+        System.out.println("profile {attributes to search donors by} > {attributes to update}");
+        System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
                            + "-1998\" > height=\"169\"");
 
         System.out.println("\nAdd an organ to donate:");
-        System.out.println("donor {attributes to search donors by} > add-organ=\" {list of organs "
+        System.out.println("profile {attributes to search donors by} > add-organ=\" {list of organs "
                            + "to donate} \"");
-        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+        System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
                            + "-1998\" > add-organ=\"liver, kidney\"");
 
         System.out.println("\nRemove an organ to donate:");
-        System.out.println("donor {attributes to search donors by} > remove-organ=\" {list of "
+        System.out.println("profile {attributes to search donors by} > remove-organ=\" {list of "
                            + "organs to remove} \"");
-        System.out.println("e.g. donor given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
+        System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
                            + "03-1998\" > remove-organ=\"liver, kidney\"");
 
         System.out.print("\nPrint all profiles: ");
@@ -648,11 +649,11 @@ public class CommandUtils {
     public static void helpSpecific(String cmd)
     {
         String[] cmdArray = {"create-profile","view","date-created","donations","update","add-organ","remove-organ","print all","print donors","quit","attributes","organs"};
-        String[] definitionArray = {"\nCreate a new donor","\nView a donor","\nView the date a donor was created","\nView a donors past donations","\nUpdate a donors attributes",
+        String[] definitionArray = {"\nCreate a new profile","\nView a profile","\nView the date a profile was created","\nView a donors past donations","\nUpdate a donors attributes",
                 "\nAdd an organ to donate","\nRemove an organ to donate","\nPrint all profiles ","\nPrint all donors ","\nClose the app ","The possible attriubtes are : given-names, last-names, dob, dod, gender, height, weight, blood-type, address, region, ird",
                 "The possible organs are : Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue"};
-        String[] exampleArray = {"create-profile {attributes (given-names, last-names, dob and ird is required)}", "donor {attributes to search donors by} > view","donor {attributes to search donors by} > date-created","donor {attributes to search donors by} > donations","donor {attributes to search donors by} > {attributes to update}"
-        ,"donor {attributes to search donors by} > add-organ=\" {list of organs to donate} \"","donor {attributes to search donors by} > remove-organ=\" {list of organs to remove} \"","print all: ","print donors","quit"};
+        String[] exampleArray = {"create-profile {attributes (given-names, last-names, dob and ird is required)}", "profile {attributes to search donors by} > view","profile {attributes to search donors by} > date-created","profile {attributes to search donors by} > donations","profile {attributes to search donors by} > {attributes to update}"
+        ,"profile {attributes to search donors by} > add-organ=\" {list of organs to donate} \"","profile {attributes to search donors by} > remove-organ=\" {list of organs to remove} \"","print all: ","print donors","quit"};
         if(Arrays.asList(cmdArray).contains(cmd)) {
             int position = Arrays.asList(cmdArray).indexOf(cmd);
             System.out.println(definitionArray[position]);
@@ -670,7 +671,7 @@ public class CommandUtils {
             currentSessionHistory.subList(historyPosition, currentSessionHistory.size()-1).clear();
         }
         }
-        currentSessionHistory.add("Donor "+Id+" added at "+ LocalDateTime.now());
+        currentSessionHistory.add("Profile "+Id+" added at "+ LocalDateTime.now());
         historyPosition = currentSessionHistory.size()-1;
     }
 
@@ -678,15 +679,15 @@ public class CommandUtils {
         return currentSessionHistory;
     }
 
-    public static void undo(DonorDatabase currentDatabase) {
+    public static void undo(ProfileDatabase currentDatabase) {
         try {
             String action = currentSessionHistory.get(historyPosition);
             action = action.substring(0, action.indexOf(" at"));
             if (action.contains("added")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Donor donor = currentDatabase.getDonor(id);
+                Profile profile = currentDatabase.getDonor(id);
                 currentDatabase.deleteDonor(id);
-                unaddedDonors.add(donor);
+                unaddedProfiles.add(profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 } else {
@@ -694,50 +695,50 @@ public class CommandUtils {
                 }
             } else if (action.contains("deleted")) {
                 int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                int id = currentDatabase.undeleteDonor(oldid, deletedDonors.get(deletedDonors.size()-1));
-                deletedDonors.remove(deletedDonors.get(deletedDonors.size()-1));
+                int id = currentDatabase.undeleteDonor(oldid, deletedProfiles.get(deletedProfiles.size()-1));
+                deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size()-1));
                 for(int i = 0; i < currentSessionHistory.size()-1; i++) {
-                    if(currentSessionHistory.get(i).contains("Donor "+oldid)) {
-                        currentSessionHistory.set(i,("Donor "+id+" "+currentSessionHistory.get(i).substring(action.indexOf("Donor "+oldid)+6+Integer.toString(id).length())));
+                    if(currentSessionHistory.get(i).contains("Profile "+oldid)) {
+                        currentSessionHistory.set(i,("Profile "+id+" "+currentSessionHistory.get(i).substring(action.indexOf("Profile "+oldid)+6+Integer.toString(id).length())));
                     }
                 }
-                currentSessionHistory.set(historyPosition, ("Donor "+id+" deleted at "+ LocalDateTime.now()));
+                currentSessionHistory.set(historyPosition, ("Profile "+id+" deleted at "+ LocalDateTime.now()));
                 if(historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Donor donor = currentDatabase.getDonor(id);
+                Profile profile = currentDatabase.getDonor(id);
                 Set<String> organSet = new HashSet(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                donor.addOrgans(organSet);
+                profile.addOrgans(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("set")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Donor donor = currentDatabase.getDonor(id);
+                Profile profile = currentDatabase.getDonor(id);
                 Set<String> organSet = new HashSet(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                donor.removeOrgans(organSet);
+                profile.removeOrgans(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("donate")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Donor donor = currentDatabase.getDonor(id);
+                Profile profile = currentDatabase.getDonor(id);
                 Set<String> organSet = new HashSet(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                donor.removeDonations(organSet);
+                profile.removeDonations(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("update")) {
                 int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-                Donor donor = currentDatabase.getDonor(id);
+                Profile profile = currentDatabase.getDonor(id);
                 String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
-                donor.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
+                profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -749,7 +750,7 @@ public class CommandUtils {
         }
     }
 
-    public static void redo(DonorDatabase currentDatabase) {
+    public static void redo(ProfileDatabase currentDatabase) {
         try {
             System.out.println(historyPosition);
 
@@ -766,44 +767,44 @@ public class CommandUtils {
                 action = action.substring(0, action.indexOf(" at"));
                 if (action.contains("added")) {
                     int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    int id = currentDatabase.undeleteDonor(oldid, unaddedDonors.get(unaddedDonors.size()-1));
-                    unaddedDonors.remove(unaddedDonors.get(unaddedDonors.size()-1));
+                    int id = currentDatabase.undeleteDonor(oldid, unaddedProfiles.get(unaddedProfiles.size()-1));
+                    unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size()-1));
                     for(int i = 0; i < currentSessionHistory.size()-1; i++) {
-                        if(currentSessionHistory.get(i).contains("Donor "+oldid)) {
-                            currentSessionHistory.set(i,("Donor "+id+currentSessionHistory.get(i).substring(action.indexOf("Donor "+oldid)+6+Integer.toString(id).length())));
+                        if(currentSessionHistory.get(i).contains("Profile "+oldid)) {
+                            currentSessionHistory.set(i,("Profile "+id+currentSessionHistory.get(i).substring(action.indexOf("Profile "+oldid)+6+Integer.toString(id).length())));
                         }
                     }
-                    currentSessionHistory.set(historyPosition, ("Donor "+id+" added at "+ LocalDateTime.now()));
+                    currentSessionHistory.set(historyPosition, ("Profile "+id+" added at "+ LocalDateTime.now()));
                 } else if (action.contains("deleted")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Donor donor = currentDatabase.getDonor(id);
+                    Profile profile = currentDatabase.getDonor(id);
                     currentDatabase.deleteDonor(id);
-                    deletedDonors.add(donor);
+                    deletedProfiles.add(profile);
                 } else if (action.contains("removed")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Donor donor = currentDatabase.getDonor(id);
+                    Profile profile = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    donor.removeOrgans(organSet);
+                    profile.removeOrgans(organSet);
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Donor donor = currentDatabase.getDonor(id);
+                    Profile profile = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    donor.addOrgans(organSet);
+                    profile.addOrgans(organSet);
                 } else if (action.contains("donate")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Donor donor = currentDatabase.getDonor(id);
+                    Profile profile = currentDatabase.getDonor(id);
                     Set<String> organSet = new HashSet(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    donor.addDonations(organSet);
+                    profile.addDonations(organSet);
                 } else if (action.contains("update")) {
                     int id = Integer.parseInt(
                             action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-                    Donor donor = currentDatabase.getDonor(id);
+                    Profile profile = currentDatabase.getDonor(id);
                     String newInfo = action.substring(action.indexOf("new"));
                     newInfo = action.substring(action.indexOf("ird"));
-                    donor.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+                    profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
                 }
                 System.out.println("Command redone");
             }

@@ -1,4 +1,4 @@
-package odms.commandlineview;
+package odms.cli;
 
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -22,7 +22,7 @@ public enum Commands {
     PROFILEDELETE,
     PROFILEVIEW,
 
-    // Donor Commands
+    // Profile Commands
     DONORDATECREATED,
     DONORDONATIONS,
     DONORUPDATE,

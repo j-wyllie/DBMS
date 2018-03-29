@@ -5,18 +5,18 @@ import static org.junit.Assert.assertEquals;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import odms.donor.Donor;
+import odms.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DonorDataIOTest {
-    private DonorDatabase donorDB;
-    private Donor donorOne;
+public class ProfileDataIOTest {
+    private ProfileDatabase donorDB;
+    private Profile profileOne;
 
     @Before
     public void setup() {
-        // Create donor Database with basic donor
-        donorDB = new DonorDatabase();
+        // Create profile Database with basic profile
+        donorDB = new ProfileDatabase();
 
         ArrayList<String> donorOneAttr = new ArrayList<>();
         donorOneAttr.add("given-names=\"John\"");
@@ -25,8 +25,8 @@ public class DonorDataIOTest {
         donorOneAttr.add("ird=\"123456879\"");
 
         try {
-            donorOne = new Donor(donorOneAttr);
-            donorDB.addDonor(donorOne);
+            profileOne = new Profile(donorOneAttr);
+            donorDB.addDonor(profileOne);
 
         } catch (IrdNumberConflictException e) {
             e.printStackTrace();
@@ -36,10 +36,10 @@ public class DonorDataIOTest {
 
     @Test
     public void testSaveAndLoad() {
-        DonorDatabase loadedDb;
-        DonorDataIO.saveDonors(donorDB, "test.json");
+        ProfileDatabase loadedDb;
+        ProfileDataIO.saveDonors(donorDB, "CommandUtilsTest.json");
 
-        loadedDb = DonorDataIO.loadData("test.json");
+        loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
 
         assertEquals(
             donorDB.getDonor(0).getGivenNames(),
@@ -47,7 +47,7 @@ public class DonorDataIOTest {
         );
 
         try {
-            Files.deleteIfExists(Paths.get("test.json"));
+            Files.deleteIfExists(Paths.get("CommandUtilsTest.json"));
         } catch (Exception e) {
             e.printStackTrace();
         }

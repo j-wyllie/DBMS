@@ -5,7 +5,7 @@
 During runtime the 'database' will be kept in memory, with supporting functions.
 
 ### File Storage
-For the sake of readability JSON has been chosen for storing the donor data upon saving. CSV usage 
+For the sake of readability JSON has been chosen for storing the profile data upon saving. CSV usage 
 was explored but found to be less readable to a user.
 * GSON library chosen for helping handle JSON related functions. 
 
@@ -21,5 +21,5 @@ class property then it does not require testing as this provides no real benefit
 ## Constants
 ### Enums
 Enums have been used for any constants throughout the program such as the organs, blood-types 
-and the attributes of a donor. This will prevent any errors that could occur from repeating 
+and the attributes of a profile. This will prevent any errors that could occur from repeating 
 definitions across multiple files.

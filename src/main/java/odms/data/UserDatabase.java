@@ -4,6 +4,7 @@ import java.util.HashMap;
 import odms.user.User;
 
 public class UserDatabase {
+
     private HashMap<Integer, User> userDb = new HashMap<>();
     private Integer lastID = -1;
 
@@ -18,7 +19,7 @@ public class UserDatabase {
     }
 
     /**
-     * Determine unique ID for donor and add the donor the the database
+     * Determine unique ID for profile and add the profile the the database
      *
      * @param user new user object
      */

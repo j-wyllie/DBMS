@@ -38,16 +38,16 @@ The current database can be saved and exported by executing
 ### Example Database
 An example database can be found in the example directory.
     
-This example database is a database containing 10 donors of varying organ donation status and other 
+This example database is a database containing 10 profiles of varying organ donation status and other 
 mixed attributes.
 
 ## Donor Management
-ODMS refers to the specifics of a donor as attributes, such as names, date of birth, organs they opt
+ODMS refers to the specifics of a profile as attributes, such as names, date of birth, organs they opt
  to donate, etc.
 
 ### Donors
-#### Creating a donor
-A donor profile can be created from the base command `create-profile` followed by the desired 
+#### Creating a profile
+A profile profile can be created from the base command `create-profile` followed by the desired 
 attributes you wish to set at time of creation.
 
 **Note: **Profiles must be created with `given-names`, `last-names`, `dob`, and `ird`
@@ -71,25 +71,25 @@ The following attributes are available within ODMS:
 When using attributes the format is always `attribute="value"`
 
 ##### Examples
-Basic donor profile creation
+Basic profile profile creation
 
     create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789"
     
-More detailed donor profile creation
+More detailed profile profile creation
 
     create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789" gender="male" height="180" weight="104"
 
-#### Viewing or updating a donor
-A donor profile can be selected by searching via the `donor` command and providing attributes 
+#### Viewing or updating a profile
+A profile profile can be selected by searching via the `profile` command and providing attributes 
 `given-names`, `last-names`, or `ird`. After selecting these attributes follow them with ` > ` and 
 either `view` or the attributes you wish to modify.
 
 ##### Examples
-Viewing a donor:
+Viewing a profile:
     
-    donor given-names"michell marion" > view
+    profile given-names"michell marion" > view
     
-This will result in a summary of all donors that match the criteria:
+This will result in a summary of all profiles that match the criteria:
 
     IRD: 123456789
     Given Names: Marion Mitchell
@@ -98,22 +98,22 @@ This will result in a summary of all donors that match the criteria:
     IRD: 123456789
     Last updated at: 03:10 PM 08-03-2018
     
-Updating a donor:
+Updating a profile:
 
-    donor given-names="Marion Mitchell" > age="84" blood-type="O+"
+    profile given-names="Marion Mitchell" > age="84" blood-type="O+"
 
-##### Viewing a donor's creation time
-`date-created` will display the donor's creation time.
+##### Viewing a profile's creation time
+`date-created` will display the profile's creation time.
 
-    donor given-names="Marion Mitchell" > date-created
+    profile given-names="Marion Mitchell" > date-created
 
-##### View a donor's previous donations
-`donations` will display the previous donations made by a donor.
+##### View a profile's previous donations
+`donations` will display the previous donations made by a profile.
 
-    donor given-names="Marion Mitchell" > donations
+    profile given-names="Marion Mitchell" > donations
 
-#### Managing a donor's organ donation status
-The organs that are available to be added to a donor are:
+#### Managing a profile's organ donation status
+The organs that are available to be added to a profile are:
 
 `liver`
 `kidney`
@@ -128,28 +128,28 @@ The organs that are available to be added to a donor are:
 `bone-marrow`
 `connective-tissue`
 
-Please be explicit when adding organs that are available to be donated to a donor, explicitly use an
+Please be explicit when adding organs that are available to be donated to a profile, explicitly use an
  IRD number for best accuracy.
 
-    donor ird="123456789" > add-organ="heart"
+    profile ird="123456789" > add-organ="heart"
 
 Multiple organs can be added by either space or comma delimitation
 
-    donor ird="123456789" > add-organ="liver,kidney"
+    profile ird="123456789" > add-organ="liver,kidney"
     
 To remove an organ from the opted donation list use the `remove-organ` command
 
-    donor ird="123456789" > remove-organ="liver"
+    profile ird="123456789" > remove-organ="liver"
     
-#### Displaying all donor's
-You can display all donor profiles at any time with the following command:
+#### Displaying all profile's
+You can display all profile profiles at any time with the following command:
 
     print all
     
-This can be limited to only those donor profiles that currently are registered to donate an organ 
+This can be limited to only those profile profiles that currently are registered to donate an organ 
 with the following command:
     
-    print donors
+    print profiles
     
 #### UNDO/REDO Actions
 Undo undoes previously done actions in the command line and GUI.

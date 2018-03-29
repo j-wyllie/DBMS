@@ -1,19 +1,18 @@
-package odms.donor;
+package odms.profile;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import org.omg.CORBA.ORB;
 
 import static org.junit.Assert.*;
 
-public class DonorTest {
+public class ProfileTest {
 
     /**
      * Test to create a valid user
@@ -21,7 +20,7 @@ public class DonorTest {
      */
     @Test
     public void testCreateBasicUser() throws IllegalArgumentException {
-        Donor testDonor = null;
+        Profile testProfile = null;
 
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
@@ -30,25 +29,25 @@ public class DonorTest {
         donorAttr.add("ird=\"123456879\"");
 
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             //pass
         }
 
-        assertTrue(testDonor != null);
+        assertTrue(testProfile != null);
     }
 
     @Test
     public void testCreateBasicUserRawData() throws IllegalArgumentException {
-        Donor testDonor = null;
+        Profile testProfile = null;
 
         try {
-            testDonor = new Donor("John", "Smithy", "17-01-1998", 123456789);
+            testProfile = new Profile("John", "Smithy", "17-01-1998", 123456789);
         } catch (IllegalArgumentException e) {
             //pass
         }
 
-        assertTrue(testDonor != null);
+        assertTrue(testProfile != null);
     }
 
     /**
@@ -57,7 +56,7 @@ public class DonorTest {
      */
     @Test
     public void testCreateFullUser() throws IllegalArgumentException {
-        Donor testDonor = null;
+        Profile testProfile = null;
 
         ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
@@ -73,12 +72,12 @@ public class DonorTest {
         donorAttr.add("region=\"Christchurch\"");
 
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             //pass
         }
 
-        assertTrue(testDonor != null);
+        assertTrue(testProfile != null);
     }
 
     /**
@@ -92,7 +91,7 @@ public class DonorTest {
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"17-01-1998\"");
 
-        Donor donorOnlyAttr = new Donor(donorAttr);
+        Profile profileOnlyAttr = new Profile(donorAttr);
     }
 
     /**
@@ -106,7 +105,7 @@ public class DonorTest {
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("ird=\"123456879\"");;
 
-        Donor donorOnlyAttr = new Donor(donorAttr);
+        Profile profileOnlyAttr = new Profile(donorAttr);
     }
 
     /**
@@ -120,7 +119,7 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor donorOnlyAttr = new Donor(donorAttr);
+        Profile profileOnlyAttr = new Profile(donorAttr);
     }
 
     /**
@@ -134,7 +133,7 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor donorOnlyAttr = new Donor(donorAttr);
+        Profile profileOnlyAttr = new Profile(donorAttr);
     }
 
     /**
@@ -149,7 +148,7 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor donorOnlyAttr = new Donor(donorAttr);
+        Profile profileOnlyAttr = new Profile(donorAttr);
     }
 
     /**
@@ -163,9 +162,9 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -174,18 +173,18 @@ public class DonorTest {
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testDonor.addDonations(someOrgans);
+        testProfile.addDonations(someOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
         expected.add(Organ.HEART);
         expected.add(Organ.CORNEA);
 
-        assertEquals(expected, testDonor.getDonatedOrgans());
+        assertEquals(expected, testProfile.getDonatedOrgans());
     }
 
     /**
-     * Test the ability to add an organ to the list of organs that the donor can donate
+     * Test the ability to add an organ to the list of organs that the profile can donate
      */
     @Test
     public void testAddOrgans() {
@@ -195,27 +194,27 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
+        testProfile.setRegistered(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testDonor.addOrgans(someOrgans);
+        testProfile.addOrgans(someOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
         expected.add(Organ.HEART);
         expected.add(Organ.CORNEA);
 
-        assertEquals(expected, testDonor.getOrgans());
+        assertEquals(expected, testProfile.getOrgans());
     }
 
     @Test
@@ -226,15 +225,15 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
-        testDonor.addOrgansFromString("bone, heart, cornea");
+        testProfile.setRegistered(true);
+        testProfile.addOrgansFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
@@ -243,9 +242,9 @@ public class DonorTest {
 
         String expectedString = "heart, bone, cornea";
         Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getOrgansAsCSV().split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getOrgansAsCSV().split(", ")));
 
-        assertEquals(expected, testDonor.getOrgans());
+        assertEquals(expected, testProfile.getOrgans());
         assertEquals(expectedStrings, outputStrings);
     }
 
@@ -258,15 +257,15 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
-        testDonor.addDonationFromString("bone, heart, cornea");
+        testProfile.setRegistered(true);
+        testProfile.addDonationFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
@@ -275,9 +274,9 @@ public class DonorTest {
 
         String expectedString = "heart, bone, cornea";
         Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getDonationsAsCSV().split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getDonationsAsCSV().split(", ")));
 
-        assertEquals(expected, testDonor.getDonatedOrgans());
+        assertEquals(expected, testProfile.getDonatedOrgans());
         assertEquals(expectedStrings, outputStrings);
     }
 
@@ -289,15 +288,15 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
-        testDonor.addChronicDiseases("cancer, more cancer, even more cancer");
+        testProfile.setRegistered(true);
+        testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
 
         Set<String> expected = new HashSet<>();
         expected.add("cancer");
@@ -306,9 +305,9 @@ public class DonorTest {
 
         String expectedString = "cancer, more cancer, even more cancer";
         Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testDonor.getChronicDiseasesAsCSV().split(", ")));
+        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getChronicDiseasesAsCSV().split(", ")));
 
-        assertEquals(expected, testDonor.getChronicDiseases());
+        assertEquals(expected, testProfile.getChronicDiseases());
         assertEquals(expectedStrings, outputStrings);
     }
 
@@ -323,9 +322,9 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -334,22 +333,22 @@ public class DonorTest {
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testDonor.addDonations(someOrgans);
+        testProfile.addDonations(someOrgans);
 
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
         removedOrgans.add("heart");
-        testDonor.removeDonations(removedOrgans);
+        testProfile.removeDonations(removedOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.CORNEA);
 
-        assertEquals(testDonor.getDonatedOrgans(), expected);
+        assertEquals(testProfile.getDonatedOrgans(), expected);
     }
 
     /*
      * Tests the ability to remove an organ from the list of organs that the
-     * donor has donated
+     * profile has donated
      */
     @Test
     public void testRemoveOrgans() {
@@ -359,30 +358,30 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
+        testProfile.setRegistered(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testDonor.addOrgans(someOrgans);
+        testProfile.addOrgans(someOrgans);
 
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
         removedOrgans.add("heart");
-        testDonor.removeOrgans(removedOrgans);
+        testProfile.removeOrgans(removedOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.CORNEA);
 
-        assertEquals(testDonor.getOrgans(), expected);
+        assertEquals(testProfile.getOrgans(), expected);
     }
 
     /**
@@ -396,20 +395,20 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setRegistered(true);
+        testProfile.setRegistered(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
 
-        testDonor.addOrgans(someOrgans);
-        testDonor.addOrgans(someOrgans);
+        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgans(someOrgans);
     }
 
     /**
@@ -423,14 +422,14 @@ public class DonorTest {
         donorAttr.add("dob=\"17-01-1998\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        assertEquals(testDonor.getUpdateActions().size(), 4);
+        assertEquals(testProfile.getUpdateActions().size(), 4);
     }
 
     /**
@@ -448,21 +447,21 @@ public class DonorTest {
         donorAttr.add("weight=\"72.0\"");
         donorAttr.add("height=\"175.0\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        double bmi = testDonor.calculateBMI();
+        double bmi = testProfile.calculateBMI();
         assertEquals(df.format(bmi), "23.51");
     }
 
     /**
      * Tests the calculated age if the user is alive
      * Also implicitly tests the calculation after the users birthday
-     * This test will depreciate in ~2000 years
+     * This CommandUtilsTest will depreciate in ~2000 years
      * God forbid anyone finds this in ~2000 years
      */
     @Test
@@ -473,14 +472,14 @@ public class DonorTest {
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testDonor.calculateAge();
+        int age = testProfile.calculateAge();
         int year = LocalDate.now().getYear() - 2000;
         assertEquals(age, year);
     }
@@ -499,14 +498,14 @@ public class DonorTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testDonor.calculateAge();
+        int age = testProfile.calculateAge();
         assertEquals(age, 49);
     }
 
@@ -522,14 +521,14 @@ public class DonorTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testDonor.calculateAge();
+        int age = testProfile.calculateAge();
         assertEquals(age, 50);
     }
 
@@ -543,17 +542,17 @@ public class DonorTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Donor testDonor = null;
+        Profile testProfile = null;
         try {
-            testDonor = new Donor(donorAttr);
+            testProfile = new Profile(donorAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testDonor.setBloodPressureSystolic(120);
-        testDonor.setBloodPressureDiastolic(80);
+        testProfile.setBloodPressureSystolic(120);
+        testProfile.setBloodPressureDiastolic(80);
 
-        String bloodPressure = testDonor.getBloodPressure();
+        String bloodPressure = testProfile.getBloodPressure();
         assertEquals(bloodPressure, "120/80");
     }
 }
