@@ -158,6 +158,17 @@ public class DonorProfileController {
     @FXML
     private TextArea historyView;
 
+    /**
+     * Label for the calculated BMI
+     */
+    @FXML
+    private Label bmiLabel;
+
+    /**
+     * Label to display the age
+     */
+    @FXML
+    private Label ageLabel;
 
 
     /**
@@ -247,6 +258,8 @@ public class DonorProfileController {
             }
             if (currentDonor.getDateOfDeath() != null) {
                 dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath());
+            } else {
+                dodLabel.setText(dodLabel.getText() + "NULL");
             }
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
@@ -264,6 +277,14 @@ public class DonorProfileController {
             }
             if (currentDonor.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
+            }
+
+            if(currentDonor.getHeight() != null && currentDonor.getWeight() != null){
+                bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
+            }
+
+            if(currentDonor.getDateOfBirth() != null){
+                ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
             /*if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());

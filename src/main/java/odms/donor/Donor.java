@@ -19,8 +19,8 @@ public class Donor {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
-    private double height;
-    private double weight;
+    private Double height;
+    private Double weight;
     private String bloodType;
     private String address;
     private String region;
@@ -445,7 +445,7 @@ public class Donor {
      * Calculates and returns the donors bmi
      * @return BMI
      */
-    public double calculateBMI() {
+    public Double calculateBMI() {
         return this.weight / ((this.height / 100) * (this.height / 100));
     }
 
@@ -492,6 +492,8 @@ public class Donor {
         return givenNames;
     }
 
+    public String getFullName() { return givenNames + " " + lastNames; }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
@@ -533,7 +535,7 @@ public class Donor {
         this.gender = gender;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
@@ -542,7 +544,7 @@ public class Donor {
         this.height = height;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
