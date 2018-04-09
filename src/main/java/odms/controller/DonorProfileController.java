@@ -248,7 +248,7 @@ public class DonorProfileController {
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
-                donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
+                donorStatusLabel.setText("Donor Status: Registered");
             }
 
             if (currentDonor.getGivenNames() != null) {
@@ -271,6 +271,7 @@ public class DonorProfileController {
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
             }
+
             heightLabel.setText(heightLabel.getText() + currentDonor.getHeight());
             weightLabel.setText(weightLabel.getText() + currentDonor.getWeight());
             phoneLabel.setText(phoneLabel.getText());
@@ -297,6 +298,9 @@ public class DonorProfileController {
             if(currentDonor.getId() != null){
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
+
+            organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
+            donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
             /*if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }*/

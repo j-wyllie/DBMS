@@ -376,7 +376,6 @@ public class Donor {
      */
     public void addOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
-
         Set<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {

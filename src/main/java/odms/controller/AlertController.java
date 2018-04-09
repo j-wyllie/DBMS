@@ -44,6 +44,19 @@ public class AlertController {
         }
     }
 
+    public static void GuiPopup(String message) {
+
+        Alert invalidAlert = new Alert(AlertType.ERROR, message,
+                ButtonType.CLOSE);
+
+        invalidAlert.show();
+
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+
     public static boolean DonorSaveChanges() {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);

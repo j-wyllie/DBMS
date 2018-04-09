@@ -2,6 +2,7 @@ package odms.controller;
 
 import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.AlertController.GuiPopup;
 import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -198,7 +199,7 @@ public class EditDonorProfileController {
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean saveBool = DonorSaveChanges();
-
+        boolean error = false;
         if (saveBool) {
             String action =
                     "Donor " + currentDonor.getId() + " updated details previous = " + currentDonor
@@ -209,8 +210,12 @@ public class EditDonorProfileController {
             //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
             //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentDonor.setGender(genderField.getText());
-            currentDonor.setHeight(Double.valueOf(heightField.getText()));
-            currentDonor.setWeight(Double.valueOf(weightField.getText()));
+            if(heightField.getText() == null) {
+                currentDonor.setHeight(Double.valueOf(heightField.getText()));
+            }
+            if(heightField.getText() == null) {
+                currentDonor.setWeight(Double.valueOf(weightField.getText()));
+            }
             currentDonor.setPhone(phoneField.getText());
             currentDonor.setEmail(emailField.getText());
             currentDonor.setAddress(addressField.getText());
@@ -225,6 +230,29 @@ public class EditDonorProfileController {
                         .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                 currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
+            try {
+                Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                if(set != null){
+                    currentDonor.setRegistered(true);
+                    currentDonor.addOrgans(set);
+                }
+
+                } catch (Exception e){
+                    error = true;
+                }
+
+            try {
+                Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
+                if(set != null){
+                    currentDonor.setRegistered(true);
+                    currentDonor.addDonations(set);
+                }
+
+            } catch (Exception e){
+                error = true;
+            }
+
+
 
             currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
@@ -244,6 +272,9 @@ public class EditDonorProfileController {
                 String[] diseases = diseaseField.getText().split(", ");
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentDonor.setChronicDiseases(diseasesSet);
+            }
+            if(error == true) {
+                GuiPopup("Error. Not all fields were updated.");
             }
 
             DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
