@@ -6,6 +6,7 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import odms.commandlineview.CommandUtils;
@@ -170,6 +171,12 @@ public class DonorProfileController {
     @FXML
     private Label ageLabel;
 
+    /**
+     * Label for the user ID
+     */
+    @FXML
+    private Label userIdLabel;
+
 
     /**
      * Scene change to log in view.
@@ -286,6 +293,10 @@ public class DonorProfileController {
             if(currentDonor.getDateOfBirth() != null){
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
+
+            if(currentDonor.getId() != null){
+                userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
+            }
             /*if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }*/
@@ -324,4 +335,6 @@ public class DonorProfileController {
             InvalidUsername();
         }
     }
+
+
 }

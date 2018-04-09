@@ -1,8 +1,10 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidEntry;
+import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import odms.commandlineview.CommandUtils;
 import odms.data.DonorDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -13,6 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.data.IrdNumberConflictException;
+import odms.donor.Donor;
 
 public class CreateProfileController {
 
@@ -54,22 +58,27 @@ public class CreateProfileController {
             String givenNames = givenNamesField.getText();
             String surnames = surnamesField.getText();
             String dob = dobField.getText();
-            String ird = irdField.getText();
+            Integer ird = Integer.parseInt(irdField.getText());
 
-           /* Donor newDonor = new Donor(givenNames, surnames, dob, ird);
-            currentDatabase.addDonor(newDonor)
-            CommandUtils.addDonorHistory(newDonor.getId());;*/
-        }
-        catch (IllegalArgumentException e) {
-            //show error window.
-            InvalidEntry();
-        }
-        finally {
+            Donor newDonor = new Donor(givenNames, surnames, dob, ird);
+            currentDatabase.addDonor(newDonor);
+            CommandUtils.addDonorHistory(newDonor.getId());
+            LoginController.setCurrentDonor(newDonor.getId());
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
             appStage.show();
+
+        }
+        catch (IllegalArgumentException e) {
+            //show error window.
+            InvalidEntry();
+        } catch (IrdNumberConflictException e){
+            InvalidIrd();
+        }
+        finally {
+
         }
     }
 

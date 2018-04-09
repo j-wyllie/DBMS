@@ -32,6 +32,18 @@ public class AlertController {
         }
     }
 
+    public static void InvalidIrd() {
+
+        Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid IRD number.",
+                ButtonType.CLOSE);
+
+        invalidAlert.show();
+
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
     public static boolean DonorSaveChanges() {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);

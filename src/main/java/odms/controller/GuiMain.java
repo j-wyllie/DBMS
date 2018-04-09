@@ -1,5 +1,7 @@
 package odms.controller;
 
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 import odms.data.DonorDataIO;
 import odms.data.DonorDatabase;
 import javafx.application.Application;
@@ -20,6 +22,12 @@ public class GuiMain extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                DonorDataIO.saveDonors(donorDb, "example/example.json");
+            }
+        });
+
     }
 
     public static DonorDatabase getCurrentDatabase() {
@@ -30,5 +38,6 @@ public class GuiMain extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }

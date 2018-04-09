@@ -44,17 +44,19 @@ public class LoginController {
         try {
             int userId = Integer.valueOf(usernameField.getText());
             currentDonor = currentDatabase.getDonor(userId);
+            if(currentDonor != null) {
+                Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene newScene = new Scene(parent);
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                appStage.setScene(newScene);
+                appStage.show();
+            } else {
+                InvalidUsername();
+            }
         }
         catch (Exception e) {
             System.out.println(e);
             InvalidUsername();
-        }
-        finally {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
         }
     }
 
@@ -75,4 +77,5 @@ public class LoginController {
     public static Donor getCurrentDonor() {
         return currentDonor;
     }
+    public static void setCurrentDonor(Integer id) {currentDonor = currentDatabase.getDonor(id);}
 }
