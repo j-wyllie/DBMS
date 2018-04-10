@@ -174,16 +174,16 @@ public class ClinicianProfileController {
     private void makeTable(ArrayList<Donor> donors){
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        TableColumn<Donor, String> ageCol = new TableColumn("Age");
-        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
+        //TableColumn<Donor, String> ageCol = new TableColumn("Age");
+        //ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
 
 
-        ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
-        searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
+        //ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
+        searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
     }
     /**
      * Initialize
