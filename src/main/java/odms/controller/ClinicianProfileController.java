@@ -1,6 +1,8 @@
 package odms.controller;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,11 +14,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import odms.donor.Donor;
 import odms.user.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -145,7 +149,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -164,12 +168,38 @@ public class ClinicianProfileController {
     }
 
     /**
+     * initializes and refreshes the search table
+     */
+    @FXML
+    private void makeTable(ArrayList<Donor> donors){
+        donorObservableList = FXCollections.observableArrayList(donors);
+        searchTable.setItems(donorObservableList);
+        TableColumn<Donor, String> ageCol = new TableColumn("Age");
+        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
+        regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
+        ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
+        genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
+
+
+        ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
+        searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
+    }
+    /**
      * Initialize
      */
     @FXML
     private void initialize(){
         setClinicianDetails();
-    }
 
+
+        makeTable(GuiMain.getCurrentDatabase().getDonors(false));
+
+
+
+
+
+        System.out.println(donorObservableList);
+    }
 
 }
