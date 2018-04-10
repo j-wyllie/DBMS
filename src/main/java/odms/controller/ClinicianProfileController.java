@@ -191,15 +191,7 @@ public class ClinicianProfileController {
     @FXML
     private void initialize(){
         setClinicianDetails();
-
-
         makeTable(GuiMain.getCurrentDatabase().getDonors(false));
-
-
-
-
-
-        System.out.println(donorObservableList);
     }
 
 }
