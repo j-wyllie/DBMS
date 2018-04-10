@@ -1,6 +1,7 @@
 package odms.controller;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,8 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.donor.Donor;
 import odms.user.User;
 
 import java.io.IOException;
@@ -60,6 +64,44 @@ public class ClinicianProfileController {
     private Label regionLabel;
 
 
+    /**
+     * Search table
+     */
+    @FXML
+    private TableView searchTable;
+
+    /**
+     * Column containing the donors full name in the search table
+     */
+    @FXML
+    private TableColumn fullNameColumn;
+
+    /**
+     * Column containing the donors age in the search table
+     */
+    @FXML
+    private TableColumn ageColumn;
+
+    /**
+     * Column containing the donors gender in the search table
+     */
+    @FXML
+    private TableColumn genderColumn;
+
+    /**
+     * Column containing the donors region in the search table
+     */
+    @FXML
+    private TableColumn regionColumn;
+
+    /**
+     * Search field for the search table
+     */
+    @FXML
+    private TextField searchField;
+
+    private ObservableList<Donor> donorObservableList;
+
 
     /**
      * Scene change to log in view.
@@ -83,10 +125,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        //TODO
-        //refresh scene.
         undo();
-        //initialize();
     }
 
     /**
@@ -96,10 +135,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        //TODO
-        //refresh scene.
         redo();
-        //initialize();
     }
 
     /**
@@ -116,11 +152,24 @@ public class ClinicianProfileController {
         appStage.show();
     }
 
+    /**
+     * Sets all the clinicians details in the GUI.
+     */
     @FXML
-    private void initialize(){
+    private void setClinicianDetails(){
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
+
+    /**
+     * Initialize
+     */
+    @FXML
+    private void initialize(){
+        setClinicianDetails();
+    }
+
+
 }
