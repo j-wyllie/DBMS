@@ -80,7 +80,6 @@ public class Donor {
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
-
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -181,7 +180,6 @@ public class Donor {
         for (Organ org : organs) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -195,7 +193,6 @@ public class Donor {
         for (Organ org : donatedOrgans) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -207,51 +204,39 @@ public class Donor {
         if (irdNumber != null) {
             System.out.println("IRD: " + irdNumber);
         }
-
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
         }
-
         if (lastNames != null) {
             System.out.println("Last Names: " + lastNames);
         }
-
         System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         if (dateOfDeath != null) {
             System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
-
         if (gender != null) {
             System.out.println("Gender: " + gender);
         }
-
         if (height != 0.0) {
             System.out.println("Height: " + height + "cm");
         }
-
         if (weight != 0.0) {
             System.out.println("Weight: " + weight);
         }
-
         if (bloodType != null) {
             System.out.println("Blood Type: " + bloodType);
         }
-
         if (address != null) {
             System.out.println("Address: " + address);
         }
-
         if (region != null) {
             System.out.println("Region: " + region);
         }
-
         if (organs.size() > 0) {
             viewOrgans();
         }
-
         System.out.println("IRD: " + irdNumber);
-
         System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
@@ -337,7 +322,6 @@ public class Donor {
         int count = 0;
         int len = chronicDiseases.size();
 
-
         for (String disease : chronicDiseases) {
             count++;
             if (count == len) {
@@ -357,7 +341,6 @@ public class Donor {
         String out = "";
         int count = 0;
         int len = donatedOrgans.size();
-
 
         for (Organ org : donatedOrgans) {
             count++;
@@ -383,13 +366,11 @@ public class Donor {
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
         }
-
         if (Collections.disjoint(newOrgans, this.organs) && registered) {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
-
     }
 
     /**
@@ -665,6 +646,3 @@ public class Donor {
         this.email = email;
     }
 }
-
-//ree
-//he

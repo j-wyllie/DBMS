@@ -30,86 +30,46 @@ public class ClinicianProfileController {
     //Get the default clinician
     private static User currentUser = GuiMain.getUserDatabase().getClinician(0);
 
-
-    /**
-     * Label for the name at the top of the window
-     */
     @FXML
     private Label clinicianFullName;
 
-    /**
-     * Label to display the clinicians given names
-     */
     @FXML
     private Label givenNamesLabel;
 
-    /**
-     * Label to display the clinicians last names.
-     */
     @FXML
     private Label lastNamesLabel;
 
-    /**
-     * Label to display the clinicians staff ID.
-     */
     @FXML
     private Label staffIdLabel;
 
-    /**
-     * Label to display the clinicians work address.
-     */
     @FXML
     private Label addressLabel;
 
-    /**
-     * Label to display the clinicians region.
-     */
     @FXML
     private Label regionLabel;
 
-
-    /**
-     * Search table
-     */
     @FXML
     private TableView searchTable;
 
-    /**
-     * Column containing the donors full name in the search table
-     */
     @FXML
     private TableColumn fullNameColumn;
 
-    /**
-     * Column containing the donors age in the search table
-     */
     @FXML
     private TableColumn ageColumn;
 
-    /**
-     * Column containing the donors gender in the search table
-     */
     @FXML
     private TableColumn genderColumn;
 
-    /**
-     * Column containing the donors region in the search table
-     */
     @FXML
     private TableColumn regionColumn;
 
-    /**
-     * Search field for the search table
-     */
     @FXML
     private TextField searchField;
 
     private ObservableList<Donor> donorObservableList;
 
-
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
      */
     @FXML
@@ -119,12 +79,10 @@ public class ClinicianProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
-
     }
 
     /**
      * Button handler to undo last action.
-     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -134,7 +92,6 @@ public class ClinicianProfileController {
 
     /**
      * Button handler to redo last undo action.
-     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -144,7 +101,6 @@ public class ClinicianProfileController {
 
     /**
      * Button handler to make fields editable.
-     *
      * @param event clicking on the edit button.
      */
     @FXML
@@ -180,26 +136,16 @@ public class ClinicianProfileController {
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
-
-
         ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
         searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
     }
+
     /**
      * Initialize
      */
     @FXML
     private void initialize(){
         setClinicianDetails();
-
-
         makeTable(GuiMain.getCurrentDatabase().getDonors(false));
-
-
-
-
-
-        System.out.println(donorObservableList);
     }
-
 }

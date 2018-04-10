@@ -30,7 +30,6 @@ public class GuiMain extends Application {
             userDb.addClinician(user);
             UserDataIO.saveUsers(userDb, "example/users.json");
         }
-
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -41,7 +40,6 @@ public class GuiMain extends Application {
                 UserDataIO.saveUsers(userDb, "example.users.json");
             }
         });
-
     }
 
     public static DonorDatabase getCurrentDatabase() {
@@ -52,10 +50,7 @@ public class GuiMain extends Application {
         return userDb;
     }
 
-
-
     public static void main(String[] args) {
         launch(args);
-
     }
 }
