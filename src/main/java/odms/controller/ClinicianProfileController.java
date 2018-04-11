@@ -140,9 +140,6 @@ public class ClinicianProfileController {
         searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
     }
 
-    /**
-     * Initialize
-     */
     @FXML
     private void initialize(){
         setClinicianDetails();

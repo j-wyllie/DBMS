@@ -36,7 +36,7 @@ public class AlertController {
     }
 
     /**
-     * Creates a popup when the ird entered was invalid
+     * Creates a popup when the IRD number entered was invalid
      */
     public static void InvalidIrd() {
         Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid IRD number.",

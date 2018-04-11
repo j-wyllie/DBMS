@@ -17,8 +17,11 @@ import odms.user.UserType;
 
 public class GuiMain extends Application {
 
-    private static DonorDatabase donorDb = DonorDataIO.loadData("example/example.json");
-    private static UserDatabase userDb = new UserDataIO().loadData("example/users.json");
+    private static String DONORDATABASE = "example/example.json";
+    private static String USERDATABASE = "example/users.json";
+
+    private static DonorDatabase donorDb = DonorDataIO.loadData(DONORDATABASE);
+    private static UserDatabase userDb = new UserDataIO().loadData(USERDATABASE);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -28,7 +31,7 @@ public class GuiMain extends Application {
             userDb = new UserDatabase();
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
             userDb.addClinician(user);
-            UserDataIO.saveUsers(userDb, "example/users.json");
+            UserDataIO.saveUsers(userDb, USERDATABASE);
         }
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
@@ -36,8 +39,8 @@ public class GuiMain extends Application {
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                DonorDataIO.saveDonors(donorDb, "example/example.json");
-                UserDataIO.saveUsers(userDb, "example.users.json");
+                DonorDataIO.saveDonors(donorDb, DONORDATABASE);
+                UserDataIO.saveUsers(userDb, USERDATABASE);
             }
         });
     }
