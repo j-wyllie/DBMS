@@ -27,160 +27,84 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    /**
-     * Label to display the user's full name.
-     */
     @FXML
     private Label donorFullNameLabel;
 
-    /**
-     * Label to display the user's donor status.
-     */
     @FXML
     private Label donorStatusLabel;
 
-    /**
-     * Label to display the user's given names.
-     */
     @FXML
     private Label givenNamesLabel;
 
-    /**
-     * Label to display the user's surnames.
-     */
     @FXML
     private Label lastNamesLabel;
 
-    /**
-     * Label to display the user's ird number.
-     */
     @FXML
     private Label irdLabel;
 
-    /**
-     * Label to display the user's date of birth.
-     */
     @FXML
     private Label dobLabel;
 
-    /**
-     * Label to display the user's date of death.
-     */
     @FXML
     private Label dodLabel;
 
-    /**
-     * Label to display the user's gender.
-     */
     @FXML
     private Label genderLabel;
 
-    /**
-     * Label to display the user's height.
-     */
     @FXML
     private Label heightLabel;
 
-    /**
-     * Label to display the user's weight.
-     */
     @FXML
     private Label weightLabel;
 
-    /**
-     * Label to display the user's phone number.
-     */
     @FXML
     private Label phoneLabel;
 
-    /**
-     * Label to display the user's email.
-     */
     @FXML
     private Label emailLabel;
 
-    /**
-     * Label to display the user's address.
-     */
     @FXML
     private Label addressLabel;
 
-    /**
-     * Label to display the user's region.
-     */
     @FXML
     private Label regionLabel;
 
-    /**
-     * Label to display the user's blood type.
-     */
     @FXML
     private Label bloodTypeLabel;
 
-    /**
-     * Label to display the user's smoker status.
-     */
     @FXML
     private Label smokerLabel;
 
-    /**
-     * Label to display the user's alcohol consumption.
-     */
     @FXML
     private Label alcoholConsumptionLabel;
 
-    /**
-     * Label to display the user's blood pressure.
-     */
     @FXML
     private Label bloodPressureLabel;
 
-    /**
-     * Label to display the user's region.
-     */
     @FXML
     private Label chronicDiseasesLabel;
 
-    /**
-     * Label to display the user's organs to donate.
-     */
     @FXML
     private Label organsLabel;
 
-    /**
-     * Label to display the user's region.
-     */
     @FXML
     private Label donationsLabel;
 
-    /**
-     * View to display history
-     */
     @FXML
     private TextArea historyView;
 
-    /**
-     * Label for the calculated BMI
-     */
     @FXML
     private Label bmiLabel;
 
-    /**
-     * Label to display the age
-     */
     @FXML
     private Label ageLabel;
 
-    /**
-     * Label for the user ID
-     */
     @FXML
     private Label userIdLabel;
 
 
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
      */
     @FXML
@@ -190,12 +114,10 @@ public class DonorProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
-
     }
 
     /**
      * Button handler to undo last action.
-     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -205,7 +127,6 @@ public class DonorProfileController {
 
     /**
      * Button handler to redo last undo action.
-     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -215,7 +136,6 @@ public class DonorProfileController {
 
     /**
      * Button handler to make fields editable.
-     *
      * @param event clicking on the edit button.
      */
     @FXML
@@ -232,19 +152,15 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
-
         Donor currentDonor = getCurrentDonor();
-
         try {
             donorFullNameLabel
                     .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
-
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
-
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
             }
@@ -265,7 +181,6 @@ public class DonorProfileController {
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
             }
-
             heightLabel.setText(heightLabel.getText() + currentDonor.getHeight());
             weightLabel.setText(weightLabel.getText() + currentDonor.getWeight());
             phoneLabel.setText(phoneLabel.getText());
@@ -280,19 +195,15 @@ public class DonorProfileController {
             if (currentDonor.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
-
             if(currentDonor.getHeight() != null && currentDonor.getWeight() != null){
                 bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
             }
-
             if(currentDonor.getDateOfBirth() != null){
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
-
             if(currentDonor.getId() != null){
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
-
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
             donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
             /*if (currentDonor.getSmoker() != null) {
@@ -310,7 +221,6 @@ public class DonorProfileController {
             String history = DonorDataIO.getHistory();
             Gson gson = new Gson();
 
-
             if(history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
@@ -327,12 +237,9 @@ public class DonorProfileController {
                     userHistory.add(str);
                 }
             }
-
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
             InvalidUsername();
         }
     }
-
-
 }

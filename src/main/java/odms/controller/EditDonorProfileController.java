@@ -5,6 +5,8 @@ import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.AlertController.GuiPopup;
 import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -31,132 +33,68 @@ public class EditDonorProfileController {
 
     private static Donor currentDonor = getCurrentDonor();
 
-    /**
-     * Label to display the user's full name.
-     */
     @FXML
     private Label donorFullNameLabel;
 
-    /**
-     * Label to display the user's donor status.
-     */
     @FXML
     private Label donorStatusLabel;
 
-    /**
-     * Field to edit the user's given names.
-     */
     @FXML
     private TextField givenNamesField;
 
-    /**
-     * Field to edit the user's surnames.
-     */
     @FXML
     private TextField lastNamesField;
 
-    /**
-     * Field to edit the user's ird number.
-     */
     @FXML
     private TextField irdField;
 
-    /**
-     * Field to edit the user's date of birth.
-     */
     @FXML
     private TextField dobField;
 
-    /**
-     * Field to edit the user's date of death.
-     */
     @FXML
     private TextField dodField;
 
-    /**
-     * Field to edit the user's gender.
-     */
     @FXML
     private TextField genderField;
 
-    /**
-     * Field to edit the user's height.
-     */
     @FXML
     private TextField heightField;
 
-    /**
-     * Field to edit the user's weight.
-     */
     @FXML
     private TextField weightField;
 
-    /**
-     * Field to edit the user's phone number.
-     */
     @FXML
     private TextField phoneField;
 
-    /**
-     * Field to edit the user's email.
-     */
     @FXML
     private TextField emailField;
 
-    /**
-     * Field to edit the user's address.
-     */
     @FXML
     private TextField addressField;
 
-    /**
-     * Field to edit the user's region.
-     */
     @FXML
     private TextField regionField;
 
-    /**
-     * Field to edit the user's blood type.
-     */
     @FXML
     private TextField bloodTypeField;
 
-    /**
-     * Field to edit the user's smoker status.
-     */
     @FXML
     private TextField smokerField;
 
-    /**
-     * Field to edit the user's alcohol consumption.
-     */
     @FXML
     private TextField alcoholConsumptionField;
 
-    /**
-     * Field to edit the user's blood pressure.
-     */
     @FXML
     private TextField bloodPressureField;
 
-    /**
-     * Field to edit the user's region.
-     */
     @FXML
     private TextField diseaseField;
 
-    /**
-     * Field to edit the user's organs to donate.
-     */
     @FXML
     private TextField organField;
 
-    /**
-     * Field to edit the user's region.
-     */
     @FXML
     private TextField donationsField;
-
 
     /**
      * Scene change to log in view.
@@ -169,7 +107,6 @@ public class EditDonorProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
-
     }
 
     /**
@@ -178,8 +115,7 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        //TODO
-        //refresh scene.
+        undo();
     }
 
     /**
@@ -188,8 +124,20 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        //TODO
-        //refresh scene.
+        redo();
+    }
+
+    /**
+     * Button handler to make fields editable.
+     * @param event clicking on the edit button.
+     */
+    @FXML
+    private void handleEditButtonClicked(ActionEvent event) throws IOException {
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -302,7 +250,6 @@ public class EditDonorProfileController {
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
         boolean cancelBool = DonorCancelChanges();
-        System.out.println(cancelBool);
 
         if (cancelBool) {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
@@ -318,7 +265,6 @@ public class EditDonorProfileController {
      */
     @FXML
     public void initialize() {
-
         try {
             donorFullNameLabel.setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
 

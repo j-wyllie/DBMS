@@ -14,8 +14,6 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 public class EditClinicianProfileController {
-
-
     /**
      * Scene change to log in view.
      *
@@ -58,11 +56,10 @@ public class EditClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
     }
-
 }

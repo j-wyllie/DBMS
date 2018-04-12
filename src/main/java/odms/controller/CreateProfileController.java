@@ -22,27 +22,15 @@ public class CreateProfileController {
 
     private static DonorDatabase currentDatabase = getCurrentDatabase();
 
-    /**
-     * TextField to input the new user's given names.
-     */
     @FXML
     private TextField givenNamesField;
 
-    /**
-     * TextField to input the new user's surnames.
-     */
     @FXML
     private TextField surnamesField;
 
-    /**
-     * TextField to input the new user's dob.
-     */
     @FXML
     private TextField dobField;
 
-    /**
-     * TextField to input the new user's ird number.
-     */
     @FXML
     private TextField irdField;
 
@@ -53,7 +41,6 @@ public class CreateProfileController {
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-
         try {
             String givenNames = givenNamesField.getText();
             String surnames = surnamesField.getText();
@@ -69,16 +56,12 @@ public class CreateProfileController {
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
             appStage.show();
-
         }
         catch (IllegalArgumentException e) {
             //show error window.
             InvalidEntry();
         } catch (IrdNumberConflictException e){
             InvalidIrd();
-        }
-        finally {
-
         }
     }
 

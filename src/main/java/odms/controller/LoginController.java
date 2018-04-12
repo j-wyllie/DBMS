@@ -55,7 +55,6 @@ public class LoginController {
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 appStage.setScene(newScene);
                 appStage.show();
-
             } else {
                 currentDonor = currentDatabase.getDonor(userId);
                 if (currentDonor != null) {
