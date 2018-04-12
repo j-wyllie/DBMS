@@ -1,6 +1,7 @@
 package odms.donor;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
+import odms.medications.Drug;
+
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,6 +47,8 @@ public class Donor {
     private LocalDateTime lastUpdated;
 
     private Integer id;
+
+
 
     /**
      * Instantiates the Donor class with data from the CLI
