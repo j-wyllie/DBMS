@@ -19,8 +19,8 @@ public class Donor {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
-    private double height;
-    private double weight;
+    private Double height;
+    private Double weight;
     private String bloodType;
     private String address;
     private String region;
@@ -80,7 +80,6 @@ public class Donor {
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
-
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -181,7 +180,6 @@ public class Donor {
         for (Organ org : organs) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -195,7 +193,6 @@ public class Donor {
         for (Organ org : donatedOrgans) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -207,51 +204,39 @@ public class Donor {
         if (irdNumber != null) {
             System.out.println("IRD: " + irdNumber);
         }
-
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
         }
-
         if (lastNames != null) {
             System.out.println("Last Names: " + lastNames);
         }
-
         System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         if (dateOfDeath != null) {
             System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
-
         if (gender != null) {
             System.out.println("Gender: " + gender);
         }
-
         if (height != 0.0) {
             System.out.println("Height: " + height + "cm");
         }
-
         if (weight != 0.0) {
             System.out.println("Weight: " + weight);
         }
-
         if (bloodType != null) {
             System.out.println("Blood Type: " + bloodType);
         }
-
         if (address != null) {
             System.out.println("Address: " + address);
         }
-
         if (region != null) {
             System.out.println("Region: " + region);
         }
-
         if (organs.size() > 0) {
             viewOrgans();
         }
-
         System.out.println("IRD: " + irdNumber);
-
         System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
@@ -337,7 +322,6 @@ public class Donor {
         int count = 0;
         int len = chronicDiseases.size();
 
-
         for (String disease : chronicDiseases) {
             count++;
             if (count == len) {
@@ -358,7 +342,6 @@ public class Donor {
         int count = 0;
         int len = donatedOrgans.size();
 
-
         for (Organ org : donatedOrgans) {
             count++;
             if (count == len) {
@@ -376,7 +359,6 @@ public class Donor {
      */
     public void addOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
-
         Set<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
@@ -384,13 +366,11 @@ public class Donor {
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
         }
-
         if (Collections.disjoint(newOrgans, this.organs) && registered) {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
-
     }
 
     /**
@@ -445,7 +425,7 @@ public class Donor {
      * Calculates and returns the donors bmi
      * @return BMI
      */
-    public double calculateBMI() {
+    public Double calculateBMI() {
         return this.weight / ((this.height / 100) * (this.height / 100));
     }
 
@@ -492,6 +472,8 @@ public class Donor {
         return givenNames;
     }
 
+    public String getFullName() { return givenNames + " " + lastNames; }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
@@ -533,7 +515,7 @@ public class Donor {
         this.gender = gender;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
@@ -542,7 +524,7 @@ public class Donor {
         this.height = height;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
