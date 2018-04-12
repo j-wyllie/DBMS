@@ -48,7 +48,9 @@ public class Donor {
 
     private Integer id;
 
-
+    private ArrayList<Drug> currentMedications = new ArrayList<>();
+    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
+    private ArrayList<String> medicationTimestamps = new ArrayList<>();
 
     /**
      * Instantiates the Donor class with data from the CLI
@@ -462,6 +464,57 @@ public class Donor {
         lastUpdated = currentTime;
         String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"));
         updateActions.add(output);
+    }
+
+    /**
+     * adds a drug to the list of current medications a donor is on.
+     * @param drug the drug to be added
+     */
+    public void addDrug(Drug drug){
+        LocalDateTime currentTime = LocalDateTime.now();
+        currentMedications.add(drug);
+        medicationTimestamps.add(drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        generateUpdateInfo(drug.getDrugName());
+    }
+
+    /**
+     * deletes a drug from the list of current medications if it was added by accident.
+     * @param drug the drug to be deleted.
+     */
+    public void deleteDrug(Drug drug) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+    }
+
+    /**
+     * Moves the drug to the history of drugs the donor has taken.
+     * @param drug the drug to be moved to the history
+     */
+    public void moveDrugToHistory(Drug drug){
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            historyOfMedication.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+    }
+
+    public ArrayList<Drug> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    public ArrayList<Drug> getHistoryOfMedication() {
+        return historyOfMedication;
+    }
+
+    public ArrayList<String> getMedicationTimestamps() {
+        return medicationTimestamps;
     }
 
     public Set<Organ> getDonatedOrgans() {

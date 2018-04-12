@@ -1,14 +1,16 @@
 package odms.donor;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import odms.medications.Drug;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import org.omg.CORBA.ORB;
 
 import static org.junit.Assert.*;
@@ -556,4 +558,124 @@ public class DonorTest {
         String bloodPressure = testDonor.getBloodPressure();
         assertEquals(bloodPressure, "120/80");
     }
+
+    @Test
+    public void testAddDrug(){
+        Drug drug1 = new Drug("acetaminophen");
+        Drug drug2 = new Drug("paracetamol");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+        Donor donor1 = new Donor(donorAttr);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        //Simple to test as drugs can have any name at the moment.
+
+        try {
+            donor1.addDrug(drug1);
+            assertEquals(donor1.getCurrentMedications().get(0).getDrugName(), "acetaminophen");
+            assertEquals(donor1.getMedicationTimestamps().get(0), ("acetaminophen added on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+
+            donor1.addDrug(drug2);
+            assertEquals(donor1.getCurrentMedications().get(1).getDrugName(), "paracetamol");
+            assertEquals(donor1.getMedicationTimestamps().get(1), ("paracetamol added on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+
+        } catch (IllegalArgumentException e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testDeleteDrug(){
+        Drug drug1 = new Drug("acetaminophen");
+        Drug drug2 = new Drug("paracetamol");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+        Donor donor1 = new Donor(donorAttr);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        donor1.addDrug(drug1);
+        donor1.addDrug(drug2);
+
+        try{
+            assertEquals(donor1.getCurrentMedications().size(), 2);
+            donor1.deleteDrug(drug1);
+            assertEquals(donor1.getCurrentMedications().get(0).getDrugName(), "paracetamol");
+            assertEquals(donor1.getCurrentMedications().size(), 1);
+            assertEquals(donor1.getMedicationTimestamps().get(2), "acetaminophen removed on " +
+            currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+
+            assertEquals(donor1.getCurrentMedications().size(), 1);
+            donor1.deleteDrug(drug1);
+            assertEquals(donor1.getCurrentMedications().size(), 1);
+
+            donor1.deleteDrug(drug2);
+            assertEquals(donor1.getCurrentMedications().size(), 0);
+            assertEquals(donor1.getMedicationTimestamps().get(3), "paracetamol removed on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                    currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+        } catch (Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    public void testMoveDrugToHistory(){
+        Drug drug1 = new Drug("acetaminophen");
+        Drug drug2 = new Drug("paracetamol");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+        Donor donor1 = new Donor(donorAttr);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        donor1.addDrug(drug1);
+        donor1.addDrug(drug2);
+
+        try {
+            assertEquals(donor1.getCurrentMedications().size(), 2);
+            donor1.moveDrugToHistory(drug1);
+            assertEquals(donor1.getCurrentMedications().size(), 1);
+            assertEquals(donor1.getMedicationTimestamps().get(2), "acetaminophen stopped on " +
+            currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                    currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+
+            donor1.moveDrugToHistory(drug2);
+            assertEquals(donor1.getCurrentMedications().size(), 0);
+            assertEquals(donor1.getMedicationTimestamps().get(3), "paracetamol stopped on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                    currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+
+            donor1.moveDrugToHistory(drug1);
+            assertEquals(donor1.getMedicationTimestamps().size(), 4);
+
+        } catch (Exception e){
+            fail();
+        }
+
+    }
+
 }
