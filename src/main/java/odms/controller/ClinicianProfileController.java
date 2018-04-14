@@ -1,6 +1,5 @@
 package odms.controller;
 
-import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,6 +66,8 @@ public class ClinicianProfileController {
     private TextField searchField;
 
     private ObservableList<Donor> donorObservableList;
+
+    private Donor selectedDonor;
 
     /**
      * Scene change to log in view.
@@ -138,7 +139,40 @@ public class ClinicianProfileController {
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
         ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
         searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
+
+        searchTable.setOnMouseClicked( event -> {
+            if( event.getClickCount() == 2 ) {
+                createNewDonorWindow((Donor) searchTable.getSelectionModel().getSelectedItem());
+            }});
     }
+
+    /**
+     * Creates a new window when a row in the search table is double clicked.
+     * The new window contains a donors profile.
+     * @param donor The donor object that has been clicked on
+     */
+    @FXML
+    private void createNewDonorWindow(Donor donor) {
+        selectedDonor = donor;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/SearchedDonorProfile.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            SearchedDonorProfileController controller = fxmlLoader.<SearchedDonorProfileController>getController();
+            controller.setSearchedDonor(selectedDonor);
+            controller.initialize();
+
+            Stage stage = new Stage();
+            stage.setTitle(selectedDonor.getFullName() + "'s Profile");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void initialize(){
