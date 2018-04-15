@@ -9,18 +9,18 @@ import odms.profile.Profile;
 
 public class ProfileDatabase {
 
-    private HashMap<Integer, Profile> donorDb = new HashMap<>();
+    private HashMap<Integer, Profile> profileDb = new HashMap<>();
     private Integer lastID = -1;
-    private HashSet<Integer> deletedDonors = new HashSet<>();
+    private HashSet<Integer> deletedProfiles = new HashSet<>();
 
     /**
      * Find profile by ID
      *
-     * @param donorID unique ID for requested profile
+     * @param profileID unique ID for requested profile
      * @return profile object
      */
-    public Profile getDonor(Integer donorID) {
-        return donorDb.get(donorID);
+    public Profile getProfile(Integer profileID) {
+        return profileDb.get(profileID);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ProfileDatabase {
      * @param profile new profile object
      * @throws IrdNumberConflictException IRD number already in use by another profile
      */
-    public void addDonor(Profile profile) throws IrdNumberConflictException {
+    public void addProfile(Profile profile) throws IrdNumberConflictException {
         lastID += 1;
         profile.setId(lastID);
 
@@ -37,7 +37,7 @@ public class ProfileDatabase {
             throw new IrdNumberConflictException("IRD number already in use", profile.getIrdNumber());
         }
 
-        donorDb.put(lastID, profile);
+        profileDb.put(lastID, profile);
     }
 
     /**
@@ -49,22 +49,22 @@ public class ProfileDatabase {
     private boolean checkIRDNumberExists(Integer irdNumber) {
         Set<Integer> irdNumbers = new HashSet<>();
 
-        donorDb.forEach((id, donor) -> irdNumbers.add(donor.getIrdNumber()));
+        profileDb.forEach((id, profile) -> irdNumbers.add(profile.getIrdNumber()));
 
         return irdNumbers.contains(irdNumber);
     }
 
     /**
      * Remove profile from the database, adding their ID to the deletedID's set for
-     * logging of removed donors.
+     * logging of removed profiles.
      *
      * @param id unique profile ID
      */
-    public boolean deleteDonor(Integer id) {
+    public boolean deleteProfile(Integer id) {
         try {
             // Should deleted users simply be disabled for safety reasons?
-            deletedDonors.add(id);
-            donorDb.remove(id);
+            deletedProfiles.add(id);
+            profileDb.remove(id);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,14 +72,14 @@ public class ProfileDatabase {
         }
     }
 
-    public int undeleteDonor(Integer id, Profile profile) {
+    public int restoreProfile(Integer id, Profile profile) {
         try {
             // Should deleted users simply be disabled for safety reasons?
             lastID += 1;
             profile.setId(lastID);
             System.out.println("a");
-            donorDb.put(lastID, profile);
-            deletedDonors.remove(id);
+            profileDb.put(lastID, profile);
+            deletedProfiles.remove(id);
             return lastID;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,22 +88,22 @@ public class ProfileDatabase {
     }
 
 
-    public Integer getDonorPopulation() {
-        return donorDb.size();
+    public Integer getProfilePopulation() {
+        return profileDb.size();
     }
 
     /**
-     * Search for donors via their given names
+     * Search for profiles via their given names
      *
      * @param searchTerm string of the names
-     * @return Array of Donors found that match
+     * @return Array of profiles found that match
      */
     public ArrayList<Profile> searchGivenNames(String searchTerm) {
         ArrayList<Profile> results = new ArrayList<>();
 
-        donorDb.forEach((id, donor) -> {
-            if (donor.getGivenNames().toLowerCase().equals(searchTerm.toLowerCase())) {
-                results.add(donor);
+        profileDb.forEach((id, profile) -> {
+            if (profile.getGivenNames().toLowerCase().equals(searchTerm.toLowerCase())) {
+                results.add(profile);
             }
         });
 
@@ -111,17 +111,17 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for donors via their last names
+     * Search for profiles via their last names
      *
      * @param searchTerm string of the names
-     * @return Array of Donors found that match
+     * @return Array of profiles found that match
      */
     public ArrayList<Profile> searchLastNames(String searchTerm) {
         ArrayList<Profile> results = new ArrayList<>();
 
-        donorDb.forEach((id, donor) -> {
-            if (donor.getLastNames().toLowerCase().equals(searchTerm.toLowerCase())) {
-                results.add(donor);
+        profileDb.forEach((id, profile) -> {
+            if (profile.getLastNames().toLowerCase().equals(searchTerm.toLowerCase())) {
+                results.add(profile);
             }
         });
 
@@ -129,17 +129,17 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for donors via their IRD number
+     * Search for profiles via their IRD number
      *
      * @param searchTerm integer of the IRD number
-     * @return Array of Donors found that match
+     * @return Array of profiles found that match
      */
     public ArrayList<Profile> searchIRDNumber(Integer searchTerm) {
         ArrayList<Profile> results = new ArrayList<>();
 
-        donorDb.forEach((id, donor) -> {
-            if (donor.getIrdNumber().equals(searchTerm)) {
-                results.add(donor);
+        profileDb.forEach((id, profile) -> {
+            if (profile.getIrdNumber().equals(searchTerm)) {
+                results.add(profile);
             }
         });
 
@@ -147,23 +147,23 @@ public class ProfileDatabase {
     }
 
     /**
-     * Generate a list of donors ordered by last names.
-     * Parameter to specify whether or not the list contains every profile or only donors that
+     * Generate a list of profiles ordered by last names.
+     * Parameter to specify whether or not the list contains every profile or only profiles that
      * are currently donating organs.
      *
      * @param donating specify donating organs or not
-     * @return list of donors ordered by last name
+     * @return Array of profiles found that match
      */
-    public ArrayList<Profile> getDonors(boolean donating) {
+    public ArrayList<Profile> getProfiles(boolean donating) {
         ArrayList<Profile> profiles = new ArrayList<>();
 
-        donorDb.forEach((id, donor) -> {
+        profileDb.forEach((id, profile) -> {
             if (donating) {
-                if (donor.getOrgans().size() > 0) {
-                    profiles.add(donor);
+                if (profile.getOrgans().size() > 0) {
+                    profiles.add(profile);
                 }
             } else {
-                profiles.add(donor);
+                profiles.add(profile);
             }
         });
 

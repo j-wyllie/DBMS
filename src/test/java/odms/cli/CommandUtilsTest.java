@@ -3,8 +3,6 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 import static org.junit.Assert.assertEquals;
 
-import odms.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,9 +72,9 @@ public class CommandUtilsTest {
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
         assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
-        assertEquals(Commands.DONORDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
-        assertEquals(Commands.DONORDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
-        assertEquals(Commands.DONORUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
+        assertEquals(Commands.PROFILEDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
+        assertEquals(Commands.PROFILEDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
+        assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
         assertEquals(Commands.ORGANADD, validateCommandType(addOrganTest, addOrganTestStr));
         assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest, deleteOrganTestStr));
         assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest, invalidCommandTestStr));

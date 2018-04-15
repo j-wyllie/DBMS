@@ -26,7 +26,7 @@ public class ProfileDataIOTest {
 
         try {
             profileOne = new Profile(donorOneAttr);
-            donorDB.addDonor(profileOne);
+            donorDB.addProfile(profileOne);
 
         } catch (IrdNumberConflictException e) {
             e.printStackTrace();
@@ -42,8 +42,8 @@ public class ProfileDataIOTest {
         loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
 
         assertEquals(
-            donorDB.getDonor(0).getGivenNames(),
-            loadedDb.getDonor(0).getGivenNames()
+            donorDB.getProfile(0).getGivenNames(),
+            loadedDb.getProfile(0).getGivenNames()
         );
 
         try {

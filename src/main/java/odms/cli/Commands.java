@@ -23,9 +23,9 @@ public enum Commands {
     PROFILEVIEW,
 
     // Profile Commands
-    DONORDATECREATED,
-    DONORDONATIONS,
-    DONORUPDATE,
+    PROFILEDATECREATED,
+    PROFILEDONATIONS,
+    PROFILEUPDATE,
 
     // Orgon Commands
     ORGANADD,

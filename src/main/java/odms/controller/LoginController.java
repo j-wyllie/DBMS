@@ -42,7 +42,7 @@ public class LoginController {
 
         try {
             int userId = Integer.valueOf(usernameField.getText());
-            currentProfile = currentDatabase.getDonor(userId);
+            currentProfile = currentDatabase.getProfile(userId);
         }
         catch (Exception e) {
             System.out.println(e);

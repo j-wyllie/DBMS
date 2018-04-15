@@ -7,7 +7,6 @@ import java.util.Arrays;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.IrdNumberConflictException;
-import odms.data.UserDatabase;
 import odms.profile.Profile;
 import java.util.ArrayList;
 
@@ -97,7 +96,7 @@ public class CommandLine {
 
             case PRINTALL:
                 // Print all profiles (print all).
-                ArrayList<Profile> allProfiles = currentDatabase.getDonors(false);
+                ArrayList<Profile> allProfiles = currentDatabase.getProfiles(false);
                 if (allProfiles.size() > 0) {
                     for (Profile profile : allProfiles) {
                         profile.viewAttributes();
@@ -111,7 +110,7 @@ public class CommandLine {
 
             case PRINTDONORS:
                 // Print all profiles that are donors (print donors).
-                ArrayList<Profile> allDonors = currentDatabase.getDonors(true);
+                ArrayList<Profile> allDonors = currentDatabase.getProfiles(true);
                 if (allDonors.size() > 0) {
                     for (Profile profile : allDonors) {
                         profile.viewAttributes();
@@ -152,7 +151,7 @@ public class CommandLine {
                     String[] attrList = rawInput.substring(15).split("\"\\s");
                     ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
                     Profile newProfile = new Profile(attrArray);
-                    currentDatabase.addDonor(newProfile);
+                    currentDatabase.addProfile(newProfile);
                     CommandUtils.addDonorHistory(newProfile.getId());
                     System.out.println("Profile created.");
 
@@ -186,19 +185,19 @@ public class CommandLine {
                 CommandUtils.viewAttrBySearch(currentDatabase, rawInput);
                 break;
 
-            case DONORDATECREATED:
+            case PROFILEDATECREATED:
                 // Search profiles (profile > date-created).
                 System.out.println("Searching for profiles...");
                 CommandUtils.viewDateTimeCreatedBySearch(currentDatabase, rawInput);
                 break;
 
-            case DONORDONATIONS:
+            case PROFILEDONATIONS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
                 CommandUtils.viewDonationsBySearch(currentDatabase, rawInput);
                 break;
 
-            case DONORUPDATE:
+            case PROFILEUPDATE:
                 // Search profiles.
                 CommandUtils.updateProfilesBySearch(currentDatabase, rawInput);
                 System.out.println("Profile(s) successfully updated.");

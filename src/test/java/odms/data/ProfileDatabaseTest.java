@@ -53,15 +53,15 @@ public class ProfileDatabaseTest {
     @Test
     public void testAddDonor() {
         try {
-            donorDB.addDonor(profileOne);
+            donorDB.addProfile(profileOne);
 
-            assertEquals(donorDB.getDonor(0).getGivenNames(), "John");
-            assertEquals(donorDB.getDonor(0).getLastNames(), "Wayne");
-            donorDB.addDonor(profileTwo);
+            assertEquals(donorDB.getProfile(0).getGivenNames(), "John");
+            assertEquals(donorDB.getProfile(0).getLastNames(), "Wayne");
+            donorDB.addProfile(profileTwo);
 
-            assertEquals(donorDB.getDonor(1).getGivenNames(), "Sam");
-            assertEquals(donorDB.getDonor(1).getLastNames(), "Sick");
-            assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
+            assertEquals(donorDB.getProfile(1).getGivenNames(), "Sam");
+            assertEquals(donorDB.getProfile(1).getLastNames(), "Sick");
+            assertTrue("Population should be 2", donorDB.getProfilePopulation() == 2);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,19 +71,19 @@ public class ProfileDatabaseTest {
     @Test
     public void testDeleteDonor() {
         try {
-            donorDB.addDonor(profileOne);
-            donorDB.addDonor(profileTwo);
-            assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
+            donorDB.addProfile(profileOne);
+            donorDB.addProfile(profileTwo);
+            assertTrue("Population should be 2", donorDB.getProfilePopulation() == 2);
 
-            donorDB.deleteDonor(0);
-            assertNull(donorDB.getDonor(0));
+            donorDB.deleteProfile(0);
+            assertNull(donorDB.getProfile(0));
 
-            assertEquals(donorDB.getDonor(1).getGivenNames(), "Sam");
-            assertEquals(donorDB.getDonor(1).getLastNames(), "Sick");
-            assertTrue("Population should be 1", donorDB.getDonorPopulation() == 1);
+            assertEquals(donorDB.getProfile(1).getGivenNames(), "Sam");
+            assertEquals(donorDB.getProfile(1).getLastNames(), "Sick");
+            assertTrue("Population should be 1", donorDB.getProfilePopulation() == 1);
 
-            donorDB.deleteDonor(1);
-            assertTrue("Population should be 0", donorDB.getDonorPopulation() == 0);
+            donorDB.deleteProfile(1);
+            assertTrue("Population should be 0", donorDB.getProfilePopulation() == 0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,12 +93,12 @@ public class ProfileDatabaseTest {
     @Test
     public void testGetDonorPopulation() {
         try {
-            donorDB.addDonor(profileOne);
-            donorDB.addDonor(profileTwo);
-            assertTrue("Population should be 2", donorDB.getDonorPopulation() == 2);
+            donorDB.addProfile(profileOne);
+            donorDB.addProfile(profileTwo);
+            assertTrue("Population should be 2", donorDB.getProfilePopulation() == 2);
 
-            donorDB.deleteDonor(0);
-            assertTrue("Population should be 1", donorDB.getDonorPopulation() == 1);
+            donorDB.deleteProfile(0);
+            assertTrue("Population should be 1", donorDB.getProfilePopulation() == 1);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,16 +110,16 @@ public class ProfileDatabaseTest {
         ArrayList<Profile> testResults;
 
         try {
-            donorDB.addDonor(profileOne);
-            donorDB.addDonor(profileTwo);
-            testResults = donorDB.getDonors(false);
+            donorDB.addProfile(profileOne);
+            donorDB.addProfile(profileTwo);
+            testResults = donorDB.getProfiles(false);
             assertTrue("Should be 2 results", testResults.size() == 2);
 
             // Check sorting works as intended
             assertEquals(testResults.get(0).getLastNames(), "Sick");
             assertEquals(testResults.get(1).getLastNames(), "Wayne");
 
-            testResults = donorDB.getDonors(true);
+            testResults = donorDB.getProfiles(true);
             assertTrue("Should be 0 results", testResults.size() == 0);
 
         } catch (Exception e) {
@@ -132,8 +132,8 @@ public class ProfileDatabaseTest {
         thrown.expect(IrdNumberConflictException.class);
         thrown.expectMessage("IRD number already in use");
 
-        donorDB.addDonor(profileOne);
-        donorDB.addDonor(profileOne);
+        donorDB.addProfile(profileOne);
+        donorDB.addProfile(profileOne);
     }
 
 }
