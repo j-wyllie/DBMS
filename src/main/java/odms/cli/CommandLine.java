@@ -25,8 +25,6 @@ public class CommandLine {
     private LineReader reader;
     private Terminal terminal;
 
-    private UserDatabase userDatabase;
-
     public CommandLine (ProfileDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
 
