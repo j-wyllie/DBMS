@@ -9,13 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import odms.donor.Donor;
+import odms.donor.Organ;
 import odms.user.User;
 
 import java.io.IOException;
@@ -126,24 +125,47 @@ public class ClinicianProfileController {
 
     /**
      * initializes and refreshes the search table
+     * Adds a listener to each row so that when it is double clicked
+     * a new donor window is opened.
+     * Calls the setTooltipToRow function.
      */
     @FXML
     private void makeTable(ArrayList<Donor> donors){
+
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        TableColumn<Donor, String> ageCol = new TableColumn("Age");
-        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
-        ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
-        searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
-
+        searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
         searchTable.setOnMouseClicked( event -> {
             if( event.getClickCount() == 2 ) {
                 createNewDonorWindow((Donor) searchTable.getSelectionModel().getSelectedItem());
             }});
+        addTooltipToRow();
+    }
+
+    /**
+     * adds a tooltip to each row of the table
+     * containing their organs donated.
+     */
+    private void addTooltipToRow() {
+        searchTable.setRowFactory(tableView -> {
+            final TableRow<Donor> row = new TableRow<>();
+
+            row.hoverProperty().addListener((observable) -> {
+                final Donor donor = row.getItem();
+                String donations = "";
+                if (row.isHover() && donor != null) {
+                    if(donor.getDonatedOrgans().size() > 0) {
+                        donations = ". Donor: " + donor.getDonatedOrgans().toString();
+                    }
+                    row.setTooltip(new Tooltip(donor.getFullName() + donations));
+                }
+            });
+            return row;
+        });
     }
 
     /**
@@ -172,7 +194,6 @@ public class ClinicianProfileController {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void initialize(){

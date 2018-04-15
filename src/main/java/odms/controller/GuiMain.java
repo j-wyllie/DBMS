@@ -37,12 +37,6 @@ public class GuiMain extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                DonorDataIO.saveDonors(donorDb, DONOR_DATABASE);
-                UserDataIO.saveUsers(userDb, USER_DATABASE);
-            }
-        });
     }
 
     public static DonorDatabase getCurrentDatabase() {
