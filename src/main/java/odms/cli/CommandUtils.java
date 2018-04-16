@@ -122,11 +122,11 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
 
-            if (expression.substring(8, "given-names".length()).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 printSearchResults(currentDatabase.searchGivenNames(attr));
-            } else if (expression.substring(8, "last-names".length()).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 printSearchResults(currentDatabase.searchLastNames(attr));
-            } else if (expression.substring(8, "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 printSearchResults(currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
             } else {
                 System.out.println(searchErrorText);
@@ -148,7 +148,7 @@ public class CommandUtils {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.lastIndexOf("\""));
 
-        if (expression.substring(6, 17).equals("given-names")) {
+        if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
@@ -156,7 +156,7 @@ public class CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(6, 16).equals("last-names")) {
+        } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
@@ -164,7 +164,7 @@ public class CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(6, 9).equals("ird")) {
+        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
@@ -190,20 +190,20 @@ public class CommandUtils {
             expression.lastIndexOf("\""));
         ArrayList<Profile> profileList = null;
 
-        if (expression.substring(6, 17).equals("given-names")) {
+        if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
 
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 profileList = currentDatabase.searchGivenNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(6, 16).equals("last-names")) {
+        } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 profileList = currentDatabase.searchLastNames(attr);
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(6, 9).equals("ird")) {
+        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
             } else {
@@ -238,15 +238,15 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
 
-            if (expression.substring(6, 17).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(6, 16).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(6, 9).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
@@ -273,16 +273,16 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
 
-            if (expression.substring(6, 17).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 addOrgans(profileList, organList);
-            } else if (expression.substring(6, 16).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
 
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addOrgans(profileList, organList);
-            } else if (expression.substring(6, 9).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 test(currentDatabase, expression, organList);
             }
 
@@ -309,15 +309,15 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
 
-            if (expression.substring(6, 17).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 removeOrgans(profileList, organList);
-            } else if (expression.substring(6, 16).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeOrgans(profileList, organList);
-            } else if (expression.substring(6, 9).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
@@ -344,7 +344,7 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
 
-            if (expression.substring(6, 17).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 if (profileList.size() > 0) {
@@ -353,7 +353,7 @@ public class CommandUtils {
                     System.out.println(searchNotFoundText);
                 }
 
-            } else if (expression.substring(6, 16).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 if (profileList.size() > 0) {
@@ -362,7 +362,7 @@ public class CommandUtils {
                     System.out.println(searchNotFoundText);
                 }
 
-            } else if (expression.substring(6, 9).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 test(currentDatabase, expression, organList);
             } else {
                 System.out.println(searchErrorText);
@@ -394,15 +394,15 @@ public class CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
 
-            if (expression.substring(6, 17).equals("given-names")) {
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(6, 16).equals("last-names")) {
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(6, 9).equals("ird")) {
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
