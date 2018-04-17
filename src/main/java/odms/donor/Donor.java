@@ -37,6 +37,8 @@ public class Donor {
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
 
+    private ArrayList<Condition> conditions = new ArrayList<>();
+
     private String phone;
     private String email;
 
@@ -462,6 +464,18 @@ public class Donor {
 
     public Set<Organ> getOrgans() {
         return organs;
+    }
+
+    public ArrayList<Condition> getAllConditions() { return conditions; }
+
+    public ArrayList<Condition> getCuredConditions() {
+        ArrayList<Condition> curedConditions = new ArrayList<>();
+        for (Condition condition : conditions) {
+            if (condition.isCured()) {
+                curedConditions.add(condition);
+            }
+        }
+        return curedConditions;
     }
 
     public LocalDateTime getTimeOfCreation() {
