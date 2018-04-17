@@ -37,9 +37,6 @@ public class ClinicianProfileController {
     private Label givenNamesLabel;
 
     @FXML
-    private Label lastNamesLabel;
-
-    @FXML
     private Label staffIdLabel;
 
     @FXML
@@ -120,6 +117,7 @@ public class ClinicianProfileController {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
+        addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
 

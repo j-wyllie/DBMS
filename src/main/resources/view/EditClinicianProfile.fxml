@@ -90,7 +90,7 @@
                                                       <Insets left="60.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="173.0" text="Given names : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="173.0" text="Name : " GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -98,7 +98,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="52.0" prefWidth="176.0" text="Surnames : " GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="164.0" text="Staff ID : " GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -106,7 +106,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="164.0" text="Staff ID : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="180.0" text="Work Address : " GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -114,15 +114,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="180.0" text="Work Address : " GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="regionLabel" prefHeight="47.0" prefWidth="173.0" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <Label fx:id="regionLabel" prefHeight="47.0" prefWidth="173.0" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -135,22 +127,17 @@
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="lastNamesField" layoutX="196.0" layoutY="74.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <TextField fx:id="addressField" layoutX="166.0" layoutY="123.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="addressField" layoutX="166.0" layoutY="123.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets left="50.0" right="20.0" />
-                                                   </GridPane.margin>
-                                                </TextField>
-                                                <TextField fx:id="regionField" layoutX="166.0" layoutY="175.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <TextField fx:id="regionField" layoutX="166.0" layoutY="175.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
@@ -159,11 +146,12 @@
                                           </GridPane>
                                        </children>
                                     </TilePane>
-                                    <ToolBar maxWidth="170.0" prefHeight="66.0" prefWidth="170.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                    <ToolBar maxWidth="236.0" prefHeight="66.0" prefWidth="236.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                       <items>
                                         <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
                                           <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
-                                          <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/edit.png); -fx-background-size: stretch;" />
+                                          <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
+                                          <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
                                       </items>
                                        <GridPane.margin>
                                           <Insets bottom="40.0" left="30.0" />

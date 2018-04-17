@@ -85,7 +85,7 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </ImageView>
-                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1143.0" text="Given names : " GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1143.0" text="Name : " GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -93,7 +93,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="1137.0" text="Work Address: " GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="1138.0" text="Staff ID: " GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -101,7 +101,15 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="regionLabel" prefHeight="51.0" prefWidth="1140.0" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="1137.0" text="Work Address: " GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                   <GridPane.margin>
+                                                      <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="regionLabel" prefHeight="51.0" prefWidth="1140.0" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -116,22 +124,6 @@
                                                    <GridPane.margin>
                                                       <Insets left="60.0" />
                                                    </GridPane.margin>
-                                                </Label>
-                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="52.0" prefWidth="1138.0" text="Surnames : " GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="1138.0" text="Staff ID: " GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
                                                 </Label>
                                              </children>
                                           </GridPane>
