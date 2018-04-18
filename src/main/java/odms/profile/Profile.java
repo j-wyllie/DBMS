@@ -441,7 +441,7 @@ public class Profile {
     }
 
     /**
-     * Calculates and returns the donors bmi
+     * Calculates and returns the profiles bmi
      * @return BMI
      */
     public double calculateBMI() {
@@ -449,7 +449,7 @@ public class Profile {
     }
 
     /**
-     * Calculate the donors age if they are alive and their age at death if they are dead
+     * Calculate the profiles age if they are alive and their age at death if they are dead
      * If the age is calculated on the users birthday they are the age they are turning that day
      * e.g. if it's your 20th birthday you are 20
      * @return profile age

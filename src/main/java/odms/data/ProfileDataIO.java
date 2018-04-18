@@ -17,10 +17,10 @@ public class ProfileDataIO {
     /**
      * Export full ProfileDatabase object to specified JSON file.
      *
-     * @param donorDb Database to be exported to JSON
+     * @param profileDb Database to be exported to JSON
      * @param path target path
      */
-    public static void saveDonors(ProfileDatabase donorDb, String path) {
+    public static void saveProfiles(ProfileDatabase profileDb, String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
 
@@ -28,7 +28,7 @@ public class ProfileDataIO {
             Gson gson = new Gson();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
-            writeFile.write(gson.toJson(donorDb));
+            writeFile.write(gson.toJson(profileDb));
             writeFile.close();
             if(history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
@@ -45,7 +45,6 @@ public class ProfileDataIO {
             System.out.println("File requested: " + path);
         }
     }
-
 
     /**
      * Reads a file from the provided filename or path, converts to string.
@@ -75,9 +74,7 @@ public class ProfileDataIO {
         }
 
         return fileBuffer.toString();
-
     }
-
 
     /**
      * Load the specified ProfileDatabase JSON file instantiating a ProfileDatabase Object.
@@ -88,7 +85,7 @@ public class ProfileDataIO {
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
-        ProfileDatabase donorDb = new ProfileDatabase();
+        ProfileDatabase profileDb = new ProfileDatabase();
 
         try {
             history = fileToString(historyFile);
@@ -104,7 +101,7 @@ public class ProfileDataIO {
             e.printStackTrace();
         }
 
-        return donorDb;
+        return profileDb;
     }
 
     public static String getHistory() { return history;}

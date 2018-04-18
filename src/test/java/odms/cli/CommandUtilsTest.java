@@ -139,11 +139,6 @@ public class CommandUtilsTest {
     }
 
     @Test
-    public void testInvalidCommand() {
-
-    }
-
-    @Test
     public void testHelpCommand() {
 
     }
@@ -192,7 +187,7 @@ public class CommandUtilsTest {
                 "dob=\"" + dob + "\" " +
                 "ird=\"" + irdNumber + "\"";
 
-        CommandUtils.createProfile(profileDb, createProfileStr);
+        odms.cli.commands.Profile.createProfile(profileDb, createProfileStr);
 
         Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
 
@@ -208,7 +203,7 @@ public class CommandUtilsTest {
         String deleteProfileStr = "profile " +
             "ird=\"" + irdNumber + "\" "
             + "> delete";
-        CommandUtils.deleteDonorBySearch(profileDb, deleteProfileStr);
+        odms.cli.commands.Profile.deleteProfileBySearch(profileDb, deleteProfileStr);
 
         assertEquals(profileDb.searchIRDNumber(123456789).size(), 0);
     }
@@ -222,7 +217,7 @@ public class CommandUtilsTest {
             + "> "
             + "given-names=\"" + givenNames + "\"";
 
-        CommandUtils.updateProfilesBySearch(profileDb, updateProfileStr);
+        odms.cli.commands.Profile.updateProfilesBySearch(profileDb, updateProfileStr);
 
         Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
@@ -235,10 +230,10 @@ public class CommandUtilsTest {
             "ird=\"" + irdNumber + "\" "
             + "> date-created";
         Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
-        CommandUtils.viewDateTimeCreatedBySearch(profileDb, deleteProfileStr);
+        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, deleteProfileStr);
 
         assertTrue(
-            result.toString().trim().split("\\\\r?\\\\n")[0]
+            result.toString().trim().split("\\r?\\n")[3]
                 .contains(profile.getTimeOfCreation().toString())
         );
 

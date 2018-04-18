@@ -1,6 +1,6 @@
 # Design Decisions
 
-## Donor Data Storage
+## Profile Data Storage
 ### Memory
 During runtime the 'database' will be kept in memory, with supporting functions.
 

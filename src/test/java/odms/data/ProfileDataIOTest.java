@@ -10,23 +10,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ProfileDataIOTest {
-    private ProfileDatabase donorDB;
+    private ProfileDatabase profileDb;
     private Profile profileOne;
 
     @Before
     public void setup() {
         // Create profile Database with basic profile
-        donorDB = new ProfileDatabase();
+        profileDb = new ProfileDatabase();
 
-        ArrayList<String> donorOneAttr = new ArrayList<>();
-        donorOneAttr.add("given-names=\"John\"");
-        donorOneAttr.add("last-names=\"Wayne\"");
-        donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileOneAttr = new ArrayList<>();
+        profileOneAttr.add("given-names=\"John\"");
+        profileOneAttr.add("last-names=\"Wayne\"");
+        profileOneAttr.add("dob=\"17-01-1998\"");
+        profileOneAttr.add("ird=\"123456879\"");
 
         try {
-            profileOne = new Profile(donorOneAttr);
-            donorDB.addProfile(profileOne);
+            profileOne = new Profile(profileOneAttr);
+            profileDb.addProfile(profileOne);
 
         } catch (IrdNumberConflictException e) {
             e.printStackTrace();
@@ -37,12 +37,12 @@ public class ProfileDataIOTest {
     @Test
     public void testSaveAndLoad() {
         ProfileDatabase loadedDb;
-        ProfileDataIO.saveDonors(donorDB, "CommandUtilsTest.json");
+        ProfileDataIO.saveProfiles(profileDb, "CommandUtilsTest.json");
 
         loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
 
         assertEquals(
-            donorDB.getProfile(0).getGivenNames(),
+            profileDb.getProfile(0).getGivenNames(),
             loadedDb.getProfile(0).getGivenNames()
         );
 

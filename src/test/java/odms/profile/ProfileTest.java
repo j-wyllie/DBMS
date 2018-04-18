@@ -16,25 +16,25 @@ public class ProfileTest {
 
     /**
      * Test to create a valid user
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test
     public void testCreateBasicUser() throws IllegalArgumentException {
         Profile testProfile = null;
 
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             //pass
         }
 
-        assertTrue(testProfile != null);
+        assertNotNull(testProfile);
     }
 
     @Test
@@ -47,108 +47,108 @@ public class ProfileTest {
             //pass
         }
 
-        assertTrue(testProfile != null);
+        assertNotNull(testProfile);
     }
 
     /**
      * Test creating a users with every attribute
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test
     public void testCreateFullUser() throws IllegalArgumentException {
         Profile testProfile = null;
 
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
-        donorAttr.add("dod=\"6-3-2018\"");
-        donorAttr.add("gender=\"male\"");
-        donorAttr.add("height=\"86.0\"");
-        donorAttr.add("weight=\"72.0\"");
-        donorAttr.add("blood-type=\"O+\"");
-        donorAttr.add("address=\"Riccarton\"");
-        donorAttr.add("region=\"Christchurch\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("dod=\"6-3-2018\"");
+        profileAttr.add("gender=\"male\"");
+        profileAttr.add("height=\"86.0\"");
+        profileAttr.add("weight=\"72.0\"");
+        profileAttr.add("blood-type=\"O+\"");
+        profileAttr.add("address=\"Riccarton\"");
+        profileAttr.add("region=\"Christchurch\"");
 
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             //pass
         }
 
-        assertTrue(testProfile != null);
+        assertNotNull(testProfile);
     }
 
     /**
      * Test to create an invalid user with no IRD no
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserNoIRD() throws IllegalArgumentException {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("\"given-names=John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("\"given-names=John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
 
-        Profile profileOnlyAttr = new Profile(donorAttr);
+        Profile profileOnlyAttr = new Profile(profileAttr);
     }
 
     /**
      * Test to create an invalid user with no DOB
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserNoDOB() throws IllegalArgumentException {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("ird=\"123456879\"");;
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("ird=\"123456879\"");;
 
-        Profile profileOnlyAttr = new Profile(donorAttr);
+        Profile profileOnlyAttr = new Profile(profileAttr);
     }
 
     /**
      * Test to create an invalid user with no first-name
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserNoFirstName() throws IllegalArgumentException {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(donorAttr);
+        Profile profileOnlyAttr = new Profile(profileAttr);
     }
 
     /**
      * Test to create an invalid user with no last name
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserNoLastName() throws IllegalArgumentException {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(donorAttr);
+        Profile profileOnlyAttr = new Profile(profileAttr);
     }
 
     /**
      * Test to create an invalid user with an incorrectly spelt attribute
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserBadAttr() throws IllegalArgumentException {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-na=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-na=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(donorAttr);
+        Profile profileOnlyAttr = new Profile(profileAttr);
     }
 
     /**
@@ -156,15 +156,15 @@ public class ProfileTest {
      */
     @Test
     public void testAddDonatableOrgans() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -188,15 +188,15 @@ public class ProfileTest {
      */
     @Test
     public void testAddOrgans() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -219,15 +219,15 @@ public class ProfileTest {
 
     @Test
     public void testAddOrgansFromString() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -251,15 +251,15 @@ public class ProfileTest {
 
     @Test
     public void testAddDonationsFromString() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -282,15 +282,15 @@ public class ProfileTest {
 
     @Test
     public void testAddDiseases() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -316,15 +316,15 @@ public class ProfileTest {
      */
     @Test
     public void testRemoveDonatableOrgans() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -352,15 +352,15 @@ public class ProfileTest {
      */
     @Test
     public void testRemoveOrgans() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -389,15 +389,15 @@ public class ProfileTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddExistingOrgan() {
-        ArrayList<String> donorAttr = new ArrayList<>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -416,15 +416,15 @@ public class ProfileTest {
      */
     @Test
     public void testPropertyChangeEvent() {
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -439,17 +439,17 @@ public class ProfileTest {
     public void testCalculateBMI() {
         DecimalFormat df = new DecimalFormat("#.##");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"17-01-1998\"");
-        donorAttr.add("ird=\"123456879\"");
-        donorAttr.add("weight=\"72.0\"");
-        donorAttr.add("height=\"175.0\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("weight=\"72.0\"");
+        profileAttr.add("height=\"175.0\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -466,15 +466,15 @@ public class ProfileTest {
      */
     @Test
     public void testCalculateAgeAlive() {
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"01-01-2000\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -491,16 +491,16 @@ public class ProfileTest {
      */
     @Test
     public void testCalculateAgeDead() {
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"02-01-2000\"");
-        donorAttr.add("dod=\"01-01-2050\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"02-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -510,20 +510,20 @@ public class ProfileTest {
     }
 
     /**
-     * Tests the calculated age if it is the donors birthday
+     * Tests the calculated age if it is the profiles birthday
      */
     @Test
     public void testCalculateAgeOnBirthday() {
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"01-01-2000\"");
-        donorAttr.add("dod=\"01-01-2050\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -535,16 +535,16 @@ public class ProfileTest {
 
     @Test
     public void testGetBloodPressure() {
-        ArrayList<String> donorAttr = new ArrayList<String>();
-        donorAttr.add("given-names=\"John\"");
-        donorAttr.add("last-names=\"Smithy Smith Face\"");
-        donorAttr.add("dob=\"01-01-2000\"");
-        donorAttr.add("dod=\"01-01-2050\"");
-        donorAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = null;
         try {
-            testProfile = new Profile(donorAttr);
+            testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
             // pass
         }

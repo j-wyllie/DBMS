@@ -3,9 +3,11 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
+import odms.cli.commands.Help;
+import odms.cli.commands.Print;
+import odms.cli.commands.Profile;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
-import odms.profile.Profile;
 import java.util.ArrayList;
 
 import org.jline.reader.LineReader;
@@ -86,46 +88,27 @@ public class CommandLine {
             case HELP:
                 // Show available commands (help).
                 if(rawInput.equals("help")) {
-                    CommandUtils.help();
+                    Help.help();
                 } else {
-                    CommandUtils.helpSpecific(rawInput.substring(5));
+                    Help.helpSpecific(rawInput.substring(5));
                 }
                 break;
 
             case PRINTALL:
                 // Print all profiles (print all).
-                ArrayList<Profile> allProfiles = currentDatabase.getProfiles(false);
-                if (allProfiles.size() > 0) {
-                    for (Profile profile : allProfiles) {
-                        profile.viewAttributes();
-                        System.out.println();
-                    }
-                }
-                else {
-                    System.out.println("There are no profiles to show.");
-                }
+                Print.printAll(currentDatabase);
                 break;
 
             case PRINTDONORS:
                 // Print all profiles that are donors (print donors).
-                ArrayList<Profile> allDonors = currentDatabase.getProfiles(true);
-                if (allDonors.size() > 0) {
-                    for (Profile profile : allDonors) {
-                        profile.viewAttributes();
-                        profile.viewOrgans();
-                        System.out.println();
-                    }
-                }
-                else {
-                    System.out.println("There are no profile profiles to show.");
-                }
+                Print.printDonors(currentDatabase);
                 break;
 
             case EXPORT:
                 // Export profile database to file
                 if (input.size() == 2) {
                     String filepath = input.get(1);
-                    ProfileDataIO.saveDonors(currentDatabase, filepath);
+                    ProfileDataIO.saveProfiles(currentDatabase, filepath);
                 } else {
                     System.out.println("Error: Invalid arguments. Expected: 1, "
                             + "Found: " + (input.size() - 1));
@@ -145,47 +128,47 @@ public class CommandLine {
 
             case PROFILECREATE:
                 // Create a new profile.
-                CommandUtils.createProfile(currentDatabase, rawInput);
-                break;
-
-            case PROFILEDELETE:
-                // Delete a profile.
-                CommandUtils.deleteDonorBySearch(currentDatabase, rawInput);
-                System.out.println("Profile(s) successfully deleted.");
-                break;
-
-            case PROFILEVIEW:
-                // Search profiles (profile > view).
-                System.out.println("Searching for profiles...");
-                CommandUtils.viewAttrBySearch(currentDatabase, rawInput);
+                Profile.createProfile(currentDatabase, rawInput);
                 break;
 
             case PROFILEDATECREATED:
                 // Search profiles (profile > date-created).
                 System.out.println("Searching for profiles...");
-                CommandUtils.viewDateTimeCreatedBySearch(currentDatabase, rawInput);
+                Profile.viewDateTimeCreatedBySearch(currentDatabase, rawInput);
+                break;
+
+            case PROFILEDELETE:
+                // Delete a profile.
+                Profile.deleteProfileBySearch(currentDatabase, rawInput);
+                System.out.println("Profile(s) successfully deleted.");
                 break;
 
             case PROFILEDONATIONS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
-                CommandUtils.viewDonationsBySearch(currentDatabase, rawInput);
+                Profile.viewDonationsBySearch(currentDatabase, rawInput);
                 break;
 
             case PROFILEUPDATE:
                 // Search profiles.
-                CommandUtils.updateProfilesBySearch(currentDatabase, rawInput);
+                Profile.updateProfilesBySearch(currentDatabase, rawInput);
                 System.out.println("Profile(s) successfully updated.");
                 break;
 
+            case PROFILEVIEW:
+                // Search profiles (profile > view).
+                System.out.println("Searching for profiles...");
+                Profile.viewAttrBySearch(currentDatabase, rawInput);
+                break;
+
             case ORGANADD:
-                // Add organs to a donors profile.
+                // Add organs to a printDonors profile.
                 CommandUtils.addOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case ORGANREMOVE:
-                // Remove organs from a donors profile.
+                // Remove organs from a printDonors profile.
                 CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;

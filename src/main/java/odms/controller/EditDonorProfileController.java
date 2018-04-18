@@ -244,7 +244,7 @@ public class EditDonorProfileController {
                 currentProfile.setChronicDiseases(diseasesSet);
             }
 
-            ProfileDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
+            ProfileDataIO.saveProfiles(getCurrentDatabase(), "example/example.json");
 
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
             Scene newScene = new Scene(parent);
@@ -291,7 +291,7 @@ public class EditDonorProfileController {
 
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentProfile.getRegistered() != null && currentProfile.getRegistered() == true) {
+            if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
                 donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
             }
 
@@ -341,7 +341,7 @@ public class EditDonorProfileController {
             donationsField.setText(currentProfile.getDonationsAsCSV());
         }
         catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }

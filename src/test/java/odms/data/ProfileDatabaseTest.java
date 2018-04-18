@@ -21,26 +21,26 @@ public class ProfileDatabaseTest {
         // Create profile Database with basic profile
         profileDb = new ProfileDatabase();
 
-        ArrayList<String> donorOneAttr = new ArrayList<>();
-        donorOneAttr.add("given-names=\"John\"");
-        donorOneAttr.add("last-names=\"Wayne\"");
-        donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("ird=\"123456879\"");
+        ArrayList<String> profileOneAttr = new ArrayList<>();
+        profileOneAttr.add("given-names=\"John\"");
+        profileOneAttr.add("last-names=\"Wayne\"");
+        profileOneAttr.add("dob=\"17-01-1998\"");
+        profileOneAttr.add("ird=\"123456879\"");
 
-        ArrayList<String> donorTwoAttr = new ArrayList<>();
-        donorTwoAttr.add("given-names=\"Sam\"");
-        donorTwoAttr.add("last-names=\"Sick\"");
-        donorTwoAttr.add("dob=\"17-01-1997\"");
-        donorTwoAttr.add("ird=\"123456878\"");
+        ArrayList<String> profileTwoAttr = new ArrayList<>();
+        profileTwoAttr.add("given-names=\"Sam\"");
+        profileTwoAttr.add("last-names=\"Sick\"");
+        profileTwoAttr.add("dob=\"17-01-1997\"");
+        profileTwoAttr.add("ird=\"123456878\"");
 
         try {
-            profileOne = new Profile(donorOneAttr);
+            profileOne = new Profile(profileOneAttr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
 
         try {
-            profileTwo = new Profile(donorTwoAttr);
+            profileTwo = new Profile(profileTwoAttr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class ProfileDatabaseTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testAddDonor() {
+    public void testAddProfile() {
         try {
             profileDb.addProfile(profileOne);
 
@@ -69,7 +69,7 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testDeleteDonor() {
+    public void testDeleteProfile() {
         try {
             profileDb.addProfile(profileOne);
             profileDb.addProfile(profileTwo);
@@ -91,7 +91,7 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testGetDonorPopulation() {
+    public void testGetProfilePopulation() {
         try {
             profileDb.addProfile(profileOne);
             profileDb.addProfile(profileTwo);
@@ -106,7 +106,7 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testGetDonors() {
+    public void testGetProfiles() {
         ArrayList<Profile> testResults;
 
         try {

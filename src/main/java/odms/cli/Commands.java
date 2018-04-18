@@ -19,11 +19,11 @@ public enum Commands {
 
     // Profile Commands
     PROFILECREATE,
-    PROFILEDELETE,
-    PROFILEVIEW,
     PROFILEDATECREATED,
+    PROFILEDELETE,
     PROFILEDONATIONS,
     PROFILEUPDATE,
+    PROFILEVIEW,
 
     // Orgon Commands
     ORGANADD,
@@ -33,8 +33,8 @@ public enum Commands {
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
             new StringsCompleter("help"),
-            new StringsCompleter("print-all"),
-            new StringsCompleter("print-donors"),
+            new StringsCompleter("print all"),
+            new StringsCompleter("print donors"),
 
             new StringsCompleter("export"),
             new StringsCompleter("import"),

@@ -8,7 +8,7 @@ import odms.data.ProfileDatabase;
 
 public class App {
 
-    private static ProfileDatabase donorDb = new ProfileDatabase();
+    private static ProfileDatabase profileDb = new ProfileDatabase();
 
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");
@@ -19,7 +19,7 @@ public class App {
             } else {
                 switch (args[0].toLowerCase()) {
                     case "-cmd":
-                        CommandLine commandLine = new CommandLine(donorDb);
+                        CommandLine commandLine = new CommandLine(profileDb);
                         commandLine.initialiseConsole();
                         break;
                 }

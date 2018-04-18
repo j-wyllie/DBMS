@@ -41,11 +41,11 @@ An example database can be found in the example directory.
 This example database is a database containing 10 profiles of varying organ donation status and other 
 mixed attributes.
 
-## Donor Management
+## Profile Management
 ODMS refers to the specifics of a profile as attributes, such as names, date of birth, organs they opt
  to donate, etc.
 
-### Donors
+### Profiles
 #### Creating a profile
 A profile profile can be created from the base command `create-profile` followed by the desired 
 attributes you wish to set at time of creation.
