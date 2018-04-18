@@ -4,7 +4,7 @@ import static odms.cli.CommandUtils.validateCommandType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
@@ -27,13 +27,13 @@ public class CommandUtilsTest {
 
     // Output Handling
     private PrintStream stdout;
-    private ByteOutputStream result;
+    private ByteArrayOutputStream result;
 
     @Before
     public void setup() {
         // Capture output stream
         stdout = System.out;
-        result = new ByteOutputStream();
+        result = new ByteArrayOutputStream();
         System.setOut(new PrintStream(result));
 
         // Database setup
