@@ -16,6 +16,7 @@ import odms.controller.GuiMain;
 import odms.controller.LoginController;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
@@ -23,6 +24,7 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -36,14 +38,18 @@ public class LoginControllerTest extends ApplicationTest {
 
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
-    static {
+    @BeforeClass
+    public static void setupSpec() throws Exception {
         if (Boolean.getBoolean("headless")) {
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
             System.setProperty("prism.order", "sw");
             System.setProperty("prism.text", "t2k");
+            System.setProperty("java.awt.headless", "true");
         }
+        registerPrimaryStage();
     }
+
 
     @After()
     public void tearDown() throws Exception {
