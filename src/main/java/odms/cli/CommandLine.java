@@ -3,10 +3,8 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
-import java.util.Arrays;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
-import odms.data.IrdNumberConflictException;
 import odms.profile.Profile;
 import java.util.ArrayList;
 
@@ -147,30 +145,7 @@ public class CommandLine {
 
             case PROFILECREATE:
                 // Create a new profile.
-                try {
-                    String[] attrList = rawInput.substring(15).split("\"\\s");
-                    ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-                    Profile newProfile = new Profile(attrArray);
-                    currentDatabase.addProfile(newProfile);
-                    CommandUtils.addDonorHistory(newProfile.getId());
-                    System.out.println("Profile created.");
-
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Please enter the required attributes correctly.");
-
-                } catch (IrdNumberConflictException e) {
-                    Integer errorIrdNumber = e.getIrdNumber();
-                    Profile errorProfile = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
-
-                    System.out.println("Error: IRD Number " + errorIrdNumber +
-                        " already in use by profile " +
-                        errorProfile.getGivenNames() + " " +
-                        errorProfile.getLastNames());
-
-                } catch (Exception e) {
-                    System.out.println("Please enter a valid command.");
-                }
-
+                CommandUtils.createProfile(currentDatabase, rawInput);
                 break;
 
             case PROFILEDELETE:

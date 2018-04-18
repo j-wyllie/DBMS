@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
 
@@ -462,6 +464,38 @@ public class CommandUtils {
     }
 
     /**
+     * Create profile.
+     *
+     * @param currentDatabase Database reference
+     * @param rawInput raw command input
+     */
+    public static void createProfile(ProfileDatabase currentDatabase, String rawInput) {
+        try {
+            String[] attrList = rawInput.substring(15).split("\"\\s");
+            ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
+            Profile newProfile = new Profile(attrArray);
+            currentDatabase.addProfile(newProfile);
+            CommandUtils.addDonorHistory(newProfile.getId());
+            System.out.println("Profile created.");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Please enter the required attributes correctly.");
+
+        } catch (IrdNumberConflictException e) {
+            Integer errorIrdNumber = e.getIrdNumber();
+            Profile errorProfile = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
+
+            System.out.println("Error: IRD Number " + errorIrdNumber +
+                    " already in use by profile " +
+                    errorProfile.getGivenNames() + " " +
+                    errorProfile.getLastNames());
+
+        } catch (Exception e) {
+            System.out.println("Please enter a valid command.");
+        }
+    }
+
+    /**
      * Update profile attributes.
      *
      * @param profileList List of profiles
@@ -707,7 +741,7 @@ public class CommandUtils {
         }
     }
 
-    public static void addDonorHistory(int Id) {
+    private static void addDonorHistory(int Id) {
         if (currentSessionHistory.size() != 0) {
             if (historyPosition != currentSessionHistory.size() - 1) {
                 currentSessionHistory.subList(historyPosition, currentSessionHistory.size() - 1)
@@ -864,8 +898,7 @@ public class CommandUtils {
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    String newInfo = action.substring(action.indexOf("new"));
-                    newInfo = action.substring(action.indexOf("ird"));
+                    String newInfo = action.substring(action.indexOf("ird"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
                 }
                 System.out.println("Command redone");

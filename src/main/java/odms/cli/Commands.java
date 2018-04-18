@@ -21,8 +21,6 @@ public enum Commands {
     PROFILECREATE,
     PROFILEDELETE,
     PROFILEVIEW,
-
-    // Profile Commands
     PROFILEDATECREATED,
     PROFILEDONATIONS,
     PROFILEUPDATE,
