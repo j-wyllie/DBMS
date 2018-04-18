@@ -47,7 +47,7 @@ public class LoginControllerTest extends ApplicationTest {
             System.setProperty("prism.text", "t2k");
             System.setProperty("java.awt.headless", "true");
         }
-        registerPrimaryStage();
+        //registerPrimaryStage();
     }
 
 
