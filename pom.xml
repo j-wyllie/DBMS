@@ -36,7 +36,7 @@
             <version>3.6.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core/4.0.13-alpha -->
+        <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
@@ -44,6 +44,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
