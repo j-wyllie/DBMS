@@ -18,10 +18,40 @@ import java.util.Arrays;
 
 public class CommandUtilsTest {
     private ProfileDatabase profileDb;
+    private Profile profileOne;
+    private Profile profileTwo;
 
     @Before
     public void setup() {
         this.profileDb = new ProfileDatabase();
+
+        // TODO if test data is commonly created for test cases, consider abstraction to a
+        // TODO centralised TestDataCreator class
+        // Create some test profiles
+        ArrayList<String> donorOneAttr = new ArrayList<>();
+        donorOneAttr.add("given-names=\"John\"");
+        donorOneAttr.add("last-names=\"Wayne\"");
+        donorOneAttr.add("dob=\"17-01-1998\"");
+        donorOneAttr.add("ird=\"123456879\"");
+
+        ArrayList<String> donorTwoAttr = new ArrayList<>();
+        donorTwoAttr.add("given-names=\"Sam\"");
+        donorTwoAttr.add("last-names=\"Sick\"");
+        donorTwoAttr.add("dob=\"17-01-1997\"");
+        donorTwoAttr.add("ird=\"123456878\"");
+
+        try {
+            profileOne = new Profile(donorOneAttr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            profileTwo = new Profile(donorTwoAttr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @After
@@ -121,7 +151,7 @@ public class CommandUtilsTest {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
         String dob = "12-08-1989";
-        String irdNumber = "123456789";
+        String irdNumber = "987654321";
 
         LocalDate dobConverted = LocalDate.of(
                 Integer.valueOf(dob.split("-")[2]),
@@ -157,7 +187,7 @@ public class CommandUtilsTest {
 
     @Test
     public void testProfileDateCreatedCommand() {
-
+        Profile testProfile = profileDb.searchIRDNumber(123456789).get(0);
     }
 
     @Test
