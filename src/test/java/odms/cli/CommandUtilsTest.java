@@ -2,7 +2,11 @@ package odms.cli;
 
 import static odms.cli.CommandUtils.validateCommandType;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import java.io.PrintStream;
+import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
 import org.jline.reader.impl.completer.ArgumentCompleter;
@@ -21,8 +25,18 @@ public class CommandUtilsTest {
     private Profile profileOne;
     private Profile profileTwo;
 
+    // Output Handling
+    private PrintStream stdout;
+    private ByteOutputStream result;
+
     @Before
     public void setup() {
+        // Capture output stream
+        stdout = System.out;
+        result = new ByteOutputStream();
+        System.setOut(new PrintStream(result));
+
+        // Database setup
         this.profileDb = new ProfileDatabase();
 
         // TODO if test data is commonly created for test cases, consider abstraction to a
@@ -32,7 +46,7 @@ public class CommandUtilsTest {
         donorOneAttr.add("given-names=\"John\"");
         donorOneAttr.add("last-names=\"Wayne\"");
         donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("ird=\"123456879\"");
+        donorOneAttr.add("ird=\"123456789\"");
 
         ArrayList<String> donorTwoAttr = new ArrayList<>();
         donorTwoAttr.add("given-names=\"Sam\"");
@@ -52,6 +66,13 @@ public class CommandUtilsTest {
             e.printStackTrace();
         }
 
+        try {
+            profileDb.addProfile(profileOne);
+            profileDb.addProfile(profileTwo);
+        } catch (IrdNumberConflictException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @After
@@ -61,6 +82,12 @@ public class CommandUtilsTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Reset output stream
+        // TODO remove this
+        System.out.println("RESULT TIME");
+        System.out.println(result);
+        System.setOut(stdout);
     }
 
     @Test
@@ -167,7 +194,7 @@ public class CommandUtilsTest {
 
         CommandUtils.createProfile(profileDb, createProfileStr);
 
-        Profile profile = profileDb.searchIRDNumber(123456789).get(0);
+        Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
 
         assertEquals(profile.getGivenNames(), givenNames);
         assertEquals(profile.getLastNames(), lastNames);
@@ -177,17 +204,44 @@ public class CommandUtilsTest {
 
     @Test
     public void testDeleteProfileCommand() {
+        String irdNumber = "123456789";
+        String deleteProfileStr = "profile " +
+            "ird=\"" + irdNumber + "\" "
+            + "> delete";
+        CommandUtils.deleteDonorBySearch(profileDb, deleteProfileStr);
 
+        assertEquals(profileDb.searchIRDNumber(123456789).size(), 0);
     }
 
     @Test
     public void testUpdateProfileCommand() {
+        String givenNames = "Boaty McBoatface";
+        String irdNumber = "123456789";
+        String updateProfileStr = "profile " +
+            "ird=\"" + irdNumber + "\" "
+            + "> "
+            + "given-names=\"" + givenNames + "\"";
 
+        CommandUtils.updateProfilesBySearch(profileDb, updateProfileStr);
+
+        Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
+        assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
 
     @Test
     public void testProfileDateCreatedCommand() {
-        Profile testProfile = profileDb.searchIRDNumber(123456789).get(0);
+        String irdNumber = "123456789";
+        String deleteProfileStr = "profile " +
+            "ird=\"" + irdNumber + "\" "
+            + "> date-created";
+        Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
+        CommandUtils.viewDateTimeCreatedBySearch(profileDb, deleteProfileStr);
+
+        assertTrue(
+            result.toString().trim().split("\\\\r?\\\\n")[0]
+                .contains(profile.getTimeOfCreation().toString())
+        );
+
     }
 
     @Test
