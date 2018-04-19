@@ -84,7 +84,6 @@ public class AlertController {
     static boolean DonorSaveChanges() {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);
-
         saveAlert.showAndWait();
         if (saveAlert.getResult() == ButtonType.NO) {
             saveAlert.close();

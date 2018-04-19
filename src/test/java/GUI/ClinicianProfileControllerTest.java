@@ -3,11 +3,10 @@ package GUI;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -61,6 +60,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         FxToolkit.cleanupStages();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+
     }
 
     /**
@@ -75,9 +75,9 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     public void openSearchedProfileTest() {
         logInClinician();
         clickOn("#searchTab");
-        //TableView searchDonorTable = lookup("#searchTable").queryTableView();
         doubleClickOn(row("#searchTable", 0));
 
+        //opening the first donor
         Scene scene = getTopModalStage();
         Label donorName = (Label) scene.lookup("#donorFullNameLabel");
         assertEquals("Meredith Fisher", donorName.getText()); //checks name label is equal
@@ -85,11 +85,71 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     @Test
     public void editSearchedProfileTest() {
+        //open up the first donor
+        logInClinician();
+        clickOn("#searchTab");
+        doubleClickOn(row("#searchTable", 0));
+        Scene scene = getTopModalStage();
 
-    }
+        Label userIdLabel = (Label) scene.lookup("#userIdLabel");
+        Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
 
-    public void closeWindow() {
+        String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
+        String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
+        //opening edit tab
+        Button editDonorButton = (Button) scene.lookup("#editDonorButton");
+        clickOn(editDonorButton);
 
+        //editing donor
+        Scene scene2 = getTopModalStage();
+        TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
+        TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
+        clickOn(givenNames).eraseText(originalGivenNames.length()).write("Bob");
+        clickOn(lastNames).eraseText(originalLastNames.length()).write("Seger");
+
+        Button saveButton = (Button) scene2.lookup("#saveButton");
+        clickOn(saveButton);
+
+        Stage stage = getAlertDialogue();
+        DialogPane dialogPane = (DialogPane) stage.getScene().getRoot();
+        Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
+        clickOn(yesButton);
+
+        //closes final dialogue
+        Stage stage3 = getAlertDialogue();
+        DialogPane dialogPane2 = (DialogPane) stage3.getScene().getRoot();
+        clickOn(dialogPane2.lookupButton(ButtonType.CLOSE));
+
+        //checks database has been updated
+        assertEquals("Bob", GuiMain.getCurrentDatabase().getDonor(userId).getGivenNames());
+        assertEquals("Seger", GuiMain.getCurrentDatabase().getDonor(userId).getLastNames());
+
+        //checks GUI has been updated.
+        scene2 = getTopModalStage();
+        Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
+        Label updatedLastNames = (Label) scene2.lookup("#lastNamesLabel");
+        assertEquals("Bob", updatedGivenNames.getText().substring(14));
+        assertEquals("Seger", updatedLastNames.getText().substring(11));
+
+        //reset user through GUI
+        //open edit donor back up
+        Scene searchedDonorScene = getTopModalStage();
+        editDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton");
+        clickOn(editDonorButton);
+
+        scene2 = getTopModalStage();
+        givenNames = (TextField) scene2.lookup("#givenNamesField");
+        lastNames = (TextField) scene2.lookup("#lastNamesField");
+        clickOn(givenNames).eraseText(3).write(originalGivenNames);
+        clickOn(lastNames).eraseText(5).write(originalLastNames);
+
+        Button saveButton2 = (Button) scene2.lookup("#saveButton");
+        clickOn(saveButton2);
+
+        Stage stage2 = getAlertDialogue();
+        DialogPane dialogPane3 = (DialogPane) stage2.getScene().getRoot();
+        yesButton = (Button) dialogPane3.lookupButton(ButtonType.YES);
+        clickOn(yesButton);
     }
 
     /**
@@ -165,7 +225,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
 
     /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
+     * gets current stage with all windows.
      * @return All of the current windows
      */
     private javafx.scene.Scene getTopModalStage() {
@@ -175,5 +235,23 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         Collections.reverse(allWindows);
 
         return (javafx.scene.Scene) allWindows.get(0).getScene();
+    }
+
+    /**
+     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
+     * @return All of the current windows
+     */
+    private javafx.stage.Stage getAlertDialogue() {
+        // Get a list of windows but ordered from top[0] to bottom[n] ones.
+        // It is needed to get the first found modal window.
+        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        Collections.reverse(allWindows);
+
+        return (javafx.stage.Stage) allWindows
+                .stream()
+                .filter(window -> window instanceof javafx.stage.Stage)
+                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
+                .findFirst()
+                .orElse(null);
     }
 }
