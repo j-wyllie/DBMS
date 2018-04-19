@@ -23,11 +23,24 @@ public class Condition {
         if (isChronic) {isChronicString = "CHRONIC";}
     }
 
+    Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isCured, boolean isCronic) {
+        this.condition = condition;
+        this.dateOfDiagnosis = dateOfDiagnosis;
+        this.dateCured = dateOfDiagnosis;
+        this.isCured = isCured;
+        this.isCronic = isCronic;
+    }
 
+    // getters
     public String getCondition() { return this.condition; }
     public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
     public LocalDate getDateCured() { return dateCured; }
     public boolean isCured() { return this.isCured; }
+    public boolean isCronic() { return isCronic; }
+
+    // setters
+    public void setIsCured(boolean isCured) { this.isCured = isCured; }
+    public void setIsCronic(boolean isCronic) { this.isCronic = isCronic; }
     public boolean isChronic() { return isChronic; }
 
 
