@@ -7,9 +7,14 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import odms.commandlineview.CommandUtils;
 import odms.data.DonorDataIO;
+import odms.donor.Condition;
 import odms.donor.Donor;
 import java.io.Console;
 import java.io.IOException;
@@ -130,6 +135,40 @@ public class DonorProfileController {
     @FXML
     private Button toggleChronicButton;
 
+    private ObservableList<Condition> curConditionsObservableList;
+    private ObservableList<Condition> pastConditionsObservableList;
+
+
+
+
+
+    /**
+     * initializes and refreshes the current and past conditions tables
+     */
+    @FXML
+    private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
+
+        curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+
+        curDiseasesTable.setItems(curConditionsObservableList);
+        pastDiseasesTable.setItems(pastConditionsObservableList);
+
+        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("description"));
+        curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronic"));
+        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+
+        //pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("description"));
+        //pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        //pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+
+        curDiseasesTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
+        //pastDiseasesTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
+
+
+    }
+
+
 
     /**
      * Button handler to handle toggle chronic button clcked, only available to clinicians
@@ -199,6 +238,11 @@ public class DonorProfileController {
     @FXML
     public void initialize() {
         Donor currentDonor = getCurrentDonor();
+
+        System.out.println(currentDonor.getAllConditions());
+        makeTable(currentDonor.getAllConditions(), currentDonor.getCuredConditions());
+
+
         try {
             donorFullNameLabel
                     .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
