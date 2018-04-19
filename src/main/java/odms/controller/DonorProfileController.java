@@ -189,8 +189,8 @@ public class DonorProfileController {
         Donor currentDonor = getCurrentDonor();
         String medicationName = textFieldMedicationSearch.getText();
         currentDonor.addDrug(new Drug(medicationName));
-        tableViewCurrentMedications.getItems().clear();
-        currentMedication.addAll(currentDonor.getCurrentMedications());
+
+        refreshTable();
     }
 
     /**
@@ -202,10 +202,8 @@ public class DonorProfileController {
         Donor currentDonor = getCurrentDonor();
         Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
         currentDonor.moveDrugToHistory(drug);
-        tableViewCurrentMedications.getItems().clear();
-        currentMedication.addAll(currentDonor.getCurrentMedications());
-        tableViewHistoricMedications.getItems().clear();
-        historicMedication.addAll(currentDonor.getHistoryOfMedication());
+
+        refreshTable();
     }
 
     /**
@@ -217,10 +215,38 @@ public class DonorProfileController {
         Donor currentDonor = getCurrentDonor();
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
         currentDonor.moveDrugToCurrent(drug);
+
+        refreshTable();
+    }
+
+    @FXML
+    private void handleDelete(ActionEvent event) throws IOException {
+        Donor currentDonor = getCurrentDonor();
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
+
+        currentDonor.deleteDrug(drug);
+
+        refreshTable();
+    }
+
+    @FXML
+    private void refreshTable() {
+        Donor currentDonor = getCurrentDonor();
         tableViewCurrentMedications.getItems().clear();
-        currentMedication.addAll(currentDonor.getCurrentMedications());
+        if (currentDonor.getCurrentMedications() != null) {currentMedication.addAll(currentDonor.getCurrentMedications());}
         tableViewHistoricMedications.getItems().clear();
-        historicMedication.addAll(currentDonor.getHistoryOfMedication());
+        if (currentDonor.getHistoryOfMedication() != null) {historicMedication.addAll(currentDonor.getHistoryOfMedication());}
+
+        tableViewCurrentMedications.setItems(currentMedication);
+        tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewCurrentMedications.getColumns().setAll(tableColumnMedicationNameCurrent);
+
+        tableViewHistoricMedications.setItems(historicMedication);
+        tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
+
     }
 
     /**
@@ -229,6 +255,8 @@ public class DonorProfileController {
     @FXML
     public void initialize() {
         Donor currentDonor = getCurrentDonor();
+
+
         try {
             donorFullNameLabel
                     .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
@@ -315,7 +343,9 @@ public class DonorProfileController {
             }
             historyView.setText(userHistory.toString());
 
-            currentMedication.setAll(currentDonor.getCurrentMedications());
+            refreshTable();
+
+            /*currentMedication.setAll(currentDonor.getCurrentMedications());
             historicMedication.setAll(currentDonor.getHistoryOfMedication());
             tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
             tableViewCurrentMedications.setItems(currentMedication);
@@ -323,6 +353,7 @@ public class DonorProfileController {
             tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
             tableViewHistoricMedications.setItems(historicMedication);
             tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
+            */
         } catch (Exception e) {
             InvalidUsername();
         }

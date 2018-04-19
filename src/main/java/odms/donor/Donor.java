@@ -74,6 +74,11 @@ public class Donor {
      * @param irdNumber Donor's IRD number as Integer
      */
     public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
+
+
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
@@ -473,7 +478,8 @@ public class Donor {
     public void addDrug(Drug drug){
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        medicationTimestamps.add(drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        medicationTimestamps.add(data);
         generateUpdateInfo(drug.getDrugName());
     }
 
@@ -496,12 +502,15 @@ public class Donor {
      */
     public void moveDrugToHistory(Drug drug){
         LocalDateTime currentTime = LocalDateTime.now();
+        if (historyOfMedication == null) {historyOfMedication = new ArrayList<>();}
+
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
             medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             generateUpdateInfo(drug.getDrugName());
         }
+
 
     }
 
