@@ -180,6 +180,10 @@ public class DonorProfileController {
         appStage.show();
     }
 
+    /**
+     * Button handler to add medications to the current medications for the current profile.
+     * @param event clicking on the add button.
+     */
     @FXML
     private void handleAddNewMedications(ActionEvent event) throws IOException {
         Donor currentDonor = getCurrentDonor();
