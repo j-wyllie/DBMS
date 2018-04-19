@@ -124,15 +124,6 @@ public class DonorProfileController {
     @FXML
     private TableColumn pastDateOfDiagnosisColumn;
 
-    @FXML
-    private Button toggleCuredButton;
-
-    @FXML
-    private Button toggleChronicButton;
-
-    @FXML
-    private  Button toggleCurrentButton;
-
     /**
      * Button handler to handle toggle chronic button clcked, only available to clinicians
      * @param event clicking on the button.

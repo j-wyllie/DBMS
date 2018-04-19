@@ -8,9 +8,14 @@ import java.time.LocalDate;
 public class Condition {
     private String condition;
     private LocalDate dateOfDiagnosis;
-    private boolean isCurrent = true;
+    private LocalDate dateCured;
     private boolean isCured = false;
     private boolean isCronic = false;
 
+
+    public String getCondition() { return this.condition; }
+    public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
+    public LocalDate getDateCured() { return dateCured; }
     public boolean isCured() { return this.isCured; }
+    public boolean isCronic() { return isCronic; }
 }

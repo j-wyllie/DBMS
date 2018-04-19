@@ -466,6 +466,8 @@ public class Donor {
         return organs;
     }
 
+
+    // Condition functions
     public ArrayList<Condition> getAllConditions() { return conditions; }
 
     public ArrayList<Condition> getCuredConditions() {
@@ -477,6 +479,8 @@ public class Donor {
         }
         return curedConditions;
     }
+
+    
 
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
