@@ -439,12 +439,12 @@
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="648.0" minWidth="10.0" prefWidth="420.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="50.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="134.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="10.0" prefWidth="50.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="185.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="233.0" minWidth="44.0" prefWidth="50.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="185.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="48.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="162.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="233.0" minWidth="44.0" prefWidth="95.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="162.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
@@ -457,8 +457,22 @@
                                 </rowConstraints>
                                  <children>
                                     <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" text="Add" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" text="Move to Historic" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/arrow0.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></Button>
+                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/arrow2.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></Button>
                                     <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                       <columns>
                                         <TableColumn prefWidth="198.0" text="Current Medications" />
@@ -470,7 +484,14 @@
                                       </columns>
                                     </TableView>
                                     <TextField fx:id="fieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3" />
-                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" text="Move to Current" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/arrow1.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></Button>
                                  </children>
                               </GridPane>
                            </children>
