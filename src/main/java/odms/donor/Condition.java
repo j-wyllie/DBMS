@@ -11,24 +11,15 @@ public class Condition {
     private LocalDate dateCured;
     private boolean isCured = false;
     private boolean isChronic = false;
-    private String isChronicString = "";
+    private String isChronicText = "";
 
-
-    public Condition(boolean isCured, boolean isChronic, String condition, LocalDate dateOfDiagnosis, LocalDate dateCured) {
-        this.isCured = isCured;
-        this.isChronic = isChronic;
+    public Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isCured, boolean isChronic) {
         this.condition = condition;
         this.dateOfDiagnosis = dateOfDiagnosis;
         this.dateCured = dateCured;
-        if (isChronic) {isChronicString = "CHRONIC";}
-    }
-
-    Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isCured, boolean isCronic) {
-        this.condition = condition;
-        this.dateOfDiagnosis = dateOfDiagnosis;
-        this.dateCured = dateOfDiagnosis;
         this.isCured = isCured;
-        this.isCronic = isCronic;
+        this.isChronic = isChronic;
+        if (isChronic) {isChronicText = "CHRONIC";}
     }
 
     // getters
@@ -36,12 +27,12 @@ public class Condition {
     public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
     public LocalDate getDateCured() { return dateCured; }
     public boolean isCured() { return this.isCured; }
-    public boolean isCronic() { return isCronic; }
+    public boolean isChronic() { return isChronic; }
+
 
     // setters
     public void setIsCured(boolean isCured) { this.isCured = isCured; }
-    public void setIsCronic(boolean isCronic) { this.isCronic = isCronic; }
-    public boolean isChronic() { return isChronic; }
+    public void setIsChronic(boolean isChronic) { this.isChronic = isChronic; }
 
 
 }
