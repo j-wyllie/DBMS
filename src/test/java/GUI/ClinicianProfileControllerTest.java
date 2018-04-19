@@ -2,14 +2,20 @@ package GUI;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
+import odms.controller.SearchedDonorProfileController;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +26,12 @@ import javafx.scene.input.MouseButton;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.testfx.api.FxToolkit.registerPrimaryStage;
@@ -47,6 +58,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     @After()
     public void tearDown() throws Exception {
         FxToolkit.hideStage();
+        FxToolkit.cleanupStages();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
@@ -63,9 +75,12 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     public void openSearchedProfileTest() {
         logInClinician();
         clickOn("#searchTab");
-        TableView searchDonorTable = lookup("#searchTable").queryTableView();
-        System.out.println(cellValue("#searchTable", 1, 1));
-        clickOn(searchDonorTable);
+        //TableView searchDonorTable = lookup("#searchTable").queryTableView();
+        doubleClickOn(row("#searchTable", 0));
+
+        Scene scene = getTopModalStage();
+        Label donorName = (Label) scene.lookup("#donorFullNameLabel");
+        assertEquals("Meredith Fisher", donorName.getText()); //checks name label is equal
     }
 
     @Test
@@ -73,10 +88,13 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     }
 
+    public void closeWindow() {
+
+    }
 
     /**
-     * @param tableSelector Ein CSS-Selektor oder Label.
-     * @return Die TableView, sofern sie anhand des Selektors gefunden wurde.
+     * @param tableSelector The id of the table to be used
+     * @return Returns a table view node from the given ID
      */
     private TableView<?> getTableView(String tableSelector) {
         Node node = lookup(tableSelector).queryTableView();
@@ -86,20 +104,19 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     }
 
     /**
-     * @param tableSelector Selektor zur Identifikation der Tabelle.
-     * @param row Zeilennummer
-     * @param column Spaltennummer
-     * @return Der Wert der gegebenen Zelle in der Tabelle. Es handelt sich nicht um das, was auf der UI dransteht,
-     *         sondern um den Wert, also nicht notwendigerweise ein String.
+     * @param tableSelector The id of the table that contains the cell wanted
+     * @param row           row number
+     * @param column        column number
+     * @return returns the cell data.
      */
     protected Object cellValue(String tableSelector, int row, int column) {
         return getTableView(tableSelector).getColumns().get(column).getCellData(row);
     }
 
     /**
-     * @param tableSelector Selektor zur Identifikation der Tabelle.
-     * @param row Zeilennummer
-     * @return Die entsprechende Zeile.
+     * @param tableSelector Id of table that contains the row
+     * @param row           row number
+     * @return returns a table row
      */
     protected TableRow<?> row(String tableSelector, int row) {
 
@@ -116,18 +133,14 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         }
 
         Node node = current.get(row);
-        if (node instanceof TableRow) {
-            return (TableRow<?>) node;
-        } else {
-            throw new RuntimeException("Expected Group with only TableRows as children");
-        }
+        return (TableRow<?>) node;
     }
 
     /**
-     * @param tableSelector Selektor zur Identifikation der Tabelle.
-     * @param row Zeilennummer
-     * @param column Spaltennummer
-     * @return Die entsprechende Zelle.
+     * @param tableSelector ID of the table that contains the cell wanted
+     * @param row           row number
+     * @param column        column number
+     * @return the cell of the table
      */
     protected TableCell<?, ?> cell(String tableSelector, int row, int column) {
         List<Node> current = row(tableSelector, row).getChildrenUnmodifiable();
@@ -136,11 +149,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         }
 
         Node node = current.get(column);
-        if (node instanceof TableCell) {
-            return (TableCell<?, ?>) node;
-        } else {
-            throw new RuntimeException("Expected TableRowSkin with only TableCells as children");
-        }
+        return (TableCell<?, ?>) node;
     }
 
     /**
@@ -152,5 +161,19 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception{
         guiMain = new GuiMain();
         guiMain.start(stage);
+    }
+
+
+    /**
+     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
+     * @return All of the current windows
+     */
+    private javafx.scene.Scene getTopModalStage() {
+        // Get a list of windows but ordered from top[0] to bottom[n] ones.
+        // It is needed to get the first found modal window.
+        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        Collections.reverse(allWindows);
+
+        return (javafx.scene.Scene) allWindows.get(0).getScene();
     }
 }
