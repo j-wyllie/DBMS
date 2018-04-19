@@ -108,7 +108,7 @@ public class CommandLine {
                 // Export profile database to file
                 if (input.size() == 2) {
                     String filepath = input.get(1);
-                    ProfileDataIO.saveProfiles(currentDatabase, filepath);
+                    ProfileDataIO.saveData(currentDatabase, filepath);
                 } else {
                     System.out.println("Error: Invalid arguments. Expected: 1, "
                             + "Found: " + (input.size() - 1));

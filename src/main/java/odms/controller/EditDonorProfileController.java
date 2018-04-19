@@ -244,7 +244,7 @@ public class EditDonorProfileController {
                 currentProfile.setChronicDiseases(diseasesSet);
             }
 
-            ProfileDataIO.saveProfiles(getCurrentDatabase(), "example/example.json");
+            ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
 
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
             Scene newScene = new Scene(parent);

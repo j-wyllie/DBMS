@@ -20,7 +20,7 @@ public class ProfileDataIO {
      * @param profileDb Database to be exported to JSON
      * @param path target path
      */
-    public static void saveProfiles(ProfileDatabase profileDb, String path) {
+    public static void saveData(ProfileDatabase profileDb, String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
 

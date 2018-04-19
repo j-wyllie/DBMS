@@ -37,7 +37,7 @@ public class ProfileDataIOTest {
     @Test
     public void testSaveAndLoad() {
         ProfileDatabase loadedDb;
-        ProfileDataIO.saveProfiles(profileDb, "CommandUtilsTest.json");
+        ProfileDataIO.saveData(profileDb, "CommandUtilsTest.json");
 
         loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
 

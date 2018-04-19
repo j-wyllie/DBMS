@@ -139,36 +139,6 @@ public class CommandUtilsTest {
     }
 
     @Test
-    public void testHelpCommand() {
-
-    }
-
-    @Test
-    public void testPrintAll() {
-
-    }
-
-    @Test
-    public void testPrintDonors() {
-
-    }
-
-    @Test
-    public void testUndoRedoCommand() {
-
-    }
-
-    @Test
-    public void testExportCommand() {
-
-    }
-
-    @Test
-    public void testImportCommand() {
-
-    }
-
-    @Test
     public void testCreateProfileCommand() {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
@@ -239,28 +209,4 @@ public class CommandUtilsTest {
 
     }
 
-    @Test
-    public void testProfileDonationsCommand() {
-
-    }
-
-    @Test
-    public void testProfileUpdateCommand() {
-
-    }
-
-    @Test
-    public void testOrganAddCommand() {
-
-    }
-
-    @Test
-    public void testOrganRemoveCommand() {
-
-    }
-
-    @Test
-    public void testOrganDonateCommand() {
-
-    }
 }
