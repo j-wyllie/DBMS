@@ -1,5 +1,6 @@
 package odms.data;
 
+import static odms.data.MedicationDataIO.GetActiveIngredients;
 import static odms.data.MedicationDataIO.GetSuggestionList;
 import static org.junit.Assert.*;
 import java.io.IOException;
@@ -14,8 +15,10 @@ public class MedicationDataIOTest {
     private String substring1;
     private String substring2;
     private String substring3;
+    private String drugName;
     private Object[] expectedList1;
     private Object[] expectedList2;
+    private Object[] expectedList3;
 
     @Before
     public void setUp() {
@@ -32,6 +35,12 @@ public class MedicationDataIOTest {
                 "Reserpine, hydrochlorothiazide, and hydralazine hydrochloride",
                 "Reserpine and hydrochlorothiazide-50", "Reserpine and hydroflumethiazide",
                 "Resporal")).toArray();
+
+        //Test for drug name with valid name.
+        drugName = "Reserpine";
+        expectedList3 = new ArrayList<>(Arrays.asList("Hydralazine hydrochloride; hydrochlorothiazide; reserpine",
+                "Hydrochlorothiazide; reserpine", "Hydroflumethiazide; reserpine", "Reserpine")).toArray();
+
     }
 
     @Test
@@ -45,5 +54,18 @@ public class MedicationDataIOTest {
     public void testValidStringGetSuggestionList() throws IOException {
         //Test for substring with valid value.
         assertArrayEquals(expectedList2, GetSuggestionList(substring3).toArray());
+    }
+
+    @Test
+    public void testEmptyOrNullStringGetActiveIngredients() throws IOException {
+        //Test for null or empty substrings.
+        assertArrayEquals(expectedList1, GetActiveIngredients(substring1).toArray());
+        assertArrayEquals(expectedList1, GetActiveIngredients(substring2).toArray());
+    }
+
+    @Test
+    public void testValidStringGetActiveIngredients() throws IOException {
+        //Test for drug name with valid value.
+        assertArrayEquals(expectedList3, GetActiveIngredients(drugName).toArray());
     }
 }

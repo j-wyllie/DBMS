@@ -1,6 +1,5 @@
 package odms.data;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,10 +10,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import netscape.javascript.JSObject;
 
 public class MedicationDataIO {
 
@@ -32,24 +27,50 @@ public class MedicationDataIO {
                     .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
             URL url = new URL(urlString);
 
-            //Creating the connection to the API server.
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
-
             //Reading the response from the connection.
-            StringBuffer responseContent = GetResponse(con);
+            StringBuffer response = MakeRequest(url);
 
             //Parsing the list of suggestions from the response.
-            suggestionList = ParseJSON(responseContent);
+            suggestionList = ParseJSON(response, false);
         }
         return suggestionList;
     }
 
+    /**
+     * Gets a list of active ingredients for the drug selected by the clinician user.
+     * @param drugName represents the value to send in the HTTP GET request to the API.
+     * @throws IOException
+     */
+    public static ArrayList<String> GetActiveIngredients(String drugName) throws IOException {
+        ArrayList<String> activeList = new ArrayList<>();
 
-    private static StringBuffer GetResponse(HttpURLConnection con) throws IOException{
+        if (!(drugName == null || drugName == "")) {
+            String urlString = String
+                    .format("http://mapi-us.iterar.co/api/%s/substances.json", drugName);
+            URL url = new URL(urlString);
+
+            //Reading the response from the connection.
+            StringBuffer response = MakeRequest(url);
+
+            //Parsing the list of suggestions from the response.
+            activeList = ParseJSON(response, true);
+        }
+        return activeList;
+    }
+
+    /**
+     * Makes a HTTP GET request to the url passed as a parameter and then returns the response.
+     * @param url represents the address the HTTP GET request is made to.
+     * @throws IOException
+     */
+    private static StringBuffer MakeRequest(URL url) throws IOException{
+        //Creating the connection to the API server.
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+
         BufferedReader response = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
 
@@ -65,20 +86,27 @@ public class MedicationDataIO {
         return responseContent;
     }
 
-
     /**
-     * Parse the list of suggestions from the JSON in the HTTP response.
+     * Parse the list of results from the JSON in the HTTP response.
      * @param content represents the buffer holding the JSON response to parse.
-     */
-    private static ArrayList<String> ParseJSON(StringBuffer content) {
-        ArrayList<String> suggestionList = new ArrayList<>();
+     **/
+    private static ArrayList<String> ParseJSON(StringBuffer content, boolean ingredients) {
+        ArrayList<String> responseList = new ArrayList<>();
         JsonParser parser = new JsonParser();
-        JsonObject suggestionObject = parser.parse(content.toString()).getAsJsonObject();
 
-        JsonArray suggestions = suggestionObject.getAsJsonArray("suggestions");
-        for (JsonElement value : suggestions) {
-            suggestionList.add(value.toString().replace("\"", ""));
+        if (ingredients) {
+            JsonArray results = parser.parse(content.toString()).getAsJsonArray();
+            for (JsonElement value : results) {
+                responseList.add(value.toString().replace("\"", ""));
+            }
         }
-        return suggestionList;
+        else {
+            JsonObject resultsObject = parser.parse(content.toString()).getAsJsonObject();
+            JsonArray results = resultsObject.getAsJsonArray("suggestions");
+            for (JsonElement value : results) {
+                responseList.add(value.toString().replace("\"", ""));
+            }
+        }
+        return responseList;
     }
 }
