@@ -130,6 +130,8 @@ public class DonorProfileController {
     @FXML
     private Button toggleChronicButton;
 
+    @FXML
+    private  Button toggleCurrentButton;
 
     /**
      * Button handler to handle toggle chronic button clcked, only available to clinicians
