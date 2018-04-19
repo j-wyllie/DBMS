@@ -472,10 +472,14 @@ public class Donor {
 
     public ArrayList<Condition> getCuredConditions() {
         ArrayList<Condition> curedConditions = new ArrayList<>();
-        for (Condition condition : conditions) {
-            if (condition.isCured()) {
-                curedConditions.add(condition);
+        try {
+            for (Condition condition : conditions) {
+                if (condition.isCured()) {
+                    curedConditions.add(condition);
+                }
             }
+        } catch (NullPointerException e) {
+            return null;
         }
         return curedConditions;
     }
