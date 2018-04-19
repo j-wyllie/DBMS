@@ -47,7 +47,7 @@ public class LoginControllerTest extends ApplicationTest {
             System.setProperty("prism.text", "t2k");
             System.setProperty("java.awt.headless", "true");
         }
-        //registerPrimaryStage();
+        registerPrimaryStage();
     }
 
 
@@ -56,7 +56,6 @@ public class LoginControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
-
     }
 
     /**
@@ -75,8 +74,7 @@ public class LoginControllerTest extends ApplicationTest {
      */
     @Test
     public void loginValidUser(){
-        clickOn("#usernameField");
-        write("1");
+        clickOn("#usernameField").write("1");
         login();
         assertEquals("1", LoginController.getCurrentDonor().getId().toString());
     }
@@ -157,7 +155,7 @@ public class LoginControllerTest extends ApplicationTest {
      * Clicks on the login button to log the user in.
      */
     private void login(){
-        clickOn("#loginButton").write("1");
+        clickOn("#loginButton");
     }
 
 
