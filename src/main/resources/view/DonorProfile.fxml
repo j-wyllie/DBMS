@@ -462,7 +462,7 @@
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
-                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" onAction="#handleMoveMedicationToHistoric" GridPane.columnIndex="3" GridPane.rowIndex="3">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -481,7 +481,7 @@
                                       </columns>
                                     </TableView>
                                     <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3" />
-                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>

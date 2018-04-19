@@ -194,6 +194,36 @@ public class DonorProfileController {
     }
 
     /**
+     * Button handler to remove medications from the current medications and move them to historic.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToHistoric(ActionEvent event) throws IOException {
+        Donor currentDonor = getCurrentDonor();
+        Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
+        currentDonor.moveDrugToHistory(drug);
+        tableViewCurrentMedications.getItems().clear();
+        currentMedication.addAll(currentDonor.getCurrentMedications());
+        tableViewHistoricMedications.getItems().clear();
+        historicMedication.addAll(currentDonor.getHistoryOfMedication());
+    }
+
+    /**
+     * Button handler to remove medications from the historic list and add them back to the current list of drugs.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToCurrent(ActionEvent event) throws IOException {
+        Donor currentDonor = getCurrentDonor();
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        currentDonor.moveDrugToCurrent(drug);
+        tableViewCurrentMedications.getItems().clear();
+        currentMedication.addAll(currentDonor.getCurrentMedications());
+        tableViewHistoricMedications.getItems().clear();
+        historicMedication.addAll(currentDonor.getHistoryOfMedication());
+    }
+
+    /**
      * Sets the current donor attributes to the labels on start up.
      */
     @FXML

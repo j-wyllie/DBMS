@@ -505,6 +505,21 @@ public class Donor {
 
     }
 
+    /**
+     * Moves the drug to the list of current drugs the donor is taking.
+     * @param drug the drug to be moved to the current drug list
+     */
+    public void moveDrugToCurrent(Drug drug){
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            currentMedications.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+    }
+
     public ArrayList<Drug> getCurrentMedications() {
         return currentMedications;
     }
