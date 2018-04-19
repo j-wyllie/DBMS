@@ -2,15 +2,11 @@ package odms.donor;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
 import java.time.Period;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Donor {
 
@@ -480,7 +476,13 @@ public class Donor {
         return curedConditions;
     }
 
-    
+    public void addCondition(Condition condition) {
+        conditions.add(condition);
+    }
+
+    public void deleteCondition(Condition condition) {
+        conditions.remove(condition);
+    }
 
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
