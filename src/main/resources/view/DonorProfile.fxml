@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
@@ -16,8 +18,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -424,6 +427,40 @@
                            </children>
                         </AnchorPane>
                      </content>
+                  </Tab>
+                  <Tab text="Medical history">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="curDiseasesTable" layoutX="8.0" layoutY="53.0" prefHeight="458.0" prefWidth="386.0">
+                                <columns>
+                                  <TableColumn fx:id="curDescriptionColumn" prefWidth="205.0" text="Description" />
+                                  <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="58.0" text="Chronic?" />
+                                    <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="120.0" text="Date of diagnosis" />
+                                </columns>
+                              </TableView>
+                              <TableView fx:id="pastDiseasesTable" layoutX="693.0" layoutY="53.0" prefHeight="453.0" prefWidth="404.0">
+                                <columns>
+                                  <TableColumn fx:id="pastDescriptionColumn" prefWidth="200.0" text="Description" />
+                                  <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="109.0" text="Date of diagnosis" />
+                                    <TableColumn fx:id="pastDateCuredColumn" prefWidth="92.0" text="Date cured" />
+                                </columns>
+                              </TableView>
+                              <Text layoutX="8.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current  diseases/conditions">
+                                 <font>
+                                    <Font name="Arial Bold" size="25.0" />
+                                 </font>
+                              </Text>
+                              <Text layoutX="706.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Past diseases/conditions">
+                                 <font>
+                                    <Font name="Arial Bold" size="25.0" />
+                                 </font>
+                              </Text>
+                              <Button layoutX="468.0" layoutY="109.0" mnemonicParsing="false" text="Toggle selected as cured" />
+                              <Button layoutX="464.0" layoutY="144.0" mnemonicParsing="false" text="Toggle selected as chronic" />
+                           </children>
+                        </AnchorPane>
+                    </content>
                   </Tab>
               </tabs>
             </TabPane>

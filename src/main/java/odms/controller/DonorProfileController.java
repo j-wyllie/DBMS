@@ -7,8 +7,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import odms.commandlineview.CommandUtils;
 import odms.data.DonorDataIO;
 import odms.donor.Donor;
@@ -22,7 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DonorProfileController {
@@ -101,6 +99,54 @@ public class DonorProfileController {
 
     @FXML
     private Label userIdLabel;
+
+    @FXML
+    private TableView curDiseasesTable;
+
+    @FXML
+    private TableColumn curDescriptionColumn;
+
+    @FXML
+    private TableColumn curChronicColumn;
+
+    @FXML
+    private TableColumn curDateOfDiagnosisColumn;
+
+    @FXML
+    private TableView pastDiseasesTable;
+
+    @FXML
+    private TableColumn pastDescriptionColumn;
+
+    @FXML
+    private TableColumn pastDateCuredColumn;
+
+    @FXML
+    private TableColumn pastDateOfDiagnosisColumn;
+
+    @FXML
+    private Button toggleCuredButton;
+
+    @FXML
+    private Button toggleChronicButton;
+
+
+    /**
+     * Button handler to handle toggle chronic button clcked, only available to clinicians
+     * @param event clicking on the button.
+     */
+    @FXML
+    private void handleToggleChronicButtonClicked(ActionEvent event) {
+    }
+
+
+    /**
+     * Button handler to handle toggle cured button clcked, only available to clinicians
+     * @param event clicking on the button.
+     */
+    @FXML
+    private void handleToggleCuredButtonClicked(ActionEvent event) {
+    }
 
 
     /**
