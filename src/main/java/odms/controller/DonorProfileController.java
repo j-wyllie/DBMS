@@ -7,8 +7,10 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import odms.commandlineview.CommandUtils;
 import odms.data.DonorDataIO;
 import odms.donor.Donor;
@@ -22,8 +24,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import odms.medications.Drug;
 
 public class DonorProfileController {
 
@@ -102,6 +104,37 @@ public class DonorProfileController {
     @FXML
     private Label userIdLabel;
 
+    @FXML
+    private Button buttonAddMedication;
+
+    @FXML
+    private Button buttonDeleteMedication;
+
+    @FXML
+    private Button buttonMedicationCurrentToHistoric;
+
+    @FXML
+    private Button buttonMedicationHistoricToCurrent;
+
+    @FXML
+    private TextField textFieldMedicationSearch;
+
+    @FXML
+    private TableView<Drug> tableViewCurrentMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameCurrent;
+
+    @FXML
+    private TableView<Drug> tableViewHistoricMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
+
+    private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
+
+    private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
 
     /**
      * Scene change to log in view.
@@ -145,6 +178,15 @@ public class DonorProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
+    }
+
+    @FXML
+    private void handleAddNewMedications(ActionEvent event) throws IOException {
+        Donor currentDonor = getCurrentDonor();
+        String medicationName = textFieldMedicationSearch.getText();
+        currentDonor.addDrug(new Drug(medicationName));
+        tableViewCurrentMedications.getItems().clear();
+        currentMedication.addAll(currentDonor.getCurrentMedications());
     }
 
     /**
@@ -238,6 +280,15 @@ public class DonorProfileController {
                 }
             }
             historyView.setText(userHistory.toString());
+
+            currentMedication.setAll(currentDonor.getCurrentMedications());
+            historicMedication.setAll(currentDonor.getHistoryOfMedication());
+            tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
+            tableViewCurrentMedications.setItems(currentMedication);
+            tableViewCurrentMedications.getColumns().setAll(tableColumnMedicationNameCurrent);
+            tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
+            tableViewHistoricMedications.setItems(historicMedication);
+            tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
         } catch (Exception e) {
             InvalidUsername();
         }
