@@ -18,6 +18,7 @@ public class GuiMain extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
+        primaryStage.setTitle("Login");
         primaryStage.show();
 
     }

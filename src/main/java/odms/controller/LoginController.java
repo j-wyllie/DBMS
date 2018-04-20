@@ -54,6 +54,7 @@ public class LoginController {
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
         }
     }
@@ -69,6 +70,7 @@ public class LoginController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Create Profile");
         appStage.show();
     }
 

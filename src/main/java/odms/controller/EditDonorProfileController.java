@@ -167,6 +167,7 @@ public class EditDonorProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Login");
         appStage.show();
 
     }
@@ -252,6 +253,7 @@ public class EditDonorProfileController {
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
         }
         else {
@@ -259,6 +261,7 @@ public class EditDonorProfileController {
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
 
         }
@@ -278,6 +281,7 @@ public class EditDonorProfileController {
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
         }
     }
