@@ -149,6 +149,8 @@ public class DonorProfileController {
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
 
+        //curDiseasesTable.getSortOrder().add(curChronicColumn);
+
         if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
         else {curConditionsObservableList = FXCollections.observableArrayList(); }
         if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
@@ -157,31 +159,56 @@ public class DonorProfileController {
         Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), null, false, true);
         Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), true, false );
         Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), null, false, false);
+        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), null, false, true);
+        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), null, false, true);
 
-
+        curConditionsObservableList.add(placeholdCondition3);
+        curConditionsObservableList.add(placeholdCondition5);
         curConditionsObservableList.add(placeholdCondition);
         curConditionsObservableList.add(placeholdCondition3);
+        curConditionsObservableList.add(placeholdCondition4);
         pastConditionsObservableList.add(placeholdCondition2);
 
-        curDiseasesTable.setItems(curConditionsObservableList);
-        pastDiseasesTable.setItems(pastConditionsObservableList);
+        refreshTable();
 
-        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("condition"));
-        curChronicColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("isChronicText"));
-        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("dateOfDiagnosis"));
+    }
 
-        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
-        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+    @FXML
+    private void refreshTable() {
+        Donor currentDonor = getCurrentDonor();
 
-        curDiseasesTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
-        pastDiseasesTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
+            curDiseasesTable.getItems().clear();
+            if (currentDonor.getAllConditions() != null) {curConditionsObservableList.addAll(currentDonor.getAllConditions());}
+            pastDiseasesTable.getItems().clear();
+            if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
 
+            curDiseasesTable.setItems(curConditionsObservableList);
+            curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
+            curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+            curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+            curDiseasesTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
+
+            pastDiseasesTable.setItems(pastConditionsObservableList);
+            pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
+            pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+            pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+            pastDiseasesTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
+
+        forceSortOrder();
+
+
+    }
+
+    @FXML
+    private void forceSortOrder() {
+        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
+        curDiseasesTable.getSortOrder().clear();
+        curDiseasesTable.getSortOrder().add(curChronicColumn);
     }
 
 
     /**
-     * Button handler to handle toggle chronic button clcked, only available to clinicians
+     * Button handler to handle toggle chronic button clicked, only available to clinicians
      * @param event clicking on the button.
      */
     @FXML
@@ -249,7 +276,6 @@ public class DonorProfileController {
     public void initialize() {
         Donor currentDonor = getCurrentDonor();
         makeTable(currentDonor.getAllConditions(), currentDonor.getCuredConditions());                       //need get current conditions rather than get all conditions
-
 
         try {
             donorFullNameLabel

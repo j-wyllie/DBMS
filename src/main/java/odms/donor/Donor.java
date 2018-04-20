@@ -470,7 +470,7 @@ public class Donor {
         ArrayList<Condition> curedConditions = new ArrayList<>();
         try {
             for (Condition condition : conditions) {
-                if (condition.isCured()) {
+                if (condition.getCured()) {
                     curedConditions.add(condition);
                 }
             }
