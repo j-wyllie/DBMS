@@ -491,9 +491,14 @@ public class Donor {
         LocalDateTime currentTime = LocalDateTime.now();
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            medicationTimestamps.add(drug.getDrugName() + " removed from 'current' on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        } else if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed from 'past' on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             generateUpdateInfo(drug.getDrugName());
         }
+
     }
 
     /**
