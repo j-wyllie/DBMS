@@ -26,7 +26,7 @@ public class UserDataIO {
 
             writeFile.close();
 
-            System.out.println("File  exported successfully!");
+            System.out.println("File exported successfully!");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,9 +64,9 @@ public class UserDataIO {
     }
 
     /**
-     * Load the specified ProfileDatabase JSON file instantiating a ProfileDatabase Object.
+     * Load the specified UserDatabase JSON file instantiating a UserDatabase Object.
      *
-     * @return ProfileDatabase
+     * @return UserDatabase
      */
     public static UserDatabase loadData() {
         File file = new File("./users.json");

@@ -207,6 +207,8 @@ public class Profile {
             System.out.println("IRD: " + irdNumber);
         }
 
+        System.out.println("ODMS ID: " + id);
+
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
         }

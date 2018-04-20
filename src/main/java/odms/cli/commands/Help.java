@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 public class Help {
 
+    /**
+     * Output a list of all commands and explanations/examples of use
+     */
     public static void help() {
         System.out.println("\nCreate a new profile:");
         System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
@@ -60,6 +63,11 @@ public class Help {
 
     }
 
+    /**
+     * Output usage information for specified command.
+     *
+     * @param cmd command requesting usage for
+     */
     public static void helpSpecific(String cmd) {
         String[] cmdArray = {"create-profile", "view", "date-created", "donations", "update",
             "add-organ", "remove-organ", "print all", "print donors", "quit", "attributes",

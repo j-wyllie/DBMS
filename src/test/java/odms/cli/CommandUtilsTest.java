@@ -84,9 +84,6 @@ public class CommandUtilsTest {
         }
 
         // Reset output stream
-        // TODO remove this
-        System.out.println("RESULT TIME");
-        System.out.println(result);
         System.setOut(stdout);
     }
 

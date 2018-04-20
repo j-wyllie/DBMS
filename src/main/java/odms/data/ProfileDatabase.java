@@ -72,6 +72,13 @@ public class ProfileDatabase {
         }
     }
 
+    /**
+     * Restore a previously deleted profile
+     *
+     * @param id ODMS ID of deleted profile
+     * @param profile the profile to be restored
+     * @return current ProfileDatabase lastId
+     */
     public int restoreProfile(Integer id, Profile profile) {
         try {
             // Should deleted users simply be disabled for safety reasons?
