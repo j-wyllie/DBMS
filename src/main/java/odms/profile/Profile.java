@@ -13,6 +13,9 @@ import java.util.Set;
 
 public class Profile {
 
+    private boolean donor;
+    private boolean receiver;
+
     private String givenNames;
     private String lastNames;
     private LocalDate dateOfBirth;
@@ -36,6 +39,7 @@ public class Profile {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
+    private Set<Organ> neededOrgans = new HashSet<>();
 
     private String phone;
     private String email;
@@ -435,6 +439,22 @@ public class Profile {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void setDonor(boolean donor) {
+        this.donor = donor;
+    }
+    
+    public boolean isDonor() {
+        return donor;
+    }
+
+    public void setReceiver(boolean receiver) {
+        this.receiver = receiver;
+    }
+
+    public boolean isReceiver() {
+        return receiver;
     }
 
     /**
