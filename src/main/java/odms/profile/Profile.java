@@ -16,6 +16,9 @@ public class Profile {
     private boolean donor;
     private boolean receiver;
 
+    private boolean donor;
+    private boolean receiver;
+
     private String givenNames;
     private String lastNames;
     private LocalDate dateOfBirth;
