@@ -38,6 +38,8 @@ public class LoginController {
     @FXML
     private TextField passwordField;
 
+
+
     /**
      * Scene change to donor profile view if log in credentials are valid.
      * @param event clicking on the login button.
@@ -69,6 +71,7 @@ public class LoginController {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e);
             InvalidUsername();
         }
@@ -92,4 +95,6 @@ public class LoginController {
         return currentDonor;
     }
     public static void setCurrentDonor(Integer id) {currentDonor = currentDatabase.getDonor(id);}
+    public static User getCurrentUser() { return currentUser; }
+    public static void setCurrentUser(User currentUser) { LoginController.currentUser = currentUser; }
 }

@@ -1,6 +1,7 @@
 package odms.donor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * A specific condition for use in medical history
@@ -37,6 +38,9 @@ public class Condition {
     public void setIsCured(boolean isCured) { this.isCured = isCured; }
     public void setIsChronic(boolean isChronic) { this.isChronic = isChronic; }
     public void setChronicText(String chronicText) { this.chronicText = chronicText; }
+    public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) { this.dateOfDiagnosis = dateOfDiagnosis; }
+    public void setDateCured(LocalDate dateCured) { this.dateCured = dateCured; }
+
 
 
 }

@@ -50,6 +50,8 @@ public class Donor {
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
+        conditions = new ArrayList<>();
+
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -66,6 +68,8 @@ public class Donor {
      * @param irdNumber Donor's IRD number as Integer
      */
     public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
+        conditions = new ArrayList<>();
+
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
@@ -480,7 +484,22 @@ public class Donor {
         return curedConditions;
     }
 
+    public ArrayList<Condition> getCurrentConditions() {
+        ArrayList<Condition> currentConditions = new ArrayList<>();
+        try {
+            for (Condition condition : conditions) {
+                if (!condition.getCured()) {
+                    currentConditions.add(condition);
+                }
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return currentConditions;
+    }
+
     public void addCondition(Condition condition) {
+        if (conditions == null) { conditions = new ArrayList<>(); }
         conditions.add(condition);
     }
 
@@ -669,4 +688,7 @@ public class Donor {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setAllConditions(ArrayList<Condition> conditions) { this.conditions = conditions; }
+
 }
