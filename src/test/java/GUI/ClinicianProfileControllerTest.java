@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,10 +15,10 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
+import odms.controller.LoginController;
 import odms.controller.SearchedDonorProfileController;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import odms.donor.Donor;
+import org.junit.*;
 import org.testfx.api.FxToolkit;
 
 import javafx.scene.input.KeyCode;
@@ -38,28 +39,44 @@ import static org.testfx.api.FxToolkit.registerPrimaryStage;
 public class ClinicianProfileControllerTest extends ApplicationTest {
 
     private GuiMain guiMain;
+    private Parent root;
 
-    //Runs tests in background if headless is set to true. This gets it working with the CI.
+        //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void setupSpec() throws Exception {
-        if (Boolean.getBoolean("headless")) {
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.text", "t2k");
-            System.setProperty("java.awt.headless", "true");
-        }
-        registerPrimaryStage();
+    public static void headless() {
+        GUITestSetup.headless();
     }
-
 
     @After()
     public void tearDown() throws Exception {
         FxToolkit.hideStage();
-        FxToolkit.cleanupStages();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+    }
 
+    @Before
+    public void loginUser() {
+        logInClinician();
+    }
+
+
+    /**
+     * Initializes the main gui
+     * @param stage current stage
+     * @throws Exception throws Exception
+     */
+    @Override
+    public void start(Stage stage) throws Exception{
+//        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Login.fxml"));
+//        root = loader.load();
+//        LoginController controller = loader.getController();
+//
+//        Scene scene = new Scene(root);
+//        stage.setScene(scene);
+//        stage.show();
+//        stage.toFront();
+        guiMain = new GuiMain();
+        guiMain.start(stage);
     }
 
     /**
@@ -72,20 +89,24 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     @Test
     public void openSearchedProfileTest() {
-        logInClinician();
         clickOn("#searchTab");
+        TableView searchTable = getTableView("#searchTable");
+        Donor firstDonor = (Donor) searchTable.getItems().get(0);
+
+
         doubleClickOn(row("#searchTable", 0));
 
         //opening the first donor
         Scene scene = getTopModalStage();
         Label donorName = (Label) scene.lookup("#donorFullNameLabel");
-        assertEquals("Meredith Fisher", donorName.getText()); //checks name label is equal
+        assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
     }
 
-    @Test
+    @Ignore
     public void editSearchedProfileTest() {
         //open up the first donor
-        logInClinician();
+
+
         clickOn("#searchTab");
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
@@ -211,16 +232,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         return (TableCell<?, ?>) node;
     }
 
-    /**
-     * Initializes the main gui
-     * @param stage current stage
-     * @throws Exception throws Exception
-     */
-    @Override
-    public void start(Stage stage) throws Exception{
-        guiMain = new GuiMain();
-        guiMain.start(stage);
-    }
 
 
     /**

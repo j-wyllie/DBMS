@@ -38,15 +38,8 @@ public class LoginControllerTest extends ApplicationTest {
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void setupSpec() throws Exception {
-        if (Boolean.getBoolean("headless")) {
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.text", "t2k");
-            System.setProperty("java.awt.headless", "true");
-        }
-        registerPrimaryStage();
+    public static void headless() {
+        GUITestSetup.headless();
     }
 
 
