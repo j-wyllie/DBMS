@@ -154,7 +154,7 @@ public class DonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event)  {
         undo();
     }
 
@@ -163,7 +163,7 @@ public class DonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event)  {
         redo();
     }
 
@@ -185,9 +185,10 @@ public class DonorProfileController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleAddNewMedications(ActionEvent event) throws IOException {
+    private void handleAddNewMedications(ActionEvent event)  {
         Donor currentDonor = getCurrentDonor();
         String medicationName = textFieldMedicationSearch.getText();
+
         currentDonor.addDrug(new Drug(medicationName));
 
         refreshTable();
@@ -198,10 +199,11 @@ public class DonorProfileController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleMoveMedicationToHistoric(ActionEvent event) throws IOException {
+    private void handleMoveMedicationToHistoric(ActionEvent event)  {
         Donor currentDonor = getCurrentDonor();
         Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
         currentDonor.moveDrugToHistory(drug);
+        if (drug == null) { return; }
 
         refreshTable();
     }
@@ -211,26 +213,35 @@ public class DonorProfileController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleMoveMedicationToCurrent(ActionEvent event) throws IOException {
+    private void handleMoveMedicationToCurrent(ActionEvent event)   {
         Donor currentDonor = getCurrentDonor();
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { return; }
         currentDonor.moveDrugToCurrent(drug);
 
         refreshTable();
     }
 
+    /**
+     * Button handler to delete medications
+     * @param event clicking on the delete button.
+     */
     @FXML
-    private void handleDelete(ActionEvent event) throws IOException {
+    private void handleDelete(ActionEvent event)  {
         Donor currentDonor = getCurrentDonor();
 
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
         if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
+        if (drug == null) { return; }
 
         currentDonor.deleteDrug(drug);
 
         refreshTable();
     }
 
+    /**
+     * Refresh the current and historic medication tables with the most up to date data
+     */
     @FXML
     private void refreshTable() {
         Donor currentDonor = getCurrentDonor();
@@ -345,15 +356,6 @@ public class DonorProfileController {
 
             refreshTable();
 
-            /*currentMedication.setAll(currentDonor.getCurrentMedications());
-            historicMedication.setAll(currentDonor.getHistoryOfMedication());
-            tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
-            tableViewCurrentMedications.setItems(currentMedication);
-            tableViewCurrentMedications.getColumns().setAll(tableColumnMedicationNameCurrent);
-            tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory<>("DrugName"));
-            tableViewHistoricMedications.setItems(historicMedication);
-            tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
-            */
         } catch (Exception e) {
             InvalidUsername();
         }

@@ -26,7 +26,6 @@ public class Donor {
     private String address;
     private String region;
     private Boolean registered;
-    private Integer age;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -48,9 +47,9 @@ public class Donor {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications = new ArrayList<>();
-    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
-    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+    private ArrayList<Drug> currentMedications;
+    private ArrayList<Drug> historyOfMedication;
+    private ArrayList<String> medicationTimestamps;
 
     /**
      * Instantiates the Donor class with data from the CLI
@@ -59,6 +58,9 @@ public class Donor {
      */
     public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -476,6 +478,10 @@ public class Donor {
      * @param drug the drug to be added
      */
     public void addDrug(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
         String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -488,6 +494,10 @@ public class Donor {
      * @param drug the drug to be deleted.
      */
     public void deleteDrug(Drug drug) {
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
         LocalDateTime currentTime = LocalDateTime.now();
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
@@ -506,9 +516,11 @@ public class Donor {
      * @param drug the drug to be moved to the history
      */
     public void moveDrugToHistory(Drug drug){
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (historyOfMedication == null) {historyOfMedication = new ArrayList<>();}
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
+        LocalDateTime currentTime = LocalDateTime.now();
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
@@ -524,6 +536,10 @@ public class Donor {
      * @param drug the drug to be moved to the current drug list
      */
     public void moveDrugToCurrent(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
         LocalDateTime currentTime = LocalDateTime.now();
         if(historyOfMedication.contains(drug)){
             historyOfMedication.remove(drug);
