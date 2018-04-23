@@ -39,7 +39,7 @@ public class Donor {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
-    private Set<Organ> neededOrgans = new HashSet<>();
+    private Set<Organ> requiredOrgans = new HashSet<>();
 
     private String phone;
     private String email;
@@ -375,6 +375,30 @@ public class Donor {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * Add an organ to the list of required organs.
+     * 
+     * @param organ to be added
+     */
+    public void addRequiredOrgan(Organ organ) {
+        this.requiredOrgans.add(organ);
+    }
+
+    /**
+     * Add an ArrayList of Organs to the list of required organs.
+     *
+     * @param organs ArrayList of organs to be added
+     */
+    public void addRequiredOrgans(ArrayList<Organ> organs) {
+        for (Organ organ : organs) {
+            addRequiredOrgan(organ);
+        }
+    }
+
+    public Set<Organ> getRequiredOrgans() {
+        return requiredOrgans;
     }
 
     /**
