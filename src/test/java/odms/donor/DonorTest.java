@@ -556,4 +556,85 @@ public class DonorTest {
         String bloodPressure = testDonor.getBloodPressure();
         assertEquals(bloodPressure, "120/80");
     }
+
+    @Test
+    public void testAddConditionandGetAllConditions() {
+        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        ArrayList<String> donorAttr = new ArrayList<String>();
+
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.addCondition(condition);
+        assert testDonor.getAllConditions().contains(condition);
+    }
+
+    @Test
+    public void testDeleteCondition() {
+        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        ArrayList<String> donorAttr = new ArrayList<String>();
+
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+
+        testDonor.addCondition(condition);
+        testDonor.removeCondition(condition);
+
+        assert testDonor.getAllConditions().size() == 0;
+    }
+
+    @Test
+    public void testGetCuredConditions() {
+        Condition condition0 = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        ArrayList<String> donorAttr0 = new ArrayList<String>();
+
+        donorAttr0.add("given-names=\"John\"");
+        donorAttr0.add("last-names=\"Smithy Smith Face\"");
+        donorAttr0.add("dob=\"01-01-2000\"");
+        donorAttr0.add("dod=\"01-01-2050\"");
+        donorAttr0.add("ird=\"123456879\"");
+
+        Donor testDonor = null;
+        try {
+            testDonor = new Donor(donorAttr0);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testDonor.addCondition(condition0);
+
+        Condition condition1 = new Condition("blindness", LocalDate.of(1997, 7, 18), false, true);
+        ArrayList<String> donorAttr1 = new ArrayList<String>();
+
+        donorAttr1.add("given-names=\"John\"");
+        donorAttr1.add("last-names=\"Smithy Smith Face\"");
+        donorAttr1.add("dob=\"01-01-2000\"");
+        donorAttr1.add("dod=\"01-01-2050\"");
+        donorAttr1.add("ird=\"123456879\"");
+
+        testDonor.addCondition(condition1);
+
+        assert testDonor.getCuredConditions().size() == 1 && testDonor.getCuredConditions().contains(condition0);
+    }
 }

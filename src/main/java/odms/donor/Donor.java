@@ -503,9 +503,10 @@ public class Donor {
         conditions.add(condition);
     }
 
-    public void deleteCondition(Condition condition) {
+    public void removeCondition(Condition condition) {
         conditions.remove(condition);
     }
+    // -------
 
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;

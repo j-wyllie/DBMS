@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Condition {
     private String condition;
     private LocalDate dateOfDiagnosis;
-    private LocalDate dateCured;
+    private LocalDate dateCured = null;
     private boolean isCured = false;
     private boolean isChronic = false;
     private String chronicText = "";
@@ -22,6 +22,11 @@ public class Condition {
         this.isCured = isCured;
         this.isChronic = isChronic;
         if (isChronic) {this.chronicText = "CHRONIC";}
+    }
+
+    // constructor for uncured conditions
+    public Condition(String condition, LocalDate dateOfDiagnosis, boolean isCured, boolean isChronic) {
+        this(condition, dateOfDiagnosis, null, isCured, isChronic);
     }
 
     // getters
