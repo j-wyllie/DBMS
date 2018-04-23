@@ -164,11 +164,11 @@ public class DonorProfileController {
         if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
         else {pastConditionsObservableList = FXCollections.observableArrayList(); }
 
-        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), null, false, true);
-        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), true, false );
-        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), null, false, false);
-        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), null, false, true);
-        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), null, false, true);
+        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
+        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), false );
+        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), false);
+        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
+        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
 
         currentDonor.addCondition(placeholdCondition3);
         currentDonor.addCondition(placeholdCondition5);
@@ -257,7 +257,7 @@ public class DonorProfileController {
     private void handleAddNewCondition(ActionEvent event) throws IOException {
         Donor currentDonor = getCurrentDonor();
 
-        Condition condition = new Condition("Being cold", LocalDate.now(), null, false, true);
+        Condition condition = new Condition("Being cold", LocalDate.now(), true);
         currentDonor.addCondition(condition);
 
         refreshTable();
@@ -275,7 +275,7 @@ public class DonorProfileController {
         if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
         if (condition == null) { return; }
 
-        currentDonor.deleteCondition(condition);
+        currentDonor.removeCondition(condition);
 
         refreshTable();
     }

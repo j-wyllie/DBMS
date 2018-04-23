@@ -15,18 +15,22 @@ public class Condition {
     private String chronicText = "";
 
 
-    public Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isCured, boolean isChronic) {
+    public Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) {
         this.condition = condition;
         this.dateOfDiagnosis = dateOfDiagnosis;
         this.dateCured = dateCured;
-        this.isCured = isCured;
+        if (dateCured != null) {
+            this.isCured = true;
+        } else {
+            this.isCured = false;
+        }
         this.isChronic = isChronic;
         if (isChronic) {this.chronicText = "CHRONIC";}
     }
 
     // constructor for uncured conditions
-    public Condition(String condition, LocalDate dateOfDiagnosis, boolean isCured, boolean isChronic) {
-        this(condition, dateOfDiagnosis, null, isCured, isChronic);
+    public Condition(String condition, LocalDate dateOfDiagnosis, boolean isChronic) {
+        this(condition, dateOfDiagnosis, null, isChronic);
     }
 
     // getters

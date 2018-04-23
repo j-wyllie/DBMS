@@ -559,7 +559,7 @@ public class DonorTest {
 
     @Test
     public void testAddConditionandGetAllConditions() {
-        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);
         ArrayList<String> donorAttr = new ArrayList<String>();
 
         donorAttr.add("given-names=\"John\"");
@@ -581,7 +581,7 @@ public class DonorTest {
 
     @Test
     public void testDeleteCondition() {
-        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);
         ArrayList<String> donorAttr = new ArrayList<String>();
 
         donorAttr.add("given-names=\"John\"");
@@ -606,7 +606,7 @@ public class DonorTest {
 
     @Test
     public void testGetCuredConditions() {
-        Condition condition0 = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), true, false);
+        Condition condition0 = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);
         ArrayList<String> donorAttr0 = new ArrayList<String>();
 
         donorAttr0.add("given-names=\"John\"");
@@ -624,7 +624,7 @@ public class DonorTest {
 
         testDonor.addCondition(condition0);
 
-        Condition condition1 = new Condition("blindness", LocalDate.of(1997, 7, 18), false, true);
+        Condition condition1 = new Condition("blindness", LocalDate.of(1997, 7, 18), true);
         ArrayList<String> donorAttr1 = new ArrayList<String>();
 
         donorAttr1.add("given-names=\"John\"");
