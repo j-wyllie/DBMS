@@ -5,6 +5,7 @@ import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentDonor;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -13,6 +14,10 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +26,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+
+import javafx.util.Duration;
 import odms.commandlineview.CommandUtils;
 import odms.data.DonorDataIO;
 import odms.donor.Donor;
@@ -156,6 +165,17 @@ public class EditDonorProfileController {
     @FXML
     private TextField donationsField;
 
+
+    /**
+     * Changes the Edit Profile title to include an asterix to indicate a value has been edited.
+     * @param event Any key event within the text boxes.
+     */
+
+    @FXML
+    private void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setTitle("Edit Profile (*)");
+    }
 
     /**
      * Scene change to log in view.

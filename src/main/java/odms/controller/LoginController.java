@@ -4,6 +4,7 @@ import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ public class LoginController {
      */
     @FXML
     private TextField passwordField;
+
 
     /**
      * Scene change to donor profile view if log in credentials are valid.
