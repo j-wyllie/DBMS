@@ -84,7 +84,6 @@ public class ProfileDatabase {
             // Should deleted users simply be disabled for safety reasons?
             lastID += 1;
             profile.setId(lastID);
-            System.out.println("a");
             profileDb.put(lastID, profile);
             deletedProfiles.remove(id);
             return lastID;
