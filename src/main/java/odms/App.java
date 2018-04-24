@@ -16,6 +16,7 @@ public class App {
 
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);
+
             } else {
                 switch (args[0].toLowerCase()) {
                     case "-cmd":

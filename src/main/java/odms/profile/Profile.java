@@ -18,8 +18,8 @@ public class Profile {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
-    private double height;
-    private double weight;
+    private Double height;
+    private Double weight;
     private String bloodType;
     private String address;
     private String region;
@@ -79,7 +79,6 @@ public class Profile {
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
-
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -180,7 +179,6 @@ public class Profile {
         for (Organ org : organs) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -194,7 +192,6 @@ public class Profile {
         for (Organ org : donatedOrgans) {
             output += org.getName() + ", ";
         }
-
         // Did this to make the output look nicer with commas
         System.out.println(output.substring(0, output.length() - 2));
     }
@@ -338,7 +335,6 @@ public class Profile {
         int count = 0;
         int len = chronicDiseases.size();
 
-
         for (String disease : chronicDiseases) {
             count++;
             if (count == len) {
@@ -358,7 +354,6 @@ public class Profile {
         String out = "";
         int count = 0;
         int len = donatedOrgans.size();
-
 
         for (Organ org : donatedOrgans) {
             count++;
@@ -391,7 +386,6 @@ public class Profile {
         } else {
             throw new IllegalArgumentException();
         }
-
     }
 
     /**
@@ -446,7 +440,7 @@ public class Profile {
      * Calculates and returns the profiles bmi
      * @return BMI
      */
-    public double calculateBMI() {
+    public Double calculateBMI() {
         return this.weight / ((this.height / 100) * (this.height / 100));
     }
 
@@ -493,6 +487,8 @@ public class Profile {
         return givenNames;
     }
 
+    public String getFullName() { return givenNames + " " + lastNames; }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
@@ -534,7 +530,7 @@ public class Profile {
         this.gender = gender;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
@@ -543,7 +539,7 @@ public class Profile {
         this.height = height;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
