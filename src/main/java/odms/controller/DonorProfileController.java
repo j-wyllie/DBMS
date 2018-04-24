@@ -202,7 +202,13 @@ public class DonorProfileController {
      */
     @FXML
     private void handleAddNewMedications(ActionEvent event)  {
-        Profile currentDonor = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
         String medicationName = textFieldMedicationSearch.getText();
 
         currentDonor.addDrug(new Drug(medicationName));
@@ -216,7 +222,13 @@ public class DonorProfileController {
      */
     @FXML
     private void handleMoveMedicationToHistoric(ActionEvent event)  {
-        Profile currentDonor = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
         Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
         currentDonor.moveDrugToHistory(drug);
         if (drug == null) { return; }
@@ -230,7 +242,13 @@ public class DonorProfileController {
      */
     @FXML
     private void handleMoveMedicationToCurrent(ActionEvent event)   {
-        Profile currentDonor = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
         if (drug == null) { return; }
         currentDonor.moveDrugToCurrent(drug);
@@ -244,7 +262,12 @@ public class DonorProfileController {
      */
     @FXML
     private void handleDelete(ActionEvent event)  {
-        Profile currentDonor = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
 
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
         if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
@@ -260,7 +283,13 @@ public class DonorProfileController {
      */
     @FXML
     private void refreshTable() {
-        Profile currentDonor = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
 
         tableViewCurrentMedications.getItems().clear();
         if (currentDonor.getCurrentMedications() != null) {currentMedication.addAll(currentDonor.getCurrentMedications());}

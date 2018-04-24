@@ -1,6 +1,8 @@
 package odms.profile;
 
 
+import odms.medications.Drug;
+
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Collections;
