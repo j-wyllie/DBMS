@@ -89,7 +89,6 @@ public class ProfileDataIO {
 
         try {
             history = fileToString(historyFile);
-            System.out.println(history);
             Gson gson = new Gson();
 
             return gson.fromJson(

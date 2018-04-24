@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,7 @@ import odms.profile.Profile;
 
 public class EditDonorProfileController {
 
-    private static Profile currentProfile = getCurrentProfile();
+    private Profile currentProfile;
 
     @FXML
     private Label donorFullNameLabel;
@@ -199,8 +200,6 @@ public class EditDonorProfileController {
                 error = true;
             }
 
-
-
             currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
             action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
@@ -226,19 +225,26 @@ public class EditDonorProfileController {
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
 
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
-        }
-        else {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
+            if(getCurrentProfile() != null){
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
+                appStage.setScene(scene);
+                appStage.show();
+
+            } else {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+                controller.setDonor(currentProfile);
+                controller.initialize();
+
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                appStage.setScene(scene);
+                appStage.show();
+            }
         }
     }
 
@@ -265,62 +271,71 @@ public class EditDonorProfileController {
     @FXML
     public void initialize() {
 
-        try {
-            donorFullNameLabel.setText(currentProfile.getGivenNames() + " " + currentProfile.getLastNames());
-
-            donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
-
-            if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
-                donorStatusLabel.setText(donorStatusLabel.getText() + "Registered");
-            }
-
-            if (currentProfile.getGivenNames() != null) {
-                givenNamesField.setText(currentProfile.getGivenNames());
-            }
-            if (currentProfile.getLastNames() != null) {
-                lastNamesField.setText(currentProfile.getLastNames());
-            }
-            if (currentProfile.getIrdNumber() != null) {
-                irdField.setText(currentProfile.getIrdNumber().toString());
-            }
-            if (currentProfile.getDateOfBirth() != null) {
-                dobField.setText(currentProfile.getDateOfBirth().toString());
-            }
-            if (currentProfile.getDateOfDeath() != null) {
-                dodField.setText(currentProfile.getDateOfDeath().toString());
-            }
-            if (currentProfile.getGender() != null) {
-                genderField.setText(currentProfile.getGender());
-            }
-            heightField.setText(String.valueOf(currentProfile.getHeight()));
-            weightField.setText(String.valueOf(currentProfile.getWeight()));
-            phoneField.setText(currentProfile.getPhone());
-            emailField.setText(currentProfile.getEmail());
-
-            if (currentProfile.getAddress() != null) {
-                addressField.setText(currentProfile.getAddress());
-            }
-            if (currentProfile.getRegion() != null) {
-                regionField.setText(currentProfile.getRegion());
-            }
-            if (currentProfile.getBloodType() != null) {
-                bloodTypeField.setText(currentProfile.getBloodType());
-            }
-            if (currentProfile.getSmoker() != null) {
-                smokerField.setText(currentProfile.getSmoker().toString());
-            }
-            if (currentProfile.getAlcoholConsumption() != null) {
-                alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
-            }
-            if (currentProfile.getBloodPressure() != null) {
-                bloodPressureField.setText(currentProfile.getBloodPressure());
-            }
-            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-            organField.setText(currentProfile.getOrgansAsCSV());
-            donationsField.setText(currentProfile.getDonationsAsCSV());
+        if(currentProfile == null){
+            currentProfile = getCurrentProfile();
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        if (currentProfile != null) {
+
+            try {
+                donorFullNameLabel.setText(currentProfile.getFullName());
+
+                donorStatusLabel.setText("Donor Status: Unregistered");
+
+                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                    donorStatusLabel.setText("Donor Status: Registered");
+                }
+
+                if (currentProfile.getGivenNames() != null) {
+                    givenNamesField.setText(currentProfile.getGivenNames());
+                }
+                if (currentProfile.getLastNames() != null) {
+                    lastNamesField.setText(currentProfile.getLastNames());
+                }
+                if (currentProfile.getIrdNumber() != null) {
+                    irdField.setText(currentProfile.getIrdNumber().toString());
+                }
+                if (currentProfile.getDateOfBirth() != null) {
+                    dobField.setText(currentProfile.getDateOfBirth().toString());
+                }
+                if (currentProfile.getDateOfDeath() != null) {
+                    dodField.setText(currentProfile.getDateOfDeath().toString());
+                }
+                if (currentProfile.getGender() != null) {
+                    genderField.setText(currentProfile.getGender());
+                }
+                heightField.setText(String.valueOf(currentProfile.getHeight()));
+                weightField.setText(String.valueOf(currentProfile.getWeight()));
+                phoneField.setText(currentProfile.getPhone());
+                emailField.setText(currentProfile.getEmail());
+
+                if (currentProfile.getAddress() != null) {
+                    addressField.setText(currentProfile.getAddress());
+                }
+                if (currentProfile.getRegion() != null) {
+                    regionField.setText(currentProfile.getRegion());
+                }
+                if (currentProfile.getBloodType() != null) {
+                    bloodTypeField.setText(currentProfile.getBloodType());
+                }
+                if (currentProfile.getSmoker() != null) {
+                    smokerField.setText(currentProfile.getSmoker().toString());
+                }
+                if (currentProfile.getAlcoholConsumption() != null) {
+                    alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+//            if (currentProfile.getBloodPressure() != null) {
+//                bloodPressureField.setText(currentProfile.getBloodPressure());
+//            }
+//            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
+                organField.setText(currentProfile.getOrgansAsCSV());
+                donationsField.setText(currentProfile.getDonationsAsCSV());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public void setDonor(Profile donor) {
+        currentProfile = donor;
     }
 }
