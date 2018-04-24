@@ -1,7 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
-import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -9,11 +9,10 @@ import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
-import odms.donor.Donor;
-import java.io.Console;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    private Donor searchedDonor;
+    private Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -161,7 +160,7 @@ public class DonorProfileController {
     }
 
     @FXML
-    private void setPage(Donor currentDonor){
+    private void setPage(Profile currentDonor){
 
         try {
             donorFullNameLabel
@@ -230,7 +229,7 @@ public class DonorProfileController {
             //chronic diseases.
             //organs to donate.
             //past donations.
-            String history = DonorDataIO.getHistory();
+            String history = ProfileDataIO.getHistory();
             Gson gson = new Gson();
 
             if (history.equals("")) {
@@ -246,7 +245,7 @@ public class DonorProfileController {
 
             for (String str : actionHistory) {
                 if (str.contains("Donor " + currentDonor.getId())) {
-                        userHistory.add(str);
+                    userHistory.add(str);
 
                 }
             }
@@ -273,8 +272,8 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
-        if(getCurrentDonor() != null){
-            Donor currentDonor = getCurrentDonor();
+        if(getCurrentProfile() != null){
+            Profile currentDonor = getCurrentProfile();
             setPage(currentDonor);
             //run disable function 'refresh page'
             hideItems();
@@ -285,14 +284,11 @@ public class DonorProfileController {
      * sets the donor if it is being opened by a clinician
      * @param donor
      */
-    public void setDonor(Donor donor) {
+    public void setDonor(Profile donor) {
         isClinician = true;
         searchedDonor = donor;
         hideItems();
         setPage(searchedDonor);
     }
 
-    public Donor getDonor(Donor donor){
-        return searchedDonor;
-    }
 }

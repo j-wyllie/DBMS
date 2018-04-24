@@ -1,6 +1,5 @@
 package odms.controller;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,9 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import odms.donor.Donor;
-import odms.donor.Organ;
+import odms.profile.Profile;
 import odms.user.User;
 
 import java.io.IOException;
@@ -64,9 +61,9 @@ public class ClinicianProfileController {
     @FXML
     private TextField searchField;
 
-    private ObservableList<Donor> donorObservableList;
+    private ObservableList<Profile> donorObservableList;
 
-    private Donor selectedDonor;
+    private Profile selectedDonor;
 
     /**
      * Scene change to log in view.
@@ -130,10 +127,11 @@ public class ClinicianProfileController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTable(ArrayList<Donor> donors){
-
+    private void makeTable(ArrayList<Profile> donors){
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
+        TableColumn<Profile, String> ageCol = new TableColumn("Age");
+        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
@@ -152,10 +150,10 @@ public class ClinicianProfileController {
      */
     private void addTooltipToRow() {
         searchTable.setRowFactory(tableView -> {
-            final TableRow<Donor> row = new TableRow<>();
+            final TableRow<Profile> row = new TableRow<>();
 
             row.hoverProperty().addListener((observable) -> {
-                final Donor donor = row.getItem();
+                final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
                     if(donor.getDonatedOrgans().size() > 0) {
@@ -174,7 +172,7 @@ public class ClinicianProfileController {
      * @param donor The donor object that has been clicked on
      */
     @FXML
-    private void createNewDonorWindow(Donor donor) {
+    private void createNewDonorWindow(Profile donor) {
         selectedDonor = donor;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -199,6 +197,6 @@ public class ClinicianProfileController {
     @FXML
     private void initialize(){
         setClinicianDetails();
-        makeTable(GuiMain.getCurrentDatabase().getDonors(false));
+        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
     }
 }

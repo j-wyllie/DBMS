@@ -1,15 +1,15 @@
 package odms.controller;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.data.DonorDatabase;
+import odms.data.ProfileDatabase;
+
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class AlertController {
 
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getCurrentDatabase();
 
     /**
      * Creates a popup when the details were entered incorrectly

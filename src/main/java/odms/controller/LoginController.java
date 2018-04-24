@@ -14,16 +14,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.DonorDatabase;
+import odms.data.ProfileDatabase;
+import odms.profile.Profile;
+import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
-import odms.donor.Donor;
+import odms.profile.Profile;
 import odms.user.User;
 
 public class LoginController {
 
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
-    private static Donor currentDonor;
+    private static Profile currentProfile;
     private static User currentUser;
 
     /**
@@ -39,7 +41,7 @@ public class LoginController {
     private TextField passwordField;
 
     /**
-     * Scene change to donor profile view if log in credentials are valid.
+     * Scene change to profile profile view if log in credentials are valid.
      * @param event clicking on the login button.
      * @throws IOException
      */
@@ -56,8 +58,8 @@ public class LoginController {
                 appStage.setScene(newScene);
                 appStage.show();
             } else {
-                currentDonor = currentDatabase.getDonor(userId);
-                if (currentDonor != null) {
+                currentProfile = currentDatabase.getProfile(userId);
+                if (currentProfile != null) {
                     Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
                     Scene newScene = new Scene(parent);
                     Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -69,7 +71,6 @@ public class LoginController {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
             InvalidUsername();
         }
     }
@@ -88,8 +89,8 @@ public class LoginController {
         appStage.show();
     }
 
-    public static Donor getCurrentDonor() {
-        return currentDonor;
+    public static Profile getCurrentProfile() {
+        return currentProfile;
     }
-    public static void setCurrentDonor(Integer id) {currentDonor = currentDatabase.getDonor(id);}
+    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }
