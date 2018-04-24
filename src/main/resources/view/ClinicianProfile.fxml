@@ -154,7 +154,7 @@
                   </content>
                 </Tab>
                   <Tab closable="false" text="History" />
-                  <Tab text="Search">
+                  <Tab fx:id="searchTab" text="Search">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
