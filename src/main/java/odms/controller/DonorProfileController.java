@@ -250,7 +250,6 @@ public class DonorProfileController {
             for (String str : actionHistory) {
                 if (str.contains("Donor " + currentDonor.getId())) {
                     userHistory.add(str);
-
                 }
             }
             historyView.setText(userHistory.toString());
@@ -280,7 +279,6 @@ public class DonorProfileController {
             Profile currentDonor = getCurrentProfile();
             hideItems();
             setPage(currentDonor);
-            //run disable function 'refresh page'
         }
     }
 

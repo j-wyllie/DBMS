@@ -3,6 +3,7 @@ package odms.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Profile;
 import odms.user.User;
@@ -130,17 +132,18 @@ public class ClinicianProfileController {
     private void makeTable(ArrayList<Profile> donors){
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        TableColumn<Profile, String> ageCol = new TableColumn("Age");
-        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
         searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
-        searchTable.setOnMouseClicked( event -> {
-            if( event.getClickCount() == 2 ) {
+
+        searchTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    searchTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
-            }});
+            }
+        });
         addTooltipToRow();
     }
 
