@@ -31,7 +31,8 @@ import odms.donor.Donor;
 
 public class EditDonorProfileController {
 
-    private static Donor currentDonor = getCurrentDonor();
+    private Donor currentDonor;
+    private Donor searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -178,29 +179,29 @@ public class EditDonorProfileController {
                         .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                 currentDonor.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
-            try {
-                Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
-                if(set != null){
-                    currentDonor.setRegistered(true);
-                    currentDonor.addOrgans(set);
-                }
-
-                } catch (Exception e){
-                    error = true;
-                }
-
-            try {
-                Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                if(set != null){
-                    currentDonor.setRegistered(true);
-                    currentDonor.addDonations(set);
-                }
-
-            } catch (Exception e){
-                error = true;
-            }
-
-
+//            try {
+//                Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+//                if(set != null){
+//                    currentDonor.setRegistered(true);
+//                    currentDonor.addOrgans(set);
+//                }
+//
+//                } catch (Exception e){
+//                e.printStackTrace();
+//                    error = true;
+//                }
+//
+//            try {
+//                Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
+//                if(set != null){
+//                    currentDonor.setRegistered(true);
+//                    currentDonor.addDonations(set);
+//                }
+//
+//            } catch (Exception e){
+//                e.printStackTrace();
+//                error = true;
+//            }
 
             currentDonor.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentDonor.setAlcoholConsumption(alcoholConsumptionField.getText());
@@ -227,19 +228,26 @@ public class EditDonorProfileController {
 
             DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
 
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
-        }
-        else {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
+            if(getCurrentDonor() != null){
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
+                appStage.setScene(scene);
+                appStage.show();
+
+            } else {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+                controller.setDonor(currentDonor);
+                controller.initialize();
+
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                appStage.setScene(scene);
+                appStage.show();
+            }
         }
     }
 
@@ -265,6 +273,9 @@ public class EditDonorProfileController {
      */
     @FXML
     public void initialize() {
+        if(currentDonor == null){
+            currentDonor = getCurrentDonor();
+        }
         try {
             donorFullNameLabel.setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
 
@@ -322,5 +333,9 @@ public class EditDonorProfileController {
         catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public void setDonor(Donor donor) {
+        currentDonor = donor;
     }
 }

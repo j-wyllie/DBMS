@@ -16,7 +16,6 @@ import javafx.stage.Window;
 import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
-import odms.controller.SearchedDonorProfileController;
 import odms.donor.Donor;
 import org.junit.*;
 import org.testfx.api.FxToolkit;
@@ -120,7 +119,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
         String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
         //opening edit tab
-        clickOn((scene.lookup("#editDonorButton2")));
+        clickOn((scene.lookup("#editButton")));
 
         //editing donor
         Scene scene2 = getTopModalStage();
@@ -137,11 +136,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
 
-        //closes final dialogue
-        Stage stage3 = getAlertDialogue();
-        DialogPane dialogPane2 = (DialogPane) stage3.getScene().getRoot();
-        clickOn(dialogPane2.lookupButton(ButtonType.CLOSE));
-
         //checks database has been updated
         assertEquals("Bob", GuiMain.getCurrentDatabase().getDonor(userId).getGivenNames());
         assertEquals("Seger", GuiMain.getCurrentDatabase().getDonor(userId).getLastNames());
@@ -155,9 +149,9 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         //reset user through GUI
         //open edit donor back up
-        Scene searchedDonorScene = getTopModalStage();
+        Scene donorScene = getTopModalStage();
         //editDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton2");
-        clickOn(searchedDonorScene.lookup("#editDonorButton2"));
+        clickOn(donorScene.lookup("#editButton"));
 
         scene2 = getTopModalStage();
         givenNames = (TextField) scene2.lookup("#givenNamesField");

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LoginControllerTest extends ApplicationTest {
+public class LoginCreateControllerTest extends ApplicationTest {
 
     private GuiMain guiMain;
 
@@ -115,12 +115,12 @@ public class LoginControllerTest extends ApplicationTest {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14.11.1997");
-        clickOn("#irdField").write("123456788");
+        clickOn("#irdField").write("100132122");
         clickOn("#createAccountButton");
 
         actualAlertDialog = getTopModalStage();
         dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-        assertEquals(dialogPane.getContentText(), "Date entered is not in the format dd-mm-yyyy.");
+        assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
         closeDialogue(dialogPane);
 
         //tests duplicate IRD number.

@@ -69,7 +69,7 @@ public class LoginController {
             }
         }
         catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             InvalidUsername();
         }
     }

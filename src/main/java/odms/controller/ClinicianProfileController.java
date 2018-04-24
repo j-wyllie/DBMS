@@ -26,7 +26,7 @@ import static odms.controller.UndoRedoController.undo;
 public class ClinicianProfileController {
 
     //Get the default clinician
-    private static User currentUser = GuiMain.getUserDatabase().getClinician(0);
+    protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
 
     @FXML
     private Label clinicianFullName;
@@ -178,12 +178,13 @@ public class ClinicianProfileController {
         selectedDonor = donor;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/SearchedDonorProfile.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
+            fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
 
-            SearchedDonorProfileController controller = fxmlLoader.<SearchedDonorProfileController>getController();
-            controller.setSearchedDonor(selectedDonor);
+            Scene scene = new Scene(fxmlLoader.load());
+            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            controller.setDonor(selectedDonor);
             controller.initialize();
+
 
             Stage stage = new Stage();
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");

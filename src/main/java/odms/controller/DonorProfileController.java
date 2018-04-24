@@ -7,6 +7,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import odms.commandlineview.CommandUtils;
@@ -26,6 +27,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DonorProfileController {
+
+    private Donor searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -102,6 +105,11 @@ public class DonorProfileController {
     @FXML
     private Label userIdLabel;
 
+    @FXML
+    private Button logoutButton;
+
+    Boolean isClinician = false;
+
 
     /**
      * Scene change to log in view.
@@ -140,29 +148,33 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
-        Scene newScene = new Scene(parent);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
+        controller.setDonor(searchedDonor);
+        controller.initialize();
+
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
+
+        appStage.setScene(scene);
         appStage.show();
     }
 
-    /**
-     * Sets the current donor attributes to the labels on start up.
-     */
     @FXML
-    public void initialize() {
-        Donor currentDonor = getCurrentDonor();
+    private void setPage(Donor currentDonor){
+
         try {
             donorFullNameLabel
-                    .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+                    .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
+                System.out.println(givenNamesLabel.getText() + currentDonor.getGivenNames());
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
+
             }
             if (currentDonor.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentDonor.getLastNames());
@@ -195,13 +207,13 @@ public class DonorProfileController {
             if (currentDonor.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
-            if(currentDonor.getHeight() != null && currentDonor.getWeight() != null){
+            if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
                 bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
             }
-            if(currentDonor.getDateOfBirth() != null){
+            if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
-            if(currentDonor.getId() != null){
+            if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
@@ -221,25 +233,66 @@ public class DonorProfileController {
             String history = DonorDataIO.getHistory();
             Gson gson = new Gson();
 
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
-                history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+                history = history.substring(0, history.length() - 1);
+                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
             }
-            history = history.substring(1, history.length()-1);
+            history = history.substring(1, history.length() - 1);
             String[] actionHistory = history.split(",");
 
             ArrayList<String> userHistory = new ArrayList<>();
 
-            for(String str : actionHistory){
-                if(str.contains("Donor " + getCurrentDonor().getId())){
-                    userHistory.add(str);
+            for (String str : actionHistory) {
+                if (str.contains("Donor " + currentDonor.getId())) {
+                        userHistory.add(str);
+
                 }
             }
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
+            e.printStackTrace();
             InvalidUsername();
         }
+
+    }
+
+    /**
+     * hides items that shouldn't be visible to either a donor or clinician
+     */
+    @FXML
+    private void hideItems() {
+        if(isClinician){
+            logoutButton.setVisible(false);
+        }
+    }
+
+    /**
+     * Sets the current donor attributes to the labels on start up.
+     */
+    @FXML
+    public void initialize() {
+        if(getCurrentDonor() != null){
+            Donor currentDonor = getCurrentDonor();
+            setPage(currentDonor);
+            //run disable function 'refresh page'
+            hideItems();
+        }
+    }
+
+    /**
+     * sets the donor if it is being opened by a clinician
+     * @param donor
+     */
+    public void setDonor(Donor donor) {
+        isClinician = true;
+        searchedDonor = donor;
+        hideItems();
+        setPage(searchedDonor);
+    }
+
+    public Donor getDonor(Donor donor){
+        return searchedDonor;
     }
 }
