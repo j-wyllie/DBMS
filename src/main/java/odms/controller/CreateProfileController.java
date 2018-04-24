@@ -1,9 +1,11 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidEntry;
+import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-import odms.data.DonorDatabase;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,63 +15,53 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.data.IrdNumberConflictException;
+import odms.profile.Profile;
 
 public class CreateProfileController {
 
-    private static DonorDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getCurrentDatabase();
 
-    /**
-     * TextField to input the new user's given names.
-     */
     @FXML
     private TextField givenNamesField;
 
-    /**
-     * TextField to input the new user's surnames.
-     */
     @FXML
     private TextField surnamesField;
 
-    /**
-     * TextField to input the new user's dob.
-     */
     @FXML
     private TextField dobField;
 
-    /**
-     * TextField to input the new user's ird number.
-     */
     @FXML
     private TextField irdField;
 
     /**
-     * Scene change to donor profile view if all required fields are filled in.
+     * Scene change to profile profile view if all required fields are filled in.
      * @param event clicking on the create new account button.
      * @throws IOException
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-
         try {
             String givenNames = givenNamesField.getText();
             String surnames = surnamesField.getText();
             String dob = dobField.getText();
-            String ird = irdField.getText();
+            Integer ird = Integer.parseInt(irdField.getText());
 
-           /* Donor newDonor = new Donor(givenNames, surnames, dob, ird);
-            currentDatabase.addDonor(newDonor)
-            CommandUtils.addDonorHistory(newDonor.getId());;*/
-        }
-        catch (IllegalArgumentException e) {
-            //show error window.
-            InvalidEntry();
-        }
-        finally {
+            Profile newDonor = new Profile(givenNames, surnames, dob, ird);
+            currentDatabase.addProfile(newDonor);
+            //CommandUtils.addDonorHistory(newDonor.getId());
+            LoginController.setCurrentDonor(newDonor.getId());
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
             appStage.show();
+        }
+        catch (IllegalArgumentException e) {
+            //show error window.
+            InvalidEntry();
+        } catch (IrdNumberConflictException e){
+            InvalidIrd();
         }
     }
 

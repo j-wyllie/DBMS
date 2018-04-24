@@ -8,18 +8,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import odms.commandlineview.CommandUtils;
+import odms.cli.CommandUtils;
 
-public class DonorDataIO {
+public class ProfileDataIO {
+
     private static String history = "";
 
     /**
-     * Export full DonorDatabase object to specified JSON file.
+     * Export full ProfileDatabase object to specified JSON file.
      *
-     * @param donorDb Database to be exported to JSON
+     * @param profileDb Database to be exported to JSON
      * @param path target path
      */
-    public static void saveDonors(DonorDatabase donorDb, String path) {
+    public static void saveData(ProfileDatabase profileDb, String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
 
@@ -27,7 +28,7 @@ public class DonorDataIO {
             Gson gson = new Gson();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
-            writeFile.write(gson.toJson(donorDb));
+            writeFile.write(gson.toJson(profileDb));
             writeFile.close();
             if(history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
@@ -44,7 +45,6 @@ public class DonorDataIO {
             System.out.println("File requested: " + path);
         }
     }
-
 
     /**
      * Reads a file from the provided filename or path, converts to string.
@@ -74,20 +74,18 @@ public class DonorDataIO {
         }
 
         return fileBuffer.toString();
-
     }
 
-
     /**
-     * Load the specified DonorDatabase JSON file instantiating a DonorDatabase Object.
+     * Load the specified ProfileDatabase JSON file instantiating a ProfileDatabase Object.
      *
-     * @param path specified DonorDatabase JSON to load
-     * @return DonorDatabase
+     * @param path specified ProfileDatabase JSON to load
+     * @return ProfileDatabase
      */
-    public static DonorDatabase loadData(String path) {
+    public static ProfileDatabase loadData(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
-        DonorDatabase donorDb = new DonorDatabase();
+        ProfileDatabase profileDb = new ProfileDatabase();
 
         try {
             history = fileToString(historyFile);
@@ -95,15 +93,15 @@ public class DonorDataIO {
             Gson gson = new Gson();
 
             return gson.fromJson(
-                    DonorDataIO.fileToString(file),
-                    DonorDatabase.class
+                    ProfileDataIO.fileToString(file),
+                    ProfileDatabase.class
             );
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return donorDb;
+        return profileDb;
     }
 
     public static String getHistory() { return history;}
