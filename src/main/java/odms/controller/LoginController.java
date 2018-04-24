@@ -92,5 +92,5 @@ public class LoginController {
     public static Profile getCurrentProfile() {
         return currentProfile;
     }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getDonor(id);}
+    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }

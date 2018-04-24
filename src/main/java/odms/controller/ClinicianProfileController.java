@@ -16,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import odms.donor.Donor;
+import odms.profile.Profile;
 import odms.user.User;
 
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class ClinicianProfileController {
     @FXML
     private TextField searchField;
 
-    private ObservableList<Donor> donorObservableList;
+    private ObservableList<Profile> donorObservableList;
 
     /**
      * Scene change to log in view.
@@ -127,10 +127,10 @@ public class ClinicianProfileController {
      * initializes and refreshes the search table
      */
     @FXML
-    private void makeTable(ArrayList<Donor> donors){
+    private void makeTable(ArrayList<Profile> donors){
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        TableColumn<Donor, String> ageCol = new TableColumn("Age");
+        TableColumn<Profile, String> ageCol = new TableColumn("Age");
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
@@ -143,6 +143,6 @@ public class ClinicianProfileController {
     @FXML
     private void initialize(){
         setClinicianDetails();
-        makeTable(GuiMain.getCurrentDatabase().getDonors(false));
+        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
     }
 }
