@@ -68,7 +68,7 @@ public class LoginCreateControllerTest extends ApplicationTest {
     public void loginValidUser(){
         clickOn("#usernameField").write("1");
         login();
-        assertEquals("1", LoginController.getCurrentDonor().getId().toString());
+        assertEquals("1", LoginController.getCurrentProfile().getId().toString());
     }
 
     /**
@@ -96,7 +96,7 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#irdField").write("88888888");
         clickOn("#createAccountButton");
 
-        assertEquals("88888888", LoginController.getCurrentDonor().getIrdNumber().toString());
+        assertEquals("88888888", LoginController.getCurrentProfile().getIrdNumber().toString());
     }
 
     @Test

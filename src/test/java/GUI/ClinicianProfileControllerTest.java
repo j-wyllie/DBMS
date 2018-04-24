@@ -16,7 +16,7 @@ import javafx.stage.Window;
 import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
-import odms.donor.Donor;
+import odms.profile.Profile;
 import org.junit.*;
 import org.testfx.api.FxToolkit;
 
@@ -92,7 +92,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     public void openSearchedProfileTest() {
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Donor firstDonor = (Donor) searchTable.getItems().get(0);
+        Profile firstDonor = (Profile) searchTable.getItems().get(0);
 
 
         doubleClickOn(row("#searchTable", 0));
@@ -136,9 +136,14 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
 
+        //closes final dialogue
+        Stage stage3 = getAlertDialogue();
+        DialogPane dialogPane2 = (DialogPane) stage3.getScene().getRoot();
+        clickOn(dialogPane2.lookupButton(ButtonType.CLOSE));
+
         //checks database has been updated
-        assertEquals("Bob", GuiMain.getCurrentDatabase().getDonor(userId).getGivenNames());
-        assertEquals("Seger", GuiMain.getCurrentDatabase().getDonor(userId).getLastNames());
+        assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
+        assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
         //checks GUI has been updated.
         scene2 = getTopModalStage();

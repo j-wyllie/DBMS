@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    private Profile searchedDonor;
+    protected Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -159,6 +159,10 @@ public class DonorProfileController {
         appStage.show();
     }
 
+    /**
+     * sets all of the items in the fxml to their respective values
+     * @param currentDonor donors profile
+     */
     @FXML
     private void setPage(Profile currentDonor){
 
@@ -272,11 +276,11 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
-        if(getCurrentProfile() != null){
+        if(getCurrentProfile() != null) {
             Profile currentDonor = getCurrentProfile();
+            hideItems();
             setPage(currentDonor);
             //run disable function 'refresh page'
-            hideItems();
         }
     }
 

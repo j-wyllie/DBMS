@@ -24,8 +24,14 @@ public class GuiMain extends Application {
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
     private static UserDatabase userDb = new UserDataIO().loadData(USER_DATABASE);
 
+    /**
+     * Loads in a default clinician if one does not exist. Opens the login screen
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
+        System.out.println(profileDb.searchGivenNames("Jack"));
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){

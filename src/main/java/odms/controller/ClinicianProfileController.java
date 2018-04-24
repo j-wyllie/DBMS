@@ -139,7 +139,7 @@ public class ClinicianProfileController {
         searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
         searchTable.setOnMouseClicked( event -> {
             if( event.getClickCount() == 2 ) {
-                createNewDonorWindow((Donor) searchTable.getSelectionModel().getSelectedItem());
+                createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
             }});
         addTooltipToRow();
     }
@@ -182,7 +182,6 @@ public class ClinicianProfileController {
             DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
             controller.setDonor(selectedDonor);
             controller.initialize();
-
 
             Stage stage = new Stage();
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
