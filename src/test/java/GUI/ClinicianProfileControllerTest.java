@@ -35,6 +35,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.testfx.api.FxToolkit.registerPrimaryStage;
+import static org.testfx.api.FxToolkit.setupScene;
+import static org.testfx.api.FxToolkit.showStage;
 
 public class ClinicianProfileControllerTest extends ApplicationTest {
 
@@ -102,7 +104,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
     }
 
-    @Ignore
+    @Test
     public void editSearchedProfileTest() {
         //open up the first donor
 
@@ -111,14 +113,14 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
 
+
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
         Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
 
         String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
         String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
         //opening edit tab
-        Button editDonorButton = (Button) scene.lookup("#editDonorButton");
-        clickOn(editDonorButton);
+        clickOn((scene.lookup("#editDonorButton2")));
 
         //editing donor
         Scene scene2 = getTopModalStage();
@@ -154,8 +156,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         //reset user through GUI
         //open edit donor back up
         Scene searchedDonorScene = getTopModalStage();
-        editDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton");
-        clickOn(editDonorButton);
+        //editDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton2");
+        clickOn(searchedDonorScene.lookup("#editDonorButton2"));
 
         scene2 = getTopModalStage();
         givenNames = (TextField) scene2.lookup("#givenNamesField");
