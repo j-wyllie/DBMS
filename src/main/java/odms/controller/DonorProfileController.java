@@ -146,7 +146,7 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
         controller.setDonor(searchedDonor);

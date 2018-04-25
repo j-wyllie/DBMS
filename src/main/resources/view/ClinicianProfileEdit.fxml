@@ -82,7 +82,7 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </ImageView>
-                                                <Label prefHeight="74.0" prefWidth="207.0" text="DETAILS" GridPane.columnSpan="2">
+                                                <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
                                                    <font>
                                                       <Font name="Arial Bold" size="25.0" />
                                                    </font>
@@ -90,7 +90,7 @@
                                                       <Insets left="60.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="173.0" text="Given names : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="173.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Given names : " GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -98,7 +98,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="52.0" prefWidth="176.0" text="Surnames : " GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="52.0" prefWidth="176.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Surnames : " GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -106,7 +106,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="164.0" text="Staff ID : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                <Label fx:id="staffIdLabel" layoutX="30.0" layoutY="132.0" prefHeight="52.0" prefWidth="164.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Staff ID : " GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -114,7 +114,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="180.0" text="Work Address : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                <Label fx:id="addressLabel" prefHeight="51.0" prefWidth="180.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Work Address : " GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -122,7 +122,7 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="regionLabel" prefHeight="47.0" prefWidth="173.0" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <Label fx:id="regionLabel" prefHeight="47.0" prefWidth="173.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
@@ -159,7 +159,7 @@
                                           </GridPane>
                                        </children>
                                     </TilePane>
-                                    <ToolBar maxWidth="170.0" prefHeight="66.0" prefWidth="170.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                    <ToolBar maxWidth="210.0" prefHeight="66.0" prefWidth="210.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                       <items>
                                         <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
                                           <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
@@ -196,48 +196,49 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <TilePane prefHeight="200.0" prefWidth="1202.0" style="-fx-background-color: #1fa98c;" GridPane.columnSpan="2">
+            <GridPane prefHeight="146.0" prefWidth="1203.0" styleClass="banner" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="15.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0" vgrow="NEVER" />
+                  <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="74.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <GridPane prefHeight="146.0" prefWidth="1203.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="15.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0" vgrow="NEVER" />
-                        <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="74.0" vgrow="NEVER" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label fx:id="clinicianFullName" prefHeight="52.0" prefWidth="972.0" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.rowIndex="1">
-                           <font>
-                              <Font name="System Bold" size="40.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="40.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" text="Clinician" textFill="WHITE" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="28.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="40.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="44.0" prefWidth="59.0" style="-fx-background-image: url(icons/logout.png); -fx-background-size: stretch; -fx-background-color: #1fa98c;" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
-                           <GridPane.margin>
-                              <Insets bottom="5.0" top="15.0" />
-                           </GridPane.margin>
-                           <padding>
-                              <Insets right="15.0" />
-                           </padding></Button>
-                     </children>
-                  </GridPane>
-               </children></TilePane>
+                  <Label fx:id="clinicianFullName" prefHeight="52.0" prefWidth="972.0" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="40.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" text="Clinician" textFill="WHITE" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="40.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png); -fx-background-size: stretch;" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" top="15.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets right="15.0" />
+                     </padding>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
          </children>
       </GridPane>
    </children>

@@ -3,7 +3,6 @@ package odms.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Profile;
 import odms.user.User;
@@ -104,7 +102,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -179,7 +177,7 @@ public class ClinicianProfileController {
         selectedDonor = donor;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();

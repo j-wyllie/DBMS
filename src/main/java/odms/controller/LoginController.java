@@ -16,9 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
-import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
-import odms.profile.Profile;
 import odms.user.User;
 
 public class LoginController {
@@ -61,7 +59,8 @@ public class LoginController {
             } else {
                 currentProfile = currentDatabase.getProfile(userId);
                 if (currentProfile != null) {
-                    Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+                    Parent parent = FXMLLoader.load(getClass().getResource(
+                            "/view/ProfileDisplay.fxml"));
                     Scene newScene = new Scene(parent);
                     Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     appStage.setScene(newScene);
@@ -82,7 +81,7 @@ public class LoginController {
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/CreateProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileCreate.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);

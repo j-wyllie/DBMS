@@ -457,7 +457,7 @@
                         <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png); -fx-background-size: stretch;" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" styleClass="button-logout" stylesheets="@../styles/Profile.css" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                      <GridPane.margin>
                         <Insets bottom="5.0" top="15.0" />
                      </GridPane.margin>

@@ -132,7 +132,7 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -225,7 +225,8 @@ public class EditDonorProfileController {
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
 
             if (getCurrentProfile() != null) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass()
+                        .getResource("/view/ProfileDisplay.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -233,7 +234,8 @@ public class EditDonorProfileController {
                 appStage.show();
 
             } else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass()
+                        .getResource("/view/ProfileDisplay.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
                 controller.setDonor(currentProfile);
@@ -256,7 +258,7 @@ public class EditDonorProfileController {
         boolean cancelBool = DonorCancelChanges();
 
         if (cancelBool) {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
