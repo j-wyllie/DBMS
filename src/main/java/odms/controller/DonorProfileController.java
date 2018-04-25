@@ -160,26 +160,20 @@ public class DonorProfileController {
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
 
         //curDiseasesTable.getSortOrder().add(curChronicColumn);
-        Profile currentProfile = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
         curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-        currentProfile.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
+        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
         else {curConditionsObservableList = FXCollections.observableArrayList(); }
         if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
         else {pastConditionsObservableList = FXCollections.observableArrayList(); }
-
-        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
-        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), false );
-        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), false);
-        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
-        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
-
-        currentProfile.addCondition(placeholdCondition3);
-        currentProfile.addCondition(placeholdCondition5);
-        currentProfile.addCondition(placeholdCondition);
-        currentProfile.addCondition(placeholdCondition4);
-        currentProfile.addCondition(placeholdCondition2);
 
         refreshTable();
 
@@ -190,21 +184,26 @@ public class DonorProfileController {
      */
     @FXML
     private void refreshTable() {
-        Profile currentProfile = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
 
         curConditionsTable.getItems().clear();
-        if (currentProfile.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentProfile.getCurrentConditions());}
+        if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
         pastConditionsTable.getItems().clear();
-        if (currentProfile.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentProfile.getCuredConditions());}
+        if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
-        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
+        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
         pastConditionsTable.setItems(pastConditionsObservableList);
-        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
+        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
@@ -222,37 +221,7 @@ public class DonorProfileController {
         curConditionsTable.getSortOrder().add(curChronicColumn);
     }
 
-    /**
-     * Refreshes the page so that the relevant buttons are available to the correct user, Clinician has max 'access'
-     */
-    @FXML
-    private void refreshPage() {
-        //Show or hide relevant buttons if user is clinician or donor
 
-        if (LoginController.getCurrentUser() != null) {
-            //User is a donor, limit functionality
-            curConditionsTable.setEditable(false);
-            pastConditionsTable.setEditable(false);
-            toggleChronicButton.setDisable(true);
-            toggleChronicButton.setVisible(false);
-            toggleCuredButton.setDisable(true);
-            toggleCuredButton.setVisible(false);
-            addNewConditionButton.setVisible(false);
-            deleteConditionButton.setVisible(false);
-
-        } else {
-            //User is a clinician looking at donors profile, maximise functionality
-            curConditionsTable.setEditable(true);
-            pastConditionsTable.setEditable(true);
-            toggleChronicButton.setDisable(false);
-            toggleChronicButton.setVisible(true);
-            toggleCuredButton.setDisable(false);
-            toggleCuredButton.setVisible(true);
-            addNewConditionButton.setVisible(true);
-            deleteConditionButton.setVisible(true);
-        }
-
-    }
 
     /**
      * Button handler to add condition to the current conditions for the current profile.
@@ -260,10 +229,28 @@ public class DonorProfileController {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        Profile currentProfile = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+
+        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
+        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), false );
+        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), false);
+        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
+        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
+
+        currentDonor.addCondition(placeholdCondition3);
+        currentDonor.addCondition(placeholdCondition5);
+        currentDonor.addCondition(placeholdCondition);
+        currentDonor.addCondition(placeholdCondition4);
+        currentDonor.addCondition(placeholdCondition2);
 
         Condition condition = new Condition("Being cold", LocalDate.now(), true);
-        currentProfile.addCondition(condition);
+        currentDonor.addCondition(condition);
 
         refreshTable();
     }
@@ -274,13 +261,18 @@ public class DonorProfileController {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        Profile currentProfile = getCurrentProfile();
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
 
         Condition condition = (Condition) curConditionsTable.getSelectionModel().getSelectedItem();
         if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
         if (condition == null) { return; }
 
-        currentProfile.removeCondition(condition);
+        currentDonor.removeCondition(condition);
 
         refreshTable();
     }
@@ -367,10 +359,17 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
-        controller.setDonor(searchedDonor);
+        controller.setDonor(currentDonor);
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -385,9 +384,15 @@ public class DonorProfileController {
      */
     @FXML
     private void setPage(Profile currentDonor){
-        Profile currentProfile = getCurrentProfile();
-        makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());                       //need get current conditions rather than get all conditions
-        refreshPage();
+        /*
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+        */
+
+        makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());
         refreshTable();
 
         try {
@@ -395,7 +400,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentProfile.getRegistered() == true) {
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
@@ -489,8 +494,29 @@ public class DonorProfileController {
     @FXML
     private void hideItems() {
         if(isClinician){
+            //User is a clinician looking at donors profile, maximise functionality
+            curConditionsTable.setEditable(true);
+            pastConditionsTable.setEditable(true);
+            toggleChronicButton.setDisable(false);
+            toggleChronicButton.setVisible(true);
+            toggleCuredButton.setDisable(false);
+            toggleCuredButton.setVisible(true);
+            addNewConditionButton.setVisible(true);
+            deleteConditionButton.setVisible(true);
+
             logoutButton.setVisible(false);
+        } else {
+            //User is a donor, limit functionality
+            curConditionsTable.setEditable(false);
+            pastConditionsTable.setEditable(false);
+            toggleChronicButton.setDisable(true);
+            toggleChronicButton.setVisible(false);
+            toggleCuredButton.setDisable(true);
+            toggleCuredButton.setVisible(false);
+            addNewConditionButton.setVisible(false);
+            deleteConditionButton.setVisible(false);
         }
+
     }
 
     /**
