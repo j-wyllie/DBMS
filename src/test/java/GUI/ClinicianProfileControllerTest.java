@@ -42,7 +42,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     private GuiMain guiMain;
     private Parent root;
 
-        //Runs tests in background if headless is set to true. This gets it working with the CI.
+    // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
         GUITestSetup.headless();
@@ -75,7 +75,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     /**
      * logs in the clinician and opens up the search tab
      */
-    public void logInClinician() {
+    private void logInClinician() {
         clickOn("#usernameField").write("0");
         clickOn("#loginButton");
     }
@@ -92,8 +92,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         doubleClickOn(row("#searchTable", 0));
         //opening the first donor
         Scene scene = getTopModalStage();
-        Label donorName = (Label) scene.lookup("#donorFullNameLabel");
-        assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
+        Label profileName = (Label) scene.lookup("#donorFullNameLabel");
+        assertEquals(firstDonor.getFullName(), profileName.getText()); //checks name label is equal
     }
 
     /**

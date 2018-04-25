@@ -50,7 +50,8 @@ public class LoginController {
 
         try {
             int userId = Integer.valueOf(usernameField.getText());
-            if(userId == 0){
+
+            if (userId == 0) {
                 currentUser = userDatabase.getClinician(0);
                 Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
                 Scene newScene = new Scene(parent);
@@ -69,8 +70,7 @@ public class LoginController {
                     InvalidUsername();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             InvalidUsername();
         }
     }
