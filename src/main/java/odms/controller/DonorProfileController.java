@@ -116,6 +116,8 @@ public class DonorProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        LoginController.setCurrentDonor(null); //clears current donor
+
         Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
