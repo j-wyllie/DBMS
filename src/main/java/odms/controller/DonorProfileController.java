@@ -1,22 +1,18 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
-import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
-import odms.donor.Condition;
-import odms.donor.Donor;
-import java.io.Console;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,9 +23,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DonorProfileController {
+
+    protected Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -105,6 +104,11 @@ public class DonorProfileController {
 
     @FXML
     private Label userIdLabel;
+
+    @FXML
+    private Button logoutButton;
+
+    Boolean isClinician = false;
 
     @FXML
     private TableView curConditionsTable;
@@ -362,18 +366,24 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
-        Scene newScene = new Scene(parent);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
+        controller.setDonor(searchedDonor);
+        controller.initialize();
+
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
+
+        appStage.setScene(scene);
         appStage.show();
     }
 
     /**
-     * Sets the current donor attributes to the labels on start up.
+     * sets all of the items in the fxml to their respective values
+     * @param currentDonor donors profile
      */
     @FXML
-    public void initialize() {
+    private void setPage(Profile currentDonor){
         Donor currentDonor = getCurrentDonor();
         makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());                       //need get current conditions rather than get all conditions
         refreshPage();
@@ -381,13 +391,14 @@ public class DonorProfileController {
 
         try {
             donorFullNameLabel
-                    .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+                    .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
+                System.out.println(givenNamesLabel.getText() + currentDonor.getGivenNames());
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
             }
             if (currentDonor.getLastNames() != null) {
@@ -421,13 +432,13 @@ public class DonorProfileController {
             if (currentDonor.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
-            if(currentDonor.getHeight() != null && currentDonor.getWeight() != null){
+            if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
                 bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
             }
-            if(currentDonor.getDateOfBirth() != null){
+            if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
-            if(currentDonor.getId() != null){
+            if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
@@ -444,28 +455,64 @@ public class DonorProfileController {
             //chronic diseases.
             //organs to donate.
             //past donations.
-            String history = DonorDataIO.getHistory();
+            String history = ProfileDataIO.getHistory();
             Gson gson = new Gson();
 
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
-                history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+                history = history.substring(0, history.length() - 1);
+                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
             }
-            history = history.substring(1, history.length()-1);
+            history = history.substring(1, history.length() - 1);
             String[] actionHistory = history.split(",");
 
             ArrayList<String> userHistory = new ArrayList<>();
 
-            for(String str : actionHistory){
-                if(str.contains("Donor " + getCurrentDonor().getId())){
+            for (String str : actionHistory) {
+                if (str.contains("Donor " + currentDonor.getId())) {
                     userHistory.add(str);
                 }
             }
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
+            e.printStackTrace();
             InvalidUsername();
         }
+
     }
+
+    /**
+     * hides items that shouldn't be visible to either a donor or clinician
+     */
+    @FXML
+    private void hideItems() {
+        if(isClinician){
+            logoutButton.setVisible(false);
+        }
+    }
+
+    /**
+     * Sets the current donor attributes to the labels on start up.
+     */
+    @FXML
+    public void initialize() {
+        if(getCurrentProfile() != null) {
+            Profile currentDonor = getCurrentProfile();
+            hideItems();
+            setPage(currentDonor);
+        }
+    }
+
+    /**
+     * sets the donor if it is being opened by a clinician
+     * @param donor
+     */
+    public void setDonor(Profile donor) {
+        isClinician = true;
+        searchedDonor = donor;
+        hideItems();
+        setPage(searchedDonor);
+    }
+
 }
