@@ -177,7 +177,6 @@ public class DonorProfileController {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
-                System.out.println(givenNamesLabel.getText() + currentDonor.getGivenNames());
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
 
             }
