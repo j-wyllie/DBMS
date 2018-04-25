@@ -92,5 +92,13 @@ public class LoginController {
     public static Profile getCurrentProfile() {
         return currentProfile;
     }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+
+    @FXML
+    private void onEnter(ActionEvent event) throws IOException {
+        handleLoginButtonClicked(event);
+    }
+
+    public static void setCurrentDonor(Integer id) {
+        currentProfile = currentDatabase.getProfile(id);
+    }
 }
