@@ -131,11 +131,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
 
-        //closes final dialogue
-        Stage stage3 = getAlertDialogue();
-        DialogPane dialogPane2 = (DialogPane) stage3.getScene().getRoot();
-        clickOn(dialogPane2.lookupButton(ButtonType.CLOSE));
-
         //checks database has been updated
         assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
         assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
