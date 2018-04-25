@@ -4,6 +4,7 @@ import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.GuiPopup;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -132,7 +133,7 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileEdit.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -178,10 +179,12 @@ public class EditDonorProfileController {
                 currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
             try {
-                Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
-                if(set != null){
-                    currentProfile.setRegistered(true);
-                    currentProfile.addOrgans(set);
+                if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                    Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                    if (!set.isEmpty()) {
+                        currentProfile.setRegistered(true);
+                        currentProfile.addOrgans(set);
+                    }
                 }
 
                 } catch (Exception e){
@@ -189,12 +192,13 @@ public class EditDonorProfileController {
                 }
 
             try {
-                Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                if(set != null){
-                    currentProfile.setRegistered(true);
-                    currentProfile.addDonations(set);
+                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
+                    Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
+                    if(!set.isEmpty()){
+                        currentProfile.setRegistered(true);
+                        currentProfile.addDonations(set);
+                    }
                 }
-
             } catch (Exception e){
                 error = true;
             }
@@ -218,34 +222,13 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if (error) {
+            if(error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
 
-            if (getCurrentProfile() != null) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-                        .getResource("/view/ProfileDisplay.fxml"));
-                Scene scene = new Scene(fxmlLoader.load());
-                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-                appStage.setScene(scene);
-                appStage.show();
-
-            } else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-                        .getResource("/view/ProfileDisplay.fxml"));
-                Scene scene = new Scene(fxmlLoader.load());
-                DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-                controller.setDonor(currentProfile);
-                controller.initialize();
-
-                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-                appStage.setScene(scene);
-                appStage.show();
-            }
+            closeEditWindow(event);
         }
     }
 
@@ -258,10 +241,34 @@ public class EditDonorProfileController {
         boolean cancelBool = DonorCancelChanges();
 
         if (cancelBool) {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileDisplay.fxml"));
-            Scene newScene = new Scene(parent);
+            closeEditWindow(event);
+        }
+    }
+
+    /**
+     * closes the edit donor window and reopens the donor.
+     * @param event either the cancel button event or the save button event
+     */
+    @FXML
+    private void closeEditWindow(ActionEvent event) throws IOException {
+        if(getCurrentProfile() != null){
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
+
+            appStage.setScene(scene);
+            appStage.show();
+
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            controller.setDonor(currentProfile);
+            controller.initialize();
+
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            appStage.setScene(scene);
             appStage.show();
         }
     }
