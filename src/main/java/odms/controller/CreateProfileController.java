@@ -5,7 +5,6 @@ import static odms.controller.AlertController.InvalidEntry;
 import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -57,7 +56,7 @@ public class CreateProfileController {
                 currentDatabase.addProfile(newDonor);
 
                 LoginController.setCurrentDonor(newDonor.getId());
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+                Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileDisplay.fxml"));
                 Scene newScene = new Scene(parent);
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 appStage.setScene(newScene);
