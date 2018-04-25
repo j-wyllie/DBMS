@@ -31,7 +31,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" styleClass="banner" stylesheets="@../styles/CreateProfile.css" text="Please enter your details..." textAlignment="CENTER" textFill="WHITE" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.valignment="TOP">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" styleClass="banner" stylesheets="@../styles/ProfileCreate.css" text="Please enter your details..." textAlignment="CENTER" textFill="WHITE" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.valignment="TOP">
                <font>
                   <Font name="Arial" size="30.0" />
                </font>
@@ -56,7 +56,7 @@
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="createAccountButton" mnemonicParsing="false" onAction="#handleCreateAccountButtonClicked" prefHeight="55.0" prefWidth="516.0" styleClass="button-create-account" stylesheets="@../styles/CreateProfile.css" text="CREATE ACCOUNT" textFill="WHITE" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+            <Button fx:id="createAccountButton" mnemonicParsing="false" onAction="#handleCreateAccountButtonClicked" prefHeight="55.0" prefWidth="516.0" styleClass="button-create-account" stylesheets="@../styles/ProfileCreate.css" text="CREATE ACCOUNT" textFill="WHITE" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
