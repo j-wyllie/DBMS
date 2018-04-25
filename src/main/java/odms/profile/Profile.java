@@ -16,9 +16,6 @@ public class Profile {
     private boolean donor;
     private boolean receiver;
 
-    private boolean donor;
-    private boolean receiver;
-
     private String givenNames;
     private String lastNames;
     private LocalDate dateOfBirth;
@@ -30,7 +27,6 @@ public class Profile {
     private String address;
     private String region;
     private Boolean registered;
-    private Integer age;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -42,7 +38,7 @@ public class Profile {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
-    private Set<Organ> neededOrgans = new HashSet<>();
+    private Set<Organ> requiredOrgans = new HashSet<>();
 
     private String phone;
     private String email;
@@ -397,6 +393,30 @@ public class Profile {
     }
 
     /**
+     * Add an organ to the list of required organs.
+     *
+     * @param organ to be added
+     */
+    public void addRequiredOrgan(Organ organ) {
+        this.requiredOrgans.add(organ);
+    }
+
+    /**
+     * Add an ArrayList of Organs to the list of required organs.
+     *
+     * @param organs ArrayList of organs to be added
+     */
+    public void addRequiredOrgans(ArrayList<Organ> organs) {
+        for (Organ organ : organs) {
+            addRequiredOrgan(organ);
+        }
+    }
+
+    public Set<Organ> getRequiredOrgans() {
+        return requiredOrgans;
+    }
+
+    /**
      * Add a set of organs to the list of organs that the profile has donated
      * @param organs a set of organs that the profile has donated
      */
@@ -447,7 +467,7 @@ public class Profile {
     public void setDonor(boolean donor) {
         this.donor = donor;
     }
-    
+
     public boolean isDonor() {
         return donor;
     }
