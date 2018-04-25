@@ -22,7 +22,7 @@ public class GuiMain extends Application {
     private static final String USER_DATABASE = "example/users.json";
 
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
-    private static UserDatabase userDb = new UserDataIO().loadData(USER_DATABASE);
+    private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen

@@ -28,16 +28,16 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-        <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" style="-fx-background-color: #1fa98c;" styleClass="banner" stylesheets="@../styles/Login.css" text="Organ Donor Management System" textAlignment="CENTER" textFill="#fffbfb" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="TOP">
+        <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" styleClass="banner" stylesheets="@../styles/Login.css" text="Organ Donor Management System" textAlignment="CENTER" textFill="#fffbfb" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="TOP">
           <font>
             <Font size="30.0" />
           </font></Label>
-        <TextField fx:id="usernameField" prefHeight="55.0" prefWidth="400.0" promptText="Enter your username here" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+        <TextField fx:id="usernameField" prefHeight="55.0" prefWidth="400.0" promptText="Enter your username here" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" onAction="#onEnter">
           <GridPane.margin>
             <Insets left="100.0" right="100.0" />
           </GridPane.margin>
         </TextField>
-        <PasswordField fx:id="passwordField" editable="false" prefHeight="55.0" prefWidth="400.0" promptText="Enter your password here" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <PasswordField fx:id="passwordField" editable="false" prefHeight="55.0" prefWidth="400.0" promptText="Enter your password here" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="CENTER" onAction="#onEnter">
           <GridPane.margin>
             <Insets left="100.0" right="100.0" />
           </GridPane.margin>
