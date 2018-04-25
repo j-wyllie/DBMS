@@ -24,8 +24,7 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
-import static org.testfx.assertions.api.Assertions.assertThat;
+
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -6,11 +6,13 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Condition;
 import odms.profile.Profile;
 
 import java.io.IOException;
@@ -23,7 +25,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DonorProfileController {
@@ -159,9 +160,9 @@ public class DonorProfileController {
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
 
         //curDiseasesTable.getSortOrder().add(curChronicColumn);
-        Donor currentDonor = getCurrentDonor();
+        Profile currentProfile = getCurrentProfile();
         curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-        currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
+        currentProfile.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
         else {curConditionsObservableList = FXCollections.observableArrayList(); }
@@ -174,11 +175,11 @@ public class DonorProfileController {
         Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
         Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
 
-        currentDonor.addCondition(placeholdCondition3);
-        currentDonor.addCondition(placeholdCondition5);
-        currentDonor.addCondition(placeholdCondition);
-        currentDonor.addCondition(placeholdCondition4);
-        currentDonor.addCondition(placeholdCondition2);
+        currentProfile.addCondition(placeholdCondition3);
+        currentProfile.addCondition(placeholdCondition5);
+        currentProfile.addCondition(placeholdCondition);
+        currentProfile.addCondition(placeholdCondition4);
+        currentProfile.addCondition(placeholdCondition2);
 
         refreshTable();
 
@@ -189,12 +190,12 @@ public class DonorProfileController {
      */
     @FXML
     private void refreshTable() {
-        Donor currentDonor = getCurrentDonor();
+        Profile currentProfile = getCurrentProfile();
 
         curConditionsTable.getItems().clear();
-        if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
+        if (currentProfile.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentProfile.getCurrentConditions());}
         pastConditionsTable.getItems().clear();
-        if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
+        if (currentProfile.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentProfile.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("condition"));
@@ -259,10 +260,10 @@ public class DonorProfileController {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        Donor currentDonor = getCurrentDonor();
+        Profile currentProfile = getCurrentProfile();
 
         Condition condition = new Condition("Being cold", LocalDate.now(), true);
-        currentDonor.addCondition(condition);
+        currentProfile.addCondition(condition);
 
         refreshTable();
     }
@@ -273,13 +274,13 @@ public class DonorProfileController {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        Donor currentDonor = getCurrentDonor();
+        Profile currentProfile = getCurrentProfile();
 
         Condition condition = (Condition) curConditionsTable.getSelectionModel().getSelectedItem();
         if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
         if (condition == null) { return; }
 
-        currentDonor.removeCondition(condition);
+        currentProfile.removeCondition(condition);
 
         refreshTable();
     }
@@ -384,7 +385,7 @@ public class DonorProfileController {
      */
     @FXML
     private void setPage(Profile currentDonor){
-        Donor currentDonor = getCurrentDonor();
+        Profile currentProfile = getCurrentProfile();
         makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());                       //need get current conditions rather than get all conditions
         refreshPage();
         refreshTable();
@@ -394,7 +395,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentDonor.getRegistered() != null && currentProfile.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {

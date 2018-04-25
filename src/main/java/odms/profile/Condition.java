@@ -1,4 +1,4 @@
-package odms.donor;
+package odms.profile;
 
 import java.time.LocalDate;
 
