@@ -6,7 +6,6 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import odms.cli.CommandUtils;
@@ -147,7 +146,7 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditProfile.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
         controller.setDonor(searchedDonor);

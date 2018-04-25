@@ -4,7 +4,6 @@ import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.GuiPopup;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -133,7 +132,7 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
@@ -219,13 +218,13 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if(error == true) {
+            if (error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
 
-            if(getCurrentProfile() != null){
+            if (getCurrentProfile() != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
