@@ -27,8 +27,11 @@ public class AlertController {
      * Creates a popup when the username entered was invalid
      */
     static void InvalidUsername() {
-        Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid username.",
-                ButtonType.CLOSE);
+        Alert invalidAlert = new Alert(
+            AlertType.ERROR,
+            "Please enter a valid username.",
+            ButtonType.CLOSE
+        );
         invalidAlert.show();
 
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
