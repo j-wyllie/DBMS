@@ -557,6 +557,9 @@ public class DonorTest {
         assertEquals(bloodPressure, "120/80");
     }
 
+    /**
+     * Tests adding a condition to the user and getting all conditions in the process
+     */
     @Test
     public void testAddConditionandGetAllConditions() {
         Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);
@@ -579,6 +582,9 @@ public class DonorTest {
         assert testDonor.getAllConditions().contains(condition);
     }
 
+    /**
+     * Tests deleting a condition of the user
+     */
     @Test
     public void testDeleteCondition() {
         Condition condition = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);
@@ -604,6 +610,9 @@ public class DonorTest {
         assert testDonor.getAllConditions().size() == 0;
     }
 
+    /**
+     * Tests getting an array list of all cured conditions from the user
+     */
     @Test
     public void testGetCuredConditions() {
         Condition condition0 = new Condition("aids", LocalDate.of(1997, 7, 18), LocalDate.of(2013, 9, 15), false);

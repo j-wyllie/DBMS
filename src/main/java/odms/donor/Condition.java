@@ -1,22 +1,27 @@
 package odms.donor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * A specific condition for use in medical history
  */
 public class Condition {
-    private String condition;
+    private String name;
     private LocalDate dateOfDiagnosis;
     private LocalDate dateCured = null;
     private boolean isCured = false;
     private boolean isChronic = false;
     private String chronicText = "";
 
-
-    public Condition(String condition, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) {
-        this.condition = condition;
+    /**
+     * Constructor for cured conditions
+     * @param name
+     * @param dateOfDiagnosis
+     * @param dateCured
+     * @param isChronic
+     */
+    public Condition(String name, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) {
+        this.name = name;
         this.dateOfDiagnosis = dateOfDiagnosis;
         this.dateCured = dateCured;
         if (dateCured != null) {
@@ -28,13 +33,18 @@ public class Condition {
         if (isChronic) {this.chronicText = "CHRONIC";}
     }
 
-    // constructor for uncured conditions
-    public Condition(String condition, LocalDate dateOfDiagnosis, boolean isChronic) {
-        this(condition, dateOfDiagnosis, null, isChronic);
+    /**
+     * Constructor for uncured conditions
+     * @param name
+     * @param dateOfDiagnosis
+     * @param isChronic
+     */
+    public Condition(String name, LocalDate dateOfDiagnosis, boolean isChronic) {
+        this(name, dateOfDiagnosis, null, isChronic);
     }
 
     // getters
-    public String getCondition() { return this.condition; }
+    public String getName() { return this.name; }
     public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
     public LocalDate getDateCured() { return dateCured; }
     public boolean getCured() { return this.isCured; }

@@ -468,8 +468,17 @@ public class Donor {
 
 
     // Condition functions
+
+    /**
+     * Gets all the current conditions of the user
+     * @return the conditions of the user
+     */
     public ArrayList<Condition> getAllConditions() { return conditions; }
 
+    /**
+     * Gets all the cured conditions of the user
+     * @return the cured conditions of the user
+     */
     public ArrayList<Condition> getCuredConditions() {
         ArrayList<Condition> curedConditions = new ArrayList<>();
         try {
@@ -484,6 +493,10 @@ public class Donor {
         return curedConditions;
     }
 
+    /**
+     * Gets all the current conditions of the user
+     * @return the current conditions of the user
+     */
     public ArrayList<Condition> getCurrentConditions() {
         ArrayList<Condition> currentConditions = new ArrayList<>();
         try {
@@ -498,11 +511,19 @@ public class Donor {
         return currentConditions;
     }
 
+    /**
+     * adds a condition from the user
+     * @param condition to be added
+     */
     public void addCondition(Condition condition) {
         if (conditions == null) { conditions = new ArrayList<>(); }
         conditions.add(condition);
     }
 
+    /**
+     * removes a condition from the user
+     * @param condition to be removed
+     */
     public void removeCondition(Condition condition) {
         conditions.remove(condition);
     }
