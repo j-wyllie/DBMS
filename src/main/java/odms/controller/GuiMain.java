@@ -1,9 +1,10 @@
 package odms.controller;
 
+import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
+
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-import odms.data.DonorDataIO;
-import odms.data.DonorDatabase;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,11 +21,17 @@ public class GuiMain extends Application {
     private static final String DONOR_DATABASE = "example/example.json";
     private static final String USER_DATABASE = "example/users.json";
 
-    private static DonorDatabase donorDb = DonorDataIO.loadData(DONOR_DATABASE);
+    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
     private static UserDatabase userDb = new UserDataIO().loadData(USER_DATABASE);
 
+    /**
+     * Loads in a default clinician if one does not exist. Opens the login screen
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
+        System.out.println(profileDb.searchGivenNames("Jack"));
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
@@ -37,16 +44,16 @@ public class GuiMain extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                DonorDataIO.saveDonors(donorDb, DONOR_DATABASE);
-                UserDataIO.saveUsers(userDb, USER_DATABASE);
-            }
-        });
+//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//            public void handle(WindowEvent we) {
+//                ProfileDataIO.saveData(donorDb, DONOR_DATABASE);
+//                UserDataIO.saveUsers(userDb, USER_DATABASE);
+//            }
+//        });
     }
 
-    public static DonorDatabase getCurrentDatabase() {
-        return donorDb;
+    public static ProfileDatabase getCurrentDatabase() {
+        return profileDb;
     }
 
     public static UserDatabase getUserDatabase(){

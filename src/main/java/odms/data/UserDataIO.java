@@ -12,7 +12,7 @@ import java.io.IOException;
 public class UserDataIO {
 
     /**
-     * Export full DonorDatabase object to specified JSON file.
+     * Export full ProfileDatabase object to specified JSON file.
      *
      * @param userDb Database to be exported to JSON
      * @param path The location of the saved file
@@ -27,9 +27,10 @@ public class UserDataIO {
 
             writeFile.close();
 
-            System.out.println("File  exported successfully!");
+            System.out.println("File exported successfully!");
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +62,6 @@ public class UserDataIO {
         }
 
         return fileBuffer.toString();
-
     }
 
     /**
@@ -87,6 +87,4 @@ public class UserDataIO {
 
         return userDb;
     }
-
-
 }

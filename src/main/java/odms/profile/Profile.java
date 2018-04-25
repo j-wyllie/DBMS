@@ -1,6 +1,5 @@
-package odms.donor;
+package odms.profile;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Donor {
+public class Profile {
 
     private boolean donor;
     private boolean receiver;
@@ -51,11 +50,11 @@ public class Donor {
     private Integer id;
 
     /**
-     * Instantiates the Donor class with data from the CLI
+     * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public Donor (ArrayList<String> attributes) throws IllegalArgumentException {
+    public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -65,13 +64,13 @@ public class Donor {
     }
 
     /**
-     * Instantiates the basic Donor class with a raw input of values
-     * @param givenNames Donor's given names as String
-     * @param lastNames Donor's last names as String
-     * @param dob Donor's date of birth as a string
-     * @param irdNumber Donor's IRD number as Integer
+     * Instantiates the basic Profile class with a raw input of values
+     * @param givenNames Profile's given names as String
+     * @param lastNames Profile's last names as String
+     * @param dob Profile's date of birth as a string
+     * @param irdNumber Profile's IRD number as Integer
      */
-    public Donor (String givenNames, String lastNames, String dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
@@ -176,7 +175,7 @@ public class Donor {
     }
 
     /**
-     * Outputs the donor's organs that they want to donate
+     * Outputs the profile's organs that they want to donate
      */
     public void viewOrgans() {
         String output = "Organs to donate: ";
@@ -189,7 +188,7 @@ public class Donor {
     }
 
     /**
-     * View the list of donations that the donor has made
+     * View the list of donations that the profile has made
      */
     public void viewDonations() {
         String output = "Organs donated:  ";
@@ -202,45 +201,59 @@ public class Donor {
     }
 
     /**
-     * Outputs the donor's attributes
+     * Outputs the profile's attributes
      */
     public void viewAttributes() {
         if (irdNumber != null) {
             System.out.println("IRD: " + irdNumber);
         }
+
+        System.out.println("ODMS ID: " + id);
+
         if (givenNames != null) {
             System.out.println("Given Names: " + givenNames);
         }
+
         if (lastNames != null) {
             System.out.println("Last Names: " + lastNames);
         }
+
         System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         if (dateOfDeath != null) {
             System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
+
         if (gender != null) {
             System.out.println("Gender: " + gender);
         }
+
         if (height != 0.0) {
             System.out.println("Height: " + height + "cm");
         }
+
         if (weight != 0.0) {
             System.out.println("Weight: " + weight);
         }
+
         if (bloodType != null) {
             System.out.println("Blood Type: " + bloodType);
         }
+
         if (address != null) {
             System.out.println("Address: " + address);
         }
+
         if (region != null) {
             System.out.println("Region: " + region);
         }
+
         if (organs.size() > 0) {
             viewOrgans();
         }
+
         System.out.println("IRD: " + irdNumber);
+
         System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
@@ -358,11 +371,12 @@ public class Donor {
     }
 
     /**
-     * Add a set of organs to the list of organs that the donor wants to donate
+     * Add a set of organs to the list of organs that the profile wants to donate
      * @param organs a set of organs they want to donate
      */
     public void addOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
+
         Set<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
@@ -370,6 +384,7 @@ public class Donor {
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
         }
+
         if (Collections.disjoint(newOrgans, this.organs) && registered) {
             this.organs.addAll(newOrgans);
         } else {
@@ -379,7 +394,7 @@ public class Donor {
 
     /**
      * Add an organ to the list of required organs.
-     * 
+     *
      * @param organ to be added
      */
     public void addRequiredOrgan(Organ organ) {
@@ -402,8 +417,8 @@ public class Donor {
     }
 
     /**
-     * Add a set of organs to the list of organs that the donor has donated
-     * @param organs a set of organs that the donor has donated
+     * Add a set of organs to the list of organs that the profile has donated
+     * @param organs a set of organs that the profile has donated
      */
     public void addDonations(Set<String> organs) {
         generateUpdateInfo("donatedOrgans");
@@ -415,7 +430,7 @@ public class Donor {
     }
 
     /**
-     * Remove a set of organs from the list of organs that the donor has donated
+     * Remove a set of organs from the list of organs that the profile has donated
      * @param organs a set of organs to remove from the list
      */
     public void removeDonations(Set<String> organs) {
@@ -452,7 +467,7 @@ public class Donor {
     public void setDonor(boolean donor) {
         this.donor = donor;
     }
-    
+
     public boolean isDonor() {
         return donor;
     }
@@ -466,7 +481,7 @@ public class Donor {
     }
 
     /**
-     * Calculates and returns the donors bmi
+     * Calculates and returns the profiles bmi
      * @return BMI
      */
     public Double calculateBMI() {
@@ -474,10 +489,10 @@ public class Donor {
     }
 
     /**
-     * Calculate the donors age if they are alive and their age at death if they are dead
+     * Calculate the profiles age if they are alive and their age at death if they are dead
      * If the age is calculated on the users birthday they are the age they are turning that day
      * e.g. if it's your 20th birthday you are 20
-     * @return donor age
+     * @return profile age
      */
     public int calculateAge() {
         if (dateOfDeath == null) {
@@ -485,6 +500,10 @@ public class Donor {
         } else {
             return Period.between(dateOfBirth, dateOfDeath).getYears();
         }
+    }
+
+    public int getAge(){
+        return calculateAge();
     }
 
 
