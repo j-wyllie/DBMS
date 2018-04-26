@@ -15,9 +15,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import odms.donor.Donor;
 import odms.user.User;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,6 +112,26 @@ public class ClinicianProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
+    }
+
+    /**
+     * Button handler to update donor table based on search results.
+     * @param event releasing a key on the keyboard.
+     */
+    @FXML
+    private void handleSearchDonors(KeyEvent event) {
+        updateTable();
+    }
+
+    /**
+     * Clears the searchTable and updates with search results of profiles from the fuzzy search.
+     */
+    private void updateTable() {
+        String searchString = searchField.getText();
+
+        searchTable.getItems().clear();
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchDonors(searchString));
+        searchTable.setItems(donorObservableList);
     }
 
     /**

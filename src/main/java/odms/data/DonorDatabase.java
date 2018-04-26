@@ -1,10 +1,9 @@
 package odms.data;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.donor.Donor;
 
 public class DonorDatabase {
@@ -169,6 +168,34 @@ public class DonorDatabase {
         donors.sort(Comparator.comparing(Donor::getLastNames));
 
         return donors;
+    }
+
+    /**
+     * Fuzzy search that finds the top 30 donors that match the provide search string.
+     * @param searchString the string that the donor names will be searched against.
+     */
+    public ArrayList<Donor> searchDonors(String searchString) {
+        boolean donating = false;
+        ArrayList<String> donors = new ArrayList<>();
+
+        if (searchString == null || searchString.equals("")) {
+            return getDonors(donating);
+        }
+
+        for (Donor donor : getDonors(donating)) {
+            donors.add(donor.getFullName());
+        }
+
+        //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
+        List<ExtractedResult> result;
+        result = FuzzySearch.extractSorted(searchString, donors, 30);
+
+        //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
+        ArrayList<Donor> resultDonors = new ArrayList<>();
+        for (ExtractedResult er : result) {
+            resultDonors.add(getDonors(donating).get(er.getIndex()));
+        }
+        return resultDonors;
     }
 
 }
