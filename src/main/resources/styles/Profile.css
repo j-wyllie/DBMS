@@ -15,7 +15,6 @@
 
 .button-logout {
   -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
-  -fx-background-image: url(icons/logout.png);
   -fx-background-radius: 4;
   -fx-background-size: stretch;
   -fx-font-size: 20px;
@@ -24,6 +23,14 @@
   -fx-border-color: #1fa98c;
   -fx-border-radius: 4;
   -fx-border-width: 1;
+}
+
+.button-logout:hover {
+  -fx-background-color: #46d4b6;
+}
+
+.button-logout:pressed {
+  -fx-background-color: #1fa98c;
 }
 
 .detail-text {

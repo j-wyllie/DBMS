@@ -13,7 +13,7 @@ import java.io.IOException;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
-public class EditClinicianProfileController {
+public class ClinicianProfileEditController extends CommonController {
     /**
      * Scene change to log in view.
      *
@@ -21,11 +21,7 @@ public class EditClinicianProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -55,10 +51,6 @@ public class EditClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ClinicianProfileEdit.fxml", true);
     }
 }

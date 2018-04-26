@@ -24,9 +24,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class DonorProfileController {
+public class ProfileDisplayController extends CommonController {
 
-    protected Profile searchedDonor;
+    private Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -117,11 +117,7 @@ public class DonorProfileController {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         LoginController.setCurrentDonor(null); //clears current donor
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -150,7 +146,7 @@ public class DonorProfileController {
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
+        ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
         controller.setDonor(searchedDonor);
         controller.initialize();
 
@@ -172,7 +168,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {

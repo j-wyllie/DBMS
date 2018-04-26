@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
-public class ClinicianProfileController {
+public class ClinicianProfileController extends CommonController {
 
     //Get the default clinician
     protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
@@ -71,11 +71,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -102,11 +98,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ClinicianProfileEdit.fxml", true);
     }
 
     /**
@@ -180,7 +172,7 @@ public class ClinicianProfileController {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            ProfileDisplayController controller = fxmlLoader.<ProfileDisplayController>getController();
             controller.setDonor(selectedDonor);
             controller.initialize();
 

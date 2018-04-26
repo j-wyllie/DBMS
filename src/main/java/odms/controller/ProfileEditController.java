@@ -28,7 +28,7 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController {
+public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
@@ -96,19 +96,6 @@ public class EditDonorProfileController {
     private TextField donationsField;
 
     /**
-     * Scene change to log in view.
-     * @param event clicking on the logout button.
-     */
-    @FXML
-    private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
-    }
-
-    /**
      * Button handler to undo last action.
      * @param event clicking on the undo button.
      */
@@ -132,11 +119,7 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ProfileEdit.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ProfileEdit.fxml", true);
     }
 
     /**
@@ -261,7 +244,7 @@ public class EditDonorProfileController {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            ProfileDisplayController controller = fxmlLoader.<ProfileDisplayController>getController();
             controller.setDonor(currentProfile);
             controller.initialize();
 
