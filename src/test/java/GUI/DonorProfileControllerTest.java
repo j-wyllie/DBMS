@@ -98,8 +98,8 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Profile firstDonor = (Profile) searchTable.getItems().get(0);
-        doubleClickOn(row("#searchTable", 0));
+        Profile donor = (Profile) searchTable.getItems().get(1);
+        doubleClickOn(row("#searchTable", 1));
         Scene scene = getTopModalStage();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
@@ -111,7 +111,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
         clickOn("#textFieldMedicationSearch").write("1 medication");
         clickOn(scene2.lookup("#buttonAddMedication"));
 
-        assertEquals("1 medication", firstDonor.getCurrentMedications().get(0).getDrugName());
+        assertEquals("1 medication", donor.getCurrentMedications().get(0).getDrugName());
 
 
     }
@@ -123,8 +123,8 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Profile firstDonor = (Profile) searchTable.getItems().get(0);
-        doubleClickOn(row("#searchTable", 0));
+        Profile donor = (Profile) searchTable.getItems().get(1);
+        doubleClickOn(row("#searchTable", 1));
         Scene scene = getTopModalStage();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
@@ -137,11 +137,12 @@ public class DonorProfileControllerTest extends ApplicationTest {
         clickOn(scene2.lookup("#buttonAddMedication"));
 
         TableView currentMedicationsTable = getTableView("#tableViewCurrentMedications");
+        System.out.println(currentMedicationsTable.getItems());
         Drug firstDrug = (Drug) currentMedicationsTable.getItems().get(0);
         clickOn(row("#tableViewCurrentMedications", 0));
         clickOn(scene2.lookup("#buttonDeleteMedication"));
 
-        assert(!firstDonor.getCurrentMedications().contains(firstDrug));
+        assert(!donor.getCurrentMedications().contains(firstDrug));
 
 
     }
@@ -154,8 +155,8 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Profile firstDonor = (Profile) searchTable.getItems().get(0);
-        doubleClickOn(row("#searchTable", 0));
+        Profile donor = (Profile) searchTable.getItems().get(1);
+        doubleClickOn(row("#searchTable", 1));
         Scene scene = getTopModalStage();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
@@ -172,7 +173,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
         clickOn(row("#tableViewCurrentMedications", 0));
         clickOn(scene2.lookup("#buttonMedicationCurrentToHistoric"));
 
-        assert(firstDonor.getHistoryOfMedication().contains(firstDrug));
+        assert(donor.getHistoryOfMedication().contains(firstDrug));
 
 
     }
@@ -183,8 +184,8 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Profile firstDonor = (Profile) searchTable.getItems().get(0);
-        doubleClickOn(row("#searchTable", 0));
+        Profile donor = (Profile) searchTable.getItems().get(1);
+        doubleClickOn(row("#searchTable", 1));
         Scene scene = getTopModalStage();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
@@ -205,7 +206,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
         clickOn(row("#tableViewHistoricMedications", 0));
         clickOn(scene2.lookup("#buttonMedicationHistoricToCurrent"));
 
-        assert(firstDonor.getCurrentMedications().contains(firstDrug));
+        assert(donor.getCurrentMedications().contains(firstDrug));
 
 
 
