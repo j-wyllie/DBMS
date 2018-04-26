@@ -1,20 +1,18 @@
 package odms.controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import odms.profile.Condition;
 
-import javax.xml.soap.Text;
+import java.awt.*;
+import java.time.LocalDate;
 
 public class AddConditionController {
 
 
-    public void handleAddButtonClicked(ActionEvent actionEvent) {
-    }
 
-    public void handleCuredChecked(ActionEvent actionEvent) {
-    }
+
+
+
 }

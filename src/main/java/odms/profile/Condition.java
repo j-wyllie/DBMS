@@ -20,10 +20,13 @@ public class Condition {
      * @param dateCured
      * @param isChronic
      */
-    public Condition(String name, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) {
+    public Condition(String name, String dateOfDiagnosis, String dateCured, boolean isChronic) throws IllegalArgumentException {
+
         this.name = name;
-        this.dateOfDiagnosis = dateOfDiagnosis;
-        this.dateCured = dateCured;
+        String[] dates = dateOfDiagnosis.split("-");
+        this.dateOfDiagnosis = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+        dates = dateCured.split("-");
+        this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
         if (dateCured != null) {
             this.isCured = true;
         } else {
@@ -39,7 +42,7 @@ public class Condition {
      * @param dateOfDiagnosis
      * @param isChronic
      */
-    public Condition(String name, LocalDate dateOfDiagnosis, boolean isChronic) {
+    public Condition(String name, String dateOfDiagnosis, boolean isChronic) throws IllegalArgumentException {
         this(name, dateOfDiagnosis, null, isChronic);
     }
 

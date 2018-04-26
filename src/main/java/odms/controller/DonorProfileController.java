@@ -136,6 +136,21 @@ public class DonorProfileController {
     private TableColumn pastDateOfDiagnosisColumn;
 
     @FXML
+    private TextField nameField;
+
+    @FXML
+    private TextField dateDiagnosedField;
+
+    @FXML
+    private TextField dateCuredField;
+
+    @FXML
+    private CheckBox chronicCheckBox;
+
+    @FXML
+    private CheckBox curedCheckBox;
+
+    @FXML
     private Button toggleCuredButton;
 
     @FXML
@@ -229,12 +244,6 @@ public class DonorProfileController {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
 
         try {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/AddCondition.fxml"));
@@ -246,12 +255,35 @@ public class DonorProfileController {
             e.printStackTrace();
             System.out.println(e);
         }
+    }
 
-//        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
-//        currentDonor.addCondition(placeholdCondition);
-//
-//        Condition condition = new Condition("Being cold", LocalDate.now(), true);
-//        currentDonor.addCondition(condition);
+    @FXML
+    public void handleAddButtonClicked(ActionEvent actionEvent) {
+        String name = nameField.getText();
+        String dateDiagnosed = dateDiagnosedField.getText();
+        Boolean isChronic = chronicCheckBox.isSelected();
+        String dateCured = dateCuredField.getText();
+        Condition condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
+        addCondition(condition);
+    }
+
+    @FXML
+    public void handleCuredChecked(ActionEvent actionEvent) {
+    }
+
+    /**
+     * Adds a new condition to the current profile
+     * @param condition
+     */
+    public void addCondition(Condition condition) {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        currentDonor.addCondition(condition);
 
         refreshTable();
     }
