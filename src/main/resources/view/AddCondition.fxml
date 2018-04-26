@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="270.0" prefWidth="369.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.AddConditionController">
+   <children>
+      <TextField fx:id="nameField" layoutX="12.0" layoutY="41.0" prefHeight="29.0" prefWidth="339.0" promptText="Name" />
+      <Button fx:id="addButton" layoutX="224.0" layoutY="214.0" mnemonicParsing="false" onAction="#handleAddButtonClicked" prefHeight="42.0" prefWidth="127.0" text="Add" />
+      <TextField fx:id="dateDiagnosedField" layoutX="12.0" layoutY="82.0" prefHeight="29.0" prefWidth="339.0" promptText="Date Diagnosed " />
+      <CheckBox fx:id="cronicCheckBox" layoutX="14.0" layoutY="122.0" mnemonicParsing="false" text="Cronic" />
+      <CheckBox fx:id="curedCheckBox" layoutX="130.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleCuredChecked" text="Cured" />
+      <TextField fx:id="dateCuredField" layoutX="15.0" layoutY="149.0" prefHeight="29.0" prefWidth="339.0" promptText="Date Cured" />
+      <Label fx:id="conditionDetailsLabel" layoutX="14.0" layoutY="14.0" text="Condition Details:" />
+   </children>
+</AnchorPane>
