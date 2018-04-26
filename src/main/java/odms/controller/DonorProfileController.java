@@ -236,21 +236,22 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
+        try {
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/AddCondition.fxml"));
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
 
-        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
-        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), false );
-        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), false);
-        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
-        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
-
-        currentDonor.addCondition(placeholdCondition3);
-        currentDonor.addCondition(placeholdCondition5);
-        currentDonor.addCondition(placeholdCondition);
-        currentDonor.addCondition(placeholdCondition4);
-        currentDonor.addCondition(placeholdCondition2);
-
-        Condition condition = new Condition("Being cold", LocalDate.now(), true);
-        currentDonor.addCondition(condition);
+//        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
+//        currentDonor.addCondition(placeholdCondition);
+//
+//        Condition condition = new Condition("Being cold", LocalDate.now(), true);
+//        currentDonor.addCondition(condition);
 
         refreshTable();
     }
