@@ -251,7 +251,7 @@ public class EditDonorProfileController {
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
         if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -259,7 +259,7 @@ public class EditDonorProfileController {
             appStage.show();
 
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
             controller.setDonor(currentProfile);

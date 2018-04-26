@@ -176,8 +176,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector The id of the table that contains the cell wanted
-     * @param row           row number
-     * @param column        column number
+     * @param row row number
+     * @param column column number
      * @return returns the cell data.
      */
     protected Object cellValue(String tableSelector, int row, int column) {
@@ -186,7 +186,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector Id of table that contains the row
-     * @param row           row number
+     * @param row row number
      * @return returns a table row
      */
     protected TableRow<?> row(String tableSelector, int row) {
@@ -209,8 +209,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector ID of the table that contains the cell wanted
-     * @param row           row number
-     * @param column        column number
+     * @param row row number
+     * @param column column number
      * @return the cell of the table
      */
     protected TableCell<?, ?> cell(String tableSelector, int row, int column) {
