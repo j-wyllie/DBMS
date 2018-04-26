@@ -43,6 +43,7 @@ public class GuiMain extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
+        primaryStage.setTitle("ODMS"); // TODO Remove magic string
         primaryStage.show();
 
 //        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

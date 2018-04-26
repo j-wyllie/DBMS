@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 class CommonController {
+    private final String appTitle = "ODMS";
 
     /**
      * Scene change to log in view.
@@ -23,6 +24,7 @@ class CommonController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.setResizable(false);
+        appStage.setTitle(appTitle);
         appStage.show();
     }
 
@@ -35,7 +37,8 @@ class CommonController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
-        appStage.setResizable(true);
+        appStage.setResizable(resizeable);
+        appStage.setTitle(appTitle);
         appStage.show();
     }
 
