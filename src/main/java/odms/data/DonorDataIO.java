@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import com.google.gson.GsonBuilder;
 import odms.commandlineview.CommandUtils;
 
 public class DonorDataIO {
@@ -24,7 +26,7 @@ public class DonorDataIO {
         File historyFile = new File(path.replace(".json","History.json"));
 
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
             writeFile.write(gson.toJson(donorDb));
