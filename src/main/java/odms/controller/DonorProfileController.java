@@ -153,6 +153,8 @@ public class DonorProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        LoginController.setCurrentDonor(null); //clears current donor
+
         Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -321,7 +323,6 @@ public class DonorProfileController {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
-                System.out.println(givenNamesLabel.getText() + currentDonor.getGivenNames());
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
 
             }
@@ -396,7 +397,6 @@ public class DonorProfileController {
             for (String str : actionHistory) {
                 if (str.contains("Donor " + currentDonor.getId())) {
                     userHistory.add(str);
-
                 }
             }
             historyView.setText(userHistory.toString());
@@ -429,7 +429,6 @@ public class DonorProfileController {
             Profile currentDonor = getCurrentProfile();
             hideItems();
             setPage(currentDonor);
-            //run disable function 'refresh page'
         }
     }
 

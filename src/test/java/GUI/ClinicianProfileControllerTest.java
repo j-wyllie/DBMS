@@ -68,14 +68,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
      */
     @Override
     public void start(Stage stage) throws Exception{
-//        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Login.fxml"));
-//        root = loader.load();
-//        LoginController controller = loader.getController();
-//
-//        Scene scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//        stage.toFront();
         guiMain = new GuiMain();
         guiMain.start(stage);
     }
@@ -88,30 +80,33 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         clickOn("#loginButton");
     }
 
+    /**
+     * Checks that the correct donor's profile is opened from the search table.
+     */
     @Test
     public void openSearchedProfileTest() {
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
         Profile firstDonor = (Profile) searchTable.getItems().get(0);
 
-
         doubleClickOn(row("#searchTable", 0));
-
         //opening the first donor
         Scene scene = getTopModalStage();
         Label donorName = (Label) scene.lookup("#donorFullNameLabel");
         assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
     }
 
+    /**
+     * Tests that a donor's profile can be opened by a clinician and that the name can be successfully
+     * updated. The name is checked in the database and in the GUI to make sure it updates.
+     * Changes the donor back to the original.
+     */
     @Test
     public void editSearchedProfileTest() {
         //open up the first donor
-
-
         clickOn("#searchTab");
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
-
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
         Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
@@ -135,11 +130,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         DialogPane dialogPane = (DialogPane) stage.getScene().getRoot();
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
-
-        //closes final dialogue
-        Stage stage3 = getAlertDialogue();
-        DialogPane dialogPane2 = (DialogPane) stage3.getScene().getRoot();
-        clickOn(dialogPane2.lookupButton(ButtonType.CLOSE));
 
         //checks database has been updated
         assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());

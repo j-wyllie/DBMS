@@ -42,7 +42,6 @@ public class LoginCreateControllerTest extends ApplicationTest {
         GUITestSetup.headless();
     }
 
-
     @After()
     public void tearDown() throws Exception {
         FxToolkit.hideStage();
@@ -99,6 +98,10 @@ public class LoginCreateControllerTest extends ApplicationTest {
         assertEquals("88888888", LoginController.getCurrentProfile().getIrdNumber().toString());
     }
 
+    /**
+     * creates a user with invalid fields. Checks that the correct popups
+     * are displayed.
+     */
     @Test
     public void createInvalidUser(){
 

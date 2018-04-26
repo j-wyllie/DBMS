@@ -55,7 +55,7 @@ public class CreateProfileController {
 
                 Profile newDonor = new Profile(givenNames, surnames, dob, ird);
                 currentDatabase.addProfile(newDonor);
-                //CommandUtils.addProfile(newDonor.getId());
+
                 LoginController.setCurrentDonor(newDonor.getId());
                 Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
                 Scene newScene = new Scene(parent);
