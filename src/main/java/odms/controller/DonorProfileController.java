@@ -416,7 +416,21 @@ public class DonorProfileController {
     @FXML
     private void hideItems() {
         if(isClinician){
+            buttonAddMedication.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+
             logoutButton.setVisible(false);
+        } else {
+            buttonAddMedication.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+
+            logoutButton.setVisible(true);
         }
     }
 
