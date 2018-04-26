@@ -471,6 +471,7 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </Label>
+                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                                                             </children>
                                                         </GridPane>
                                                     </children>

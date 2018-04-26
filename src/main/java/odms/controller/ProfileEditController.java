@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -253,6 +252,21 @@ public class ProfileEditController extends CommonController {
             appStage.setScene(scene);
             appStage.show();
         }
+    }
+
+    @FXML
+    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        OrganRequiredController controller = fxmlLoader.getController();
+        controller.setProfile(currentProfile);
+        controller.initialize();
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**

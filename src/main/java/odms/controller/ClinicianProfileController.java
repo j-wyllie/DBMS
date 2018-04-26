@@ -113,7 +113,7 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
-     * initializes and refreshes the search table
+     * Initializes and refreshes the search table
      * Adds a listener to each row so that when it is double clicked
      * a new donor window is opened.
      * Calls the setTooltipToRow function.
@@ -172,7 +172,7 @@ public class ClinicianProfileController extends CommonController {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            ProfileDisplayController controller = fxmlLoader.<ProfileDisplayController>getController();
+            ProfileDisplayController controller = fxmlLoader.getController();
             controller.setDonor(selectedDonor);
             controller.initialize();
 
