@@ -408,8 +408,8 @@ public class CommandUtils {
                     historyPosition -= 1;
                 }
             }
-            System.out.println("Action undo");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("No commands have been entered");
         }
     }
@@ -421,8 +421,6 @@ public class CommandUtils {
      */
     public static void redo(ProfileDatabase currentDatabase) {
         try {
-            System.out.println(historyPosition);
-
             if (historyPosition != currentSessionHistory.size()) {
                 historyPosition += 1;
                 String action;
