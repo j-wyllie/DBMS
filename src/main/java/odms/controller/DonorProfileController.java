@@ -8,8 +8,10 @@ import static odms.controller.UndoRedoController.undo;
 import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Condition;
@@ -184,6 +186,15 @@ public class DonorProfileController {
      */
     @FXML
     private void refreshTable() {
+
+        curConditionsTable.setEditable(true);
+        Callback<TableColumn, TableCell> cellFactory =
+                new Callback<TableColumn, TableCell>() {
+                    public TableCell call(TableColumn p) {
+                        return new EditingConditionsCell();
+                    }
+                };
+
         Profile currentDonor;
         if (searchedDonor != null) {
             currentDonor = searchedDonor;
@@ -198,18 +209,38 @@ public class DonorProfileController {
 
         curConditionsTable.setItems(curConditionsObservableList);
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        curDescriptionColumn.setCellFactory(cellFactory);
+        curDescriptionColumn.setOnEditCommit(
+                (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> {
+                    currentDonor.removeCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                    (t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setName(t.getNewValue());
+                    currentDonor.addCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                });
+
+
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
         pastConditionsTable.setItems(pastConditionsObservableList);
         pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        pastDescriptionColumn.setCellFactory(cellFactory);
+        pastDescriptionColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Condition, String>>() {
+                    @Override public void handle(TableColumn.CellEditEvent<Condition, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setName(t.getNewValue());
+                    }
+                });
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
-
     }
 
     /**
@@ -236,22 +267,21 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        try {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/AddCondition.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
-        }
 
-//        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
-//        currentDonor.addCondition(placeholdCondition);
-//
-//        Condition condition = new Condition("Being cold", LocalDate.now(), true);
-//        currentDonor.addCondition(condition);
+        Condition placeholdCondition = new Condition( "Space aids", LocalDate.of(2005, 12, 5), true);
+        Condition placeholdCondition2 = new Condition("Shortness", LocalDate.of(2005, 12, 7), LocalDate.of(2012, 3, 10), false );
+        Condition placeholdCondition3 = new Condition("Ginger", LocalDate.of(2005, 12, 10), false);
+        Condition placeholdCondition4 = new Condition("Bla bla", LocalDate.of(2005, 12, 11), true);
+        Condition placeholdCondition5 = new Condition("Bla blaaaa", LocalDate.of(2005, 12, 1), true);
+
+        currentDonor.addCondition(placeholdCondition3);
+        currentDonor.addCondition(placeholdCondition5);
+        currentDonor.addCondition(placeholdCondition);
+        currentDonor.addCondition(placeholdCondition4);
+        currentDonor.addCondition(placeholdCondition2);
+
+        Condition condition = new Condition("Being cold", LocalDate.now(), true);
+        currentDonor.addCondition(condition);
 
         refreshTable();
     }

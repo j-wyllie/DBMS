@@ -59,7 +59,7 @@ public class Condition {
     public void setChronicText(String chronicText) { this.chronicText = chronicText; }
     public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) { this.dateOfDiagnosis = dateOfDiagnosis; }
     public void setDateCured(LocalDate dateCured) { this.dateCured = dateCured; }
-
+    public void setName(String name) { this.name = name; }
 
 
 }
