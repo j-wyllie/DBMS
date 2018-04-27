@@ -34,6 +34,8 @@ public class Profile {
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
+    private ArrayList<Procedure> procedures = new ArrayList<>();
+
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
 
@@ -169,6 +171,52 @@ public class Profile {
         else {
             throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * Add a procedure to the current profile
+     * @param procedure
+     */
+    public void addProcedure(Procedure procedure) { procedures.add(procedure); }
+
+    /**
+     * Remove a procedure from the current profile
+     * @param procedure
+     */
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+
+    /**
+     * Gets all of the profiles procedures
+     * @return all procedures
+     */
+    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+
+    /**
+     * Gets all the previous procedures
+     * @return previous procedures
+     */
+    public ArrayList<Procedure> getPreviousProcedures() {
+        ArrayList<Procedure> prevProcedures = new ArrayList<>();
+        for (Procedure procedure : procedures) {
+            if (procedure.getDate().isBefore(LocalDate.now())) {
+                prevProcedures.add(procedure);
+            }
+        }
+        return prevProcedures;
+    }
+
+    /**
+     * Gets all the pending procedures
+     * @return pending procedures
+     */
+    public ArrayList<Procedure> getPendingProcedures() {
+        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+        for (Procedure procedure : procedures) {
+            if (procedure.getDate().isAfter(LocalDate.now())) {
+                pendingProcedures.add(procedure);
+            }
+        }
+        return pendingProcedures;
     }
 
     /**
