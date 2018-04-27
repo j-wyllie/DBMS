@@ -28,7 +28,7 @@ public enum Organ {
      * Generate an ArrayList of Strings with organs capitalised appropriately.
      * @return ArrayList of Organ name Strings
      */
-    public ArrayList<String> toArrayList() {
+    public static ArrayList<String> toArrayList() {
         ArrayList<String> organs = new ArrayList<>();
 
         for (Organ organ : new ArrayList<>(EnumSet.allOf(Organ.class))) {
