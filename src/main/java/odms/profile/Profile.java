@@ -379,10 +379,11 @@ public class Profile {
         Set<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
+            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
         }
+
         if (Collections.disjoint(newOrgans, this.organsRequired) && receiver) {
             this.organsRequired.addAll(newOrgans);
         } else {
@@ -409,26 +410,6 @@ public class Profile {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Add an organ to the list of required organs.
-     *
-     * @param organ to be added
-     */
-    public void addRequiredOrgan(Organ organ) {
-        this.organsRequired.add(organ);
-    }
-
-    /**
-     * Add an ArrayList of Organs to the list of required organs.
-     *
-     * @param organs ArrayList of organs to be added
-     */
-    public void addRequiredOrgans(ArrayList<Organ> organs) {
-        for (Organ organ : organs) {
-            addRequiredOrgan(organ);
         }
     }
 
