@@ -220,6 +220,19 @@ public class Profile {
     }
 
     /**
+     * Given a procedure, will return whether the procedure has past
+     * @param procedure
+     * @return whether the procedure has past
+     */
+    public boolean isPeviousProcedure(Procedure procedure) {
+        if (procedure.getDate().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Outputs the profile's organs that they want to donate
      */
     public void viewOrgans() {
