@@ -163,8 +163,8 @@ public class ProfileEditController extends CommonController {
                 if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
                     Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
                     if (!set.isEmpty()) {
-                        currentProfile.setRegistered(true);
-                        currentProfile.addOrgans(set);
+                        currentProfile.setDonor(true);
+                        currentProfile.addOrgansDonate(set);
                     }
                 }
 
@@ -176,7 +176,7 @@ public class ProfileEditController extends CommonController {
                 if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
                     Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
                     if(!set.isEmpty()){
-                        currentProfile.setRegistered(true);
+                        currentProfile.setDonor(true);
                         currentProfile.addDonations(set);
                     }
                 }
@@ -268,6 +268,7 @@ public class ProfileEditController extends CommonController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Organs Required");
+
         stage.show();
     }
 
@@ -287,7 +288,7 @@ public class ProfileEditController extends CommonController {
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 

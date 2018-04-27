@@ -13,8 +13,8 @@ import java.util.Set;
 
 public class Profile {
 
-    private boolean donor;
-    private boolean receiver;
+    private Boolean donor;
+    private Boolean receiver;
 
     private String givenNames;
     private String lastNames;
@@ -26,7 +26,6 @@ public class Profile {
     private String bloodType;
     private String address;
     private String region;
-    private Boolean registered;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -38,7 +37,7 @@ public class Profile {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
-    private Set<Organ> requiredOrgans = new HashSet<>();
+    private Set<Organ> organsRequired = new HashSet<>();
 
     private String phone;
     private String email;
@@ -286,7 +285,7 @@ public class Profile {
      */
     public void addOrgansFromString(String organs) {
         String[] org = organs.split(",");
-        addOrgans(new HashSet<>(Arrays.asList(org)));
+        addOrgansDonate(new HashSet<>(Arrays.asList(org)));
     }
 
     /**
@@ -371,10 +370,32 @@ public class Profile {
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile wants to donate
-     * @param organs a set of organs they want to donate
+     * Add a set of organs to the list of organs that the profile wants to receive
+     * @param organs the set of organs to be received
      */
-    public void addOrgans(Set<String> organs) throws IllegalArgumentException {
+    public void addOrgansRequired(Set<String> organs) {
+        generateUpdateInfo("organsRequired");
+
+        Set<Organ> newOrgans = new HashSet<>();
+
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+        }
+
+        if (Collections.disjoint(newOrgans, this.organsRequired) && receiver) {
+            this.organsRequired.addAll(newOrgans);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Add a set of organs to the list of organs that the profile wants to donate
+     * @param organs the set of organs to donate
+     */
+    public void addOrgansDonate(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -385,7 +406,7 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organs) && registered) {
+        if (Collections.disjoint(newOrgans, this.organs) && donor) {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
@@ -398,7 +419,7 @@ public class Profile {
      * @param organ to be added
      */
     public void addRequiredOrgan(Organ organ) {
-        this.requiredOrgans.add(organ);
+        this.organsRequired.add(organ);
     }
 
     /**
@@ -412,8 +433,8 @@ public class Profile {
         }
     }
 
-    public Set<Organ> getRequiredOrgans() {
-        return requiredOrgans;
+    public Set<Organ> getOrgansRequired() {
+        return organsRequired;
     }
 
     /**
@@ -685,12 +706,12 @@ public class Profile {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
+    public void setDonor(Boolean donor) {
+        this.donor = donor;
     }
 
-    public Boolean getRegistered() {
-        return registered;
+    public Boolean getDonor() {
+        return donor;
     }
 
     public String getPhone() {

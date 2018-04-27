@@ -201,13 +201,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
@@ -232,7 +232,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addOrgansFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
@@ -264,7 +264,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addDonationFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
@@ -295,7 +295,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
 
         Set<String> expected = new HashSet<>();
@@ -365,13 +365,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
 
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
@@ -402,13 +402,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
 
-        testProfile.addOrgans(someOrgans);
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
     }
 
     /**

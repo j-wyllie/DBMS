@@ -44,8 +44,8 @@ public class OrganRequiredController {
 
     private void buildOrgansRequired() {
         observableListOrgansRequired = FXCollections.observableArrayList();
-        if(profile.getRequiredOrgans() != null) {
-            for (Organ organ : profile.getRequiredOrgans()) {
+        if(profile.getOrgansRequired() != null) {
+            for (Organ organ : profile.getOrgansRequired()) {
                 observableListOrgansRequired.add(organ.getName());
             }
         }
