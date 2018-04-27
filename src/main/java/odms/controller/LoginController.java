@@ -25,7 +25,7 @@ public class LoginController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
-    private static Profile currentProfile;
+    private static Profile currentProfile = null;
     private static User currentUser;
 
     /**

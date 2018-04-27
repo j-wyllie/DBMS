@@ -136,21 +136,6 @@ public class DonorProfileController {
     private TableColumn pastDateOfDiagnosisColumn;
 
     @FXML
-    private TextField nameField;
-
-    @FXML
-    private TextField dateDiagnosedField;
-
-    @FXML
-    private TextField dateCuredField;
-
-    @FXML
-    private CheckBox chronicCheckBox;
-
-    @FXML
-    private CheckBox curedCheckBox;
-
-    @FXML
     private Button toggleCuredButton;
 
     @FXML
@@ -198,7 +183,7 @@ public class DonorProfileController {
      * refreshes current and past conditions table with its up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         Profile currentDonor;
         if (searchedDonor != null) {
             currentDonor = searchedDonor;
@@ -224,7 +209,6 @@ public class DonorProfileController {
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
-
     }
 
     /**
@@ -244,49 +228,24 @@ public class DonorProfileController {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-
         try {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/AddCondition.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            AddConditionController controller = fxmlLoader.<AddConditionController>getController();
+            controller.init(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a Condition");
+            stage.setScene(scene);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
         }
     }
 
-    @FXML
-    public void handleAddButtonClicked(ActionEvent actionEvent) {
-        String name = nameField.getText();
-        String dateDiagnosed = dateDiagnosedField.getText();
-        Boolean isChronic = chronicCheckBox.isSelected();
-        String dateCured = dateCuredField.getText();
-        Condition condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
-        addCondition(condition);
-    }
-
-    @FXML
-    public void handleCuredChecked(ActionEvent actionEvent) {
-    }
-
-    /**
-     * Adds a new condition to the current profile
-     * @param condition
-     */
-    public void addCondition(Condition condition) {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
-
-        currentDonor.addCondition(condition);
-
-        refreshTable();
-    }
 
     /**
      * Button handler to handle delete button clicked, only available to clinicians
@@ -553,6 +512,8 @@ public class DonorProfileController {
         }
 
     }
+
+    public Profile getSearchedDonor() { return searchedDonor; }
 
     /**
      * Sets the current donor attributes to the labels on start up.

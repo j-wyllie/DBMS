@@ -53,7 +53,6 @@ public class Profile {
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
-        conditions = new ArrayList<>();
         setExtraAttributes(attributes);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -70,7 +69,6 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
-        conditions = new ArrayList<>();
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");

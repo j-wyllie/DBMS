@@ -27,6 +27,8 @@ public class ClinicianProfileController {
     //Get the default clinician
     protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
 
+    private DonorProfileController donorProfileController;
+
     @FXML
     private Label clinicianFullName;
 
@@ -182,9 +184,9 @@ public class ClinicianProfileController {
             fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-            controller.setDonor(selectedDonor);
-            controller.initialize();
+            donorProfileController = fxmlLoader.<DonorProfileController>getController();
+            donorProfileController.setDonor(selectedDonor);
+            donorProfileController.initialize();
 
             Stage stage = new Stage();
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
@@ -194,6 +196,10 @@ public class ClinicianProfileController {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public DonorProfileController getSearchedProfileController() {
+        return donorProfileController;
     }
 
     @FXML
