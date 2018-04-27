@@ -1,22 +1,13 @@
 package odms.controller;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import odms.profile.Organ;
 import odms.profile.Profile;
 
@@ -35,6 +26,22 @@ public class OrganRequiredController {
     @FXML
     private Button btnOrganSwitch;
 
+    @FXML
+    public void initialize() {
+        if (profile != null) {
+            buildOrgansRequired();
+            buildOrgansAvailable();
+            viewOrgansAvailable.setItems(observableListOrgansAvailable);
+            viewOrgansRequired.setItems(observableListOrgansRequired);
+        }
+
+        btnOrganSwitch.setOnAction(event -> handleBtnOrganSwitchClicked());
+        viewOrgansAvailable.setOnMouseClicked(this::handleListOrgansAvailableClick);
+        viewOrgansRequired.setOnMouseClicked(this::handleListOrgansRequiredClick);
+    }
+
+
+
     private void buildOrgansRequired() {
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getRequiredOrgans() != null) {
@@ -50,18 +57,40 @@ public class OrganRequiredController {
         observableListOrgansAvailable.removeIf(str -> observableListOrgansRequired.contains(str));
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    private void handleBtnOrganSwitchClicked() {
+        switchOrgans();
+    }
+
+    private void handleListOrgansAvailableClick(MouseEvent event) {
+        handleOrgansClick(event, viewOrgansRequired.getSelectionModel());
+    }
+
+    private void handleListOrgansRequiredClick(MouseEvent event) {
+        handleOrgansClick(event, viewOrgansAvailable.getSelectionModel());
+    }
+
+    private void handleOrgansClick(MouseEvent event,
+            MultipleSelectionModel<String> selectionModel) {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            selectionModel.clearSelection();
+
+            if (event.getClickCount() == 2) {
+                selectionModel.clearSelection();
+                switchOrgans();
+            }
+        }
     }
 
     private void refresh() {
-
         viewOrgansRequired.refresh();
         viewOrgansAvailable.refresh();
     }
 
-    @FXML
-    private void handleBtnOrganSwitchClicked() {
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    private void switchOrgans() {
         final int selectedIdxAvailable = viewOrgansAvailable.getFocusModel().getFocusedIndex();
         if (selectedIdxAvailable != -1) {
             String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
@@ -77,18 +106,9 @@ public class OrganRequiredController {
                 refresh();
             }
         }
+
+        viewOrgansAvailable.getSelectionModel().clearSelection();
+        viewOrgansRequired.getSelectionModel().clearSelection();
     }
 
-    @FXML
-    public void initialize() {
-        if (profile != null) {
-            buildOrgansRequired();
-            buildOrgansAvailable();
-            viewOrgansAvailable.setItems(observableListOrgansAvailable);
-            viewOrgansRequired.setItems(observableListOrgansRequired);
-        }
-
-        btnOrganSwitch.setOnAction(event -> handleBtnOrganSwitchClicked());
-
-    }
 }

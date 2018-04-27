@@ -266,6 +266,8 @@ public class ProfileEditController extends CommonController {
 
         Stage stage = new Stage();
         stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setTitle("Organs Required");
         stage.show();
     }
 
