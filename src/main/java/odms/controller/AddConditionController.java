@@ -9,6 +9,7 @@ import odms.profile.Condition;
 import odms.profile.Profile;
 
 import java.awt.*;
+import java.sql.Connection;
 import java.time.LocalDate;
 
 public class AddConditionController {
@@ -38,7 +39,12 @@ public class AddConditionController {
         Boolean isChronic = chronicCheckBox.isSelected();
         String dateCured = dateCuredField.getText();
 
-        Condition condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
+        Condition condition;
+        if (dateCured == "") {
+            condition = new Condition(name, dateDiagnosed, isChronic);
+        } else {
+            condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
+        }
         addCondition(condition);
     }
 
@@ -57,11 +63,17 @@ public class AddConditionController {
 
     @FXML
     public void handleCuredChecked(ActionEvent actionEvent) {
+        if (curedCheckBox.isSelected()) {
+            dateCuredField.setDisable(false);
+        } else {
+            dateCuredField.setDisable(true);
+        }
     }
 
     public void init(DonorProfileController controller) {
         this.controller = controller;
         searchedDonor = controller.searchedDonor;
+        dateCuredField.setDisable(true);
     }
 
 }
