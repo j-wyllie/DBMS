@@ -62,23 +62,21 @@ public class OrganRequiredController {
 
     @FXML
     private void handleBtnOrganSwitchClicked() {
-        btnOrganSwitch.setOnAction(event -> {
-            final int selectedIdxAvailable = viewOrgansAvailable.getSelectionModel().getSelectedIndex();
-            if (selectedIdxAvailable != -1) {
-                String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
-                observableListOrgansAvailable.remove(itemToRemove);
-                observableListOrgansRequired.add(itemToRemove);
+        final int selectedIdxAvailable = viewOrgansAvailable.getFocusModel().getFocusedIndex();
+        if (selectedIdxAvailable != -1) {
+            String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
+            observableListOrgansAvailable.remove(itemToRemove);
+            observableListOrgansRequired.add(itemToRemove);
+            refresh();
+        } else {
+            final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
+            if(selectedIdxRequired != -1) {
+                String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
+                observableListOrgansRequired.remove(itemToRemove);
+                observableListOrgansAvailable.add(itemToRemove);
                 refresh();
-            } else {
-                final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
-                if(selectedIdxRequired != -1) {
-                    String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
-                    observableListOrgansRequired.remove(itemToRemove);
-                    observableListOrgansAvailable.add(itemToRemove);
-                    refresh();
-                }
             }
-        });
+        }
     }
 
     @FXML
@@ -90,6 +88,7 @@ public class OrganRequiredController {
             viewOrgansRequired.setItems(observableListOrgansRequired);
         }
 
+        btnOrganSwitch.setOnAction(event -> handleBtnOrganSwitchClicked());
 
     }
 }
