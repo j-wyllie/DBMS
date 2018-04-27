@@ -25,12 +25,13 @@ public class Condition {
         this.name = name;
         String[] dates = dateOfDiagnosis.split("-");
         this.dateOfDiagnosis = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
-        dates = dateCured.split("-");
-        this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
         if (dateCured != null) {
             this.isCured = true;
+            dates = dateCured.split("-");
+            this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
         } else {
             this.isCured = false;
+            this.dateCured = null;
         }
         this.isChronic = isChronic;
         if (isChronic) {this.chronicText = "CHRONIC";}

@@ -561,7 +561,7 @@ public class ProfileTest {
      */
     @Test
     public void testAddConditionandGetAllConditions() {
-        Condition condition = new Condition("aids", "1997-7-18", "2013-9-15", false);
+        Condition condition = new Condition("aids", "18-7-1997", "15-09-2014", false);
         ArrayList<String> donorAttr = new ArrayList<String>();
 
         donorAttr.add("given-names=\"John\"");
@@ -614,7 +614,7 @@ public class ProfileTest {
      */
     @Test
     public void testGetCuredConditions() {
-        Condition condition0 = new Condition("aids", "18-7-1997", "15-9-2013", false);
+        Condition condition0 = new Condition("aids", "18-7-1997", true);
         ArrayList<String> donorAttr0 = new ArrayList<String>();
 
         donorAttr0.add("given-names=\"John\"");
@@ -643,6 +643,6 @@ public class ProfileTest {
 
         testDonor.addCondition(condition1);
 
-        assert testDonor.getCuredConditions().size() == 1 && testDonor.getCuredConditions().contains(condition0);
+        assert testDonor.getCuredConditions().size() == 1 && testDonor.getCuredConditions().contains(condition1);
     }
 }
