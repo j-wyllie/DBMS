@@ -555,4 +555,125 @@ public class ProfileTest {
         String bloodPressure = testProfile.getBloodPressure();
         assertEquals(bloodPressure, "120/80");
     }
+
+    /**
+     * Tests adding some procedures to the profile and getting all procedures in the process
+     */
+    @Test
+    public void testAddProcedureGetAllProcedures() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+
+        assert testProfile.getAllProcedures().contains(procedure0) && testProfile.getAllProcedures().contains(procedure1);
+    }
+
+    /**
+     * Tests deleting a procedure of the user
+     */
+    @Test
+    public void testDeleteCondition() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+
+        testProfile.removeProcedure(procedure0);
+
+        assert testProfile.getAllProcedures().size() == 1;
+    }
+
+    /**
+     * Tests getting all previous procedures
+     */
+    @Test
+    public void testGetPreviousConditions() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
+        Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+        testProfile.addProcedure(procedure2);
+
+        assert testProfile.getPreviousProcedures().contains(procedure1);
+        assert testProfile.getPreviousProcedures().size() == 1;
+    }
+
+    /**
+     * Tests getting all pending procedures
+     */
+    @Test
+    public void testGetPendingConditions() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
+        Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+        testProfile.addProcedure(procedure2);
+
+        assert testProfile.getPendingProcedures().contains(procedure0);
+        assert testProfile.getPendingProcedures().contains(procedure2);
+        assert testProfile.getPendingProcedures().size() == 2;
+    }
 }
