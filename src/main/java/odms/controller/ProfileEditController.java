@@ -96,6 +96,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Button handler to undo last action.
+     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -105,6 +106,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Button handler to redo last undo action.
+     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -114,6 +116,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Button handler to make fields editable.
+     *
      * @param event clicking on the edit button.
      */
     @FXML
@@ -123,6 +126,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
+     *
      * @param event clicking on the save (tick) button.
      */
     @FXML
@@ -131,7 +135,8 @@ public class ProfileEditController extends CommonController {
         boolean error = false;
         if (saveBool) {
             String action =
-                    "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
+                    "Profile " + currentProfile.getId() + " updated details previous = "
+                            + currentProfile
                             .getAttributesSummary() + " new = ";
             currentProfile.setGivenNames(givenNamesField.getText());
             currentProfile.setLastNames(lastNamesField.getText());
@@ -139,10 +144,10 @@ public class ProfileEditController extends CommonController {
             //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
             //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentProfile.setGender(genderField.getText());
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setHeight(Double.valueOf(heightField.getText()));
             }
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setWeight(Double.valueOf(weightField.getText()));
             }
             currentProfile.setPhone(phoneField.getText());
@@ -160,27 +165,29 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
             try {
-                if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                    Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                    Set<String> set = new HashSet<>(
+                            Arrays.asList(organField.getText().split(", ")));
                     if (!set.isEmpty()) {
                         currentProfile.setDonor(true);
                         currentProfile.addOrgansDonate(set);
                     }
                 }
 
-                } catch (Exception e){
-                    error = true;
-                }
+            } catch (Exception e) {
+                error = true;
+            }
 
             try {
-                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
-                    Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                    if(!set.isEmpty()){
+                if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
+                    Set<String> set = new HashSet<>(
+                            Arrays.asList(donationsField.getText().split(", ")));
+                    if (!set.isEmpty()) {
                         currentProfile.setDonor(true);
                         currentProfile.addDonations(set);
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 error = true;
             }
 
@@ -203,7 +210,7 @@ public class ProfileEditController extends CommonController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if(error) {
+            if (error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
@@ -215,6 +222,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Button handler to cancel the changes made to the fields.
+     *
      * @param event clicking on the cancel (x) button.
      */
     @FXML
@@ -228,12 +236,14 @@ public class ProfileEditController extends CommonController {
 
     /**
      * closes the edit donor window and reopens the donor.
+     *
      * @param event either the cancel button event or the save button event
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+        if (getCurrentProfile() != null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -241,7 +251,8 @@ public class ProfileEditController extends CommonController {
             appStage.show();
 
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             ProfileDisplayController controller = fxmlLoader.<ProfileDisplayController>getController();
             controller.setDonor(currentProfile);
@@ -263,7 +274,6 @@ public class ProfileEditController extends CommonController {
         OrganRequiredController controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
         controller.initialize();
-
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setResizable(false);
@@ -278,7 +288,7 @@ public class ProfileEditController extends CommonController {
     @FXML
     public void initialize() {
 
-        if(currentProfile == null){
+        if (currentProfile == null) {
             currentProfile = getCurrentProfile();
         }
         if (currentProfile != null) {

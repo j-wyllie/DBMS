@@ -383,7 +383,6 @@ public class Profile {
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
         }
-
         if (Collections.disjoint(newOrgans, this.organsRequired) && receiver) {
             this.organsRequired.addAll(newOrgans);
         } else {

@@ -1,5 +1,8 @@
 package odms.controller;
 
+
+import java.util.HashSet;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
 
@@ -25,6 +29,9 @@ public class OrganRequiredController {
 
     @FXML
     private Button btnOrganSwitch;
+
+    @FXML
+    private Button btnSave;
 
     @FXML
     public void initialize() {
@@ -111,4 +118,11 @@ public class OrganRequiredController {
         viewOrgansRequired.getSelectionModel().clearSelection();
     }
 
+    public void onBtnSaveClicked() {
+        profile.setReceiver(true);
+        Set<String> set = new HashSet<>(observableListOrgansRequired);
+        profile.addOrgansRequired(set);
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
+    }
 }

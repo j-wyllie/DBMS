@@ -87,6 +87,8 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#createAccountButton");
 
         assertEquals("88888888", LoginController.getCurrentProfile().getIrdNumber().toString());
+
+
     }
 
     /**

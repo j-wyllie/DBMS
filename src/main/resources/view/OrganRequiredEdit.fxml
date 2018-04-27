@@ -36,19 +36,21 @@
               <rowConstraints>
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </opaqueInsets>
                <children>
-                  <ListView fx:id="viewOrgansAvailable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                  <ListView fx:id="viewOrgansRequired" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ListView fx:id="viewOrgansAvailable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+                  <ListView fx:id="viewOrgansRequired" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                   <Button fx:id="btnOrganSwitch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="&lt;-&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin></Button>
                   <Label text="Available" />
                   <Label alignment="CENTER" text="Required" GridPane.columnIndex="2" />
+                  <Button fx:id="btnSave" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnSaveClicked" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
                <GridPane.margin>
                   <Insets />
