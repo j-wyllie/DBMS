@@ -224,7 +224,7 @@ public class Profile {
      * @param procedure
      * @return whether the procedure has past
      */
-    public boolean isPeviousProcedure(Procedure procedure) {
+    public boolean isPreviousProcedure(Procedure procedure) {
         if (procedure.getDate().isBefore(LocalDate.now())) {
             return true;
         } else {
