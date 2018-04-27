@@ -1,11 +1,21 @@
 package odms.controller;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import odms.profile.Organ;
 import odms.profile.Profile;
@@ -13,38 +23,73 @@ import odms.profile.Profile;
 public class OrganRequiredController {
     private Profile profile;
 
-    private ArrayList<String> organsAvailable;
-    private ArrayList<String> organsRequired;
-
-    private ListProperty<String> listOrgansAvailableProperty = new SimpleListProperty<>();
-    private ListProperty<String> listOrgansRequiredProperty = new SimpleListProperty<>();
+    private ObservableList<String> observableListOrgansAvailable;
+    private ObservableList<String> observableListOrgansRequired;
 
     @FXML
-    private ListView listOrgansAvailable;
+    private ListView<String> viewOrgansAvailable;
 
     @FXML
-    private ListView listOrgansRequired;
+    private ListView<String> viewOrgansRequired;
 
     @FXML
     private Button btnOrganSwitch;
 
-    private void buildOrgansAvailable() {
-        ArrayList<Organ> organs = new ArrayList<>(EnumSet.allOf(Organ.class));
-
-        for (Organ organ : organs) {
-            organsAvailable.add(organ.getName());
+    private void buildOrgansRequired() {
+        observableListOrgansRequired = FXCollections.observableArrayList();
+        if(profile.getRequiredOrgans() != null) {
+            for (Organ organ : profile.getRequiredOrgans()) {
+                observableListOrgansRequired.add(organ.getName());
+            }
         }
+    }
+
+    private void buildOrgansAvailable() {
+        observableListOrgansAvailable = FXCollections.observableArrayList();
+        observableListOrgansAvailable.addAll(Organ.toArrayList());
+        observableListOrgansAvailable.removeIf(str -> observableListOrgansRequired.contains(str));
     }
 
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
-    @FXML
-    public void initialize() {
-        buildOrgansAvailable();
+    private void refresh() {
 
-        listOrgansAvailable.itemsProperty().bind(listOrgansAvailableProperty);
+        viewOrgansRequired.refresh();
+        viewOrgansAvailable.refresh();
     }
 
+    @FXML
+    private void handleBtnOrganSwitchClicked() {
+        btnOrganSwitch.setOnAction(event -> {
+            final int selectedIdxAvailable = viewOrgansAvailable.getSelectionModel().getSelectedIndex();
+            if (selectedIdxAvailable != -1) {
+                String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
+                observableListOrgansAvailable.remove(itemToRemove);
+                observableListOrgansRequired.add(itemToRemove);
+                refresh();
+            } else {
+                final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
+                if(selectedIdxRequired != -1) {
+                    String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
+                    observableListOrgansRequired.remove(itemToRemove);
+                    observableListOrgansAvailable.add(itemToRemove);
+                    refresh();
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void initialize() {
+        if (profile != null) {
+            buildOrgansRequired();
+            buildOrgansAvailable();
+            viewOrgansAvailable.setItems(observableListOrgansAvailable);
+            viewOrgansRequired.setItems(observableListOrgansRequired);
+        }
+
+
+    }
 }

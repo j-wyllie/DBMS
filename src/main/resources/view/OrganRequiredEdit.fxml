@@ -41,9 +41,9 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </opaqueInsets>
                <children>
-                  <ListView fx:id="listOrgansAvailable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                  <ListView fx:id="listOrgansRequired" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button fx:id="btnOrganSwitch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="&lt;-&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ListView fx:id="viewOrgansAvailable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                  <ListView fx:id="viewOrgansRequired" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="btnOrganSwitch" onAction="#handleBtnOrganSwitchClicked" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="&lt;-&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin></Button>
