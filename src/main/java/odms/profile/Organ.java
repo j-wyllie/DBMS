@@ -1,22 +1,22 @@
 package odms.profile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 public enum Organ {
-    LIVER("liver"),
-    KIDNEY("kidney"),
-    PANCREAS("pancreas"),
-    HEART("heart"),
-    LUNG("lung"),
-    INTESTINE("intestine"),
-    CORNEA("cornea"),
-    MIDDLE_EAR("middle-ear"),
-    SKIN("skin"),
     BONE("bone"),
     BONE_MARROW("bone-marrow"),
-    CONNECTIVE_TISSUE("connective-tissue");
+    CONNECTIVE_TISSUE("connective-tissue"),
+    CORNEA("cornea"),
+    HEART("heart"),
+    INTESTINE("intestine"),
+    KIDNEY("kidney"),
+    LIVER("liver"),
+    LUNG("lung"),
+    MIDDLE_EAR("middle-ear"),
+    PANCREAS("pancreas"),
+    SKIN("skin");
 
     private String name;
 
@@ -38,6 +38,9 @@ public enum Organ {
             }
             organs.add(String.join(" ", organFullName));
         }
+
+        Collections.sort(organs);
+
         return organs;
     }
 
