@@ -682,4 +682,53 @@ public class ProfileTest {
 
     }
 
+    @Test
+    public  void TestMoveDrugToCurrent() {
+        Drug drug1 = new Drug("acetaminophen");
+        Drug drug2 = new Drug("paracetamol");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+        Profile donor1 = new Profile(donorAttr);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        donor1.addDrug(drug1);
+        donor1.addDrug(drug2);
+
+        try {
+            assertEquals(donor1.getCurrentMedications().size(), 2);
+            donor1.moveDrugToHistory(drug1);
+            donor1.moveDrugToHistory(drug2);
+            assertEquals(donor1.getCurrentMedications().size(), 0);
+            assertEquals(donor1.getHistoryOfMedication().size(), 2);
+
+            donor1.moveDrugToCurrent(drug1);
+            assertEquals(donor1.getCurrentMedications().size(), 1);
+            assertEquals(donor1.getHistoryOfMedication().size(), 1);
+            assertEquals(donor1.getMedicationTimestamps().get(4), "acetaminophen added back to current list on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                    currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+
+            donor1.moveDrugToCurrent(drug2);
+            assertEquals(donor1.getCurrentMedications().size(), 2);
+            assertEquals(donor1.getHistoryOfMedication().size(), 0);
+            assertEquals(donor1.getMedicationTimestamps().get(5), "paracetamol added back to current list on " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
+                    currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
+
+            donor1.moveDrugToCurrent(drug1);
+            assertEquals(donor1.getMedicationTimestamps().size(), 6);
+
+        } catch (Exception e){
+            fail();
+        }
+    }
+
 }
