@@ -69,7 +69,7 @@ public class Profile {
      * @param dob Profile's date of birth as a string
      * @param irdNumber Profile's IRD number as Integer
      */
-    public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, String dob, String irdNumber) {
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");

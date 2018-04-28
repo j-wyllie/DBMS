@@ -49,7 +49,7 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = givenNamesField.getText();
                 String surnames = surnamesField.getText();
                 String dob = dobField.getText();
-                Integer ird = Integer.parseInt(irdField.getText());
+                String ird = irdField.getText();
 
 
                 Profile newDonor = new Profile(givenNames, surnames, dob, ird);
