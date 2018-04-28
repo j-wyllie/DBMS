@@ -265,15 +265,22 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentDonor.setChronicDiseases(diseasesSet);
             }
+            System.out.println(action);
 
             DonorDataIO.saveDonors(getCurrentDatabase(), "example/example.json");
 
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+
+            Parent parent = loader.load();
+            DonorProfileController controller = loader.getController();
+            controller.editedTextArea(); //Any methods here
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
             appStage.setTitle("Donor Profile");
+
             appStage.show();
+
         }
         else {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
