@@ -178,4 +178,33 @@ public class ProfileDatabase {
         return profiles;
     }
 
+    /**
+     * Generates a list of profiles receiving organs ordered by last names.
+     * Parameter to specify whether or not the list contains every receiver or only receivers that
+     * are currently receiving organs.
+     *
+     * @param receiving specify currently receiving organs or not
+     * @return Array of profiles found that match
+     */
+    public ArrayList<Profile> getReceivers(Boolean receiving) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+
+            if (profile.isReceiver()) {
+                if (receiving) {
+                    if (profile.getOrgansRequired().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+
+        return profiles;
+    }
+
 }
