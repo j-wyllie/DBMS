@@ -581,7 +581,8 @@ public class ProfileTest {
         testProfile.addProcedure(procedure0);
         testProfile.addProcedure(procedure1);
 
-        assert testProfile.getAllProcedures().contains(procedure0) && testProfile.getAllProcedures().contains(procedure1);
+        assertEquals(testProfile.getAllProcedures().contains(procedure0), true);
+        assertEquals(testProfile.getAllProcedures().contains(procedure1), true);
     }
 
     /**
@@ -611,7 +612,7 @@ public class ProfileTest {
 
         testProfile.removeProcedure(procedure0);
 
-        assert testProfile.getAllProcedures().size() == 1;
+        assertEquals(testProfile.getAllProcedures().size(), 1);
     }
 
     /**
@@ -641,8 +642,8 @@ public class ProfileTest {
         testProfile.addProcedure(procedure1);
         testProfile.addProcedure(procedure2);
 
-        assert testProfile.getPreviousProcedures().contains(procedure1);
-        assert testProfile.getPreviousProcedures().size() == 1;
+        assertEquals(testProfile.getPreviousProcedures().contains(procedure1), true);
+        assertEquals(testProfile.getPreviousProcedures().size(), 1);
     }
 
     /**
@@ -672,9 +673,9 @@ public class ProfileTest {
         testProfile.addProcedure(procedure1);
         testProfile.addProcedure(procedure2);
 
-        assert testProfile.getPendingProcedures().contains(procedure0);
-        assert testProfile.getPendingProcedures().contains(procedure2);
-        assert testProfile.getPendingProcedures().size() == 2;
+        assertEquals(testProfile.getPendingProcedures().contains(procedure0), true);
+        assertEquals(testProfile.getPendingProcedures().contains(procedure2), true);
+        assertEquals(testProfile.getPendingProcedures().size(), 2);
     }
 
     /**
@@ -702,7 +703,7 @@ public class ProfileTest {
         testProfile.addProcedure(procedure0);
         testProfile.addProcedure(procedure1);
 
-        assert testProfile.isPreviousProcedure(procedure0) == false;
-        assert testProfile.isPreviousProcedure(procedure1) == true;
+        assertEquals(testProfile.isPreviousProcedure(procedure0), false);
+        assertEquals(testProfile.isPreviousProcedure(procedure1), true);
     }
 }
