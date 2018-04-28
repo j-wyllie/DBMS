@@ -183,14 +183,13 @@ public class ProfileDatabase {
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString) {
-        boolean donating = false;
         ArrayList<String> profiles = new ArrayList<>();
 
         if (searchString == null || searchString.equals("")) {
-            return getProfiles(donating);
+            return getProfiles(false);
         }
 
-        for (Profile profile : getProfiles(donating)) {
+        for (Profile profile : getProfiles(false)) {
             profiles.add(profile.getFullName());
         }
 
@@ -201,7 +200,7 @@ public class ProfileDatabase {
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
         ArrayList<Profile> resultProfiles = new ArrayList<>();
         for (ExtractedResult er : result) {
-            resultProfiles.add(getProfiles(donating).get(er.getIndex()));
+            resultProfiles.add(getProfiles(false).get(er.getIndex()));
         }
         return resultProfiles;
     }
