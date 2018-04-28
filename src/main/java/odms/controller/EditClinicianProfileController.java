@@ -59,7 +59,6 @@ public class EditClinicianProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
-
     }
 
     /**
