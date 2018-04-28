@@ -1,15 +1,13 @@
 package odms.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import odms.donor.Donor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.*;
 
 public class DonorDatabaseTest {
     private DonorDatabase donorDB;
@@ -134,6 +132,64 @@ public class DonorDatabaseTest {
 
         donorDB.addDonor(donorOne);
         donorDB.addDonor(donorOne);
+    }
+
+    @Test
+    public void TestSearchDonors() {
+        // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
+        // string. So tests will be based on strings that definitely should or shouldn't be matched.
+        ArrayList<Donor> testResults;
+
+        // Create some more profiles that are only needed for this test.
+        ArrayList<String> donorThreeAttr = new ArrayList<>();
+        donorThreeAttr.add("given-names=\"Sam\"");
+        donorThreeAttr.add("last-names=\"Slavko\"");
+        donorThreeAttr.add("dob=\"17-01-1997\"");
+        donorThreeAttr.add("ird=\"123456877\"");
+
+        ArrayList<String> donorFourAttr = new ArrayList<>();
+        donorFourAttr.add("given-names=\"Reece\"");
+        donorFourAttr.add("last-names=\"Williams\"");
+        donorFourAttr.add("dob=\"17-01-1997\"");
+        donorFourAttr.add("ird=\"123456876\"");
+
+        ArrayList<String> donorFiveAttr = new ArrayList<>();
+        donorFiveAttr.add("given-names=\"Zu\"");
+        donorFiveAttr.add("last-names=\"Tiu\"");
+        donorFiveAttr.add("dob=\"17-01-1997\"");
+        donorFiveAttr.add("ird=\"123456875\"");
+
+        Donor donorThree = new Donor(donorThreeAttr);
+        Donor donorFour = new Donor(donorFourAttr);
+        Donor donorFive = new Donor(donorFiveAttr);
+
+
+        try {
+            // No profiles in db, so no results
+            testResults = donorDB.searchDonors("Sam Slavko");
+            assertTrue(testResults.size() == 0);
+
+            donorDB.addDonor(donorOne);
+            donorDB.addDonor(donorTwo);
+            donorDB.addDonor(donorThree);
+            donorDB.addDonor(donorFour);
+            donorDB.addDonor(donorFive);
+
+            // Top result should be profile Sam Slavko, next result Sam Sick. No other results because other profile's
+            // names not at all similar.
+            testResults = donorDB.searchDonors("Sam Slavko");
+            assertTrue(testResults.size() == 2);
+            assertEquals(donorThree, testResults.get(0));
+            assertEquals(donorTwo, testResults.get(1));
+
+            // Should not contain profile Zu Tiu because this name has no a or nearby letter to a. Should contain
+            // all other profiles.
+            testResults = donorDB.searchDonors("a");
+            assertTrue(testResults.size() == 4);
+            assertTrue(!testResults.contains(donorFive));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

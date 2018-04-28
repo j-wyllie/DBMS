@@ -171,8 +171,9 @@ public class DonorDatabase {
     }
 
     /**
-     * Fuzzy search that finds the top 30 donors that match the provide search string.
+     * Fuzzy search that finds the top 30 donors that match the provided search string.
      * @param searchString the string that the donor names will be searched against.
+     * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Donor> searchDonors(String searchString) {
         boolean donating = false;
