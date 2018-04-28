@@ -370,10 +370,11 @@ public class Profile {
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile wants to receive
+     * Consume a set of organs that the profile wants to receive and updates the profile to use this
+     * new set.
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(Set<String> organs) {
+    public void setOrgansRequired(Set<String> organs) {
         generateUpdateInfo("organsRequired");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -384,11 +385,7 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organsRequired) && receiver) {
-            this.organsRequired.addAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        this.organsRequired = newOrgans;
     }
 
     /**

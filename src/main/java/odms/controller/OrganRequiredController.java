@@ -1,6 +1,7 @@
 package odms.controller;
 
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.collections.FXCollections;
@@ -56,8 +57,9 @@ public class OrganRequiredController {
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
             for (Organ organ : profile.getOrgansRequired()) {
-                observableListOrgansRequired.add(organ.getName());
+                observableListOrgansRequired.add(organ.getNamePlain());
             }
+            Collections.sort(observableListOrgansRequired);
         }
     }
 
@@ -119,7 +121,7 @@ public class OrganRequiredController {
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
         Set<String> set = new HashSet<>(observableListOrgansRequired);
-        profile.addOrgansRequired(set);
+        profile.setOrgansRequired(set);
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
@@ -147,16 +149,18 @@ public class OrganRequiredController {
             String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
             observableListOrgansAvailable.remove(itemToRemove);
             observableListOrgansRequired.add(itemToRemove);
-            refresh();
         } else {
             final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
             if(selectedIdxRequired != -1) {
                 String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
                 observableListOrgansRequired.remove(itemToRemove);
                 observableListOrgansAvailable.add(itemToRemove);
-                refresh();
             }
         }
+
+        Collections.sort(observableListOrgansRequired);
+        Collections.sort(observableListOrgansAvailable);
+        refresh();
 
         viewOrgansAvailable.getSelectionModel().clearSelection();
         viewOrgansRequired.getSelectionModel().clearSelection();

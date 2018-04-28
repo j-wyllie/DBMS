@@ -25,6 +25,19 @@ public enum Organ {
     }
 
     /**
+     * Correctly space and case the name of the organ for display/printing purposes.
+     *
+     * @return corrected organ String
+     */
+    public String getNamePlain() {
+        ArrayList<String> organNamePlain = new ArrayList<>();
+        for (String organTerm : getName().split("-")) {
+            organNamePlain.add(Character.toUpperCase(organTerm.charAt(0)) + organTerm.substring(1));
+        }
+        return String.join(" ", organNamePlain);
+    }
+
+    /**
      * Generate an ArrayList of Strings with organs capitalised appropriately.
      * @return ArrayList of Organ name Strings
      */
@@ -32,11 +45,7 @@ public enum Organ {
         ArrayList<String> organs = new ArrayList<>();
 
         for (Organ organ : new ArrayList<>(EnumSet.allOf(Organ.class))) {
-            ArrayList<String> organFullName = new ArrayList<>();
-            for (String organTerm : organ.getName().split("-")) {
-                organFullName.add(Character.toUpperCase(organTerm.charAt(0)) + organTerm.substring(1));
-            }
-            organs.add(String.join(" ", organFullName));
+            organs.add(organ.getNamePlain());
         }
 
         Collections.sort(organs);
