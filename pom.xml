@@ -45,6 +45,31 @@
             <version>3.6.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.13-alpha</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>4.0.13-alpha</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>8u76-b04</version> <!-- jdk-9+181 for Java 9 -->
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
