@@ -1,6 +1,7 @@
 package odms.controller;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,19 +52,19 @@ public class ClinicianProfileController {
     private Label regionLabel;
 
     @FXML
-    private TableView searchTable;
+    private TableView<Donor> searchTable;
 
     @FXML
-    private TableColumn fullNameColumn;
+    private TableColumn<Donor, String> fullNameColumn;
 
     @FXML
-    private TableColumn ageColumn;
+    private TableColumn<Donor, Integer> ageColumn;
 
     @FXML
-    private TableColumn genderColumn;
+    private TableColumn<Donor, String> genderColumn;
 
     @FXML
-    private TableColumn regionColumn;
+    private TableColumn<Donor, String> regionColumn;
 
     @FXML
     private TextField searchField;
@@ -152,13 +153,13 @@ public class ClinicianProfileController {
     private void makeTable(ArrayList<Donor> donors){
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        TableColumn<Donor, String> ageCol = new TableColumn("Age");
+        TableColumn<Donor, Integer> ageCol = new TableColumn("Age");
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
-        ageCol.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().calculateAge())));
+        ageCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().calculateAge()));
         searchTable.getColumns().setAll(fullNameColumn, ageCol, genderColumn, regionColumn);
     }
 
