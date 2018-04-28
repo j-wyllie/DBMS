@@ -51,19 +51,19 @@ public class ClinicianProfileController {
     private Label regionLabel;
 
     @FXML
-    private TableView<Donor> searchTable;
+    private TableView<Profile> searchTable;
 
     @FXML
-    private TableColumn<Donor, String> fullNameColumn;
+    private TableColumn<Profile, String> fullNameColumn;
 
     @FXML
-    private TableColumn<Donor, Integer> ageColumn;
+    private TableColumn<Profile, Integer> ageColumn;
 
     @FXML
-    private TableColumn<Donor, String> genderColumn;
+    private TableColumn<Profile, String> genderColumn;
 
     @FXML
-    private TableColumn<Donor, String> regionColumn;
+    private TableColumn<Profile, String> regionColumn;
 
     @FXML
     private TextField searchField;
@@ -132,7 +132,7 @@ public class ClinicianProfileController {
         String searchString = searchField.getText();
 
         searchTable.getItems().clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchDonors(searchString));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
         searchTable.setItems(donorObservableList);
     }
 
