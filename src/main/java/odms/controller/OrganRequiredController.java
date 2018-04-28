@@ -36,6 +36,8 @@ public class OrganRequiredController {
     @FXML
     public void initialize() {
         if (profile != null) {
+            // Order of execution for building these is required due to removing items from the
+            // Available list that are present in the Required list.
             buildOrgansRequired();
             buildOrgansAvailable();
             viewOrgansAvailable.setItems(observableListOrgansAvailable);
@@ -47,8 +49,9 @@ public class OrganRequiredController {
         viewOrgansRequired.setOnMouseClicked(this::handleListOrgansRequiredClick);
     }
 
-
-
+    /**
+     * Populate the ListView with the organs the profile currently requires.
+     */
     private void buildOrgansRequired() {
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
@@ -58,12 +61,19 @@ public class OrganRequiredController {
         }
     }
 
+    /**
+     * Populate the ListView with the organs that are available and that are not in the
+     * required list.
+     */
     private void buildOrgansAvailable() {
         observableListOrgansAvailable = FXCollections.observableArrayList();
         observableListOrgansAvailable.addAll(Organ.toArrayList());
         observableListOrgansAvailable.removeIf(str -> observableListOrgansRequired.contains(str));
     }
 
+    /**
+     * Button to perform moving the organ from one ListView to the other ListView
+     */
     private void handleBtnOrganSwitchClicked() {
         switchOrgans();
     }
@@ -76,16 +86,42 @@ public class OrganRequiredController {
         handleOrgansClick(event, viewOrgansAvailable.getSelectionModel());
     }
 
-    private void handleOrgansClick(MouseEvent event,
-            MultipleSelectionModel<String> selectionModel) {
+    /**
+     * Click Handler to handle Click actions on the ListViews.
+     * - A single click will clear the selection from the opposing ListView.
+     * - A double click will move the organ from the ListView to the opposing ListView.
+     *
+     * @param event the MouseEvent
+     * @param model the SelectionModel to operate against
+     */
+    private void handleOrgansClick(MouseEvent event, MultipleSelectionModel<String> model) {
         if (event.getButton() == MouseButton.PRIMARY) {
-            selectionModel.clearSelection();
+            model.clearSelection();
 
             if (event.getClickCount() == 2) {
-                selectionModel.clearSelection();
+                model.clearSelection();
                 switchOrgans();
             }
         }
+    }
+
+    /**
+     * Cancel the current changes in the view and close the window.
+     */
+    public void onBtnCancelClicked() {
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * Save the changes made in the current view and close the window.
+     */
+    public void onBtnSaveClicked() {
+        profile.setReceiver(true);
+        Set<String> set = new HashSet<>(observableListOrgansRequired);
+        profile.addOrgansRequired(set);
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
     }
 
     private void refresh() {
@@ -93,10 +129,18 @@ public class OrganRequiredController {
         viewOrgansAvailable.refresh();
     }
 
+    /**
+     * Configure the currently selected profile
+     *
+     * @param profile the profile to operate against.
+     */
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
+    /**
+     * Take the selected organ from the ListView and move it to the other ListView.
+     */
     private void switchOrgans() {
         final int selectedIdxAvailable = viewOrgansAvailable.getFocusModel().getFocusedIndex();
         if (selectedIdxAvailable != -1) {
@@ -118,11 +162,4 @@ public class OrganRequiredController {
         viewOrgansRequired.getSelectionModel().clearSelection();
     }
 
-    public void onBtnSaveClicked() {
-        profile.setReceiver(true);
-        Set<String> set = new HashSet<>(observableListOrgansRequired);
-        profile.addOrgansRequired(set);
-        Stage stage = (Stage) btnSave.getScene().getWindow();
-        stage.close();
-    }
 }
