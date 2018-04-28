@@ -1,7 +1,14 @@
 package odms.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +16,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
 
@@ -61,7 +71,15 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TextField searchField;
 
+    @FXML
+    private TextField transplantSearchField;
+
+    @FXML
+    private TableView transplantTable;
+
     private ObservableList<Profile> donorObservableList;
+
+    private ObservableList<Entry<Profile, Organ>> receiverObservableList;
 
     private Profile selectedDonor;
 
@@ -186,9 +204,49 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    /**
+     * Initializes and refreshes the search table
+     * Adds a listener to each row so that when it is double clicked
+     * a new donor window is opened.
+     * Calls the setTooltipToRow function.
+     */
+    @FXML
+    private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
+        //TODO Add date
+        receiverObservableList = FXCollections.observableList(receivers);
+        //transplantTable.setItems(receiverObservableList);
+        //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
+        //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
+        //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
+        //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
+        //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
+        transplantOrganRequiredCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
+        System.out.println(receivers.get(0).getKey().getFullName());
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
+        transplantReceiverNameCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantRegionCol  = new TableColumn<>("Region");
+        transplantRegionCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
+        System.out.println(receivers.get(0).getKey().getFullName());
+
+        transplantTable.getColumns().add(transplantOrganRequiredCol);
+        transplantTable.getColumns().add(transplantReceiverNameCol);
+        transplantTable.getColumns().add(transplantRegionCol);
+        transplantTable.setItems(receiverObservableList);
+    }
+
     @FXML
     private void initialize(){
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        try {
+            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
