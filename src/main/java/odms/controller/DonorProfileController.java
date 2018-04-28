@@ -6,12 +6,9 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import odms.commandlineview.CommandUtils;
 import odms.data.DonorDataIO;
 import odms.donor.Donor;
@@ -170,15 +167,12 @@ public class DonorProfileController {
     @FXML
     public Text editedText;
 
-
-
     /**
      * Called when there has been an edit to the current profile.
      */
     public void editedTextArea() {
         editedText.setText("The profile was successfully edited."); //TODO Set to necessary line
     }
-
 
     /**
      * Scene change to log in view.
@@ -193,7 +187,6 @@ public class DonorProfileController {
         appStage.setScene(newScene);
         appStage.setTitle("Login");
         appStage.show();
-
     }
 
     /**
