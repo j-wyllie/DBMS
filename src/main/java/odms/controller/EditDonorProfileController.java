@@ -206,6 +206,7 @@ public class EditDonorProfileController {
             currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
             currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
             action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
+            System.out.println(CommandUtils.getHistory().size());
             if (CommandUtils.getHistory().size() != 0) {
                 if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
                     CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),

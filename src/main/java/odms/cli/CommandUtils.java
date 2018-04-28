@@ -402,6 +402,7 @@ public class CommandUtils {
                 int id = Integer.parseInt(
                     action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
+                System.out.println(action);
                 String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
                 profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
                 if (historyPosition != 0) {
@@ -422,8 +423,10 @@ public class CommandUtils {
     public static void redo(ProfileDatabase currentDatabase) {
         try {
             System.out.println(historyPosition);
+            System.out.println(currentSessionHistory.size());
 
             if (historyPosition != currentSessionHistory.size()) {
+                System.out.println("a");
                 historyPosition += 1;
                 String action;
                 if (historyPosition == 0) {
@@ -431,9 +434,13 @@ public class CommandUtils {
                     action = currentSessionHistory.get(historyPosition);
                     historyPosition = 0;
                 } else {
+                    System.out.println(historyPosition);
+                    System.out.println(currentSessionHistory);
                     action = currentSessionHistory.get(historyPosition);
                 }
+                System.out.println(action);
                 action = action.substring(0, action.indexOf(" at"));
+                System.out.println("c");
                 if (action.contains("added")) {
                     int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     int id = currentDatabase
@@ -473,6 +480,7 @@ public class CommandUtils {
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                     profile.addDonations(organSet);
                 } else if (action.contains("update")) {
+                    System.out.println("b");
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
