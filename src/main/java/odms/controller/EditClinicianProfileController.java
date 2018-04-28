@@ -58,26 +58,6 @@ public class EditClinicianProfileController {
     }
 
     /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
-    @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undo();
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
-    @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redo();
-    }
-
-    /**
      * Button handler to cancel the changes made to the fields.
      * @param event clicking on the cancel (x) button.
      */

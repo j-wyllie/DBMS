@@ -148,8 +148,6 @@
                                     </TilePane>
                                     <ToolBar maxWidth="236.0" prefHeight="66.0" prefWidth="236.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                       <items>
-                                        <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
-                                          <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
                                           <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
                                           <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
                                       </items>
