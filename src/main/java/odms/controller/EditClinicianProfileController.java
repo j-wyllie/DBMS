@@ -8,25 +8,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
 import odms.data.UserDataIO;
+import odms.profile.Profile;
 import odms.user.User;
 
-import javax.xml.soap.Text;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.AlertController.GuiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
-import static odms.controller.LoginController.getCurrentUser;
+import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
 public class EditClinicianProfileController {
