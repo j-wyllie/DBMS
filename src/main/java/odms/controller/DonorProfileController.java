@@ -5,6 +5,7 @@ import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import javafx.collections.FXCollections;
@@ -15,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
-import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.medications.Drug;
+import org.controlsfx.control.textfield.TextFields;
 
 public class DonorProfileController {
 
@@ -315,19 +316,12 @@ public class DonorProfileController {
     private void setMedicationSearchFieldListener() {
         textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
             if (oldValue != newValue) {
-//                try {
-////                    ArrayList<String> suggestions = getSuggestionList(newValue);
-////                  suggestionMenu.getItems().clear();
-//
-//                    for (String medication : suggestions) {
-//                        System.out.println(medication);
-////                        MenuItem item = new MenuItem(medication.toString());
-////                        suggestionMenu.getItems().add(item);
-//                    }
-////                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    ArrayList<String> suggestions = getSuggestionList(newValue);
+                    TextFields.bindAutoCompletion(textFieldMedicationSearch, suggestions);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

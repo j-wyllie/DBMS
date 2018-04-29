@@ -10,8 +10,29 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MedicationDataIO {
+
+    private static String prevSubstring;
+    private static boolean isDelayed;
+
+    private static void delayRequest(String substring) {
+        if (prevSubstring == null) {
+            isDelayed = true;
+            new Timer().schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            isDelayed = false;
+                            prevSubstring = substring;
+                            System.out.println(prevSubstring);
+                        }
+                    }, 5000
+            );
+        }
+    }
 
     /**
      * Gets a list of suggestions for the clinician user based on a string or substring they
@@ -19,27 +40,32 @@ public class MedicationDataIO {
      * @param substring represents the value to send in the HTTP GET request to the API.
      * @throws IOException
      */
-    public static ArrayList<String> getSuggestionList(String substring) throws IOException{
+    public static ArrayList<String> getSuggestionList(String substring) throws IOException {
         ArrayList<String> suggestionList = new ArrayList<>();
+        delayRequest(substring);
+        if (!isDelayed) {
+            System.out.println(prevSubstring);
+            if (!(prevSubstring == null || prevSubstring == "")) {
+                System.out.println(prevSubstring);
+                String urlString = String
+                        .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", prevSubstring);
+                URL url = new URL(urlString);
 
-        if (!(substring == null || substring == "")) {
-            String urlString = String
-                    .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
-            URL url = new URL(urlString);
+                //Reading the response from the connection.
+                StringBuffer response = makeRequest(url);
 
-            //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
-
-            //Parsing the list of suggestions from the response.
-            suggestionList = parseJSON(response, false);
+                //Parsing the list of suggestions from the response.
+                suggestionList = parseJSON(response, false);
+            }
+            prevSubstring = null;
         }
         return suggestionList;
     }
 
     /**
      * Gets a list of active ingredients for the drug selected by the clinician user.
+     *
      * @param drugName represents the value to send in the HTTP GET request to the API.
-     * @throws IOException
      */
     public static ArrayList<String> getActiveIngredients(String drugName) throws IOException {
         ArrayList<String> activeList = new ArrayList<>();
@@ -60,10 +86,10 @@ public class MedicationDataIO {
 
     /**
      * Makes a HTTP GET request to the url passed as a parameter and then returns the response.
+     *
      * @param url represents the address the HTTP GET request is made to.
-     * @throws IOException
      */
-    private static StringBuffer makeRequest(URL url) throws IOException{
+    private static StringBuffer makeRequest(URL url) throws IOException {
         //Creating the connection to the API server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -88,6 +114,7 @@ public class MedicationDataIO {
 
     /**
      * Parse the list of results from the JSON in the HTTP response.
+     *
      * @param content represents the buffer holding the JSON response to parse.
      **/
     private static ArrayList<String> parseJSON(StringBuffer content, boolean ingredients) {
@@ -99,8 +126,7 @@ public class MedicationDataIO {
             for (JsonElement value : results) {
                 responseList.add(value.toString().replace("\"", ""));
             }
-        }
-        else {
+        } else {
             JsonObject resultsObject = parser.parse(content.toString()).getAsJsonObject();
             JsonArray results = resultsObject.getAsJsonArray("suggestions");
             for (JsonElement value : results) {

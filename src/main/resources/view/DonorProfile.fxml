@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -481,14 +481,7 @@
                                         <TableColumn fx:id="tableColumnMedicationNameHistoric" prefWidth="408.99998474121094" text="Historic Medications" />
                                       </columns>
                                     </TableView>
-                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3">
-                                       <contextMenu>
-                                          <ContextMenu fx:id="suggestionMenu">
-                                            <items>
-                                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                            </items>
-                                          </ContextMenu>
-                                       </contextMenu></TextField>
+                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3" />
                                     <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
