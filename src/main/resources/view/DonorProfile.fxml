@@ -428,7 +428,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="Medical history">
+                  <Tab fx:id="medicalHistoryTab" text="Medical history">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
