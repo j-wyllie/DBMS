@@ -85,8 +85,7 @@ nbactions.xml
 
 # For now, ignoring all .idea stuff:
 .idea
-app.iml
-odms.iml
+*.iml
 
 # User-specific stuff:
 .idea/workspace.xml

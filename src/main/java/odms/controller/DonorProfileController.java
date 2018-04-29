@@ -7,6 +7,12 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import odms.cli.CommandUtils;
@@ -22,8 +28,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import odms.medications.Drug;
 
 public class DonorProfileController {
 
@@ -105,6 +111,37 @@ public class DonorProfileController {
     private Label userIdLabel;
 
     @FXML
+    private Button buttonAddMedication;
+
+    @FXML
+    private Button buttonDeleteMedication;
+
+    @FXML
+    private Button buttonMedicationCurrentToHistoric;
+
+    @FXML
+    private Button buttonMedicationHistoricToCurrent;
+
+    @FXML
+    private TextField textFieldMedicationSearch;
+
+    @FXML
+    private TableView<Drug> tableViewCurrentMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameCurrent;
+
+    @FXML
+    private TableView<Drug> tableViewHistoricMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
+
+    private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
+
+    private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
+    @FXML
     private Button logoutButton;
 
     Boolean isClinician = false;
@@ -130,7 +167,7 @@ public class DonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event)  {
         undo();
     }
 
@@ -139,7 +176,7 @@ public class DonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event)  {
         redo();
     }
 
@@ -162,8 +199,117 @@ public class DonorProfileController {
     }
 
     /**
+     * Button handler to add medications to the current medications for the current profile.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleAddNewMedications(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        String medicationName = textFieldMedicationSearch.getText();
+
+        currentDonor.addDrug(new Drug(medicationName));
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to remove medications from the current medications and move them to historic.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToHistoric(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
+        currentDonor.moveDrugToHistory(drug);
+        if (drug == null) { return; }
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to remove medications from the historic list and add them back to the current list of drugs.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToCurrent(ActionEvent event)   {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { return; }
+        currentDonor.moveDrugToCurrent(drug);
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to delete medications
+     * @param event clicking on the delete button.
+     */
+    @FXML
+    private void handleDelete(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
+        if (drug == null) { return; }
+
+        currentDonor.deleteDrug(drug);
+
+        refreshTable();
+    }
+
+    /**
+     * Refresh the current and historic medication tables with the most up to date data
+     */
+    @FXML
+    private void refreshTable() {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+
+        tableViewCurrentMedications.getItems().clear();
+        if (currentDonor.getCurrentMedications() != null) {currentMedication.addAll(currentDonor.getCurrentMedications());}
+        tableViewHistoricMedications.getItems().clear();
+        if (currentDonor.getHistoryOfMedication() != null) {historicMedication.addAll(currentDonor.getHistoryOfMedication());}
+
+        tableViewCurrentMedications.setItems(currentMedication);
+        tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewCurrentMedications.getColumns().setAll(tableColumnMedicationNameCurrent);
+
+        tableViewHistoricMedications.setItems(historicMedication);
+        tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
+
+    }
+
+    /**
      * sets all of the items in the fxml to their respective values
-     * @param currentDonor donors profile
      */
     @FXML
     private void setPage(Profile currentDonor){
@@ -254,6 +400,9 @@ public class DonorProfileController {
                 }
             }
             historyView.setText(userHistory.toString());
+
+            refreshTable();
+
         } catch (Exception e) {
             e.printStackTrace();
             InvalidUsername();
@@ -267,7 +416,21 @@ public class DonorProfileController {
     @FXML
     private void hideItems() {
         if(isClinician){
+            buttonAddMedication.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+
             logoutButton.setVisible(false);
+        } else {
+            buttonAddMedication.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+
+            logoutButton.setVisible(true);
         }
     }
 
