@@ -24,6 +24,7 @@ public class Profile {
     private String address;
     private String region;
     private Boolean registered;
+    private Integer age;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -456,6 +457,10 @@ public class Profile {
         } else {
             return Period.between(dateOfBirth, dateOfDeath).getYears();
         }
+    }
+
+    public int getAge(){
+        return calculateAge();
     }
 
 
