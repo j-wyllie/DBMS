@@ -1,7 +1,7 @@
 package odms.data;
 
-import static odms.data.MedicationDataIO.GetActiveIngredients;
-import static odms.data.MedicationDataIO.GetSuggestionList;
+import static odms.medications.MedicationDataIO.getActiveIngredients;
+import static odms.medications.MedicationDataIO.getSuggestionList;
 import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,26 +46,26 @@ public class MedicationDataIOTest {
     @Test
     public void testEmptyOrNullStringGetSuggestionList() throws IOException {
         //Test for null or empty substrings.
-        assertArrayEquals(expectedList1, GetSuggestionList(substring1).toArray());
-        assertArrayEquals(expectedList1, GetSuggestionList(substring2).toArray());
+        assertArrayEquals(expectedList1, getSuggestionList(substring1).toArray());
+        assertArrayEquals(expectedList1, getSuggestionList(substring2).toArray());
     }
 
     @Test
     public void testValidStringGetSuggestionList() throws IOException {
         //Test for substring with valid value.
-        assertArrayEquals(expectedList2, GetSuggestionList(substring3).toArray());
+        assertArrayEquals(expectedList2, getSuggestionList(substring3).toArray());
     }
 
     @Test
     public void testEmptyOrNullStringGetActiveIngredients() throws IOException {
         //Test for null or empty substrings.
-        assertArrayEquals(expectedList1, GetActiveIngredients(substring1).toArray());
-        assertArrayEquals(expectedList1, GetActiveIngredients(substring2).toArray());
+        assertArrayEquals(expectedList1, getActiveIngredients(substring1).toArray());
+        assertArrayEquals(expectedList1, getActiveIngredients(substring2).toArray());
     }
 
     @Test
     public void testValidStringGetActiveIngredients() throws IOException {
         //Test for drug name with valid value.
-        assertArrayEquals(expectedList3, GetActiveIngredients(drugName).toArray());
+        assertArrayEquals(expectedList3, getActiveIngredients(drugName).toArray());
     }
 }

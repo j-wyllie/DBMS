@@ -4,6 +4,7 @@ import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
+import static odms.medications.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.stage.Window;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
@@ -136,6 +138,9 @@ public class DonorProfileController {
 
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
+
+    @FXML
+    private ContextMenu suggestionMenu;
 
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
 
@@ -280,6 +285,27 @@ public class DonorProfileController {
         refreshTable();
     }
 
+    @FXML
+    private void setMedicationSearchFieldListener() {
+        textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
+            if (oldValue != newValue) {
+                try {
+                    ArrayList<String> suggestions = getSuggestionList(newValue);
+//                    suggestionMenu.getItems().clear();
+
+                    for (String medication : suggestions) {
+                        System.out.println(medication);
+//                        MenuItem item = new MenuItem(medication.toString());
+//                        suggestionMenu.getItems().add(item);
+                    }
+//                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     /**
      * Refresh the current and historic medication tables with the most up to date data
      */
@@ -402,6 +428,7 @@ public class DonorProfileController {
             historyView.setText(userHistory.toString());
 
             refreshTable();
+            setMedicationSearchFieldListener();
 
         } catch (Exception e) {
             e.printStackTrace();

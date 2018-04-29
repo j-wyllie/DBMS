@@ -486,7 +486,14 @@
                                         <TableColumn fx:id="tableColumnMedicationNameHistoric" prefWidth="408.99998474121094" text="Historic Medications" />
                                       </columns>
                                     </TableView>
-                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3" />
+                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3">
+                                       <contextMenu>
+                                          <ContextMenu fx:id="suggestionMenu">
+                                            <items>
+                                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                            </items>
+                                          </ContextMenu>
+                                       </contextMenu></TextField>
                                     <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
