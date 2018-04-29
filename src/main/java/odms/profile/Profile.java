@@ -1,5 +1,7 @@
 package odms.profile;
 
+import odms.cli.CommandUtils;
+
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Collections;
@@ -383,6 +385,15 @@ public class Profile {
             String newOrgan = org.trim().toUpperCase().replace(" ", "_");
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
+            String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
 
         this.organsRequired = newOrgans;
