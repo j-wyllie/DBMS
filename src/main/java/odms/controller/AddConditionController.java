@@ -1,5 +1,7 @@
 package odms.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,6 +75,10 @@ public class AddConditionController {
     public void init(DonorProfileController controller) {
         this.controller = controller;
         searchedDonor = controller.searchedDonor;
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        dateDiagnosedField.setText(now.format(formatter));
         dateCuredField.setDisable(true);
     }
 
