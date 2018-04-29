@@ -71,6 +71,9 @@ public class DonorProfileControllerTest extends ApplicationTest {
         assertFalse(toggleChronic.isVisible());
         assertFalse(addNewCondition.isVisible());
         assertFalse(deleteCondition.isVisible());
+
+        // logout
+        clickOn("#logoutButton");
     }
 
     /**
