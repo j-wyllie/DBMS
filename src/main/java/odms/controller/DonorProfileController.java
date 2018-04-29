@@ -4,15 +4,13 @@ import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
+import static odms.data.MedicationDataIO.getActiveIngredients;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
@@ -20,10 +18,8 @@ import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
-
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -220,7 +216,7 @@ public class DonorProfileController {
 
         String activeIngredients = null;
         try {
-            activeIngredients = MedicationDataIO.GetActiveIngredients(drug.getDrugName()).toString();
+            activeIngredients = getActiveIngredients(drug.getDrugName()).toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -319,19 +315,19 @@ public class DonorProfileController {
     private void setMedicationSearchFieldListener() {
         textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
             if (oldValue != newValue) {
-                try {
-                    ArrayList<String> suggestions = getSuggestionList(newValue);
-//                    suggestionMenu.getItems().clear();
-
-                    for (String medication : suggestions) {
-                        System.out.println(medication);
-//                        MenuItem item = new MenuItem(medication.toString());
-//                        suggestionMenu.getItems().add(item);
-                    }
-//                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+////                    ArrayList<String> suggestions = getSuggestionList(newValue);
+////                  suggestionMenu.getItems().clear();
+//
+//                    for (String medication : suggestions) {
+//                        System.out.println(medication);
+////                        MenuItem item = new MenuItem(medication.toString());
+////                        suggestionMenu.getItems().add(item);
+//                    }
+////                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
     }

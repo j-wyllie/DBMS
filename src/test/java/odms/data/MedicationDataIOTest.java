@@ -1,7 +1,7 @@
 package odms.data;
 
-import static odms.medications.MedicationDataIO.getActiveIngredients;
-import static odms.medications.MedicationDataIO.getSuggestionList;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
 import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
