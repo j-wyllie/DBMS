@@ -24,7 +24,7 @@ public class MedicationDataIO {
      * @param age age of profile request is made for.
      * @return Map<String, String> keys are valid interactions and values are duration of time after which an
      * interaction may occur.
-     * @throws IOException
+     * @throws IOException creation of URL may cause IOException
      */
     public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
         Map<String, String> interactions;
@@ -39,6 +39,9 @@ public class MedicationDataIO {
             //Reading the response from the connection.
             StringBuffer response = makeRequest(url);
 
+            if (response == null) {
+                return interactions;
+            }
             interactions = parseInteractionsJSON(response, gender, age);
         }
         return interactions;
@@ -47,9 +50,10 @@ public class MedicationDataIO {
     /**
      * Makes a HTTP GET request to the url passed as a parameter and then returns the response.
      * @param url represents the address the HTTP GET request is made to.
-     * @throws IOException
+     * @throws IOException URL and HttpURLConnection may cause IOExceptions
      */
     private static StringBuffer makeRequest(URL url) throws IOException {
+        StringBuffer responseContent;
         //Creating the connection to the API server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -57,17 +61,21 @@ public class MedicationDataIO {
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
 
-        BufferedReader response = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        if (con.getResponseCode() == 200) {
+            BufferedReader response = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
 
-        StringBuffer responseContent = new StringBuffer();
-        String line = response.readLine();
-        while (line != null) {
-            responseContent.append(line);
-            line = response.readLine();
+            responseContent = new StringBuffer();
+            String line = response.readLine();
+            while (line != null) {
+                responseContent.append(line);
+                line = response.readLine();
+            }
+            response.close();
+            con.disconnect();
+        } else {
+            return null;
         }
-        response.close();
-        con.disconnect();
 
         return responseContent;
     }
