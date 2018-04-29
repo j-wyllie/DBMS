@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -25,8 +19,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -495,6 +490,8 @@
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
+                                    <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <Text fx:id="textDrugInteractions" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                                  </children>
                               </GridPane>
                            </children>

@@ -15,12 +15,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
+import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -144,6 +147,10 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
+    @FXML private Button buttonShowDrugInteractions;
+
+    @FXML private Text textDrugInteractions;
+
     Boolean isClinician = false;
 
 
@@ -216,6 +223,57 @@ public class DonorProfileController {
         currentDonor.addDrug(new Drug(medicationName));
 
         refreshTable();
+    }
+
+    public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
+        ArrayList<Drug> toReturn = new ArrayList<>();
+        for (int i = 0; i<drugs.size(); i++) {
+            if (drugs.get(i) != null) { toReturn.add(drugs.get(i)); }
+        }
+        return toReturn;
+    }
+
+    @FXML
+    private void handleShowInteractions(ActionEvent event) {
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+
+        Map<String, String> interactionsRaw;
+        String interactions = "";
+
+        if (drugs.size() != 2) {
+            if (drugs.size() == 1) {
+                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+                drugs.add(toAdd);
+            }
+            else if (drugs.size() == 0) {
+                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            }
+
+            if (drugs.size() != 2) {
+                return; }
+        }
+
+        try {
+            interactionsRaw = MedicationDataIO.getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
+            //System.out.println(interactionsRaw);
+
+            for (Map.Entry<String, String> entry: interactionsRaw.entrySet()) {
+                if (!(entry.getValue().equals("not specified"))) {
+                    interactions += entry.getKey() + ": " + entry.getValue() + ", ";
+                }
+            }
+
+            if (interactions.length() <= 1) {
+                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
+            } else {
+                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": " + interactions);
+            }
+
+        } catch (IOException | NullPointerException e) { //not too sure about this, sometimes get a 502 error code returned or null pointer on no interactions i think?
+            e.printStackTrace();
+            textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
+        }
+
     }
 
     /**
@@ -422,6 +480,9 @@ public class DonorProfileController {
             buttonMedicationHistoricToCurrent.setVisible(true);
             textFieldMedicationSearch.setVisible(true);
 
+            textDrugInteractions.setVisible(true);
+            buttonShowDrugInteractions.setVisible(true);
+
             logoutButton.setVisible(false);
         } else {
             buttonAddMedication.setVisible(false);
@@ -429,6 +490,9 @@ public class DonorProfileController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
+
+            textDrugInteractions.setVisible(false);
+            buttonShowDrugInteractions.setVisible(false);
 
             logoutButton.setVisible(true);
         }
@@ -439,6 +503,12 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
+        tableViewCurrentMedications.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+        tableViewHistoricMedications.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
         if(getCurrentProfile() != null) {
             Profile currentDonor = getCurrentProfile();
             hideItems();
