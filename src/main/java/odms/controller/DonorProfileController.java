@@ -4,7 +4,6 @@ import static odms.controller.AlertController.InvalidUsername;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
-import static odms.medications.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
@@ -16,8 +15,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.stage.Window;
+import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
+import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
@@ -149,6 +149,10 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
+    @FXML private Button buttonViewActiveIngredients;
+
+    @FXML private Text textActiveIngredients;
+
     Boolean isClinician = false;
 
 
@@ -204,6 +208,32 @@ public class DonorProfileController {
     }
 
     /**
+     * Button handler to view a drugs active ingredients
+     * @param event clicking on the active ingredients button
+     */
+    @FXML
+    private  void handleViewActiveIngredients(ActionEvent event) {
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
+        if (drug == null) { return; }
+
+        String activeIngredients = null;
+        try {
+            activeIngredients = MedicationDataIO.GetActiveIngredients(drug.getDrugName()).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (activeIngredients == "[]") {
+            textActiveIngredients.setText(drug.getDrugName() + " active ingredients: None found!");
+        } else {
+            textActiveIngredients.setText(drug.getDrugName() + " active ingredients: " + activeIngredients);
+        }
+
+    }
+
+    /**
      * Button handler to add medications to the current medications for the current profile.
      * @param event clicking on the add button.
      */
@@ -237,8 +267,8 @@ public class DonorProfileController {
         }
 
         Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
-        currentDonor.moveDrugToHistory(drug);
         if (drug == null) { return; }
+        currentDonor.moveDrugToHistory(drug);
 
         refreshTable();
     }
