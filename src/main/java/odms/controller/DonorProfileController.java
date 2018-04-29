@@ -11,9 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
-import odms.donor.Donor;
 import java.io.Console;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -103,11 +100,6 @@ public class DonorProfileController {
     @FXML
     private TextArea historyView;
 
-    /**
-     * Text for showing recent edits.
-     */
-    @FXML
-    public Text editedText;
     @FXML
     private Label bmiLabel;
 
@@ -121,6 +113,13 @@ public class DonorProfileController {
     private Button logoutButton;
 
     Boolean isClinician = false;
+
+    /**
+     * Text for showing recent edits.
+     */
+    @FXML
+    public Text editedText;
+
 
     /**
      * Called when there has been an edit to the current profile.
@@ -179,6 +178,7 @@ public class DonorProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
+        appStage.setTitle("Edit Profile");
         appStage.show();
     }
     /**

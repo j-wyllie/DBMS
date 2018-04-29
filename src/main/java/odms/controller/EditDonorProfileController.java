@@ -31,6 +31,8 @@ import odms.profile.Profile;
 
 public class EditDonorProfileController {
 
+    private Boolean savedProfile = false; //Tells whether saved or cancel is selected.
+
     private Profile currentProfile;
 
     @FXML
@@ -240,7 +242,7 @@ public class EditDonorProfileController {
             }
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-
+            savedProfile = true;
             closeEditWindow(event);
         }
     }
@@ -254,6 +256,7 @@ public class EditDonorProfileController {
         boolean cancelBool = DonorCancelChanges();
 
         if (cancelBool) {
+            savedProfile=false;
             closeEditWindow(event);
         }
     }
@@ -265,12 +268,19 @@ public class EditDonorProfileController {
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
         if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
 
-            appStage.setScene(scene);
+            Parent parent = loader.load();
+            DonorProfileController controller = loader.getController();
+            if(savedProfile) {
+                controller.editedTextArea(); //Any public method here.
+            }
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
+
 
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));

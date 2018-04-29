@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.EditDonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.EditDonorProfileController">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -115,22 +115,22 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                <TextField fx:id="phoneField" onKeyTyped="#editTrue" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="emailField" layoutX="140.0" layoutY="67.0" promptText="example@example.com" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                <TextField fx:id="emailField" onKeyTyped="#editTrue" layoutX="140.0" layoutY="67.0" promptText="example@example.com" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="addressField" layoutX="140.0" layoutY="118.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                                <TextField fx:id="addressField" onKeyTyped="#editTrue" layoutX="140.0" layoutY="118.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="regionField" layoutX="140.0" layoutY="169.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                <TextField fx:id="regionField" onKeyTyped="#editTrue" layoutX="140.0" layoutY="169.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
@@ -246,42 +246,42 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </Label>
-                                                                <TextField fx:id="givenNamesField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                                <TextField fx:id="givenNamesField" onKeyTyped="#editTrue" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="lastNamesField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                                <TextField fx:id="lastNamesField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                                <TextField fx:id="irdField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="dobField" layoutX="210.0" layoutY="163.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                <TextField fx:id="dobField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="163.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="dodField" layoutX="210.0" layoutY="211.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                <TextField fx:id="dodField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="211.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="genderField" layoutX="210.0" layoutY="259.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                                <TextField fx:id="genderField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="259.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="heightField" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
+                                                                <TextField fx:id="heightField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="weightField" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+                                                                <TextField fx:id="weightField" onKeyTyped="#editTrue" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
