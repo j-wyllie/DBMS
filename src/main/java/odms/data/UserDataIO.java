@@ -12,12 +12,13 @@ import java.io.IOException;
 public class UserDataIO {
 
     /**
-     * Export full DonorDatabase object to specified JSON file.
+     * Export full ProfileDatabase object to specified JSON file.
      *
      * @param userDb Database to be exported to JSON
+     * @param path The location of the saved file
      */
-    public static void saveUsers(UserDatabase userDb) {
-        File file = new File("./users.json");
+    public static void saveUsers(UserDatabase userDb, String path) {
+        File file = new File(path);
         try {
             Gson gson = new Gson();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
@@ -26,9 +27,10 @@ public class UserDataIO {
 
             writeFile.close();
 
-            System.out.println("File  exported successfully!");
+            System.out.println("File exported successfully!");
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -60,16 +62,15 @@ public class UserDataIO {
         }
 
         return fileBuffer.toString();
-
     }
 
     /**
      * Load the specified DonorDatabase JSON file instantiating a DonorDatabase Object.
-     *
+     * @param path The location of the saved file
      * @return DonorDatabase
      */
-    public static UserDatabase loadData() {
-        File file = new File("./users.json");
+    public static UserDatabase loadData(String path) {
+        File file = new File(path);
         UserDatabase userDb = new UserDatabase();
 
         try {
@@ -86,6 +87,4 @@ public class UserDataIO {
 
         return userDb;
     }
-
-
 }

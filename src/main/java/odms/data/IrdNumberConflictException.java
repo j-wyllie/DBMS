@@ -1,6 +1,7 @@
 package odms.data;
 
 public class IrdNumberConflictException extends Exception {
+
     private Integer irdNumber;
 
     public IrdNumberConflictException(String message, int irdNumber) {
