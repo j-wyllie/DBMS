@@ -1,18 +1,24 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
-import static odms.controller.LoginController.getCurrentDonor;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import odms.commandlineview.CommandUtils;
-import odms.data.DonorDataIO;
-import odms.donor.Donor;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.io.Console;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -22,10 +28,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import odms.medications.Drug;
 
 public class DonorProfileController {
+
+    protected Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -102,6 +110,42 @@ public class DonorProfileController {
     @FXML
     private Label userIdLabel;
 
+    @FXML
+    private Button buttonAddMedication;
+
+    @FXML
+    private Button buttonDeleteMedication;
+
+    @FXML
+    private Button buttonMedicationCurrentToHistoric;
+
+    @FXML
+    private Button buttonMedicationHistoricToCurrent;
+
+    @FXML
+    private TextField textFieldMedicationSearch;
+
+    @FXML
+    private TableView<Drug> tableViewCurrentMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameCurrent;
+
+    @FXML
+    private TableView<Drug> tableViewHistoricMedications;
+
+    @FXML
+    private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
+
+    private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
+
+    private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
+    @FXML
+    private Button logoutButton;
+
+    Boolean isClinician = false;
+
 
     /**
      * Scene change to log in view.
@@ -109,6 +153,8 @@ public class DonorProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        LoginController.setCurrentDonor(null); //clears current donor
+
         Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -121,7 +167,7 @@ public class DonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event)  {
         undo();
     }
 
@@ -130,7 +176,7 @@ public class DonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event)  {
         redo();
     }
 
@@ -140,22 +186,137 @@ public class DonorProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
-        Scene newScene = new Scene(parent);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
+        controller.setDonor(searchedDonor);
+        controller.initialize();
+
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
+
+        appStage.setScene(scene);
         appStage.show();
     }
 
     /**
-     * Sets the current donor attributes to the labels on start up.
+     * Button handler to add medications to the current medications for the current profile.
+     * @param event clicking on the add button.
      */
     @FXML
-    public void initialize() {
-        Donor currentDonor = getCurrentDonor();
+    private void handleAddNewMedications(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        String medicationName = textFieldMedicationSearch.getText();
+
+        currentDonor.addDrug(new Drug(medicationName));
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to remove medications from the current medications and move them to historic.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToHistoric(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
+        currentDonor.moveDrugToHistory(drug);
+        if (drug == null) { return; }
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to remove medications from the historic list and add them back to the current list of drugs.
+     * @param event clicking on the add button.
+     */
+    @FXML
+    private void handleMoveMedicationToCurrent(ActionEvent event)   {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { return; }
+        currentDonor.moveDrugToCurrent(drug);
+
+        refreshTable();
+    }
+
+    /**
+     * Button handler to delete medications
+     * @param event clicking on the delete button.
+     */
+    @FXML
+    private void handleDelete(ActionEvent event)  {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
+        if (drug == null) { return; }
+
+        currentDonor.deleteDrug(drug);
+
+        refreshTable();
+    }
+
+    /**
+     * Refresh the current and historic medication tables with the most up to date data
+     */
+    @FXML
+    private void refreshTable() {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+
+        tableViewCurrentMedications.getItems().clear();
+        if (currentDonor.getCurrentMedications() != null) {currentMedication.addAll(currentDonor.getCurrentMedications());}
+        tableViewHistoricMedications.getItems().clear();
+        if (currentDonor.getHistoryOfMedication() != null) {historicMedication.addAll(currentDonor.getHistoryOfMedication());}
+
+        tableViewCurrentMedications.setItems(currentMedication);
+        tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewCurrentMedications.getColumns().setAll(tableColumnMedicationNameCurrent);
+
+        tableViewHistoricMedications.setItems(historicMedication);
+        tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
+        tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
+
+    }
+
+    /**
+     * sets all of the items in the fxml to their respective values
+     */
+    @FXML
+    private void setPage(Profile currentDonor){
+
         try {
             donorFullNameLabel
-                    .setText(currentDonor.getGivenNames() + " " + currentDonor.getLastNames());
+                    .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
@@ -163,6 +324,7 @@ public class DonorProfileController {
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
+
             }
             if (currentDonor.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentDonor.getLastNames());
@@ -195,13 +357,13 @@ public class DonorProfileController {
             if (currentDonor.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
-            if(currentDonor.getHeight() != null && currentDonor.getWeight() != null){
+            if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
                 bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
             }
-            if(currentDonor.getDateOfBirth() != null){
+            if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
             }
-            if(currentDonor.getId() != null){
+            if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
@@ -218,28 +380,81 @@ public class DonorProfileController {
             //chronic diseases.
             //organs to donate.
             //past donations.
-            String history = DonorDataIO.getHistory();
+            String history = ProfileDataIO.getHistory();
             Gson gson = new Gson();
 
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
-                history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+                history = history.substring(0, history.length() - 1);
+                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
             }
-            history = history.substring(1, history.length()-1);
+            history = history.substring(1, history.length() - 1);
             String[] actionHistory = history.split(",");
 
             ArrayList<String> userHistory = new ArrayList<>();
 
-            for(String str : actionHistory){
-                if(str.contains("Donor " + getCurrentDonor().getId())){
+            for (String str : actionHistory) {
+                if (str.contains("Donor " + currentDonor.getId())) {
                     userHistory.add(str);
                 }
             }
             historyView.setText(userHistory.toString());
+
+            refreshTable();
+
         } catch (Exception e) {
+            e.printStackTrace();
             InvalidUsername();
         }
+
     }
+
+    /**
+     * hides items that shouldn't be visible to either a donor or clinician
+     */
+    @FXML
+    private void hideItems() {
+        if(isClinician){
+            buttonAddMedication.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+
+            logoutButton.setVisible(false);
+        } else {
+            buttonAddMedication.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+
+            logoutButton.setVisible(true);
+        }
+    }
+
+    /**
+     * Sets the current donor attributes to the labels on start up.
+     */
+    @FXML
+    public void initialize() {
+        if(getCurrentProfile() != null) {
+            Profile currentDonor = getCurrentProfile();
+            hideItems();
+            setPage(currentDonor);
+        }
+    }
+
+    /**
+     * sets the donor if it is being opened by a clinician
+     * @param donor
+     */
+    public void setDonor(Profile donor) {
+        isClinician = true;
+        searchedDonor = donor;
+        hideItems();
+        setPage(searchedDonor);
+    }
+
 }

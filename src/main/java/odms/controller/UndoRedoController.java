@@ -1,6 +1,6 @@
 package odms.controller;
 
-import odms.commandlineview.CommandUtils;
+import odms.cli.CommandUtils;
 
 public class UndoRedoController {
 
