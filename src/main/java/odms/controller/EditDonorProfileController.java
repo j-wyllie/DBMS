@@ -268,7 +268,6 @@ public class EditDonorProfileController extends GeneralWindowController{
             appStage.setTitle("Donor Profile");
             appStage.show();
 
-
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
             Scene scene = new Scene(fxmlLoader.load());

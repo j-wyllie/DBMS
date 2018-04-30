@@ -112,7 +112,7 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
-    Boolean isClinician = false;
+    private Boolean isClinician = false;
 
     /**
      * Text for showing recent edits.
