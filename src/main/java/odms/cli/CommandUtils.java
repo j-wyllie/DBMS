@@ -407,6 +407,12 @@ public class CommandUtils {
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
+            } else if (action.contains("added required")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                String organString = action.substring(action.indexOf('('), action.indexOf(')'));
+                Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
+                Profile profile = currentDatabase.getProfile(id);
+                profile.removeOrgansRequired(set);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -476,6 +482,12 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     String newInfo = action.substring(action.indexOf("ird"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+                }  else if (action.contains("added required")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    String organString = action.substring(action.indexOf('('), action.indexOf(')'));
+                    Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
+                    Profile profile = currentDatabase.getProfile(id);
+                    profile.setOrgansRequired(set);
                 }
                 System.out.println("Command redone");
             } else {

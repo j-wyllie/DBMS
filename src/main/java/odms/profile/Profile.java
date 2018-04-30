@@ -380,22 +380,23 @@ public class Profile {
         generateUpdateInfo("organsRequired");
 
         Set<Organ> newOrgans = new HashSet<>();
-
+        String organString = "";
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase().replace(" ", "_");
+            organString += newOrgan+",";
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
-            String action = "Profile " + this.getId() + " added required organ " + organ + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-        }
 
+        }
+        String action = "Profile " + this.getId() + " added required organs (" + organString.substring(0, organString.length()-1) + ") at " + LocalDateTime.now();
+        if (CommandUtils.getHistory().size() != 0) {
+            if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                        CommandUtils.getHistory().size() - 1).clear();
+            }
+        }
+        CommandUtils.currentSessionHistory.add(action);
+        CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         this.organsRequired = newOrgans;
     }
 
