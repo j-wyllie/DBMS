@@ -59,27 +59,35 @@ public class AddConditionController {
             String[] diagDates = dateDiagnosed.split("-");
             LocalDate dateDiagnoses = LocalDate.of(Integer.valueOf(diagDates[2]), Integer.valueOf(diagDates[1]), Integer.valueOf(diagDates[0]));
 
-            String[] cureDates = dateCured.split("-");
-            LocalDate dateCures = LocalDate.of(Integer.valueOf(cureDates[2]), Integer.valueOf(cureDates[1]), Integer.valueOf(cureDates[0]));
-
             if (name.equals("")) {
                 throw new IllegalArgumentException();
             }
 
             LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
-            if (dob.isAfter(dateDiagnoses) || dateDiagnoses.isAfter(LocalDate.now()) || dateCures.isAfter(LocalDate.now()) || dob.isAfter(dateCures) || dateDiagnoses.isAfter(dateCures)){
+            if (dob.isAfter(dateDiagnoses) || dateDiagnoses.isAfter(LocalDate.now())){
                 throw new IllegalArgumentException();
             }
             if (curedCheckBox.isSelected()) {
-                condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
+                String[] cureDates = dateCured.split("-");
+                LocalDate dateCures = LocalDate.of(Integer.valueOf(cureDates[2]), Integer.valueOf(cureDates[1]), Integer.valueOf(cureDates[0]));
+                if(dateCures.isAfter(LocalDate.now()) || dob.isAfter(dateCures) || dateDiagnoses.isAfter(dateCures)){
+                    condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
+
+                } else {
+                    throw new IllegalArgumentException();
+                }
             } else {
                 condition = new Condition(name, dateDiagnosed, isChronic);
             }
             addCondition(condition);
+
         } catch (IllegalArgumentException e) {
             warningLabel.setVisible(true);
         } catch (DateTimeException e) {
             warningLabel.setVisible(true);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            warningLabel.setVisible(true);
+
         }
     }
 
