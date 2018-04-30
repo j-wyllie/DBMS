@@ -19,6 +19,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -272,6 +273,23 @@ public class DonorProfileController {
                 });
 
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+        curChronicColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new TableCell<ArrayList<Condition>, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            this.setTextFill(Color.RED);
+                            setText(item);
+                        }
+                    }
+                };
+            }
+        });
+
 
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
