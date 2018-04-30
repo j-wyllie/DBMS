@@ -13,18 +13,7 @@ import java.io.IOException;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
-public class EditClinicianProfileController {
-
-    /**
-     * Changes the Edit Profile title to include an asterix to indicate a value has been edited.
-     * @param event Any key event within the text boxes.
-     */
-
-    @FXML
-    private void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setTitle("Edit Profile (*)");
-    }
+public class EditClinicianProfileController extends GeneralWindowController{
 
     /**
      * Scene change to log in view.

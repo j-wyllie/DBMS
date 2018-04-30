@@ -29,7 +29,7 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController {
+public class EditDonorProfileController extends GeneralWindowController{
 
     private Boolean savedProfile = false; //Tells whether saved or cancel is selected.
 
@@ -99,16 +99,16 @@ public class EditDonorProfileController {
     private TextField donationsField;
 
 
-    /**
-     * Changes the Edit Profile title to include an asterix to indicate a value has been edited.
-     * @param event Any key event within the text boxes.
-     */
-
-    @FXML
-    private void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setTitle("Edit Profile (*)");
-    }
+//    /**
+//     * Changes the Edit Profile title to include an asterix to indicate a value has been edited.
+//     * @param event Any key event within the text boxes.
+//     */
+//
+//    @FXML
+//    private void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
+//        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        currentStage.setTitle("Edit Profile (*)");
+//    }
 
     /**
      * Scene change to log in view.
