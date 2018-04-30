@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.TilePane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -433,17 +419,18 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane layoutY="-6.0" prefHeight="527.0" prefWidth="1200.0">
+                              <GridPane layoutY="-3.0" prefHeight="524.0" prefWidth="1200.0">
                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="648.0" minWidth="10.0" prefWidth="420.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="48.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="162.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="233.0" minWidth="44.0" prefWidth="95.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="162.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="134.0" prefWidth="134.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.0" minWidth="82.0" prefWidth="82.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="134.0" prefWidth="134.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="38.0" minWidth="38.0" prefWidth="38.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="304.0" minWidth="304.0" prefWidth="304.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints maxHeight="126.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
@@ -454,8 +441,7 @@
                                     <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" onAction="#handleAddNewMedications" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" onAction="#handleAddNewMedications" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -463,26 +449,7 @@
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
-                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" onAction="#handleMoveMedicationToHistoric" GridPane.columnIndex="3" GridPane.rowIndex="3">
-                                       <graphic>
-                                          <ImageView pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/arrow2.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic></Button>
-                                    <TableView fx:id="tableViewCurrentMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
-                                      <columns>
-                                        <TableColumn fx:id="tableColumnMedicationNameCurrent" prefWidth="390.0" text="Current Medications" />
-                                      </columns>
-                                    </TableView>
-                                    <TableView fx:id="tableViewHistoricMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
-                                      <columns>
-                                        <TableColumn fx:id="tableColumnMedicationNameHistoric" prefWidth="408.99998474121094" text="Historic Medications" />
-                                      </columns>
-                                    </TableView>
-                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="5" GridPane.columnSpan="3" />
-                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" onAction="#handleMoveMedicationToHistoric" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -490,8 +457,73 @@
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
-                                    <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                    <Text fx:id="textDrugInteractions" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                    <TableView fx:id="tableViewCurrentMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                      <columns>
+                                        <TableColumn fx:id="tableColumnMedicationNameCurrent" prefWidth="350.0" text="Current Medications" />
+                                      </columns>
+                                    </TableView>
+                                    <TableView fx:id="tableViewHistoricMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                      <columns>
+                                        <TableColumn fx:id="tableColumnMedicationNameHistoric" prefWidth="350.0" text="Historic Medications" />
+                                      </columns>
+                                    </TableView>
+                                    <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/arrow2.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></Button>
+                                    <TilePane prefHeight="523.0" prefWidth="291.0" GridPane.columnIndex="9" GridPane.rowSpan="6">
+                                       <children>
+                                          <GridPane prefHeight="523.0" prefWidth="307.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="143.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.0" minWidth="10.0" prefWidth="126.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints maxHeight="208.0" minHeight="10.0" prefHeight="179.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="191.0" minHeight="10.0" prefHeight="151.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <TableView prefHeight="207.0" prefWidth="290.0" GridPane.columnSpan="2">
+                                                  <columns>
+                                                    <TableColumn prefWidth="307.0" text="Active Ingredients" />
+                                                  </columns>
+                                                </TableView>
+                                                <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                  <columns>
+                                                    <TableColumn prefWidth="307.0" text="Drug Interactions" />
+                                                  </columns>
+                                                </TableView>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </TilePane>
+                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                       <children>
+                                          <GridPane prefHeight="62.0" prefWidth="289.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="146.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="10.0" prefWidth="54.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints maxHeight="14.0" minHeight="10.0" prefHeight="13.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="21.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.rowIndex="1" />
+                                                <Text fx:id="textDrugInteractions" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </TilePane>
                                  </children>
                               </GridPane>
                            </children>
