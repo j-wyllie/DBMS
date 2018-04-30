@@ -120,7 +120,6 @@ public class DonorProfileController {
     @FXML
     public Text editedText;
 
-
     /**
      * Called when there has been an edit to the current profile.
      */
