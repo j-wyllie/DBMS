@@ -89,7 +89,6 @@ public class Profile {
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
-        System.out.println(attributes.size());
         for (String val : attributes) {
             String[] parts = val.split("=");
             if(parts.length==1) {

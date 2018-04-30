@@ -190,8 +190,7 @@ public class CommandUtilsTest {
         Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
-
-    @Ignore
+    
     @Test
     public void testProfileDateCreatedCommand() {
         String irdNumber = "123456789";
