@@ -6,11 +6,13 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.io.IOException;
@@ -22,7 +24,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DonorProfileController {
@@ -107,7 +108,41 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private Button addNewProcedureButton;
+
+    @FXML
+    private Button deleteProcedureButton;
+
+    @FXML
+    private TableView pendingProcedureTable;
+
+    @FXML
+    private TableView previousProcedureTable;
+
+    @FXML
+    private TableColumn pendingSummaryColumn;
+
+    @FXML
+    private TableColumn previousSummaryColumn;
+
+    @FXML
+    private TableColumn pendingDateColumn;
+
+    @FXML
+    private TableColumn previousDateColumn;
+
+    @FXML
+    private TableColumn pendingDescriptionColumn;
+
+    @FXML
+    private TableColumn previousProcedureColumn;
+
     Boolean isClinician = false;
+
+    private ObservableList<Procedure> previousProceduresObservableList;
+    private ObservableList<Procedure> pendingProceduresObservableList;
+
 
 
     /**
@@ -261,12 +296,96 @@ public class DonorProfileController {
     }
 
     /**
-     * hides items that shouldn't be visible to either a donor or clinician
+     * Initializes and refreshes the previous and pending procedure tables
+     */
+    @FXML
+    private void makeProcedureTable(ArrayList<Procedure> previousProcedures, ArrayList<Procedure> pendingProcedures) {
+        //curDiseasesTable.getSortOrder().add(curChronicColumn);
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
+        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
+
+        if (previousProcedures != null) {
+            previousProceduresObservableList = FXCollections.observableArrayList(previousProcedures);}
+        else {
+            previousProceduresObservableList = FXCollections.observableArrayList(); }
+        if (pendingProcedures != null) {
+            pendingProceduresObservableList = FXCollections.observableArrayList(pendingProcedures);}
+        else {
+            pendingProceduresObservableList = FXCollections.observableArrayList(); }
+
+        refreshTable();
+
+    }
+
+
+    /**
+     * Refreshes the procedure table, updating it with the current values
+     */
+    @FXML
+    public void refreshProcedureTable() {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        pendingProcedureTable.getItems().clear();
+        if (currentDonor.getPendingProcedures() != null) {
+            previousProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
+        previousProcedureTable.getItems().clear();
+        if (currentDonor.getPreviousProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentDonor.getPreviousProcedures());}
+
+        curConditionsTable.setItems(previousProceduresObservableList);
+        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
+
+        pastConditionsTable.setItems(pendingProceduresObservableList);
+        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
+
+        forceSortOrder();
+    }
+
+    /**
+     * Forces the sort order of the current conditions table so that most recent procedures are always at the top
+     */
+    @FXML
+    private void forceSortProcedureOrder() {
+        curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().add(curChronicColumn);
+    }
+
+
+    /**
+     * Hides items that shouldn't be visible to either a donor or clinician
      */
     @FXML
     private void hideItems() {
         if(isClinician){
             logoutButton.setVisible(false);
+
+            addNewProcedureButton.setDisable(false);
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setDisable(false);
+            deleteProcedureButton.setVisible(true);
+        } else {
+            addNewProcedureButton.setDisable(true);
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setDisable(true);
+            deleteProcedureButton.setVisible(false);
         }
     }
 
@@ -293,4 +412,11 @@ public class DonorProfileController {
         setPage(searchedDonor);
     }
 
+    @FXML
+    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
+    }
 }

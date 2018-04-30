@@ -173,6 +173,8 @@ public class Profile {
         }
     }
 
+    // ----- Procedure methods -----
+
     /**
      * Add a procedure to the current profile
      * @param procedure
