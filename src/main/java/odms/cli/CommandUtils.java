@@ -371,7 +371,7 @@ public class CommandUtils {
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
-            } else if (action.contains("removed")) {
+            } else if (action.contains("removed")&&!action.contains("required")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 Set<String> organSet = new HashSet<>(Arrays.asList(
@@ -464,7 +464,7 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     currentDatabase.deleteProfile(id);
                     deletedProfiles.add(profile);
-                } else if (action.contains("removed")) {
+                } else if (action.contains("removed")&&!action.contains("required")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
                     Set<String> organSet = new HashSet<>(Arrays.asList(
