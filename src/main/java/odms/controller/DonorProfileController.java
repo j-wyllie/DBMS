@@ -231,7 +231,6 @@ public class DonorProfileController {
     @FXML
     protected void refreshTable() {
 
-        curConditionsTable.setEditable(true);
         Callback<TableColumn, TableCell> cellFactory =
                 new Callback<TableColumn, TableCell>() {
                     public TableCell call(TableColumn p) {
@@ -246,8 +245,6 @@ public class DonorProfileController {
                     }
                 };
 
-
-
         Profile currentDonor;
         if (searchedDonor != null) {
             currentDonor = searchedDonor;
@@ -256,6 +253,7 @@ public class DonorProfileController {
         }
 
         curConditionsTable.getItems().clear();
+        curConditionsObservableList.clear();
         if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
         pastConditionsTable.getItems().clear();
         if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
@@ -273,10 +271,22 @@ public class DonorProfileController {
                             t.getTablePosition().getRow()));
                 });
 
-
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
 
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
+
+        curDateOfDiagnosisColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+            if(!t.getNewValue().isAfter(LocalDate.now())) {
+                currentDonor.removeCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+                (t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
+                currentDonor.addCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+            }
+            refreshTable();
+        });
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
         pastConditionsTable.setItems(pastConditionsObservableList);
@@ -289,9 +299,6 @@ public class DonorProfileController {
 
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastDateCuredColumn.setCellFactory(cellFactoryDate);
-//        pastDateCuredColumn.setOnEditCommit((EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
-//            (t.getTableView().getItems().get(
-//                    t.getTablePosition().getRow())).setDateCured(t.getNewValue());
 
             pastDateCuredColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
                 if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
@@ -308,6 +315,21 @@ public class DonorProfileController {
             });
 
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
+
+        pastDateOfDiagnosisColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+            if(t.getNewValue().isAfter(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateCured())
+                    || t.getNewValue().isAfter(LocalDate.now())) {
+            } else {
+                currentDonor.removeCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+                (t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
+                currentDonor.addCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+            }
+            refreshTable();
+        });
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
@@ -576,7 +598,10 @@ public class DonorProfileController {
                     userHistory.add(str);
                 }
             }
+
             historyView.setText(userHistory.toString());
+            refreshTable();
+
         } catch (Exception e) {
             e.printStackTrace();
             InvalidUsername();
