@@ -61,6 +61,11 @@ public class TestDataCreator {
 
     }
 
+    /**
+     * Generate profiles with random organ data and add them to the database.
+     *
+     * @throws IrdNumberConflictException if there is a duplicate IRD number in the database
+     */
     private void generateProfiles() throws IrdNumberConflictException {
         List<Integer> irdNumbers = new ArrayList<>();
 
@@ -88,6 +93,12 @@ public class TestDataCreator {
         }
     }
 
+    /**
+     * Select a random number of organs to add as previously donated organs to
+     * the profile.
+     *
+     * @param profile the profile in which to add the organs
+     */
     private void addOrganDonations(Profile profile) {
         Integer numberDonations = randInRange(0, Organ.values().length);
 
@@ -99,6 +110,11 @@ public class TestDataCreator {
         }
     }
 
+    /**
+     * Select a random number of organs to donate to add to the profile.
+     *
+     * @param profile the profile in which to add the organs
+     */
     private void addOrganDonors(Profile profile) {
         Integer numberDonating = randInRange(0, Organ.values().length);
 
@@ -114,6 +130,11 @@ public class TestDataCreator {
         // TODO implement once Receivers implemented
     }
 
+    /**
+     * Generate a random Date of Birth string.
+     *
+     * @return the Date of Birth string
+     */
     private String randomDOB() {
         GregorianCalendar gc = new GregorianCalendar();
         Integer year = randInRange(1900, 2018);
@@ -128,7 +149,8 @@ public class TestDataCreator {
     }
 
     /**
-     * Generate a random Integer between a min and a max
+     * Generate a random Integer in the range of a min and max.
+     *
      * @param min the minimum bound
      * @param max the maximum bound
      * @return the randomly generated value
