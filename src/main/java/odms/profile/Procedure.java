@@ -10,14 +10,14 @@ public class Procedure {
     private LocalDate date;
     private String longDescription;
 
-    Procedure(String summary, String date, String longDescription) {
+    public Procedure(String summary, String date, String longDescription) {
         this.summary = summary;
         String[] dates = date.split("-");
         this.date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
         this.longDescription = longDescription;
     }
 
-    Procedure(String summary, String date) {
+    public Procedure(String summary, String date) {
         this(summary, date, "");
     }
 

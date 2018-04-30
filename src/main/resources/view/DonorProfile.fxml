@@ -447,7 +447,7 @@
                                       <columns>
                                           <TableColumn fx:id="previousSummaryColumn" prefWidth="125.0" text="Summary" />
                                           <TableColumn fx:id="previousDateColumn" prefWidth="142.0" text="Date of Procedure" />
-                                          <TableColumn fx:id="previousProcedureColumn" prefWidth="178.0" text="Description" />
+                                          <TableColumn fx:id="previousDescriptionColumn" prefWidth="178.0" text="Description" />
                                       </columns>
                                   </TableView>
                                   <Text layoutX="8.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending  Procedures">

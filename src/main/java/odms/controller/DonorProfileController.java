@@ -201,6 +201,16 @@ public class DonorProfileController {
     @FXML
     private void setPage(Profile currentDonor){
 
+        makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
+
+        // Test data; remove later
+        currentDonor.addProcedure(new Procedure("facial reconstruction", "20-2-2019", "dgfdsgfdsgdfsgfdgdsfg"));
+        currentDonor.addProcedure(new Procedure("tumor removal", "18-4-2013", "dgfdsgfdsgdfsgfdgdsfg"));
+        currentDonor.addProcedure(new Procedure("circumcision", "20-8-2012", "dgfdsgfdsgdfsgfdgdsfg"));
+        currentDonor.addProcedure(new Procedure("euthanization", "2-7-2018", "dgfdsgfdsgdfsgfdgdsfg"));
+
+        refreshProcedureTable();
+
         try {
             donorFullNameLabel
                     .setText(currentDonor.getFullName());
@@ -320,7 +330,9 @@ public class DonorProfileController {
         else {
             pendingProceduresObservableList = FXCollections.observableArrayList(); }
 
-        refreshProcedureTable();
+        if (previousProcedures != null) {
+            refreshProcedureTable();
+        }
 
     }
 
@@ -339,28 +351,34 @@ public class DonorProfileController {
 
         pendingProcedureTable.getItems().clear();
         if (currentDonor.getPendingProcedures() != null) {
-            previousProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
+            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());
+        } else {
+            return;
+        }
         previousProcedureTable.getItems().clear();
         if (currentDonor.getPreviousProcedures() != null) {
-            pendingProceduresObservableList.addAll(currentDonor.getPreviousProcedures());}
+            previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());
+        } else {
+            return;
+        }
 
         previousProcedureTable.setItems(previousProceduresObservableList);
         previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
         previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
-        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
         previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousDescriptionColumn);
 
         pendingProcedureTable.setItems(pendingProceduresObservableList);
         pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
         pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingDescriptionColumn);
 
         forceSortProcedureOrder();
     }
 
     /**
-     * Forces the sort order of the current conditions table so that most recent procedures are always at the top
+     * Forces the sort order of the procedure table so that most recent procedures are always at the top
      */
     @FXML
     private void forceSortProcedureOrder() {
