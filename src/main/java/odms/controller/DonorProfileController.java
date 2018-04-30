@@ -125,7 +125,7 @@ public class DonorProfileController {
      * Called when there has been an edit to the current profile.
      */
     public void editedTextArea() {
-        editedText.setText("The profile was successfully edited."); //TODO Set to necessary line
+        editedText.setText("The profile was successfully edited.");
     }
 
     /**
@@ -276,7 +276,6 @@ public class DonorProfileController {
 
             if(editedText.getText() != null){
                 editedText.setVisible(true);
-                //TODO Timer
                 new Timer().schedule(new TimerTask(){ //This allows for the text to be displayed for 2.5 seconds after an edit.
                     @Override
                     public void run() {
