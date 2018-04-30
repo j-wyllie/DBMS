@@ -93,6 +93,10 @@ public class TestDataCreator {
         }
     }
 
+    public ProfileDatabase getDatabase() {
+        return database;
+    }
+
     /**
      * Select a random number of organs to add as previously donated organs to
      * the profile.

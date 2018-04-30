@@ -31,7 +31,6 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        System.out.println(profileDb.searchGivenNames("Jack"));
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
