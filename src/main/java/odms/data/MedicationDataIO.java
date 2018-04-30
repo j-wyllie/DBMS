@@ -42,13 +42,13 @@ public class MedicationDataIO {
      */
     public static ArrayList<String> getSuggestionList(String substring) throws IOException {
         ArrayList<String> suggestionList = new ArrayList<>();
-        delayRequest(substring);
-        if (!isDelayed) {
-            System.out.println(prevSubstring);
-            if (!(prevSubstring == null || prevSubstring == "")) {
-                System.out.println(prevSubstring);
+//        delayRequest(substring);
+//        if (!isDelayed) {
+//            System.out.println(prevSubstring);
+            if (!(substring == null || substring == "")) {
+                System.out.println(substring);
                 String urlString = String
-                        .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", prevSubstring);
+                        .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
                 URL url = new URL(urlString);
 
                 //Reading the response from the connection.
@@ -57,8 +57,8 @@ public class MedicationDataIO {
                 //Parsing the list of suggestions from the response.
                 suggestionList = parseJSON(response, false);
             }
-            prevSubstring = null;
-        }
+//            prevSubstring = null;
+//        }
         return suggestionList;
     }
 

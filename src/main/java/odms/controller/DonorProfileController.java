@@ -8,12 +8,15 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
+import java.awt.event.KeyEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -318,9 +321,24 @@ public class DonorProfileController {
             if (oldValue != newValue) {
                 try {
                     ArrayList<String> suggestions = getSuggestionList(newValue);
-                    TextFields.bindAutoCompletion(textFieldMedicationSearch, suggestions);
+                    TextFields.bindAutoCompletion(textFieldMedicationSearch, suggestions)
+                            .setPrefWidth(textFieldMedicationSearch.getPrefWidth());
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+        textFieldMedicationSearch.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                Profile currentDonor;
+                if (searchedDonor != null) {
+                    currentDonor = searchedDonor;
+                } else {
+                    currentDonor = getCurrentProfile();
+                }
+                String medicationName = textFieldMedicationSearch.getText();
+                if (medicationName != "") {
+                    currentDonor.addDrug(new Drug(medicationName));
                 }
             }
         });
