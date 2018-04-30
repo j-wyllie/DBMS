@@ -8,8 +8,10 @@ import static odms.controller.UndoRedoController.undo;
 import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Condition;
@@ -183,7 +185,16 @@ public class DonorProfileController {
      * refreshes current and past conditions table with its up to date data
      */
     @FXML
-    public void refreshTable() {
+    private void refreshTable() {
+
+        curConditionsTable.setEditable(true);
+        Callback<TableColumn, TableCell> cellFactory =
+                new Callback<TableColumn, TableCell>() {
+                    public TableCell call(TableColumn p) {
+                        return new EditingConditionsCell();
+                    }
+                };
+
         Profile currentDonor;
         if (searchedDonor != null) {
             currentDonor = searchedDonor;
@@ -198,12 +209,33 @@ public class DonorProfileController {
 
         curConditionsTable.setItems(curConditionsObservableList);
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        curDescriptionColumn.setCellFactory(cellFactory);
+        curDescriptionColumn.setOnEditCommit(
+                (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> {
+                    currentDonor.removeCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                    (t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setName(t.getNewValue());
+                    currentDonor.addCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                });
+
+
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
         pastConditionsTable.setItems(pastConditionsObservableList);
         pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        pastDescriptionColumn.setCellFactory(cellFactory);
+        pastDescriptionColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Condition, String>>() {
+                    @Override public void handle(TableColumn.CellEditEvent<Condition, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setName(t.getNewValue());
+                    }
+                });
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
@@ -398,7 +430,6 @@ public class DonorProfileController {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
-                System.out.println(givenNamesLabel.getText() + currentDonor.getGivenNames());
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
             }
             if (currentDonor.getLastNames() != null) {

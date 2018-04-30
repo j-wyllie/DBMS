@@ -732,4 +732,5 @@ public class Profile {
 
     public void setAllConditions(ArrayList<Condition> conditions) { this.conditions = conditions; }
 
+
 }
