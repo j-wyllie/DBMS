@@ -27,6 +27,7 @@ import odms.user.User;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -138,6 +139,8 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Profile> donors){
+        searchTable.getItems().clear();
+
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
@@ -213,6 +216,8 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
+        transplantTable.getItems().clear();
+
         //TODO Add date
         receiverObservableList = FXCollections.observableList(receivers);
         //transplantTable.setItems(receiverObservableList);
@@ -249,6 +254,18 @@ public class ClinicianProfileController extends CommonController {
         addTooltipToRow();
 
     }
+
+    /**
+     * Refresh the search and transplant medication tables with the most up to date data
+     */
+    @FXML
+    private void refreshTable() {
+        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        try {
+            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }    }
 
     @FXML
     private void initialize(){
