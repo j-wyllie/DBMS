@@ -413,6 +413,12 @@ public class CommandUtils {
                 Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
                 Profile profile = currentDatabase.getProfile(id);
                 profile.removeOrgansRequired(set);
+            } else if (action.contains("removed required")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                String organString = action.substring(action.indexOf('('), action.indexOf(')'));
+                Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
+                Profile profile = currentDatabase.getProfile(id);
+                profile.setOrgansRequired(set);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -488,6 +494,12 @@ public class CommandUtils {
                     Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
                     Profile profile = currentDatabase.getProfile(id);
                     profile.setOrgansRequired(set);
+                }   else if (action.contains("removed required")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    String organString = action.substring(action.indexOf('('), action.indexOf(')'));
+                    Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
+                    Profile profile = currentDatabase.getProfile(id);
+                    profile.removeOrgansRequired(set);
                 }
                 System.out.println("Command redone");
             } else {
