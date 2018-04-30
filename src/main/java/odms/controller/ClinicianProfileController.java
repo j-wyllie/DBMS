@@ -152,6 +152,7 @@ public class ClinicianProfileController extends CommonController {
                 createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
             }
         });
+
         addTooltipToRow();
     }
 
@@ -237,6 +238,16 @@ public class ClinicianProfileController extends CommonController {
         transplantTable.getColumns().add(transplantReceiverNameCol);
         transplantTable.getColumns().add(transplantRegionCol);
         transplantTable.setItems(receiverObservableList);
+
+        transplantTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    transplantTable.getSelectionModel().getSelectedItem() != null) {
+                createNewDonorWindow(((Entry<Profile, Organ>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
+            }
+        });
+
+        addTooltipToRow();
+
     }
 
     @FXML
