@@ -1,4 +1,4 @@
-package odms;
+package odms.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,9 +12,7 @@ import odms.profile.Profile;
 
 public class TestDataCreator {
     private ProfileDatabase database;
-    private Integer profilesDonors;
-    private Integer profilesDonated;
-    private Integer profilesRequired;
+    private List<Organ> organs = Arrays.asList(Organ.values());
 
     private List<String> names = Arrays.asList(
         "Ash Ketchup",
@@ -52,14 +50,6 @@ public class TestDataCreator {
             generateClinicianProfiles();
             generateProfiles();
 
-
-            addOrganDonations();
-            addOrganDonors();
-            addOrgansRequired();
-
-            // TODO remove these debug lines
-            System.out.println(database.getProfilePopulation());
-
         } catch (IrdNumberConflictException e) {
 
             e.printStackTrace();
@@ -75,7 +65,7 @@ public class TestDataCreator {
         List<Integer> irdNumbers = new ArrayList<>();
 
         while (irdNumbers.size() < names.size()) {
-            Integer irdNumber = randBetween(100000000, 999999999);
+            Integer irdNumber = randInRange(100000000, 999999999);
 
             if (!irdNumbers.contains(irdNumber)) {
                 irdNumbers.add(irdNumber);
@@ -84,33 +74,52 @@ public class TestDataCreator {
 
         for (String name : names) {
             String[] profileName = name.split(" ");
-            database.addProfile(new Profile(
-                profileName[0],
-                profileName[1],
-                randomDOB(),
-                irdNumbers.remove(0)
-            ));
+            Profile profile = new Profile(
+                    profileName[0],
+                    profileName[1],
+                    randomDOB(),
+                    irdNumbers.remove(0)
+            );
+            addOrganDonations(profile);
+            addOrganDonors(profile);
+            addOrgansRequired(profile);
+
+            database.addProfile(profile);
         }
     }
 
-    private void addOrganDonations() {
+    private void addOrganDonations(Profile profile) {
+        Integer numberDonations = randInRange(0, Organ.values().length);
 
+        if (numberDonations > 0) {
+            profile.setRegistered(true);
+            for (Integer i = 0; i < numberDonations; i++) {
+                profile.addDonation(organs.get(i));
+            }
+        }
     }
 
-    private void addOrganDonors() {
+    private void addOrganDonors(Profile profile) {
+        Integer numberDonating = randInRange(0, Organ.values().length);
 
+        if (numberDonating > 0) {
+            profile.setRegistered(true);
+            for (Integer i = 0; i < numberDonating; i++) {
+                profile.addOrgan(organs.get(i));
+            }
+        }
     }
 
-    private void addOrgansRequired() {
-
+    private void addOrgansRequired(Profile profile) {
+        // TODO implement once Receivers implemented
     }
 
     private String randomDOB() {
         GregorianCalendar gc = new GregorianCalendar();
-        Integer year = randBetween(1900, 2018);
-        Integer yearDay = randBetween(1, gc.getActualMaximum(GregorianCalendar.DAY_OF_YEAR));
-
+        Integer year = randInRange(1900, 2018);
         gc.set(GregorianCalendar.YEAR, year);
+
+        Integer yearDay = randInRange(1, gc.getActualMaximum(GregorianCalendar.DAY_OF_YEAR));
         gc.set(GregorianCalendar.DAY_OF_YEAR, yearDay);
 
         return gc.get(GregorianCalendar.DAY_OF_MONTH) + "-" +
@@ -124,14 +133,9 @@ public class TestDataCreator {
      * @param max the maximum bound
      * @return the randomly generated value
      */
-    private Integer randBetween(Integer min, Integer max) {
+    private Integer randInRange(Integer min, Integer max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
-    }
-
-    public static void main(String[] args) {
-        TestDataCreator test = new TestDataCreator();
-
     }
 
 }
