@@ -136,7 +136,7 @@ public class DonorProfileController {
     private TableColumn pendingDescriptionColumn;
 
     @FXML
-    private TableColumn previousProcedureColumn;
+    private TableColumn previousDescriptionColumn;
 
     Boolean isClinician = false;
 
@@ -308,7 +308,7 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
+        pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
         //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (previousProcedures != null) {
@@ -320,7 +320,7 @@ public class DonorProfileController {
         else {
             pendingProceduresObservableList = FXCollections.observableArrayList(); }
 
-        refreshTable();
+        refreshProcedureTable();
 
     }
 
@@ -344,19 +344,19 @@ public class DonorProfileController {
         if (currentDonor.getPreviousProcedures() != null) {
             pendingProceduresObservableList.addAll(currentDonor.getPreviousProcedures());}
 
-        curConditionsTable.setItems(previousProceduresObservableList);
-        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
-        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
+        previousProcedureTable.setItems(previousProceduresObservableList);
+        previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
+        previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousDescriptionColumn);
 
-        pastConditionsTable.setItems(pendingProceduresObservableList);
-        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
-        pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
+        pendingProcedureTable.setItems(pendingProceduresObservableList);
+        pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
+        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingDescriptionColumn);
 
-        forceSortOrder();
+        forceSortProcedureOrder();
     }
 
     /**
@@ -364,8 +364,8 @@ public class DonorProfileController {
      */
     @FXML
     private void forceSortProcedureOrder() {
-        curConditionsTable.getSortOrder().clear();
-        curConditionsTable.getSortOrder().add(curChronicColumn);
+        previousProcedureTable.getSortOrder().clear();
+        previousProcedureTable.getSortOrder().add(previousDateColumn);
     }
 
 
