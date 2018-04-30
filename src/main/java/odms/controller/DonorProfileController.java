@@ -7,12 +7,17 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import odms.cli.CommandUtils;
@@ -183,8 +188,12 @@ public class DonorProfileController {
 
     }
 
+    /**
+     * Disables the ability for the table headers to be reordered.
+     */
     @FXML
     private void disableTableHeaderReorder() {
+
         pastConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
         {
             @Override
@@ -230,6 +239,15 @@ public class DonorProfileController {
                     }
                 };
 
+        Callback<TableColumn, TableCell> cellFactoryDate =
+                new Callback<TableColumn, TableCell>() {
+                    public TableCell call(TableColumn p) {
+                        return new EditDateCell();
+                    }
+                };
+
+
+
         Profile currentDonor;
         if (searchedDonor != null) {
             currentDonor = searchedDonor;
@@ -265,14 +283,31 @@ public class DonorProfileController {
         pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         pastDescriptionColumn.setCellFactory(cellFactory);
         pastDescriptionColumn.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<Condition, String>>() {
-                    @Override public void handle(TableColumn.CellEditEvent<Condition, String> t) {
-                        (t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setName(t.getNewValue());
-                    }
-                });
-        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+                (EventHandler<CellEditEvent<Condition, String>>) t -> (t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setName(t.getNewValue()));
+
+
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pastDateCuredColumn.setCellFactory(cellFactoryDate);
+//        pastDateCuredColumn.setOnEditCommit((EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
+//            (t.getTableView().getItems().get(
+//                    t.getTablePosition().getRow())).setDateCured(t.getNewValue());
+
+            pastDateCuredColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+                if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
+                        || t.getNewValue().isAfter(LocalDate.now())) {
+                } else {
+                    currentDonor.removeCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                    (t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setDateCured(t.getNewValue());
+                    currentDonor.addCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                }
+                refreshTable();
+            });
+
+        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
