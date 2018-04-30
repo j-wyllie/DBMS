@@ -113,6 +113,7 @@ public class ClinicianProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Edit Profile");
         appStage.show();
     }
 

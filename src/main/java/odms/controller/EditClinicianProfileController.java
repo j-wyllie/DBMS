@@ -13,7 +13,8 @@ import java.io.IOException;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
-public class EditClinicianProfileController {
+public class EditClinicianProfileController extends GeneralWindowController{
+
     /**
      * Scene change to log in view.
      *
