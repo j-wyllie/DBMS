@@ -173,7 +173,7 @@
                                 </columns>
                               </TableView>
                               <TextField fx:id="searchField" layoutX="914.0" layoutY="14.0" prefHeight="25.0" prefWidth="274.0" promptText="Enter name" />
-                              <Button layoutX="832.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
+                              <Button fx:id="refreshButton" layoutX="832.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -184,7 +184,7 @@
                            <children>
                               <TableView fx:id="transplantTable" layoutX="14.0" layoutY="52.0" prefHeight="461.0" prefWidth="1178.0" />
                               <TextField fx:id="transplantSearchField" layoutX="914.0" layoutY="14.0" prefHeight="25.0" prefWidth="274.0" promptText="Enter name" />
-                              <Button fx:id="refreshButton" layoutX="837.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
+                              <Button fx:id="refreshButton2" layoutX="837.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
                            </children>
                         </AnchorPane>
                     </content>
