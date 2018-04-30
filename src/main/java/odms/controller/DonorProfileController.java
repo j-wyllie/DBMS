@@ -6,6 +6,9 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -160,7 +163,6 @@ public class DonorProfileController {
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
-
         //curDiseasesTable.getSortOrder().add(curChronicColumn);
         Profile currentDonor;
         if (searchedDonor != null) {
@@ -181,11 +183,44 @@ public class DonorProfileController {
 
     }
 
+    @FXML
+    private void disableTableHeaderReorder() {
+        pastConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
+            {
+                TableHeaderRow header = (TableHeaderRow) pastConditionsTable.lookup("TableHeaderRow");
+                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        header.setReordering(false);
+                    }
+                });
+            }
+        });
+
+        curConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
+            {
+                TableHeaderRow header = (TableHeaderRow) curConditionsTable.lookup("TableHeaderRow");
+                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        header.setReordering(false);
+                    }
+                });
+            }
+        });
+    }
+
     /**
      * refreshes current and past conditions table with its up to date data
      */
     @FXML
-    private void refreshTable() {
+    protected void refreshTable() {
 
         curConditionsTable.setEditable(true);
         Callback<TableColumn, TableCell> cellFactory =
@@ -241,6 +276,7 @@ public class DonorProfileController {
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
+
     }
 
     /**
@@ -556,6 +592,8 @@ public class DonorProfileController {
             hideItems();
             setPage(currentDonor);
         }
+        disableTableHeaderReorder();
+
     }
 
     /**

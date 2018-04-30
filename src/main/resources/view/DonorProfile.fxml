@@ -436,14 +436,14 @@
                                 <columns>
                                   <TableColumn fx:id="curDescriptionColumn" prefWidth="205.0" text="Description" />
                                   <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="58.0" />
-                                    <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="120.0" text="Date of diagnosis" />
+                                    <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="150.0" text="Date of diagnosis" />
                                 </columns>
                               </TableView>
                               <TableView fx:id="pastConditionsTable" layoutX="674.0" layoutY="53.0" prefHeight="453.0" prefWidth="423.0">
                                 <columns>
                                   <TableColumn fx:id="pastDescriptionColumn" prefWidth="200.0" text="Description" />
                                   <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="109.0" text="Date of diagnosis" />
-                                    <TableColumn fx:id="pastDateCuredColumn" prefWidth="92.0" text="Date cured" />
+                                    <TableColumn fx:id="pastDateCuredColumn" prefWidth="113.0" text="Date cured" />
                                 </columns>
                               </TableView>
                               <Text layoutX="8.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current  diseases/conditions">

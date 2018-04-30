@@ -1,6 +1,8 @@
 package odms.profile;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 /**
  * A specific condition for use in medical history
@@ -24,14 +26,24 @@ public class Condition {
 
         this.name = name;
         String[] dates = dateOfDiagnosis.split("-");
-        this.dateOfDiagnosis = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
-        if (dateCured != null) {
-            this.isCured = true;
-            dates = dateCured.split("-");
-            this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
-        } else {
-            this.isCured = false;
-            this.dateCured = null;
+        try {
+            this.dateOfDiagnosis = LocalDate
+                    .of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
+                            Integer.valueOf(dates[0]));
+            if (dateCured != null && isChronic == false) {
+                this.isCured = true;
+                dates = dateCured.split("-");
+                System.out.println(dateCured);
+                this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
+                        Integer.valueOf(dates[0]));
+            } else {
+                this.isCured = false;
+                this.dateCured = null;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(e);
+        } catch (DateTimeException e) {
+            throw new IllegalArgumentException(e);
         }
         this.isChronic = isChronic;
         if (isChronic) {this.chronicText = "CHRONIC";}
