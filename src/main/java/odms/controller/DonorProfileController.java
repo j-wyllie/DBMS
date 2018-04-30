@@ -1,6 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -306,6 +307,7 @@ public class DonorProfileController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
     }
 
     /**
