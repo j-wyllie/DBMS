@@ -204,9 +204,11 @@ public class Profile {
      */
     public ArrayList<Procedure> getPreviousProcedures() {
         ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        for (Procedure procedure : procedures) {
-            if (procedure.getDate().isBefore(LocalDate.now())) {
-                prevProcedures.add(procedure);
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isBefore(LocalDate.now())) {
+                    prevProcedures.add(procedure);
+                }
             }
         }
         return prevProcedures;
@@ -218,9 +220,11 @@ public class Profile {
      */
     public ArrayList<Procedure> getPendingProcedures() {
         ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-        for (Procedure procedure : procedures) {
-            if (procedure.getDate().isAfter(LocalDate.now())) {
-                pendingProcedures.add(procedure);
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isAfter(LocalDate.now())) {
+                    pendingProcedures.add(procedure);
+                }
             }
         }
         return pendingProcedures;
