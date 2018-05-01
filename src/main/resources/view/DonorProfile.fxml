@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
@@ -496,7 +495,7 @@
                                                 </TableView>
                                                 <TableView fx:id="tableViewDrugInteractionsNames" prefHeight="200.0" prefWidth="302.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                   <columns>
-                                                    <TableColumn fx:id="tableColumnDrugInteractions" minWidth="156.0" prefWidth="300.0" text="Drug Interactions" />
+                                                    <TableColumn fx:id="tableColumnDrugInteractions" editable="false" minWidth="156.0" prefWidth="300.0" sortable="false" text="Drug Interactions" />
                                                   </columns>
                                                 </TableView>
                                                 <TableView fx:id="tableViewDrugInteractions" prefHeight="200.0" prefWidth="302.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
@@ -525,7 +524,6 @@
                                              <children>
                                                 <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.rowIndex="1" />
-                                                <Text fx:id="textDrugInteractions" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                              </children>
                                           </GridPane>
                                        </children>

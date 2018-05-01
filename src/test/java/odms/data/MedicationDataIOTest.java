@@ -31,26 +31,26 @@ public class MedicationDataIOTest {
         drugSeven = "";
         interactions = new HashMap<>();
 
-        interactions.put("\"international normalised ratio increased\"", "1 - 2 years");
-        interactions.put("\"nausea\"", "not specified");
-        interactions.put("\"renal failure acute\"", "< 1 month");
-        interactions.put("\"hypotension\"", "not specified");
-        interactions.put("\"cardiac failure congestive\"", "not specified");
-        interactions.put("\"pneumonia\"", "1 - 2 years");
-        interactions.put("\"fatigue\"", "not specified");
-        interactions.put("\"dyspnoea\"", "5 - 10 years");
-        interactions.put("\"vomiting\"", "not specified");
-        interactions.put("\"anaemia\"", "1 - 6 months");
-        interactions.put("\"drug ineffective\"", "");
-        interactions.put("\"neuropathy peripheral\"", "");
-        interactions.put("\"oedema peripheral\"", "1 - 6 months");
-        interactions.put("\"infusion related reaction\"", "");
-        interactions.put("\"autoimmune hepatitis\"", "");
-        interactions.put("\"catheter site related reaction\"", "");
-        interactions.put("\"cerebrovascular accident\"", "1 - 2 years");
-        interactions.put("\"cholestasis\"", "");
-        interactions.put("\"drug eruption\"", "");
-        interactions.put("\"hepatitis acute\"", "");
+        interactions.put("international normalised ratio increased", "1 - 2 years");
+        interactions.put("nausea", "not specified");
+        interactions.put("renal failure acute", "< 1 month");
+        interactions.put("hypotension", "not specified");
+        interactions.put("cardiac failure congestive", "not specified");
+        interactions.put("pneumonia", "1 - 2 years");
+        interactions.put("fatigue", "not specified");
+        interactions.put("dyspnoea", "5 - 10 years");
+        interactions.put("vomiting", "not specified");
+        interactions.put("anaemia", "1 - 6 months");
+        interactions.put("drug ineffective", "");
+        interactions.put("neuropathy peripheral", "");
+        interactions.put("oedema peripheral", "1 - 6 months");
+        interactions.put("infusion related reaction", "");
+        interactions.put("autoimmune hepatitis", "");
+        interactions.put("catheter site related reaction", "");
+        interactions.put("cerebrovascular accident", "1 - 2 years");
+        interactions.put("cholestasis", "");
+        interactions.put("drug eruption", "");
+        interactions.put("hepatitis acute", "");
 
     }
 

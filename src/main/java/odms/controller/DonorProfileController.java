@@ -9,13 +9,11 @@ import com.google.gson.Gson;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
@@ -147,13 +145,13 @@ public class DonorProfileController {
     private TableColumn<String, String> tableColumnDrugInteractions;
 
     @FXML
-    private TableView<Map<String, String>> tableViewDrugInteractions;
+    private TableView<Map.Entry<String, String>> tableViewDrugInteractions;
 
     @FXML
-    private TableColumn<String, String> tableColumnSymptoms;
+    private TableColumn<Map.Entry<String, String>, String> tableColumnSymptoms;
 
     @FXML
-    private TableColumn<String, String> tableColumnDuration;
+    private TableColumn<Map.Entry<String, String>, String> tableColumnDuration;
 
     @FXML
     private TableView<String> tableViewActiveIngredients;
@@ -165,20 +163,15 @@ public class DonorProfileController {
 
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
 
-    private ObservableList<String> interactionsSymptoms = FXCollections.observableArrayList();
-
-    private ObservableList<String> interactionsDuration = FXCollections.observableArrayList();
-
-    private ObservableMap<String, String> interactions = FXCollections.observableHashMap();
+    private ObservableList<Map.Entry<String, String>> interactions;
 
     @FXML
     private Button logoutButton;
 
-    @FXML private Button buttonShowDrugInteractions;
+    @FXML
+    private Button buttonShowDrugInteractions;
 
-    @FXML private Text textDrugInteractions;
-
-    Boolean isClinician = false;
+    private Boolean isClinician = false;
 
 
     /**
@@ -281,11 +274,9 @@ public class DonorProfileController {
 
         try {
             interactionsRaw = MedicationDataIO.getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
-            //System.out.println(interactionsRaw);
 
-            for (Map.Entry entry : interactionsRaw.entrySet()) {
-                interactionsSymptoms.add(entry.getKey().toString());
-                interactionsDuration.add(entry.getValue().toString());
+            if (interactionsRaw.isEmpty()) {
+                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
             }
 
             ObservableList<String> drugsList = FXCollections.observableArrayList();
@@ -293,37 +284,22 @@ public class DonorProfileController {
             drugsList.add(drugs.get(0).getDrugName());
             drugsList.add(drugs.get(1).getDrugName());
 
+            interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+
             tableViewDrugInteractionsNames.getItems().clear();
             tableViewDrugInteractions.getItems().clear();
-
-            interactions.putAll(interactionsRaw);
 
             tableViewDrugInteractionsNames.setItems(drugsList);
             tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
             tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
 
-//            tableViewDrugInteractions.setItems();
-//            tableColumnSymptoms.setCellValueFactory();
-//            tableColumnDuration.setCellValueFactory();
-//            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
-
-//            for (Map.Entry<String, String> entry: interactionsRaw.entrySet()) {
-//                if (!(entry.getValue().equals("not specified"))) {
-//                    interactions += entry.getKey() + ": " + entry.getValue() + ", ";
-//                }
-//            }
-//
-//            if (interactions.length() <= 1) {
-//                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
-//            } else {
-//                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": " + interactions);
-//            }
-
-        } catch (IOException | NullPointerException e) { //not too sure about this, sometimes get a 502 error code returned or null pointer on no interactions i think?
-            e.printStackTrace();
-            textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
+            tableViewDrugInteractions.setItems(interactions);
+            tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
+            tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+        } catch (IOException e) {
+            tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
         }
-
     }
 
     /**
@@ -530,7 +506,6 @@ public class DonorProfileController {
             buttonMedicationHistoricToCurrent.setVisible(true);
             textFieldMedicationSearch.setVisible(true);
 
-            textDrugInteractions.setVisible(true);
             buttonShowDrugInteractions.setVisible(true);
 
             logoutButton.setVisible(false);
@@ -541,7 +516,6 @@ public class DonorProfileController {
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
 
-            textDrugInteractions.setVisible(false);
             buttonShowDrugInteractions.setVisible(false);
 
             logoutButton.setVisible(true);

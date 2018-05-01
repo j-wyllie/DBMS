@@ -40,7 +40,15 @@ public class MedicationDataIO {
             StringBuffer response = makeRequest(url);
 
             if (response == null) {
-                return interactions;
+                // Server is fussy about what order the drugs are in the url, if request fails will try again with drugs
+                // in different order.
+                urlString = String
+                    .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug2, drug1);
+                url = new URL(urlString);
+                response = makeRequest(url);
+                if (response == null) {
+                    return interactions;
+                }
             }
             interactions = parseInteractionsJSON(response, gender, age);
         }
@@ -123,7 +131,7 @@ public class MedicationDataIO {
         JsonArray genderInteractionsArray = interactionGender.get(gender).getAsJsonArray();
         for (JsonElement value : genderInteractionsArray) {
             if (!interactions.containsKey(value.toString())) {
-                interactions.put(value.toString(), "");
+                interactions.put(value.toString().replace("\"", ""), "");
             }
         }
         return interactions;
@@ -153,7 +161,7 @@ public class MedicationDataIO {
             } else if (ageGroup.equals("60+") && age > 60) {
                 interactionArray = entry.getValue().getAsJsonArray();
                 for (JsonElement value : interactionArray) {
-                    interactions.put(value.toString(), "");
+                    interactions.put(value.toString().replace("\"", ""), "");
                 }
                 return interactions;
             } else {
@@ -163,7 +171,7 @@ public class MedicationDataIO {
                 if (age >= lowerBound && age <= upperBound) {
                     interactionArray = entry.getValue().getAsJsonArray();
                     for (JsonElement value : interactionArray) {
-                        interactions.put(value.toString(), "");
+                        interactions.put(value.toString().replace("\"", ""), "");
                     }
                     return interactions;
                 }
@@ -186,8 +194,9 @@ public class MedicationDataIO {
         for (Map.Entry<String, JsonElement> entry : interactionDuration.entrySet()) {
             JsonArray interactionArray = entry.getValue().getAsJsonArray();
             for (JsonElement value : interactionArray) {
-                if (interactions.containsKey(value.toString()) && interactions.get(value.toString()).equals("")) {
-                    interactions.put(value.toString(), entry.getKey());
+                if (interactions.containsKey(value.toString().replace("\"", "")) &&
+                        interactions.get(value.toString().replace("\"", "")).equals("")) {
+                    interactions.put(value.toString().replace("\"", ""), entry.getKey());
                 }
             }
         }
