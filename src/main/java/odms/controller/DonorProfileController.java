@@ -255,12 +255,15 @@ public class DonorProfileController {
             e.printStackTrace();
         }
 
-        if (activeIngredients == "[]") {
-            textActiveIngredients.setText(drug.getDrugName() + " active ingredients: None found!");
-        } else {
-            textActiveIngredients.setText(drug.getDrugName() + " active ingredients: " + activeIngredients);
-        }
+        ObservableList<String> activeIngredientsList = FXCollections.observableArrayList();
+        activeIngredientsList.add("Active ingredients for " + drug.getDrugName() + ":");
+        activeIngredientsList.add(activeIngredients);
 
+        tableViewActiveIngredients.getItems().clear();
+
+        tableViewActiveIngredients.setItems(activeIngredientsList);
+        tableColumnActiveIngredients.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        tableViewActiveIngredients.getColumns().setAll(tableColumnActiveIngredients);
     }
 
     /**
