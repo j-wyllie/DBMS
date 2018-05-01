@@ -668,7 +668,7 @@ public class DonorProfileController {
         if(searchedDonor != null) {
             setPage(searchedDonor);
 
-            if(isClinician) {
+            if(!isClinician) {
                 hideItems();
             }
             //Profile currentDonor = getCurrentProfile();

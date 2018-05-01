@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
+import odms.profile.Condition;
 import odms.profile.Organ;
 import odms.profile.Profile;
 
@@ -89,8 +90,14 @@ public class TestDataCreator {
             addOrganDonors(profile);
             addOrgansRequired(profile);
 
+            // Give this Galil Ar some diseases
+            if (profile.getFullName().equals("Galil AR")) {
+                addConditions(profile);
+            }
+
             database.addProfile(profile);
         }
+
     }
 
     public ProfileDatabase getDatabase() {
@@ -112,6 +119,16 @@ public class TestDataCreator {
                 profile.addDonation(organs.get(i));
             }
         }
+    }
+
+    /**
+     * Just adds 2 chronic and 2 non-chronic conditions to a profile
+     *
+     * @param profile the profile that the diseases will be given
+     */
+    private void addConditions(Profile profile) {
+        profile.addCondition(new Condition("Heart Disease", "01-04-2018", true));
+        profile.addCondition(new Condition("Heart Palpitations", "01-04-2018", "01-03-2018", false));
     }
 
     /**

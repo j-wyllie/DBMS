@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javax.xml.soap.Text;
 import odms.controller.GuiMain;
+import odms.profile.Condition;
 import odms.profile.Profile;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -28,6 +30,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+
+import static org.junit.Assert.assertNotEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 import java.time.LocalDateTime;
 
@@ -35,31 +39,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class DonorProfileControllerTest extends ApplicationTest {
+public class DonorProfileGUITest extends TestFxMethods {
     private GuiMain guiMain;
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
-        GUITestSetup.headless();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        FxToolkit.cleanupStages();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Initializes the main gui
-     * @param stage current stage
-     * @throws Exception throws Exception
-     */
-    @Override
-    public void start(Stage stage) throws Exception{
-        guiMain = new GuiMain();
-        guiMain.start(stage);
+    public static void headless() throws TimeoutException {
+        //GUITestSetup.headless();
     }
 
     /**
@@ -67,9 +53,9 @@ public class DonorProfileControllerTest extends ApplicationTest {
      */
     @Test
     public void openHistoryTabForDonor() {
-        loginDonor();
+        loginAsDonor();
         clickOn("#medicalHistoryTab");
-        Scene scene = getTopModalStage();
+        Scene scene = getTopScene();
 
         Button toggleCured = (Button) scene.lookup("#toggleCuredButton");
         Button toggleChronic = (Button) scene.lookup("#toggleChronicButton");
@@ -90,14 +76,14 @@ public class DonorProfileControllerTest extends ApplicationTest {
      */
     @Test
     public void openHistoryForClinician() {
-        logInClinician();
+        loginAsClinician();
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
         Profile firstDonor = (Profile) searchTable.getItems().get(0);
 
         doubleClickOn(row("#searchTable", 0));
         //opening the first donor
-        Scene scene = getTopModalStage();
+        Scene scene = getTopScene();
 
         Button toggleCured = (Button) scene.lookup("#toggleCuredButton");
         Button toggleChronic = (Button) scene.lookup("#toggleChronicButton");
@@ -113,96 +99,106 @@ public class DonorProfileControllerTest extends ApplicationTest {
     /**
      * Test that a diagnosis can be added to a profile by a clinician
      */
-    public void testDefaultDiagnosisDate () {
-        logInClinician();
+    public void testAddingDiagnoses () {
+        loginAsClinician();
         clickOn("#searchTab");
+
         TableView searchTable = getTableView("#searchTable");
         Profile firstDonor = (Profile) searchTable.getItems().get(0);
-        doubleClickOn(row("#searchTable", 0));
 
-        //opening the first donor
-        Scene scene = getTopModalStage();
+        doubleClickOn(row("#searchTable", 0));
         clickOn("#medicalHistoryTab");
 
-        Button addNewCondition = (Button) scene.lookup("#addNewConditionButton");
-        clickOn(addNewCondition);
-        Scene scene2 = getTopModalStage();
+        TableView currentConditions = getTableView("#curConditionsTable");
+        Integer initialSize = currentConditions.getItems().size();
 
-        TextField name = (TextField) scene2.lookup("#nameField");
-        clickOn(name).write("Heart Disease");
+        clickOn("#addNewConditionButton");
+        clickOn("#nameField").write("Heart Disease");
 
-        TextField date = (TextField) scene2.lookup("#dateDiagnosedField");
+        Scene scene = getTopScene();
+        TextField date = (TextField) scene.lookup("#dateDiagnosedField");
 
         // Check that this already has the current date in it
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         assertEquals(now.format(formatter), date.getText());
 
-        CheckBox chronic = (CheckBox) scene2.lookup("#chronicCheckBox");
-        clickOn(chronic);
+        clickOn("#chronicCheckBox");
+        clickOn("#addButton");
 
-        //clickOn("#addButton");
+        // Check that the new condition is added
+        assertEquals(currentConditions.getItems().size(), initialSize + 1);
     }
 
+    @Test
     /**
-     * logs in a donor
+     * Test adding a cured condition to the past conditions table
      */
-    public void loginDonor() {
-        clickOn("#usernameField").write("1");
-        clickOn("#loginButton");
+    public void testAddCuredDisease() {
+        loginAsClinician();
+        clickOn("#searchTab");
+
+        TableView searchTable = getTableView("#searchTable");
+        Profile firstDonor = (Profile) searchTable.getItems().get(0);
+
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
+
+        TableView pastConditions = getTableView("#pastConditionsTable");
+        Integer pastInitialSize = pastConditions.getItems().size();
+
+        clickOn("#addNewConditionButton");
+        clickOn("#nameField").write("Influenza");
+        clickOn("#curedCheckBox");
+        clickOn("#dateCuredField").write("01-04-2018");
+        clickOn("#addButton");
+
+        //assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
     }
 
+    @Test
     /**
-     * logs in the clinician and opens up the search tab
+     * Test that the clinician can toggle a disease's chronic status
      */
-    public void logInClinician() {
-        clickOn("#usernameField").write("0");
-        clickOn("#loginButton");
+    public void testChronicToggle() {
+        loginAsClinician();
+        clickOn("#searchTab");
+
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
+
+        TableView currentConditions = getTableView("#curConditionsTable");
+
+        clickOn(row("#curConditionsTable", 0));
+        Condition condition = (Condition) currentConditions.getSelectionModel().getSelectedItem();
+        Boolean initialChronic = condition.getChronic();
+
+        clickOn("#toggleChronicButton");
+
+        assertNotEquals(initialChronic, condition.getChronic());
     }
 
+    @Test
     /**
-     * gets current stage with all windows.
-     * @return All of the current windows
+     * Test that the clinician can toggle a condition from present to past
      */
-    protected Scene getTopModalStage() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-        return (Scene) allWindows.get(0).getScene();
-    }
+    public void testPresentToPastToggle() {
+        loginAsClinician();
+        clickOn("#searchTab");
 
-    /**
-     * @param tableSelector The id of the table to be used
-     * @return Returns a table view node from the given ID
-     */
-    private TableView<?> getTableView(String tableSelector) {
-        Node node = lookup(tableSelector).queryTableView();
-        if (!(node instanceof TableView)) {
-        }
-        return (TableView<?>) node;
-    }
+        TableView searchTable = getTableView("#searchTable");
 
-    /**
-     * @param tableSelector Id of table that contains the row
-     * @param row           row number
-     * @return returns a table row
-     */
-    protected TableRow<?> row(String tableSelector, int row) {
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
 
-        TableView<?> tableView = getTableView(tableSelector);
+        TableView pastConditions = getTableView("#pastConditionsTable");
+        Integer initialSize = pastConditions.getItems().size();
 
-        List<Node> current = tableView.getChildrenUnmodifiable();
-        while (current.size() == 1) {
-            current = ((Parent) current.get(0)).getChildrenUnmodifiable();
-        }
+        clickOn(row("#curConditionsTable", 0));
+        clickOn("#toggleChronicButton");
+        clickOn(row("#curConditionsTable", 0));
+        clickOn("#toggleCuredButton");
 
-        current = ((Parent) current.get(1)).getChildrenUnmodifiable();
-        while (!(current.get(0) instanceof TableRow)) {
-            current = ((Parent) current.get(0)).getChildrenUnmodifiable();
-        }
-
-        Node node = current.get(row);
-        return (TableRow<?>) node;
+        assertEquals(pastConditions.getItems().size(), initialSize + 1);
     }
 }
