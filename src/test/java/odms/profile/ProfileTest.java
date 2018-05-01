@@ -577,4 +577,27 @@ public class ProfileTest {
         testProfile.setOrgansRequired(testSet);
         assertTrue(CommandUtils.currentSessionHistory.get(CommandUtils.historyPosition).contains("HEART"));
     }
+
+    @Test
+    public void testRemoveRequiredOrgans() {
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(profileAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+        Set<String> testSet = new HashSet<String>();
+        testSet.add("Heart");
+        testProfile.setOrgansRequired(testSet);
+        testProfile.removeOrgansRequired(testSet);
+        assertEquals(testProfile.getOrgansRequired().size(), 0);
+
+    }
 }
