@@ -46,7 +46,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
     @After
     public void tearDown() throws Exception {
-        FxToolkit.hideStage();
+        FxToolkit.cleanupStages();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
@@ -113,7 +113,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
     /**
      * Test that a diagnosis can be added to a profile by a clinician
      */
-    /*public void testAddDiagnonsis () {
+    public void testDefaultDiagnosisDate () {
         logInClinician();
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
@@ -122,10 +122,12 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         //opening the first donor
         Scene scene = getTopModalStage();
+        clickOn("#medicalHistoryTab");
+
         Button addNewCondition = (Button) scene.lookup("#addNewConditionButton");
         clickOn(addNewCondition);
-
         Scene scene2 = getTopModalStage();
+
         TextField name = (TextField) scene2.lookup("#nameField");
         clickOn(name).write("Heart Disease");
 
@@ -138,7 +140,9 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
         CheckBox chronic = (CheckBox) scene2.lookup("#chronicCheckBox");
         clickOn(chronic);
-    }*/
+
+        //clickOn("#addButton");
+    }
 
     /**
      * logs in a donor
