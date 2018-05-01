@@ -39,7 +39,8 @@ public class UserDataIO extends CommonDataIO {
             System.out.println("File exported successfully!");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IO exception, please check the specified file");
+            System.out.println("File requested: " + path);
         }
     }
 
