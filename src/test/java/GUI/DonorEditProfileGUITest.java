@@ -23,6 +23,8 @@ import org.testfx.framework.junit.ApplicationTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -154,15 +156,61 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
-        Label updatedGivenNames = (Label) scene2.lookup("#dobLabel");
-        System.out.println(updatedGivenNames.getText());
-        assertEquals("14-11-1997", updatedGivenNames.getText().substring(16));
+        Label updatedDob = (Label) scene2.lookup("#dobLabel");
+        assertEquals("14-11-1997", updatedDob.getText().substring(16));
     }
 
     @Test
     public void editDateOfDeathTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
 
+        clickOn(scene.lookup("#dodField"));
+        write("abcdefg");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write("14-11-2100");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write("14-11-1700");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        // Checks GUI has been updated.
+        Scene scene2 = getTopScene();
+        Label updatedDod = (Label) scene2.lookup("#dodLabel");
+        assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                updatedDod.getText().substring(16));
     }
+
 
     @Test
     public void editAgeTest() {

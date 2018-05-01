@@ -173,7 +173,12 @@ public class EditDonorProfileController {
                 try {
                     currentProfile.setDateOfBirth(LocalDate.parse(dobField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
                     if (!dodField.getText().isEmpty()) {
-                        currentProfile.setDateOfDeath(LocalDate.parse(dodField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                        if(!(LocalDate.parse(dodField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).isBefore(currentProfile.getDateOfBirth()) ||
+                                LocalDate.parse((dodField.getText()), DateTimeFormatter.ofPattern("dd-MM-yyyy")).isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfDeath(LocalDate.parse(dodField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                        } else {
+                            error = true;
+                        }
                     }
                 } catch (DateTimeParseException e) {
                     error = true;
