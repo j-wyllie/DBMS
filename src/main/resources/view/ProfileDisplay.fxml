@@ -280,8 +280,9 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="132.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="182.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="197.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="135.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="101.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
@@ -376,7 +377,7 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <ToolBar maxWidth="268.0" prefHeight="60.0" prefWidth="191.0" GridPane.columnIndex="6" GridPane.rowIndex="9">
+                                                <ToolBar maxWidth="268.0" prefHeight="60.0" prefWidth="55.0" GridPane.columnIndex="7" GridPane.rowIndex="9">
                                                    <items>
                                                       <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
                                                       <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
