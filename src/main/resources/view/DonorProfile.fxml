@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
@@ -419,18 +418,18 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane layoutY="-3.0" prefHeight="524.0" prefWidth="1200.0">
+                              <GridPane layoutY="-3.0" minHeight="0.0" minWidth="0.0" prefHeight="524.0" prefWidth="1200.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-2.0">
                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="134.0" prefWidth="134.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="34.0" prefWidth="134.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.0" minWidth="82.0" prefWidth="82.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="134.0" prefWidth="134.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="309.0" minWidth="134.0" prefWidth="134.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="40.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="38.0" minWidth="38.0" prefWidth="38.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="304.0" minWidth="304.0" prefWidth="304.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="50.0" prefWidth="350.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="10.0" prefWidth="40.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="150.0" prefWidth="304.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints maxHeight="126.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
