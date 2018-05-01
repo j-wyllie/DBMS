@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
 import odms.profile.Profile;
+import odms.tools.TestDataCreator;
 import org.junit.*;
 import org.testfx.api.FxToolkit;
 
@@ -34,7 +35,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
-        GUITestSetup.headless();
+        //GUITestSetup.headless();
     }
 
     @After()
@@ -42,6 +43,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        FxToolkit.cleanupStages();
     }
 
     @Before
@@ -57,7 +59,10 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception{
         guiMain = new GuiMainDummy();
+        //guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
+
         guiMain.start(stage);
+        stage.toFront();
     }
 
     /**
@@ -120,8 +125,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         clickOn(yesButton);
 
         // Checks database has been updated
-        assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
-        assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
+        assertEquals("Bob", guiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
+        assertEquals("Seger", guiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
         // Checks GUI has been updated.
         scene2 = getTopModalStage();

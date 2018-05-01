@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
@@ -10,7 +11,10 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
+import odms.data.ProfileDataIO;
+import odms.tools.TestDataCreator;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
@@ -23,6 +27,7 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class LoginCreateControllerTest extends ApplicationTest {
 
@@ -32,7 +37,7 @@ public class LoginCreateControllerTest extends ApplicationTest {
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
-        GUITestSetup.headless();
+        //GUITestSetup.headless();
     }
 
     @After()
@@ -40,8 +45,14 @@ public class LoginCreateControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        FxToolkit.cleanupStages();
     }
 
+    @AfterClass
+    public static void actualTearDown() throws TimeoutException {
+        FxToolkit.hideStage();
+        FxToolkit.cleanupStages();
+    }
     /**
      * Initializes the main gui and starts the program from the login screen.
      * @param stage current stage
@@ -50,6 +61,7 @@ public class LoginCreateControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception{
         guiMain = new GuiMainDummy();
+        guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
         guiMain.start(stage);
     }
 
@@ -89,6 +101,13 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#createAccountButton");
 
         assertEquals("88888888", LoginController.getCurrentProfile().getIrdNumber().toString());
+        System.out.println(LoginController.getCurrentProfile().getFullName());
+        ProfileDataIO profileDataIO = new ProfileDataIO();
+        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+        System.out.println(guiMain.getCurrentDatabase().deleteProfile(LoginController.getCurrentProfile().getId()));
+        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+
+
     }
 
     /**
