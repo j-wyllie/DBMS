@@ -401,8 +401,8 @@ public class DonorProfileController {
         } else {
             return;
         }
-        previousProcedureTable.getItems().clear();
 
+        previousProcedureTable.getItems().clear();
         if (currentDonor.getPendingProcedures() != null) {
             pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
         if (currentDonor.getPreviousProcedures() != null) {
