@@ -29,7 +29,9 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController {
+public class EditDonorProfileController extends GeneralWindowController{
+
+    private Boolean savedProfile = false; //Tells whether saved or cancel is selected.
 
     private Profile currentProfile;
 
@@ -106,6 +108,7 @@ public class EditDonorProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Login");
         appStage.show();
     }
 
@@ -158,10 +161,10 @@ public class EditDonorProfileController {
             //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
             //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentProfile.setGender(genderField.getText());
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setHeight(Double.valueOf(heightField.getText()));
             }
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setWeight(Double.valueOf(weightField.getText()));
             }
             currentProfile.setPhone(phoneField.getText());
@@ -179,7 +182,7 @@ public class EditDonorProfileController {
                 currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
             try {
-                if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
                     Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
                     if (!set.isEmpty()) {
                         currentProfile.setRegistered(true);
@@ -192,7 +195,7 @@ public class EditDonorProfileController {
                 }
 
             try {
-                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
+                if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
                     Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
                     if(!set.isEmpty()){
                         currentProfile.setRegistered(true);
@@ -223,12 +226,12 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if(error) {
+            if (error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-
+            savedProfile = true;
             closeEditWindow(event);
         }
     }
@@ -240,8 +243,8 @@ public class EditDonorProfileController {
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
         boolean cancelBool = DonorCancelChanges();
-
         if (cancelBool) {
+            savedProfile = false;
             closeEditWindow(event);
         }
     }
@@ -252,12 +255,18 @@ public class EditDonorProfileController {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (getCurrentProfile() != null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
 
-            appStage.setScene(scene);
+            Parent parent = loader.load();
+            DonorProfileController controller = loader.getController();
+            if (savedProfile) {
+                controller.editedTextArea(); //Any public method here.
+            }
+            Scene newScene = new Scene(parent);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(newScene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
 
         } else {
@@ -270,6 +279,7 @@ public class EditDonorProfileController {
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             appStage.setScene(scene);
+            appStage.setTitle("Donor Profile");
             appStage.show();
         }
     }
@@ -280,7 +290,7 @@ public class EditDonorProfileController {
     @FXML
     public void initialize() {
 
-        if(currentProfile == null){
+        if (currentProfile == null) {
             currentProfile = getCurrentProfile();
         }
         if (currentProfile != null) {

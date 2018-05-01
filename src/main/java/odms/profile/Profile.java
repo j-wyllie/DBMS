@@ -132,18 +132,23 @@ public class Profile {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            System.out.println("b");
             if(value.equals("null") || value.equals("")) {
                 value = null;
             }

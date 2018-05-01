@@ -84,6 +84,7 @@ public class CreateProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Login");
         appStage.show();
     }
 }

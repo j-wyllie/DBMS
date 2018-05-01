@@ -10,12 +10,17 @@ import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+import java.io.Console;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -108,8 +113,20 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
-    Boolean isClinician = false;
+    private Boolean isClinician = false;
 
+    /**
+     * Text for showing recent edits.
+     */
+    @FXML
+    public Text editedText;
+
+    /**
+     * Called when there has been an edit to the current profile.
+     */
+    public void editedTextArea() {
+        editedText.setText("The profile was successfully edited.");
+    }
 
     /**
      * Scene change to log in view.
@@ -123,6 +140,7 @@ public class DonorProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Login");
         appStage.show();
     }
 
@@ -162,6 +180,7 @@ public class DonorProfileController {
      * Button handler to make fields editable.
      * @param event clicking on the edit button.
      */
+
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
@@ -173,9 +192,9 @@ public class DonorProfileController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
+        appStage.setTitle("Edit Profile");
         appStage.show();
     }
-
     /**
      * sets all of the items in the fxml to their respective values
      * @param currentDonor donors profile
@@ -268,6 +287,17 @@ public class DonorProfileController {
                     userHistory.add(str);
                 }
             }
+
+            if(editedText.getText() != null){
+                editedText.setVisible(true);
+                new Timer().schedule(new TimerTask(){ //This allows for the text to be displayed for 2.5 seconds after an edit.
+                    @Override
+                    public void run() {
+                        editedText.setVisible(false);
+                    }
+                },2500);
+            } else editedText.setVisible(false);
+
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
             e.printStackTrace();
