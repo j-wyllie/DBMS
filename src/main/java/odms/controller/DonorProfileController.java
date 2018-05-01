@@ -8,6 +8,7 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
+import javafx.beans.property.SimpleStringProperty;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.collections.FXCollections;
@@ -15,15 +16,19 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
+import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -139,9 +144,32 @@ public class DonorProfileController {
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
+    @FXML
+    private TableView<String> tableViewDrugInteractionsNames;
+
+    @FXML
+    private TableColumn<String, String> tableColumnDrugInteractions;
+
+    @FXML
+    private TableView<Map.Entry<String, String>> tableViewDrugInteractions;
+
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> tableColumnSymptoms;
+
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> tableColumnDuration;
+
+    @FXML
+    private TableView<String> tableViewActiveIngredients;
+
+    @FXML
+    private TableColumn<String, String> tableColumnActiveIngredients;
+
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
 
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
+    private ObservableList<Map.Entry<String, String>> interactions;
 
     private ContextMenu suggestionMenu = new ContextMenu();
 
@@ -152,7 +180,10 @@ public class DonorProfileController {
 
     @FXML private Text textActiveIngredients;
 
-    Boolean isClinician = false;
+    @FXML
+    private Button buttonShowDrugInteractions;
+
+    private Boolean isClinician = false;
 
 
     /**
@@ -250,6 +281,63 @@ public class DonorProfileController {
         currentDonor.addDrug(new Drug(medicationName));
 
         refreshTable();
+    }
+
+    public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
+        ArrayList<Drug> toReturn = new ArrayList<>();
+        for (int i = 0; i<drugs.size(); i++) {
+            if (drugs.get(i) != null) { toReturn.add(drugs.get(i)); }
+        }
+        return toReturn;
+    }
+
+    @FXML
+    private void handleShowInteractions(ActionEvent event) {
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+
+        Map<String, String> interactionsRaw;
+
+        if (drugs.size() != 2) {
+            if (drugs.size() == 1) {
+                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+                drugs.add(toAdd);
+            }
+            else if (drugs.size() == 0) {
+                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            }
+
+            if (drugs.size() != 2) {
+                return; }
+        }
+
+        try {
+            interactionsRaw = MedicationDataIO.getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
+
+            if (interactionsRaw.isEmpty()) {
+                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
+            }
+
+            ObservableList<String> drugsList = FXCollections.observableArrayList();
+            drugsList.add("Interactions between:");
+            drugsList.add(drugs.get(0).getDrugName());
+            drugsList.add(drugs.get(1).getDrugName());
+
+            interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+
+            tableViewDrugInteractionsNames.getItems().clear();
+            tableViewDrugInteractions.getItems().clear();
+
+            tableViewDrugInteractionsNames.setItems(drugsList);
+            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+
+            tableViewDrugInteractions.setItems(interactions);
+            tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
+            tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+        } catch (IOException e) {
+            tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+        }
     }
 
     /**
@@ -532,6 +620,8 @@ public class DonorProfileController {
             buttonMedicationHistoricToCurrent.setVisible(true);
             textFieldMedicationSearch.setVisible(true);
 
+            buttonShowDrugInteractions.setVisible(true);
+
             logoutButton.setVisible(false);
         } else {
             buttonAddMedication.setVisible(false);
@@ -539,6 +629,8 @@ public class DonorProfileController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
+
+            buttonShowDrugInteractions.setVisible(false);
 
             logoutButton.setVisible(true);
         }
@@ -549,6 +641,12 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
+        tableViewCurrentMedications.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+        tableViewHistoricMedications.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
         if(getCurrentProfile() != null) {
             Profile currentDonor = getCurrentProfile();
             hideItems();
