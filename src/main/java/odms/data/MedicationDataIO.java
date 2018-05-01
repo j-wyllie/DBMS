@@ -15,25 +15,6 @@ import java.util.TimerTask;
 
 public class MedicationDataIO {
 
-    private static String prevSubstring;
-    private static boolean isDelayed;
-
-    private static void delayRequest(String substring) {
-        if (prevSubstring == null) {
-            isDelayed = true;
-            new Timer().schedule(
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            isDelayed = false;
-                            prevSubstring = substring;
-                            System.out.println(prevSubstring);
-                        }
-                    }, 5000
-            );
-        }
-    }
-
     /**
      * Gets a list of suggestions for the clinician user based on a string or substring they
      * have entered into the field.
@@ -42,23 +23,18 @@ public class MedicationDataIO {
      */
     public static ArrayList<String> getSuggestionList(String substring) throws IOException {
         ArrayList<String> suggestionList = new ArrayList<>();
-//        delayRequest(substring);
-//        if (!isDelayed) {
-//            System.out.println(prevSubstring);
-            if (!(substring == null || substring == "")) {
-                System.out.println(substring);
-                String urlString = String
-                        .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
-                URL url = new URL(urlString);
 
-                //Reading the response from the connection.
-                StringBuffer response = makeRequest(url);
+        if (!(substring == null || substring == "")) {
+            String urlString = String
+                    .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
+            URL url = new URL(urlString);
 
-                //Parsing the list of suggestions from the response.
-                suggestionList = parseJSON(response, false);
-            }
-//            prevSubstring = null;
-//        }
+            //Reading the response from the connection.
+            StringBuffer response = makeRequest(url);
+
+            //Parsing the list of suggestions from the response.
+            suggestionList = parseJSON(response, false);
+        }
         return suggestionList;
     }
 

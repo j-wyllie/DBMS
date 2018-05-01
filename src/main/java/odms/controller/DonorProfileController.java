@@ -8,15 +8,18 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
-import java.awt.event.KeyEvent;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -31,6 +34,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.medications.Drug;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 public class DonorProfileController {
@@ -139,12 +144,11 @@ public class DonorProfileController {
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
-    @FXML
-    private ContextMenu suggestionMenu;
-
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
 
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
+    private ContextMenu suggestionMenu = new ContextMenu();
 
     @FXML
     private Button logoutButton;
@@ -315,20 +319,64 @@ public class DonorProfileController {
         refreshTable();
     }
 
+    private void delayedRequest(String substring) {
+        new Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            ArrayList<String> suggestions = getSuggestionList(substring);
+                            ArrayList<MenuItem> menuItems = new ArrayList<>();
+                            for (String drug : suggestions) {
+                                menuItems.add(new Menu(drug));
+                            }
+                            final ContextMenu suggestionMenu = new ContextMenu();
+                            suggestionMenu.getItems().setAll(menuItems);
+                            textFieldMedicationSearch.setContextMenu(suggestionMenu);
+                            suggestionMenu.show(textFieldMedicationSearch,
+                                    Side.BOTTOM, 0, 0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 1000
+        );
+    }
+
+
+    /**
+     * Set the listener for the change of value in the medication search field. Also binds the
+     * suggestion list to the field, and a listener for the enter key to add the drug to the current
+     * medication table.
+     */
     @FXML
     private void setMedicationSearchFieldListener() {
         textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
             if (oldValue != newValue) {
+//                delayedRequest(newValue);
                 try {
                     ArrayList<String> suggestions = getSuggestionList(newValue);
-                    TextFields.bindAutoCompletion(textFieldMedicationSearch, suggestions)
-                            .setPrefWidth(textFieldMedicationSearch.getPrefWidth());
+                    ArrayList<MenuItem> menuItems = new ArrayList<>();
+                    for (String drug : suggestions) {
+                        MenuItem temp = new MenuItem(drug);
+                        temp.setOnAction(event -> {
+                            MenuItem eventItem = (MenuItem)event.getTarget();
+                            textFieldMedicationSearch.setText(eventItem.getText());
+                            suggestionMenu.hide();
+                        });
+                        menuItems.add(temp);
+                    }
+                    suggestionMenu.getItems().setAll(menuItems);
+                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
+                    suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
+                    menuItems.clear();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
         textFieldMedicationSearch.setOnKeyPressed(event -> {
+
             if (event.getCode() == KeyCode.ENTER) {
                 Profile currentDonor;
                 if (searchedDonor != null) {
@@ -340,7 +388,9 @@ public class DonorProfileController {
                 if (medicationName != "") {
                     currentDonor.addDrug(new Drug(medicationName));
                 }
+                textFieldMedicationSearch.clear();
             }
+            refreshTable();
         });
     }
 
