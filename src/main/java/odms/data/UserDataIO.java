@@ -1,6 +1,7 @@
 package odms.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -28,7 +29,7 @@ public class UserDataIO extends CommonDataIO {
         File file = new File(path);
 
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
 
             writeFile.write(gson.toJson(userDb));
