@@ -195,6 +195,46 @@ public class DonorProfileController {
         appStage.show();
     }
 
+    @FXML
+    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/AddProcedure.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            AddProcedureController controller = fxmlLoader.<AddProcedureController>getController();
+            controller.init(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a Procedure");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+
+    }
+
+    @FXML
+    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Procedure procedure = (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
+        if (procedure == null) { procedure = (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem(); }
+        if (procedure == null) { return; }
+
+        currentDonor.removeProcedure(procedure);
+
+        refreshProcedureTable();
+
+    }
+
     /**
      * sets all of the items in the fxml to their respective values
      * @param currentDonor donors profile
@@ -322,7 +362,6 @@ public class DonorProfileController {
         }
 
         pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
-        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (previousProcedures != null) {
             previousProceduresObservableList = FXCollections.observableArrayList(previousProcedures);}
@@ -352,6 +391,13 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
+        if (previousProceduresObservableList == null) {
+            previousProceduresObservableList = FXCollections.observableArrayList();
+        }
+        if (pendingProceduresObservableList == null) {
+            pendingProceduresObservableList = FXCollections.observableArrayList();
+        }
+
         // update all procedures
         if (currentDonor.getAllProcedures() != null) {
             for (Procedure procedure : currentDonor.getAllProcedures()) {
@@ -365,7 +411,10 @@ public class DonorProfileController {
         } else {
             return;
         }
+
         previousProcedureTable.getItems().clear();
+        if (currentDonor.getPendingProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
         if (currentDonor.getPreviousProcedures() != null) {
             previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());
         } else {
@@ -426,6 +475,7 @@ public class DonorProfileController {
             Profile currentDonor = getCurrentProfile();
             hideItems();
             setPage(currentDonor);
+            makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
         }
     }
 
@@ -440,11 +490,9 @@ public class DonorProfileController {
         setPage(searchedDonor);
     }
 
-    @FXML
-    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
-    }
 
-    @FXML
-    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
-    }
+
+
+    public Profile getSearchedDonor() { return searchedDonor; }
+
 }
