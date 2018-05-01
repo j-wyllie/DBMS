@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.io.IOException;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 
@@ -22,15 +23,15 @@ public class GuiMain extends Application {
     private static final String USER_DATABASE = "example/users.json";
 
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
-    private static UserDatabase userDb = new UserDataIO().loadData(USER_DATABASE);
+    private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage the primary stage
+     * @throws IOException file read exception for login fxml
      */
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws IOException {
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
@@ -59,7 +60,7 @@ public class GuiMain extends Application {
         return userDb;
     }
 
-    public void setCurrentDatabase(ProfileDatabase profileDb) { this.profileDb = profileDb; }
+    public void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
 
     public static void main(String[] args) {
         launch(args);

@@ -40,7 +40,7 @@ abstract class TestFxMethods extends ApplicationTest {
      */
     @Override
     public void start(Stage stage) throws Exception{
-        guiMain = new GuiMainDummy();
+        guiMain = new GuiMain();
         guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
         guiMain.start(stage);
     }
@@ -65,7 +65,7 @@ abstract class TestFxMethods extends ApplicationTest {
         final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
         Collections.reverse(allWindows);
 
-        return (javafx.scene.Scene) allWindows.get(0).getScene();
+        return allWindows.get(0).getScene();
     }
 
     /**
@@ -92,8 +92,6 @@ abstract class TestFxMethods extends ApplicationTest {
      */
     protected TableView<?> getTableView(String tableSelector) {
         Node node = lookup(tableSelector).queryTableView();
-        if (!(node instanceof TableView)) {
-        }
         return (TableView<?>) node;
     }
 

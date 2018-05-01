@@ -114,7 +114,7 @@ public class EditDonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event) {
         undo();
     }
 
@@ -123,7 +123,7 @@ public class EditDonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event) {
         redo();
     }
 
@@ -148,21 +148,21 @@ public class EditDonorProfileController {
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean saveBool = DonorSaveChanges();
         boolean error = false;
+
         if (saveBool) {
-            String action =
-                    "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
-                            .getAttributesSummary() + " new = ";
+            String action = "Profile " +
+                currentProfile.getId() +
+                " updated details previous = " +
+                currentProfile.getAttributesSummary() +
+                " new = ";
             currentProfile.setGivenNames(givenNamesField.getText());
             currentProfile.setLastNames(lastNamesField.getText());
             currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
             //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
             //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentProfile.setGender(genderField.getText());
-            if(heightField.getText() == null) {
-                currentProfile.setHeight(Double.valueOf(heightField.getText()));
-            }
-            if(heightField.getText() == null) {
-                currentProfile.setWeight(Double.valueOf(weightField.getText()));
+            if (heightField.getText() == null) {
+                currentProfile.setHeight(0);
             }
             currentProfile.setPhone(phoneField.getText());
             currentProfile.setEmail(emailField.getText());
@@ -171,8 +171,9 @@ public class EditDonorProfileController {
             currentProfile.setBloodType(bloodTypeField.getText());
 
             if (bloodPressureField.getText().contains("/")) {
-                String systolic = bloodPressureField.getText()
-                        .substring(0, bloodPressureField.getText().indexOf("/")).trim();
+                String systolic = bloodPressureField.getText().substring(
+                    0, bloodPressureField.getText().indexOf("/")
+                ).trim();
                 currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
                 String diastolic = bloodPressureField.getText()
                         .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
@@ -192,15 +193,18 @@ public class EditDonorProfileController {
                 }
 
             try {
-                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
-                    Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                    if(!set.isEmpty()){
+                if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
+                    Set<String> set = new HashSet<>(
+                        Arrays.asList(donationsField.getText().split(", "))
+                    );
+                    if (!set.isEmpty()) {
                         currentProfile.setRegistered(true);
                         currentProfile.addDonations(set);
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 error = true;
+                e.printStackTrace();
             }
 
             currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
@@ -222,7 +226,8 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if(error) {
+
+            if (error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
@@ -262,7 +267,7 @@ public class EditDonorProfileController {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            DonorProfileController controller = fxmlLoader.getController();
             controller.setDonor(currentProfile);
             controller.initialize();
 
