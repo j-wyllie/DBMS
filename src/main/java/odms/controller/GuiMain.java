@@ -35,6 +35,7 @@ public class GuiMain extends Application {
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
+            // TODO this code always destroys the old UserDB?
             userDb = new UserDatabase();
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
             userDb.addClinician(user);

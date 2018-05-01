@@ -108,8 +108,7 @@ abstract class TestFxMethods extends ApplicationTest {
      * Saves the current database
      */
     protected void saveDatabase(){
-        ProfileDataIO profileDataIO = new ProfileDataIO();
-        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+        ProfileDataIO.saveData(GuiMain.getCurrentDatabase(), "example/example.json");
     }
 
     /**

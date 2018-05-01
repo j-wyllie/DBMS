@@ -269,8 +269,7 @@ public class EditDonorProfileController {
                 if (error) {
                     GuiPopup("Error. Not all fields were updated.");
                 } else {
-                    ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-                    closeEditWindow(event);
+                    ProfileDataIO.saveData(getCurrentDatabase());
                 }
             }
         }

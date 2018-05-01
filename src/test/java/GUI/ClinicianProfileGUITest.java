@@ -35,7 +35,7 @@ public class ClinicianProfileGUITest extends TestFxMethods {
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        //GUITestSetup.headless();
+        GUITestSetup.headless();
     }
 
     @Before
@@ -82,8 +82,8 @@ public class ClinicianProfileGUITest extends TestFxMethods {
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
         assertEquals("Seger", updatedLastNames.getText().substring(11));
 
-        guiMain.getCurrentDatabase().getProfile(userId).setGivenNames("Ash");
-        guiMain.getCurrentDatabase().getProfile(userId).setLastNames("Ketchup");
+        GuiMain.getCurrentDatabase().getProfile(userId).setGivenNames("Ash");
+        GuiMain.getCurrentDatabase().getProfile(userId).setLastNames("Ketchup");
 
         saveDatabase();
     }
