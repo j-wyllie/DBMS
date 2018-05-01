@@ -28,10 +28,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-public class ClinicianProfileControllerTest extends ApplicationTest {
+public class ClinicianProfileGUITest extends TestFxMethods {
 
     private GuiMain guiMain;
-    private Parent root;
 
     // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
@@ -39,36 +38,9 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         GUITestSetup.headless();
     }
 
-    @After()
-    public void tearDown() throws Exception {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
     @Before
     public void loginUser() {
-        logInClinician();
-    }
-
-    /**
-     * Initializes the main gui
-     * @param stage current stage
-     * @throws Exception throws Exception
-     */
-    @Override
-    public void start(Stage stage) throws Exception{
-        guiMain = new GuiMainDummy();
-        guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
-        guiMain.start(stage);
-    }
-
-    /**
-     * logs in the clinician and opens up the search tab
-     */
-    public void logInClinician() {
-        clickOn("#usernameField").write("0");
-        clickOn("#loginButton");
+        loginAsClinician();
     }
 
     /**
@@ -82,7 +54,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         doubleClickOn(row("#searchTable", 0));
         //opening the first donor
-        Scene scene = getTopModalStage();
+        Scene scene = getTopScene();
         Label donorName = (Label) scene.lookup("#donorFullNameLabel");
         assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
     }
@@ -93,11 +65,11 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
      * Changes the donor back to the original.
      */
     @Test
-    public void editSearchedProfileTest() {
+    public void editDonorNameTest() {
         // Open up the first donor
         clickOn("#searchTab");
         doubleClickOn(row("#searchTable", 0));
-        Scene scene = getTopModalStage();
+        Scene scene = getTopScene();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
         Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
@@ -108,7 +80,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         clickOn((scene.lookup("#editButton")));
 
         // Editing donor
-        Scene scene2 = getTopModalStage();
+        Scene scene2 = getTopScene();
         TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
         TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
         clickOn(givenNames).eraseText(originalGivenNames.length()).write("Bob");
@@ -127,7 +99,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
         // Checks GUI has been updated.
-        scene2 = getTopModalStage();
+        scene2 = getTopScene();
         Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
         Label updatedLastNames = (Label) scene2.lookup("#lastNamesLabel");
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
@@ -135,11 +107,11 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         // Reset user through GUI
         // Open edit donor back up
-        Scene donorScene = getTopModalStage();
+        Scene donorScene = getTopScene();
         // EditDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton2");
         clickOn(donorScene.lookup("#editButton"));
 
-        scene2 = getTopModalStage();
+        scene2 = getTopScene();
         givenNames = (TextField) scene2.lookup("#givenNamesField");
         lastNames = (TextField) scene2.lookup("#lastNamesField");
         clickOn(givenNames).eraseText(3).write(originalGivenNames);
@@ -153,6 +125,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         yesButton = (Button) dialogPane3.lookupButton(ButtonType.YES);
         clickOn(yesButton);
     }
+
+
 
     /**
      * @param tableSelector The id of the table to be used
@@ -216,34 +190,5 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
 
 
-    /**
-     * gets current stage with all windows.
-     * @return All of the current windows
-     */
-    private javafx.scene.Scene getTopModalStage() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
 
-        return (javafx.scene.Scene) allWindows.get(0).getScene();
-    }
-
-    /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
-     * @return All of the current windows
-     */
-    private javafx.stage.Stage getAlertDialogue() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-
-        return (javafx.stage.Stage) allWindows
-                .stream()
-                .filter(window -> window instanceof javafx.stage.Stage)
-                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
-                .findFirst()
-                .orElse(null);
-    }
 }

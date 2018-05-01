@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.osgi.service.TestFx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-public class LoginCreateControllerTest extends ApplicationTest {
+public class LoginCreateAccountGUITest extends TestFxMethods {
 
     private GuiMain guiMain;
 
@@ -94,7 +95,7 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#irdField").write("88888888");
         clickOn("#createAccountButton");
 
-        Scene newScene= getTopModalStage();
+        Scene newScene= getTopScene();
         Label userFullName = (Label) newScene.lookup("#donorFullNameLabel");
         Label userId = (Label) newScene.lookup("#userIdLabel");
         Integer id = Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
@@ -170,36 +171,4 @@ public class LoginCreateControllerTest extends ApplicationTest {
         closeButton.setId("Close");
         clickOn("#Close");
     }
-
-    /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
-     * @return All of the current windows
-     */
-    private javafx.stage.Stage getAlertDialogue() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-
-        return (javafx.stage.Stage) allWindows
-                .stream()
-                .filter(window -> window instanceof javafx.stage.Stage)
-                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * gets current stage with all windows.
-     * @return All of the current windows
-     */
-    private javafx.scene.Scene getTopModalStage() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-
-        return (javafx.scene.Scene) allWindows.get(0).getScene();
-    }
-
 }
