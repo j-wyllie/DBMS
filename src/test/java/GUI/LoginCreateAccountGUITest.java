@@ -41,25 +41,6 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         GUITestSetup.headless();
     }
 
-    @After()
-    public void tearDown() throws Exception {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Initializes the main gui and starts the program from the login screen.
-     * @param stage current stage
-     * @throws Exception throws Exception
-     */
-    @Override
-    public void start(Stage stage) throws Exception{
-        guiMain = new GuiMainDummy();
-        guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
-        guiMain.start(stage);
-    }
-
     /**
      * tests that the current donor is set when a successful username is entered
      */
