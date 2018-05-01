@@ -8,7 +8,6 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
-import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.collections.FXCollections;
@@ -19,7 +18,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -34,9 +32,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.medications.Drug;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 public class DonorProfileController {
 
