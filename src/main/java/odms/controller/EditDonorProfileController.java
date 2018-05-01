@@ -10,9 +10,15 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -150,87 +156,100 @@ public class EditDonorProfileController {
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean saveBool = DonorSaveChanges();
         boolean error = false;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         if (saveBool) {
-            String action =
-                    "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
-                            .getAttributesSummary() + " new = ";
-            currentProfile.setGivenNames(givenNamesField.getText());
-            currentProfile.setLastNames(lastNamesField.getText());
-            currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
-            //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
-            //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
-            currentProfile.setGender(genderField.getText());
-            if(heightField.getText() == null) {
-                currentProfile.setHeight(Double.valueOf(heightField.getText()));
-            }
-            if(heightField.getText() == null) {
-                currentProfile.setWeight(Double.valueOf(weightField.getText()));
-            }
-            currentProfile.setPhone(phoneField.getText());
-            currentProfile.setEmail(emailField.getText());
-            currentProfile.setAddress(addressField.getText());
-            currentProfile.setRegion(regionField.getText());
-            currentProfile.setBloodType(bloodTypeField.getText());
-
-            if (bloodPressureField.getText().contains("/")) {
-                String systolic = bloodPressureField.getText()
-                        .substring(0, bloodPressureField.getText().indexOf("/")).trim();
-                currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
-                String diastolic = bloodPressureField.getText()
-                        .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
-                currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
-            }
-            try {
-                if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                    Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
-                    if (!set.isEmpty()) {
-                        currentProfile.setRegistered(true);
-                        currentProfile.addOrgans(set);
-                    }
+            if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
+                    irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
+                GuiPopup("Error. Essential fields were left blank.");
+            } else {
+                String action =
+                        "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
+                                .getAttributesSummary() + " new = ";
+                currentProfile.setGivenNames(givenNamesField.getText());
+                if(!givenNamesField.getText().isEmpty()) {
+                    currentProfile.setLastNames(lastNamesField.getText());
                 }
+                currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
+                try {
+                    currentProfile.setDateOfBirth(LocalDate.parse(dobField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    if (!dodField.getText().isEmpty()) {
+                        currentProfile.setDateOfDeath(LocalDate.parse(dodField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    }
+                } catch (DateTimeParseException e) {
+                    error = true;
+                }
+                currentProfile.setGender(genderField.getText());
+                if (heightField.getText() == null) {
+                    currentProfile.setHeight(Double.valueOf(heightField.getText()));
+                }
+                if (heightField.getText() == null) {
+                    currentProfile.setWeight(Double.valueOf(weightField.getText()));
+                }
+                currentProfile.setPhone(phoneField.getText());
+                currentProfile.setEmail(emailField.getText());
+                currentProfile.setAddress(addressField.getText());
+                currentProfile.setRegion(regionField.getText());
+                currentProfile.setBloodType(bloodTypeField.getText());
 
-                } catch (Exception e){
+                if (bloodPressureField.getText().contains("/")) {
+                    String systolic = bloodPressureField.getText()
+                            .substring(0, bloodPressureField.getText().indexOf("/")).trim();
+                    currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
+                    String diastolic = bloodPressureField.getText()
+                            .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
+                    currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+                }
+                try {
+                    if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                        Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                        if (!set.isEmpty()) {
+                            currentProfile.setRegistered(true);
+                            currentProfile.addOrgans(set);
+                        }
+                    }
+
+                } catch (Exception e) {
                     error = true;
                 }
 
-            try {
-                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
-                    Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                    if(!set.isEmpty()){
-                        currentProfile.setRegistered(true);
-                        currentProfile.addDonations(set);
+                try {
+                    if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
+                        Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
+                        if (!set.isEmpty()) {
+                            currentProfile.setRegistered(true);
+                            currentProfile.addDonations(set);
+                        }
+                    }
+                } catch (Exception e) {
+                    error = true;
+                }
+
+                currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
+                currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
+                action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
+                if (CommandUtils.getHistory().size() != 0) {
+                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                                CommandUtils.getHistory().size() - 1).clear();
                     }
                 }
-            } catch (Exception e){
-                error = true;
-            }
-
-            currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
-            currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-            action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+                CommandUtils.currentSessionHistory.add(action);
+                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             /*currentProfile.setOrgans();
             currentProfile.setDonations();*/
 
-            if (diseaseField.getText().contains("/")) {
-                String[] diseases = diseaseField.getText().split(", ");
-                Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-                currentProfile.setChronicDiseases(diseasesSet);
+                if (diseaseField.getText().contains("/")) {
+                    String[] diseases = diseaseField.getText().split(", ");
+                    Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
+                    currentProfile.setChronicDiseases(diseasesSet);
+                }
+                if (error) {
+                    GuiPopup("Error. Not all fields were updated.");
+                } else {
+                    ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+                    closeEditWindow(event);
+                }
             }
-            if(error) {
-                GuiPopup("Error. Not all fields were updated.");
-            }
-
-            ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-
-            closeEditWindow(event);
         }
     }
 
@@ -300,10 +319,10 @@ public class EditDonorProfileController {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().toString());
+                    dobField.setText(currentProfile.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().toString());
+                    dodField.setText(currentProfile.getDateOfDeath().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
                 }
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());

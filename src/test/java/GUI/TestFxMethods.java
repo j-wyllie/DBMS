@@ -26,6 +26,10 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * regularly used methods in testfx.
+ * Add to this if you find yourself copy and pasting a lot of code.
+ */
 abstract class TestFxMethods extends ApplicationTest {
 
     public GuiMain guiMain;
@@ -61,7 +65,7 @@ abstract class TestFxMethods extends ApplicationTest {
      * logs in as a donor with the given ID
      * @param id
      */
-    public void loginAsDonor(Integer id){
+    protected void loginAsDonor(Integer id){
         clickOn("#usernameField").write(id.toString());
         clickOn("#loginButton");
     }
@@ -69,7 +73,7 @@ abstract class TestFxMethods extends ApplicationTest {
     /**
      * Checks that the correct donor's profile is opened from the search table.
      */
-    public void openSearchedProfile(String name) {
+    protected void openSearchedProfile(String name) {
         clickOn("#searchTab");
         clickOn("#searchField").write(name);
         TableView searchTable = getTableView("#searchTable");
@@ -80,26 +84,34 @@ abstract class TestFxMethods extends ApplicationTest {
     /**
      * Presses yes on a confirmation dialogue
      */
-    public void closeYesConfirmationDialogue() {
+    protected void closeYesConfirmationDialogue() {
         Stage stage = getAlertDialogue();
         DialogPane dialogPane = (DialogPane) stage.getScene().getRoot();
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
     }
 
-    public Integer getProfileIdFromWindow() {
+    protected Integer getProfileIdFromWindow() {
         Scene newScene= getTopScene();
         Label userId = (Label) newScene.lookup("#userIdLabel");
         return Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
     }
 
     /**
+     * Deletes the line of text
+     */
+    protected void deleteLine() {
+        push(KeyCode.CONTROL, KeyCode.A).push(KeyCode.BACK_SPACE);
+    }
+
+    /**
      * Saves the current database
      */
-    public void saveDatabase(){
+    protected void saveDatabase(){
         ProfileDataIO profileDataIO = new ProfileDataIO();
         profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
     }
+
     /**
      * gets current stage with all windows.
      * @return All of the current windows
@@ -129,6 +141,17 @@ abstract class TestFxMethods extends ApplicationTest {
                 .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Closes the currently open alert dialogue
+     * @param alert the alert DialogPane to be closed
+     */
+    protected void closeDialog(DialogPane alert){
+        robotContext();
+        Button closeButton = (Button) alert.lookupButton(ButtonType.CLOSE);
+        closeButton.setId("Close");
+        clickOn("#Close");
     }
 
     /**

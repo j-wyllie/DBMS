@@ -14,6 +14,7 @@ import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
@@ -174,7 +175,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
@@ -188,10 +189,12 @@ public class DonorProfileController {
                 irdLabel.setText(irdLabel.getText() + currentDonor.getIrdNumber());
             }
             if (currentDonor.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth());
+                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
             if (currentDonor.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath());
+                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             } else {
                 dodLabel.setText(dodLabel.getText() + "NULL");
             }

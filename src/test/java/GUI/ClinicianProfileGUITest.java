@@ -35,7 +35,7 @@ public class ClinicianProfileGUITest extends TestFxMethods {
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        GUITestSetup.headless();
+        //GUITestSetup.headless();
     }
 
     @Before
@@ -51,23 +51,23 @@ public class ClinicianProfileGUITest extends TestFxMethods {
     public void editDonorNameTest() {
         // Open up the first donor
         openSearchedProfile("Ash Ketchup");
-        Scene scene = getTopScene();
 
         Integer userId = getProfileIdFromWindow();
-        String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
-        String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
+
         // Opening edit tab
-        clickOn((scene.lookup("#editButton")));
+        clickOn("#editButton");
 
         // Editing donor
-        Scene scene2 = getTopScene();
-        TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
-        TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
-        clickOn(givenNames).eraseText(originalGivenNames.length()).write("Bob");
-        clickOn(lastNames).eraseText(originalLastNames.length()).write("Seger");
+        clickOn("#givenNamesField");
+        deleteLine();
+        write("Bob");
 
-        Button saveButton = (Button) scene2.lookup("#saveButton");
-        clickOn(saveButton);
+        clickOn("#lastNamesField");
+        deleteLine();
+        write("Seger");
+
+        //Button saveButton = (Button) scene2.lookup("#saveButton");
+        clickOn("#saveButton");
 
         closeYesConfirmationDialogue();
 
@@ -76,9 +76,9 @@ public class ClinicianProfileGUITest extends TestFxMethods {
         assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
         // Checks GUI has been updated.
-        scene2 = getTopScene();
-        Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
-        Label updatedLastNames = (Label) scene2.lookup("#lastNamesLabel");
+        Scene scene = getTopScene();
+        Label updatedGivenNames = (Label) scene.lookup("#givenNamesLabel");
+        Label updatedLastNames = (Label) scene.lookup("#lastNamesLabel");
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
         assertEquals("Seger", updatedLastNames.getText().substring(11));
 
