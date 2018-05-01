@@ -96,6 +96,8 @@ public class EditDonorProfileController {
     @FXML
     private TextField donationsField;
 
+    private Boolean isClinician;
+
     /**
      * Scene change to log in view.
      * @param event clicking on the logout button.
@@ -251,27 +253,21 @@ public class EditDonorProfileController {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            appStage.setScene(scene);
-            appStage.show();
-
-        } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-            controller.setDonor(currentProfile);
+            if(isClinician){
+                controller.setDonor(currentProfile);
+            } else {
+                controller.setLoggedInDonor(currentProfile);
+            }
             controller.initialize();
 
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             appStage.setScene(scene);
             appStage.show();
-
-        }
     }
 
     /**
@@ -346,5 +342,9 @@ public class EditDonorProfileController {
 
     public void setDonor(Profile donor) {
         currentProfile = donor;
+    }
+
+    public void setIsClinician(Boolean bool) {
+        isClinician = bool;
     }
 }

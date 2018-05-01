@@ -153,6 +153,7 @@ public class DonorProfileController {
         Scene scene = new Scene(fxmlLoader.load());
         EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
         controller.setDonor(searchedDonor);
+        controller.setIsClinician(isClinician);
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
