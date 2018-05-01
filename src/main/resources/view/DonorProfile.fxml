@@ -440,14 +440,14 @@
                                           <TableColumn fx:id="pendingSummaryColumn" prefWidth="138.0" text="Summary" />
                                           <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="0.0" />
                                           <TableColumn fx:id="pendingDateColumn" prefWidth="140.0" text="Date of Procedure" />
-                                    <TableColumn fx:id="pendingDescriptionColumn" prefWidth="176.0" text="Description" />
+                                    <TableColumn fx:id="pendingAffectsColumn" prefWidth="176.0" text="Affects" />
                                       </columns>
                                   </TableView>
                                   <TableView fx:id="previousProcedureTable" layoutX="650.0" layoutY="53.0" prefHeight="453.0" prefWidth="447.0">
                                       <columns>
                                           <TableColumn fx:id="previousSummaryColumn" prefWidth="125.0" text="Summary" />
                                           <TableColumn fx:id="previousDateColumn" prefWidth="142.0" text="Date of Procedure" />
-                                          <TableColumn fx:id="previousDescriptionColumn" prefWidth="178.0" text="Description" />
+                                          <TableColumn fx:id="previousAffectsColumn" prefWidth="178.0" text="Affects" />
                                       </columns>
                                   </TableView>
                                   <Text layoutX="8.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending  Procedures">

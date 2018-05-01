@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -133,10 +134,10 @@ public class DonorProfileController {
     private TableColumn previousDateColumn;
 
     @FXML
-    private TableColumn pendingDescriptionColumn;
+    private TableColumn pendingAffectsColumn;
 
     @FXML
-    private TableColumn previousDescriptionColumn;
+    private TableColumn previousAffectsColumn;
 
     Boolean isClinician = false;
 
@@ -205,6 +206,8 @@ public class DonorProfileController {
 
         // Test data; remove later
         currentDonor.addProcedure(new Procedure("facial reconstruction", "20-2-2019", "dgfdsgfdsgdfsgfdgdsfg"));
+        currentDonor.addDonationFromString("heart");
+        currentDonor.getAllProcedures().get(0).addAffectedOrgan(currentDonor, Organ.HEART);
         currentDonor.addProcedure(new Procedure("tumor removal", "18-4-2013", "dgfdsgfdsgdfsgfdgdsfg"));
         currentDonor.addProcedure(new Procedure("circumcision", "20-8-2012", "dgfdsgfdsgdfsgfdgdsfg"));
         currentDonor.addProcedure(new Procedure("euthanization", "2-7-2018", "dgfdsgfdsgdfsgfdgdsfg"));
@@ -349,6 +352,13 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
+        // update all procedures
+        if (currentDonor.getAllProcedures() != null) {
+            for (Procedure procedure : currentDonor.getAllProcedures()) {
+                procedure.update();
+            }
+        }
+
         pendingProcedureTable.getItems().clear();
         if (currentDonor.getPendingProcedures() != null) {
             pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());
@@ -365,14 +375,14 @@ public class DonorProfileController {
         previousProcedureTable.setItems(previousProceduresObservableList);
         previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
         previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
-        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
-        previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousDescriptionColumn);
+        previousAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
+        previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousAffectsColumn);
 
         pendingProcedureTable.setItems(pendingProceduresObservableList);
         pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
         pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
-        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
-        pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingDescriptionColumn);
+        pendingAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
+        pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingAffectsColumn);
 
         forceSortProcedureOrder();
     }

@@ -7,10 +7,13 @@ import java.util.ArrayList;
  * A specific procedure for use in medical history
  */
 public class Procedure {
+    private final String AFFECTED_ORGAN_TEXT = "Affects Organs";
+
     private String summary;
     private LocalDate date;
     private String longDescription;
     private ArrayList<Organ> organsAffected = new ArrayList<>();
+    private String affectsOrgansText = "Affects Organs";
 
     public Procedure(String summary, String date, String longDescription) {
         this.summary = summary;
@@ -23,13 +26,20 @@ public class Procedure {
         this(summary, date, "");
     }
 
+    public void update() {
+        if (organsAffected.size() == 0) {
+            this.affectsOrgansText = "";
+        } else {
+            this.affectsOrgansText = AFFECTED_ORGAN_TEXT;
+        }
+    }
+
     // getters
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }
-    public ArrayList<Organ> getOrgansAffected() {
-        return organsAffected;
-    }
+    public ArrayList<Organ> getOrgansAffected() { return organsAffected; }
+    public String getAffectsOrgansText() { return affectsOrgansText; }
 
     // setters
     public void setSummary(String summary) { this.summary = summary; }
@@ -51,7 +61,7 @@ public class Procedure {
             throw new IllegalArgumentException("No an organ donated by this profile");
         }
     }
-    public void removeAffectedOragen(Organ organ) {
+    public void removeAffectedOrgen(Organ organ) {
         organsAffected.remove(organ);
     }
 }
