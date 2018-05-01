@@ -248,22 +248,27 @@ public class DonorProfileController {
         if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
         if (drug == null) { return; }
 
-        String activeIngredients = null;
+        ArrayList<String> activeIngredients = null;
         try {
-            activeIngredients = getActiveIngredients(drug.getDrugName()).toString();
+            activeIngredients = getActiveIngredients(drug.getDrugName());
         } catch (IOException e) {
             e.printStackTrace();
+            tableViewActiveIngredients.setPlaceholder(new Label("There was an error getting active ingredient data"));
         }
-
-        ObservableList<String> activeIngredientsList = FXCollections.observableArrayList();
-        activeIngredientsList.add("Active ingredients for " + drug.getDrugName() + ":");
-        activeIngredientsList.add(activeIngredients);
 
         tableViewActiveIngredients.getItems().clear();
 
-        tableViewActiveIngredients.setItems(activeIngredientsList);
-        tableColumnActiveIngredients.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-        tableViewActiveIngredients.getColumns().setAll(tableColumnActiveIngredients);
+        if (activeIngredients == null || activeIngredients.isEmpty()) {
+            tableViewActiveIngredients.setPlaceholder(new Label("There is no active ingredient for this drug"));
+        } else {
+            ObservableList<String> activeIngredientsList = FXCollections.observableArrayList();
+            activeIngredientsList.add("Active ingredients for " + drug.getDrugName() + ":");
+            activeIngredientsList.addAll(activeIngredients);
+
+            tableViewActiveIngredients.setItems(activeIngredientsList);
+            tableColumnActiveIngredients.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            tableViewActiveIngredients.getColumns().setAll(tableColumnActiveIngredients);
+        }
     }
 
     /**
