@@ -55,6 +55,7 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
+        procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -179,7 +180,11 @@ public class Profile {
      * Add a procedure to the current profile
      * @param procedure
      */
-    public void addProcedure(Procedure procedure) { procedures.add(procedure); }
+    public void addProcedure(Procedure procedure) {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
+        procedures.add(procedure); }
 
     /**
      * Remove a procedure from the current profile

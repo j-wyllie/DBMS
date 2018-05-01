@@ -194,6 +194,46 @@ public class DonorProfileController {
         appStage.show();
     }
 
+    @FXML
+    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/AddProcedure.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            AddProcedureController controller = fxmlLoader.<AddProcedureController>getController();
+            controller.init(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a Procedure");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+
+    }
+
+    @FXML
+    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Procedure procedure = (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
+        if (procedure == null) { procedure = (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem(); }
+        if (procedure == null) { return; }
+
+        currentDonor.removeProcedure(procedure);
+
+        refreshProcedureTable();
+
+    }
+
     /**
      * sets all of the items in the fxml to their respective values
      * @param currentDonor donors profile
@@ -309,7 +349,6 @@ public class DonorProfileController {
         }
 
         pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
-        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (previousProcedures != null) {
             previousProceduresObservableList = FXCollections.observableArrayList(previousProcedures);}
@@ -337,23 +376,31 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
+        if (previousProceduresObservableList == null) {
+            previousProceduresObservableList = FXCollections.observableArrayList();
+        }
+        if (pendingProceduresObservableList == null) {
+            pendingProceduresObservableList = FXCollections.observableArrayList();
+        }
+
         pendingProcedureTable.getItems().clear();
-        if (currentDonor.getPendingProcedures() != null) {
-            previousProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
         previousProcedureTable.getItems().clear();
+
+        if (currentDonor.getPendingProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
         if (currentDonor.getPreviousProcedures() != null) {
-            pendingProceduresObservableList.addAll(currentDonor.getPreviousProcedures());}
+            previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());}
 
         previousProcedureTable.setItems(previousProceduresObservableList);
         previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
         previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
-        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        previousDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
         previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousDescriptionColumn);
 
         pendingProcedureTable.setItems(pendingProceduresObservableList);
         pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        pendingDescriptionColumn.setCellValueFactory(new PropertyValueFactory("longDescription"));
         pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingDescriptionColumn);
 
         forceSortProcedureOrder();
@@ -398,6 +445,7 @@ public class DonorProfileController {
             Profile currentDonor = getCurrentProfile();
             hideItems();
             setPage(currentDonor);
+            makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
         }
     }
 
@@ -412,11 +460,9 @@ public class DonorProfileController {
         setPage(searchedDonor);
     }
 
-    @FXML
-    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
-    }
 
-    @FXML
-    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
-    }
+
+
+    public Profile getSearchedDonor() { return searchedDonor; }
+
 }
