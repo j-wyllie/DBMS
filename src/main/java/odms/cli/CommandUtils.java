@@ -371,7 +371,7 @@ public class CommandUtils {
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
-            } else if (action.contains("removed")&&!action.contains("required")) {
+            } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 Set<String> organSet = new HashSet<>(Arrays.asList(
@@ -407,18 +407,6 @@ public class CommandUtils {
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
-            } else if (action.contains("added required")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                String organString = action.substring(action.indexOf('('), action.indexOf(')'));
-                Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
-                Profile profile = currentDatabase.getProfile(id);
-                profile.removeOrgansRequired(set);
-            } else if (action.contains("removed required")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                String organString = action.substring(action.indexOf('('), action.indexOf(')'));
-                Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
-                Profile profile = currentDatabase.getProfile(id);
-                profile.setOrgansRequired(set);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -464,7 +452,7 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     currentDatabase.deleteProfile(id);
                     deletedProfiles.add(profile);
-                } else if (action.contains("removed")&&!action.contains("required")) {
+                } else if (action.contains("removed")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
                     Set<String> organSet = new HashSet<>(Arrays.asList(
@@ -488,18 +476,6 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     String newInfo = action.substring(action.indexOf("ird"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
-                }  else if (action.contains("added required")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    String organString = action.substring(action.indexOf('('), action.indexOf(')'));
-                    Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
-                    Profile profile = currentDatabase.getProfile(id);
-                    profile.setOrgansRequired(set);
-                }   else if (action.contains("removed required")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    String organString = action.substring(action.indexOf('('), action.indexOf(')'));
-                    Set<String> set = new HashSet<>(Arrays.asList(organString.split(",")));
-                    Profile profile = currentDatabase.getProfile(id);
-                    profile.removeOrgansRequired(set);
                 }
                 System.out.println("Command redone");
             } else {
