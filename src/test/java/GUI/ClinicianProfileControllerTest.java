@@ -1,6 +1,5 @@
 package GUI;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,39 +12,30 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
-import odms.controller.LoginController;
 import odms.profile.Profile;
+import odms.tools.TestDataCreator;
 import org.junit.*;
 import org.testfx.api.FxToolkit;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import org.testfx.framework.junit.ApplicationTest;
-import org.testfx.matcher.control.TableViewMatchers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
-import static org.testfx.api.FxToolkit.setupScene;
-import static org.testfx.api.FxToolkit.showStage;
 
 public class ClinicianProfileControllerTest extends ApplicationTest {
 
     private GuiMain guiMain;
     private Parent root;
 
-        //Runs tests in background if headless is set to true. This gets it working with the CI.
+    // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
-        GUITestSetup.headless();
+        //GUITestSetup.headless();
     }
 
     @After()
@@ -53,13 +43,13 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        FxToolkit.cleanupStages();
     }
 
     @Before
     public void loginUser() {
         logInClinician();
     }
-
 
     /**
      * Initializes the main gui
@@ -68,8 +58,11 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
      */
     @Override
     public void start(Stage stage) throws Exception{
-        guiMain = new GuiMain();
+        guiMain = new GuiMainDummy();
+        //guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
+
         guiMain.start(stage);
+        stage.toFront();
     }
 
     /**
@@ -103,7 +96,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
      */
     @Test
     public void editSearchedProfileTest() {
-        //open up the first donor
+        // Open up the first donor
         clickOn("#searchTab");
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
@@ -113,10 +106,10 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
         String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
-        //opening edit tab
+        // Opening edit tab
         clickOn((scene.lookup("#editButton")));
 
-        //editing donor
+        // Editing donor
         Scene scene2 = getTopModalStage();
         TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
         TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
@@ -131,21 +124,21 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
         clickOn(yesButton);
 
-        //checks database has been updated
-        assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
-        assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
+        // Checks database has been updated
+        assertEquals("Bob", guiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
+        assertEquals("Seger", guiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
-        //checks GUI has been updated.
+        // Checks GUI has been updated.
         scene2 = getTopModalStage();
         Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
         Label updatedLastNames = (Label) scene2.lookup("#lastNamesLabel");
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
         assertEquals("Seger", updatedLastNames.getText().substring(11));
 
-        //reset user through GUI
-        //open edit donor back up
+        // Reset user through GUI
+        // Open edit donor back up
         Scene donorScene = getTopModalStage();
-        //editDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton2");
+        // EditDonorButton = (Button) searchedDonorScene.lookup("#editDonorButton2");
         clickOn(donorScene.lookup("#editButton"));
 
         scene2 = getTopModalStage();

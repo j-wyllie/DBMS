@@ -31,7 +31,6 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        System.out.println(profileDb.searchGivenNames("Jack"));
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
@@ -59,6 +58,8 @@ public class GuiMain extends Application {
     public static UserDatabase getUserDatabase(){
         return userDb;
     }
+
+    public void setCurrentDatabase(ProfileDatabase profileDb) { this.profileDb = profileDb; }
 
     public static void main(String[] args) {
         launch(args);
