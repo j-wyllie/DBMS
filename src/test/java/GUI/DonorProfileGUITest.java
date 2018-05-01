@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -53,7 +54,7 @@ public class DonorProfileGUITest extends TestFxMethods {
      */
     @Test
     public void openHistoryTabForDonor() {
-        loginAsDonor();
+        loginAsDonor(1);
         clickOn("#medicalHistoryTab");
         Scene scene = getTopScene();
 
@@ -139,6 +140,34 @@ public class DonorProfileGUITest extends TestFxMethods {
         clickOn("#searchTab");
 
         TableView searchTable = getTableView("#searchTable");
+
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
+
+        TableView pastConditions = getTableView("#pastConditionsTable");
+        Integer pastInitialSize = pastConditions.getItems().size();
+
+        clickOn("#addNewConditionButton");
+        clickOn("#nameField").write("Influenza");
+        clickOn("#dateDiagnosedField");
+        deleteLine();
+        write("01-03-2018");
+        clickOn("#curedCheckBox");
+        clickOn("#dateCuredField").write("01-04-2018");
+        clickOn("#addButton");
+
+        assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
+    }
+
+    @Test
+    /**
+     * Test trying to add a cured condition with a diagnosis date after the cured date
+     */
+    public void testCuredConditionDatesOutOfOrder() {
+        loginAsClinician();
+        clickOn("#searchTab");
+
+        TableView searchTable = getTableView("#searchTable");
         Profile firstDonor = (Profile) searchTable.getItems().get(0);
 
         doubleClickOn(row("#searchTable", 0));
@@ -149,11 +178,50 @@ public class DonorProfileGUITest extends TestFxMethods {
 
         clickOn("#addNewConditionButton");
         clickOn("#nameField").write("Influenza");
+        clickOn("#dateDiagnosedField");
+        deleteLine();
+        write("01-04-2018");
         clickOn("#curedCheckBox");
-        clickOn("#dateCuredField").write("01-04-2018");
+        clickOn("#dateCuredField").write("01-03-2018");
         clickOn("#addButton");
 
-        //assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
+        Scene scene = getTopScene();
+        Label date = (Label) scene.lookup("#warningLabel");
+        assertTrue(date.isVisible());
+    }
+
+    @Test
+    /**
+     * Test trying to add a cured condition with the cured date after the current date
+     */
+    public void testCuredDateAfterToday() {
+        loginAsClinician();
+        clickOn("#searchTab");
+
+        TableView searchTable = getTableView("#searchTable");
+
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
+
+        TableView pastConditions = getTableView("#pastConditionsTable");
+        Integer pastInitialSize = pastConditions.getItems().size();
+
+        clickOn("#addNewConditionButton");
+        clickOn("#nameField").write("Influenza");
+        clickOn("#dateDiagnosedField");
+        deleteLine();
+        write("01-03-2018");
+        clickOn("#curedCheckBox");
+
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        clickOn("#dateCuredField").write(now.format(formatter));
+        clickOn("#addButton");
+
+        Scene scene = getTopScene();
+        Label date = (Label) scene.lookup("#warningLabel");
+        assertTrue(date.isVisible());
     }
 
     @Test
