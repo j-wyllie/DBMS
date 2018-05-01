@@ -6,13 +6,13 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
@@ -140,9 +140,36 @@ public class DonorProfileController {
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
+    @FXML
+    private TableView<String> tableViewDrugInteractionsNames;
+
+    @FXML
+    private TableColumn<String, String> tableColumnDrugInteractions;
+
+    @FXML
+    private TableView<Map<String, String>> tableViewDrugInteractions;
+
+    @FXML
+    private TableColumn<String, String> tableColumnSymptoms;
+
+    @FXML
+    private TableColumn<String, String> tableColumnDuration;
+
+    @FXML
+    private TableView<String> tableViewActiveIngredients;
+
+    @FXML
+    private TableColumn<String, String> tableColumnActiveIngredients;
+
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
 
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+
+    private ObservableList<String> interactionsSymptoms = FXCollections.observableArrayList();
+
+    private ObservableList<String> interactionsDuration = FXCollections.observableArrayList();
+
+    private ObservableMap<String, String> interactions = FXCollections.observableHashMap();
 
     @FXML
     private Button logoutButton;
@@ -238,7 +265,6 @@ public class DonorProfileController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
         Map<String, String> interactionsRaw;
-        String interactions = "";
 
         if (drugs.size() != 2) {
             if (drugs.size() == 1) {
@@ -257,17 +283,41 @@ public class DonorProfileController {
             interactionsRaw = MedicationDataIO.getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
             //System.out.println(interactionsRaw);
 
-            for (Map.Entry<String, String> entry: interactionsRaw.entrySet()) {
-                if (!(entry.getValue().equals("not specified"))) {
-                    interactions += entry.getKey() + ": " + entry.getValue() + ", ";
-                }
+            for (Map.Entry entry : interactionsRaw.entrySet()) {
+                interactionsSymptoms.add(entry.getKey().toString());
+                interactionsDuration.add(entry.getValue().toString());
             }
 
-            if (interactions.length() <= 1) {
-                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
-            } else {
-                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": " + interactions);
-            }
+            ObservableList<String> drugsList = FXCollections.observableArrayList();
+            drugsList.add("Interactions between:");
+            drugsList.add(drugs.get(0).getDrugName());
+            drugsList.add(drugs.get(1).getDrugName());
+
+            tableViewDrugInteractionsNames.getItems().clear();
+            tableViewDrugInteractions.getItems().clear();
+
+            interactions.putAll(interactionsRaw);
+
+            tableViewDrugInteractionsNames.setItems(drugsList);
+            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+
+//            tableViewDrugInteractions.setItems();
+//            tableColumnSymptoms.setCellValueFactory();
+//            tableColumnDuration.setCellValueFactory();
+//            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+
+//            for (Map.Entry<String, String> entry: interactionsRaw.entrySet()) {
+//                if (!(entry.getValue().equals("not specified"))) {
+//                    interactions += entry.getKey() + ": " + entry.getValue() + ", ";
+//                }
+//            }
+//
+//            if (interactions.length() <= 1) {
+//                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": None!" );
+//            } else {
+//                textDrugInteractions.setText("Interactions between " + drugs.get(0).getDrugName() + " and " + drugs.get(1).getDrugName() + ": " + interactions);
+//            }
 
         } catch (IOException | NullPointerException e) { //not too sure about this, sometimes get a 502 error code returned or null pointer on no interactions i think?
             e.printStackTrace();
