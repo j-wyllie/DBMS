@@ -375,12 +375,23 @@ public class DonorProfileController {
         if (previousProcedures != null) {
             refreshProcedureTable();
         }
+        pendingProcedureTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                try {
+                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
 
     /**
      * Refreshes the procedure table, updating it with the current values
+     * pendingProcedureTable;
      */
     @FXML
     public void refreshProcedureTable() {
@@ -488,6 +499,29 @@ public class DonorProfileController {
         searchedDonor = donor;
         hideItems();
         setPage(searchedDonor);
+    }
+
+    /**
+     * Creates a new edit procedure window
+     */
+    @FXML
+    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/EditProcedure.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            EditProcedureController controller = fxmlLoader.<EditProcedureController>getController();
+            controller.setProcedure(selectedProcedure);
+            controller.initialize();
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
