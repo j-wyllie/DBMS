@@ -665,10 +665,13 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
-        if(getCurrentProfile() != null) {
-            Profile currentDonor = getCurrentProfile();
-            hideItems();
-            setPage(currentDonor);
+        if(searchedDonor != null) {
+            setPage(searchedDonor);
+
+            if(isClinician) {
+                hideItems();
+            }
+            //Profile currentDonor = getCurrentProfile();
         }
         disableTableHeaderReorder();
 
@@ -681,8 +684,14 @@ public class DonorProfileController {
     public void setDonor(Profile donor) {
         isClinician = true;
         searchedDonor = donor;
-        hideItems();
-        setPage(searchedDonor);
+        //hideItems();
+        //setPage(searchedDonor);
+    }
+
+    public void setLoggedInDonor(Profile donor) {
+        isClinician = false;
+        searchedDonor = donor;
+        //setPage(searchedDonor);
     }
 
 }

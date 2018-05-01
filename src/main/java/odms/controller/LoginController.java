@@ -60,10 +60,16 @@ public class LoginController {
             } else {
                 currentProfile = currentDatabase.getProfile(userId);
                 if (currentProfile != null) {
-                    Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-                    Scene newScene = new Scene(parent);
+
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                    Scene scene = new Scene(fxmlLoader.load());
+                    DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+
+                    controller.setLoggedInDonor(currentProfile);
+                    controller.initialize();
                     Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    appStage.setScene(newScene);
+
+                    appStage.setScene(scene);
                     appStage.show();
                 } else {
                     InvalidUsername();
@@ -72,7 +78,7 @@ public class LoginController {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e);
+
             InvalidUsername();
         }
     }

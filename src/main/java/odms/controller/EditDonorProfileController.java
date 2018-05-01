@@ -270,6 +270,7 @@ public class EditDonorProfileController {
 
             appStage.setScene(scene);
             appStage.show();
+
         }
     }
 
