@@ -279,7 +279,7 @@ public class DonorProfileController {
         if(searchedDonor != null) {
             setPage(searchedDonor);
 
-            if(isClinician) {
+            if(!isClinician) {
                 hideItems();
             }
             //Profile currentDonor = getCurrentProfile();
@@ -298,6 +298,10 @@ public class DonorProfileController {
         //setPage(searchedDonor);
     }
 
+    /**
+     * sets the donor if it was logged in by a user
+     * @param donor
+     */
     public void setLoggedInDonor(Profile donor) {
         isClinician = false;
         searchedDonor = donor;

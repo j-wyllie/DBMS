@@ -78,12 +78,11 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         Scene newScene= getTopScene();
         Label userFullName = (Label) newScene.lookup("#donorFullNameLabel");
-        Label userId = (Label) newScene.lookup("#userIdLabel");
-        Integer id = Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
+
         assertEquals("Jack Travis Hay", userFullName.getText());
-        ProfileDataIO profileDataIO = new ProfileDataIO();
-        guiMain.getCurrentDatabase().deleteProfile(id);
-        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+
+        guiMain.getCurrentDatabase().deleteProfile(getProfileIdFromWindow());
+
     }
 
     /**

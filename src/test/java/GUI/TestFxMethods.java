@@ -2,18 +2,20 @@ package GUI;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
 import odms.tools.TestDataCreator;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
@@ -22,9 +24,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import static org.junit.Assert.assertEquals;
+
 abstract class TestFxMethods extends ApplicationTest {
 
-    private GuiMain guiMain;
+    public GuiMain guiMain;
 
     @After()
     public void tearDown() throws Exception {
@@ -45,7 +49,6 @@ abstract class TestFxMethods extends ApplicationTest {
         guiMain.start(stage);
     }
 
-
     /**
      * logs in the clinician and opens up the search tab
      */
@@ -54,7 +57,49 @@ abstract class TestFxMethods extends ApplicationTest {
         clickOn("#loginButton");
     }
 
+    /**
+     * logs in as a donor with the given ID
+     * @param id
+     */
+    public void loginAsDonor(Integer id){
+        clickOn("#usernameField").write(id.toString());
+        clickOn("#loginButton");
+    }
 
+    /**
+     * Checks that the correct donor's profile is opened from the search table.
+     */
+    public void openSearchedProfile(String name) {
+        clickOn("#searchTab");
+        clickOn("#searchField").write(name);
+        TableView searchTable = getTableView("#searchTable");
+
+        doubleClickOn(row("#searchTable", 0));
+    }
+
+    /**
+     * Presses yes on a confirmation dialogue
+     */
+    public void closeYesConfirmationDialogue() {
+        Stage stage = getAlertDialogue();
+        DialogPane dialogPane = (DialogPane) stage.getScene().getRoot();
+        Button yesButton = (Button) dialogPane.lookupButton(ButtonType.YES);
+        clickOn(yesButton);
+    }
+
+    public Integer getProfileIdFromWindow() {
+        Scene newScene= getTopScene();
+        Label userId = (Label) newScene.lookup("#userIdLabel");
+        return Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
+    }
+
+    /**
+     * Saves the current database
+     */
+    public void saveDatabase(){
+        ProfileDataIO profileDataIO = new ProfileDataIO();
+        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+    }
     /**
      * gets current stage with all windows.
      * @return All of the current windows
