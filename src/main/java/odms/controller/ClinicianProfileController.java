@@ -23,6 +23,7 @@ import javafx.util.Callback;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
+import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -276,5 +277,7 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(transplantTable);
+
     }
 }
