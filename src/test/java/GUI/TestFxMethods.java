@@ -1,5 +1,10 @@
 package GUI;
 
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -79,5 +84,65 @@ abstract class TestFxMethods extends ApplicationTest {
                 .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * @param tableSelector The id of the table to be used
+     * @return Returns a table view node from the given ID
+     */
+    protected TableView<?> getTableView(String tableSelector) {
+        Node node = lookup(tableSelector).queryTableView();
+        if (!(node instanceof TableView)) {
+        }
+        return (TableView<?>) node;
+    }
+
+    /**
+     * @param tableSelector The id of the table that contains the cell wanted
+     * @param row           row number
+     * @param column        column number
+     * @return returns the cell data.
+     */
+    protected Object cellValue(String tableSelector, int row, int column) {
+        return getTableView(tableSelector).getColumns().get(column).getCellData(row);
+    }
+
+    /**
+     * @param tableSelector Id of table that contains the row
+     * @param row           row number
+     * @return returns a table row
+     */
+    protected TableRow<?> row(String tableSelector, int row) {
+
+        TableView<?> tableView = getTableView(tableSelector);
+
+        List<Node> current = tableView.getChildrenUnmodifiable();
+        while (current.size() == 1) {
+            current = ((Parent) current.get(0)).getChildrenUnmodifiable();
+        }
+
+        current = ((Parent) current.get(1)).getChildrenUnmodifiable();
+        while (!(current.get(0) instanceof TableRow)) {
+            current = ((Parent) current.get(0)).getChildrenUnmodifiable();
+        }
+
+        Node node = current.get(row);
+        return (TableRow<?>) node;
+    }
+
+    /**
+     * @param tableSelector ID of the table that contains the cell wanted
+     * @param row           row number
+     * @param column        column number
+     * @return the cell of the table
+     */
+    protected TableCell<?, ?> cell(String tableSelector, int row, int column) {
+        List<Node> current = row(tableSelector, row).getChildrenUnmodifiable();
+        while (current.size() == 1 && !(current.get(0) instanceof TableCell)) {
+            current = ((Parent) current.get(0)).getChildrenUnmodifiable();
+        }
+
+        Node node = current.get(column);
+        return (TableCell<?, ?>) node;
     }
 }
