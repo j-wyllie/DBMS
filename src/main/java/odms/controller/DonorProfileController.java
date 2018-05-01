@@ -28,6 +28,7 @@ import odms.profile.Profile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
@@ -506,7 +507,8 @@ public class DonorProfileController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
-        controller.setDonor(currentDonor);
+        controller.setDonor(searchedDonor);
+        controller.setIsClinician(isClinician);
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -537,7 +539,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
@@ -550,10 +552,12 @@ public class DonorProfileController {
                 irdLabel.setText(irdLabel.getText() + currentDonor.getIrdNumber());
             }
             if (currentDonor.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth());
+                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
             if (currentDonor.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath());
+                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             } else {
                 dodLabel.setText(dodLabel.getText() + "NULL");
             }
@@ -688,6 +692,10 @@ public class DonorProfileController {
         //setPage(searchedDonor);
     }
 
+    /**
+     * sets the donor if it was logged in by a user
+     * @param donor
+     */
     public void setLoggedInDonor(Profile donor) {
         isClinician = false;
         searchedDonor = donor;

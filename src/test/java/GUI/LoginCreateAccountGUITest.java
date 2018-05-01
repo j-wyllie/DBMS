@@ -61,7 +61,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         final javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         final DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals(dialogPane.getContentText(), "Please enter a valid username.");
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
     }
 
     /**
@@ -78,12 +78,11 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         Scene newScene= getTopScene();
         Label userFullName = (Label) newScene.lookup("#donorFullNameLabel");
-        Label userId = (Label) newScene.lookup("#userIdLabel");
-        Integer id = Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
+
         assertEquals("Jack Travis Hay", userFullName.getText());
-        ProfileDataIO profileDataIO = new ProfileDataIO();
-        guiMain.getCurrentDatabase().deleteProfile(id);
-        profileDataIO.saveData(guiMain.getCurrentDatabase(), "example/example.json");
+
+        guiMain.getCurrentDatabase().deleteProfile(getProfileIdFromWindow());
+
     }
 
     /**
@@ -100,7 +99,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
 
         //tests invalid date format
         clickOn("#givenNamesField").write("Jack Travis");
@@ -112,7 +111,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         actualAlertDialog = getAlertDialogue();
         dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
 
         //tests duplicate IRD number.
         clickOn("#dobField").eraseText(10).write("14-11-1997");
@@ -141,15 +140,4 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#loginButton");
     }
 
-
-    /**
-     * Closes the currently open alert dialogue
-     * @param alert the alert DialogPane to be closed
-     */
-    private void closeDialogue(DialogPane alert){
-        robotContext();
-        Button closeButton = (Button) alert.lookupButton(ButtonType.CLOSE);
-        closeButton.setId("Close");
-        clickOn("#Close");
-    }
 }
