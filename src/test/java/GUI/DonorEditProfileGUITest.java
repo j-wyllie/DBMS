@@ -31,17 +31,19 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class DonorEditProfileGUITest extends TestFxMethods {
+    private final String errorRequiredFieldsString = "Error. Required fields were left blank.";
+    private final String errorNotAllFieldsUpdatedString = "Error. Not all fields were updated.";
 
-    javafx.stage.Stage alertDialog;
-    DialogPane dialogPane;
+    private javafx.stage.Stage alertDialog;
+    private DialogPane dialogPane;
+
     /**
      * Runs tests in background if headless is set to true. This gets it working with the CI.
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        //GUITestSetup.headless();
+        GUITestSetup.headless();
     }
-
 
     @Before
     public void loginUser() {
@@ -60,7 +62,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#givenNamesField"));
@@ -85,7 +87,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#lastNamesField"));
@@ -135,7 +137,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dobField"));
@@ -145,7 +147,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dobField"));
@@ -173,7 +175,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dodField"));
@@ -184,7 +186,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dodField"));
@@ -195,7 +197,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dodField"));
@@ -210,7 +212,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 updatedDod.getText().substring(16));
     }
-
 
     @Test
     public void editAgeTest() {
