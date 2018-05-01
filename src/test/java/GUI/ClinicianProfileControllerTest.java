@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class ClinicianProfileControllerTest extends ApplicationTest {
 
@@ -34,8 +35,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
-        //GUITestSetup.headless();
+    public static void headless() throws TimeoutException {
+        GUITestSetup.headless();
     }
 
     @After()
@@ -43,7 +44,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
-        FxToolkit.cleanupStages();
     }
 
     @Before
@@ -59,10 +59,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception{
         guiMain = new GuiMainDummy();
-        //guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
-
+        guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
         guiMain.start(stage);
-        stage.toFront();
     }
 
     /**
@@ -125,8 +123,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         clickOn(yesButton);
 
         // Checks database has been updated
-        assertEquals("Bob", guiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
-        assertEquals("Seger", guiMain.getCurrentDatabase().getProfile(userId).getLastNames());
+        assertEquals("Bob", GuiMain.getCurrentDatabase().getProfile(userId).getGivenNames());
+        assertEquals("Seger", GuiMain.getCurrentDatabase().getProfile(userId).getLastNames());
 
         // Checks GUI has been updated.
         scene2 = getTopModalStage();
