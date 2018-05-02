@@ -37,6 +37,11 @@ abstract class TestFxMethods extends ApplicationTest {
     @After()
     public void tearDown() throws Exception {
         closeCurrentWindow();
+        closeCurrentWindow();
+        closeCurrentWindow();
+        closeCurrentWindow();
+        closeCurrentWindow();
+        closeCurrentWindow();
 
         FxToolkit.hideStage();
         release(new KeyCode[]{});
