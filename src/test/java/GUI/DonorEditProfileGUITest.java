@@ -32,11 +32,12 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         loginAsDonor(1);
         Scene scene = getTopScene();
         sleep(500);
-        clickOn((scene.lookup("#editButton")));
+
     }
 
     @Test
     public void editGivenNames() {
+        clickOn("#editButton");
         Scene scene = getTopScene();
         clickOn(scene.lookup("#givenNamesField"));
         deleteLine();
@@ -61,6 +62,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editLastNames() {
+        clickOn("#editButton");
+
         Scene scene = getTopScene();
         clickOn(scene.lookup("#lastNamesField"));
         deleteLine();
@@ -85,6 +88,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editPhoneTest() {
+        clickOn("#editButton");
+
         clickOn("#phoneField");
         deleteLine();
         write("0276666666");
@@ -98,6 +103,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editEmailTest() {
+        clickOn("#editButton");
+
         clickOn("#emailField");
         deleteLine();
         write("test@test.com");
@@ -126,6 +133,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editDateOfBirthTest() {
+        clickOn("#editButton");
+
         Scene scene = getTopScene();
         clickOn(scene.lookup("#dobField"));
         deleteLine();
@@ -162,6 +171,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editDateOfDeathTest() {
+        clickOn("#editButton");
+
         Scene scene = getTopScene();
         clickOn(scene.lookup("#dodField"));
         deleteLine();
@@ -214,6 +225,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editGenderTest() {
+        clickOn("#editButton");
+
         Scene scene = getTopScene();
         clickOn(scene.lookup("#genderField"));
         deleteLine();
@@ -228,6 +241,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editHeightTest() {
+        clickOn("#editButton");
 
         Scene scene = getTopScene();
         clickOn(scene.lookup("#heightField"));
@@ -263,6 +277,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editWeightTest() {
+        clickOn("#editButton");
+
         Scene scene = getTopScene();
         clickOn(scene.lookup("#weightField"));
         deleteLine();
