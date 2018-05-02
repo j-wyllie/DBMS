@@ -180,6 +180,9 @@ public class DonorProfileController {
     @FXML
     private Button buttonShowDrugInteractions;
 
+    @FXML
+    private Button buttonViewActiveIngredients;
+
     private Boolean isClinician = false;
 
 
@@ -643,6 +646,11 @@ public class DonorProfileController {
             textFieldMedicationSearch.setVisible(true);
 
             buttonShowDrugInteractions.setVisible(true);
+            buttonViewActiveIngredients.setVisible(true);
+
+            tableViewActiveIngredients.setVisible(true);
+            tableViewDrugInteractionsNames.setVisible(true);
+            tableViewDrugInteractions.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -653,6 +661,11 @@ public class DonorProfileController {
             textFieldMedicationSearch.setVisible(false);
 
             buttonShowDrugInteractions.setVisible(false);
+            buttonViewActiveIngredients.setVisible(false);
+
+            tableViewActiveIngredients.setVisible(false);
+            tableViewDrugInteractionsNames.setVisible(false);
+            tableViewDrugInteractions.setVisible(false);
 
             logoutButton.setVisible(true);
         }
@@ -677,12 +690,7 @@ public class DonorProfileController {
                 hideItems();
             }
             //Profile currentDonor = getCurrentProfile();
-        } else if (getCurrentProfile() != null) {
-            Profile currentDonor = getCurrentProfile();
-            hideItems();
-            setPage(currentDonor);
         }
-
     }
 
     /**
