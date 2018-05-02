@@ -42,6 +42,7 @@ public class ClinicianProfileGUITest extends TestFxMethods {
     public void loginUser() {
         loginAsClinician();
     }
+
     /**
      * Tests that a donor's profile can be opened by a clinician and that the name can be successfully
      * updated. The name is checked in the database and in the GUI to make sure it updates.
