@@ -63,10 +63,13 @@ public class EditProcedureController {
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
-
-        affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
-        affectedOrgansListView.setItems(donatedOrgans);
+        try{
+            affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
+            affectedOrgansListView.setItems(donatedOrgans);
+        } catch (NullPointerException e){
+            System.out.println("Not clinician");
+        }
 
     }
 
@@ -79,8 +82,14 @@ public class EditProcedureController {
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
-        affectedOrgansListView.setDisable(false);
-        affectedOrgansListView.setVisible(true);
+        try {
+            if(!controller.getSearchedDonor().equals(null)) {
+                affectedOrgansListView.setDisable(false);
+                affectedOrgansListView.setVisible(true);
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Not clinician");
+        }
         descEntry.setDisable(false);
         descEntry.setVisible(true);
         dateEntry.setDisable(false);
@@ -102,10 +111,22 @@ public class EditProcedureController {
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
-        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
+        try {
+            if(!controller.getSearchedDonor().equals(null)) {
+                currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Not clinician");
+        }
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-        affectedOrgansListView.setDisable(true);
-        affectedOrgansListView.setVisible(false);
+        try {
+            if(!controller.getSearchedDonor().equals(null)) {
+                affectedOrgansListView.setDisable(true);
+                affectedOrgansListView.setVisible(false);
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Not clinician");
+        }
         descEntry.setDisable(true);
         descEntry.setVisible(false);
         dateEntry.setDisable(true);

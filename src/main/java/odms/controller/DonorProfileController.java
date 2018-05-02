@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    protected Profile searchedDonor;
+    protected Profile searchedDonor = null;
 
     @FXML
     private Label donorFullNameLabel;
