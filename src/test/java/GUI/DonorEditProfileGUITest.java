@@ -59,46 +59,46 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
     }
 
-//    @Test
-//    public void editLastNames() {
-//        clickOn("#editButton");
-//
-//        Scene scene = getTopScene();
-//        clickOn(scene.lookup("#lastNamesField"));
-//        deleteLine();
-//        clickOn("#saveButton");
-//        closeYesConfirmationDialogue();
-//
-//        alertDialog = getAlertDialogue();
-//        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-//        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
-//        closeDialog(dialogPane);
-//
-//        clickOn(scene.lookup("#lastNamesField"));
-//        write("Seger");
-//        clickOn("#saveButton");
-//        closeYesConfirmationDialogue();
-//
-//        // Checks GUI has been updated.
-//        Scene scene2 = getTopScene();
-//        Label updatedGivenNames = (Label) scene2.lookup("#lastNamesLabel");
-//        assertEquals("Seger", updatedGivenNames.getText().substring(11));
-//    }
-//
-//    @Test
-//    public void editPhoneTest() {
-//        clickOn("#editButton");
-//
-//        clickOn("#phoneField");
-//        deleteLine();
-//        write("0276666666");
-//        clickOn("#saveButton");
-//        closeYesConfirmationDialogue();
-//
-//        Scene scene = getTopScene();
-//        String phoneText = ((Label) scene.lookup("#phoneLabel")).getText().substring(8);
-//        assertEquals("0276666666", phoneText);
-//    }
+    @Test
+    public void editLastNames() {
+        clickOn("#editButton");
+
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#lastNamesField"));
+        deleteLine();
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#lastNamesField"));
+        write("Seger");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        // Checks GUI has been updated.
+        Scene scene2 = getTopScene();
+        Label updatedGivenNames = (Label) scene2.lookup("#lastNamesLabel");
+        assertEquals("Seger", updatedGivenNames.getText().substring(11));
+    }
+
+    @Test
+    public void editPhoneTest() {
+        clickOn("#editButton");
+
+        clickOn("#phoneField");
+        deleteLine();
+        write("0276666666");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        Scene scene = getTopScene();
+        String phoneText = ((Label) scene.lookup("#phoneLabel")).getText().substring(8);
+        assertEquals("0276666666", phoneText);
+    }
 //
 //    @Test
 //    public void editEmailTest() {
