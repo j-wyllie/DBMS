@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.EditClinicianProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.EditClinicianProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -127,22 +127,17 @@
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="lastNamesField" onKeyTyped="#editTrue" layoutX="196.0" layoutY="74.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" onKeyTyped="#editTrue" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="staffIdField" onKeyTyped="#editTrue" layoutX="10.0" layoutY="24.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <TextField fx:id="addressField" layoutX="166.0" layoutY="123.0" onKeyTyped="#editTrue" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="addressField" onKeyTyped="#editTrue" layoutX="166.0" layoutY="123.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets left="50.0" right="20.0" />
-                                                   </GridPane.margin>
-                                                </TextField>
-                                                <TextField fx:id="regionField" onKeyTyped="#editTrue" layoutX="166.0" layoutY="175.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                <TextField fx:id="regionField" layoutX="166.0" layoutY="175.0" onKeyTyped="#editTrue" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
