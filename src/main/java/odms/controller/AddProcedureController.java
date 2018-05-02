@@ -5,15 +5,19 @@ import java.sql.Date;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import javax.lang.model.element.NestingKind;
 import javax.swing.Action;
+
+import odms.profile.Organ;
 
 import odms.data.ProfileDataIO;
 import odms.profile.Procedure;
@@ -21,6 +25,8 @@ import odms.profile.Profile;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -43,6 +49,11 @@ public class AddProcedureController {
 
     @FXML
     private Button addButton;
+
+    @FXML
+    private ListView<Organ> affectedOrgansListView;
+
+    private ObservableList<Organ> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
@@ -72,6 +83,8 @@ public class AddProcedureController {
                 procedure = new Procedure(summary, dateOfProcedure, longDescription);
             }
 
+            procedure.setOrgansAffected(new ArrayList<Organ>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
+
             System.out.println(procedure);
             addProcedure(procedure);
 
@@ -89,7 +102,7 @@ public class AddProcedureController {
      * Adds a new condition to the current profile
      * @param procedure
      */
-    public void addProcedure(Procedure procedure) {
+    private void addProcedure(Procedure procedure) {
         searchedDonor.addProcedure(procedure);
         controller.refreshProcedureTable();
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
@@ -99,14 +112,23 @@ public class AddProcedureController {
 //        fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
 //        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
 //        controller.refreshTable();
+
+
+        System.out.println("----------------" + affectedOrgansListView.getSelectionModel().getSelectedItems() );
     }
 
-
-
+    /**
+     * Run whenever this controller is called
+     * @param controller
+     */
     public void init(DonorProfileController controller) {
         this.controller = controller;
         searchedDonor = controller.getSearchedDonor();
 
+        affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
+        affectedOrgansListView.setItems(donatedOrgans);
     }
+
 
 }

@@ -45,6 +45,7 @@ public class Procedure {
     public void setSummary(String summary) { this.summary = summary; }
     public void setDate(LocalDate date) { this.date = date; }
     public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
+    public void setOrgansAffected(ArrayList<Organ> organs) { this.organsAffected = organs; }
 
     // organ methods
 
