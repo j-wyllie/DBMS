@@ -41,7 +41,6 @@ abstract class TestFxMethods extends ApplicationTest {
         closeCurrentWindow();
         closeCurrentWindow();
         closeCurrentWindow();
-        closeCurrentWindow();
 
         FxToolkit.hideStage();
         release(new KeyCode[]{});
