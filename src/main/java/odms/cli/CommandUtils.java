@@ -480,7 +480,6 @@ public class CommandUtils {
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                     profile.addDonations(organSet);
                 } else if (action.contains("update")) {
-                    System.out.println("b");
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
