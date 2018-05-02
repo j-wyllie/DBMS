@@ -30,7 +30,7 @@ public class DonorProfileGUITest extends TestFxMethods {
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() throws TimeoutException {
-        //GUITestSetup.headless();
+        GUITestSetup.headless();
     }
 
     /**
