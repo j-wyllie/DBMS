@@ -137,12 +137,18 @@ public class Profile {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
@@ -171,8 +177,14 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
+            if(value.equals("null")) {
+                value = "0";
+            }
             setBloodPressureSystolic(Integer.valueOf(value));
         }else if (attrName.equals("bloodPressureDiastolic")) {
+            if(value.equals("null")) {
+                value = "0";
+            }
             setBloodPressureDiastolic(Integer.valueOf(value));
         }else if (attrName.equals("phone")) {
             setPhone(value);
@@ -381,6 +393,14 @@ public class Profile {
     }
 
     /**
+     * Add an organ to the organs donate list.
+     * @param organ the organ the profile wishes to donate
+     */
+    public void addOrgan(Organ organ) {
+        this.organs.add(organ);
+    }
+
+    /**
      * Add a set of organs to the list of organs that the profile wants to donate
      * @param organs a set of organs they want to donate
      */
@@ -403,6 +423,14 @@ public class Profile {
     }
 
     /**
+     * Add an organ to the list of donated organs.
+     * @param organ the organ to be added
+     */
+    public void addDonation(Organ organ) {
+        this.donatedOrgans.add(organ);
+    }
+
+    /**
      * Add a set of organs to the list of organs that the profile has donated
      * @param organs a set of organs that the profile has donated
      */
@@ -411,7 +439,7 @@ public class Profile {
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
             Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.add(organ);
+            this.addDonation(organ);
         }
     }
 

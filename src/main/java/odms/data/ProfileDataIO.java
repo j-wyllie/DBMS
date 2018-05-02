@@ -1,31 +1,43 @@
 package odms.data;
 
 import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import com.google.gson.GsonBuilder;
 import odms.cli.CommandUtils;
 
-public class ProfileDataIO {
+public class ProfileDataIO extends CommonDataIO {
 
+    private static final String defaultPath = "example/example.json";
     private static String history = "";
 
     /**
-     * Export full ProfileDatabase object to specified JSON file.
+     * Export full Profile Database object to the previously used path.
+     *
+     * @param profileDb Database to be exported to JSON
+     */
+    public static void saveData(ProfileDatabase profileDb) {
+        if (profileDb.getPath() == null) {
+            profileDb.setPath(defaultPath);
+        }
+        saveData(profileDb, profileDb.getPath());
+    }
+
+    /**
+     * Export full Profile Database object to specified file.
      *
      * @param profileDb Database to be exported to JSON
      * @param path target path
      */
     public static void saveData(ProfileDatabase profileDb, String path) {
+        profileDb.setPath(path);
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
 
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
             writeFile.write(gson.toJson(profileDb));
@@ -54,24 +66,8 @@ public class ProfileDataIO {
      */
     private static String fileToString(File file) {
         StringBuilder fileBuffer = new StringBuilder();
-        String lineBuffer;
 
-        try {
-            BufferedReader readFile = new BufferedReader(new FileReader(file));
-
-            while ((lineBuffer = readFile.readLine()) != null) {
-                fileBuffer.append(lineBuffer);
-            }
-
-            readFile.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            System.out.println("File requested: " + file);
-        } catch (IOException e) {
-            System.out.println("IO exception, please check the specified file");
-            System.out.println("File requested: " + file);
-        }
+        UserDataIO.loadDataInBuffer(file, fileBuffer);
 
         return fileBuffer.toString();
     }
@@ -86,6 +82,7 @@ public class ProfileDataIO {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
         ProfileDatabase profileDb = new ProfileDatabase();
+        profileDb.setPath(path);
 
         try {
             history = fileToString(historyFile);

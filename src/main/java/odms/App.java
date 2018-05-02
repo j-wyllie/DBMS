@@ -4,11 +4,12 @@ import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
+import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 
 public class App {
-
-    private static ProfileDatabase profileDb = new ProfileDatabase();
+    private static final String DONOR_DATABASE = "example/example.json";
+    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
 
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");

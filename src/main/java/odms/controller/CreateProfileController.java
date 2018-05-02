@@ -6,6 +6,7 @@ import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -54,13 +55,20 @@ public class CreateProfileController {
 
 
                 Profile newDonor = new Profile(givenNames, surnames, dob, ird);
-                currentDatabase.addProfile(newDonor);
 
-                LoginController.setCurrentDonor(newDonor.getId());
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-                Scene newScene = new Scene(parent);
+                currentDatabase.addProfile(newDonor);
+                ProfileDataIO.saveData(currentDatabase);
+
+
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+                controller.setLoggedInDonor(currentDatabase.getProfile(newDonor.getId()));
+                controller.initialize();
+
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                appStage.setScene(newScene);
+
+                appStage.setScene(scene);
                 appStage.show();
             } catch (IllegalArgumentException e) {
                 //show error window.
