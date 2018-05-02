@@ -269,4 +269,26 @@ public class DonorProfileGUITest extends TestFxMethods {
 
         assertEquals(pastConditions.getItems().size(), initialSize + 1);
     }
+
+    @Test
+    /**
+     * Test that the clinician can toggle a condition from past to present
+     */
+    public void testPastToPresentToggle() {
+        loginAsClinician();
+        clickOn("#searchTab");
+
+        TableView searchTable = getTableView("#searchTable");
+
+        doubleClickOn(row("#searchTable", 0));
+        clickOn("#medicalHistoryTab");
+
+        TableView currentConditions = getTableView("#curConditionsTable");
+        Integer initialSize = currentConditions.getItems().size();
+
+        clickOn(row("#pastConditionsTable", 0));
+        clickOn("#toggleCuredButton");
+
+        assertEquals(currentConditions.getItems().size(), initialSize + 1);
+    }
 }
