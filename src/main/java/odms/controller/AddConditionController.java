@@ -96,7 +96,7 @@ public class AddConditionController {
      */
     public void addCondition(Condition condition) {
         searchedDonor.addCondition(condition);
-        controller.refreshTable();
+        controller.refreshConditionTable();
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
 //        FXMLLoader fxmlLoader = new FXMLLoader();

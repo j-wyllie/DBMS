@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.controlsfx.control.table.TableFilter;
 
 public class DonorProfileController {
 
@@ -186,7 +187,7 @@ public class DonorProfileController {
         if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
         else {pastConditionsObservableList = FXCollections.observableArrayList(); }
 
-        refreshTable();
+        refreshConditionTable();
 
     }
 
@@ -227,11 +228,47 @@ public class DonorProfileController {
         });
     }
 
+
+
+    public ArrayList<Condition> convertConditionObservableToArray(ObservableList<Condition> conditions) {
+        ArrayList<Condition> toReturn = new ArrayList<>();
+        for (int i = 0; i<conditions.size(); i++) {
+            if (conditions.get(i) != null) { toReturn.add(conditions.get(i)); }
+        }
+        return toReturn;
+    }
+
+
+
+    /**
+     * sets all of the items in the fxml to their respective values
+     * Enables the relevant buttons on medications tab for how many conditions are selected
+     */
+    @FXML
+    private void refreshPageElements() {
+
+        ArrayList<Condition> allConditions = convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems());
+        allConditions.addAll(convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems()));
+
+        if (allConditions.size() == 0) {
+            deleteConditionButton.setDisable(true);
+            toggleCuredButton.setDisable(true);
+            toggleChronicButton.setDisable(true);
+        } else {
+            deleteConditionButton.setDisable(false);
+            toggleCuredButton.setDisable(false);
+            toggleChronicButton.setDisable(false);
+        }
+
+    }
+
+
+
     /**
      * refreshes current and past conditions table with its up to date data
      */
     @FXML
-    protected void refreshTable() {
+    protected void refreshConditionTable() {
 
         Callback<TableColumn, TableCell> cellFactory =
                 new Callback<TableColumn, TableCell>() {
@@ -254,10 +291,16 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        curConditionsTable.getItems().clear();
-        curConditionsObservableList.clear();
+        try {
+            if (curConditionsTable.getItems() != null) { curConditionsTable.getItems().clear(); }
+            if (pastConditionsTable.getItems() != null) { pastConditionsTable.getItems().clear(); }
+        } catch (NullPointerException|UnsupportedOperationException e) {
+            System.out.println();
+        }
+
+        //curConditionsObservableList.clear();
+
         if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
-        pastConditionsTable.getItems().clear();
         if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
@@ -304,7 +347,7 @@ public class DonorProfileController {
                 currentDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
-            refreshTable();
+            refreshConditionTable();
         });
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
@@ -330,7 +373,7 @@ public class DonorProfileController {
                     currentDonor.addCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()));
                 }
-                refreshTable();
+                refreshConditionTable();
             });
 
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
@@ -347,11 +390,12 @@ public class DonorProfileController {
                 currentDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
-            refreshTable();
+            refreshConditionTable();
         });
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
         forceSortOrder();
+        refreshPageElements();
 
     }
 
@@ -388,6 +432,8 @@ public class DonorProfileController {
             e.printStackTrace();
             System.out.println(e);
         }
+
+        refreshConditionTable();
     }
 
 
@@ -404,13 +450,16 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        Condition condition = (Condition) curConditionsTable.getSelectionModel().getSelectedItem();
-        if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
-        if (condition == null) { return; }
 
-        currentDonor.removeCondition(condition);
 
-        refreshTable();
+        ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
+        conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
+
+        for (int i = 0; i<conditions.size(); i++) {
+            if (conditions.get(i) != null) { currentDonor.removeCondition(conditions.get(i));}
+        }
+
+        refreshConditionTable();
     }
 
 
@@ -420,17 +469,25 @@ public class DonorProfileController {
      */
     @FXML
     private void handleToggleChronicButtonClicked(ActionEvent event) {
-        Condition condition = (Condition) curConditionsTable.getSelectionModel().getSelectedItem();
-        if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
-        if (condition == null) { return; }
-        condition.setIsChronic(!condition.getChronic());
-        if (condition.getChronic()) {
-            condition.setChronicText("CHRONIC");
-            condition.setIsCured(false);
-        }
-        else {condition.setChronicText("");}
-        refreshTable();
 
+
+        ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
+        conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
+
+        for (int i = 0; i<conditions.size(); i++) {
+            if (conditions.get(i) != null) {
+
+                conditions.get(i).setIsChronic(!conditions.get(i).getChronic());
+                if (conditions.get(i).getChronic()) {
+                    conditions.get(i).setChronicText("CHRONIC");
+                    conditions.get(i).setIsCured(false);
+                }
+                else {conditions.get(i).setChronicText("");}
+
+            }
+        }
+
+        refreshConditionTable();
     }
 
 
@@ -440,21 +497,29 @@ public class DonorProfileController {
      */
     @FXML
     private void handleToggleCuredButtonClicked(ActionEvent event) {
-        Condition condition = (Condition) curConditionsTable.getSelectionModel().getSelectedItem();
-        if (condition == null) { condition = (Condition) pastConditionsTable.getSelectionModel().getSelectedItem(); }
-        if (condition == null) { return; }
 
-        if (!condition.getChronic()) {
-            condition.setIsCured(!condition.getCured());
-        } else {
-            System.out.println("Condition must be unmarked as Chronic before being Cured!");
-        }
+        ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
+        conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
 
-        if (condition.getCured()) { condition.setDateCured(LocalDate.now()); }
-        else {
-            condition.setDateCured(null);
+        for (int i = 0; i < conditions.size(); i++) {
+            if (conditions.get(i) != null) {
+
+                if (!conditions.get(i).getChronic()) {
+                    conditions.get(i).setIsCured(!conditions.get(i).getCured());
+                } else {
+                    System.out.println("Condition must be unmarked as Chronic before being Cured!");
+                }
+
+                if (conditions.get(i).getCured()) {
+                    conditions.get(i).setDateCured(LocalDate.now());
+                } else {
+                    conditions.get(i).setDateCured(null);
+                }
+
+            }
+
+            refreshConditionTable();
         }
-        refreshTable();
     }
 
 
@@ -532,7 +597,7 @@ public class DonorProfileController {
         */
 
         makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());
-        refreshTable();
+        refreshConditionTable();
 
         try {
             donorFullNameLabel
@@ -622,7 +687,7 @@ public class DonorProfileController {
             }
 
             historyView.setText(userHistory.toString());
-            refreshTable();
+            refreshConditionTable();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -669,6 +734,14 @@ public class DonorProfileController {
      */
     @FXML
     public void initialize() {
+        curConditionsTable.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+        pastConditionsTable.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+
+
         if(searchedDonor != null) {
             setPage(searchedDonor);
 
@@ -677,7 +750,17 @@ public class DonorProfileController {
             //}
             //Profile currentDonor = getCurrentProfile();
         }
+
+
+        refreshPageElements();
+
+
+
+
+
         disableTableHeaderReorder();
+        @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(curConditionsTable);
+        @SuppressWarnings("deprecation") TableFilter tableFilter2 = new TableFilter(pastConditionsTable);
 
     }
 
