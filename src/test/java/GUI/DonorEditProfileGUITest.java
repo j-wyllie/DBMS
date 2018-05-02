@@ -42,7 +42,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        GUITestSetup.headless();
+        //GUITestSetup.headless();
     }
 
     @Before
@@ -73,7 +73,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
         Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
-        System.out.println(updatedGivenNames.getText());
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
     }
 
@@ -98,18 +97,33 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
         Label updatedGivenNames = (Label) scene2.lookup("#lastNamesLabel");
-        System.out.println(updatedGivenNames.getText());
         assertEquals("Seger", updatedGivenNames.getText().substring(11));
     }
 
     @Test
     public void editPhoneTest() {
+        clickOn("#phoneField");
+        deleteLine();
+        write("0276666666");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        Scene scene = getTopScene();
+        String phoneText = ((Label) scene.lookup("#phoneLabel")).getText().substring(8);
+        assertEquals("0276666666", phoneText);
     }
 
     @Test
     public void editEmailTest() {
+        clickOn("#emailField");
+        deleteLine();
+        write("test@test.com");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        Scene scene = getTopScene();
+        String emailText = ((Label) scene.lookup("#emailLabel")).getText().substring(8);
+        assertEquals("test@test.com", emailText);
     }
 
     @Test
@@ -160,6 +174,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         Scene scene2 = getTopScene();
         Label updatedDob = (Label) scene2.lookup("#dobLabel");
         assertEquals("14-11-1997", updatedDob.getText().substring(16));
+
+        //TODO verify age
     }
 
     @Test
@@ -215,23 +231,85 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     }
 
     @Test
-    public void editAgeTest() {
-
-    }
-
-    @Test
     public void editGenderTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#genderField"));
+        deleteLine();
+        write("Male");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        scene = getTopScene();
+        Label updatedGender = (Label) scene.lookup("#genderLabel");
+        assertEquals("Male", updatedGender.getText().substring(9));
     }
 
     @Test
     public void editHeightTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
+        write("aaa");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label updatedHeight = (Label) scene.lookup("#heightLabel");
+        assertEquals("", updatedHeight.getText().substring(9));
+
+        clickOn("#editButton");
+        clickOn("#heightField");
+        write("1.65");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        updatedHeight = (Label) scene.lookup("#heightLabel");
+        assertEquals("1.65cm", updatedHeight.getText().substring(9));
     }
 
     @Test
     public void editWeightTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#weightField"));
+        deleteLine();
+        write("aaa");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#weightField"));
+        deleteLine();
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label updatedWeight = (Label) scene.lookup("#weightLabel");
+        assertEquals("", updatedWeight.getText().substring(9));
+
+        clickOn("#editButton");
+        clickOn("#weightField");
+        write("70");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        updatedWeight = (Label) scene.lookup("#weightLabel");
+        assertEquals("70.0kg", updatedWeight.getText().substring(9));
     }
 
     @Test
@@ -271,6 +349,25 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void validateBMITest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
 
+        write("1.65");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        clickOn("#editButton");
+
+        clickOn("#weightField");
+        deleteLine();
+        write("70");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label bmi = (Label) scene.lookup("#bmiLabel");
+
+        assertEquals("25.71166207529844", bmi.getText().substring(6));
     }
 }

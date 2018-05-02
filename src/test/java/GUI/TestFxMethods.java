@@ -76,8 +76,6 @@ abstract class TestFxMethods extends ApplicationTest {
     protected void openSearchedProfile(String name) {
         clickOn("#searchTab");
         clickOn("#searchField").write(name);
-        TableView searchTable = getTableView("#searchTable");
-
         doubleClickOn(row("#searchTable", 0));
     }
 

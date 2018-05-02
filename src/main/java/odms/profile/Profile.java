@@ -470,7 +470,7 @@ public class Profile {
      * @return BMI
      */
     public Double calculateBMI() {
-        return this.weight / ((this.height / 100) * (this.height / 100));
+        return this.weight / ((this.height) * (this.height));
     }
 
     /**

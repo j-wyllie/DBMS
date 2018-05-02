@@ -201,10 +201,18 @@ public class DonorProfileController {
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
             }
-            heightLabel.setText(heightLabel.getText() + currentDonor.getHeight());
-            weightLabel.setText(weightLabel.getText() + currentDonor.getWeight());
-            phoneLabel.setText(phoneLabel.getText());
-            emailLabel.setText(emailLabel.getText());
+            if (currentDonor.getHeight() != null) {
+                heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
+            }
+            if (currentDonor.getWeight() != null) {
+                weightLabel.setText(weightLabel.getText() + currentDonor.getWeight() + "kg");
+            }
+            if (currentDonor.getPhone() != null) {
+                phoneLabel.setText(phoneLabel.getText() + currentDonor.getPhone());
+            }
+            if (currentDonor.getEmail() != null) {
+                emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
+            }
 
             if (currentDonor.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
@@ -216,7 +224,8 @@ public class DonorProfileController {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
             if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
-                bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
+                bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
+                System.out.println(currentDonor.calculateBMI());
             }
             if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));

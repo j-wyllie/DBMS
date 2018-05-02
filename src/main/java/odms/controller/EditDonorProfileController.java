@@ -9,6 +9,7 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -199,9 +200,16 @@ public class EditDonorProfileController {
                     error = true;
                 }
                 currentProfile.setGender(genderField.getText());
-
-                if (heightField.getText() == null) {
-                    currentProfile.setWeight(Double.valueOf(weightField.getText()));
+                try {
+                    if (!weightField.getText().isEmpty()) {
+                        currentProfile.setWeight(Double.valueOf(weightField.getText()));
+                    }
+                    if (!heightField.getText().isEmpty()) {
+                        currentProfile.setHeight(Double.valueOf(heightField.getText()));
+                    }
+                } catch(NumberFormatException e) {
+                    error = true;
+                    System.out.println("here");
                 }
                 currentProfile.setPhone(phoneField.getText());
                 currentProfile.setEmail(emailField.getText());
@@ -352,10 +360,19 @@ public class EditDonorProfileController {
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());
                 }
-                heightField.setText(String.valueOf(currentProfile.getHeight()));
-                weightField.setText(String.valueOf(currentProfile.getWeight()));
-                phoneField.setText(currentProfile.getPhone());
-                emailField.setText(currentProfile.getEmail());
+                if (currentProfile.getHeight() != null){
+                    heightField.setText(String.valueOf(currentProfile.getHeight()));
+
+                }
+                if (currentProfile.getWeight() != null) {
+                    weightField.setText(String.valueOf(currentProfile.getWeight()));
+                }
+                if (currentProfile.getPhone() != null) {
+                    phoneField.setText(currentProfile.getPhone());
+                }
+                if (currentProfile.getEmail() != null) {
+                    emailField.setText(currentProfile.getEmail());
+                }
 
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
