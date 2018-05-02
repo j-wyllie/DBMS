@@ -113,12 +113,16 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
         String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
+        System.out.println(originalGivenNames);
         //opening edit tab
         clickOn((scene.lookup("#editButton")));
 
         //editing donor
         Scene scene2 = getTopModalStage();
+        System.out.println(scene);
+        System.out.println(scene2);
         TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
+        System.out.println(givenNames);
         TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
         clickOn(givenNames).eraseText(originalGivenNames.length()).write("Bob");
         clickOn(lastNames).eraseText(originalLastNames.length()).write("Seger");
