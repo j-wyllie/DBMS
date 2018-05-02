@@ -93,6 +93,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         deleteLine();
         write("0276666666");
         clickOn("#saveButton");
+        sleep(3000);
         closeYesConfirmationDialogue();
 
         Scene scene = getTopScene();
