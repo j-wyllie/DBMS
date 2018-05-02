@@ -176,10 +176,6 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
-    @FXML private Button buttonViewActiveIngredients;
-
-    @FXML private Text textActiveIngredients;
-
     @FXML
     private Button buttonShowDrugInteractions;
 
@@ -291,6 +287,11 @@ public class DonorProfileController {
         refreshTable();
     }
 
+    /**
+     * Converts ObservableList of drugs to ArrayList of drugs.
+     * @param drugs ObservableList of drugs.
+     * @return ArrayList of drugs.
+     */
     public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
         ArrayList<Drug> toReturn = new ArrayList<>();
         for (int i = 0; i<drugs.size(); i++) {
@@ -299,6 +300,11 @@ public class DonorProfileController {
         return toReturn;
     }
 
+    /**
+     * Button handler to get and display drug interactions on TableView tableViewDrugInteractionsName and
+     * tableViewDrugInteractions.
+     * @param event clicking on the show interactions button.
+     */
     @FXML
     private void handleShowInteractions(ActionEvent event) {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
@@ -308,6 +314,9 @@ public class DonorProfileController {
         if (drugs.size() != 2) {
             if (drugs.size() == 1) {
                 Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+                if (toAdd == null) {
+                    return;
+                }
                 drugs.add(toAdd);
             }
             else if (drugs.size() == 0) {
@@ -410,6 +419,7 @@ public class DonorProfileController {
         refreshTable();
     }
 
+
     private void delayedRequest(String substring) {
         new Timer().schedule(
                 new TimerTask() {
@@ -443,7 +453,7 @@ public class DonorProfileController {
     @FXML
     private void setMedicationSearchFieldListener() {
         textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
-            if (oldValue != newValue) {
+            if (!oldValue.equals(newValue)) {
 //                delayedRequest(newValue);
                 try {
                     ArrayList<String> suggestions = getSuggestionList(newValue);
@@ -476,7 +486,7 @@ public class DonorProfileController {
                     currentDonor = getCurrentProfile();
                 }
                 String medicationName = textFieldMedicationSearch.getText();
-                if (medicationName != "") {
+                if (!medicationName.equals("")) {
                     currentDonor.addDrug(new Drug(medicationName));
                 }
                 textFieldMedicationSearch.clear();
