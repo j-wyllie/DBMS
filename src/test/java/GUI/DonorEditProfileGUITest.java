@@ -1,5 +1,6 @@
 package GUI;
 
+import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -176,7 +177,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         sleep(500);
 
-        Scene scene2 = getTopScene();
+        //Scene scene2 = getTopScene();
+        Scene scene2 = FXRobotHelper.getStages().get(0).getScene();
         clickOn(scene2.lookup("#dodField"));
         deleteLine();
 
