@@ -171,9 +171,10 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editDateOfDeathTest() {
-        clickOn("#editButton");
-
         Scene scene = getTopScene();
+        clickOn(scene.lookup("#editButton"));
+
+        scene = getTopScene();
         clickOn(scene.lookup("#dodField"));
         deleteLine();
 
@@ -319,13 +320,16 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editSmokerTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#editButton"));
+
         clickOn("#editMedicalTab");
         clickOn("#smokerTrueRadio");
         clickOn("#saveMedicalButton");
         closeYesConfirmationDialogue();
         clickOn("#medicalTab");
 
-        Scene scene = getTopScene();
+        scene = getTopScene();
         Label updatedSmoker = (Label) scene.lookup("#smokerLabel");
         assertEquals("true", updatedSmoker.getText().substring(9));
 
@@ -370,6 +374,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     @Test
     public void validateBMITest() {
         Scene scene = getTopScene();
+        clickOn(scene.lookup("#editButton"));
+        scene = getTopScene();
         clickOn(scene.lookup("#heightField"));
         deleteLine();
 
