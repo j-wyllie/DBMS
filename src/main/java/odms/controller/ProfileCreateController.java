@@ -5,7 +5,6 @@ import static odms.controller.AlertController.InvalidEntry;
 import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -19,7 +18,7 @@ import javafx.stage.Stage;
 import odms.data.IrdNumberConflictException;
 import odms.profile.Profile;
 
-public class CreateProfileController {
+public class ProfileCreateController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
 
@@ -57,11 +56,8 @@ public class CreateProfileController {
                 currentDatabase.addProfile(newDonor);
 
                 LoginController.setCurrentDonor(newDonor.getId());
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-                Scene newScene = new Scene(parent);
-                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                appStage.setScene(newScene);
-                appStage.show();
+
+                showScene(event, "/view/ProfileDisplay.fxml", true);
             } catch (IllegalArgumentException e) {
                 //show error window.
                 InvalidEntry();
@@ -80,10 +76,6 @@ public class CreateProfileController {
      */
     @FXML
     private void handleLoginLinkClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 }

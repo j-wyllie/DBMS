@@ -42,7 +42,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     private GuiMain guiMain;
     private Parent root;
 
-        //Runs tests in background if headless is set to true. This gets it working with the CI.
+    // Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
         GUITestSetup.headless();
@@ -75,7 +75,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     /**
      * logs in the clinician and opens up the search tab
      */
-    public void logInClinician() {
+    private void logInClinician() {
         clickOn("#usernameField").write("0");
         clickOn("#loginButton");
     }
@@ -92,8 +92,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         doubleClickOn(row("#searchTable", 0));
         //opening the first donor
         Scene scene = getTopModalStage();
-        Label donorName = (Label) scene.lookup("#donorFullNameLabel");
-        assertEquals(firstDonor.getFullName(), donorName.getText()); //checks name label is equal
+        Label profileName = (Label) scene.lookup("#donorFullNameLabel");
+        assertEquals(firstDonor.getFullName(), profileName.getText()); //checks name label is equal
     }
 
     /**
@@ -113,12 +113,16 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
         String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
         String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
+        System.out.println(originalGivenNames);
         //opening edit tab
         clickOn((scene.lookup("#editButton")));
 
         //editing donor
         Scene scene2 = getTopModalStage();
+        System.out.println(scene);
+        System.out.println(scene2);
         TextField givenNames = (TextField) scene2.lookup("#givenNamesField");
+        System.out.println(givenNames);
         TextField lastNames = (TextField) scene2.lookup("#lastNamesField");
         clickOn(givenNames).eraseText(originalGivenNames.length()).write("Bob");
         clickOn(lastNames).eraseText(originalLastNames.length()).write("Seger");
@@ -176,8 +180,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector The id of the table that contains the cell wanted
-     * @param row           row number
-     * @param column        column number
+     * @param row row number
+     * @param column column number
      * @return returns the cell data.
      */
     protected Object cellValue(String tableSelector, int row, int column) {
@@ -186,7 +190,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector Id of table that contains the row
-     * @param row           row number
+     * @param row row number
      * @return returns a table row
      */
     protected TableRow<?> row(String tableSelector, int row) {
@@ -209,8 +213,8 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
 
     /**
      * @param tableSelector ID of the table that contains the cell wanted
-     * @param row           row number
-     * @param column        column number
+     * @param row row number
+     * @param column column number
      * @return the cell of the table
      */
     protected TableCell<?, ?> cell(String tableSelector, int row, int column) {

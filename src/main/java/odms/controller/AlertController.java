@@ -27,8 +27,11 @@ public class AlertController {
      * Creates a popup when the username entered was invalid
      */
     static void InvalidUsername() {
-        Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid username.",
-                ButtonType.CLOSE);
+        Alert invalidAlert = new Alert(
+            AlertType.ERROR,
+            "Please enter a valid username.",
+            ButtonType.CLOSE
+        );
         invalidAlert.show();
 
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
@@ -85,17 +88,8 @@ public class AlertController {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);
         saveAlert.showAndWait();
-        if (saveAlert.getResult() == ButtonType.NO) {
-            saveAlert.close();
-            return false;
-        }
-        else if (saveAlert.getResult() == ButtonType.YES) {
-            saveAlert.close();
-            return true;
-        }
-        else {
-            return false;
-        }
+
+        return handleAlert(saveAlert);
     }
 
     /**
@@ -107,12 +101,23 @@ public class AlertController {
                 ButtonType.NO, ButtonType.YES);
 
         cancelAlert.showAndWait();
-        if (cancelAlert.getResult() == ButtonType.NO) {
-            cancelAlert.close();
+
+        return handleAlert(cancelAlert);
+    }
+
+    /**
+     * Handle alert window responses
+     *
+     * @param alert to handle
+     * @return boolean of action chosen
+     */
+    private static boolean handleAlert(Alert alert) {
+        if (alert.getResult() == ButtonType.NO) {
+            alert.close();
             return false;
         }
-        else if (cancelAlert.getResult() == ButtonType.YES) {
-            cancelAlert.close();
+        else if (alert.getResult() == ButtonType.YES) {
+            alert.close();
             return true;
         }
         else {

@@ -1,5 +1,7 @@
 package odms.profile;
 
+import odms.cli.CommandUtils;
+
 
 import odms.medications.Drug;
 
@@ -15,6 +17,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Profile {
+
+    private Boolean donor;
+    private Boolean receiver;
 
     private String givenNames;
     private String lastNames;
@@ -38,6 +43,7 @@ public class Profile {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
+    private Set<Organ> organsRequired = new HashSet<>();
 
     private String phone;
     private String email;
@@ -296,7 +302,7 @@ public class Profile {
      */
     public void addOrgansFromString(String organs) {
         String[] org = organs.split(",");
-        addOrgans(new HashSet<>(Arrays.asList(org)));
+        addOrgansDonate(new HashSet<>(Arrays.asList(org)));
     }
 
     /**
@@ -381,10 +387,38 @@ public class Profile {
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile wants to donate
-     * @param organs a set of organs they want to donate
+     * Consume a set of organs that the profile wants to receive and updates the profile to use this
+     * new set.
+     * @param organs the set of organs to be received
      */
-    public void addOrgans(Set<String> organs) throws IllegalArgumentException {
+    public void setOrgansRequired(Set<String> organs) {
+        generateUpdateInfo("organsRequired");
+
+        Set<Organ> newOrgans = new HashSet<>();
+
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+            String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        }
+
+        this.organsRequired = newOrgans;
+    }
+
+    /**
+     * Add a set of organs to the list of organs that the profile wants to donate
+     * @param organs the set of organs to donate
+     */
+    public void addOrgansDonate(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -395,11 +429,15 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organs) && registered) {
+        if (Collections.disjoint(newOrgans, this.organs) && donor) {
             this.organs.addAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public Set<Organ> getOrgansRequired() {
+        return organsRequired;
     }
 
     /**
@@ -448,6 +486,22 @@ public class Profile {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void setDonor(boolean donor) {
+        this.donor = donor;
+    }
+
+    public boolean isDonor() {
+        return donor;
+    }
+
+    public void setReceiver(boolean receiver) {
+        this.receiver = receiver;
+    }
+
+    public boolean isReceiver() {
+        return receiver;
     }
 
     /**
@@ -744,12 +798,12 @@ public class Profile {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
+    public void setDonor(Boolean donor) {
+        this.donor = donor;
     }
 
-    public Boolean getRegistered() {
-        return registered;
+    public Boolean getDonor() {
+        return donor;
     }
 
     public String getPhone() {

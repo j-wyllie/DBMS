@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import odms.medications.Drug;
+import odms.cli.CommandUtils;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -204,13 +205,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
@@ -235,7 +236,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addOrgansFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
@@ -267,7 +268,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addDonationFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
@@ -298,7 +299,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
         testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
 
         Set<String> expected = new HashSet<>();
@@ -368,13 +369,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
 
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
@@ -405,13 +406,13 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setRegistered(true);
+        testProfile.setDonor(true);
 
         Set<String> someOrgans = new HashSet<>();
         someOrgans.add("bone");
 
-        testProfile.addOrgans(someOrgans);
-        testProfile.addOrgans(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
+        testProfile.addOrgansDonate(someOrgans);
     }
 
     /**
@@ -731,4 +732,25 @@ public class ProfileTest {
         }
     }
 
+
+    @Test
+    public void testRequiredOrganHistory() {
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(profileAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+        Set<String> testSet = new HashSet<String>();
+        testSet.add("Heart");
+        testProfile.setOrgansRequired(testSet);
+        assertTrue(CommandUtils.currentSessionHistory.get(CommandUtils.historyPosition).contains("HEART"));
+    }
 }

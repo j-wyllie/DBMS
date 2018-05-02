@@ -22,7 +22,7 @@ public class GuiMain extends Application {
     private static final String USER_DATABASE = "example/users.json";
 
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
-    private static UserDatabase userDb = new UserDataIO().loadData(USER_DATABASE);
+    private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
@@ -31,7 +31,7 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        System.out.println(profileDb.searchGivenNames("Jack"));
+
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
@@ -42,6 +42,8 @@ public class GuiMain extends Application {
         }
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("ODMS"); // TODO Remove magic string
         primaryStage.show();
 
 //        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

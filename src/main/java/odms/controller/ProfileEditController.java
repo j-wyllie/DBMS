@@ -4,7 +4,6 @@ import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.GuiPopup;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -20,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -29,7 +27,7 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController {
+public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
@@ -97,20 +95,8 @@ public class EditDonorProfileController {
     private TextField donationsField;
 
     /**
-     * Scene change to log in view.
-     * @param event clicking on the logout button.
-     */
-    @FXML
-    private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
-    }
-
-    /**
      * Button handler to undo last action.
+     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -120,6 +106,7 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to redo last undo action.
+     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -129,19 +116,17 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to make fields editable.
+     *
      * @param event clicking on the edit button.
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ProfileEdit.fxml", true);
     }
 
     /**
      * Button handler to save the changes made to the fields.
+     *
      * @param event clicking on the save (tick) button.
      */
     @FXML
@@ -150,7 +135,8 @@ public class EditDonorProfileController {
         boolean error = false;
         if (saveBool) {
             String action =
-                    "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
+                    "Profile " + currentProfile.getId() + " updated details previous = "
+                            + currentProfile
                             .getAttributesSummary() + " new = ";
             currentProfile.setGivenNames(givenNamesField.getText());
             currentProfile.setLastNames(lastNamesField.getText());
@@ -158,10 +144,10 @@ public class EditDonorProfileController {
             //currentDonor.setDateOfBirth(Date.parse(dobField.getText()));
             //currentDonor.setDateOfDeath(LocalDate.parse(dodField.getText()));
             currentProfile.setGender(genderField.getText());
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setHeight(Double.valueOf(heightField.getText()));
             }
-            if(heightField.getText() == null) {
+            if (heightField.getText() == null) {
                 currentProfile.setWeight(Double.valueOf(weightField.getText()));
             }
             currentProfile.setPhone(phoneField.getText());
@@ -179,27 +165,29 @@ public class EditDonorProfileController {
                 currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
             }
             try {
-                if(!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                    Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                    Set<String> set = new HashSet<>(
+                            Arrays.asList(organField.getText().split(", ")));
                     if (!set.isEmpty()) {
-                        currentProfile.setRegistered(true);
-                        currentProfile.addOrgans(set);
+                        currentProfile.setDonor(true);
+                        currentProfile.addOrgansDonate(set);
                     }
                 }
 
-                } catch (Exception e){
-                    error = true;
-                }
+            } catch (Exception e) {
+                error = true;
+            }
 
             try {
-                if(!donationsField.getText().equals(currentProfile.getDonationsAsCSV())){
-                    Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
-                    if(!set.isEmpty()){
-                        currentProfile.setRegistered(true);
+                if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
+                    Set<String> set = new HashSet<>(
+                            Arrays.asList(donationsField.getText().split(", ")));
+                    if (!set.isEmpty()) {
+                        currentProfile.setDonor(true);
                         currentProfile.addDonations(set);
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 error = true;
             }
 
@@ -222,7 +210,7 @@ public class EditDonorProfileController {
                 Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                 currentProfile.setChronicDiseases(diseasesSet);
             }
-            if(error) {
+            if (error) {
                 GuiPopup("Error. Not all fields were updated.");
             }
 
@@ -234,6 +222,7 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to cancel the changes made to the fields.
+     *
      * @param event clicking on the cancel (x) button.
      */
     @FXML
@@ -247,12 +236,14 @@ public class EditDonorProfileController {
 
     /**
      * closes the edit donor window and reopens the donor.
+     *
      * @param event either the cancel button event or the save button event
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        if(getCurrentProfile() != null){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        if (getCurrentProfile() != null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -260,9 +251,10 @@ public class EditDonorProfileController {
             appStage.show();
 
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/view/ProfileDisplay.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+            ProfileDisplayController controller = fxmlLoader.<ProfileDisplayController>getController();
             controller.setDonor(currentProfile);
             controller.initialize();
 
@@ -273,13 +265,30 @@ public class EditDonorProfileController {
         }
     }
 
+    @FXML
+    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        OrganRequiredController controller = fxmlLoader.getController();
+        controller.setProfile(currentProfile);
+        controller.initialize();
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setTitle("Organs Required");
+
+        stage.show();
+    }
+
     /**
      * Sets the current profile attributes to the labels on start up.
      */
     @FXML
     public void initialize() {
 
-        if(currentProfile == null){
+        if (currentProfile == null) {
             currentProfile = getCurrentProfile();
         }
         if (currentProfile != null) {
@@ -289,7 +298,7 @@ public class EditDonorProfileController {
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 
