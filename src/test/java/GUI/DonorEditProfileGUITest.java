@@ -176,8 +176,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         sleep(500);
 
-        scene = getTopScene();
-        clickOn(scene.lookup("#dodField"));
+        Scene scene2 = getTopScene();
+        clickOn(scene2.lookup("#dodField"));
         deleteLine();
 
         clickOn(scene.lookup("#dodField"));
@@ -219,8 +219,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         closeYesConfirmationDialogue();
 
         // Checks GUI has been updated.
-        Scene scene2 = getTopScene();
-        Label updatedDod = (Label) scene2.lookup("#dodLabel");
+        Scene scene3 = getTopScene();
+        Label updatedDod = (Label) scene3.lookup("#dodLabel");
         assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 updatedDod.getText().substring(16)
         );
