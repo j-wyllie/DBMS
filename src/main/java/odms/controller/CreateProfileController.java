@@ -57,8 +57,7 @@ public class CreateProfileController {
                 Profile newDonor = new Profile(givenNames, surnames, dob, ird);
 
                 currentDatabase.addProfile(newDonor);
-                ProfileDataIO profileDataIO = new ProfileDataIO();
-                profileDataIO.saveData(currentDatabase, "example/example.json");
+                ProfileDataIO.saveData(currentDatabase);
 
 
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
@@ -71,13 +70,6 @@ public class CreateProfileController {
 
                 appStage.setScene(scene);
                 appStage.show();
-//
-//                LoginController.setCurrentDonor(newDonor.getId());
-//                Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-//                Scene newScene = new Scene(parent);
-//                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//                appStage.setScene(newScene);
-//                appStage.show();
             } catch (IllegalArgumentException e) {
                 //show error window.
                 InvalidEntry();

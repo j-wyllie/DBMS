@@ -9,8 +9,10 @@ import odms.profile.Profile;
 public class ProfileDatabase {
 
     private HashMap<Integer, Profile> profileDb = new HashMap<>();
-    private Integer lastID = -1;
     private HashSet<Integer> deletedProfiles = new HashSet<>();
+
+    private Integer lastID = -1;
+    private String path;
 
     /**
      * Find profile by ID
@@ -92,6 +94,13 @@ public class ProfileDatabase {
         }
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public Integer getProfilePopulation() {
         return profileDb.size();

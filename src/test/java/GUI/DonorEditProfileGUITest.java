@@ -23,23 +23,27 @@ import org.testfx.framework.junit.ApplicationTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class DonorEditProfileGUITest extends TestFxMethods {
+    private final String errorRequiredFieldsString = "Error. Required fields were left blank.";
+    private final String errorNotAllFieldsUpdatedString = "Error. Not all fields were updated.";
 
-    javafx.stage.Stage alertDialog;
-    DialogPane dialogPane;
+    private javafx.stage.Stage alertDialog;
+    private DialogPane dialogPane;
+
     /**
      * Runs tests in background if headless is set to true. This gets it working with the CI.
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        //GUITestSetup.headless();
+        GUITestSetup.headless();
     }
-
 
     @Before
     public void loginUser() {
@@ -58,7 +62,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#givenNamesField"));
@@ -83,7 +87,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#lastNamesField"));
@@ -133,7 +137,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Essential fields were left blank.", dialogPane.getContentText());
+        assertEquals(errorRequiredFieldsString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dobField"));
@@ -143,7 +147,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         alertDialog = getAlertDialogue();
         dialogPane = (DialogPane) alertDialog.getScene().getRoot();
-        assertEquals("Error. Not all fields were updated.", dialogPane.getContentText());
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
         clickOn(scene.lookup("#dobField"));
@@ -154,14 +158,60 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
-        Label updatedGivenNames = (Label) scene2.lookup("#dobLabel");
-        System.out.println(updatedGivenNames.getText());
-        assertEquals("14-11-1997", updatedGivenNames.getText().substring(16));
+        Label updatedDob = (Label) scene2.lookup("#dobLabel");
+        assertEquals("14-11-1997", updatedDob.getText().substring(16));
     }
 
     @Test
     public void editDateOfDeathTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
 
+        clickOn(scene.lookup("#dodField"));
+        write("abcdefg");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write("14-11-2100");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write("14-11-1700");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#dodField"));
+        deleteLine();
+        write(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        // Checks GUI has been updated.
+        Scene scene2 = getTopScene();
+        Label updatedDod = (Label) scene2.lookup("#dodLabel");
+        assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                updatedDod.getText().substring(16)
+        );
     }
 
     @Test

@@ -4,21 +4,17 @@ import static odms.controller.AlertController.DonorCancelChanges;
 import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.GuiPopup;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,7 +118,7 @@ public class EditDonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event) {
         undo();
     }
 
@@ -131,7 +127,7 @@ public class EditDonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event) {
         redo();
     }
 
@@ -156,32 +152,54 @@ public class EditDonorProfileController {
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean saveBool = DonorSaveChanges();
         boolean error = false;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
         if (saveBool) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
-                GuiPopup("Error. Essential fields were left blank.");
+                GuiPopup("Error. Required fields were left blank.");
             } else {
-                String action =
-                        "Profile " + currentProfile.getId() + " updated details previous = " + currentProfile
-                                .getAttributesSummary() + " new = ";
+                String action = "Profile " +
+                    currentProfile.getId() +
+                    " updated details previous = " +
+                    currentProfile.getAttributesSummary() +
+                    " new = ";
+
                 currentProfile.setGivenNames(givenNamesField.getText());
-                if(!givenNamesField.getText().isEmpty()) {
+
+                if (!givenNamesField.getText().isEmpty()) {
                     currentProfile.setLastNames(lastNamesField.getText());
                 }
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
+
                 try {
-                    currentProfile.setDateOfBirth(LocalDate.parse(dobField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    currentProfile.setDateOfBirth(
+                        LocalDate.parse(dobField.getText(),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    );
                     if (!dodField.getText().isEmpty()) {
-                        currentProfile.setDateOfDeath(LocalDate.parse(dodField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                        if(!(
+                            LocalDate.parse(dodField.getText(),
+                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            ).isBefore(currentProfile.getDateOfBirth())
+                            ||
+                            LocalDate.parse((dodField.getText()),
+                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            ).isAfter(LocalDate.now()))) {
+
+                            currentProfile.setDateOfDeath(LocalDate.parse(
+                                    dodField.getText(),
+                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            ));
+
+                        } else {
+                            error = true;
+                        }
                     }
                 } catch (DateTimeParseException e) {
                     error = true;
                 }
                 currentProfile.setGender(genderField.getText());
-                if (heightField.getText() == null) {
-                    currentProfile.setHeight(Double.valueOf(heightField.getText()));
-                }
+
                 if (heightField.getText() == null) {
                     currentProfile.setWeight(Double.valueOf(weightField.getText()));
                 }
@@ -192,16 +210,18 @@ public class EditDonorProfileController {
                 currentProfile.setBloodType(bloodTypeField.getText());
 
                 if (bloodPressureField.getText().contains("/")) {
-                    String systolic = bloodPressureField.getText()
-                            .substring(0, bloodPressureField.getText().indexOf("/")).trim();
+                    String systolic = bloodPressureField.getText().substring(
+                        0, bloodPressureField.getText().indexOf("/")).trim();
                     currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
-                    String diastolic = bloodPressureField.getText()
-                            .substring(bloodPressureField.getText().lastIndexOf('/') + 1).trim();
+                    String diastolic = bloodPressureField.getText().substring(
+                        bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
                 }
                 try {
                     if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
+                        Set<String> set = new HashSet<>(
+                            Arrays.asList(organField.getText().split(", "))
+                        );
                         if (!set.isEmpty()) {
                             currentProfile.setRegistered(true);
                             currentProfile.addOrgans(set);
@@ -214,7 +234,9 @@ public class EditDonorProfileController {
 
                 try {
                     if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
-                        Set<String> set = new HashSet<>(Arrays.asList(donationsField.getText().split(", ")));
+                        Set<String> set = new HashSet<>(
+                            Arrays.asList(donationsField.getText().split(", "))
+                        );
                         if (!set.isEmpty()) {
                             currentProfile.setRegistered(true);
                             currentProfile.addDonations(set);
@@ -226,7 +248,10 @@ public class EditDonorProfileController {
 
                 currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-                action = action + currentProfile.getAttributesSummary() + " at " + LocalDateTime.now();
+                action = action +
+                    currentProfile.getAttributesSummary() +
+                    " at " +
+                    LocalDateTime.now();
                 if (CommandUtils.getHistory().size() != 0) {
                     if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
                         CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
@@ -235,8 +260,6 @@ public class EditDonorProfileController {
                 }
                 CommandUtils.currentSessionHistory.add(action);
                 CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-            /*currentProfile.setOrgans();
-            currentProfile.setDonations();*/
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");
@@ -246,7 +269,7 @@ public class EditDonorProfileController {
                 if (error) {
                     GuiPopup("Error. Not all fields were updated.");
                 } else {
-                    ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+                    ProfileDataIO.saveData(getCurrentDatabase());
                     closeEditWindow(event);
                 }
             }
@@ -272,21 +295,20 @@ public class EditDonorProfileController {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+        if (isClinician) {
+            controller.setDonor(currentProfile);
+        } else {
+            controller.setLoggedInDonor(currentProfile);
+        }
+        controller.initialize();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-            if(isClinician){
-                controller.setDonor(currentProfile);
-            } else {
-                controller.setLoggedInDonor(currentProfile);
-            }
-            controller.initialize();
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            appStage.setScene(scene);
-            appStage.show();
+        appStage.setScene(scene);
+        appStage.show();
     }
 
     /**
@@ -294,12 +316,11 @@ public class EditDonorProfileController {
      */
     @FXML
     public void initialize() {
-
-        if(currentProfile == null){
+        if(currentProfile == null) {
             currentProfile = getCurrentProfile();
         }
-        if (currentProfile != null) {
 
+        if (currentProfile != null) {
             try {
                 donorFullNameLabel.setText(currentProfile.getFullName());
 
@@ -319,10 +340,14 @@ public class EditDonorProfileController {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    dobField.setText(currentProfile.getDateOfBirth().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    );
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    dodField.setText(currentProfile.getDateOfDeath().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    );
                 }
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());
