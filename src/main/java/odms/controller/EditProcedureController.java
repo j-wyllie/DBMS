@@ -6,12 +6,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import odms.data.ProfileDataIO;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.time.LocalDate;
 import java.util.Date;
 
+import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -56,9 +58,6 @@ public class EditProcedureController {
 
     }
 
-    public void handleLogoutButtonClicked(ActionEvent actionEvent) {
-    }
-
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
         undo();
     }
@@ -89,6 +88,7 @@ public class EditProcedureController {
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         descEntry.setDisable(true);
         descEntry.setVisible(false);
         dateEntry.setDisable(true);

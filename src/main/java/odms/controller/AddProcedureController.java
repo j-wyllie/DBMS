@@ -15,11 +15,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.swing.Action;
+
+import odms.data.ProfileDataIO;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class AddProcedureController {
 
@@ -89,6 +93,7 @@ public class AddProcedureController {
     public void addProcedure(Procedure procedure) {
         searchedDonor.addProcedure(procedure);
         controller.refreshProcedureTable();
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
 //        FXMLLoader fxmlLoader = new FXMLLoader();
