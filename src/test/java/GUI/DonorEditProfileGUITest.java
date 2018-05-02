@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import org.junit.*;
+import org.testfx.api.FxRobot;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +31,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     public void loginUser() {
         loginAsDonor(1);
         Scene scene = getTopScene();
-        sleep(300);
+        sleep(500);
         clickOn((scene.lookup("#editButton")));
     }
 
