@@ -217,9 +217,8 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
-        transplantTable.getItems().clear();
+        transplantTable.getColumns().clear();
 
-        //TODO Add date
         receiverObservableList = FXCollections.observableList(receivers);
         //transplantTable.setItems(receiverObservableList);
         //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
