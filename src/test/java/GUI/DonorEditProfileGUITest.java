@@ -63,6 +63,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     public void editLastNames() {
         clickOn("#editButton");
 
+        sleep(3000);
         Scene scene = getTopScene();
         clickOn(scene.lookup("#lastNamesField"));
         deleteLine();
