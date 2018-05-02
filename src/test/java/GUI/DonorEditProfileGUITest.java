@@ -30,7 +30,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     public void loginUser() {
         loginAsDonor(1);
         Scene scene = getTopScene();
-        clickOn((scene.lookup("#editButton")));
+        clickOn("#editButton");
     }
 
     @Test
@@ -107,17 +107,17 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals("test@test.com", emailText);
     }
 
-    @Test
+    @Ignore
     public void editAddressTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editRegionTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editIRDTest() {
 
     }
@@ -294,7 +294,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals("70.0kg", updatedWeight.getText().substring(9));
     }
 
-    @Test
+    @Ignore
     public void editBloodTypeTest() {
 
     }
@@ -324,27 +324,27 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals("false", updatedSmoker.getText().substring(9));
     }
 
-    @Test
+    @Ignore
     public void editAlcoholConsumptionTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editBloodPressureTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editChronicDiseasesTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editOrgansToDonateTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editPastDonationsTest() {
 
     }
