@@ -46,7 +46,7 @@ public class ProfileTest {
         Profile testProfile = null;
 
         try {
-            testProfile = new Profile("John", "Smithy", "17-01-1998", "123456789");
+            testProfile = new Profile("John", "Smithy", "17-01-1998", Integer.valueOf("123456789"));
         } catch (IllegalArgumentException e) {
             //pass
         }

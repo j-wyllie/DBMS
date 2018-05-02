@@ -52,7 +52,7 @@ public class ProfileCreateController extends CommonController {
                 String ird = irdField.getText();
 
 
-                Profile newDonor = new Profile(givenNames, surnames, dob, ird);
+                Profile newDonor = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
                 currentDatabase.addProfile(newDonor);
 
                 LoginController.setCurrentDonor(newDonor.getId());
