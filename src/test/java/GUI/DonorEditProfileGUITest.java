@@ -210,7 +210,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         Scene scene2 = getTopScene();
         Label updatedDod = (Label) scene2.lookup("#dodLabel");
         assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                updatedDod.getText().substring(16));
+                updatedDod.getText().substring(16)
+        );
     }
 
     @Test

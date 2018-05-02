@@ -10,6 +10,7 @@ import odms.cli.CommandUtils;
 
 public class ProfileDataIO extends CommonDataIO {
 
+    private static final String defaultPath = "example/example.json";
     private static String history = "";
 
     /**
@@ -18,6 +19,9 @@ public class ProfileDataIO extends CommonDataIO {
      * @param profileDb Database to be exported to JSON
      */
     public static void saveData(ProfileDatabase profileDb) {
+        if (profileDb.getPath() == null) {
+            profileDb.setPath(defaultPath);
+        }
         saveData(profileDb, profileDb.getPath());
     }
 

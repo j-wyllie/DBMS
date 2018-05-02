@@ -1,1 +1,78 @@
-{"userDb":{"0":{"userType":"CLINICIAN","name":"John Smith","staffId":0,"region":"Christchurch","lastUpdated":{"date":{"year":2018,"month":5,"day":1},"time":{"hour":20,"minute":34,"second":53,"nano":89000000}},"updateActions":["Account for John Smithcreated at 2018-05-01T20:34:53.089","0 updated at 08:34 PM 01-05-2018"],"timeOfCreation":{"date":{"year":2018,"month":5,"day":1},"time":{"hour":20,"minute":34,"second":53,"nano":89000000}}},"1":{"userType":"CLINICIAN","name":"Matt Smith","staffId":1,"region":"Auckland","lastUpdated":{"date":{"year":2018,"month":5,"day":1},"time":{"hour":20,"minute":34,"second":53,"nano":89000000}},"updateActions":["Account for Matt Smithcreated at 2018-05-01T20:34:53.089","1 updated at 08:34 PM 01-05-2018"],"timeOfCreation":{"date":{"year":2018,"month":5,"day":1},"time":{"hour":20,"minute":34,"second":53,"nano":89000000}}}},"lastID":1}
+{
+  "userDb": {
+    "0": {
+      "userType": "CLINICIAN",
+      "name": "John Smith",
+      "staffId": 0,
+      "region": "Christchurch",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 2
+        },
+        "time": {
+          "hour": 13,
+          "minute": 33,
+          "second": 7,
+          "nano": 276000000
+        }
+      },
+      "updateActions": [
+        "Account for John Smithcreated at 2018-05-02T13:33:07.275",
+        "0 updated at 01:33 PM 02-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 2
+        },
+        "time": {
+          "hour": 13,
+          "minute": 33,
+          "second": 7,
+          "nano": 275000000
+        }
+      }
+    },
+    "1": {
+      "userType": "CLINICIAN",
+      "name": "Matt Smith",
+      "staffId": 1,
+      "region": "Auckland",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 2
+        },
+        "time": {
+          "hour": 13,
+          "minute": 33,
+          "second": 7,
+          "nano": 276000000
+        }
+      },
+      "updateActions": [
+        "Account for Matt Smithcreated at 2018-05-02T13:33:07.275",
+        "1 updated at 01:33 PM 02-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 2
+        },
+        "time": {
+          "hour": 13,
+          "minute": 33,
+          "second": 7,
+          "nano": 275000000
+        }
+      }
+    }
+  },
+  "lastID": 1,
+  "path": "example/users.json"
+}
