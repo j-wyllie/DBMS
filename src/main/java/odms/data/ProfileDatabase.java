@@ -1,10 +1,16 @@
 package odms.data;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileDatabase {
@@ -176,6 +182,53 @@ public class ProfileDatabase {
         profiles.sort(Comparator.comparing(Profile::getLastNames));
 
         return profiles;
+    }
+
+    /**
+     * Generates a list of profiles receiving organs ordered by last names.
+     * Parameter to specify whether or not the list contains every receiver or only receivers that
+     * are currently receiving organs.
+     *
+     * @param receiving specify currently receiving organs or not
+     * @return Array of profiles found that match
+     */
+    public ArrayList<Profile> getReceivers(Boolean receiving) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+
+            if (profile.isReceiver()) {
+                if (receiving) {
+                    if (profile.getOrgansRequired().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+        return profiles;
+    }
+
+    /**
+     * Generates a collection of a profile and organ for each organ that a receiver requires
+     *
+     *  @return Collection of Profile and Organ that match
+     */
+    public List<Entry<Profile, Organ>> getAllOrgansRequired() {
+        List<Entry<Profile, Organ>> receivers = new ArrayList<>();
+
+        ArrayList<Profile> allReceivers = getReceivers(true);
+
+        for (Profile profile : allReceivers) {
+            for (Organ organ : profile.getOrgansRequired()) {
+                Map.Entry<Profile, Organ> pair = new SimpleEntry<>(profile, organ);
+                receivers.add(pair);
+            }
+        }
+        return receivers;
     }
 
 }

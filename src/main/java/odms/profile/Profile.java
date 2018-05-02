@@ -93,7 +93,7 @@ public class Profile {
         attr.add("last-names=\"" + lastNames + "\"");
         attr.add("ird=\"" + irdNumber + "\"");
         attr.add("dob=\"" + dob + "\"");
-
+        this.setReceiver(false);
         setExtraAttributes(attr);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
