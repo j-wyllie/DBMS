@@ -56,6 +56,7 @@ public class LoginController {
                 Scene newScene = new Scene(parent);
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 appStage.setScene(newScene);
+                appStage.setTitle("Clinician Profile");
                 appStage.show();
             } else {
                 currentProfile = currentDatabase.getProfile(userId);
@@ -64,6 +65,7 @@ public class LoginController {
                     Scene newScene = new Scene(parent);
                     Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     appStage.setScene(newScene);
+                    appStage.setTitle("Donor Profile");
                     appStage.show();
                 } else {
                     InvalidUsername();
@@ -86,6 +88,7 @@ public class LoginController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Create Profile");
         appStage.show();
     }
 

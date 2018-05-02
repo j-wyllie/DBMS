@@ -25,7 +25,7 @@ import static odms.controller.UndoRedoController.undo;
 import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
-public class EditClinicianProfileController {
+public class EditClinicianProfileController extends GeneralWindowController{
     private static User currentUser = getCurrentUser();
 
     @FXML
