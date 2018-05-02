@@ -102,6 +102,7 @@ public class EditProcedureController {
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
+        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
@@ -118,7 +119,5 @@ public class EditProcedureController {
         procedureDescriptionLabel.setText(procedureDescriptionLabel.getText() +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText(procedureOrgansLabel.getText() +" "+currentProcedure.getOrgansAffected().toString());
         controller.refreshProcedureTable();
-
-        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
     }
 }
