@@ -1,13 +1,12 @@
 package GUI;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-
-import odms.controller.GuiMain;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class AddConditionGUITest extends TestFxMethods {
-    private GuiMain guiMain;
-
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() throws TimeoutException {
@@ -45,7 +42,7 @@ public class AddConditionGUITest extends TestFxMethods {
         TextField date = (TextField) scene.lookup("#dateDiagnosedField");
 
         // Check that this already has the current date in it
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         assertEquals(now.format(formatter), date.getText());
 
@@ -149,9 +146,6 @@ public class AddConditionGUITest extends TestFxMethods {
         openSearchedProfile("Galil AR");
         clickOn("#medicalHistoryTab");
 
-        TableView pastConditions = getTableView("#pastConditionsTable");
-        Integer pastInitialSize = pastConditions.getItems().size();
-
         clickOn("#addNewConditionButton");
         clickOn("#nameField").write("Influenza");
         clickOn("#dateDiagnosedField");
@@ -159,7 +153,7 @@ public class AddConditionGUITest extends TestFxMethods {
         write("01-03-2018");
         clickOn("#curedCheckBox");
 
-        LocalDateTime now = LocalDateTime.now().plusDays(1);
+        LocalDate now = LocalDate.now().plusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         clickOn("#dateCuredField").write(now.format(formatter));
@@ -178,9 +172,6 @@ public class AddConditionGUITest extends TestFxMethods {
         loginAsClinician();
         openSearchedProfile("Galil AR");
         clickOn("#medicalHistoryTab");
-
-        TableView pastConditions = getTableView("#pastConditionsTable");
-        Integer pastInitialSize = pastConditions.getItems().size();
 
         clickOn("#addNewConditionButton");
         clickOn("#nameField").write("Influenza");

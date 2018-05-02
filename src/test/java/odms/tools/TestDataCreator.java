@@ -128,7 +128,7 @@ public class TestDataCreator {
      */
     private void addConditions(Profile profile) {
         profile.addCondition(new Condition("Heart Disease", "01-04-2018", true));
-        profile.addCondition(new Condition("Heart Palpitations", "01-04-2018", "01-03-2018", false));
+        profile.addCondition(new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
     }
 
     /**
