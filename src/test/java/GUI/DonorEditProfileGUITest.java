@@ -29,7 +29,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     @Before
     public void loginUser() {
         loginAsDonor(1);
-        Scene scene = getTopScene();
         clickOn("#editButton");
     }
 
