@@ -1,5 +1,6 @@
 package odms.profile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -19,10 +20,13 @@ public enum Organ {
     SKIN("skin");
 
     private String name;
+    private LocalDate date = LocalDate.now();
 
     public String getName() {
         return name;
     }
+
+    public LocalDate getDate() { return date; }
 
     /**
      * Generate an ArrayList of Strings with organs capitalised appropriately.
@@ -47,4 +51,6 @@ public enum Organ {
     Organ(String name) {
         this.name = name;
     }
+
+
 }

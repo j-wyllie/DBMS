@@ -226,6 +226,7 @@ public class ClinicianProfileController extends CommonController {
         //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
         //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
         //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
+
         TableColumn<Map.Entry<Profile, Organ>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
@@ -235,14 +236,21 @@ public class ClinicianProfileController extends CommonController {
         TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
+
         TableColumn<Map.Entry<Profile, Organ>, String> transplantRegionCol  = new TableColumn<>("Region");
         transplantRegionCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantDateCol  = new TableColumn<>("Date");
+        transplantDateCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
+
         System.out.println(receivers.get(0).getKey().getFullName());
 
         transplantTable.getColumns().add(transplantOrganRequiredCol);
         transplantTable.getColumns().add(transplantReceiverNameCol);
         transplantTable.getColumns().add(transplantRegionCol);
+        transplantTable.getColumns().add(transplantDateCol);
         transplantTable.setItems(receiverObservableList);
 
         transplantTable.setOnMousePressed(event -> {
