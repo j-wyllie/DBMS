@@ -11,7 +11,5 @@ Remember to set up your GitLab CI server (refer to the student guide for instruc
  - `doc/` User and design documentation
  - `doc/examples/` Demo example files for use with your application
  - 
- 
 
-External libraries used: controlsfx - http://fxexperience.com/controlsfx/
  
