@@ -141,7 +141,7 @@
                                       <items>
                                         <Button fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
                                           <Button fx:id="redoButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
-                                          <Button fx:id="editButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/edit.png); -fx-background-size: stretch;" />
+                                          <Button fx:id="editClinicianButton" layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/edit.png); -fx-background-size: stretch;" />
                                       </items>
                                        <GridPane.margin>
                                           <Insets bottom="40.0" left="30.0" />
