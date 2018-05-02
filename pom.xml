@@ -38,6 +38,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/me.xdrop/fuzzywuzzy -->
+        <dependency>
+            <groupId>me.xdrop</groupId>
+            <artifactId>fuzzywuzzy</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.jline/jline -->
         <dependency>
             <groupId>org.jline</groupId>

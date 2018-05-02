@@ -5,16 +5,12 @@ import static odms.controller.AlertController.InvalidEntry;
 import static odms.controller.AlertController.InvalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.data.IrdNumberConflictException;
 import odms.profile.Profile;
 
@@ -53,7 +49,9 @@ public class ProfileCreateController extends CommonController {
 
 
                 Profile newDonor = new Profile(givenNames, surnames, dob, ird);
+
                 currentDatabase.addProfile(newDonor);
+                ProfileDataIO.saveData(currentDatabase);
 
                 LoginController.setCurrentDonor(newDonor.getId());
 

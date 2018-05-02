@@ -13,6 +13,7 @@ import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
@@ -147,6 +148,7 @@ public class ProfileDisplayController extends CommonController {
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
         controller.setDonor(searchedDonor);
+        controller.setIsClinician(isClinician);
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -181,20 +183,30 @@ public class ProfileDisplayController extends CommonController {
                 irdLabel.setText(irdLabel.getText() + currentDonor.getIrdNumber());
             }
             if (currentDonor.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth());
+                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
             if (currentDonor.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath());
+                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             } else {
                 dodLabel.setText(dodLabel.getText() + "NULL");
             }
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
             }
-            heightLabel.setText(heightLabel.getText() + currentDonor.getHeight());
-            weightLabel.setText(weightLabel.getText() + currentDonor.getWeight());
-            phoneLabel.setText(phoneLabel.getText());
-            emailLabel.setText(emailLabel.getText());
+            if (currentDonor.getHeight() != null) {
+                heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
+            }
+            if (currentDonor.getWeight() != null) {
+                weightLabel.setText(weightLabel.getText() + currentDonor.getWeight() + "kg");
+            }
+            if (currentDonor.getPhone() != null) {
+                phoneLabel.setText(phoneLabel.getText() + currentDonor.getPhone());
+            }
+            if (currentDonor.getEmail() != null) {
+                emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
+            }
 
             if (currentDonor.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
@@ -206,7 +218,7 @@ public class ProfileDisplayController extends CommonController {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
             if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
-                bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
+                bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
             }
             if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
@@ -216,9 +228,9 @@ public class ProfileDisplayController extends CommonController {
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
             donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
-            /*if (currentDonor.getSmoker() != null) {
+            if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
-            }*/
+            }
             /*if (currentDonor.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentDonor.getAlcoholConsumption());
             }*/
@@ -270,11 +282,15 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void initialize() {
-        if(getCurrentProfile() != null) {
-            Profile currentDonor = getCurrentProfile();
-            hideItems();
-            setPage(currentDonor);
+        if(searchedDonor != null) {
+            setPage(searchedDonor);
+
+            if(!isClinician) {
+                hideItems();
+            }
+            //Profile currentDonor = getCurrentProfile();
         }
+
     }
 
     /**
@@ -284,8 +300,18 @@ public class ProfileDisplayController extends CommonController {
     public void setDonor(Profile donor) {
         isClinician = true;
         searchedDonor = donor;
-        hideItems();
-        setPage(searchedDonor);
+        //hideItems();
+        //setPage(searchedDonor);
+    }
+
+    /**
+     * sets the donor if it was logged in by a user
+     * @param donor
+     */
+    public void setLoggedInDonor(Profile donor) {
+        isClinician = false;
+        searchedDonor = donor;
+        //setPage(searchedDonor);
     }
 
 }

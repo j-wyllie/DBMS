@@ -65,6 +65,7 @@ public class LoginController extends CommonController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             InvalidUsername();
         }
     }
