@@ -235,9 +235,9 @@ public class DonorProfileController {
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
             donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
-            /*if (currentDonor.getSmoker() != null) {
+            if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
-            }*/
+            }
             /*if (currentDonor.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentDonor.getAlcoholConsumption());
             }*/

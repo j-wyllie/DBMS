@@ -9,7 +9,8 @@ import java.util.Set;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
 
-public class CommandUtils {
+public class
+CommandUtils {
 
     public static ArrayList<String> currentSessionHistory = new ArrayList<>();
 

@@ -445,7 +445,7 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
         profileAttr.add("weight=\"72.0\"");
-        profileAttr.add("height=\"175.0\"");
+        profileAttr.add("height=\"1.75\"");
 
         Profile testProfile = null;
         try {
@@ -455,7 +455,7 @@ public class ProfileTest {
         }
 
         double bmi = testProfile.calculateBMI();
-        assertEquals(df.format(bmi), "23.51");
+        assertEquals("23.51", df.format(bmi));
     }
 
     /**

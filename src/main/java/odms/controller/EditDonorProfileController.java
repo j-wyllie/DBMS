@@ -26,7 +26,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
@@ -99,7 +101,16 @@ public class EditDonorProfileController {
     @FXML
     private TextField donationsField;
 
+    @FXML
+    private RadioButton smokerTrueRadio;
+
+    @FXML
+    private RadioButton smokerFalseRadio;
+
     private Boolean isClinician;
+
+    final ToggleGroup smokerGroup = new ToggleGroup();
+
 
     /**
      * Scene change to log in view.
@@ -254,7 +265,7 @@ public class EditDonorProfileController {
                     error = true;
                 }
 
-                currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
+                currentProfile.setSmoker(smokerTrueRadio.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
                     currentProfile.getAttributesSummary() +
@@ -329,6 +340,8 @@ public class EditDonorProfileController {
         }
 
         if (currentProfile != null) {
+            smokerFalseRadio.setToggleGroup(smokerGroup);
+            smokerTrueRadio.setToggleGroup(smokerGroup);
             try {
                 donorFullNameLabel.setText(currentProfile.getFullName());
 
@@ -383,8 +396,12 @@ public class EditDonorProfileController {
                 if (currentProfile.getBloodType() != null) {
                     bloodTypeField.setText(currentProfile.getBloodType());
                 }
-                if (currentProfile.getSmoker() != null) {
-                    smokerField.setText(currentProfile.getSmoker().toString());
+                if (currentProfile.getSmoker() == null || !currentProfile.getSmoker()) {
+                    smokerFalseRadio.setSelected(true);
+                    smokerTrueRadio.setSelected(false);
+                } else {
+                    smokerTrueRadio.setSelected(true);
+                    smokerFalseRadio.setSelected(false);
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());

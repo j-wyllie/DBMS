@@ -35,7 +35,7 @@ public class ClinicianProfileGUITest extends TestFxMethods {
      */
     @BeforeClass
     public static void headless() throws TimeoutException {
-        //GUITestSetup.headless();
+        GUITestSetup.headless();
     }
 
     @Before
