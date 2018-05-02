@@ -385,6 +385,16 @@ public class DonorProfileController {
                 }
             }
         });
+        previousProcedureTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                try {
+                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
@@ -512,8 +522,7 @@ public class DonorProfileController {
 
             Scene scene = new Scene(fxmlLoader.load());
             EditProcedureController controller = fxmlLoader.<EditProcedureController>getController();
-            controller.setProcedure(selectedProcedure);
-            controller.initialize();
+            controller.initialize(selectedProcedure, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);
