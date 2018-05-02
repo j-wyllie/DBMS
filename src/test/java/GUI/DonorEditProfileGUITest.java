@@ -29,7 +29,9 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     @Before
     public void loginUser() {
         loginAsDonor(1);
-        clickOn("#editButton");
+        Scene scene = getTopScene();
+        sleep(300);
+        clickOn((scene.lookup("#editButton")));
     }
 
     @Test
@@ -160,10 +162,10 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     @Test
     public void editDateOfDeathTest() {
         Scene scene = getTopScene();
-        clickOn("#dodField");
+        clickOn(scene.lookup("#dodField"));
         deleteLine();
 
-        clickOn("#dodField");
+        clickOn(scene.lookup("#dodField"));
         write("abcdefg");
         clickOn("#saveButton");
         closeYesConfirmationDialogue();
@@ -184,7 +186,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
         closeDialog(dialogPane);
 
-        clickOn("#dodField");
+        clickOn(scene.lookup("#dodField"));
         deleteLine();
         write("14-11-1700");
         clickOn("#saveButton");
