@@ -137,7 +137,7 @@
                   </ImageView>
                   <TextField fx:id="dateEntry" prefHeight="25.0" prefWidth="184.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                   <TextArea fx:id="descEntry" prefHeight="125.0" prefWidth="397.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" GridPane.rowSpan="2" />
-                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="9" />
                   <ListView fx:id="affectedOrgansListView" prefHeight="61.0" prefWidth="330.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                </children>
             </GridPane>
