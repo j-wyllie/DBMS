@@ -78,7 +78,7 @@
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -112,7 +112,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="procedureDescriptionLabel" alignment="TOP_LEFT" prefHeight="281.0" prefWidth="722.0" text="Description:" GridPane.columnSpan="4" GridPane.rowIndex="2" GridPane.rowSpan="6">
+                  <Label fx:id="procedureDescriptionLabel" alignment="TOP_LEFT" prefHeight="281.0" prefWidth="722.0" text="Description:" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="6">
                      <font>
                         <Font size="22.0" />
                      </font>
@@ -135,9 +135,10 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </ImageView>
-                  <TextField fx:id="dateEntry" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextArea fx:id="descEntry" prefHeight="129.0" prefWidth="297.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                  <TextField fx:id="dateEntry" prefHeight="25.0" prefWidth="184.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                  <TextArea fx:id="descEntry" prefHeight="125.0" prefWidth="397.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" GridPane.rowSpan="2" />
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <ListView fx:id="affectedOrgansListView" prefHeight="61.0" prefWidth="330.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                </children>
             </GridPane>
          </children>

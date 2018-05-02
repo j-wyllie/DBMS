@@ -83,7 +83,7 @@ public class AddProcedureController {
                 procedure = new Procedure(summary, dateOfProcedure, longDescription);
             }
 
-            procedure.setOrgansAffected(new ArrayList<Organ>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
+            procedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
 
             System.out.println(procedure);
             addProcedure(procedure);

@@ -1,16 +1,17 @@
 package odms.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static odms.controller.GuiMain.getCurrentDatabase;
@@ -36,6 +37,11 @@ public class EditProcedureController {
     @FXML
     private TextField summaryEntry;
 
+    @FXML
+    private ListView<Organ> affectedOrgansListView;
+
+    private ObservableList<Organ> donatedOrgans;
+
     protected Procedure currentProcedure;
     protected DonorProfileController controller;
 
@@ -47,6 +53,8 @@ public class EditProcedureController {
         procedureDateLabel.setText(procedureDateLabel.getText() +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText(procedureDescriptionLabel.getText() +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText(procedureOrgansLabel.getText() +" "+currentProcedure.getOrgansAffected().toString());
+        affectedOrgansListView.setDisable(true);
+        affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
         dateEntry.setDisable(true);
@@ -55,6 +63,10 @@ public class EditProcedureController {
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
+
+        affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
+        affectedOrgansListView.setItems(donatedOrgans);
 
     }
 
@@ -67,6 +79,8 @@ public class EditProcedureController {
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
+        affectedOrgansListView.setDisable(false);
+        affectedOrgansListView.setVisible(true);
         descEntry.setDisable(false);
         descEntry.setVisible(true);
         dateEntry.setDisable(false);
@@ -89,6 +103,8 @@ public class EditProcedureController {
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+        affectedOrgansListView.setDisable(true);
+        affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
         dateEntry.setDisable(true);
@@ -102,5 +118,7 @@ public class EditProcedureController {
         procedureDescriptionLabel.setText(procedureDescriptionLabel.getText() +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText(procedureOrgansLabel.getText() +" "+currentProcedure.getOrgansAffected().toString());
         controller.refreshProcedureTable();
+
+        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
     }
 }
