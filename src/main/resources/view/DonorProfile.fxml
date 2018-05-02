@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -456,12 +457,12 @@
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
-                                    <TableView fx:id="tableViewCurrentMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                    <TableView fx:id="tableViewCurrentMedications" onMouseReleased="#refreshPageElements" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                       <columns>
                                         <TableColumn fx:id="tableColumnMedicationNameCurrent" prefWidth="350.0" text="Current Medications" />
                                       </columns>
                                     </TableView>
-                                    <TableView fx:id="tableViewHistoricMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                    <TableView fx:id="tableViewHistoricMedications" onMouseReleased="#refreshPageElements" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                       <columns>
                                         <TableColumn fx:id="tableColumnMedicationNameHistoric" prefWidth="350.0" text="Historic Medications" />
                                       </columns>
