@@ -47,7 +47,6 @@ public class TestDataCreator {
 
         try {
 
-            generateClinicianProfiles();
             generateProfiles();
 
         } catch (IrdNumberConflictException e) {
@@ -55,10 +54,6 @@ public class TestDataCreator {
             e.printStackTrace();
 
         }
-    }
-
-    private void generateClinicianProfiles() {
-
     }
 
     /**
