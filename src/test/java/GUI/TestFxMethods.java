@@ -1,6 +1,5 @@
 package GUI;
 
-import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,7 +36,9 @@ abstract class TestFxMethods extends ApplicationTest {
 
     @After()
     public void tearDown() throws Exception {
-        FxToolkit.cleanupStages();
+        closeCurrentWindow();
+
+        FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
@@ -117,11 +118,10 @@ abstract class TestFxMethods extends ApplicationTest {
     protected javafx.scene.Scene getTopScene() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
-//        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-//        Collections.reverse(allWindows);
+        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        Collections.reverse(allWindows);
 
-        return FXRobotHelper.getStages().get(0).getScene();
-
+        return allWindows.get(0).getScene();
     }
 
     /**

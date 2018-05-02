@@ -1,6 +1,5 @@
 package GUI;
 
-import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -177,9 +176,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
         sleep(500);
 
-        //Scene scene2 = getTopScene();
-        Scene scene2 = FXRobotHelper.getStages().get(0).getScene();
-        clickOn(scene2.lookup("#dodField"));
+        scene = getTopScene();
+        clickOn(scene.lookup("#dodField"));
         deleteLine();
 
         clickOn(scene.lookup("#dodField"));
@@ -221,8 +219,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         closeYesConfirmationDialogue();
 
         // Checks GUI has been updated.
-        Scene scene3 = getTopScene();
-        Label updatedDod = (Label) scene3.lookup("#dodLabel");
+        Scene scene2 = getTopScene();
+        Label updatedDod = (Label) scene2.lookup("#dodLabel");
         assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 updatedDod.getText().substring(16)
         );
@@ -326,7 +324,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     public void editSmokerTest() {
         Scene scene = getTopScene();
         clickOn(scene.lookup("#editButton"));
-
         clickOn("#editMedicalTab");
         clickOn("#smokerTrueRadio");
         clickOn("#saveMedicalButton");
