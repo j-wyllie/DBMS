@@ -225,7 +225,6 @@ public class DonorProfileController {
             }
             if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
                 bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
-                System.out.println(currentDonor.calculateBMI());
             }
             if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));

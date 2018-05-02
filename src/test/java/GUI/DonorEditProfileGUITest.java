@@ -358,8 +358,9 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         write("1.65");
         clickOn("#saveButton");
         closeYesConfirmationDialogue();
-
-        clickOn("#editButton");
+        scene = getTopScene();
+        Button editButton = (Button) scene.lookup("#editButton");
+        clickOn(editButton);
 
         clickOn("#weightField");
         deleteLine();
