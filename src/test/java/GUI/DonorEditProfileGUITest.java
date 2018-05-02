@@ -174,6 +174,8 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         Scene scene = getTopScene();
         clickOn(scene.lookup("#editButton"));
 
+        sleep(500);
+
         scene = getTopScene();
         clickOn(scene.lookup("#dodField"));
         deleteLine();
