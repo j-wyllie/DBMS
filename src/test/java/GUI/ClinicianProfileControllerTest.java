@@ -42,7 +42,7 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     private GuiMain guiMain;
     private Parent root;
 
-        //Runs tests in background if headless is set to true. This gets it working with the CI.
+    //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
         GUITestSetup.headless();
