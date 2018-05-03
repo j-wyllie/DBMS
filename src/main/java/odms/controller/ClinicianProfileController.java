@@ -30,8 +30,6 @@ public class ClinicianProfileController extends CommonController {
     //Get the default clinician
     protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
 
-    private DonorProfileController donorProfileController;
-
     @FXML
     private Label clinicianFullName;
 
@@ -211,10 +209,6 @@ public class ClinicianProfileController extends CommonController {
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public DonorProfileController getSearchedProfileController() {
-        return donorProfileController;
     }
 
     @FXML

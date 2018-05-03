@@ -107,6 +107,4 @@ public class LoginController extends CommonController {
     public static void setCurrentDonor(Integer id) {
         currentProfile = currentDatabase.getProfile(id);
     }
-    public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentUser(User currentUser) { LoginController.currentUser = currentUser; }
 }

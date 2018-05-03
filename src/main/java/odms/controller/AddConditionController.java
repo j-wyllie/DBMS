@@ -22,7 +22,7 @@ import java.time.LocalDate;
 public class AddConditionController {
 
     private Profile searchedDonor;
-    private DonorProfileController controller;
+    private ProfileDisplayController controller;
 
     @FXML
     private javafx.scene.control.TextField nameField;
@@ -122,7 +122,7 @@ public class AddConditionController {
         }
     }
 
-    public void init(DonorProfileController controller) {
+    public void init(ProfileDisplayController controller) {
         this.controller = controller;
         searchedDonor = controller.searchedDonor;
 

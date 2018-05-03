@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class AddConditionGUITest extends TestFxMethods {
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
@@ -24,7 +25,7 @@ public class AddConditionGUITest extends TestFxMethods {
          GUITestSetup.headless();
     }
 
-    @Ignore
+    @Test
     /**
      * Test that a diagnosis can be added to a profile by a clinician
      */
@@ -54,7 +55,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(currentConditions.getItems().size(), initialSize + 1);
     }
 
-    @Ignore
+    @Test
     /**
      * Test adding a cured condition to the past conditions table
      */
@@ -78,7 +79,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
     }
 
-    @Ignore
+    @Test
     /**
      * Test adding a condition with no name
      */
@@ -94,7 +95,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Ignore
+    @Test
     /**
      * Test adding a cured condition without a cured date
      */
@@ -112,7 +113,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Ignore
+    @Test
     /**
      * Test trying to add a cured condition with a diagnosis date after the cured date
      */
@@ -138,7 +139,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Ignore
+    @Test
     /**
      * Test trying to add a cured condition with the cured date after the current date
      */
@@ -165,7 +166,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Ignore
+    @Test
     /**
      * Test adding a condition with invalid diagnosis date
      */
@@ -186,7 +187,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Ignore
+    @Test
     /**
      * Test adding a condition with an invalid cured date
      */

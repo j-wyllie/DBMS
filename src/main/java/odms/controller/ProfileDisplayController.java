@@ -44,7 +44,7 @@ import org.controlsfx.control.table.TableFilter;
 
 public class ProfileDisplayController extends CommonController {
 
-    private Profile searchedDonor;
+    protected Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -173,13 +173,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
-        //curDiseasesTable.getSortOrder().add(curChronicColumn);
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
+        //curDiseasesTable.getSortOrder().add(curChronicColumn);}
 
         curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
         //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
@@ -287,12 +281,6 @@ public class ProfileDisplayController extends CommonController {
                     }
                 };
 
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
 //
 //        try {
 //            if (curConditionsTable.getItems() != null) { curConditionsTable.getItems().clear(); }
@@ -307,8 +295,8 @@ public class ProfileDisplayController extends CommonController {
             pastConditionsObservableList = FXCollections.observableArrayList();
         }
 
-        if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
-        if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
+        if (searchedDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(searchedDonor.getCurrentConditions());}
+        if (searchedDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(searchedDonor.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
 
@@ -316,11 +304,11 @@ public class ProfileDisplayController extends CommonController {
         curDescriptionColumn.setCellFactory(cellFactory);
         curDescriptionColumn.setOnEditCommit(
                 (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> {
-                    currentDonor.removeCondition(t.getTableView().getItems().get(
+                    searchedDonor.removeCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()));
                     (t.getTableView().getItems().get(
                             t.getTablePosition().getRow())).setName(t.getNewValue());
-                    currentDonor.addCondition(t.getTableView().getItems().get(
+                    searchedDonor.addCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()));
                 });
 
@@ -348,11 +336,11 @@ public class ProfileDisplayController extends CommonController {
 
         curDateOfDiagnosisColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
             if(!t.getNewValue().isAfter(LocalDate.now())) {
-                currentDonor.removeCondition(t.getTableView().getItems().get(
+                searchedDonor.removeCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
                 (t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                currentDonor.addCondition(t.getTableView().getItems().get(
+                searchedDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
 
@@ -375,11 +363,11 @@ public class ProfileDisplayController extends CommonController {
             if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
                     || t.getNewValue().isAfter(LocalDate.now())) {
             } else {
-                currentDonor.removeCondition(t.getTableView().getItems().get(
+                searchedDonor.removeCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
                 (t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setDateCured(t.getNewValue());
-                currentDonor.addCondition(t.getTableView().getItems().get(
+                searchedDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
             refreshConditionTable();
@@ -392,11 +380,11 @@ public class ProfileDisplayController extends CommonController {
             if(t.getNewValue().isAfter(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateCured())
                     || t.getNewValue().isAfter(LocalDate.now())) {
             } else {
-                currentDonor.removeCondition(t.getTableView().getItems().get(
+                searchedDonor.removeCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
                 (t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                currentDonor.addCondition(t.getTableView().getItems().get(
+                searchedDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
             refreshConditionTable();
@@ -480,12 +468,12 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
+//        Profile currentDonor;
+//        if (searchedDonor != null) {
+//            currentDonor = searchedDonor;
+//        } else {
+//            currentDonor = getCurrentProfile();
+//        }
 
 
 
@@ -493,7 +481,7 @@ public class ProfileDisplayController extends CommonController {
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
 
         for (int i = 0; i<conditions.size(); i++) {
-            if (conditions.get(i) != null) { currentDonor.removeCondition(conditions.get(i));}
+            if (conditions.get(i) != null) { searchedDonor.removeCondition(conditions.get(i));}
         }
 
         refreshConditionTable();
@@ -595,14 +583,14 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
+//        Profile currentDonor;
+//        if (searchedDonor != null) {
+//            currentDonor = searchedDonor;
+//        } else {
+//            currentDonor = getCurrentProfile();
+//        }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
         controller.setDonor(searchedDonor);
