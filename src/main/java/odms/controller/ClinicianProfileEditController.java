@@ -15,17 +15,17 @@ import odms.user.User;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static odms.controller.AlertController.DonorCancelChanges;
-import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.AlertController.donorCancelChanges;
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentUser;
-import static odms.controller.AlertController.GuiPopup;
+import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
-public class EditClinicianProfileController extends CommonController{
+public class ClinicianProfileEditController extends CommonController{
     private static User currentUser = getCurrentUser();
 
     @FXML
@@ -60,7 +60,7 @@ public class EditClinicianProfileController extends CommonController{
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = DonorCancelChanges();
+        boolean cancelBool = donorCancelChanges();
 
         if (cancelBool) {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
@@ -77,7 +77,7 @@ public class EditClinicianProfileController extends CommonController{
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = DonorSaveChanges();
+        boolean saveBool = donorSaveChanges();
         boolean error = false;
         if (saveBool) {
             String action =
@@ -99,7 +99,7 @@ public class EditClinicianProfileController extends CommonController{
             CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
 
             if(error == true) {
-                GuiPopup("Error. Not all fields were updated.");
+                guiPopup("Error. Not all fields were updated.");
             }
 
             UserDataIO.saveUsers(getUserDatabase(), "example/example.json");

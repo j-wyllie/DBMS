@@ -1,10 +1,9 @@
 package odms.controller;
 
-import static odms.controller.AlertController.DonorCancelChanges;
-import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.AlertController.donorCancelChanges;
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.AlertController.GuiPopup;
-import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -29,7 +28,7 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController extends GeneralWindowController{
+public class EditDonorProfileController {
 
     private Boolean savedProfile = false; //Tells whether saved or cancel is selected.
 
@@ -149,7 +148,7 @@ public class EditDonorProfileController extends GeneralWindowController{
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = DonorSaveChanges();
+        boolean saveBool = donorSaveChanges();
         boolean error = false;
         if (saveBool) {
             String action =
@@ -186,7 +185,7 @@ public class EditDonorProfileController extends GeneralWindowController{
                     Set<String> set = new HashSet<>(Arrays.asList(organField.getText().split(", ")));
                     if (!set.isEmpty()) {
                         currentProfile.setRegistered(true);
-                        currentProfile.addOrgans(set);
+                        currentProfile.addOrgansDonate(set);
                     }
                 }
 
@@ -226,7 +225,7 @@ public class EditDonorProfileController extends GeneralWindowController{
                 currentProfile.setChronicDiseases(diseasesSet);
             }
             if (error) {
-                GuiPopup("Error. Not all fields were updated.");
+                guiPopup("Error. Not all fields were updated.");
             }
 
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
@@ -241,7 +240,7 @@ public class EditDonorProfileController extends GeneralWindowController{
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = DonorCancelChanges();
+        boolean cancelBool = donorCancelChanges();
         if (cancelBool) {
             savedProfile = false;
             closeEditWindow(event);

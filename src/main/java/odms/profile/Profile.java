@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class Profile {
 
-    private Boolean donor;
+    private Boolean registered;
     private Boolean receiver;
 
     private String givenNames;
@@ -460,7 +460,7 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organs) && donor) {
+        if (Collections.disjoint(newOrgans, this.organs) && registered) {
             for (String organ : organs) {
                 this.addOrgan(Organ.valueOf(organ));
             }
@@ -529,13 +529,15 @@ public class Profile {
         }
     }
 
-    public void setDonor(boolean donor) {
-        this.donor = donor;
+    public void setRegistered(Boolean registered) {
+        this.registered = registered;
     }
 
-    public boolean isDonor() {
-        return donor;
+    public Boolean getRegistered() {
+        return registered;
     }
+
+
 
     public void setReceiver(boolean receiver) {
         this.receiver = receiver;
@@ -811,14 +813,6 @@ public class Profile {
 
     public void setChronicDiseases(Set<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
-    }
-
-    public void setDonor(Boolean donor) {
-        this.donor = donor;
-    }
-
-    public Boolean getDonor() {
-        return donor;
     }
 
     public String getPhone() {

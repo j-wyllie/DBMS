@@ -625,7 +625,7 @@ public class ProfileDisplayController extends CommonController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
+            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {

@@ -1,6 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -192,7 +193,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered() == true) {
+            if (currentDonor.getRegistered() == true) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
@@ -286,7 +287,7 @@ public class DonorProfileController {
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            InvalidUsername();
+            invalidUsername();
         }
 
     }

@@ -200,7 +200,7 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setDonor(true);
+            testProfile.setRegistered(true);
 
             Set<String> someOrgans = new HashSet<>();
             someOrgans.add("bone");
@@ -233,7 +233,7 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setDonor(true);
+            testProfile.setRegistered(true);
             testProfile.addOrgansFromString("bone, heart, cornea");
 
             Set<Organ> expected = new HashSet<>();
@@ -269,7 +269,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setDonor(true);
+        testProfile.setRegistered(true);
         testProfile.addDonationFromString("bone, heart, cornea");
 
         Set<Organ> expected = new HashSet<>();
@@ -300,7 +300,7 @@ public class ProfileTest {
             // pass
         }
 
-        testProfile.setDonor(true);
+        testProfile.setRegistered(true);
         testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
 
         Set<String> expected = new HashSet<>();
@@ -368,7 +368,7 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setDonor(true);
+            testProfile.setRegistered(true);
 
             Set<String> someOrgans = new HashSet<>();
             someOrgans.add("bone");
@@ -407,7 +407,7 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setDonor(true);
+            testProfile.setRegistered(true);
 
             Set<String> someOrgans = new HashSet<>();
             someOrgans.add("bone");

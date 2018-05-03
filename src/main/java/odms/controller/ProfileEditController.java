@@ -235,7 +235,7 @@ public class ProfileEditController extends CommonController {
                             Arrays.asList(organField.getText().split(", "))
                         );
                         if (!organSet.isEmpty()) {
-                            currentProfile.setDonor(true);
+                            currentProfile.setRegistered(true);
                             currentProfile.addOrgansDonate(organSet);
                         }
                     }
@@ -250,7 +250,7 @@ public class ProfileEditController extends CommonController {
                             Arrays.asList(donationsField.getText().split(", "))
                         );
                         if (!set.isEmpty()) {
-                            currentProfile.setDonor(true);
+                            currentProfile.setRegistered(true);
                             currentProfile.addDonations(set);
                         }
                     }
@@ -359,7 +359,7 @@ public class ProfileEditController extends CommonController {
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 
