@@ -1,10 +1,14 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidDate;
-import static odms.controller.AlertController.InvalidEntry;
-import static odms.controller.AlertController.InvalidIrd;
+import static odms.controller.AlertController.invalidDate;
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import java.io.IOException;
@@ -39,7 +43,7 @@ public class ProfileCreateController extends CommonController {
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
         if(givenNamesField.getText().trim().equals("") || surnamesField.getText().trim().equals("") ||
                 dobField.getText().trim().equals("") || irdField.getText().trim().equals("")) {
-            InvalidEntry();
+            invalidEntry();
         } else {
             try {
                 String givenNames = givenNamesField.getText();
@@ -47,22 +51,29 @@ public class ProfileCreateController extends CommonController {
                 String dob = dobField.getText();
                 Integer ird = Integer.parseInt(irdField.getText());
 
+                Profile newProfile = new Profile(givenNames, surnames, dob, ird);
 
-                Profile newDonor = new Profile(givenNames, surnames, dob, ird);
-
-                currentDatabase.addProfile(newDonor);
+                currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
 
-                LoginController.setCurrentDonor(newDonor.getId());
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                ProfileDisplayController controller = fxmlLoader.getController();
 
-                showScene(event, "/view/ProfileDisplay.fxml", true);
+                controller.setLoggedInProfile(currentDatabase.getProfile(newProfile.getId()));
+                controller.initialize();
+
+                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                appStage.setScene(scene);
+                appStage.show();
             } catch (IllegalArgumentException e) {
                 //show error window.
-                InvalidEntry();
+                invalidEntry();
             } catch (IrdNumberConflictException e) {
-                InvalidIrd();
+                invalidIrd();
             } catch (ArrayIndexOutOfBoundsException e) {
-                InvalidDate();
+                invalidDate();
             }
         }
     }

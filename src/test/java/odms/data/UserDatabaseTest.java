@@ -25,7 +25,6 @@ public class UserDatabaseTest {
     public void testAddUser() {
         try {
             userDb.addClinician(user1);
-            System.out.println(userDb);
             assertEquals("John Smith", userDb.getClinician(0).getName());
             assertEquals("Christchurch", userDb.getClinician(0).getRegion());
         } catch (Exception e){

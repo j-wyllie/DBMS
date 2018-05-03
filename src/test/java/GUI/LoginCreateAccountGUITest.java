@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
 import odms.data.ProfileDataIO;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,6 +22,11 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     @BeforeClass
     public static void headless() throws TimeoutException {
         GUITestSetup.headless();
+    }
+
+    @After
+    public void cleanup() {
+        closeStages();
     }
 
     /**
@@ -63,7 +69,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         assertEquals("Jack Travis Hay", userFullName.getText());
 
-        guiMain.getCurrentDatabase().deleteProfile(getProfileIdFromWindow());
+        GuiMain.getCurrentDatabase().deleteProfile(getProfileIdFromWindow());
 
     }
 

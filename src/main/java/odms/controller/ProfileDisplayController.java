@@ -1,7 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
-import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -106,7 +105,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Button logoutButton;
 
-    Boolean isClinician = false;
+    private Boolean isClinician = false;
 
 
     /**
@@ -125,7 +124,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event) {
         undo();
     }
 
@@ -134,7 +133,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event) {
         redo();
     }
 
@@ -262,7 +261,7 @@ public class ProfileDisplayController extends CommonController {
             historyView.setText(userHistory.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            InvalidUsername();
+            invalidUsername();
         }
 
     }
@@ -306,11 +305,11 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * sets the donor if it was logged in by a user
-     * @param donor
+     * @param profile
      */
-    public void setLoggedInDonor(Profile donor) {
+    public void setLoggedInProfile(Profile profile) {
         isClinician = false;
-        searchedDonor = donor;
+        searchedDonor = profile;
         //setPage(searchedDonor);
     }
 

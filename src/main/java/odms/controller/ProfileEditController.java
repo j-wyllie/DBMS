@@ -1,15 +1,14 @@
 package odms.controller;
 
-import static odms.controller.AlertController.DonorCancelChanges;
-import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.AlertController.donorCancelChanges;
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.AlertController.GuiPopup;
+import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -117,11 +116,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -161,13 +156,13 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = DonorSaveChanges();
+        boolean saveBool = donorSaveChanges();
         boolean error = false;
 
         if (saveBool) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
-                GuiPopup("Error. Required fields were left blank.");
+                guiPopup("Error. Required fields were left blank.");
             } else {
                 String action = "Profile " +
                     currentProfile.getId() +
@@ -219,7 +214,6 @@ public class ProfileEditController extends CommonController {
                     }
                 } catch(NumberFormatException e) {
                     error = true;
-                    System.out.println("here");
                 }
                 currentProfile.setPhone(phoneField.getText());
                 currentProfile.setEmail(emailField.getText());
@@ -237,12 +231,12 @@ public class ProfileEditController extends CommonController {
                 }
                 try {
                     if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> set = new HashSet<>(
+                        Set<String> organSet = new HashSet<>(
                             Arrays.asList(organField.getText().split(", "))
                         );
-                        if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addOrgans(set);
+                        if (!organSet.isEmpty()) {
+                            currentProfile.setDonor(true);
+                            currentProfile.addOrgansDonate(organSet);
                         }
                     }
 
@@ -256,7 +250,7 @@ public class ProfileEditController extends CommonController {
                             Arrays.asList(donationsField.getText().split(", "))
                         );
                         if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
+                            currentProfile.setDonor(true);
                             currentProfile.addDonations(set);
                         }
                     }
@@ -285,7 +279,7 @@ public class ProfileEditController extends CommonController {
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
                 if (error) {
-                    GuiPopup("Error. Not all fields were updated.");
+                    guiPopup("Error. Not all fields were updated.");
                 } else {
                     ProfileDataIO.saveData(getCurrentDatabase());
                     closeEditWindow(event);
@@ -301,7 +295,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = DonorCancelChanges();
+        boolean cancelBool = donorCancelChanges();
 
         if (cancelBool) {
             closeEditWindow(event);
@@ -315,13 +309,13 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+        ProfileDisplayController controller = fxmlLoader.getController();
         if (isClinician) {
             controller.setDonor(currentProfile);
         } else {
-            controller.setLoggedInDonor(currentProfile);
+            controller.setLoggedInProfile(currentProfile);
         }
         controller.initialize();
 

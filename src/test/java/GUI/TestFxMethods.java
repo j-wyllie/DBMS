@@ -1,5 +1,7 @@
 package GUI;
 
+import com.sun.javafx.robot.impl.FXRobotHelper;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,13 +38,6 @@ abstract class TestFxMethods extends ApplicationTest {
 
     @After()
     public void tearDown() throws Exception {
-        // TODO review why this uses 5 magic calls instead of a concrete solution
-        closeCurrentWindow();
-        closeCurrentWindow();
-        closeCurrentWindow();
-        closeCurrentWindow();
-        closeCurrentWindow();
-
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
@@ -58,6 +53,19 @@ abstract class TestFxMethods extends ApplicationTest {
         guiMain = new GuiMain();
         guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
         guiMain.start(stage);
+    }
+
+    protected void closeStages() {
+        try {
+            Integer numberOfStages = FXRobotHelper.getStages().size();
+            ObservableList<Stage> stages = FXRobotHelper.getStages();
+
+            for (Integer i = 0; i < numberOfStages; i++) {
+                stages.get(i).close();
+            }
+        } catch (IllegalStateException e) {
+            System.out.println("Caught"); // TODO
+        }
     }
 
     /**

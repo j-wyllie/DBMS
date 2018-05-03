@@ -26,7 +26,6 @@ public class UserDatabase {
      */
     public void addClinician(User user){
         lastID += 1;
-        System.out.println(lastID);
         user.setStaffId(lastID);
 
         userDb.put(lastID, user);

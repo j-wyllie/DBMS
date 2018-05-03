@@ -102,7 +102,7 @@ public class TestDataCreator {
         Integer numberDonations = randInRange(0, Organ.values().length);
 
         if (numberDonations > 0) {
-            profile.setRegistered(true);
+            profile.setDonor(true);
             for (Integer i = 0; i < numberDonations; i++) {
                 profile.addDonation(organs.get(i));
             }
@@ -118,7 +118,7 @@ public class TestDataCreator {
         Integer numberDonating = randInRange(0, Organ.values().length);
 
         if (numberDonating > 0) {
-            profile.setRegistered(true);
+            profile.setDonor(true);
             for (Integer i = 0; i < numberDonating; i++) {
                 profile.addOrgan(organs.get(i));
             }

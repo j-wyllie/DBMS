@@ -1,6 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
@@ -10,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -44,29 +44,44 @@ public class LoginController extends CommonController {
      */
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
-        String scene;
         try {
-            int userId = Integer.valueOf(usernameField.getText());
+            if (!usernameField.getText().equals("")) {
+                int userId = Integer.valueOf(usernameField.getText());
 
-            if (userId == 0) {
-                currentUser = userDatabase.getClinician(0);
-                scene = "/view/ClinicianProfile.fxml";
+                if (userId == 0) {
+                    currentUser = userDatabase.getClinician(0);
+                    String scene = "/view/ClinicianProfile.fxml";
 
-                showScene(event, scene, true);
-            } else {
-                currentProfile = currentDatabase.getProfile(userId);
-                if (currentProfile != null) {
-                    scene = "/view/ProfileDisplay.fxml";
-
-                    showScene(event, scene, true);
+                    showScene(event, scene);
                 } else {
-                    InvalidUsername();
+                    currentProfile = currentDatabase.getProfile(userId);
+
+                    if (currentProfile != null) {
+
+                        FXMLLoader fxmlLoader = new FXMLLoader(
+                                getClass().getResource("/view/ProfileDisplay.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        ProfileDisplayController controller = fxmlLoader.getController();
+
+                        controller.setLoggedInProfile(currentProfile);
+                        controller.initialize();
+                        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                        appStage.setScene(scene);
+                        appStage.show();
+                    } else {
+                        invalidUsername();
+                    }
                 }
             }
+        } catch (NumberFormatException e) {
+
+            invalidEntry();
 
         } catch (Exception e) {
             e.printStackTrace();
-            InvalidUsername();
+
+            invalidUsername();
         }
     }
 
@@ -85,7 +100,7 @@ public class LoginController extends CommonController {
     }
 
     @FXML
-    private void onEnter(ActionEvent event) throws IOException {
+    private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
     }
 
