@@ -85,7 +85,6 @@ public class AddProcedureController {
 
             procedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
 
-            System.out.println(procedure);
             addProcedure(procedure);
 
         } catch (IllegalArgumentException e) {

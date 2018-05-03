@@ -412,7 +412,7 @@ public class CommandUtils {
                 Profile profile = currentDatabase.getProfile(id);
                 int procedurePlace = Integer.parseInt(
                         action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-                String previous = action.substring(action.indexOf("PREVIOUS("), action.indexOf(") OLD"));
+                String previous = action.substring(action.indexOf("PREVIOUS(")+9, action.indexOf(") OLD"));
                 String[] previousValues = previous.split(",");
                 String organs = action.substring(action.indexOf("[")+1, action.indexOf("] CURRENT"));
                 List<String> List = new ArrayList<String>(Arrays.asList(organs.split(",")));
@@ -420,11 +420,17 @@ public class CommandUtils {
                 System.out.println(organs);
                 for(String organ : List) {
                     System.out.println(organ);
-                    organList.add(Organ.valueOf(organ.replace(" ","")));
+                    try {
+                        organList.add(Organ.valueOf(organ.replace(" ", "")));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e);
+                    }
                 }
                 profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
                 profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                if(previousValues.length==3) {
+                    profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                }
                 profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
@@ -507,15 +513,18 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     int procedurePlace = Integer.parseInt(
                             action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-                    String previous = action.substring(action.indexOf("CURRENT("), action.indexOf(") NEW"));
+                    String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
                     String[] previousValues = previous.split(",");
-                    System.out.println(action.indexOf("NEWORGANS["));
                     String organs;
                     ArrayList<Organ> organList = new ArrayList<Organ>();
-                    if(action.indexOf("] at")==-1){
+                    System.out.println(action);
+                    System.out.println(action.indexOf("at"));
+                    if(action.indexOf("]")==-1){
                         organs="";
                     }else {
-                        organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("] at"));
+                        System.out.println(action.indexOf("NEWORGANS["));
+                        System.out.println(action.indexOf("] at"));
+                        organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
                         List<String> List = new ArrayList<String>(Arrays.asList(organs.split(",")));
 
                         System.out.println(organs);
@@ -524,10 +533,11 @@ public class CommandUtils {
                             organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
                         }
                     }
-                    System.out.println("A");
                     profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
                     profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                    profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                    if(previousValues.length==3) {
+                        profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                    }
                     profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
                 }
                 System.out.println("Command redone");
@@ -535,7 +545,7 @@ public class CommandUtils {
                 System.out.println("There are no commands to redo");
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             System.out.println("No commands have been entered.");
         }
 

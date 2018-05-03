@@ -54,9 +54,9 @@ public class EditProcedureController {
         controller = selectedController;
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());
-        procedureDateLabel.setText(procedureDateLabel.getText() +" "+currentProcedure.getDate().toString());
-        procedureDescriptionLabel.setText(procedureDescriptionLabel.getText() +" "+currentProcedure.getLongDescription());
-        procedureOrgansLabel.setText(procedureOrgansLabel.getText() +" "+currentProcedure.getOrgansAffected().toString());
+        procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
+        procedureOrgansLabel.setText("Donations Affected: " +" "+currentProcedure.getOrgansAffected().toString());
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
@@ -81,16 +81,20 @@ public class EditProcedureController {
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
         undo();
-        descEntry.setText(currentProcedure.getLongDescription());
-        dateEntry.setText(currentProcedure.getDate().toString());
-        summaryEntry.setText(currentProcedure.getSummary());
+        procedureSummaryLabel.setText(currentProcedure.getSummary());
+        procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
+        procedureOrgansLabel.setText("Organs Affected: " +" "+currentProcedure.getOrgansAffected().toString());
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
         redo();
-        descEntry.setText(currentProcedure.getLongDescription());
-        dateEntry.setText(currentProcedure.getDate().toString());
-        summaryEntry.setText(currentProcedure.getSummary());
+        procedureSummaryLabel.setText(currentProcedure.getSummary());
+        procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
+        procedureOrgansLabel.setText("Donations Affected: " +" "+currentProcedure.getOrgansAffected().toString());
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
@@ -116,7 +120,7 @@ public class EditProcedureController {
         procedureSummaryLabel.setText("");
         procedureDateLabel.setText("Date:");
         procedureDescriptionLabel.setText("Description:");
-        procedureOrgansLabel.setText("Organs Affected:");
+        procedureOrgansLabel.setText("Donations Affected:");
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
@@ -135,7 +139,7 @@ public class EditProcedureController {
         }
         String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action += oldValues+newValues;
-        action = action +" at " + LocalDateTime.now();
+        action = action +"END at " + LocalDateTime.now();
         System.out.println(action);
         if (CommandUtils.getHistory().size() != 0) {
             if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {

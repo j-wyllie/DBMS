@@ -7,13 +7,13 @@ import java.util.ArrayList;
  * A specific procedure for use in medical history
  */
 public class Procedure {
-    private final String AFFECTED_ORGAN_TEXT = "Affects Organs";
+    private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
     private String summary;
     private LocalDate date;
     private String longDescription;
     private ArrayList<Organ> organsAffected = new ArrayList<>();
-    private String affectsOrgansText = "Affects Organs";
+    private String affectsOrgansText = "Affects Donations";
 
     public Procedure(String summary, String date, String longDescription) {
         this.summary = summary;
