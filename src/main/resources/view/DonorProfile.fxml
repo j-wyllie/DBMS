@@ -491,7 +491,7 @@
                                              <children>
                                                 <TableView fx:id="tableViewActiveIngredients" prefHeight="207.0" prefWidth="302.0" GridPane.columnSpan="2">
                                                   <columns>
-                                                    <TableColumn fx:id="tableColumnActiveIngredients" prefWidth="300.0" text="Active Ingredients" />
+                                                    <TableColumn fx:id="tableColumnActiveIngredients" editable="false" prefWidth="300.0" sortable="false" text="Active Ingredients" />
                                                   </columns>
                                                 </TableView>
                                                 <TableView fx:id="tableViewDrugInteractionsNames" prefHeight="200.0" prefWidth="302.0" GridPane.columnSpan="2" GridPane.rowIndex="1">

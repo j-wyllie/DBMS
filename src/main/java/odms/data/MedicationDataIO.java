@@ -190,7 +190,7 @@ public class MedicationDataIO {
         JsonObject results = parser.parse(content.toString()).getAsJsonObject();
 
         JsonObject genderInteractions = results.get("gender_interaction").getAsJsonObject();
-        if (!(gender.equals("male") || gender.equals("female"))) {
+        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
             interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, "male"));
             interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, "female"));
         } else {
