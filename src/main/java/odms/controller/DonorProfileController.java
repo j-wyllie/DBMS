@@ -377,9 +377,12 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        Drug drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
-        if (drug == null) { return; }
-        currentDonor.moveDrugToHistory(drug);
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+
+        for (int i = 0; i<drugs.size(); i++) {
+            if (drugs.get(i) != null) { currentDonor.moveDrugToHistory(drugs.get(i));}
+        }
+
 
         refreshTable();
     }
@@ -397,9 +400,11 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-        if (drug == null) { return; }
-        currentDonor.moveDrugToCurrent(drug);
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+
+        for (int i = 0; i<drugs.size(); i++) {
+            if (drugs.get(i) != null) { currentDonor.moveDrugToCurrent(drugs.get(i));}
+        }
 
         refreshTable();
     }
@@ -417,11 +422,13 @@ public class DonorProfileController {
             currentDonor = getCurrentProfile();
         }
 
-        Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
-        if (drug == null) { return; }
 
-        currentDonor.deleteDrug(drug);
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
+
+        for (int i = 0; i<drugs.size(); i++) {
+            if (drugs.get(i) != null) { currentDonor.deleteDrug(drugs.get(i));}
+        }
 
         refreshTable();
     }
@@ -528,11 +535,58 @@ public class DonorProfileController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
+        refreshPageElements();
+
     }
 
+
     /**
-     * sets all of the items in the fxml to their respective values
+     * Enables the relevant buttons on medications tab for how many drugs are selected
      */
+    @FXML
+    private void refreshPageElements() {
+
+        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        ArrayList<Drug> allDrugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        allDrugs.addAll(convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()));
+
+        if (allDrugs.size() == 0) {
+            buttonMedicationHistoricToCurrent.setDisable(true);
+            buttonMedicationCurrentToHistoric.setDisable(true);
+            buttonDeleteMedication.setDisable(true);
+        } else {
+            buttonMedicationHistoricToCurrent.setDisable(false);
+            buttonMedicationCurrentToHistoric.setDisable(false);
+            buttonDeleteMedication.setDisable(false);
+        }
+
+
+        if (drugs.size() != 2) {
+            if (drugs.size() == 1) {
+                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+                if (toAdd != null) { drugs.add(toAdd); }
+            } else if (drugs.size() == 0) {
+                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            }
+
+
+            if (drugs.size() != 2) {
+                buttonShowDrugInteractions.setDisable(true);
+                return;
+            }
+        } else {
+            buttonShowDrugInteractions.setDisable(false);
+        }
+
+
+
+
+    }
+
+
+        /**
+         * sets all of the items in the fxml to their respective values
+         */
     @FXML
     private void setPage(Profile currentDonor){
 
@@ -693,6 +747,7 @@ public class DonorProfileController {
             }
             //Profile currentDonor = getCurrentProfile();
         }
+        refreshPageElements();
     }
 
     /**
