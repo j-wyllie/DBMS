@@ -1009,6 +1009,8 @@ public class ProfileDisplayController extends CommonController {
             }
 
             historyView.setText(userHistory.toString());
+            setMedicationSearchFieldListener();
+
             refreshConditionTable();
 
         } catch (Exception e) {
@@ -1171,6 +1173,7 @@ public class ProfileDisplayController extends CommonController {
             refreshMedicationsTable();
         }
         refreshPageElements();
+
 
         disableTableHeaderReorder();
         @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(curConditionsTable);
