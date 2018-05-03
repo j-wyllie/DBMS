@@ -14,7 +14,7 @@ public class AlertController {
     /**
      * Creates a popup when the details were entered incorrectly
      */
-    static void InvalidEntry() {
+    static void invalidEntry() {
         Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter your details correctly.",
                 ButtonType.CLOSE);
         invalidAlert.show();
@@ -26,7 +26,7 @@ public class AlertController {
     /**
      * Creates a popup when the username entered was invalid
      */
-    static void InvalidUsername() {
+    static void invalidUsername() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Please enter a valid username.",
@@ -42,7 +42,7 @@ public class AlertController {
     /**
      * Creates a popup when the IRD number entered was invalid
      */
-    static void InvalidIrd() {
+    static void invalidIrd() {
         Alert invalidAlert = new Alert(AlertType.ERROR, "Please enter a valid IRD number.",
                 ButtonType.CLOSE);
 
@@ -55,7 +55,7 @@ public class AlertController {
     /**
      * Creates a popup when the date entered is an incorrect format
      */
-    static void InvalidDate() {
+    static void invalidDate() {
         Alert invalidAlert = new Alert(AlertType.ERROR, "Date entered is not in the format dd-mm-yyyy.",
                 ButtonType.CLOSE);
 
@@ -70,7 +70,7 @@ public class AlertController {
      * Creates a popup with a personalized message from the controller
      * @param message the message to be displayed
      */
-    static void GuiPopup(String message) {
+    static void guiPopup(String message) {
         Alert invalidAlert = new Alert(AlertType.ERROR, message,
                 ButtonType.CLOSE);
 
@@ -84,7 +84,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean DonorSaveChanges() {
+    static boolean donorSaveChanges() {
         Alert saveAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to save your changes?",
                 ButtonType.NO, ButtonType.YES);
         saveAlert.showAndWait();
@@ -96,7 +96,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean DonorCancelChanges() {
+    static boolean donorCancelChanges() {
         Alert cancelAlert = new Alert(AlertType.CONFIRMATION, "Do you wish to cancel your changes?",
                 ButtonType.NO, ButtonType.YES);
 

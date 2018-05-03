@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.io.IOException;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 
@@ -26,15 +27,15 @@ public class GuiMain extends Application {
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage the primary stage
+     * @throws IOException file read exception for login fxml
      */
     @Override
-    public void start(Stage primaryStage) throws Exception{
-
+    public void start(Stage primaryStage) throws IOException {
         try {
             userDb.getClinician(0);
         } catch (NullPointerException e){
+            // TODO this code always destroys the old UserDB?
             userDb = new UserDatabase();
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
             userDb.addClinician(user);
@@ -61,6 +62,8 @@ public class GuiMain extends Application {
     public static UserDatabase getUserDatabase(){
         return userDb;
     }
+
+    public void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
 
     public static void main(String[] args) {
         launch(args);

@@ -1,5 +1,8 @@
 package odms.controller;
 
+import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import odms.profile.Organ;
@@ -56,19 +61,19 @@ public class ClinicianProfileController extends CommonController {
     private Label regionLabel;
 
     @FXML
-    private TableView searchTable;
+    private TableView<Profile> searchTable;
 
     @FXML
-    private TableColumn fullNameColumn;
+    private TableColumn<Profile, String> fullNameColumn;
 
     @FXML
-    private TableColumn ageColumn;
+    private TableColumn<Profile, Integer> ageColumn;
 
     @FXML
-    private TableColumn genderColumn;
+    private TableColumn<Profile, String> genderColumn;
 
     @FXML
-    private TableColumn regionColumn;
+    private TableColumn<Profile, String> regionColumn;
 
     @FXML
     private TextField searchField;
@@ -119,6 +124,26 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         showScene(event, "/view/ClinicianProfileEdit.fxml", true);
+    }
+
+    /**
+     * Button handler to update donor table based on search results.
+     * @param event releasing a key on the keyboard.
+     */
+    @FXML
+    private void handleSearchDonors(KeyEvent event) {
+        updateTable();
+    }
+
+    /**
+     * Clears the searchTable and updates with search results of profiles from the fuzzy search.
+     */
+    private void updateTable() {
+        String searchString = searchField.getText();
+
+        searchTable.getItems().clear();
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
+        searchTable.setItems(donorObservableList);
     }
 
     /**

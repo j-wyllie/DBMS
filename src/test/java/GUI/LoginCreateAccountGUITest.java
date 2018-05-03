@@ -1,54 +1,32 @@
 package GUI;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.scene.control.Label;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
+import odms.data.ProfileDataIO;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit.ApplicationTest;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.TimeoutException;
 
-public class LoginCreateControllerTest extends ApplicationTest {
-
-    private GuiMain guiMain;
-
+public class LoginCreateAccountGUITest extends TestFxMethods {
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
+    public static void headless() throws TimeoutException {
         GUITestSetup.headless();
     }
 
-    @After()
-    public void tearDown() throws Exception {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Initializes the main gui and starts the program from the login screen.
-     * @param stage current stage
-     * @throws Exception throws Exception
-     */
-    @Override
-    public void start(Stage stage) throws Exception{
-        guiMain = new GuiMain();
-        guiMain.start(stage);
+    @After
+    public void cleanup() {
+        closeStages();
     }
 
     /**
@@ -68,10 +46,10 @@ public class LoginCreateControllerTest extends ApplicationTest {
     public void loginInvalidUser(){
         clickOn("#usernameField").write("1234");
         login();
-        final javafx.stage.Stage actualAlertDialog = getTopModalStage();
+        final javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         final DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals(dialogPane.getContentText(), "Please enter a valid username.");
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
     }
 
     /**
@@ -86,8 +64,12 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#irdField").write("88888888");
         clickOn("#createAccountButton");
 
-        assertEquals("88888888", LoginController.getCurrentProfile().getIrdNumber().toString());
+        Scene newScene= getTopScene();
+        Label userFullName = (Label) newScene.lookup("#donorFullNameLabel");
 
+        assertEquals("Jack Travis Hay", userFullName.getText());
+
+        GuiMain.getCurrentDatabase().deleteProfile(getProfileIdFromWindow());
 
     }
 
@@ -102,22 +84,22 @@ public class LoginCreateControllerTest extends ApplicationTest {
         clickOn("#createAccountLink");
         clickOn("#createAccountButton");
 
-        javafx.stage.Stage actualAlertDialog = getTopModalStage();
+        javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
 
         //tests invalid date format
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14.11.1997");
-        clickOn("#irdField").write("100132121");
+        clickOn("#irdField").write("100132122");
         clickOn("#createAccountButton");
 
-        actualAlertDialog = getTopModalStage();
+        actualAlertDialog = getAlertDialogue();
         dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
-        closeDialogue(dialogPane);
+        closeDialog(dialogPane);
 
         //tests duplicate IRD number.
         clickOn("#dobField").eraseText(10).write("14-11-1997");
@@ -127,11 +109,11 @@ public class LoginCreateControllerTest extends ApplicationTest {
 //        dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
 //        assertEquals(dialogPane.getContentText(), "Please enter a valid IRD number.");
 //        closeDialogue(dialogPane);
-
-        //tests empty IRD field.
-//        clickOn("#irdField").eraseText(10);
+//
+//        //tests empty IRD field.
+//        clickOn("#irdField").eraseText(9);
 //        clickOn("#createAccountButton");
-
+//
 //        actualAlertDialog = getTopModalStage();
 //        dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
 //        assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
@@ -144,36 +126,6 @@ public class LoginCreateControllerTest extends ApplicationTest {
      */
     private void login(){
         clickOn("#loginButton");
-    }
-
-
-    /**
-     * Closes the currently open alert dialogue
-     * @param alert the alert DialogPane to be closed
-     */
-    private void closeDialogue(DialogPane alert){
-        robotContext();
-        Button closeButton = (Button) alert.lookupButton(ButtonType.CLOSE);
-        closeButton.setId("Close");
-        clickOn("#Close");
-    }
-
-    /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
-     * @return All of the current windows
-     */
-    private javafx.stage.Stage getTopModalStage() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-
-        return (javafx.stage.Stage) allWindows
-                .stream()
-                .filter(window -> window instanceof javafx.stage.Stage)
-                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
-                .findFirst()
-                .orElse(null);
     }
 
 }

@@ -1,23 +1,18 @@
 package odms.data;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import odms.profile.Organ;
+import java.util.*;
+
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.profile.Profile;
 
 public class ProfileDatabase {
 
     private HashMap<Integer, Profile> profileDb = new HashMap<>();
-    private Integer lastID = -1;
     private HashSet<Integer> deletedProfiles = new HashSet<>();
+
+    private Integer lastID = -1;
+    private String path;
 
     /**
      * Find profile by ID
@@ -99,6 +94,13 @@ public class ProfileDatabase {
         }
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public Integer getProfilePopulation() {
         return profileDb.size();
@@ -185,50 +187,31 @@ public class ProfileDatabase {
     }
 
     /**
-     * Generates a list of profiles receiving organs ordered by last names.
-     * Parameter to specify whether or not the list contains every receiver or only receivers that
-     * are currently receiving organs.
-     *
-     * @param receiving specify currently receiving organs or not
-     * @return Array of profiles found that match
+     * Fuzzy search that finds the top 30 donors that match the provided search string.
+     * @param searchString the string that the donor names will be searched against.
+     * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> getReceivers(Boolean receiving) {
-        ArrayList<Profile> profiles = new ArrayList<>();
+    public ArrayList<Profile> searchProfiles(String searchString) {
+        ArrayList<String> profiles = new ArrayList<>();
 
-        profileDb.forEach((id, profile) -> {
-
-            if (profile.isReceiver()) {
-                if (receiving) {
-                    if (profile.getOrgansRequired().size() > 0) {
-                        profiles.add(profile);
-                    }
-                } else {
-                    profiles.add(profile);
-                }
-            }
-        });
-
-        profiles.sort(Comparator.comparing(Profile::getLastNames));
-        return profiles;
-    }
-
-    /**
-     * Generates a collection of a profile and organ for each organ that a receiver requires
-     *
-     *  @return Collection of Profile and Organ that match
-     */
-    public List<Entry<Profile, Organ>> getAllOrgansRequired() {
-        List<Entry<Profile, Organ>> receivers = new ArrayList<>();
-
-        ArrayList<Profile> allReceivers = getReceivers(true);
-
-        for (Profile profile : allReceivers) {
-            for (Organ organ : profile.getOrgansRequired()) {
-                Map.Entry<Profile, Organ> pair = new SimpleEntry<>(profile, organ);
-                receivers.add(pair);
-            }
+        if (searchString == null || searchString.equals("")) {
+            return getProfiles(false);
         }
-        return receivers;
+
+        for (Profile profile : getProfiles(false)) {
+            profiles.add(profile.getFullName());
+        }
+
+        //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
+        List<ExtractedResult> result;
+        result = FuzzySearch.extractSorted(searchString, profiles, 30);
+
+        //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
+        ArrayList<Profile> resultProfiles = new ArrayList<>();
+        for (ExtractedResult er : result) {
+            resultProfiles.add(getProfiles(false).get(er.getIndex()));
+        }
+        return resultProfiles;
     }
 
 }

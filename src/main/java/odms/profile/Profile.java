@@ -143,12 +143,18 @@ public class Profile {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
+                if (value.equals("null")) {
+                    value = "0";
+                }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException();
@@ -177,8 +183,14 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
+            if(value.equals("null")) {
+                value = "0";
+            }
             setBloodPressureSystolic(Integer.valueOf(value));
         }else if (attrName.equals("bloodPressureDiastolic")) {
+            if(value.equals("null")) {
+                value = "0";
+            }
             setBloodPressureDiastolic(Integer.valueOf(value));
         }else if (attrName.equals("phone")) {
             setPhone(value);
@@ -299,8 +311,9 @@ public class Profile {
     /**
      * This will add a csv list to the list of organs
      * @param organs the organs to add as a csv
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansFromString(String organs) {
+    public void addOrgansFromString(String organs) throws OrganConflictException {
         String[] org = organs.split(",");
         addOrgansDonate(new HashSet<>(Arrays.asList(org)));
     }
@@ -387,6 +400,35 @@ public class Profile {
     }
 
     /**
+     * Add an organ to the organs donate list.
+     * @param organ the organ the profile wishes to donate
+     */
+    public void addOrgan(Organ organ) throws OrganConflictException {
+        if (this.organsRequired.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently receiver for " + organ,
+                    organ
+            );
+        }
+        this.organs.add(organ);
+    }
+
+    /**
+     * Add an organ to the organs required list.
+     * @param organ the organ the profile requires
+     * @throws OrganConflictException if there is a conflicting organ
+     */
+    public void addOrganRequired(Organ organ) throws OrganConflictException {
+        if (this.organs.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently donor for  " + organ,
+                    organ
+            );
+        }
+        this.organsRequired.add(organ);
+    }
+
+    /**
      * Consume a set of organs that the profile wants to receive and updates the profile to use this
      * new set.
      * @param organs the set of organs to be received
@@ -417,8 +459,11 @@ public class Profile {
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
      * @param organs the set of organs to donate
+     * @throws IllegalArgumentException if a bad argument is used
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansDonate(Set<String> organs) throws IllegalArgumentException {
+    public void addOrgansDonate(Set<String> organs)
+            throws IllegalArgumentException, OrganConflictException {
         generateUpdateInfo("donatedOrgans");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -443,6 +488,14 @@ public class Profile {
 
     public Set<Organ> getOrgansRequired() {
         return organsRequired;
+    }
+
+    /**
+     * Add an organ to the list of donated organs.
+     * @param organ the organ to be added
+     */
+    public void addDonation(Organ organ) {
+        this.donatedOrgans.add(organ);
     }
 
     /**
@@ -528,7 +581,7 @@ public class Profile {
      * @return BMI
      */
     public Double calculateBMI() {
-        return this.weight / ((this.height / 100) * (this.height / 100));
+        return this.weight / ((this.height) * (this.height));
     }
 
     /**
