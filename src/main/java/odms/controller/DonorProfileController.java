@@ -1,6 +1,8 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -17,6 +19,7 @@ import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.Console;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -25,6 +28,7 @@ import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
+
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -535,6 +539,7 @@ public class DonorProfileController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
 
     }
