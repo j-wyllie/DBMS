@@ -434,8 +434,17 @@ public class ProfileDisplayController extends CommonController {
             organsRequiredLabel.setText("");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
-                donorStatusLabel.setText("Donor Status: Registered");
+                if (currentDonor.getDonatedOrgans().size() > 0) {
+                    donorStatusLabel.setText("Donor Status: Registered");
+                }
             }
+
+            if (currentDonor.getOrgansRequired().size() < 1) {
+                currentDonor.setReceiver(false);
+            } else {
+                currentDonor.setReceiver(true);
+            }
+
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
                 organsRequiredLabel.setText("Organs Required : " + currentDonor.getOrgansRequired().toString());

@@ -478,6 +478,7 @@
                                                       <Insets left="120.0" />
                                                    </GridPane.margin>
                                                 </Button>
+                                                <RadioButton fx:id="isSmokerRadioButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                             </children>
                                                         </GridPane>
                                                     </children>

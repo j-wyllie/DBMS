@@ -26,7 +26,7 @@
           <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="banner" stylesheets="@../styles/Common.css" text="Organs Required" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
+            <Label fx:id="bannerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="banner" stylesheets="@../styles/Common.css" text="Organs Required" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
             <GridPane alignment="CENTER" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />

@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseButton;
@@ -34,10 +35,22 @@ public class OrganRequiredController {
     @FXML
     private Button btnSave;
 
+    @FXML
+    private Label bannerLabel;
+
     private static int windowType;
 
     @FXML
     public void initialize() {
+
+        if (windowType == 1) {
+            bannerLabel.setText("Organs to Donate");
+        } else if (windowType == 2) {
+            bannerLabel.setText("Organs Required");
+        } else if (windowType == 3) {
+            bannerLabel.setText("Past Donations");
+        }
+
         if (profile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.

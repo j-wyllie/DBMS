@@ -101,14 +101,9 @@ public class ProfileEditController extends CommonController {
     private TextField donationsField;
 
     @FXML
-    private RadioButton smokerTrueRadio;
-
-    @FXML
-    private RadioButton smokerFalseRadio;
+    private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
-
-    final ToggleGroup smokerGroup = new ToggleGroup();
 
 
     /**
@@ -230,36 +225,8 @@ public class ProfileEditController extends CommonController {
                         bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
                 }
-                try {
-                    if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> organSet = new HashSet<>(
-                            Arrays.asList(organField.getText().split(", "))
-                        );
-                        if (!organSet.isEmpty()) {
-                            currentProfile.setDonor(true);
-                            currentProfile.addOrgansDonate(organSet);
-                        }
-                    }
 
-                } catch (Exception e) {
-                    error = true;
-                }
-
-                try {
-                    if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
-                        Set<String> set = new HashSet<>(
-                            Arrays.asList(donationsField.getText().split(", "))
-                        );
-                        if (!set.isEmpty()) {
-                            currentProfile.setDonor(true);
-                            currentProfile.addDonations(set);
-                        }
-                    }
-                } catch (Exception e) {
-                    error = true;
-                }
-
-                currentProfile.setSmoker(smokerTrueRadio.isSelected());
+                currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
                     currentProfile.getAttributesSummary() +
@@ -328,37 +295,33 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow();
-        stage.setTitle("Organs to Donate");
-        setWindowType(stage.getTitle());
+        Stage stage = showOrgansSelectionWindow("Organs to Donate");
         stage.show();
     }
 
     @FXML
     private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow();
-        stage.setTitle("Organs Required");
-        setWindowType(stage.getTitle());
+        Stage stage = showOrgansSelectionWindow("Organs Required");
         stage.show();
     }
 
     @FXML
     private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow();
-        stage.setTitle("Past Donations");
-        setWindowType(stage.getTitle());
+        Stage stage = showOrgansSelectionWindow("Past Donations");
         stage.show();
     }
 
-    private Stage showOrgansSelectionWindow() throws IOException {
+    private Stage showOrgansSelectionWindow(String windowTitle) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         OrganRequiredController controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
+        setWindowType(windowTitle);
         controller.initialize();
         Stage stage = new Stage();
+        stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.setResizable(false);
         return stage;
@@ -374,8 +337,6 @@ public class ProfileEditController extends CommonController {
         }
 
         if (currentProfile != null) {
-            smokerFalseRadio.setToggleGroup(smokerGroup);
-            smokerTrueRadio.setToggleGroup(smokerGroup);
             try {
                 donorFullNameLabel.setText(currentProfile.getFullName());
 
@@ -431,11 +392,9 @@ public class ProfileEditController extends CommonController {
                     bloodTypeField.setText(currentProfile.getBloodType());
                 }
                 if (currentProfile.getSmoker() == null || !currentProfile.getSmoker()) {
-                    smokerFalseRadio.setSelected(true);
-                    smokerTrueRadio.setSelected(false);
+                    isSmokerRadioButton.setSelected(false);
                 } else {
-                    smokerTrueRadio.setSelected(true);
-                    smokerFalseRadio.setSelected(false);
+                    isSmokerRadioButton.setSelected(true);
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
