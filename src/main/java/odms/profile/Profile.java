@@ -296,8 +296,9 @@ public class Profile {
     /**
      * This will add a csv list to the list of organs
      * @param organs the organs to add as a csv
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansFromString(String organs) {
+    public void addOrgansFromString(String organs) throws OrganConflictException {
         String[] org = organs.split(",");
         addOrgansDonate(new HashSet<>(Arrays.asList(org)));
     }
@@ -387,8 +388,29 @@ public class Profile {
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrgan(Organ organ) {
+    public void addOrgan(Organ organ) throws OrganConflictException {
+        if (this.organsRequired.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently receiver for " + organ,
+                    organ
+            );
+        }
         this.organs.add(organ);
+    }
+
+    /**
+     * Add an organ to the organs required list.
+     * @param organ the organ the profile requires
+     * @throws OrganConflictException if there is a conflicting organ
+     */
+    public void addOrganRequired(Organ organ) throws OrganConflictException {
+        if (this.organs.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently donor for  " + organ,
+                    organ
+            );
+        }
+        this.organsRequired.add(organ);
     }
 
     /**
@@ -422,8 +444,11 @@ public class Profile {
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
      * @param organs the set of organs to donate
+     * @throws IllegalArgumentException if a bad argument is used
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansDonate(Set<String> organs) throws IllegalArgumentException {
+    public void addOrgansDonate(Set<String> organs)
+            throws IllegalArgumentException, OrganConflictException {
         generateUpdateInfo("donatedOrgans");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -435,7 +460,9 @@ public class Profile {
         }
 
         if (Collections.disjoint(newOrgans, this.organs) && donor) {
-            this.organs.addAll(newOrgans);
+            for (String organ : organs) {
+                this.addOrgan(Organ.valueOf(organ));
+            }
         } else {
             throw new IllegalArgumentException();
         }

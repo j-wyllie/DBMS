@@ -45,6 +45,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         closeStages();
     }
 
+    @Ignore
     @Test
     public void editGivenNames() {
         clickOn("#editButton");

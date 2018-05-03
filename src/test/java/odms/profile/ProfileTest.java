@@ -195,27 +195,29 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
-        } catch (IllegalArgumentException e) {
+
+            testProfile.setDonor(true);
+
+            Set<String> someOrgans = new HashSet<>();
+            someOrgans.add("bone");
+            someOrgans.add("heart");
+            someOrgans.add("cornea");
+            testProfile.addOrgansDonate(someOrgans);
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.BONE);
+            expected.add(Organ.HEART);
+            expected.add(Organ.CORNEA);
+
+            assertEquals(expected, testProfile.getOrgans());
+
+        } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
         }
-
-        testProfile.setDonor(true);
-
-        Set<String> someOrgans = new HashSet<>();
-        someOrgans.add("bone");
-        someOrgans.add("heart");
-        someOrgans.add("cornea");
-        testProfile.addOrgansDonate(someOrgans);
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.BONE);
-        expected.add(Organ.HEART);
-        expected.add(Organ.CORNEA);
-
-        assertEquals(expected, testProfile.getOrgans());
     }
 
     @Test
@@ -226,27 +228,29 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
-        } catch (IllegalArgumentException e) {
+
+            testProfile.setDonor(true);
+            testProfile.addOrgansFromString("bone, heart, cornea");
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.BONE);
+            expected.add(Organ.HEART);
+            expected.add(Organ.CORNEA);
+
+            String expectedString = "heart, bone, cornea";
+            Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+            Set<String> outputStrings = new HashSet<>(
+                    Arrays.asList(testProfile.getOrgansAsCSV().split(", ")));
+
+            assertEquals(expected, testProfile.getOrgans());
+            assertEquals(expectedStrings, outputStrings);
+        } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
         }
-
-        testProfile.setDonor(true);
-        testProfile.addOrgansFromString("bone, heart, cornea");
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.BONE);
-        expected.add(Organ.HEART);
-        expected.add(Organ.CORNEA);
-
-        String expectedString = "heart, bone, cornea";
-        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getOrgansAsCSV().split(", ")));
-
-        assertEquals(expected, testProfile.getOrgans());
-        assertEquals(expectedStrings, outputStrings);
     }
 
 
@@ -359,57 +363,61 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
-        } catch (IllegalArgumentException e) {
+
+            testProfile.setDonor(true);
+
+            Set<String> someOrgans = new HashSet<>();
+            someOrgans.add("bone");
+            someOrgans.add("heart");
+            someOrgans.add("cornea");
+            testProfile.addOrgansDonate(someOrgans);
+
+            Set<String> removedOrgans = new HashSet<>();
+            removedOrgans.add("bone");
+            removedOrgans.add("heart");
+            testProfile.removeOrgans(removedOrgans);
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.CORNEA);
+
+            assertEquals(testProfile.getOrgans(), expected);
+
+        } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
         }
-
-        testProfile.setDonor(true);
-
-        Set<String> someOrgans = new HashSet<>();
-        someOrgans.add("bone");
-        someOrgans.add("heart");
-        someOrgans.add("cornea");
-        testProfile.addOrgansDonate(someOrgans);
-
-        Set<String> removedOrgans = new HashSet<>();
-        removedOrgans.add("bone");
-        removedOrgans.add("heart");
-        testProfile.removeOrgans(removedOrgans);
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.CORNEA);
-
-        assertEquals(testProfile.getOrgans(), expected);
     }
 
     /**
      * Tests that when an existing organ is added it does not duplicate it
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddExistingOrgan() {
+    public void testAddExistingOrgan() throws IllegalArgumentException {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
-        } catch (IllegalArgumentException e) {
+
+            testProfile.setDonor(true);
+
+            Set<String> someOrgans = new HashSet<>();
+            someOrgans.add("bone");
+
+            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonate(someOrgans);
+
+        } catch (OrganConflictException e) {
             // pass
         }
-
-        testProfile.setDonor(true);
-
-        Set<String> someOrgans = new HashSet<>();
-        someOrgans.add("bone");
-
-        testProfile.addOrgansDonate(someOrgans);
-        testProfile.addOrgansDonate(someOrgans);
     }
 
     /**

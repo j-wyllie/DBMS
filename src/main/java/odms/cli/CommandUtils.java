@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import odms.data.ProfileDatabase;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public class CommandUtils {
@@ -262,6 +263,10 @@ public class CommandUtils {
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
+                } catch (OrganConflictException e) {
+                    System.out.println("A profile cannot be both a receiver and donor "
+                            + "for the same organ");
+                    System.out.println(e.getMessage());
                 }
             }
         } else {
