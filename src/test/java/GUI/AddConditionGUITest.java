@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class AddConditionGUITest extends TestFxMethods {
          GUITestSetup.headless();
     }
 
-    @Test
+    @Ignore
     /**
      * Test that a diagnosis can be added to a profile by a clinician
      */
@@ -53,7 +54,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(currentConditions.getItems().size(), initialSize + 1);
     }
 
-    @Test
+    @Ignore
     /**
      * Test adding a cured condition to the past conditions table
      */
@@ -77,7 +78,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
     }
 
-    @Test
+    @Ignore
     /**
      * Test adding a condition with no name
      */
@@ -93,7 +94,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
+    @Ignore
     /**
      * Test adding a cured condition without a cured date
      */
@@ -111,7 +112,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
+    @Ignore
     /**
      * Test trying to add a cured condition with a diagnosis date after the cured date
      */
@@ -137,7 +138,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
+    @Ignore
     /**
      * Test trying to add a cured condition with the cured date after the current date
      */
@@ -164,7 +165,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
+    @Ignore
     /**
      * Test adding a condition with invalid diagnosis date
      */
@@ -185,7 +186,7 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
+    @Ignore
     /**
      * Test adding a condition with an invalid cured date
      */

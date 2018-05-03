@@ -33,7 +33,6 @@ public class Condition {
             if (dateCured != null && isChronic == false) {
                 this.isCured = true;
                 dates = dateCured.split("-");
-                System.out.println(dateCured);
                 this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
                         Integer.valueOf(dates[0]));
             } else {
