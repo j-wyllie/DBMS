@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -51,7 +52,7 @@ public class LoginController extends CommonController {
                 if (userId == 0) {
                     currentUser = userDatabase.getClinician(0);
                     String scene = "/view/ClinicianProfile.fxml";
-
+                    //TODO set the appstage title
                     showScene(event, scene);
                 } else {
                     currentProfile = currentDatabase.getProfile(userId);
@@ -66,6 +67,7 @@ public class LoginController extends CommonController {
                         controller.setLoggedInProfile(currentProfile);
                         controller.initialize();
                         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        appStage.setTitle("Donor Profile");
 
                         appStage.setScene(scene);
                         appStage.show();
@@ -93,18 +95,25 @@ public class LoginController extends CommonController {
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
         showScene(event, "/view/ProfileCreate.fxml", true);
+        //TODO SET TITLE
+//        Parent parent = FXMLLoader.load(getClass().getResource("/view/CreateProfile.fxml"));
+//        Scene newScene = new Scene(parent);
+//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        appStage.setScene(newScene);
+//        appStage.setTitle("Create Profile");
+//        appStage.show();
     }
 
     public static Profile getCurrentProfile() {
         return currentProfile;
     }
 
+
     @FXML
     private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
     }
 
-    public static void setCurrentDonor(Integer id) {
-        currentProfile = currentDatabase.getProfile(id);
-    }
+    public static User getCurrentUser() { return currentUser; }
+    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }
