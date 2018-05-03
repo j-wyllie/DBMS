@@ -1,0 +1,18 @@
+.button-login {
+    -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+    -fx-background-radius: 4;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fffbfb;
+    -fx-border-color: #1fa98c;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.button-login:hover {
+    -fx-background-color: #46d4b6;
+}
+
+.button-login:pressed {
+    -fx-background-color: #1fa98c;
+}

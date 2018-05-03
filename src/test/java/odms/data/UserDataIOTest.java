@@ -26,8 +26,8 @@ public class UserDataIOTest {
     @Test
     public void testSaveAndLoad() {
         UserDatabase loadedDb;
-        UserDataIO.saveUsers(userDb);
-        loadedDb = UserDataIO.loadData();
+        UserDataIO.saveUsers(userDb, "example/users.json");
+        loadedDb = UserDataIO.loadData("example/users.json");
         assertEquals("John Smith", userDb.getClinician(0).getName());
     }
 }

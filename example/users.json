@@ -1,0 +1,78 @@
+{
+  "userDb": {
+    "0": {
+      "userType": "CLINICIAN",
+      "name": "John Smith",
+      "staffId": 0,
+      "region": "Christchurch",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 3
+        },
+        "time": {
+          "hour": 13,
+          "minute": 42,
+          "second": 25,
+          "nano": 661000000
+        }
+      },
+      "updateActions": [
+        "Account for John Smithcreated at 2018-05-03T13:42:25.661",
+        "0 updated at 01:42 PM 03-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 3
+        },
+        "time": {
+          "hour": 13,
+          "minute": 42,
+          "second": 25,
+          "nano": 661000000
+        }
+      }
+    },
+    "1": {
+      "userType": "CLINICIAN",
+      "name": "Matt Smith",
+      "staffId": 1,
+      "region": "Auckland",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 3
+        },
+        "time": {
+          "hour": 13,
+          "minute": 42,
+          "second": 25,
+          "nano": 661000000
+        }
+      },
+      "updateActions": [
+        "Account for Matt Smithcreated at 2018-05-03T13:42:25.661",
+        "1 updated at 01:42 PM 03-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 3
+        },
+        "time": {
+          "hour": 13,
+          "minute": 42,
+          "second": 25,
+          "nano": 661000000
+        }
+      }
+    }
+  },
+  "lastID": 1,
+  "path": "example/users.json"
+}
