@@ -1,7 +1,5 @@
 package odms.user;
 
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +15,6 @@ public class User {
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
 
-
     /**
      * Logs which property was updated and the time it was updated
      * Also changes the last updated property
@@ -25,9 +22,9 @@ public class User {
      */
     private void generateUpdateInfo(String property) {
         LocalDateTime currentTime = LocalDateTime.now();
-        lastUpdated = currentTime;
+        this.lastUpdated = currentTime;
         String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"));
-        updateActions.add(output);
+        this.updateActions.add(output);
     }
 
     public User(UserType userType){
@@ -35,13 +32,12 @@ public class User {
     }
 
     public User(UserType userType, String name, String region){
-        timeOfCreation = LocalDateTime.now();
+        this.timeOfCreation = LocalDateTime.now();
         this.userType = userType;
         this.name = name;
         this.region = region;
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
     }
-
 
     /**
      * Sets the attributes that are passed into the constructor
@@ -59,16 +55,21 @@ public class User {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 
-        if (attrName.equals("name")) {
-            setName(value);
-        } else if (attrName.equals("workAddress")) {
-            setWorkAddress(value);
-        } else if (attrName.equals("staffId")) {
-            setStaffId(Integer.parseInt(value));
-        } else if (attrName.equals("region")) {
-            setRegion(value);
-        } else {
-            throw new IllegalArgumentException();
+        switch (attrName) {
+            case "name":
+                setName(value);
+                break;
+            case "workAddress":
+                setWorkAddress(value);
+                break;
+            case "staffId":
+                setStaffId(Integer.parseInt(value));
+                break;
+            case "region":
+                setRegion(value);
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 

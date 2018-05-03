@@ -2,8 +2,8 @@ package odms.user;
 
 public enum UserType {
     CLINICIAN("clinician"),
-    DONOR("donor");
-
+    DONOR("profile"),
+    PROFILE("profile");
 
     private String name;
 
