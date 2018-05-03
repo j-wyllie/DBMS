@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeoutException;
 
-
+@Ignore
 public class DonorProfileControllerTest extends TestFxMethods {
 
 
