@@ -320,6 +320,7 @@ public class DonorProfileController {
             if (drugs.size() == 1) {
                 Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
                 if (toAdd == null) {
+                    tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
                     return;
                 }
                 drugs.add(toAdd);
@@ -329,6 +330,7 @@ public class DonorProfileController {
             }
 
             if (drugs.size() != 2) {
+                tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
                 return; }
         }
 
