@@ -35,7 +35,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     @Test
     public void loginValidUser(){
         clickOn("#usernameField").write("1");
-        login();
+        clickOn("#loginButton");
         assertEquals("1", LoginController.getCurrentProfile().getId().toString());
     }
 
@@ -45,7 +45,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     @Test
     public void loginInvalidUser(){
         clickOn("#usernameField").write("1234");
-        login();
+        clickOn("#loginButton");
         final javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         final DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
         assertEquals(dialogPane.getContentText(), "Please enter a valid username.");
@@ -119,13 +119,6 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 //        assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
 //        closeDialogue(dialogPane);
 
-    }
-
-    /**
-     * Clicks on the login button to log the user in.
-     */
-    private void login(){
-        clickOn("#loginButton");
     }
 
 }

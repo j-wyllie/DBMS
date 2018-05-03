@@ -2,6 +2,9 @@ package odms.profile;
 
 import odms.cli.CommandUtils;
 
+
+import odms.medications.Drug;
+
 import java.time.Period;
 import java.util.*;
 
@@ -51,6 +54,10 @@ public class Profile {
 
     private Integer id;
 
+    private ArrayList<Drug> currentMedications;
+    private ArrayList<Drug> historyOfMedication;
+    private ArrayList<String> medicationTimestamps;
+
     /**
      * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
@@ -58,6 +65,9 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -73,6 +83,10 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
+
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
@@ -584,6 +598,95 @@ public class Profile {
         lastUpdated = currentTime;
         String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"));
         updateActions.add(output);
+    }
+
+    /**
+     * adds a drug to the list of current medications a donor is on.
+     * @param drug the drug to be added
+     */
+    public void addDrug(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        currentMedications.add(drug);
+        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        medicationTimestamps.add(data);
+        generateUpdateInfo(drug.getDrugName());
+    }
+
+    /**
+     * deletes a drug from the list of current medications if it was added by accident.
+     * @param drug the drug to be deleted.
+     */
+    public void deleteDrug(Drug drug) {
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        } else if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+    }
+
+    /**
+     * Moves the drug to the history of drugs the donor has taken.
+     * @param drug the drug to be moved to the history
+     */
+    public void moveDrugToHistory(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            historyOfMedication.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+
+    }
+
+    /**
+     * Moves the drug to the list of current drugs the donor is taking.
+     * @param drug the drug to be moved to the current drug list
+     */
+    public void moveDrugToCurrent(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            currentMedications.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+    }
+
+    public ArrayList<Drug> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    public ArrayList<Drug> getHistoryOfMedication() {
+        return historyOfMedication;
+    }
+
+    public ArrayList<String> getMedicationTimestamps() {
+        return medicationTimestamps;
     }
 
     public Set<Organ> getDonatedOrgans() {
