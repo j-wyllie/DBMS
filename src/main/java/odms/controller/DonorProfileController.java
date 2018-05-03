@@ -148,21 +148,8 @@ public class DonorProfileController {
     @FXML
     private TableColumn previousAffectsColumn;
 
-    Boolean isClinician = false;
     private Boolean isClinician = false;
 
-    /**
-     * Text for showing recent edits.
-     */
-    @FXML
-    public Text editedText;
-
-    /**
-     * Called when there has been an edit to the current profile.
-     */
-    public void editedTextArea() {
-        editedText.setText("The profile was successfully edited.");
-    }
     /**
      * Text for showing recent edits.
      */
