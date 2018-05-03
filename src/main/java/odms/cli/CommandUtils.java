@@ -455,7 +455,6 @@ public class CommandUtils {
             System.out.println(currentSessionHistory.size());
 
             if (historyPosition != currentSessionHistory.size()) {
-                System.out.println("a");
                 historyPosition += 1;
                 String action;
                 if (historyPosition == 0) {
@@ -469,7 +468,6 @@ public class CommandUtils {
                 }
                 System.out.println(action);
                 action = action.substring(0, action.indexOf(" at"));
-                System.out.println("c");
                 if (action.contains("added")) {
                     int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     int id = currentDatabase
