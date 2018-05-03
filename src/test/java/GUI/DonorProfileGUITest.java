@@ -16,6 +16,7 @@ import odms.profile.Condition;
 
 import odms.profile.Profile;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotEquals;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+@Ignore
 public class DonorProfileGUITest extends TestFxMethods {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private LocalDate now = LocalDate.now();
