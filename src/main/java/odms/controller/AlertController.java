@@ -24,6 +24,18 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup when the details were entered incorrectly
+     */
+    public static void invalidOrgan() {
+        Alert invalidAlert = new Alert(AlertType.ERROR, "A user cannot require and donate the same organ.",
+                ButtonType.CLOSE);
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Creates a popup when the username entered was invalid
      */
     static void invalidUsername() {

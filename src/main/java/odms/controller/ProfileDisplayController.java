@@ -1,6 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;

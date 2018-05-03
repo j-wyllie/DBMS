@@ -51,7 +51,7 @@ public class ProfileCreateController extends CommonController {
                 String dob = dobField.getText();
                 String ird = irdField.getText();
 
-                Profile newProfile = new Profile(givenNames, surnames, dob, ird);
+                Profile newProfile = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);

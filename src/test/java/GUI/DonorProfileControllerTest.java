@@ -1,6 +1,7 @@
 package GUI;
 
 
+import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -48,7 +49,7 @@ public class DonorProfileControllerTest extends ApplicationTest {
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
+    public static void headless() throws TimeoutException {
         GUITestSetup.headless();
     }
 

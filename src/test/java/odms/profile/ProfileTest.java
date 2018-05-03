@@ -218,7 +218,7 @@ public class ProfileTest {
 
             assertEquals(expected, testProfile.getOrgans());
 
-        } catch (IllegalArgumentException | OrganConflictException e) {
+        } catch (Exception e) {
             // pass
         }
     }
@@ -389,7 +389,7 @@ public class ProfileTest {
 
             assertEquals(testProfile.getOrgans(), expected);
 
-        } catch (IllegalArgumentException | OrganConflictException e) {
+        } catch (Exception e) {
             // pass
         }
     }
@@ -418,7 +418,7 @@ public class ProfileTest {
             testProfile.addOrgansDonate(someOrgans);
             testProfile.addOrgansDonate(someOrgans);
 
-        } catch (OrganConflictException e) {
+        } catch (Exception e) {
             // pass
         }
     }

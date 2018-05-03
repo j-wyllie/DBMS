@@ -3,6 +3,7 @@ package odms.profile;
 import odms.cli.CommandUtils;
 
 
+import odms.controller.AlertController;
 import odms.medications.Drug;
 
 import java.time.Period;
@@ -436,24 +437,25 @@ public class Profile {
     public void setOrgansRequired(Set<String> organs) {
         generateUpdateInfo("organsRequired");
 
-        Set<Organ> newOrgans = new HashSet<>();
-
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-            String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
+        try {
+            this.organsRequired.clear();
+            for (String org : organs) {
+                String newOrgan = org.trim().toUpperCase().replace(" ", "_");
+                Organ organ = Organ.valueOf(newOrgan);
+                addOrganRequired(organ);
+                String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
+                if (CommandUtils.getHistory().size() != 0) {
+                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                                CommandUtils.getHistory().size() - 1).clear();
+                    }
                 }
+                CommandUtils.currentSessionHistory.add(action);
+                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        } catch (OrganConflictException e) {
+            AlertController.invalidOrgan();
         }
-
-        this.organsRequired = newOrgans;
     }
 
     /**
@@ -463,27 +465,29 @@ public class Profile {
      * @throws OrganConflictException if there is a conflicting organ
      */
     public void addOrgansDonate(Set<String> organs)
-            throws IllegalArgumentException, OrganConflictException {
+            throws IllegalArgumentException {
         generateUpdateInfo("donatedOrgans");
 
-        Set<Organ> newOrgans = new HashSet<>();
+        try {
+            this.organs.clear();
 
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-            String action = "Profile " + this.getId() + " added " + organ + " to donate at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
+            for (String org : organs) {
+                String newOrgan = org.trim().toUpperCase().replace(" ", "_");
+                Organ organ = Organ.valueOf(newOrgan);
+                addOrgan(organ);
+                String action = "Profile " + this.getId() + " added " + organ + " to donate at " + LocalDateTime.now();
+                if (CommandUtils.getHistory().size() != 0) {
+                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                                CommandUtils.getHistory().size() - 1).clear();
+                    }
                 }
+                CommandUtils.currentSessionHistory.add(action);
+                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        } catch (OrganConflictException e) {
+            AlertController.invalidOrgan();
         }
-
-        this.organs = newOrgans;
     }
 
     public Set<Organ> getOrgansRequired() {

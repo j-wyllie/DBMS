@@ -263,7 +263,7 @@ public class CommandUtils {
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
-                } catch (OrganConflictException e) {
+                } catch (Exception e) {
                     System.out.println("A profile cannot be both a receiver and donor "
                             + "for the same organ");
                     System.out.println(e.getMessage());
