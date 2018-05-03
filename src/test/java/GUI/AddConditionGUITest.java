@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore
+//@Ignore
 public class AddConditionGUITest extends TestFxMethods {
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass

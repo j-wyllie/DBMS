@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
 
-@Ignore
+//@Ignore
 public class DonorEditProfileGUITest extends TestFxMethods {
     private final String errorRequiredFieldsString = "Error. Required fields were left blank.";
     private final String errorNotAllFieldsUpdatedString = "Error. Not all fields were updated.";

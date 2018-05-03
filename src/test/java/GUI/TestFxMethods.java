@@ -39,6 +39,7 @@ abstract class TestFxMethods extends ApplicationTest {
     @After()
     public void tearDown() throws Exception {
         FxToolkit.cleanupStages();
+        FxToolkit.cleanupApplication(guiMain);
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
