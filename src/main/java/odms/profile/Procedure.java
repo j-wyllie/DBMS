@@ -34,14 +34,12 @@ public class Procedure {
         }
     }
 
-    // getters
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }
     public ArrayList<Organ> getOrgansAffected() { return organsAffected; }
     public String getAffectsOrgansText() { return affectsOrgansText; }
 
-    // setters
     public void setSummary(String summary) { this.summary = summary; }
     public void setDate(LocalDate date) { this.date = date; }
     public void setLongDescription(String longDescription) { this.longDescription = longDescription; }

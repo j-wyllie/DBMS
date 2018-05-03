@@ -87,13 +87,8 @@ public class AddProcedureController {
 
             addProcedure(procedure);
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException|DateTimeException|ArrayIndexOutOfBoundsException e){
             warningLabel.setVisible(true);
-        } catch (DateTimeException e) {
-            warningLabel.setVisible(true);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            warningLabel.setVisible(true);
-
         }
     }
 
@@ -107,10 +102,6 @@ public class AddProcedureController {
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
-//        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-//        controller.refreshTable();
     }
 
     /**

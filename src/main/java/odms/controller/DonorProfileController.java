@@ -242,6 +242,10 @@ public class DonorProfileController {
 
     }
 
+    /**
+     * Removes the selected procedure and refreshes the table
+     * @param actionEvent
+     */
     @FXML
     public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
         Profile currentDonor;
@@ -549,8 +553,7 @@ public class DonorProfileController {
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

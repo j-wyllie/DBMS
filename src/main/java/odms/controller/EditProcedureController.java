@@ -46,8 +46,8 @@ public class EditProcedureController {
 
     private ObservableList<Organ> donatedOrgans;
 
-    protected Procedure currentProcedure;
-    protected DonorProfileController controller;
+    private Procedure currentProcedure;
+    private DonorProfileController controller;
 
     @FXML
     public void initialize(Procedure selectedProcedure, DonorProfileController selectedController) {
@@ -98,14 +98,8 @@ public class EditProcedureController {
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
-        try {
-            if(!controller.getSearchedDonor().equals(null)) {
-                affectedOrgansListView.setDisable(false);
-                affectedOrgansListView.setVisible(true);
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Not clinician");
-        }
+        affectedOrgansListView.setDisable(false);
+        affectedOrgansListView.setVisible(true);
         descEntry.setDisable(false);
         descEntry.setVisible(true);
         dateEntry.setDisable(false);
@@ -130,13 +124,7 @@ public class EditProcedureController {
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
-        try {
-            if(!controller.getSearchedDonor().equals(null)) {
-                currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Not clinician");
-        }
+        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
         String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action += oldValues+newValues;
         action = action +"END at " + LocalDateTime.now();
@@ -150,14 +138,8 @@ public class EditProcedureController {
         CommandUtils.currentSessionHistory.add(action);
         CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
-        try {
-            if(!controller.getSearchedDonor().equals(null)) {
-                affectedOrgansListView.setDisable(true);
-                affectedOrgansListView.setVisible(false);
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Not clinician");
-        }
+        affectedOrgansListView.setDisable(true);
+        affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
         dateEntry.setDisable(true);

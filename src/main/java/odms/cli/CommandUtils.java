@@ -415,8 +415,8 @@ public class CommandUtils {
                 String previous = action.substring(action.indexOf("PREVIOUS(")+9, action.indexOf(") OLD"));
                 String[] previousValues = previous.split(",");
                 String organs = action.substring(action.indexOf("[")+1, action.indexOf("] CURRENT"));
-                List<String> List = new ArrayList<String>(Arrays.asList(organs.split(",")));
-                ArrayList<Organ> organList = new ArrayList<Organ>();
+                List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
+                ArrayList<Organ> organList = new ArrayList<>();
                 System.out.println(organs);
                 for(String organ : List) {
                     System.out.println(organ);
@@ -507,31 +507,19 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     String newInfo = action.substring(action.indexOf("ird"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
-                }  else if (action.contains("EDITED")) {
-                    int id = Integer.parseInt(
-                            action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
+                }  else if(action.contains("EDITED")){
+                    int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    int procedurePlace = Integer.parseInt(
-                            action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
+                    int procedurePlace = Integer.parseInt(action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
                     String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
                     String[] previousValues = previous.split(",");
                     String organs;
-                    ArrayList<Organ> organList = new ArrayList<Organ>();
-                    System.out.println(action);
-                    System.out.println(action.indexOf("at"));
-                    if(action.indexOf("]")==-1){
-                        organs="";
-                    }else {
-                        System.out.println(action.indexOf("NEWORGANS["));
-                        System.out.println(action.indexOf("] at"));
-                        organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
-                        List<String> List = new ArrayList<String>(Arrays.asList(organs.split(",")));
-
-                        System.out.println(organs);
-                        for(String organ : List) {
-                            System.out.println(organ);
-                            organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
-                        }
+                    ArrayList<Organ> organList = new ArrayList<>();
+                    organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
+                    List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
+                    for(String organ : List){
+                        System.out.println(organ);
+                        organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
                     }
                     profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
                     profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));

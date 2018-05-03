@@ -71,8 +71,6 @@ public class ClinicianProcedureTests extends ApplicationTest {
      */
     @Test
     public void createProcedureTest() {
-
-
         //Open First Donor
         clickOn("#searchTab");
         doubleClickOn(row("#searchTable", 0));
@@ -97,7 +95,6 @@ public class ClinicianProcedureTests extends ApplicationTest {
         clickOn(row("#pendingProcedureTable", 0));
         clickOn("#deleteProcedureButton");
         closeCurrentWindow();
-
     }
 
     /**
