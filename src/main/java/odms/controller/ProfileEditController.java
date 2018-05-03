@@ -5,6 +5,7 @@ import static odms.controller.AlertController.DonorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.GuiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.OrganRequiredController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -266,7 +267,30 @@ public class ProfileEditController extends CommonController {
     }
 
     @FXML
+    private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow();
+        stage.setTitle("Organs to Donate");
+        setWindowType(stage.getTitle());
+        stage.show();
+    }
+
+    @FXML
     private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow();
+        stage.setTitle("Organs Required");
+        setWindowType(stage.getTitle());
+        stage.show();
+    }
+
+    @FXML
+    private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow();
+        stage.setTitle("Past Donations");
+        setWindowType(stage.getTitle());
+        stage.show();
+    }
+
+    private Stage showOrgansSelectionWindow() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
 
@@ -277,9 +301,7 @@ public class ProfileEditController extends CommonController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setTitle("Organs Required");
-
-        stage.show();
+        return stage;
     }
 
     /**
@@ -344,8 +366,8 @@ public class ProfileEditController extends CommonController {
 //                bloodPressureField.setText(currentProfile.getBloodPressure());
 //            }
 //            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-                organField.setText(currentProfile.getOrgansAsCSV());
-                donationsField.setText(currentProfile.getDonationsAsCSV());
+//                organField.setText(currentProfile.getOrgansAsCSV());
+//                donationsField.setText(currentProfile.getDonationsAsCSV());
             } catch (Exception e) {
                 e.printStackTrace();
             }

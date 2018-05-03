@@ -424,16 +424,21 @@ public class Profile {
         Set<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
+            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
             Organ organ = Organ.valueOf(newOrgan);
             newOrgans.add(organ);
+            String action = "Profile " + this.getId() + " added " + organ + " to donate at " + LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
 
-        if (Collections.disjoint(newOrgans, this.organs) && donor) {
-            this.organs.addAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        this.organs = newOrgans;
     }
 
     public Set<Organ> getOrgansRequired() {
@@ -445,12 +450,26 @@ public class Profile {
      * @param organs a set of organs that the profile has donated
      */
     public void addDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
+        generateUpdateInfo("pastDonations");
+
+        Set<Organ> newOrgans = new HashSet<>();
+
         for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
+            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
             Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.add(organ);
+            newOrgans.add(organ);
+            String action = "Profile " + this.getId() + " added " + organ + " to past donations " + LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
+
+        this.donatedOrgans = newOrgans;
     }
 
     /**

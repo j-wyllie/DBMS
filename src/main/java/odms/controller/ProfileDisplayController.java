@@ -138,6 +138,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
+    @FXML
+    private Label organsRequiredLabel;
+
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
 
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
@@ -426,12 +429,15 @@ public class ProfileDisplayController extends CommonController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
+            organsRequiredLabel.setText("");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
+                organsRequiredLabel.setText("Organs Required : " + currentDonor.getOrgansRequired().toString());
+
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());

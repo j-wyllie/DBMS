@@ -34,6 +34,8 @@ public class OrganRequiredController {
     @FXML
     private Button btnSave;
 
+    private static int windowType;
+
     @FXML
     public void initialize() {
         if (profile != null) {
@@ -54,9 +56,19 @@ public class OrganRequiredController {
      * Populate the ListView with the organs the profile currently requires.
      */
     private void buildOrgansRequired() {
+        Set<Organ> organs = new HashSet<>();
+        if (windowType == 1) {
+            organs = profile.getOrgans();
+        }
+        else if (windowType == 2) {
+            organs = profile.getOrgansRequired();
+        }
+        else if (windowType == 3) {
+            organs = profile.getDonatedOrgans();
+        }
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
-            for (Organ organ : profile.getOrgansRequired()) {
+            for (Organ organ : organs) {
                 observableListOrgansRequired.add(organ.getNamePlain());
             }
             Collections.sort(observableListOrgansRequired);
@@ -121,7 +133,15 @@ public class OrganRequiredController {
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
         Set<String> set = new HashSet<>(observableListOrgansRequired);
-        profile.setOrgansRequired(set);
+        if (windowType == 1) {
+            profile.addOrgansDonate(set);
+        }
+        else if (windowType == 2) {
+            profile.setOrgansRequired(set);
+        }
+        else if (windowType == 3) {
+            profile.addDonations(set);
+        }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
@@ -164,6 +184,16 @@ public class OrganRequiredController {
 
         viewOrgansAvailable.getSelectionModel().clearSelection();
         viewOrgansRequired.getSelectionModel().clearSelection();
+    }
+
+    public static void setWindowType(String type) {
+        if (type == "Organs to Donate") {
+            windowType = 1;
+        } else if (type == "Organs Required") {
+            windowType = 2;
+        } else if (type == "Past Donations") {
+            windowType = 3;
+        }
     }
 
 }

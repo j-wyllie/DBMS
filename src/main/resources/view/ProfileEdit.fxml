@@ -367,7 +367,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="organsLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                <Label fx:id="organsDonateLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -459,17 +459,7 @@
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="organField" layoutX="278.0" layoutY="259.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="donationsField" layoutX="278.0" layoutY="306.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                <Label fx:id="organsLabel1" layoutX="30.0" layoutY="278.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                <Label fx:id="organsRequiredLabel" layoutX="30.0" layoutY="278.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2" GridPane.rowIndex="7">
                                                    <font>
                                                       <Font size="22.0" />
                                                    </font>
@@ -477,7 +467,20 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin></Button>
+                                                <Button fx:id="btnOrgansDonate" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonateClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <Button fx:id="btnOrgansDonations" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonationsClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
                                                             </children>
                                                         </GridPane>
                                                     </children>
