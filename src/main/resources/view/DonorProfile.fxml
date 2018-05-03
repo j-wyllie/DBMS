@@ -26,7 +26,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.DonorProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -259,6 +259,11 @@
                                           <Insets bottom="30.0" left="20.0" />
                                        </GridPane.margin>
                                     </ToolBar>
+                                    <Text fx:id="editedText" fill="BLUE" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="30.0" left="30.0" />
+                                       </GridPane.margin>
+                                    </Text>
                                  </children>
                               </GridPane>
                            </children>
