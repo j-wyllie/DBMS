@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,9 +37,12 @@ abstract class TestFxMethods extends ApplicationTest {
 
     @After()
     public void tearDown() throws Exception {
+        FxToolkit.cleanupApplication(guiMain);
+        FxToolkit.cleanupStages();
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        sleep(500);
     }
 
     /**

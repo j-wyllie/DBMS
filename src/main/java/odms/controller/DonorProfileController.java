@@ -293,6 +293,7 @@ public class DonorProfileController {
 
         currentDonor.addDrug(new Drug(medicationName));
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshTable();
     }
 
@@ -387,7 +388,7 @@ public class DonorProfileController {
             if (drugs.get(i) != null) { currentDonor.moveDrugToHistory(drugs.get(i));}
         }
 
-
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshTable();
     }
 
@@ -410,6 +411,7 @@ public class DonorProfileController {
             if (drugs.get(i) != null) { currentDonor.moveDrugToCurrent(drugs.get(i));}
         }
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshTable();
     }
 
@@ -434,6 +436,7 @@ public class DonorProfileController {
             if (drugs.get(i) != null) { currentDonor.deleteDrug(drugs.get(i));}
         }
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshTable();
     }
 
@@ -540,7 +543,6 @@ public class DonorProfileController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
 
     }
@@ -552,37 +554,37 @@ public class DonorProfileController {
     @FXML
     private void refreshPageElements() {
 
-        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
-        ArrayList<Drug> allDrugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
-        allDrugs.addAll(convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()));
-
-        if (allDrugs.size() == 0) {
-            buttonMedicationHistoricToCurrent.setDisable(true);
-            buttonMedicationCurrentToHistoric.setDisable(true);
-            buttonDeleteMedication.setDisable(true);
-        } else {
-            buttonMedicationHistoricToCurrent.setDisable(false);
-            buttonMedicationCurrentToHistoric.setDisable(false);
-            buttonDeleteMedication.setDisable(false);
-        }
-
-
-        if (drugs.size() != 2) {
-            if (drugs.size() == 1) {
-                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-                if (toAdd != null) { drugs.add(toAdd); }
-            } else if (drugs.size() == 0) {
-                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
-            }
-
-
-            if (drugs.size() != 2) {
-                buttonShowDrugInteractions.setDisable(true);
-                return;
-            }
-        } else {
-            buttonShowDrugInteractions.setDisable(false);
-        }
+//        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+//        ArrayList<Drug> allDrugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+//        allDrugs.addAll(convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()));
+//
+//        if (allDrugs.size() == 0) {
+//            buttonMedicationHistoricToCurrent.setDisable(true);
+//            buttonMedicationCurrentToHistoric.setDisable(true);
+//            buttonDeleteMedication.setDisable(true);
+//        } else {
+//            buttonMedicationHistoricToCurrent.setDisable(false);
+//            buttonMedicationCurrentToHistoric.setDisable(false);
+//            buttonDeleteMedication.setDisable(false);
+//        }
+//
+//
+//        if (drugs.size() != 2) {
+//            if (drugs.size() == 1) {
+//                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
+//                if (toAdd != null) { drugs.add(toAdd); }
+//            } else if (drugs.size() == 0) {
+//                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+//            }
+//
+//
+//            if (drugs.size() != 2) {
+//                buttonShowDrugInteractions.setDisable(true);
+//                return;
+//            }
+//        } else {
+//            buttonShowDrugInteractions.setDisable(false);
+//        }
 
 
     }
