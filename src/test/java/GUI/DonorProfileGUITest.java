@@ -209,8 +209,6 @@ public class DonorProfileGUITest extends TestFxMethods {
         loginAsClinician();
         openSearchedProfile("Galil AR");
 
-        TableView searchTable = getTableView("#searchTable");
-
         clickOn("#medicalHistoryTab");
 
         TableView currentConditions = getTableView("#curConditionsTable");
@@ -262,7 +260,6 @@ public class DonorProfileGUITest extends TestFxMethods {
         openSearchedProfile("Galil AR");
 
         TableView searchTable = getTableView("#searchTable");
-        Profile profile = (Profile) searchTable.getSelectionModel().getSelectedItem();
 
         clickOn("#medicalHistoryTab");
 
@@ -289,8 +286,6 @@ public class DonorProfileGUITest extends TestFxMethods {
         openSearchedProfile("Galil AR");
 
         TableView searchTable = getTableView("#searchTable");
-        Profile profile = (Profile) searchTable.getSelectionModel().getSelectedItem();
-
         clickOn("#medicalHistoryTab");
 
         TableView pastConditions = getTableView("#pastConditionsTable");

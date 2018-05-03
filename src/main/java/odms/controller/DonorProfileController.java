@@ -7,10 +7,12 @@ import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -260,8 +262,9 @@ public class DonorProfileController {
             toggleChronicButton.setDisable(false);
         }
 
-    }
+        //refreshConditionTable();
 
+    }
 
 
     /**
@@ -290,20 +293,25 @@ public class DonorProfileController {
         } else {
             currentDonor = getCurrentProfile();
         }
-
-        try {
-            if (curConditionsTable.getItems() != null) { curConditionsTable.getItems().clear(); }
-            if (pastConditionsTable.getItems() != null) { pastConditionsTable.getItems().clear(); }
-        } catch (NullPointerException|UnsupportedOperationException e) {
-            System.out.println();
+//
+//        try {
+//            if (curConditionsTable.getItems() != null) { curConditionsTable.getItems().clear(); }
+//            if (pastConditionsTable.getItems() != null) { pastConditionsTable.getItems().clear(); }
+//        } catch (NullPointerException|UnsupportedOperationException e) {
+//            System.out.println();
+//        }
+        if (curConditionsObservableList != null) {
+            curConditionsObservableList = FXCollections.observableArrayList();
         }
-
-        //curConditionsObservableList.clear();
+        if (pastConditionsObservableList != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
 
         if (currentDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentDonor.getCurrentConditions());}
         if (currentDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentDonor.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
+
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         curDescriptionColumn.setCellFactory(cellFactory);
         curDescriptionColumn.setOnEditCommit(
@@ -347,6 +355,7 @@ public class DonorProfileController {
                 currentDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
+
             refreshConditionTable();
         });
         curConditionsTable.getColumns().setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
@@ -362,19 +371,19 @@ public class DonorProfileController {
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastDateCuredColumn.setCellFactory(cellFactoryDate);
 
-            pastDateCuredColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-                if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
-                        || t.getNewValue().isAfter(LocalDate.now())) {
-                } else {
-                    currentDonor.removeCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
-                    (t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setDateCured(t.getNewValue());
-                    currentDonor.addCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
-                }
-                refreshConditionTable();
-            });
+        pastDateCuredColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+            if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
+                    || t.getNewValue().isAfter(LocalDate.now())) {
+            } else {
+                currentDonor.removeCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+                (t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setDateCured(t.getNewValue());
+                currentDonor.addCondition(t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()));
+            }
+            refreshConditionTable();
+        });
 
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
@@ -394,7 +403,35 @@ public class DonorProfileController {
         });
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
-        forceSortOrder();
+        curConditionsTable.sortPolicyProperty().set(new Callback<TableView<Condition>, Boolean>() {
+            @Override
+            public Boolean call(TableView<Condition> param) {
+                Comparator<Condition> comparator = new Comparator<Condition>() {
+                    @Override
+                    public int compare(Condition o1, Condition o2) {
+                        if (o1.getChronic() && o2.getChronic()) {
+                            if (param.getComparator() == null) {
+                                return 0;
+                            } else {
+                                return param.getComparator().compare(o1,o2);
+                            }
+                        } else if (o1.getChronic()) {
+                            return -1;
+                        } else if (o2.getChronic()) {
+                            return 1;
+                        } else if (param.getComparator() == null) {
+                            return 0;
+                        } else {
+                            return param.getComparator().compare(o1,o2);
+                        }
+                    }
+                };
+                FXCollections.sort(curConditionsTable.getItems(), comparator);
+                return true;
+            }
+        });
+
+        //forceSortOrder();
         refreshPageElements();
 
     }
@@ -741,6 +778,8 @@ public class DonorProfileController {
                 SelectionMode.MULTIPLE
         );
 
+        curChronicColumn.setSortable(false);
+
 
         if(searchedDonor != null) {
             setPage(searchedDonor);
@@ -753,10 +792,6 @@ public class DonorProfileController {
 
 
         refreshPageElements();
-
-
-
-
 
         disableTableHeaderReorder();
         @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(curConditionsTable);
