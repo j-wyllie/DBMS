@@ -513,6 +513,7 @@ public class DonorProfileController {
         });
     }
 
+
     /**
      * Refresh the current and historic medication tables with the most up to date data
      */
