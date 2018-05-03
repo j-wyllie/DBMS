@@ -47,10 +47,10 @@ public class ProcedureEditController {
     private ObservableList<Organ> donatedOrgans;
 
     private Procedure currentProcedure;
-    private DonorProfileController controller;
+    private ProfileDisplayController controller;
 
     @FXML
-    public void initialize(Procedure selectedProcedure, DonorProfileController selectedController) {
+    public void initialize(Procedure selectedProcedure, ProfileDisplayController selectedController) {
         controller = selectedController;
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());

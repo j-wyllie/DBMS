@@ -33,7 +33,7 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 public class ProcedureAddController {
 
     private Profile searchedDonor;
-    private DonorProfileController controller;
+    private ProfileDisplayController controller;
 
     @FXML
     private TextField summaryField;
@@ -113,7 +113,7 @@ public class ProcedureAddController {
      * Run whenever this controller is called
      * @param controller
      */
-    public void init(DonorProfileController controller) {
+    public void init(ProfileDisplayController controller) {
         this.controller = controller;
         searchedDonor = controller.getSearchedDonor();
 

@@ -1,5 +1,6 @@
 package GUI;
 
+import java.util.concurrent.TimeoutException;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ import odms.profile.Profile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
@@ -25,13 +27,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ClinicianProcedureTests extends ApplicationTest {
+@Ignore
+public class ClinicianProcedureTests extends TestFxMethods {
 
     private GuiMain guiMain;
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
+    public static void headless() throws TimeoutException {
         GUITestSetup.headless();
     }
 
@@ -131,15 +134,7 @@ public class ClinicianProcedureTests extends ApplicationTest {
         assertTrue(tableLength == newTableLength+1);
         closeCurrentWindow();
     }
-
-    private TableView<?> getTableView(String tableSelector) {
-        Node node = lookup(tableSelector).queryTableView();
-        if (!(node instanceof TableView)) {
-        }
-        return (TableView<?>) node;
-    }
-
-    /**
+        /**
      * @param tableSelector Id of table that contains the row
      * @param row           row number
      * @return returns a table row
