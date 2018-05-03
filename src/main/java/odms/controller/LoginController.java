@@ -1,6 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
@@ -10,18 +11,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
-import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
-import odms.profile.Profile;
 import odms.user.User;
 
-public class LoginController {
+public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
@@ -43,43 +41,47 @@ public class LoginController {
     /**
      * Scene change to profile profile view if log in credentials are valid.
      * @param event clicking on the login button.
-     * @throws IOException
      */
     @FXML
-    private void handleLoginButtonClicked(ActionEvent event) throws IOException {
-
+    private void handleLoginButtonClicked(ActionEvent event) {
         try {
-            int userId = Integer.valueOf(usernameField.getText());
-            if(userId == 0){
-                currentUser = userDatabase.getClinician(0);
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
-                Scene newScene = new Scene(parent);
-                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                appStage.setScene(newScene);
-                appStage.show();
-            } else {
-                currentProfile = currentDatabase.getProfile(userId);
-                if (currentProfile != null) {
+            if (!usernameField.getText().equals("")) {
+                int userId = Integer.valueOf(usernameField.getText());
 
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+                if (userId == 0) {
+                    currentUser = userDatabase.getClinician(0);
+                    String scene = "/view/ClinicianProfile.fxml";
 
-                    controller.setLoggedInDonor(currentProfile);
-                    controller.initialize();
-                    Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-                    appStage.setScene(scene);
-                    appStage.show();
+                    showScene(event, scene);
                 } else {
-                    InvalidUsername();
+                    currentProfile = currentDatabase.getProfile(userId);
+
+                    if (currentProfile != null) {
+
+                        FXMLLoader fxmlLoader = new FXMLLoader(
+                                getClass().getResource("/view/ProfileDisplay.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        ProfileDisplayController controller = fxmlLoader.getController();
+
+                        controller.setLoggedInProfile(currentProfile);
+                        controller.initialize();
+                        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                        appStage.setScene(scene);
+                        appStage.show();
+                    } else {
+                        invalidUsername();
+                    }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (NumberFormatException e) {
+
+            invalidEntry();
+
+        } catch (Exception e) {
             e.printStackTrace();
 
-            InvalidUsername();
+            invalidUsername();
         }
     }
 
@@ -90,17 +92,21 @@ public class LoginController {
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/CreateProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ProfileCreate.fxml", true);
     }
 
     public static Profile getCurrentProfile() {
         return currentProfile;
     }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+
+    @FXML
+    private void onEnter(ActionEvent event) {
+        handleLoginButtonClicked(event);
+    }
+
+    public static void setCurrentDonor(Integer id) {
+        currentProfile = currentDatabase.getProfile(id);
+    }
     public static User getCurrentUser() { return currentUser; }
     public static void setCurrentUser(User currentUser) { LoginController.currentUser = currentUser; }
 }

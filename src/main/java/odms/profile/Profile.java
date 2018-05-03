@@ -1,5 +1,7 @@
 package odms.profile;
 
+import odms.cli.CommandUtils;
+
 import java.time.Period;
 import java.util.*;
 
@@ -12,6 +14,9 @@ import java.util.Set;
 
 public class Profile {
 
+    private Boolean donor;
+    private Boolean receiver;
+
     private String givenNames;
     private String lastNames;
     private LocalDate dateOfBirth;
@@ -22,8 +27,6 @@ public class Profile {
     private String bloodType;
     private String address;
     private String region;
-    private Boolean registered;
-    private Integer age;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -35,6 +38,7 @@ public class Profile {
 
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
+    private Set<Organ> organsRequired = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -293,10 +297,11 @@ public class Profile {
     /**
      * This will add a csv list to the list of organs
      * @param organs the organs to add as a csv
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansFromString(String organs) {
+    public void addOrgansFromString(String organs) throws OrganConflictException {
         String[] org = organs.split(",");
-        addOrgans(new HashSet<>(Arrays.asList(org)));
+        addOrgansDonate(new HashSet<>(Arrays.asList(org)));
     }
 
     /**
@@ -384,15 +389,67 @@ public class Profile {
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrgan(Organ organ) {
+    public void addOrgan(Organ organ) throws OrganConflictException {
+        if (this.organsRequired.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently receiver for " + organ,
+                    organ
+            );
+        }
         this.organs.add(organ);
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile wants to donate
-     * @param organs a set of organs they want to donate
+     * Add an organ to the organs required list.
+     * @param organ the organ the profile requires
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgans(Set<String> organs) throws IllegalArgumentException {
+    public void addOrganRequired(Organ organ) throws OrganConflictException {
+        if (this.organs.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently donor for  " + organ,
+                    organ
+            );
+        }
+        this.organsRequired.add(organ);
+    }
+
+    /**
+     * Consume a set of organs that the profile wants to receive and updates the profile to use this
+     * new set.
+     * @param organs the set of organs to be received
+     */
+    public void setOrgansRequired(Set<String> organs) {
+        generateUpdateInfo("organsRequired");
+
+        Set<Organ> newOrgans = new HashSet<>();
+
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+            String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        }
+
+        this.organsRequired = newOrgans;
+    }
+
+    /**
+     * Add a set of organs to the list of organs that the profile wants to donate
+     * @param organs the set of organs to donate
+     * @throws IllegalArgumentException if a bad argument is used
+     * @throws OrganConflictException if there is a conflicting organ
+     */
+    public void addOrgansDonate(Set<String> organs)
+            throws IllegalArgumentException, OrganConflictException {
         generateUpdateInfo("donatedOrgans");
 
         Set<Organ> newOrgans = new HashSet<>();
@@ -403,11 +460,17 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (Collections.disjoint(newOrgans, this.organs) && registered) {
-            this.organs.addAll(newOrgans);
+        if (Collections.disjoint(newOrgans, this.organs) && donor) {
+            for (String organ : organs) {
+                this.addOrgan(Organ.valueOf(organ));
+            }
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public Set<Organ> getOrgansRequired() {
+        return organsRequired;
     }
 
     /**
@@ -466,12 +529,28 @@ public class Profile {
         }
     }
 
+    public void setDonor(boolean donor) {
+        this.donor = donor;
+    }
+
+    public boolean isDonor() {
+        return donor;
+    }
+
+    public void setReceiver(boolean receiver) {
+        this.receiver = receiver;
+    }
+
+    public boolean isReceiver() {
+        return receiver;
+    }
+
     /**
      * Calculates and returns the profiles bmi
      * @return BMI
      */
     public Double calculateBMI() {
-        return this.weight / ((this.height / 100) * (this.height / 100));
+        return this.weight / ((this.height) * (this.height));
     }
 
     /**
@@ -734,12 +813,12 @@ public class Profile {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
+    public void setDonor(Boolean donor) {
+        this.donor = donor;
     }
 
-    public Boolean getRegistered() {
-        return registered;
+    public Boolean getDonor() {
+        return donor;
     }
 
     public String getPhone() {

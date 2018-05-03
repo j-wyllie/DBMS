@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import odms.data.ProfileDatabase;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public class CommandUtils {
@@ -249,7 +250,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgans(organSet);
+                    profile.addOrgansDonate(organSet);
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -262,6 +263,10 @@ public class CommandUtils {
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
+                } catch (OrganConflictException e) {
+                    System.out.println("A profile cannot be both a receiver and donor "
+                            + "for the same organ");
+                    System.out.println(e.getMessage());
                 }
             }
         } else {
@@ -376,7 +381,7 @@ public class CommandUtils {
                 Profile profile = currentDatabase.getProfile(id);
                 Set<String> organSet = new HashSet<>(Arrays.asList(
                     action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.addOrgans(organSet);
+                profile.addOrgansDonate(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -408,8 +413,8 @@ public class CommandUtils {
                     historyPosition -= 1;
                 }
             }
-            System.out.println("Action undo");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("No commands have been entered");
         }
     }
@@ -421,8 +426,6 @@ public class CommandUtils {
      */
     public static void redo(ProfileDatabase currentDatabase) {
         try {
-            System.out.println(historyPosition);
-
             if (historyPosition != currentSessionHistory.size()) {
                 historyPosition += 1;
                 String action;
@@ -465,7 +468,7 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     Set<String> organSet = new HashSet<>(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.addOrgans(organSet);
+                    profile.addOrgansDonate(organSet);
                 } else if (action.contains("donate")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);

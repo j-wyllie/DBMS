@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,14 +19,13 @@ import javafx.stage.Stage;
 import odms.profile.Profile;
 import odms.user.User;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
-public class ClinicianProfileController {
+public class ClinicianProfileController extends CommonController {
 
     //Get the default clinician
     protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
@@ -80,11 +78,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -111,11 +105,7 @@ public class ClinicianProfileController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ClinicianProfileEdit.fxml", true);
     }
 
     /**
@@ -150,7 +140,7 @@ public class ClinicianProfileController {
     }
 
     /**
-     * initializes and refreshes the search table
+     * Initializes and refreshes the search table
      * Adds a listener to each row so that when it is double clicked
      * a new donor window is opened.
      * Calls the setTooltipToRow function.
@@ -206,12 +196,12 @@ public class ClinicianProfileController {
         selectedDonor = donor;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            donorProfileController = fxmlLoader.<DonorProfileController>getController();
-            donorProfileController.setDonor(selectedDonor);
-            donorProfileController.initialize();
+            ProfileDisplayController controller = fxmlLoader.getController();
+            controller.setDonor(selectedDonor);
+            controller.initialize();
 
             Stage stage = new Stage();
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");

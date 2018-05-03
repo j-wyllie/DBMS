@@ -1,7 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
-import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -23,6 +22,8 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Condition;
@@ -37,14 +38,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 
-public class DonorProfileController {
+public class ProfileDisplayController extends CommonController {
 
-    protected Profile searchedDonor;
+    private Profile searchedDonor;
 
     @FXML
     private Label donorFullNameLabel;
@@ -124,7 +124,7 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
-    Boolean isClinician = false;
+    private Boolean isClinician = false;
 
     @FXML
     private TableView curConditionsTable;
@@ -568,11 +568,7 @@ public class DonorProfileController {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         LoginController.setCurrentDonor(null); //clears current donor
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
@@ -580,7 +576,7 @@ public class DonorProfileController {
      * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+    private void handleUndoButtonClicked(ActionEvent event) {
         undo();
     }
 
@@ -589,7 +585,7 @@ public class DonorProfileController {
      * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+    private void handleRedoButtonClicked(ActionEvent event) {
         redo();
     }
 
@@ -608,7 +604,7 @@ public class DonorProfileController {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/EditDonorProfile.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        EditDonorProfileController controller = fxmlLoader.<EditDonorProfileController>getController();
+        ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
         controller.setDonor(searchedDonor);
         controller.setIsClinician(isClinician);
         controller.initialize();
@@ -641,7 +637,7 @@ public class DonorProfileController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
+            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
@@ -666,10 +662,18 @@ public class DonorProfileController {
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
             }
-            heightLabel.setText(heightLabel.getText() + currentDonor.getHeight());
-            weightLabel.setText(weightLabel.getText() + currentDonor.getWeight());
-            phoneLabel.setText(phoneLabel.getText());
-            emailLabel.setText(emailLabel.getText());
+            if (currentDonor.getHeight() != null) {
+                heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
+            }
+            if (currentDonor.getWeight() != null) {
+                weightLabel.setText(weightLabel.getText() + currentDonor.getWeight() + "kg");
+            }
+            if (currentDonor.getPhone() != null) {
+                phoneLabel.setText(phoneLabel.getText() + currentDonor.getPhone());
+            }
+            if (currentDonor.getEmail() != null) {
+                emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
+            }
 
             if (currentDonor.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
@@ -681,7 +685,7 @@ public class DonorProfileController {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
             }
             if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
-                bmiLabel.setText(bmiLabel.getText() + Math.round(currentDonor.calculateBMI() * 100.00) / 100.00);
+                bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
             }
             if (currentDonor.getDateOfBirth() != null) {
                 ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
@@ -691,9 +695,9 @@ public class DonorProfileController {
             }
             organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
             donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
-            /*if (currentDonor.getSmoker() != null) {
+            if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
-            }*/
+            }
             /*if (currentDonor.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentDonor.getAlcoholConsumption());
             }*/
@@ -728,7 +732,7 @@ public class DonorProfileController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            InvalidUsername();
+            invalidUsername();
         }
 
     }
@@ -812,11 +816,11 @@ public class DonorProfileController {
 
     /**
      * sets the donor if it was logged in by a user
-     * @param donor
+     * @param profile
      */
-    public void setLoggedInDonor(Profile donor) {
+    public void setLoggedInProfile(Profile profile) {
         isClinician = false;
-        searchedDonor = donor;
+        searchedDonor = profile;
         //setPage(searchedDonor);
     }
 

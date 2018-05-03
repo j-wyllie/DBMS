@@ -1,9 +1,9 @@
 package odms.controller;
 
-import static odms.controller.AlertController.DonorCancelChanges;
-import static odms.controller.AlertController.DonorSaveChanges;
+import static odms.controller.AlertController.donorCancelChanges;
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.AlertController.GuiPopup;
+import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -22,16 +22,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
 
-public class EditDonorProfileController {
+public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
@@ -98,7 +99,16 @@ public class EditDonorProfileController {
     @FXML
     private TextField donationsField;
 
+    @FXML
+    private RadioButton smokerTrueRadio;
+
+    @FXML
+    private RadioButton smokerFalseRadio;
+
     private Boolean isClinician;
+
+    final ToggleGroup smokerGroup = new ToggleGroup();
+
 
     /**
      * Scene change to log in view.
@@ -106,15 +116,12 @@ public class EditDonorProfileController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showLoginScene(event);
     }
 
     /**
      * Button handler to undo last action.
+     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -124,6 +131,7 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to redo last undo action.
+     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -133,30 +141,28 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to make fields editable.
+     *
      * @param event clicking on the edit button.
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditDonorProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        showScene(event, "/view/ProfileEdit.fxml", true);
     }
 
     /**
      * Button handler to save the changes made to the fields.
+     *
      * @param event clicking on the save (tick) button.
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = DonorSaveChanges();
+        boolean saveBool = donorSaveChanges();
         boolean error = false;
 
         if (saveBool) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
-                GuiPopup("Error. Required fields were left blank.");
+                guiPopup("Error. Required fields were left blank.");
             } else {
                 String action = "Profile " +
                     currentProfile.getId() +
@@ -199,9 +205,15 @@ public class EditDonorProfileController {
                     error = true;
                 }
                 currentProfile.setGender(genderField.getText());
-
-                if (heightField.getText() == null) {
-                    currentProfile.setWeight(Double.valueOf(weightField.getText()));
+                try {
+                    if (!weightField.getText().isEmpty()) {
+                        currentProfile.setWeight(Double.valueOf(weightField.getText()));
+                    }
+                    if (!heightField.getText().isEmpty()) {
+                        currentProfile.setHeight(Double.valueOf(heightField.getText()));
+                    }
+                } catch(NumberFormatException e) {
+                    error = true;
                 }
                 currentProfile.setPhone(phoneField.getText());
                 currentProfile.setEmail(emailField.getText());
@@ -219,12 +231,12 @@ public class EditDonorProfileController {
                 }
                 try {
                     if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> set = new HashSet<>(
+                        Set<String> organSet = new HashSet<>(
                             Arrays.asList(organField.getText().split(", "))
                         );
-                        if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addOrgans(set);
+                        if (!organSet.isEmpty()) {
+                            currentProfile.setDonor(true);
+                            currentProfile.addOrgansDonate(organSet);
                         }
                     }
 
@@ -238,7 +250,7 @@ public class EditDonorProfileController {
                             Arrays.asList(donationsField.getText().split(", "))
                         );
                         if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
+                            currentProfile.setDonor(true);
                             currentProfile.addDonations(set);
                         }
                     }
@@ -246,7 +258,7 @@ public class EditDonorProfileController {
                     error = true;
                 }
 
-                currentProfile.setSmoker(Boolean.valueOf(smokerField.getText()));
+                currentProfile.setSmoker(smokerTrueRadio.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
                     currentProfile.getAttributesSummary() +
@@ -267,7 +279,7 @@ public class EditDonorProfileController {
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
                 if (error) {
-                    GuiPopup("Error. Not all fields were updated.");
+                    guiPopup("Error. Not all fields were updated.");
                 } else {
                     ProfileDataIO.saveData(getCurrentDatabase());
                     closeEditWindow(event);
@@ -278,11 +290,12 @@ public class EditDonorProfileController {
 
     /**
      * Button handler to cancel the changes made to the fields.
+     *
      * @param event clicking on the cancel (x) button.
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = DonorCancelChanges();
+        boolean cancelBool = donorCancelChanges();
 
         if (cancelBool) {
             closeEditWindow(event);
@@ -291,17 +304,18 @@ public class EditDonorProfileController {
 
     /**
      * closes the edit donor window and reopens the donor.
+     *
      * @param event either the cancel button event or the save button event
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
+        ProfileDisplayController controller = fxmlLoader.getController();
         if (isClinician) {
             controller.setDonor(currentProfile);
         } else {
-            controller.setLoggedInDonor(currentProfile);
+            controller.setLoggedInProfile(currentProfile);
         }
         controller.initialize();
 
@@ -309,6 +323,23 @@ public class EditDonorProfileController {
 
         appStage.setScene(scene);
         appStage.show();
+    }
+
+    @FXML
+    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        OrganRequiredController controller = fxmlLoader.getController();
+        controller.setProfile(currentProfile);
+        controller.initialize();
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setTitle("Organs Required");
+
+        stage.show();
     }
 
     /**
@@ -321,12 +352,14 @@ public class EditDonorProfileController {
         }
 
         if (currentProfile != null) {
+            smokerFalseRadio.setToggleGroup(smokerGroup);
+            smokerTrueRadio.setToggleGroup(smokerGroup);
             try {
                 donorFullNameLabel.setText(currentProfile.getFullName());
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 
@@ -352,10 +385,19 @@ public class EditDonorProfileController {
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());
                 }
-                heightField.setText(String.valueOf(currentProfile.getHeight()));
-                weightField.setText(String.valueOf(currentProfile.getWeight()));
-                phoneField.setText(currentProfile.getPhone());
-                emailField.setText(currentProfile.getEmail());
+                if (currentProfile.getHeight() != null){
+                    heightField.setText(String.valueOf(currentProfile.getHeight()));
+
+                }
+                if (currentProfile.getWeight() != null) {
+                    weightField.setText(String.valueOf(currentProfile.getWeight()));
+                }
+                if (currentProfile.getPhone() != null) {
+                    phoneField.setText(currentProfile.getPhone());
+                }
+                if (currentProfile.getEmail() != null) {
+                    emailField.setText(currentProfile.getEmail());
+                }
 
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
@@ -366,8 +408,12 @@ public class EditDonorProfileController {
                 if (currentProfile.getBloodType() != null) {
                     bloodTypeField.setText(currentProfile.getBloodType());
                 }
-                if (currentProfile.getSmoker() != null) {
-                    smokerField.setText(currentProfile.getSmoker().toString());
+                if (currentProfile.getSmoker() == null || !currentProfile.getSmoker()) {
+                    smokerFalseRadio.setSelected(true);
+                    smokerTrueRadio.setSelected(false);
+                } else {
+                    smokerTrueRadio.setSelected(true);
+                    smokerFalseRadio.setSelected(false);
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());

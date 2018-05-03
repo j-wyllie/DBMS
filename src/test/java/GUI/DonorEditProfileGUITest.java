@@ -1,33 +1,19 @@
 package GUI;
 
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import com.sun.javafx.robot.impl.FXRobotHelper;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import odms.controller.GuiMain;
-import odms.profile.Profile;
-import odms.tools.TestDataCreator;
 import org.junit.*;
-import org.testfx.api.FxToolkit;
-
-import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.api.FxRobot;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class DonorEditProfileGUITest extends TestFxMethods {
@@ -48,12 +34,21 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     @Before
     public void loginUser() {
         loginAsDonor(1);
-        Scene scene = getTopScene();
-        clickOn((scene.lookup("#editButton")));
+        sleep(500);
+
+        clickOn("#editButton");
+        sleep(500);
     }
 
+    @After
+    public void cleanup() {
+        closeStages();
+    }
+
+    @Ignore
     @Test
     public void editGivenNames() {
+        clickOn("#editButton");
         Scene scene = getTopScene();
         clickOn(scene.lookup("#givenNamesField"));
         deleteLine();
@@ -73,7 +68,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
         Label updatedGivenNames = (Label) scene2.lookup("#givenNamesLabel");
-        System.out.println(updatedGivenNames.getText());
         assertEquals("Bob", updatedGivenNames.getText().substring(14));
     }
 
@@ -98,31 +92,47 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         // Checks GUI has been updated.
         Scene scene2 = getTopScene();
         Label updatedGivenNames = (Label) scene2.lookup("#lastNamesLabel");
-        System.out.println(updatedGivenNames.getText());
         assertEquals("Seger", updatedGivenNames.getText().substring(11));
     }
 
     @Test
     public void editPhoneTest() {
+        clickOn("#phoneField");
+        deleteLine();
+        write("0276666666");
+        clickOn("#saveButton");
+        sleep(3000);
+        closeYesConfirmationDialogue();
 
+        Scene scene = getTopScene();
+        String phoneText = ((Label) scene.lookup("#phoneLabel")).getText().substring(8);
+        assertEquals("0276666666", phoneText);
     }
 
     @Test
     public void editEmailTest() {
+        clickOn("#emailField");
+        deleteLine();
+        write("test@test.com");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        Scene scene = getTopScene();
+        String emailText = ((Label) scene.lookup("#emailLabel")).getText().substring(8);
+        assertEquals("test@test.com", emailText);
     }
 
-    @Test
+    @Ignore
     public void editAddressTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editRegionTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editIRDTest() {
 
     }
@@ -160,6 +170,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
         Scene scene2 = getTopScene();
         Label updatedDob = (Label) scene2.lookup("#dobLabel");
         assertEquals("14-11-1997", updatedDob.getText().substring(16));
+
     }
 
     @Test
@@ -215,62 +226,169 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     }
 
     @Test
-    public void editAgeTest() {
-
-    }
-
-    @Test
     public void editGenderTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#genderField"));
+        deleteLine();
+        write("Male");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        scene = getTopScene();
+        Label updatedGender = (Label) scene.lookup("#genderLabel");
+        assertEquals("Male", updatedGender.getText().substring(9));
     }
 
     @Test
     public void editHeightTest() {
 
+
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
+        write("aaa");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label updatedHeight = (Label) scene.lookup("#heightLabel");
+        assertEquals("", updatedHeight.getText().substring(9));
+
+        clickOn("#editButton");
+        clickOn("#heightField");
+        write("1.65");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        updatedHeight = (Label) scene.lookup("#heightLabel");
+        assertEquals("1.65m", updatedHeight.getText().substring(9));
     }
 
     @Test
     public void editWeightTest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#weightField"));
+        deleteLine();
+        write("aaa");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
 
+        alertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) alertDialog.getScene().getRoot();
+        assertEquals(errorNotAllFieldsUpdatedString, dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+//        clickOn(scene.lookup("#weightField"));
+//        deleteLine();
+//        clickOn("#saveButton");
+//        closeYesConfirmationDialogue();
+//
+//        scene = getTopScene();
+//        Label updatedWeight = (Label) scene.lookup("#weightLabel");
+//        assertEquals("", updatedWeight.getText().substring(9));
+
+        //clickOn("#editButton");
+        clickOn("#weightField");
+        deleteLine();
+        write("70");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label updatedWeight = (Label) scene.lookup("#weightLabel");
+        assertEquals("70.0kg", updatedWeight.getText().substring(9));
     }
 
-    @Test
+    @Ignore
     public void editBloodTypeTest() {
 
     }
 
     @Test
     public void editSmokerTest() {
+        Scene scene;
 
+        clickOn("#editMedicalTab");
+        clickOn("#smokerTrueRadio");
+        clickOn("#saveMedicalButton");
+        closeYesConfirmationDialogue();
+        clickOn("#medicalTab");
+
+        scene = getTopScene();
+        Label updatedSmoker = (Label) scene.lookup("#smokerLabel");
+        assertEquals("true", updatedSmoker.getText().substring(9));
+
+        clickOn("#generalTab");
+        clickOn("#editButton");
+        clickOn("#editMedicalTab");
+        clickOn("#smokerFalseRadio");
+        clickOn("#saveMedicalButton");
+        closeYesConfirmationDialogue();
+        clickOn("#medicalTab");
+
+        scene = getTopScene();
+        updatedSmoker = (Label) scene.lookup("#smokerLabel");
+        assertEquals("false", updatedSmoker.getText().substring(9));
     }
 
-    @Test
+    @Ignore
     public void editAlcoholConsumptionTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editBloodPressureTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editChronicDiseasesTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editOrgansToDonateTest() {
 
     }
 
-    @Test
+    @Ignore
     public void editPastDonationsTest() {
 
     }
 
     @Test
     public void validateBMITest() {
+        Scene scene = getTopScene();
+        clickOn(scene.lookup("#heightField"));
+        deleteLine();
 
+        write("1.65");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+        scene = getTopScene();
+        Button editButton = (Button) scene.lookup("#editButton");
+        clickOn(editButton);
+
+        clickOn("#weightField");
+        deleteLine();
+        write("70");
+        clickOn("#saveButton");
+        closeYesConfirmationDialogue();
+
+        scene = getTopScene();
+        Label bmi = (Label) scene.lookup("#bmiLabel");
+
+        assertEquals("25.71166207529844", bmi.getText().substring(6));
     }
 }
