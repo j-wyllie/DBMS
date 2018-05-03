@@ -141,8 +141,7 @@ public class MedicationDataIO {
      * @param drug2 Name of second drug.
      * @param gender gender of profile request is made for.
      * @param age age of profile request is made for.
-     * @return Map<String, String> keys are valid interactions and values are duration of time after which an
-     * interaction may occur.
+     * @return Map
      * @throws IOException creation of URL may cause IOException
      */
     public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
