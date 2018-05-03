@@ -10,15 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import java.io.Console;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -225,10 +221,10 @@ public class DonorProfileController {
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/AddProcedure.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/view/ProcedureAdd.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            AddProcedureController controller = fxmlLoader.<AddProcedureController>getController();
+            ProcedureAddController controller = fxmlLoader.getController();
             controller.init(this);
 
             Stage stage = new Stage();
@@ -544,10 +540,10 @@ public class DonorProfileController {
     public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/EditProcedure.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            EditProcedureController controller = fxmlLoader.<EditProcedureController>getController();
+            ProcedureEditController controller = fxmlLoader.<ProcedureEditController>getController();
             controller.initialize(selectedProcedure, this);
 
             Stage stage = new Stage();

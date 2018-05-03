@@ -30,7 +30,7 @@ import java.util.List;
 
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-public class AddProcedureController {
+public class ProcedureAddController {
 
     private Profile searchedDonor;
     private DonorProfileController controller;
@@ -87,7 +87,7 @@ public class AddProcedureController {
 
             addProcedure(procedure);
 
-        } catch (IllegalArgumentException|DateTimeException|ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException |DateTimeException e) {
             warningLabel.setVisible(true);
         }
     }
@@ -104,6 +104,11 @@ public class AddProcedureController {
         stage.close();
     }
 
+    @FXML
+    private void onEnter(ActionEvent event) {
+        handleAddButtonClicked(event);
+    }
+
     /**
      * Run whenever this controller is called
      * @param controller
@@ -116,6 +121,5 @@ public class AddProcedureController {
         donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
         affectedOrgansListView.setItems(donatedOrgans);
     }
-
 
 }
