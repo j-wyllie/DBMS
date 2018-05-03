@@ -112,9 +112,6 @@ public class AddProcedureController {
 //        fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
 //        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
 //        controller.refreshTable();
-
-
-        System.out.println("----------------" + affectedOrgansListView.getSelectionModel().getSelectedItems() );
     }
 
     /**

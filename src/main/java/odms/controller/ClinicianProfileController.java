@@ -1,5 +1,8 @@
 package odms.controller;
 
+import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,29 +15,29 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import odms.profile.Profile;
 import odms.user.User;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController {
 
     //Get the default clinician
-    protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
+    private static User currentUser = getCurrentUser();
 
     @FXML
     private Label clinicianFullName;
 
     @FXML
     private Label givenNamesLabel;
-
-    @FXML
-    private Label lastNamesLabel;
 
     @FXML
     private Label staffIdLabel;
@@ -46,19 +49,19 @@ public class ClinicianProfileController {
     private Label regionLabel;
 
     @FXML
-    private TableView searchTable;
+    private TableView<Profile> searchTable;
 
     @FXML
-    private TableColumn fullNameColumn;
+    private TableColumn<Profile, String> fullNameColumn;
 
     @FXML
-    private TableColumn ageColumn;
+    private TableColumn<Profile, Integer> ageColumn;
 
     @FXML
-    private TableColumn genderColumn;
+    private TableColumn<Profile, String> genderColumn;
 
     @FXML
-    private TableColumn regionColumn;
+    private TableColumn<Profile, String> regionColumn;
 
     @FXML
     private TextField searchField;
@@ -108,7 +111,28 @@ public class ClinicianProfileController {
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
+        appStage.setTitle("Edit Profile");
         appStage.show();
+    }
+
+    /**
+     * Button handler to update donor table based on search results.
+     * @param event releasing a key on the keyboard.
+     */
+    @FXML
+    private void handleSearchDonors(KeyEvent event) {
+        updateTable();
+    }
+
+    /**
+     * Clears the searchTable and updates with search results of profiles from the fuzzy search.
+     */
+    private void updateTable() {
+        String searchString = searchField.getText();
+
+        searchTable.getItems().clear();
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
+        searchTable.setItems(donorObservableList);
     }
 
     /**
@@ -119,6 +143,7 @@ public class ClinicianProfileController {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
+        addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
 

@@ -53,7 +53,7 @@ public class EditProcedureController {
     public void initialize(Procedure selectedProcedure, DonorProfileController selectedController) {
         controller = selectedController;
         currentProcedure = selectedProcedure;
-        procedureSummaryLabel.setText(procedureSummaryLabel.getText() +" "+currentProcedure.getSummary());
+        procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText(procedureDateLabel.getText() +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText(procedureDescriptionLabel.getText() +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText(procedureOrgansLabel.getText() +" "+currentProcedure.getOrgansAffected().toString());
@@ -113,7 +113,7 @@ public class EditProcedureController {
         descEntry.setText(currentProcedure.getLongDescription());
         dateEntry.setText(currentProcedure.getDate().toString());
         summaryEntry.setText(currentProcedure.getSummary());
-        procedureSummaryLabel.setText("Procedure:");
+        procedureSummaryLabel.setText("");
         procedureDateLabel.setText("Date:");
         procedureDescriptionLabel.setText("Description:");
         procedureOrgansLabel.setText("Organs Affected:");
