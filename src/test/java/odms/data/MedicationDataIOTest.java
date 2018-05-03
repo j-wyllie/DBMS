@@ -15,9 +15,11 @@ public class MedicationDataIOTest {
     private String substring2;
     private String substring3;
     private String drugName;
+    private String drugName2;
     private Object[] expectedList1;
     private Object[] expectedList2;
     private Object[] expectedList3;
+    private String[] expectedList4;
 
     private String drugOne;
     private String drugTwo;
@@ -26,6 +28,7 @@ public class MedicationDataIOTest {
     private String drugFive;
     private String drugSix;
     private String drugSeven;
+    private String drugEight;
     private Map<String, String> interactions;
 
     @Before
@@ -49,6 +52,10 @@ public class MedicationDataIOTest {
         expectedList3 = new ArrayList<>(Arrays.asList("Hydralazine hydrochloride; hydrochlorothiazide; reserpine",
                 "Hydrochlorothiazide; reserpine", "Hydroflumethiazide; reserpine", "Reserpine")).toArray();
 
+        drugName2 = "Dolophine hydrochloride";
+        expectedList4 = new String[1];
+        expectedList4[0] = "Methadone hydrochloride";
+
         // Test values for drug interactions test.
         drugOne = "acetaminophen";
         drugTwo = "warfarin-sodium";
@@ -57,6 +64,7 @@ public class MedicationDataIOTest {
         drugFive = "maca";
         drugSix = null;
         drugSeven = "";
+        drugEight = "warfarin sodium";
         interactions = new HashMap<>();
 
         interactions.put("international normalised ratio increased", "1 - 2 years");
@@ -108,12 +116,18 @@ public class MedicationDataIOTest {
     }
 
     @Test
+    public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws IOException {
+        //Test for drug name with valid value and it has a space in drug name.
+        assertArrayEquals(expectedList4, getActiveIngredients(drugName2).toArray());
+    }
+
+    @Test
     public void testGetDrugInteractions() throws IOException {
+        // Test valid request
         Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugTwo, "male", 29);
         for (Map.Entry<String, String> entry : results.entrySet()) {
             assertTrue(results.containsKey(entry.getKey()));
             assertEquals(results.get(entry.getKey()), entry.getValue());
-            System.out.println(entry.getKey() + " / " + entry.getValue());
         }
 
         //Test for null drug string
@@ -131,5 +145,12 @@ public class MedicationDataIOTest {
         // Test for invalid drugs, should return empty map.
         results = MedicationDataIO.getDrugInteractions(drugThree, drugFour, "male", 29);
         assertTrue(results.isEmpty());
+
+        // Test valid request with drug with space in name
+        results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
+        for (Map.Entry<String, String> entry : results.entrySet()) {
+            assertTrue(results.containsKey(entry.getKey()));
+            assertEquals(results.get(entry.getKey()), entry.getValue());
+        }
     }
 }

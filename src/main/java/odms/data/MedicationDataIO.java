@@ -24,7 +24,8 @@ public class MedicationDataIO {
     public static ArrayList<String> getSuggestionList(String substring) throws IOException {
         ArrayList<String> suggestionList = new ArrayList<>();
 
-        if (!(substring == null || substring == "")) {
+        if (!(substring == null || substring.equals(""))) {
+            substring = replaceSpace(substring, false);
             String urlString = String
                     .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
             URL url = new URL(urlString);
@@ -46,7 +47,8 @@ public class MedicationDataIO {
     public static ArrayList<String> getActiveIngredients(String drugName) throws IOException {
         ArrayList<String> activeList = new ArrayList<>();
 
-        if (!(drugName == null || drugName == "")) {
+        if (!(drugName == null || drugName.equals(""))) {
+            drugName = replaceSpace(drugName, false);
             String urlString = String
                     .format("http://mapi-us.iterar.co/api/%s/substances.json", drugName);
             URL url = new URL(urlString);
@@ -58,6 +60,22 @@ public class MedicationDataIO {
             activeList = parseJSON(response, true);
         }
         return activeList;
+    }
+
+    /**
+     * Replaces space character in drug name with either UTF-8 encoding or the dash, '-', character. Depends on value of
+     * isInteractions which one is used.
+     * @param drug name of drug to be used in http request.
+     * @param isInteraction boolean that identifies if drug will be used in drug interaction request or not.
+     * @return drug name with space replaced with correct replacement.
+     */
+    private static String replaceSpace(String drug, Boolean isInteraction) {
+        if (!isInteraction) {
+            return drug.replace(" ", "%20");
+        } else {
+            return drug.replace(" ", "-");
+        }
+
     }
 
     /**
@@ -101,7 +119,6 @@ public class MedicationDataIO {
     private static ArrayList<String> parseJSON(StringBuffer content, boolean ingredients) {
         ArrayList<String> responseList = new ArrayList<>();
         JsonParser parser = new JsonParser();
-
         if (ingredients) {
             JsonArray results = parser.parse(content.toString()).getAsJsonArray();
             for (JsonElement value : results) {
@@ -134,6 +151,8 @@ public class MedicationDataIO {
 
 
         if (!(drug1 == null || drug1.equals("") || drug2 == null || drug2.equals(""))) {
+            drug1 = replaceSpace(drug1, true);
+            drug2 = replaceSpace(drug2, true);
             String urlString = String
                     .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug1, drug2);
             URL url = new URL(urlString);
