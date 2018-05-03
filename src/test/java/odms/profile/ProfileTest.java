@@ -555,4 +555,253 @@ public class ProfileTest {
         String bloodPressure = testProfile.getBloodPressure();
         assertEquals(bloodPressure, "120/80");
     }
+
+    /**
+     * Tests adding some procedures to the profile and getting all procedures in the process
+     */
+    @Test
+    public void testAddProcedureGetAllProcedures() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+
+        assertEquals(testProfile.getAllProcedures().contains(procedure0), true);
+        assertEquals(testProfile.getAllProcedures().contains(procedure1), true);
+    }
+
+    /**
+     * Tests deleting a procedure of the user
+     */
+    @Test
+    public void testDeleteProcedure() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+
+        testProfile.removeProcedure(procedure0);
+
+        assertEquals(testProfile.getAllProcedures().size(), 1);
+    }
+
+    /**
+     * Tests getting all previous procedures
+     */
+    @Test
+    public void testGetPreviousProcedure() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
+        Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+        testProfile.addProcedure(procedure2);
+
+        assertEquals(testProfile.getPreviousProcedures().contains(procedure1), true);
+        assertEquals(testProfile.getPreviousProcedures().size(), 1);
+    }
+
+    /**
+     * Tests getting all pending procedures
+     */
+    @Test
+    public void testGetPendingProcedure() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
+        Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+        testProfile.addProcedure(procedure2);
+
+        assertEquals(testProfile.getPendingProcedures().contains(procedure0), true);
+        assertEquals(testProfile.getPendingProcedures().contains(procedure2), true);
+        assertEquals(testProfile.getPendingProcedures().size(), 2);
+    }
+
+    /**
+     * Tests the isPreviousProcedure function of Profile
+     */
+    @Test
+    public void testIsPendingProcedure() {
+        Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2012", "Will correct the patients vision");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure0);
+        testProfile.addProcedure(procedure1);
+
+        assertEquals(testProfile.isPreviousProcedure(procedure0), false);
+        assertEquals(testProfile.isPreviousProcedure(procedure1), true);
+    }
+
+    /**
+     * Tests that affected organs can be added correctly to a procedure
+     */
+    @Test
+    public void testAddAffectedOrgans() {
+        // create a profile and add a procedure
+        Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure);
+
+        testProfile.addDonationFromString("heart");
+        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
+
+        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), true);
+    }
+
+    /**
+     * Tests that adding an affected organ to a procedure that from a profile that does not have that organ listed as donated throws the correct exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalAddAffectedOrgan() {
+        // create a profile and add a procedure
+        Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure);
+
+        Organ testOrgan = Organ.HEART;
+        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, testOrgan);
+
+        testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART);
+    }
+
+    /**
+     * Tests that affected organs can be added removed from a procedure
+     */
+    @Test
+    public void testRemoveAffectedOrgans() {
+        // create a profile and add a procedure
+        Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+
+        ArrayList<String> donorAttr = new ArrayList<String>();
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        try {
+            testProfile = new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.addProcedure(procedure);
+
+        // add heart and liver
+        testProfile.addDonationFromString("heart, liver");
+        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
+        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.LIVER);
+
+        // remove the heart
+        testProfile.getAllProcedures().get(0).removeAffectedOrgen(Organ.HEART);
+
+        // test that heart has been removed
+        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), false);
+        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.LIVER), true);
+    }
+
 }

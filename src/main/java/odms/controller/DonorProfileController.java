@@ -6,6 +6,10 @@ import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import com.google.gson.Gson;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -14,6 +18,8 @@ import javafx.scene.text.Text;
 import java.io.Console;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
+import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.io.IOException;
@@ -32,7 +38,7 @@ import javafx.stage.Stage;
 
 public class DonorProfileController {
 
-    protected Profile searchedDonor;
+    protected Profile searchedDonor = null;
 
     @FXML
     private Label donorFullNameLabel;
@@ -112,6 +118,36 @@ public class DonorProfileController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private Button addNewProcedureButton;
+
+    @FXML
+    private Button deleteProcedureButton;
+
+    @FXML
+    private TableView pendingProcedureTable;
+
+    @FXML
+    private TableView previousProcedureTable;
+
+    @FXML
+    private TableColumn pendingSummaryColumn;
+
+    @FXML
+    private TableColumn previousSummaryColumn;
+
+    @FXML
+    private TableColumn pendingDateColumn;
+
+    @FXML
+    private TableColumn previousDateColumn;
+
+    @FXML
+    private TableColumn pendingAffectsColumn;
+
+    @FXML
+    private TableColumn previousAffectsColumn;
+
     private Boolean isClinician = false;
 
     /**
@@ -126,6 +162,10 @@ public class DonorProfileController {
     public void editedTextArea() {
         editedText.setText("The profile was successfully edited.");
     }
+    private ObservableList<Procedure> previousProceduresObservableList;
+    private ObservableList<Procedure> pendingProceduresObservableList;
+
+
 
     /**
      * Scene change to log in view.
@@ -180,12 +220,61 @@ public class DonorProfileController {
         appStage.setTitle("Edit Profile");
         appStage.show();
     }
+
+    @FXML
+    public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/AddProcedure.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            AddProcedureController controller = fxmlLoader.<AddProcedureController>getController();
+            controller.init(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a Procedure");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+
+    }
+
+    /**
+     * Removes the selected procedure and refreshes the table
+     * @param actionEvent
+     */
+    @FXML
+    public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        Procedure procedure = (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
+        if (procedure == null) { procedure = (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem(); }
+        if (procedure == null) { return; }
+
+        currentDonor.removeProcedure(procedure);
+
+        refreshProcedureTable();
+
+    }
+
     /**
      * sets all of the items in the fxml to their respective values
      * @param currentDonor donors profile
      */
     @FXML
     private void setPage(Profile currentDonor){
+
+        makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
+
+        refreshProcedureTable();
 
         try {
             donorFullNameLabel
@@ -292,12 +381,135 @@ public class DonorProfileController {
     }
 
     /**
-     * hides items that shouldn't be visible to either a donor or clinician
+     * Initializes and refreshes the previous and pending procedure tables
+     */
+    @FXML
+    private void makeProcedureTable(ArrayList<Procedure> previousProcedures, ArrayList<Procedure> pendingProcedures) {
+        //curDiseasesTable.getSortOrder().add(curChronicColumn);
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
+
+        if (previousProcedures != null) {
+            previousProceduresObservableList = FXCollections.observableArrayList(previousProcedures);}
+        else {
+            previousProceduresObservableList = FXCollections.observableArrayList(); }
+        if (pendingProcedures != null) {
+            pendingProceduresObservableList = FXCollections.observableArrayList(pendingProcedures);}
+        else {
+            pendingProceduresObservableList = FXCollections.observableArrayList(); }
+
+        if (previousProcedures != null) {
+            refreshProcedureTable();
+        }
+        pendingProcedureTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                try {
+                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        previousProcedureTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                try {
+                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * Refreshes the procedure table, updating it with the current values
+     * pendingProcedureTable;
+     */
+    @FXML
+    public void refreshProcedureTable() {
+        Profile currentDonor;
+        if (searchedDonor != null) {
+            currentDonor = searchedDonor;
+        } else {
+            currentDonor = getCurrentProfile();
+        }
+
+        if (previousProceduresObservableList == null) {
+            previousProceduresObservableList = FXCollections.observableArrayList();
+        }
+        if (pendingProceduresObservableList == null) {
+            pendingProceduresObservableList = FXCollections.observableArrayList();
+        }
+
+        // update all procedures
+        if (currentDonor.getAllProcedures() != null) {
+            for (Procedure procedure : currentDonor.getAllProcedures()) {
+                procedure.update();
+            }
+        }
+
+        pendingProcedureTable.getItems().clear();
+        previousProcedureTable.getItems().clear();
+        if (currentDonor.getPendingProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
+        if (currentDonor.getPreviousProcedures() != null) {
+            previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());
+        } else {
+            return;
+        }
+
+        previousProcedureTable.setItems(previousProceduresObservableList);
+        previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
+        previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        previousAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
+        previousProcedureTable.getColumns().setAll(previousSummaryColumn, previousDateColumn, previousAffectsColumn);
+
+        pendingProcedureTable.setItems(pendingProceduresObservableList);
+        pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
+        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        pendingAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
+        pendingProcedureTable.getColumns().setAll(pendingSummaryColumn, pendingDateColumn, pendingAffectsColumn);
+
+        forceSortProcedureOrder();
+    }
+
+    /**
+     * Forces the sort order of the procedure table so that most recent procedures are always at the top
+     */
+    @FXML
+    private void forceSortProcedureOrder() {
+        previousProcedureTable.getSortOrder().clear();
+        previousProcedureTable.getSortOrder().add(previousDateColumn);
+    }
+
+
+    /**
+     * Hides items that shouldn't be visible to either a donor or clinician
      */
     @FXML
     private void hideItems() {
         if(isClinician){
             logoutButton.setVisible(false);
+
+            addNewProcedureButton.setDisable(false);
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setDisable(false);
+            deleteProcedureButton.setVisible(true);
+        } else {
+            addNewProcedureButton.setDisable(true);
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setDisable(true);
+            deleteProcedureButton.setVisible(false);
         }
     }
 
@@ -310,6 +522,7 @@ public class DonorProfileController {
             Profile currentDonor = getCurrentProfile();
             hideItems();
             setPage(currentDonor);
+            makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
         }
     }
 
@@ -323,5 +536,31 @@ public class DonorProfileController {
         hideItems();
         setPage(searchedDonor);
     }
+
+    /**
+     * Creates a new edit procedure window
+     */
+    @FXML
+    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/EditProcedure.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            EditProcedureController controller = fxmlLoader.<EditProcedureController>getController();
+            controller.initialize(selectedProcedure, this);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    public Profile getSearchedDonor() { return searchedDonor; }
 
 }

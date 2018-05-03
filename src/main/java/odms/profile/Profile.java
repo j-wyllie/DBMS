@@ -34,6 +34,8 @@ public class Profile {
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
+    private ArrayList<Procedure> procedures = new ArrayList<>();
+
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
 
@@ -53,6 +55,7 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
+        procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -180,6 +183,74 @@ public class Profile {
         }
         else {
             throw new IllegalArgumentException();
+        }
+    }
+
+
+    /**
+     * Add a procedure to the current profile
+     * @param procedure
+     */
+    public void addProcedure(Procedure procedure) {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
+        procedures.add(procedure); }
+
+    /**
+     * Remove a procedure from the current profile
+     * @param procedure
+     */
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+
+    /**
+     * Gets all of the profiles procedures
+     * @return all procedures
+     */
+    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+
+    /**
+     * Gets all the previous procedures
+     * @return previous procedures
+     */
+    public ArrayList<Procedure> getPreviousProcedures() {
+        ArrayList<Procedure> prevProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isBefore(LocalDate.now())) {
+                    prevProcedures.add(procedure);
+                }
+            }
+        }
+        return prevProcedures;
+    }
+
+    /**
+     * Gets all the pending procedures
+     * @return pending procedures
+     */
+    public ArrayList<Procedure> getPendingProcedures() {
+        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isAfter(LocalDate.now())) {
+                    pendingProcedures.add(procedure);
+                }
+            }
+        }
+        return pendingProcedures;
+    }
+
+    /**
+     * Given a procedure, will return whether the procedure has past
+     * @param procedure
+     * @return whether the procedure has past
+     */
+    public boolean isPreviousProcedure(Procedure procedure) {
+        if (procedure.getDate().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            return false;
         }
     }
 
