@@ -94,7 +94,12 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            setGivenAttribute(parts);
+            if(parts.length==1) {
+                String[] newParts = {parts[0], ""};
+                setGivenAttribute(newParts);
+            } else {
+                setGivenAttribute(parts);
+            }
         }
     }
 
@@ -105,7 +110,10 @@ public class Profile {
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        String value = null;
+        if(!parts[1].equals(null)) {
+            value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        }
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             setGivenNames(value);
@@ -144,7 +152,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null")) {
+            if(value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -167,15 +175,15 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            else {
+                setBloodPressureSystolic(Integer.valueOf(value));
             }
-            setBloodPressureSystolic(Integer.valueOf(value));
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            else {
+                setBloodPressureDiastolic(Integer.valueOf(value));
             }
-            setBloodPressureDiastolic(Integer.valueOf(value));
         }else if (attrName.equals("phone")) {
             setPhone(value);
         }else if (attrName.equals("email")) {
@@ -641,8 +649,10 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        generateUpdateInfo("blood-type");
-        this.bloodType = bloodType;
+        if(bloodType != null) {
+            generateUpdateInfo("blood-type");
+            this.bloodType = bloodType;
+        }
     }
 
     public String getAddress() {

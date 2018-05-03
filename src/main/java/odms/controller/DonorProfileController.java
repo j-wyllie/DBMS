@@ -1,6 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -186,6 +187,13 @@ public class DonorProfileController {
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         undo();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        appStage.setScene(scene);
+        appStage.show();
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
     }
 
     /**
@@ -195,6 +203,13 @@ public class DonorProfileController {
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         redo();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/DonorProfile.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        appStage.setScene(scene);
+        appStage.show();
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
     }
 
     /**

@@ -401,6 +401,7 @@ public class CommandUtils {
                 int id = Integer.parseInt(
                     action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
+                System.out.println(action);
                 String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
                 profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
                 if (historyPosition != 0) {
@@ -451,6 +452,7 @@ public class CommandUtils {
     public static void redo(ProfileDatabase currentDatabase) {
         try {
             System.out.println(historyPosition);
+            System.out.println(currentSessionHistory.size());
 
             if (historyPosition != currentSessionHistory.size()) {
                 historyPosition += 1;
@@ -460,8 +462,11 @@ public class CommandUtils {
                     action = currentSessionHistory.get(historyPosition);
                     historyPosition = 0;
                 } else {
+                    System.out.println(historyPosition);
+                    System.out.println(currentSessionHistory);
                     action = currentSessionHistory.get(historyPosition);
                 }
+                System.out.println(action);
                 action = action.substring(0, action.indexOf(" at"));
                 if (action.contains("added")) {
                     int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
