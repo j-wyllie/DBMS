@@ -5,12 +5,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -36,6 +38,8 @@ public class EditProcedureController {
     private Button saveButton;
     @FXML
     private TextField summaryEntry;
+    @FXML
+    private Button editButton;
 
     @FXML
     private ListView<Organ> affectedOrgansListView;
@@ -67,18 +71,26 @@ public class EditProcedureController {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
             affectedOrgansListView.setItems(donatedOrgans);
+            editButton.setVisible(true);
         } catch (NullPointerException e){
             System.out.println("Not clinician");
+            editButton.setVisible(false);
         }
 
     }
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
         undo();
+        descEntry.setText(currentProcedure.getLongDescription());
+        dateEntry.setText(currentProcedure.getDate().toString());
+        summaryEntry.setText(currentProcedure.getSummary());
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
         redo();
+        descEntry.setText(currentProcedure.getLongDescription());
+        dateEntry.setText(currentProcedure.getDate().toString());
+        summaryEntry.setText(currentProcedure.getSummary());
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
@@ -108,6 +120,9 @@ public class EditProcedureController {
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
+        String action = "Donor "+controller.getSearchedDonor().getId()+" PROCEDURE "+controller.getSearchedDonor().getAllProcedures().indexOf(currentProcedure)+" EDITED";
+        String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
+        System.out.println(action);
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
@@ -118,6 +133,18 @@ public class EditProcedureController {
         } catch (NullPointerException e) {
             System.out.println("Not clinician");
         }
+        String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
+        action += oldValues+newValues;
+        action = action +" at " + LocalDateTime.now();
+        System.out.println(action);
+        if (CommandUtils.getHistory().size() != 0) {
+            if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                        CommandUtils.getHistory().size() - 1).clear();
+            }
+        }
+        CommandUtils.currentSessionHistory.add(action);
+        CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         try {
             if(!controller.getSearchedDonor().equals(null)) {
