@@ -147,6 +147,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private Label receiverStatusLabel;
+
     @FXML private Button buttonViewActiveIngredients;
 
     @FXML private Text textActiveIngredients;
@@ -422,9 +425,13 @@ public class ProfileDisplayController extends CommonController {
             donorFullNameLabel
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
+            receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 donorStatusLabel.setText("Donor Status: Registered");
+            }
+            if (currentDonor.isReceiver()) {
+                receiverStatusLabel.setText("Receiver Status: Registered");
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
