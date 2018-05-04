@@ -5,9 +5,9 @@
     <groupId>seng302</groupId>
     <artifactId>odms</artifactId>
     <packaging>jar</packaging>
-    <version>0.2</version>
+    <version>0.3</version>
     <name>Organ Donor Management System</name>
-    <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-4</url>
+    <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
