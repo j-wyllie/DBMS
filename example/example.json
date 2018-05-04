@@ -290,6 +290,22 @@
         "ird updated at 03:30 PM 03-05-2018",
         "dob updated at 03:30 PM 03-05-2018"
       ],
+      "procedures": [
+        {
+          "AFFECTED_ORGAN_TEXT": "Affects Donations",
+          "summary": "fdgsfdg",
+          "date": {
+            "year": 2000,
+            "month": 11,
+            "day": 11
+          },
+          "longDescription": "",
+          "organsAffected": [
+            "KIDNEY"
+          ],
+          "affectsOrgansText": "Affects Donations"
+        }
+      ],
       "organs": [
         "INTESTINE",
         "MIDDLE_EAR",

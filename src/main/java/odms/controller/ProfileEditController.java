@@ -225,7 +225,36 @@ public class ProfileEditController extends CommonController {
                         bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
                 }
+                try {
+                    if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
+                        Set<String> organSet = new HashSet<>(
+                            Arrays.asList(organField.getText().split(", "))
+                        );
+                        if (!organSet.isEmpty()) {
+                            currentProfile.setRegistered(true);
+                            currentProfile.addOrgansDonate(organSet);
+                        }
+                    }
 
+                } catch (Exception e) {
+                    error = true;
+                }
+
+                try {
+                    if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
+                        Set<String> set = new HashSet<>(
+                            Arrays.asList(donationsField.getText().split(", "))
+                        );
+                        if (!set.isEmpty()) {
+                            currentProfile.setRegistered(true);
+                            currentProfile.addDonations(set);
+                        }
+                    }
+                } catch (Exception e) {
+                    error = true;
+                }
+
+                currentProfile.setSmoker(smokerTrueRadio.isSelected());
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
@@ -342,7 +371,7 @@ public class ProfileEditController extends CommonController {
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 

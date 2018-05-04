@@ -33,6 +33,7 @@ import org.controlsfx.control.table.TableFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -40,16 +41,13 @@ import static odms.controller.UndoRedoController.undo;
 public class ClinicianProfileController extends CommonController {
 
     //Get the default clinician
-    protected static User currentUser = GuiMain.getUserDatabase().getClinician(0);
+    private static User currentUser = getCurrentUser();
 
     @FXML
     private Label clinicianFullName;
 
     @FXML
     private Label givenNamesLabel;
-
-    @FXML
-    private Label lastNamesLabel;
 
     @FXML
     private Label staffIdLabel;
@@ -123,7 +121,12 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        showScene(event, "/view/ClinicianProfileEdit.fxml", true);
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.setTitle("Edit Profile");
+        appStage.show();
     }
 
     /**
@@ -154,6 +157,7 @@ public class ClinicianProfileController extends CommonController {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
+        addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
 

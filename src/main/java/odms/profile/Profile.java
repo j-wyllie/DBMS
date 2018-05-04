@@ -2,9 +2,9 @@ package odms.profile;
 
 import odms.cli.CommandUtils;
 
+import odms.medications.Drug;
 
 import odms.controller.AlertController;
-import odms.medications.Drug;
 
 import java.time.Period;
 import java.util.Arrays;
@@ -32,7 +32,6 @@ public class Profile {
     private String bloodType;
     private String address;
     private String region;
-    private Boolean registered;
 
     private Boolean smoker;
     private String alcoholConsumption;
@@ -42,9 +41,13 @@ public class Profile {
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
+    private ArrayList<Procedure> procedures = new ArrayList<>();
+
     private Set<Organ> organs = new HashSet<>();
     private Set<Organ> donatedOrgans = new HashSet<>();
     private Set<Organ> organsRequired = new HashSet<>();
+
+    private ArrayList<Condition> conditions = new ArrayList<>();
 
     private String phone;
     private String email;
@@ -69,6 +72,7 @@ public class Profile {
         currentMedications = new ArrayList<>();
         historyOfMedication = new ArrayList<>();
         medicationTimestamps = new ArrayList<>();
+        procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -94,7 +98,7 @@ public class Profile {
         attr.add("last-names=\"" + lastNames + "\"");
         attr.add("ird=\"" + irdNumber + "\"");
         attr.add("dob=\"" + dob + "\"");
-        this.setReceiver(false);
+        this.setReceiver(false); // TODO decide behaviour
         setExtraAttributes(attr);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -111,7 +115,12 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            setGivenAttribute(parts);
+            if(parts.length==1) {
+                String[] newParts = {parts[0], ""};
+                setGivenAttribute(newParts);
+            } else {
+                setGivenAttribute(parts);
+            }
         }
     }
 
@@ -122,7 +131,10 @@ public class Profile {
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        String value = null;
+        if(!parts[1].equals(null)) {
+            value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        }
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             setGivenNames(value);
@@ -161,7 +173,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null")) {
+            if(value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -184,15 +196,15 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            else {
+                setBloodPressureSystolic(Integer.valueOf(value));
             }
-            setBloodPressureSystolic(Integer.valueOf(value));
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            else {
+                setBloodPressureDiastolic(Integer.valueOf(value));
             }
-            setBloodPressureDiastolic(Integer.valueOf(value));
         }else if (attrName.equals("phone")) {
             setPhone(value);
         }else if (attrName.equals("email")) {
@@ -200,6 +212,73 @@ public class Profile {
         }
         else {
             throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Add a procedure to the current profile
+     * @param procedure
+     */
+    public void addProcedure(Procedure procedure) {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
+        procedures.add(procedure); }
+
+    /**
+     * Remove a procedure from the current profile
+     * @param procedure
+     */
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+
+    /**
+     * Gets all of the profiles procedures
+     * @return all procedures
+     */
+    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+
+    /**
+     * Gets all the previous procedures
+     * @return previous procedures
+     */
+    public ArrayList<Procedure> getPreviousProcedures() {
+        ArrayList<Procedure> prevProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isBefore(LocalDate.now())) {
+                    prevProcedures.add(procedure);
+                }
+            }
+        }
+        return prevProcedures;
+    }
+
+    /**
+     * Gets all the pending procedures
+     * @return pending procedures
+     */
+    public ArrayList<Procedure> getPendingProcedures() {
+        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isAfter(LocalDate.now())) {
+                    pendingProcedures.add(procedure);
+                }
+            }
+        }
+        return pendingProcedures;
+    }
+
+    /**
+     * Given a procedure, will return whether the procedure has past
+     * @param procedure
+     * @return whether the procedure has past
+     */
+    public boolean isPreviousProcedure(Procedure procedure) {
+        if (procedure.getDate().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -471,6 +550,15 @@ public class Profile {
         try {
             this.organs.clear();
 
+        for (String org : organs) {
+            String newOrgan = org.trim().toUpperCase();
+            Organ organ = Organ.valueOf(newOrgan);
+            newOrgans.add(organ);
+        }
+
+        if (Collections.disjoint(newOrgans, this.organs) && registered) {
+            for (String organ : organs) {
+                this.addOrgan(Organ.valueOf(organ));
             for (String org : organs) {
                 String newOrgan = org.trim().toUpperCase().replace(" ", "_");
                 Organ organ = Organ.valueOf(newOrgan);
@@ -564,13 +652,6 @@ public class Profile {
         }
     }
 
-    public void setDonor(boolean donor) {
-        this.donor = donor;
-    }
-
-    public boolean isDonor() {
-        return donor;
-    }
 
     public void setReceiver(boolean receiver) {
         this.receiver = receiver;
@@ -675,6 +756,7 @@ public class Profile {
         }
 
 
+
     }
 
     /**
@@ -715,6 +797,69 @@ public class Profile {
     public Set<Organ> getOrgans() {
         return organs;
     }
+
+
+    // Condition functions
+
+    /**
+     * Gets all the current conditions of the user
+     * @return the conditions of the user
+     */
+    public ArrayList<Condition> getAllConditions() { return conditions; }
+
+    /**
+     * Gets all the cured conditions of the user
+     * @return the cured conditions of the user
+     */
+    public ArrayList<Condition> getCuredConditions() {
+        ArrayList<Condition> curedConditions = new ArrayList<>();
+        try {
+            for (Condition condition : conditions) {
+                if (condition.getCured()) {
+                    curedConditions.add(condition);
+                }
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return curedConditions;
+    }
+
+    /**
+     * Gets all the current conditions of the user
+     * @return the current conditions of the user
+     */
+    public ArrayList<Condition> getCurrentConditions() {
+        ArrayList<Condition> currentConditions = new ArrayList<>();
+        try {
+            for (Condition condition : conditions) {
+                if (!condition.getCured()) {
+                    currentConditions.add(condition);
+                }
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return currentConditions;
+    }
+
+    /**
+     * adds a condition from the user
+     * @param condition to be added
+     */
+    public void addCondition(Condition condition) {
+        if (conditions == null) { conditions = new ArrayList<>(); }
+        conditions.add(condition);
+    }
+
+    /**
+     * removes a condition from the user
+     * @param condition to be removed
+     */
+    public void removeCondition(Condition condition) {
+        conditions.remove(condition);
+    }
+    // -------
 
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
@@ -790,8 +935,10 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        generateUpdateInfo("blood-type");
-        this.bloodType = bloodType;
+        if(bloodType != null) {
+            generateUpdateInfo("blood-type");
+            this.bloodType = bloodType;
+        }
     }
 
     public String getAddress() {
@@ -874,14 +1021,6 @@ public class Profile {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setDonor(Boolean donor) {
-        this.donor = donor;
-    }
-
-    public Boolean getDonor() {
-        return donor;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -897,4 +1036,8 @@ public class Profile {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setAllConditions(ArrayList<Condition> conditions) { this.conditions = conditions; }
+
+
 }
