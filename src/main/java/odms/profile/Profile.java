@@ -890,6 +890,11 @@ public class Profile {
         this.bloodPressureDiastolic = bloodPressureDiastolic;
     }
 
+    /**
+     * Returns a string formatted Systolic / Diastolic.
+     *
+     * @return blood pressure string
+     */
     public String getBloodPressure() {
         return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
