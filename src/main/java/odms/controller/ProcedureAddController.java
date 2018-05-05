@@ -1,34 +1,24 @@
-
 package odms.controller;
 
-import java.sql.Date;
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import javax.lang.model.element.NestingKind;
-import javax.swing.Action;
-
-import odms.profile.Organ;
-
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-
-import java.sql.Connection;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProcedureAddController {
 

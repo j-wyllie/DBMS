@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

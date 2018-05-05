@@ -1,21 +1,17 @@
 package odms.controller;
 
 import java.io.IOException;
-import odms.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
-
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import odms.user.User;
 import odms.user.UserType;
-
 
 public class GuiMain extends Application {
 

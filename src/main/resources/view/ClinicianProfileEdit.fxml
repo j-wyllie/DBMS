@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -16,7 +22,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -36,7 +42,7 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane layoutX="6.0" layoutY="1.0" prefHeight="509.0" prefWidth="1204.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="1.0">
+                              <GridPane layoutX="6.0" layoutY="1.0" prefHeight="509.0" prefWidth="1204.0" styleClass="tab-background" stylesheets="@../styles/Profile.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="1.0">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="597.0" minWidth="10.0" prefWidth="450.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="759.0" minWidth="10.0" prefWidth="754.0" />
@@ -196,7 +202,7 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <GridPane prefHeight="146.0" prefWidth="1203.0" styleClass="banner" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
+            <GridPane prefHeight="146.0" prefWidth="1203.0" styleClass="banner-clinician" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
@@ -226,7 +232,7 @@
                         <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-logout" stylesheets="@../styles/Profile.css" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Profile.css" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>

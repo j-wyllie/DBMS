@@ -1,25 +1,26 @@
 package odms.controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import odms.cli.CommandUtils;
-import odms.data.ProfileDataIO;
-import odms.profile.Organ;
-import odms.profile.Procedure;
-import odms.profile.Profile;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Organ;
+import odms.profile.Procedure;
 
 public class ProcedureEditController {
     @FXML

@@ -1,46 +1,37 @@
 package odms.controller;
 
-import javafx.application.Application;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import java.util.Collection;
+import static odms.controller.LoginController.getCurrentUser;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
 import org.controlsfx.control.table.TableFilter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static odms.controller.LoginController.getCurrentUser;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
 public class ClinicianProfileController extends CommonController {
 
-    //Get the default clinician
     private static User currentUser = getCurrentUser();
 
     @FXML
@@ -121,12 +112,10 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.setTitle("Edit Profile");
-        appStage.show();
+        String scene = "/view/EditClinicianProfile.fxml";
+        String title = "Edit Profile";
+
+        showScene(event, scene, title, true);
     }
 
     /**
@@ -173,10 +162,10 @@ public class ClinicianProfileController extends CommonController {
 
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
-        regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
-        ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
-        genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
+        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
@@ -282,8 +271,10 @@ public class ClinicianProfileController extends CommonController {
         transplantTable.setItems(receiverObservableList);
 
         transplantTable.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    transplantTable.getSelectionModel().getSelectedItem() != null) {
+            if (event.isPrimaryButtonDown() &&
+                event.getClickCount() == 2 &&
+                transplantTable.getSelectionModel().getSelectedItem() != null) {
+
                 createNewDonorWindow(((Entry<Profile, Organ>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
             }
         });
@@ -313,7 +304,7 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(transplantTable);
+//        new TableFilter(transplantTable);
 
     }
 }

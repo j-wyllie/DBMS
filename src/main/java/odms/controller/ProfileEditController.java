@@ -2,9 +2,9 @@ package odms.controller;
 
 import static odms.controller.AlertController.donorCancelChanges;
 import static odms.controller.AlertController.donorSaveChanges;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.OrganRequiredController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -12,14 +12,11 @@ import static odms.controller.UndoRedoController.undo;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -143,7 +140,9 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        showScene(event, "/view/ProfileEdit.fxml", true);
+        String scene = "/view/ProfileEdit.fxml";
+        String title = "Edit Profile";
+        showScene(event, scene, title, true);
     }
 
     /**
