@@ -37,15 +37,15 @@ public class Profile {
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private Set<String> chronicDiseases = new HashSet<>();
+    private HashSet<String> chronicDiseases = new HashSet<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private Set<Organ> organs = new HashSet<>();
-    private Set<Organ> donatedOrgans = new HashSet<>();
-    private Set<Organ> organsRequired = new HashSet<>();
+    private HashSet<Organ> organs = new HashSet<>();
+    private HashSet<Organ> donatedOrgans = new HashSet<>();
+    private HashSet<Organ> organsRequired = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -282,89 +282,6 @@ public class Profile {
         }
     }
 
-    /**
-     * Outputs the profile's organs that they want to donate
-     */
-    public void viewOrgans() {
-        String output = "Organs to donate: ";
-
-        for (Organ org : organs) {
-            output += org.getName() + ", ";
-        }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
-    }
-
-    /**
-     * View the list of donations that the profile has made
-     */
-    public void viewDonations() {
-        String output = "Organs donated:  ";
-
-        for (Organ org : donatedOrgans) {
-            output += org.getName() + ", ";
-        }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
-    }
-
-    /**
-     * Outputs the profile's attributes
-     */
-    public void viewAttributes() {
-        if (irdNumber != null) {
-            System.out.println("IRD: " + irdNumber);
-        }
-
-        System.out.println("ODMS ID: " + id);
-
-        if (givenNames != null) {
-            System.out.println("Given Names: " + givenNames);
-        }
-
-        if (lastNames != null) {
-            System.out.println("Last Names: " + lastNames);
-        }
-
-        System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        if (dateOfDeath != null) {
-            System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }
-
-        if (gender != null) {
-            System.out.println("Gender: " + gender);
-        }
-
-        if (height != 0.0) {
-            System.out.println("Height: " + height + "cm");
-        }
-
-        if (weight != 0.0) {
-            System.out.println("Weight: " + weight);
-        }
-
-        if (bloodType != null) {
-            System.out.println("Blood Type: " + bloodType);
-        }
-
-        if (address != null) {
-            System.out.println("Address: " + address);
-        }
-
-        if (region != null) {
-            System.out.println("Region: " + region);
-        }
-
-        if (organs.size() > 0) {
-            viewOrgans();
-        }
-
-        System.out.println("IRD: " + irdNumber);
-
-        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
-    }
-
     // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
@@ -589,7 +506,7 @@ public class Profile {
         }
     }
 
-    public Set<Organ> getOrgansRequired() {
+    public HashSet<Organ> getOrgansRequired() {
         return organsRequired;
     }
 
@@ -650,7 +567,7 @@ public class Profile {
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("organs");
 
-        Set<Organ> newOrgans = new HashSet<>();
+        HashSet<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
@@ -803,11 +720,11 @@ public class Profile {
         return medicationTimestamps;
     }
 
-    public Set<Organ> getDonatedOrgans() {
+    public HashSet<Organ> getDonatedOrgans() {
         return donatedOrgans;
     }
 
-    public Set<Organ> getOrgans() {
+    public HashSet<Organ> getOrgans() {
         return organs;
     }
 
@@ -1041,12 +958,11 @@ public class Profile {
         return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
 
-    public Set<String> getChronicDiseases() {
+    public HashSet<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
-
-    public void setChronicDiseases(Set<String> chronicDiseases) {
+    public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
 

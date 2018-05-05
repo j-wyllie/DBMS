@@ -76,6 +76,23 @@ public enum Organ {
         return organs;
     }
 
+    /**
+     * Take a HashSet of Organ objects and return a sorted comma delimited string
+     * @param organs Organ HashSet to be converted
+     * @return comma delimited string
+     */
+    public static String organSetToString(HashSet<Organ> organs) {
+        List<String> organsList = new ArrayList<>();
+
+        for (Organ organ : organs) {
+            organsList.add(organ.getNamePlain());
+        }
+
+        Collections.sort(organsList);
+
+        return String.join(", ", organsList);
+    }
+
     Organ(String name) {
         this.name = name;
     }

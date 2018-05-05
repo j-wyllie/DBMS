@@ -86,7 +86,7 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations":
+                        case "donations": // TODO is this meant to be donating or donated
                             return Commands.PROFILEDONATIONS;
                         case "delete":
                             return Commands.PROFILEDELETE;
@@ -365,18 +365,20 @@ public class CommandUtils {
             } else if (action.contains("deleted")) {
                 int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 int id = currentDatabase
-                    .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
+                        .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
                 deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size() - 1));
                 for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
                     if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
                         currentSessionHistory.set(i,
-                            ("Profile " + id + " " + currentSessionHistory.get(i).substring(
-                                action.indexOf("Profile " + oldid) + 6 + Integer.toString(id)
-                                    .length())));
+                                ("Profile " + id + " " + currentSessionHistory.get(i).substring(
+                                        action.indexOf("Profile " + oldid) + 6 + Integer
+                                                .toString(id)
+                                                .length())));
                     }
                 }
                 currentSessionHistory
-                    .set(historyPosition, ("Profile " + id + " deleted at " + LocalDateTime.now()));
+                        .set(historyPosition,
+                                ("Profile " + id + " deleted at " + LocalDateTime.now()));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -395,7 +397,7 @@ public class CommandUtils {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                 profile.removeOrgans(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
@@ -404,14 +406,14 @@ public class CommandUtils {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
                 profile.removeDonations(organSet);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("update")) {
                 int id = Integer.parseInt(
-                    action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
+                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 System.out.println(action);
                 String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
@@ -424,14 +426,17 @@ public class CommandUtils {
                         action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 int procedurePlace = Integer.parseInt(
-                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-                String previous = action.substring(action.indexOf("PREVIOUS(")+9, action.indexOf(") OLD"));
+                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
+                                .replaceAll("[\\D]", ""));
+                String previous = action
+                        .substring(action.indexOf("PREVIOUS(") + 9, action.indexOf(") OLD"));
                 String[] previousValues = previous.split(",");
-                String organs = action.substring(action.indexOf("[")+1, action.indexOf("] CURRENT"));
+                String organs = action
+                        .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
                 List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
                 ArrayList<Organ> organList = new ArrayList<>();
                 System.out.println(organs);
-                for(String organ : List) {
+                for (String organ : List) {
                     System.out.println(organ);
                     try {
                         organList.add(Organ.valueOf(organ.replace(" ", "")));
@@ -440,9 +445,11 @@ public class CommandUtils {
                     }
                 }
                 profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
-                profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                if(previousValues.length==3) {
-                    profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                profile.getAllProcedures().get(procedurePlace)
+                        .setDate(LocalDate.parse(previousValues[1]));
+                if (previousValues.length == 3) {
+                    profile.getAllProcedures().get(procedurePlace)
+                            .setLongDescription(previousValues[2]);
                 }
                 profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
                 if (historyPosition != 0) {
@@ -547,8 +554,9 @@ public class CommandUtils {
                     }
                     profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
                     profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                    if(previousValues.length==3) {
-                        profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
+                    if (previousValues.length == 3) {
+                        profile.getAllProcedures().get(procedurePlace)
+                                .setLongDescription(previousValues[2]);
                     }
                     profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
                 }

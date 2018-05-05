@@ -269,7 +269,7 @@ public class ProfileEditController extends CommonController {
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");
-                    Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
+                    HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
                 if (error) {
