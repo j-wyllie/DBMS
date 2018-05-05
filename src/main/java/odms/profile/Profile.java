@@ -1,21 +1,17 @@
 package odms.profile;
 
-import odms.cli.CommandUtils;
-
-import odms.medications.Drug;
-
-import odms.controller.AlertController;
-
-import java.time.Period;
-import java.util.Arrays;
-import java.util.Collections;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import odms.cli.CommandUtils;
+import odms.controller.AlertController;
+import odms.medications.Drug;
 
 public class Profile {
 
@@ -340,66 +336,6 @@ public class Profile {
             String newDis = dis.trim();
             chronicDiseases.add(newDis);
         }
-    }
-
-    /**
-     * Returns the organs as a csv string
-     * @return string of the organs
-     */
-    public String getOrgansAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = organs.size();
-
-        for (Organ org : organs) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
-            }
-        }
-        return out;
-    }
-
-    /**
-     * returns the chronic diseases as a csv string
-     * @return list of chronic dieseases
-     */
-    public String getChronicDiseasesAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = chronicDiseases.size();
-
-        for (String disease : chronicDiseases) {
-            count++;
-            if (count == len) {
-                out += disease;
-            } else {
-                out += disease + ", ";
-            }
-        }
-        return out;
-    }
-
-    /**
-     * returns the donations as a csv
-     * @return String of donations as csv
-     */
-    public String getDonationsAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = donatedOrgans.size();
-
-        for (Organ org : donatedOrgans) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
-            }
-        }
-        return out;
     }
 
     /**

@@ -248,8 +248,7 @@ public class ProfileTest {
 
             String expectedString = "heart, bone, cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(
-                    Arrays.asList(testProfile.getOrgansAsCSV().split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgans()).split(", ")));
 
             assertEquals(expected, testProfile.getOrgans());
             assertEquals(expectedStrings, outputStrings);
@@ -267,21 +266,21 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
-            testProfile.addDonationFromString("bone, heart, cornea");
+            testProfile.addDonationFromString("Heart, Bone, Cornea");
 
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.BONE);
             expected.add(Organ.HEART);
             expected.add(Organ.CORNEA);
 
-            String expectedString = "heart, bone, cornea";
+            String expectedString = "Heart, Bone, Cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getDonationsAsCSV().split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getDonatedOrgans()).split(", ")));
 
             assertEquals(expected, testProfile.getDonatedOrgans());
             assertEquals(expectedStrings, outputStrings);
@@ -299,7 +298,7 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
 
@@ -312,8 +311,9 @@ public class ProfileTest {
             expected.add("even more cancer");
 
             String expectedString = "cancer, more cancer, even more cancer";
+
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getChronicDiseasesAsCSV().split(", ")));
+            Set<String> outputStrings = testProfile.getChronicDiseases();
 
             assertEquals(expected, testProfile.getChronicDiseases());
             assertEquals(expectedStrings, outputStrings);
