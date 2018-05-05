@@ -79,29 +79,20 @@ public class ConditionAddController {
             }
             addCondition(condition);
 
-        } catch (IllegalArgumentException e) {
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
             warningLabel.setVisible(true);
-        } catch (DateTimeException e) {
-            warningLabel.setVisible(true);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            warningLabel.setVisible(true);
-
         }
     }
 
     /**
      * Adds a new condition to the current profile
-     * @param condition
+     * @param condition to be added
      */
     public void addCondition(Condition condition) {
         searchedDonor.addCondition(condition);
         controller.refreshConditionTable();
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
-//        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-//        controller.refreshTable();
     }
 
     @FXML

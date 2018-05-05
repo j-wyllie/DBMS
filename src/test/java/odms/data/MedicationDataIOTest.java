@@ -40,17 +40,32 @@ public class MedicationDataIOTest {
 
         //Test for substring with valid value.
         substring3 = "res";
-        expectedList2 = new ArrayList<>(Arrays.asList("Reserpine", "Resectisol", "Resectisol in plastic container",
-                "Restoril", "Rescriptor", "Restasis", "Rescula", "Reserpine and hydrochlorothiazide",
-                "Reserpine, hydralazine hydrochloride and hydrochlorothiazide",
-                "Reserpine, hydrochlorothiazide, and hydralazine hydrochloride",
-                "Reserpine and hydrochlorothiazide-50", "Reserpine and hydroflumethiazide",
-                "Resporal")).toArray();
+        expectedList2 = new ArrayList<>(
+                Arrays.asList(
+                        "Reserpine",
+                        "Resectisol",
+                        "Resectisol in plastic container",
+                        "Restoril",
+                        "Rescriptor",
+                        "Restasis",
+                        "Rescula",
+                        "Reserpine and hydrochlorothiazide",
+                        "Reserpine, hydralazine hydrochloride and hydrochlorothiazide",
+                        "Reserpine, hydrochlorothiazide, and hydralazine hydrochloride",
+                        "Reserpine and hydrochlorothiazide-50",
+                        "Reserpine and hydroflumethiazide",
+                        "Resporal"
+                )).toArray();
 
         //Test for drug name with valid name.
         drugName = "Reserpine";
-        expectedList3 = new ArrayList<>(Arrays.asList("Hydralazine hydrochloride; hydrochlorothiazide; reserpine",
-                "Hydrochlorothiazide; reserpine", "Hydroflumethiazide; reserpine", "Reserpine")).toArray();
+        expectedList3 = new ArrayList<>(
+                Arrays.asList(
+                        "Hydralazine hydrochloride; hydrochlorothiazide; reserpine",
+                        "Hydrochlorothiazide; reserpine",
+                        "Hydroflumethiazide; reserpine",
+                        "Reserpine"
+                )).toArray();
 
         drugName2 = "Dolophine hydrochloride";
         expectedList4 = new String[1];
