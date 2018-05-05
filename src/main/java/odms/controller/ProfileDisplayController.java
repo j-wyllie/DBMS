@@ -53,6 +53,7 @@ import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.medications.Drug;
 import odms.profile.Condition;
+import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 import org.controlsfx.control.table.TableFilter;
@@ -320,34 +321,16 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void disableTableHeaderReorder() {
 
-        pastConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
-            {
-                TableHeaderRow header = (TableHeaderRow) pastConditionsTable.lookup("TableHeaderRow");
-                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        header.setReordering(false);
-                    }
-                });
-            }
+        pastConditionsTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) pastConditionsTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener(
+                    (observable, oldValue, newValue) -> header.setReordering(false));
         });
 
-        curConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
-            {
-                TableHeaderRow header = (TableHeaderRow) curConditionsTable.lookup("TableHeaderRow");
-                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        header.setReordering(false);
-                    }
-                });
-            }
+        curConditionsTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) curConditionsTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener(
+                    (observable, oldValue, newValue) -> header.setReordering(false));
         });
     }
 
@@ -367,19 +350,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     protected void refreshConditionTable() {
 
-        Callback<TableColumn, TableCell> cellFactory =
-                new Callback<TableColumn, TableCell>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditingConditionsCell();
-                    }
-                };
+        Callback<TableColumn, TableCell> cellFactory = p -> new EditingConditionsCell();
 
-        Callback<TableColumn, TableCell> cellFactoryDate =
-                new Callback<TableColumn, TableCell>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditDateCell();
-                    }
-                };
+        Callback<TableColumn, TableCell> cellFactoryDate = p -> new EditDateCell();
 
 //
 //        try {
@@ -429,7 +402,6 @@ public class ProfileDisplayController extends CommonController {
                 };
             }
         });
-
 
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
@@ -1032,7 +1004,7 @@ public class ProfileDisplayController extends CommonController {
 
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
-                organsRequiredLabel.setText("Organs Required : " + currentDonor.getOrgansRequired().toString());
+                organsRequiredLabel.setText("Organs Required : " + Organ.organSetToString(currentDonor.getOrgansRequired()));
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -1087,8 +1059,11 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
-            organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
-            donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
+
+            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgans()));
+
+            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getDonatedOrgans()));
+
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }
