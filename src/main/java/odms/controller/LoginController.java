@@ -50,23 +50,15 @@ public class LoginController extends CommonController {
                 if (userId == 0) {
                     currentUser = userDatabase.getClinician(0);
                     String scene = "/view/ClinicianProfile.fxml";
-                    showScene(event, scene, "Clinician", true);
+                    String title = "Clinician";
+                    showScene(event, scene, title, true);
                 } else {
                     currentProfile = currentDatabase.getProfile(userId);
 
                     if (currentProfile != null) {
-
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        ProfileDisplayController controller = fxmlLoader.getController();
-
-                        controller.setLoggedInProfile(currentProfile);
-                        controller.initialize();
-                        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        appStage.setTitle("Profile");
-
-                        appStage.setScene(scene);
-                        appStage.show();
+                        String scene = "/view/ProfileDisplay.fxml";
+                        String title = "Profile";
+                        showScene(event, scene, title, true);
                     } else {
                         invalidUsername();
                     }

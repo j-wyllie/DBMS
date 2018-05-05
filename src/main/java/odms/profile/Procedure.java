@@ -55,7 +55,6 @@ public class Procedure {
      */
     public void addAffectedOrgan(Profile profile, Organ organ) throws IllegalArgumentException {
         if (profile.getOrgans().contains(organ)) {
-            System.out.println("GETS IN HERE SOMEHOW");
             organsAffected.add(organ);
         } else {
             throw new IllegalArgumentException("Not an organ with donor status on this profile");
