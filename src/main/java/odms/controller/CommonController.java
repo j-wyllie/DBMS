@@ -42,12 +42,10 @@ class CommonController {
         appStage.show();
     }
 
-
     /**
      * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
      * @param event Any key event within the text boxes.
      */
-
     @FXML
     protected void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

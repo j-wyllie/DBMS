@@ -1,8 +1,10 @@
 package odms.controller;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Organ;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public class OrganRequiredController {
@@ -145,18 +148,35 @@ public class OrganRequiredController {
      */
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
-        Set<String> set = new HashSet<>(observableListOrgansRequired);
-        if (windowType == 1) {
-            profile.addOrgansDonate(set);
-        }
-        else if (windowType == 2) {
-            profile.setOrgansRequired(set);
-        }
-        else if (windowType == 3) {
-            profile.addDonations(set);
+        HashSet<Organ> organs = OrganRequiredController.observableListStringsToOrgans(
+                new HashSet<>(observableListOrgansRequired)
+        );
+
+        try {
+            if (windowType == 1) {
+                profile.addOrgansDonating(organs);
+            } else if (windowType == 2) {
+                profile.setOrgansRequired(organs);
+            } else if (windowType == 3) {
+                profile.addOrgansDonated(organs);
+            }
+        } catch (OrganConflictException e) {
+
+            // TODO handle error correctly.
+
         }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
+    }
+
+    private static HashSet<Organ> observableListStringsToOrgans(HashSet<String> organStrings) {
+        List<String> correctedOrganStrings = new ArrayList<>();
+
+        for (String organ : organStrings) {
+            correctedOrganStrings.add(organ.trim().toUpperCase().replace(" ", "_"));
+        }
+
+        return Organ.stringListToOrganSet(correctedOrganStrings);
     }
 
     private void refresh() {

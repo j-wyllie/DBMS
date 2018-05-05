@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javafx.event.ActionEvent;
@@ -27,10 +28,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -227,12 +228,10 @@ public class ProfileEditController extends CommonController {
                 }
                 try {
                     if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> organSet = new HashSet<>(
-                            Arrays.asList(organField.getText().split(", "))
-                        );
-                        if (!organSet.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addOrgansDonate(organSet);
+                        List<String> organList = Arrays.asList(organField.getText().split(", "));
+                        if (!organList.isEmpty()) {
+                            currentProfile.setDonor(true);
+                            currentProfile.addOrgansDonating(Organ.stringListToOrganSet(organList));
                         }
                     }
 
@@ -242,19 +241,17 @@ public class ProfileEditController extends CommonController {
 
                 try {
                     if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
-                        Set<String> set = new HashSet<>(
-                            Arrays.asList(donationsField.getText().split(", "))
-                        );
-                        if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addDonations(set);
+                        List<String> organList = Arrays.asList(donationsField.getText().split(", "));
+
+                        if (!organList.isEmpty()) {
+                            currentProfile.setDonor(true);
+                            currentProfile.addOrgansDonated(Organ.stringListToOrganSet(organList));
                         }
                     }
                 } catch (Exception e) {
                     error = true;
                 }
 
-                currentProfile.setSmoker(smokerTrueRadio.isSelected());
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
@@ -371,7 +368,7 @@ public class ProfileEditController extends CommonController {
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 

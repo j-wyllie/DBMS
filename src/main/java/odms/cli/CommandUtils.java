@@ -6,7 +6,6 @@ import java.util.*;
 
 import odms.data.ProfileDatabase;
 import odms.profile.Organ;
-import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public class CommandUtils {
@@ -245,11 +244,11 @@ public class CommandUtils {
      */
     private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            Set<String> organSet = new HashSet<>(Arrays.asList(organList));
+            HashSet<Organ> organSet = Organ.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonate(organSet);
+                    profile.addOrgansDonating(organSet);
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -278,20 +277,26 @@ public class CommandUtils {
      */
     private static void addDonation(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addDonations(organSet);
+                    profile.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
                                 .subList(historyPosition, currentSessionHistory.size() - 1).clear();
                         }
                     }
+
+                    // TODO abstract in command history refactor
                     currentSessionHistory.add(
-                        "Profile " + profile.getId() + " decided to donate these organs " + organSet
-                            + " at " + LocalDateTime.now());
+                            "Profile " +
+                            profile.getId() +
+                            " decided to donate these organs " +
+                            Arrays.asList(organList) +
+                            " at " +
+                            LocalDateTime.now()
+                    );
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
@@ -378,9 +383,11 @@ public class CommandUtils {
             } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.addOrgansDonate(organSet);
+                profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(",")
+                )));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -501,15 +508,23 @@ public class CommandUtils {
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.addOrgansDonate(organSet);
+                    profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(",")
+                    )));
                 } else if (action.contains("donate")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.addDonations(organSet);
+                    profile.addOrgansDonated(
+                            Organ.stringListToOrganSet(
+                                    Arrays.asList(
+                                            action.substring(
+                                                    action.indexOf("[") + 1,
+                                                    action.indexOf("]")).split(",")
+                                    )
+                            )
+                    );
                 } else if (action.contains("update")) {
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));

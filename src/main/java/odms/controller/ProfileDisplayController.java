@@ -3,7 +3,6 @@ package odms.controller;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;
@@ -11,7 +10,10 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Timer;
@@ -21,19 +23,31 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
-import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
@@ -41,17 +55,6 @@ import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 
 public class ProfileDisplayController extends CommonController {
@@ -280,6 +283,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private TableColumn previousAffectsColumn;
 
+    @FXML
+    private Label receiverStatusLabel;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -288,9 +294,6 @@ public class ProfileDisplayController extends CommonController {
     }
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
-
-
-
 
     /**
      * initializes and refreshes the current and past conditions tables
@@ -332,10 +335,6 @@ public class ProfileDisplayController extends CommonController {
             }
         });
 
-    @FXML
-    private Label receiverStatusLabel;
-
-    @FXML private Button buttonViewActiveIngredients;
         curConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
         {
             @Override
@@ -353,7 +352,6 @@ public class ProfileDisplayController extends CommonController {
     }
 
 
-    private Boolean isClinician = false;
 
     public ArrayList<Condition> convertConditionObservableToArray(ObservableList<Condition> conditions) {
         ArrayList<Condition> toReturn = new ArrayList<>();
@@ -548,7 +546,7 @@ public class ProfileDisplayController extends CommonController {
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            AddConditionController controller = fxmlLoader.<AddConditionController>getController();
+            ConditionAddController controller = fxmlLoader.<ConditionAddController>getController();
             controller.init(this);
 
             Stage stage = new Stage();
@@ -1020,7 +1018,7 @@ public class ProfileDisplayController extends CommonController {
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
             organsRequiredLabel.setText("");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
+            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 if (currentDonor.getDonatedOrgans().size() > 0) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }

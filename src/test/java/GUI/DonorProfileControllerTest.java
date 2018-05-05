@@ -1,6 +1,5 @@
 package GUI;
 
-
 import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

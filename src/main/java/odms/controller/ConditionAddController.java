@@ -19,7 +19,7 @@ import odms.profile.Profile;
 import java.sql.Connection;
 import java.time.LocalDate;
 
-public class AddConditionController {
+public class ConditionAddController {
 
     private Profile searchedDonor;
     private ProfileDisplayController controller;

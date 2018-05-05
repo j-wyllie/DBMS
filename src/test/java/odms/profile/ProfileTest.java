@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import odms.medications.Drug;
 import odms.cli.CommandUtils;
-import odms.medications.Drug;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -174,11 +174,11 @@ public class ProfileTest {
             // pass
         }
 
-        Set<String> someOrgans = new HashSet<>();
+        List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addDonations(someOrgans);
+        testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
 
         Set<Organ> expected = new HashSet<>();
         expected.add(Organ.BONE);
@@ -206,11 +206,11 @@ public class ProfileTest {
 
             testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.BONE);
@@ -238,7 +238,7 @@ public class ProfileTest {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
-            testProfile.addOrgansFromString("bone, heart, cornea");
+            testProfile.addOrgansDonatingFromString("bone, heart, cornea");
 
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.BONE);
@@ -338,11 +338,11 @@ public class ProfileTest {
             // pass
         }
 
-        Set<String> someOrgans = new HashSet<>();
+        List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
         someOrgans.add("heart");
         someOrgans.add("cornea");
-        testProfile.addDonations(someOrgans);
+        testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
 
         Set<String> removedOrgans = new HashSet<>();
         removedOrgans.add("bone");
@@ -374,11 +374,11 @@ public class ProfileTest {
 
             testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
             Set<String> removedOrgans = new HashSet<>();
             removedOrgans.add("bone");
@@ -413,11 +413,11 @@ public class ProfileTest {
 
             testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
 
-            testProfile.addOrgansDonate(someOrgans);
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
         } catch (OrganConflictException e) {
             // pass
@@ -1096,9 +1096,14 @@ public class ProfileTest {
         } catch (IllegalArgumentException e) {
             // pass
         }
-        Set<String> testSet = new HashSet<String>();
-        testSet.add("Heart");
-        testProfile.setOrgansRequired(testSet);
-        assertTrue(CommandUtils.currentSessionHistory.get(CommandUtils.historyPosition).contains("HEART"));
+        List<String> someOrgans = new ArrayList<>();
+        someOrgans.add("Heart");
+        testProfile.setOrgansRequired(Organ.stringListToOrganSet(someOrgans));
+
+        assertTrue(CommandUtils.currentSessionHistory
+                .get(CommandUtils.historyPosition)
+                .contains(Organ.HEART.getNamePlain()
+                )
+        );
     }
 }
