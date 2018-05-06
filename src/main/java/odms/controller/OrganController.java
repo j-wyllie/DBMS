@@ -19,7 +19,7 @@ import odms.profile.Organ;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
-public class OrganRequiredController {
+public class OrganController {
     private Profile profile;
 
     private ObservableList<String> observableListOrgansAvailable;
@@ -147,7 +147,7 @@ public class OrganRequiredController {
      */
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
-        HashSet<Organ> organs = OrganRequiredController.observableListStringsToOrgans(
+        HashSet<Organ> organs = OrganController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansRequired)
         );
 
@@ -219,12 +219,16 @@ public class OrganRequiredController {
     }
 
     public static void setWindowType(String type) {
-        if (type == "Organs to Donate") {
-            windowType = 1;
-        } else if (type == "Organs Required") {
-            windowType = 2;
-        } else if (type == "Past Donations") {
-            windowType = 3;
+        switch (type) {
+            case "Organs to Donate":
+                windowType = 1;
+                break;
+            case "Organs Required":
+                windowType = 2;
+                break;
+            case "Past Donations":
+                windowType = 3;
+                break;
         }
     }
 
