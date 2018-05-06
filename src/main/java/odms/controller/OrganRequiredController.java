@@ -73,13 +73,13 @@ public class OrganRequiredController {
     private void buildOrgansRequired() {
         Set<Organ> organs = new HashSet<>();
         if (windowType == 1) {
-            organs = profile.getOrgans();
+            organs = profile.getOrgansDonating();
         }
         else if (windowType == 2) {
             organs = profile.getOrgansRequired();
         }
         else if (windowType == 3) {
-            organs = profile.getDonatedOrgans();
+            organs = profile.getOrgansDonated();
         }
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {

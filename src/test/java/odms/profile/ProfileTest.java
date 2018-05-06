@@ -182,7 +182,7 @@ public class ProfileTest {
             expected.add(Organ.HEART);
             expected.add(Organ.CORNEA);
 
-            assertEquals(expected, testProfile.getDonatedOrgans());
+            assertEquals(expected, testProfile.getOrgansDonated());
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -218,7 +218,7 @@ public class ProfileTest {
             expected.add(Organ.HEART);
             expected.add(Organ.CORNEA);
 
-            assertEquals(expected, testProfile.getOrgans());
+            assertEquals(expected, testProfile.getOrgansDonating());
 
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
@@ -248,9 +248,9 @@ public class ProfileTest {
 
             String expectedString = "heart, bone, cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgans()).split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonating()).split(", ")));
 
-            assertEquals(expected, testProfile.getOrgans());
+            assertEquals(expected, testProfile.getOrgansDonating());
             assertEquals(expectedStrings, outputStrings);
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
@@ -280,9 +280,9 @@ public class ProfileTest {
 
             String expectedString = "Heart, Bone, Cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getDonatedOrgans()).split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonated()).split(", ")));
 
-            assertEquals(expected, testProfile.getDonatedOrgans());
+            assertEquals(expected, testProfile.getOrgansDonated());
             assertEquals(expectedStrings, outputStrings);
         } catch (IllegalArgumentException e) {
             // pass
@@ -352,7 +352,7 @@ public class ProfileTest {
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.CORNEA);
 
-            assertEquals(testProfile.getDonatedOrgans(), expected);
+            assertEquals(testProfile.getOrgansDonated(), expected);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -392,7 +392,7 @@ public class ProfileTest {
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.CORNEA);
 
-            assertEquals(testProfile.getOrgans(), expected);
+            assertEquals(testProfile.getOrgansDonating(), expected);
 
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass

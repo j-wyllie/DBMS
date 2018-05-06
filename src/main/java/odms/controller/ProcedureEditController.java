@@ -70,7 +70,7 @@ public class ProcedureEditController {
         saveButton.setVisible(false);
         try{
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
+            donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
             affectedOrgansListView.setItems(donatedOrgans);
             editButton.setVisible(true);
         } catch (NullPointerException e){

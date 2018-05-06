@@ -37,7 +37,7 @@ public class Print extends CommandUtils {
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
                 printProfileAttributes(profile);
-                System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgans()));
+                System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
                 System.out.println();
             }
         }
@@ -71,8 +71,8 @@ public class Print extends CommandUtils {
             System.out.println("IRD: " + profile.getIrdNumber());
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
-            System.out.println("Organs Donated:" + profile.getDonatedOrgans());
-            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgans()));
+            System.out.println("Organs Donated:" + profile.getOrgansDonated());
+            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
             System.out.println("Organs Required: " + Organ.organSetToString(profile.getOrgansRequired()));
             System.out.println();
         }
@@ -139,15 +139,15 @@ public class Print extends CommandUtils {
             System.out.println("Region: " + profile.getRegion());
         }
 
-        if (profile.getOrgans().size() > 0) {
-            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgans()));
+        if (profile.getOrgansDonating().size() > 0) {
+            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
         }
 
-        if (profile.getOrgans().size() > 0) {
-            System.out.println("Organs Donated: " + Organ.organSetToString(profile.getDonatedOrgans()));
+        if (profile.getOrgansDonating().size() > 0) {
+            System.out.println("Organs Donated: " + Organ.organSetToString(profile.getOrgansDonated()));
         }
 
-        if (profile.getOrgans().size() > 0) {
+        if (profile.getOrgansDonating().size() > 0) {
             System.out.println("Organs Required: " + Organ.organSetToString(profile.getOrgansRequired()));
         }
 

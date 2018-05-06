@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
-import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -190,8 +189,8 @@ public class ClinicianProfileController extends CommonController {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
-                    if(donor.getDonatedOrgans().size() > 0) {
-                        donations = ". Donor: " + donor.getDonatedOrgans().toString();
+                    if(donor.getOrgansDonated().size() > 0) {
+                        donations = ". Donor: " + donor.getOrgansDonated().toString();
                     }
                     row.setTooltip(new Tooltip(donor.getFullName() + donations));
                 }

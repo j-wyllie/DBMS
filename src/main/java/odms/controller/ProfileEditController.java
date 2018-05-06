@@ -226,7 +226,7 @@ public class ProfileEditController extends CommonController {
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
                 }
                 try {
-                    if (!organField.getText().equals(Organ.organSetToString(currentProfile.getOrgans()))) {
+                    if (!organField.getText().equals(Organ.organSetToString(currentProfile.getOrgansDonating()))) {
                         List<String> organList = Arrays.asList(organField.getText().split(", "));
                         if (!organList.isEmpty()) {
                             currentProfile.setDonor(true);
@@ -239,7 +239,7 @@ public class ProfileEditController extends CommonController {
                 }
 
                 try {
-                    if (!donationsField.getText().equals(Organ.organSetToString(currentProfile.getDonatedOrgans()))) {
+                    if (!donationsField.getText().equals(Organ.organSetToString(currentProfile.getOrgansDonated()))) {
                         List<String> organList = Arrays.asList(donationsField.getText().split(", "));
 
                         if (!organList.isEmpty()) {

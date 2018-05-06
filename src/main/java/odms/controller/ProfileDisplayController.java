@@ -989,7 +989,7 @@ public class ProfileDisplayController extends CommonController {
             organsRequiredLabel.setText("");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
-                if (currentDonor.getDonatedOrgans().size() > 0) {
+                if (currentDonor.getOrgansDonated().size() > 0) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
             }
@@ -1058,9 +1058,9 @@ public class ProfileDisplayController extends CommonController {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
 
-            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgans()));
+            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonating()));
 
-            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getDonatedOrgans()));
+            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonated()));
 
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());

@@ -108,7 +108,7 @@ public class ProcedureAddController {
         searchedDonor = controller.getSearchedDonor();
 
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getDonatedOrgans());
+        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
         affectedOrgansListView.setItems(donatedOrgans);
     }
 

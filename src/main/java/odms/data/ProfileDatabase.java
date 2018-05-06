@@ -176,7 +176,7 @@ public class ProfileDatabase {
 
         profileDb.forEach((id, profile) -> {
             if (donating) {
-                if (profile.getOrgans().size() > 0) {
+                if (profile.getOrgansDonating().size() > 0) {
                     profiles.add(profile);
                 }
             } else {

@@ -39,9 +39,10 @@ public class Profile {
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private HashSet<Organ> organs = new HashSet<>();
-    private HashSet<Organ> donatedOrgans = new HashSet<>();
+    private HashSet<Organ> organsDonating = new HashSet<>();
+    private HashSet<Organ> organsDonated = new HashSet<>();
     private HashSet<Organ> organsRequired = new HashSet<>();
+    private HashSet<Organ> organsReceived = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -311,10 +312,10 @@ public class Profile {
         String[] organStrings = organString.split("(,\\s+|,)");
 
         for (String organ : organStrings) {
-            organs.add(Organ.valueOf(organ));
+            organsDonating.add(Organ.valueOf(organ));
         }
 
-        addOrgansDonating(organs);
+        addOrgansDonating(organsDonating);
     }
 
     /**
@@ -349,7 +350,7 @@ public class Profile {
                     organ
             );
         }
-        this.organs.add(organ);
+        this.organsDonating.add(organ);
     }
 
     /**
@@ -358,7 +359,7 @@ public class Profile {
      * @throws OrganConflictException if there is a conflicting organ
      */
     public void addOrganRequired(Organ organ) throws OrganConflictException {
-        if (this.organs.contains(organ)) {
+        if (this.organsDonating.contains(organ)) {
             throw new OrganConflictException(
                     "Profile is currently donor for  " + organ,
                     organ
@@ -410,10 +411,10 @@ public class Profile {
     public void addOrgansDonating(Set<Organ> organs)
             throws IllegalArgumentException, OrganConflictException {
         // TODO shouldn't be checking for args here
-        generateUpdateInfo("donatedOrgans"); // TODO should this be Organs Donating
+        generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
 
         for (Organ organ : organs) {
-            if (this.organs.contains(organ)) {
+            if (this.organsDonating.contains(organ)) {
                 throw new IllegalArgumentException(
                         "Organ " + organ + " already exists in donating list"
                 );
@@ -447,22 +448,73 @@ public class Profile {
     }
 
     /**
-     * Add an organ to the list of donated organs.
-     * @param organ the organ to be added
+     * Add an organ to the set of received organs.
+     * If the organ exists in the receiving set, remove it.
+     * @param organ to be added
      */
-    public void addOrganDonated(Organ organ) {
-        this.donatedOrgans.add(organ);
+    public void addOrganReceived(Organ organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
+
+        this.organsReceived.add(organ);
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile has donated
-     * @param organs a set of organs that the profile has donated
+     * Add a set of organs to the set of received organs.
+     * @param organs set to be added
+     */
+    public void addOrgansReceived(Set<Organ> organs) {
+        generateUpdateInfo("organsReceived");
+
+        for (Organ organ : organs) {
+            addOrganReceived(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " added " +
+                    organ.getNamePlain() +
+                    " to received organs " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        }
+    }
+
+    public HashSet<Organ> getOrgansReceived() {
+        return organsReceived;
+    }
+
+    /**
+     * Add an organ to the list of donated organsDonating.
+     * If the organ exists in the donating list, remove it from the donating list.
+     * @param organ the organ to be added
+     */
+    public void addOrganDonated(Organ organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
+
+        this.organsDonated.add(organ);
+    }
+
+    /**
+     * Add a set of organsDonating to the list of organsDonating that the profile has donated
+     * @param organs a set of organsDonating that the profile has donated
      */
     public void addOrgansDonated(Set<Organ> organs) {
         generateUpdateInfo("pastDonations");
 
         for (Organ organ : organs) {
-            this.donatedOrgans.add(organ);
+            this.organsDonated.add(organ);
 
             // TODO history abstraction
             String action = "Profile " +
@@ -488,11 +540,11 @@ public class Profile {
      * @param organs a set of organs to remove from the list
      */
     public void removeDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
+        generateUpdateInfo("organsDonated");
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
             Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.remove(organ);
+            this.organsDonated.remove(organ);
         }
     }
 
@@ -501,7 +553,7 @@ public class Profile {
      * @param organs a set of organs to be removed
      */
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
-        generateUpdateInfo("organs");
+        generateUpdateInfo("organsDonating");
 
         HashSet<Organ> newOrgans = new HashSet<>();
 
@@ -511,8 +563,8 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (!Collections.disjoint(newOrgans, this.organs)) {
-            this.organs.removeAll(newOrgans);
+        if (!Collections.disjoint(newOrgans, this.organsDonating)) {
+            this.organsDonating.removeAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
@@ -656,12 +708,12 @@ public class Profile {
         return medicationTimestamps;
     }
 
-    public HashSet<Organ> getDonatedOrgans() {
-        return donatedOrgans;
+    public HashSet<Organ> getOrgansDonated() {
+        return organsDonated;
     }
 
-    public HashSet<Organ> getOrgans() {
-        return organs;
+    public HashSet<Organ> getOrgansDonating() {
+        return organsDonating;
     }
 
 
