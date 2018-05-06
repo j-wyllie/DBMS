@@ -207,7 +207,7 @@ public class ProfileDatabase {
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
         List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 30);
+        result = FuzzySearch.extractSorted(searchString, profiles, 50);
 
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
         ArrayList<Profile> resultProfiles = new ArrayList<>();

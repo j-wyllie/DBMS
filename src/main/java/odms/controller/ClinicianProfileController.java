@@ -248,7 +248,6 @@ public class ClinicianProfileController extends CommonController {
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
-        System.out.println(receivers.get(0).getKey().getFullName());
 
         TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
@@ -261,8 +260,6 @@ public class ClinicianProfileController extends CommonController {
         TableColumn<Map.Entry<Profile, Organ>, String> transplantDateCol  = new TableColumn<>("Date");
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
-
-        System.out.println(receivers.get(0).getKey().getFullName());
 
         transplantTable.getColumns().add(transplantOrganRequiredCol);
         transplantTable.getColumns().add(transplantReceiverNameCol);
@@ -293,7 +290,8 @@ public class ClinicianProfileController extends CommonController {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
-        }    }
+        }
+    }
 
     @FXML
     private void initialize(){
