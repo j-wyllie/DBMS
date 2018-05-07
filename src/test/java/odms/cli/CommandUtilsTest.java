@@ -12,6 +12,7 @@ import odms.profile.Profile;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -189,7 +190,7 @@ public class CommandUtilsTest {
         Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
-
+    
     @Test
     public void testProfileDateCreatedCommand() {
         String irdNumber = "123456789";

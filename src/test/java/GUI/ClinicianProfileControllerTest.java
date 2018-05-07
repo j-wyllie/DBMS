@@ -1,5 +1,6 @@
 package GUI;
 
+import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -37,14 +38,15 @@ import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.api.FxToolkit.setupScene;
 import static org.testfx.api.FxToolkit.showStage;
 
-public class ClinicianProfileControllerTest extends ApplicationTest {
+@Ignore
+public class ClinicianProfileControllerTest extends TestFxMethods {
 
     private GuiMain guiMain;
     private Parent root;
 
-        //Runs tests in background if headless is set to true. This gets it working with the CI.
+    //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() {
+    public static void headless() throws TimeoutException {
         GUITestSetup.headless();
     }
 
@@ -178,17 +180,6 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
     }
 
     /**
-     * @param tableSelector The id of the table to be used
-     * @return Returns a table view node from the given ID
-     */
-    private TableView<?> getTableView(String tableSelector) {
-        Node node = lookup(tableSelector).queryTableView();
-        if (!(node instanceof TableView)) {
-        }
-        return (TableView<?>) node;
-    }
-
-    /**
      * @param tableSelector The id of the table that contains the cell wanted
      * @param row           row number
      * @param column        column number
@@ -252,21 +243,4 @@ public class ClinicianProfileControllerTest extends ApplicationTest {
         return (javafx.scene.Scene) allWindows.get(0).getScene();
     }
 
-    /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
-     * @return All of the current windows
-     */
-    private javafx.stage.Stage getAlertDialogue() {
-        // Get a list of windows but ordered from top[0] to bottom[n] ones.
-        // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
-        Collections.reverse(allWindows);
-
-        return (javafx.stage.Stage) allWindows
-                .stream()
-                .filter(window -> window instanceof javafx.stage.Stage)
-                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
-                .findFirst()
-                .orElse(null);
-    }
 }
