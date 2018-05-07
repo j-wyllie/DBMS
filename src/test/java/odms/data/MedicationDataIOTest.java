@@ -90,18 +90,18 @@ public class MedicationDataIOTest {
         interactions.put("pneumonia", "1 - 2 years");
         interactions.put("fatigue", "not specified");
         interactions.put("dyspnoea", "5 - 10 years");
-        interactions.put("vomiting", "not specified");
+        interactions.put("pyrexia", "10+ years");
         interactions.put("anaemia", "1 - 6 months");
-        interactions.put("drug ineffective", "");
-        interactions.put("neuropathy peripheral", "");
+        interactions.put("drug ineffective", "not specified");
+        interactions.put("neuropathy peripheral", "not specified");
         interactions.put("oedema peripheral", "1 - 6 months");
-        interactions.put("infusion related reaction", "");
-        interactions.put("autoimmune hepatitis", "");
-        interactions.put("catheter site related reaction", "");
+        interactions.put("infusion related reaction", "not specified");
+        interactions.put("autoimmune hepatitis", "not specified");
+        interactions.put("catheter site related reaction", "not specified");
         interactions.put("cerebrovascular accident", "1 - 2 years");
-        interactions.put("cholestasis", "");
-        interactions.put("drug eruption", "");
-        interactions.put("hepatitis acute", "");
+        interactions.put("cholestasis", "not specified");
+        interactions.put("drug eruption", "not specified");
+        interactions.put("hepatitis acute", "not specified");
     }
 
     @Test
@@ -140,7 +140,7 @@ public class MedicationDataIOTest {
     public void testGetDrugInteractions() throws IOException {
         // Test valid request
         Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugTwo, "male", 29);
-        for (Map.Entry<String, String> entry : results.entrySet()) {
+        for (Map.Entry<String, String> entry : interactions.entrySet()) {
             assertTrue(results.containsKey(entry.getKey()));
             assertEquals(results.get(entry.getKey()), entry.getValue());
         }
@@ -163,7 +163,7 @@ public class MedicationDataIOTest {
 
         // Test valid request with drug with space in name
         results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
-        for (Map.Entry<String, String> entry : results.entrySet()) {
+        for (Map.Entry<String, String> entry : interactions.entrySet()) {
             assertTrue(results.containsKey(entry.getKey()));
             assertEquals(results.get(entry.getKey()), entry.getValue());
         }
