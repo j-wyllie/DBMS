@@ -20,17 +20,17 @@
       "procedures": [],
       "organsDonating": [],
       "organsDonated": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -76,33 +76,49 @@
         "month": 5,
         "day": 16
       },
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "organsRequired updated at 06:26 PM 07-05-2018",
+        "given-names updated at 06:26 PM 07-05-2018",
+        "last-names updated at 06:26 PM 07-05-2018",
+        "ird updated at 06:26 PM 07-05-2018",
+        "dob updated at 06:26 PM 07-05-2018",
+        "address updated at 06:26 PM 07-05-2018",
+        "region updated at 06:26 PM 07-05-2018",
+        "blood-type updated at 06:26 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
-        "CORNEA"
+        "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsRequired": [
-        "LUNG",
+        "MIDDLE_EAR",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
         "HEART",
-        "INTESTINE"
+        "LUNG",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 432612314,
       "timeOfCreation": {
         "date": {
@@ -124,10 +140,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 457000000
+          "hour": 18,
+          "minute": 26,
+          "second": 30,
+          "nano": 132000000
         }
       },
       "id": 1,
@@ -154,17 +170,17 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -221,25 +237,25 @@
       "procedures": [],
       "organsDonating": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "LIVER",
-        "KIDNEY",
-        "HEART",
+        "CORNEA",
         "INTESTINE",
-        "CORNEA"
+        "LIVER",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -290,24 +306,27 @@
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "Antabuse updated at 06:08 PM 07-05-2018",
+        "Zantac 25 updated at 06:08 PM 07-05-2018",
+        "Alcohol 5% in dextrose 5% in water updated at 06:09 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW"
       ],
       "organsDonated": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -333,16 +352,33 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 459000000
+          "hour": 18,
+          "minute": 9,
+          "second": 23,
+          "nano": 135000000
         }
       },
       "id": 4,
-      "currentMedications": [],
+      "currentMedications": [
+        {
+          "drugName": "Antabuse",
+          "activeIngredients": []
+        },
+        {
+          "drugName": "Zantac 25",
+          "activeIngredients": []
+        },
+        {
+          "drugName": "Alcohol 5% in dextrose 5% in water",
+          "activeIngredients": []
+        }
+      ],
       "historyOfMedication": [],
-      "medicationTimestamps": []
+      "medicationTimestamps": [
+        "Antabuse added on 07-05-2018",
+        "Zantac 25 added on 07-05-2018",
+        "Alcohol 5% in dextrose 5% in water added on 07-05-2018"
+      ]
     },
     "5": {
       "donor": true,
@@ -363,21 +399,21 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "PANCREAS",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "PANCREAS",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -416,7 +452,7 @@
     },
     "6": {
       "donor": true,
-      "receiver": true,
+      "receiver": false,
       "givenNames": "Darbage",
       "lastNames": "Gumpster",
       "dateOfBirth": {
@@ -424,38 +460,54 @@
         "month": 9,
         "day": 22
       },
+      "gender": "",
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "given-names updated at 06:09 PM 07-05-2018",
+        "last-names updated at 06:09 PM 07-05-2018",
+        "ird updated at 06:09 PM 07-05-2018",
+        "dob updated at 06:09 PM 07-05-2018",
+        "gender updated at 06:09 PM 07-05-2018",
+        "address updated at 06:09 PM 07-05-2018",
+        "region updated at 06:09 PM 07-05-2018",
+        "blood-type updated at 06:09 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 573691144,
       "timeOfCreation": {
         "date": {
@@ -477,10 +529,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 460000000
+          "hour": 18,
+          "minute": 9,
+          "second": 55,
+          "nano": 282000000
         }
       },
       "id": 6,
@@ -507,20 +559,20 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [
+        "CORNEA",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "CORNEA"
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -567,34 +619,110 @@
         "month": 4,
         "day": 9
       },
+      "dateOfDeath": {
+        "year": 2000,
+        "month": 11,
+        "day": 11
+      },
+      "gender": "",
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": true,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "organsRequired updated at 05:56 PM 07-05-2018",
+        "given-names updated at 05:56 PM 07-05-2018",
+        "last-names updated at 05:56 PM 07-05-2018",
+        "ird updated at 05:56 PM 07-05-2018",
+        "dob updated at 05:56 PM 07-05-2018",
+        "gender updated at 05:56 PM 07-05-2018",
+        "address updated at 05:56 PM 07-05-2018",
+        "region updated at 05:56 PM 07-05-2018",
+        "blood-type updated at 05:56 PM 07-05-2018",
+        "given-names updated at 05:56 PM 07-05-2018",
+        "last-names updated at 05:56 PM 07-05-2018",
+        "ird updated at 05:56 PM 07-05-2018",
+        "dob updated at 05:56 PM 07-05-2018",
+        "gender updated at 05:56 PM 07-05-2018",
+        "address updated at 05:56 PM 07-05-2018",
+        "region updated at 05:56 PM 07-05-2018",
+        "blood-type updated at 05:56 PM 07-05-2018",
+        "given-names updated at 05:56 PM 07-05-2018",
+        "last-names updated at 05:56 PM 07-05-2018",
+        "ird updated at 05:56 PM 07-05-2018",
+        "dob updated at 05:56 PM 07-05-2018",
+        "gender updated at 05:56 PM 07-05-2018",
+        "address updated at 05:56 PM 07-05-2018",
+        "region updated at 05:56 PM 07-05-2018",
+        "blood-type updated at 05:56 PM 07-05-2018",
+        "organsRequired updated at 05:57 PM 07-05-2018",
+        "organsDonated updated at 05:57 PM 07-05-2018",
+        "organsDonated updated at 05:57 PM 07-05-2018",
+        "organsRequired updated at 06:01 PM 07-05-2018",
+        "organsRequired updated at 06:01 PM 07-05-2018",
+        "organsRequired updated at 06:01 PM 07-05-2018",
+        "organsRequired updated at 06:01 PM 07-05-2018",
+        "organsDonated updated at 06:01 PM 07-05-2018",
+        "organsDonated updated at 06:02 PM 07-05-2018",
+        "organsDonated updated at 06:02 PM 07-05-2018",
+        "organsDonated updated at 06:02 PM 07-05-2018",
+        "organsDonated updated at 06:02 PM 07-05-2018",
+        "organsRequired updated at 06:02 PM 07-05-2018",
+        "pastDonations updated at 06:02 PM 07-05-2018",
+        "pastDonations updated at 06:03 PM 07-05-2018",
+        "organsDonated updated at 06:03 PM 07-05-2018",
+        "organsRequired updated at 06:03 PM 07-05-2018",
+        "organsRequired updated at 06:03 PM 07-05-2018",
+        "pastDonations updated at 06:04 PM 07-05-2018",
+        "organsRequired updated at 06:04 PM 07-05-2018",
+        "organsRequired updated at 06:05 PM 07-05-2018",
+        "given-names updated at 06:05 PM 07-05-2018",
+        "last-names updated at 06:05 PM 07-05-2018",
+        "ird updated at 06:05 PM 07-05-2018",
+        "dob updated at 06:05 PM 07-05-2018",
+        "gender updated at 06:05 PM 07-05-2018",
+        "address updated at 06:05 PM 07-05-2018",
+        "region updated at 06:05 PM 07-05-2018",
+        "blood-type updated at 06:05 PM 07-05-2018",
+        "given-names updated at 06:05 PM 07-05-2018",
+        "last-names updated at 06:05 PM 07-05-2018",
+        "ird updated at 06:05 PM 07-05-2018",
+        "dob updated at 06:05 PM 07-05-2018",
+        "dod updated at 06:05 PM 07-05-2018",
+        "gender updated at 06:05 PM 07-05-2018",
+        "address updated at 06:05 PM 07-05-2018",
+        "region updated at 06:05 PM 07-05-2018",
+        "blood-type updated at 06:05 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
+        "LIVER",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG"
       ],
       "organsDonated": [
+        "CORNEA",
+        "MIDDLE_EAR",
+        "INTESTINE",
+        "PANCREAS",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "LIVER",
-        "KIDNEY",
-        "HEART",
-        "INTESTINE"
+        "SKIN"
       ],
       "organsReceived": [],
       "conditions": [
@@ -626,6 +754,8 @@
           "chronicText": ""
         }
       ],
+      "phone": "",
+      "email": "",
       "irdNumber": 844617370,
       "timeOfCreation": {
         "date": {
@@ -647,10 +777,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 463000000
+          "hour": 18,
+          "minute": 5,
+          "second": 19,
+          "nano": 598000000
         }
       },
       "id": 8,
@@ -677,21 +807,21 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -748,12 +878,12 @@
       "procedures": [],
       "organsDonating": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -810,31 +940,31 @@
       "procedures": [],
       "organsDonating": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "PANCREAS",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "PANCREAS",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "LUNG",
-        "LIVER",
-        "KIDNEY",
-        "HEART",
-        "PANCREAS",
         "INTESTINE",
-        "CORNEA"
+        "LIVER",
+        "PANCREAS",
+        "HEART",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -885,18 +1015,20 @@
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "Adderall 20 updated at 06:33 PM 07-05-2018",
+        "Adderall 20 updated at 06:33 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [
         "BONE"
@@ -928,16 +1060,24 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 466000000
+          "hour": 18,
+          "minute": 33,
+          "second": 8,
+          "nano": 382000000
         }
       },
       "id": 12,
       "currentMedications": [],
-      "historyOfMedication": [],
-      "medicationTimestamps": []
+      "historyOfMedication": [
+        {
+          "drugName": "Adderall 20",
+          "activeIngredients": []
+        }
+      ],
+      "medicationTimestamps": [
+        "Adderall 20 added on 07-05-2018",
+        "Adderall 20 stopped on 07-05-2018"
+      ]
     },
     "13": {
       "donor": true,
@@ -958,27 +1098,27 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "PANCREAS",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "PANCREAS",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1035,28 +1175,28 @@
       "procedures": [],
       "organsDonating": [],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "PANCREAS",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "PANCREAS",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1111,26 +1251,26 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1186,26 +1326,26 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1244,7 +1384,7 @@
     },
     "17": {
       "donor": true,
-      "receiver": true,
+      "receiver": false,
       "givenNames": "Peppermint",
       "lastNames": "Butler",
       "dateOfBirth": {
@@ -1252,36 +1392,48 @@
         "month": 2,
         "day": 22
       },
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "organsRequired updated at 06:21 PM 07-05-2018",
+        "given-names updated at 06:21 PM 07-05-2018",
+        "last-names updated at 06:21 PM 07-05-2018",
+        "ird updated at 06:21 PM 07-05-2018",
+        "dob updated at 06:21 PM 07-05-2018",
+        "address updated at 06:21 PM 07-05-2018",
+        "region updated at 06:21 PM 07-05-2018",
+        "blood-type updated at 06:21 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
-      "organsRequired": [
-        "HEART",
-        "CORNEA"
-      ],
+      "organsRequired": [],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 713705290,
       "timeOfCreation": {
         "date": {
@@ -1303,10 +1455,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 469000000
+          "hour": 18,
+          "minute": 21,
+          "second": 38,
+          "nano": 109000000
         }
       },
       "id": 17,
@@ -1333,25 +1485,25 @@
       ],
       "procedures": [],
       "organsDonating": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "PANCREAS",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "PANCREAS",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1407,15 +1559,15 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsDonated": [],
       "organsRequired": [],
@@ -1463,34 +1615,54 @@
         "month": 2,
         "day": 11
       },
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "given-names updated at 06:14 PM 07-05-2018",
+        "last-names updated at 06:14 PM 07-05-2018",
+        "ird updated at 06:14 PM 07-05-2018",
+        "dob updated at 06:14 PM 07-05-2018",
+        "address updated at 06:14 PM 07-05-2018",
+        "region updated at 06:14 PM 07-05-2018",
+        "blood-type updated at 06:14 PM 07-05-2018",
+        "organsRequired updated at 06:14 PM 07-05-2018",
+        "organsDonated updated at 06:14 PM 07-05-2018",
+        "organsRequired updated at 06:14 PM 07-05-2018",
+        "organsRequired updated at 06:14 PM 07-05-2018",
+        "organsRequired updated at 06:14 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
         "CONNECTIVE_TISSUE",
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "CORNEA"
+        "SKIN",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 151199672,
       "timeOfCreation": {
         "date": {
@@ -1512,10 +1684,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 471000000
+          "hour": 18,
+          "minute": 14,
+          "second": 22,
+          "nano": 380000000
         }
       },
       "id": 20,
@@ -1525,7 +1697,7 @@
     },
     "21": {
       "donor": true,
-      "receiver": true,
+      "receiver": false,
       "givenNames": "Slim",
       "lastNames": "Flapjack",
       "dateOfBirth": {
@@ -1538,18 +1710,22 @@
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "Aspirin updated at 06:58 PM 07-05-2018",
+        "Benadryl preservative free updated at 06:58 PM 07-05-2018",
+        "Aspirin updated at 06:58 PM 07-05-2018",
+        "Aspirin updated at 06:58 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [],
       "organsRequired": [],
@@ -1576,16 +1752,30 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 475000000
+          "hour": 18,
+          "minute": 58,
+          "second": 29,
+          "nano": 187000000
         }
       },
       "id": 21,
-      "currentMedications": [],
+      "currentMedications": [
+        {
+          "drugName": "Benadryl preservative free",
+          "activeIngredients": []
+        },
+        {
+          "drugName": "Aspirin",
+          "activeIngredients": []
+        }
+      ],
       "historyOfMedication": [],
-      "medicationTimestamps": []
+      "medicationTimestamps": [
+        "Aspirin added on 07-05-2018",
+        "Benadryl preservative free added on 07-05-2018",
+        "Aspirin stopped on 07-05-2018",
+        "Aspirin added back to current list on 07-05-2018"
+      ]
     },
     "22": {
       "donor": true,
@@ -1597,42 +1787,68 @@
         "month": 11,
         "day": 2
       },
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "organsRequired updated at 07:06 PM 07-05-2018",
+        "organsRequired updated at 07:06 PM 07-05-2018",
+        "given-names updated at 07:06 PM 07-05-2018",
+        "last-names updated at 07:06 PM 07-05-2018",
+        "ird updated at 07:06 PM 07-05-2018",
+        "dob updated at 07:06 PM 07-05-2018",
+        "address updated at 07:06 PM 07-05-2018",
+        "region updated at 07:06 PM 07-05-2018",
+        "blood-type updated at 07:06 PM 07-05-2018",
+        "organsRequired updated at 07:07 PM 07-05-2018",
+        "organsRequired updated at 07:07 PM 07-05-2018",
+        "given-names updated at 07:07 PM 07-05-2018",
+        "last-names updated at 07:07 PM 07-05-2018",
+        "ird updated at 07:07 PM 07-05-2018",
+        "dob updated at 07:07 PM 07-05-2018",
+        "address updated at 07:07 PM 07-05-2018",
+        "region updated at 07:07 PM 07-05-2018",
+        "blood-type updated at 07:07 PM 07-05-2018"
       ],
       "procedures": [],
       "organsDonating": [
-        "CONNECTIVE_TISSUE",
+        "CORNEA",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsDonated": [
+        "CORNEA",
         "MIDDLE_EAR",
-        "CONNECTIVE_TISSUE",
-        "LUNG",
+        "INTESTINE",
         "LIVER",
-        "KIDNEY",
-        "BONE_MARROW",
+        "CONNECTIVE_TISSUE",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "LUNG",
+        "KIDNEY"
       ],
       "organsRequired": [
+        "SKIN",
         "MIDDLE_EAR",
         "LUNG"
       ],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 396778623,
       "timeOfCreation": {
         "date": {
@@ -1654,10 +1870,10 @@
           "day": 7
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 476000000
+          "hour": 19,
+          "minute": 7,
+          "second": 21,
+          "nano": 88000000
         }
       },
       "id": 22,
@@ -1684,8 +1900,8 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
         "BONE"
@@ -1744,22 +1960,22 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE_MARROW",
-        "BONE"
+        "BONE",
+        "BONE_MARROW"
       ],
       "organsDonated": [
+        "CORNEA",
+        "INTESTINE",
         "CONNECTIVE_TISSUE",
-        "KIDNEY",
-        "BONE_MARROW",
         "BONE",
         "HEART",
-        "INTESTINE",
-        "CORNEA"
+        "BONE_MARROW",
+        "KIDNEY"
       ],
       "organsRequired": [
+        "CORNEA",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "CORNEA"
+        "HEART"
       ],
       "organsReceived": [],
       "conditions": [],
