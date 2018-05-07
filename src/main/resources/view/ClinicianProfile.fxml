@@ -5,9 +5,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
@@ -18,8 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -231,7 +230,10 @@
                                  <children>
                                     <TextField onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="274.0" promptText="Enter name" GridPane.columnIndex="1" GridPane.valignment="TOP" />
                                     <TableView fx:id="transplantTable" prefHeight="461.0" prefWidth="1178.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                    <Button fx:id="refreshButton2" alignment="CENTER" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
+                                    <Button fx:id="refreshButton2" alignment="CENTER" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                                       <GridPane.margin>
+                                          <Insets right="10.0" />
+                                       </GridPane.margin></Button>
                                  </children>
                               </GridPane>
                            </children>
