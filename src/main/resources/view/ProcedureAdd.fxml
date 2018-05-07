@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="450.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProcedureAddController">
+    <children>
+        <Label fx:id="warningLabel" alignment="CENTER" layoutX="14.0" layoutY="188.0" prefHeight="15.0" prefWidth="339.0" text="Invalid Details" textAlignment="CENTER" textFill="RED" visible="false" />
+      <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="NEVER" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <GridPane GridPane.rowIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
+                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+              </rowConstraints>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                    <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonClicked" prefWidth="127.0" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
+                    <TextField fx:id="summaryField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Summary of procedure" />
+                    <TextField fx:id="dateOfProcedureField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Date of Procedure (dd-mm-yyyy)" GridPane.rowIndex="1" />
+                    <TextField fx:id="descriptionField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Procedure description (optional)" GridPane.rowIndex="2" />
+                  <ListView fx:id="affectedOrgansListView" prefHeight="119.0" prefWidth="339.0" GridPane.rowIndex="4" />
+                  <Label fx:id="ProcedureDetailsLabel1" text="Affected Organs" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+              <Label fx:id="ProcedureDetailsLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Procedure Details" GridPane.halignment="CENTER">
+               <styleClass>
+                  <String fx:value="banner" />
+                  <String fx:value="banner-default" />
+               </styleClass>
+            </Label>
+         </children>
+      </GridPane>
+    </children>
+</AnchorPane>

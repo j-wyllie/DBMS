@@ -1,5 +1,8 @@
 # Things that don't belong under source control see https://github.com/github/gitignore
 
+# ODMS Specific
+CommandUtilsTestHistory.json
+
 # Java
 *.class
 
@@ -85,8 +88,7 @@ nbactions.xml
 
 # For now, ignoring all .idea stuff:
 .idea
-app.iml
-odms.iml
+*.iml
 
 # User-specific stuff:
 .idea/workspace.xml

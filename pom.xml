@@ -5,9 +5,9 @@
     <groupId>seng302</groupId>
     <artifactId>odms</artifactId>
     <packaging>jar</packaging>
-    <version>0.2</version>
+    <version>0.3</version>
     <name>Organ Donor Management System</name>
-    <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-4</url>
+    <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -38,18 +38,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.jline/jline -->
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>3.6.1</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/me.xdrop/fuzzywuzzy -->
         <dependency>
             <groupId>me.xdrop</groupId>
             <artifactId>fuzzywuzzy</artifactId>
             <version>1.1.10</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jline/jline -->
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.6.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
@@ -74,6 +74,12 @@
             <artifactId>openjfx-monocle</artifactId>
             <version>8u76-b04</version> <!-- jdk-9+181 for Java 9 -->
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.14</version>
         </dependency>
 
 

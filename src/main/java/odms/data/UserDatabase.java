@@ -7,6 +7,7 @@ public class UserDatabase {
 
     private HashMap<Integer, User> userDb = new HashMap<>();
     private Integer lastID = -1;
+    private String path;
 
     /**
      * Find clinician by ID
@@ -25,9 +26,16 @@ public class UserDatabase {
      */
     public void addClinician(User user){
         lastID += 1;
-        System.out.println(lastID);
         user.setStaffId(lastID);
 
         userDb.put(lastID, user);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

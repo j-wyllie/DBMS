@@ -1,31 +1,28 @@
 package odms.controller;
 
-import static odms.controller.AlertController.InvalidUsername;
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
-
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.ProfileDatabase;
-import odms.profile.Profile;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
 import odms.user.User;
 
-public class LoginController {
+public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
-    private static Profile currentProfile;
+    private static Profile currentProfile = null;
     private static User currentUser;
 
     /**
@@ -43,35 +40,38 @@ public class LoginController {
     /**
      * Scene change to profile profile view if log in credentials are valid.
      * @param event clicking on the login button.
-     * @throws IOException
      */
     @FXML
-    private void handleLoginButtonClicked(ActionEvent event) throws IOException {
-
+    private void handleLoginButtonClicked(ActionEvent event) {
         try {
-            int userId = Integer.valueOf(usernameField.getText());
-            if(userId == 0){
-                currentUser = userDatabase.getClinician(0);
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
-                Scene newScene = new Scene(parent);
-                Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                appStage.setScene(newScene);
-                appStage.show();
-            } else {
-                currentProfile = currentDatabase.getProfile(userId);
-                if (currentProfile != null) {
-                    Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
-                    Scene newScene = new Scene(parent);
-                    Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    appStage.setScene(newScene);
-                    appStage.show();
+            if (!usernameField.getText().equals("")) {
+                int userId = Integer.valueOf(usernameField.getText());
+
+                if (userId == 0) {
+                    currentUser = userDatabase.getClinician(0);
+                    String scene = "/view/ClinicianProfile.fxml";
+                    String title = "Clinician";
+                    showScene(event, scene, title, true);
                 } else {
-                    InvalidUsername();
+                    currentProfile = currentDatabase.getProfile(userId);
+
+                    if (currentProfile != null) {
+                        String scene = "/view/ProfileDisplay.fxml";
+                        String title = "Profile";
+                        showScene(event, scene, title, true);
+                    } else {
+                        invalidUsername();
+                    }
                 }
             }
-        }
-        catch (Exception e) {
-            InvalidUsername();
+        } catch (NumberFormatException e) {
+
+            invalidEntry();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            invalidUsername();
         }
     }
 
@@ -82,16 +82,21 @@ public class LoginController {
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/CreateProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
+        String scene = "/view/ProfileCreate.fxml";
+        String title = "Create Profile";
+        showScene(event, scene, title, false);
     }
 
     public static Profile getCurrentProfile() {
         return currentProfile;
     }
+
+
+    @FXML
+    private void onEnter(ActionEvent event) {
+        handleLoginButtonClicked(event);
+    }
+
     public static User getCurrentUser() { return currentUser; }
     public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }

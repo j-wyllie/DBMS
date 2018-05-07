@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -16,7 +23,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.EditDonorProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -75,7 +82,7 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </ImageView>
-                                                                <Label prefHeight="69.0" prefWidth="207.0" text="CONTACT" GridPane.columnSpan="3">
+                                                                <Label prefHeight="69.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="CONTACT" GridPane.columnSpan="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="60.0" />
                                                                     </GridPane.margin>
@@ -83,7 +90,7 @@
                                                                         <Font name="Arial Bold" size="25.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="phoneNumberLabel" prefHeight="58.0" prefWidth="401.0" text="Phone : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                <Label fx:id="phoneNumberLabel" prefHeight="58.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Phone : " GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" right="70.0" />
                                                                     </GridPane.margin>
@@ -91,7 +98,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="emailLabel" layoutX="30.0" layoutY="99.0" prefHeight="55.0" prefWidth="401.0" text="Email :" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                <Label fx:id="emailLabel" layoutX="30.0" layoutY="99.0" prefHeight="55.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Email :" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" right="70.0" />
                                                                     </GridPane.margin>
@@ -99,7 +106,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="addressLabel" layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="401.0" text="Address : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                <Label fx:id="addressLabel" layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Address : " GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" right="70.0" />
                                                                     </GridPane.margin>
@@ -107,7 +114,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="regionLabel" layoutX="30.0" layoutY="235.0" prefHeight="57.0" prefWidth="401.0" text="Region : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                <Label fx:id="regionLabel" layoutX="30.0" layoutY="235.0" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region : " GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" right="70.0" />
                                                                     </GridPane.margin>
@@ -174,7 +181,7 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </ImageView>
-                                                                <Label fx:id="dobLabel" prefHeight="66.0" prefWidth="700.0" text="Date of birth : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                <Label fx:id="dobLabel" prefHeight="66.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of birth : " GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -182,7 +189,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="genderLabel" layoutX="30.0" layoutY="99.0" prefHeight="74.0" prefWidth="700.0" text="Gender : " GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                <Label fx:id="genderLabel" layoutX="30.0" layoutY="99.0" prefHeight="74.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Gender : " GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -190,7 +197,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="heightLabel" layoutX="30.0" layoutY="167.0" prefHeight="75.0" prefWidth="700.0" text="Height : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                                <Label fx:id="heightLabel" layoutX="30.0" layoutY="167.0" prefHeight="75.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Height : " GridPane.columnSpan="2" GridPane.rowIndex="7">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -198,7 +205,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="weightLabel" layoutX="30.0" layoutY="235.0" prefHeight="69.0" prefWidth="700.0" text="Weight : " GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                <Label fx:id="weightLabel" layoutX="30.0" layoutY="235.0" prefHeight="69.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Weight : " GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -206,7 +213,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="61.0" prefWidth="700.0" text="Given names : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                <Label fx:id="givenNamesLabel" layoutX="30.0" layoutY="235.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Given names : " GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -214,7 +221,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label prefHeight="74.0" prefWidth="207.0" text="DETAILS" GridPane.columnSpan="2">
+                                                                <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
                                                                     <font>
                                                                         <Font name="Arial Bold" size="25.0" />
                                                                     </font>
@@ -222,7 +229,7 @@
                                                                         <Insets left="60.0" />
                                                                     </GridPane.margin>
                                                                 </Label>
-                                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="61.0" prefWidth="700.0" text="Surnames : " GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                <Label fx:id="lastNamesLabel" layoutX="30.0" layoutY="99.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Surnames : " GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -230,7 +237,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="irdLabel" layoutX="30.0" layoutY="132.0" prefHeight="61.0" prefWidth="700.0" text="IRD : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                <Label fx:id="irdLabel" layoutX="30.0" layoutY="132.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="IRD : " GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -238,7 +245,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="dodLabel" layoutX="30.0" layoutY="158.0" prefHeight="61.0" prefWidth="700.0" text="Date of death : " GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                <Label fx:id="dodLabel" layoutX="30.0" layoutY="158.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of death : " GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                     <font>
                                                                         <Font size="22.0" />
                                                                     </font>
@@ -305,7 +312,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab closable="false" text="Medical">
+                        <Tab fx:id="editMedicalTab" closable="false" text="Medical">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -326,11 +333,12 @@
                                                             <columnConstraints>
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="148.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="176.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="176.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="160.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="172.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="10.0" prefWidth="172.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="150.0" />
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
                                                             </columnConstraints>
                                                             <rowConstraints>
                                                                 <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
@@ -341,6 +349,7 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="78.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
@@ -352,7 +361,7 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </ImageView>
-                                                                <Label fx:id="bloodPressureLabel" prefHeight="48.0" prefWidth="1170.0" text="Blood Pressure : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                <Label fx:id="bloodPressureLabel" prefHeight="48.0" prefWidth="1170.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Pressure : " GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -360,7 +369,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="organsLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                <Label fx:id="organsDonateLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -368,7 +377,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="donationsLabel" layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="1185.0" text="Past Donations : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                                <Label fx:id="donationsLabel" layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="1185.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Past Donations : " GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -376,7 +385,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="bloodTypeLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1179.0" text="Blood Type : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                <Label fx:id="bloodTypeLabel" layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1179.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Type : " GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -384,7 +393,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label prefHeight="74.0" prefWidth="207.0" text="DETAILS" GridPane.columnSpan="2">
+                                                                <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
                                                                     <font>
                                                                         <Font name="Arial Bold" size="25.0" />
                                                                     </font>
@@ -392,7 +401,7 @@
                                                                         <Insets left="60.0" />
                                                                     </GridPane.margin>
                                                                 </Label>
-                                                                <Label fx:id="smokerLabel" layoutX="30.0" layoutY="99.0" prefHeight="48.0" prefWidth="1173.0" text="Smoker : " GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                <Label fx:id="smokerLabel" layoutX="30.0" layoutY="99.0" prefHeight="48.0" prefWidth="1173.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Smoker : " GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -400,7 +409,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="alcoholConsumptionLabel" layoutX="30.0" layoutY="132.0" prefHeight="48.0" prefWidth="1150.0" text="Alcohol Consumption : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                <Label fx:id="alcoholConsumptionLabel" layoutX="30.0" layoutY="132.0" prefHeight="48.0" prefWidth="1150.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Alcohol Consumption : " GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -408,7 +417,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="chronicDiseasesLabel" layoutX="30.0" layoutY="158.0" prefHeight="48.0" prefWidth="1178.0" text="Chronic Diseases: " GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                <Label fx:id="chronicDiseasesLabel" layoutX="30.0" layoutY="158.0" prefHeight="48.0" prefWidth="1178.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Chronic Diseases: " GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                     <font>
                                                                         <Font size="22.0" />
                                                                     </font>
@@ -416,7 +425,7 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </Label>
-                                                                <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+                                                                <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                                                                     <items>
                                                                         <Button fx:id="undoMedicalButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
                                                                         <Button fx:id="redoMedicalButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRedoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/redo.png); -fx-background-size: stretch;" />
@@ -428,11 +437,6 @@
                                                                     </GridPane.margin>
                                                                 </ToolBar>
                                                                 <TextField fx:id="bloodTypeField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="smokerField" layoutX="278.0" layoutY="68.0" promptText="True/False" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
@@ -452,16 +456,29 @@
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="organField" layoutX="278.0" layoutY="259.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="donationsField" layoutX="278.0" layoutY="306.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
+                                                <Label fx:id="organsRequiredLabel" layoutX="30.0" layoutY="278.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                      <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin></Button>
+                                                <Button fx:id="btnOrgansDonate" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonateClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <Button fx:id="btnOrgansDonations" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonationsClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <RadioButton fx:id="isSmokerRadioButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                             </children>
                                                         </GridPane>
                                                     </children>
@@ -496,41 +513,53 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                <TilePane prefHeight="200.0" prefWidth="1202.0" style="-fx-background-color: #1fa98c;" GridPane.columnSpan="2">
-                    <children>
-                        <GridPane prefHeight="146.0" prefWidth="1203.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="15.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0" vgrow="NEVER" />
-                                <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="74.0" vgrow="NEVER" />
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Label fx:id="donorFullNameLabel" prefHeight="52.0" prefWidth="972.0" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.rowIndex="1">
-                                    <font>
-                                        <Font name="System Bold" size="40.0" />
-                                    </font>
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                </Label>
-                                <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" text="Donor Status: " textFill="WHITE" GridPane.rowIndex="2">
-                                    <font>
-                                        <Font size="28.0" />
-                                    </font>
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                </Label>
-                            </children>
-                        </GridPane>
-                    </children></TilePane>
+                  <GridPane prefHeight="146.0" prefWidth="1203.0" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
+                      <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="15.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0" vgrow="NEVER" />
+                          <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="45.0" vgrow="NEVER" />
+                          <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <children>
+                          <Label fx:id="donorFullNameLabel" prefHeight="52.0" prefWidth="972.0" styleClass="banner-text-header" stylesheets="@../styles/Profile.css" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.rowIndex="1">
+                              <font>
+                                  <Font name="System Bold" size="40.0" />
+                              </font>
+                              <GridPane.margin>
+                                  <Insets bottom="10.0" left="40.0" />
+                              </GridPane.margin>
+                          </Label>
+                          <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Donor Status: " textFill="WHITE" GridPane.rowIndex="2">
+                              <font>
+                                  <Font size="28.0" />
+                              </font>
+                              <GridPane.margin>
+                                  <Insets bottom="10.0" left="40.0" />
+                              </GridPane.margin>
+                          </Label>
+                  <Label fx:id="receiverStatusLabel" layoutX="60.0" layoutY="96.0" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Receiver Status: " textFill="WHITE" GridPane.rowIndex="3">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="40.0" />
+                     </GridPane.margin>
+                  </Label>
+                      </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="banner" />
+                  <String fx:value="banner-default" />
+               </styleClass>
+                  </GridPane>
             </children>
         </GridPane>
     </children>

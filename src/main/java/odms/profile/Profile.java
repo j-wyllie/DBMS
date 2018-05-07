@@ -1,17 +1,22 @@
 package odms.profile;
 
-import java.time.Period;
-import java.util.Arrays;
-import java.util.Collections;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import odms.cli.CommandUtils;
+import odms.controller.AlertController;
+import odms.medications.Drug;
 
 public class Profile {
+
+    private Boolean donor;
+    private Boolean receiver;
 
     private String givenNames;
     private String lastNames;
@@ -23,19 +28,23 @@ public class Profile {
     private String bloodType;
     private String address;
     private String region;
-    private Boolean registered;
-    private Integer age;
 
     private Boolean smoker;
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private Set<String> chronicDiseases = new HashSet<>();
+    private HashSet<String> chronicDiseases = new HashSet<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
-    private Set<Organ> organs = new HashSet<>();
-    private Set<Organ> donatedOrgans = new HashSet<>();
+    private ArrayList<Procedure> procedures = new ArrayList<>();
+
+    private HashSet<Organ> organsDonating = new HashSet<>();
+    private HashSet<Organ> organsDonated = new HashSet<>();
+    private HashSet<Organ> organsRequired = new HashSet<>();
+    private HashSet<Organ> organsReceived = new HashSet<>();
+
+    private ArrayList<Condition> conditions = new ArrayList<>();
 
     private String phone;
     private String email;
@@ -46,6 +55,10 @@ public class Profile {
 
     private Integer id;
 
+    private ArrayList<Drug> currentMedications;
+    private ArrayList<Drug> historyOfMedication;
+    private ArrayList<String> medicationTimestamps;
+
     /**
      * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
@@ -53,6 +66,10 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
+        procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
@@ -68,13 +85,17 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
+        currentMedications = new ArrayList<>();
+        historyOfMedication = new ArrayList<>();
+        medicationTimestamps = new ArrayList<>();
+
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
         attr.add("last-names=\"" + lastNames + "\"");
         attr.add("ird=\"" + irdNumber + "\"");
         attr.add("dob=\"" + dob + "\"");
-
+        this.setReceiver(false); // TODO decide behaviour
         setExtraAttributes(attr);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -91,7 +112,12 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            setGivenAttribute(parts);
+            if(parts.length==1) {
+                String[] newParts = {parts[0], ""};
+                setGivenAttribute(newParts);
+            } else {
+                setGivenAttribute(parts);
+            }
         }
     }
 
@@ -102,7 +128,10 @@ public class Profile {
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        String value = null;
+        if(!parts[1].equals(null)) {
+            value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        }
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             setGivenNames(value);
@@ -141,7 +170,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null")) {
+            if(value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -164,15 +193,15 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            else {
+                setBloodPressureSystolic(Integer.valueOf(value));
             }
-            setBloodPressureSystolic(Integer.valueOf(value));
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {
-                value = "0";
+            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            else {
+                setBloodPressureDiastolic(Integer.valueOf(value));
             }
-            setBloodPressureDiastolic(Integer.valueOf(value));
         }else if (attrName.equals("phone")) {
             setPhone(value);
         }else if (attrName.equals("email")) {
@@ -184,88 +213,73 @@ public class Profile {
     }
 
     /**
-     * Outputs the profile's organs that they want to donate
+     * Add a procedure to the current profile
+     * @param procedure
      */
-    public void viewOrgans() {
-        String output = "Organs to donate: ";
-
-        for (Organ org : organs) {
-            output += org.getName() + ", ";
+    public void addProcedure(Procedure procedure) {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
         }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
+        procedures.add(procedure); }
+
+    /**
+     * Remove a procedure from the current profile
+     * @param procedure
+     */
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+
+    /**
+     * Gets all of the profiles procedures
+     * @return all procedures
+     */
+    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+
+    /**
+     * Gets all the previous procedures
+     * @return previous procedures
+     */
+    public ArrayList<Procedure> getPreviousProcedures() {
+        ArrayList<Procedure> prevProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isBefore(LocalDate.now())) {
+                    prevProcedures.add(procedure);
+                }
+            }
+        }
+        return prevProcedures;
     }
 
     /**
-     * View the list of donations that the profile has made
+     * Gets all the pending procedures
+     * @return pending procedures
      */
-    public void viewDonations() {
-        String output = "Organs donated:  ";
-
-        for (Organ org : donatedOrgans) {
-            output += org.getName() + ", ";
+    public ArrayList<Procedure> getPendingProcedures() {
+        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+        if (procedures != null) {
+            for (Procedure procedure : procedures) {
+                if (procedure.getDate().isAfter(LocalDate.now())) {
+                    pendingProcedures.add(procedure);
+                }
+            }
         }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
+        return pendingProcedures;
     }
 
     /**
-     * Outputs the profile's attributes
+     * Given a procedure, will return whether the procedure has past
+     * @param procedure
+     * @return whether the procedure has past
      */
-    public void viewAttributes() {
-        if (irdNumber != null) {
-            System.out.println("IRD: " + irdNumber);
+    public boolean isPreviousProcedure(Procedure procedure) {
+        if (procedure.getDate().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            return false;
         }
-
-        System.out.println("ODMS ID: " + id);
-
-        if (givenNames != null) {
-            System.out.println("Given Names: " + givenNames);
-        }
-
-        if (lastNames != null) {
-            System.out.println("Last Names: " + lastNames);
-        }
-
-        System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        if (dateOfDeath != null) {
-            System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }
-
-        if (gender != null) {
-            System.out.println("Gender: " + gender);
-        }
-
-        if (height != 0.0) {
-            System.out.println("Height: " + height + "cm");
-        }
-
-        if (weight != 0.0) {
-            System.out.println("Weight: " + weight);
-        }
-
-        if (bloodType != null) {
-            System.out.println("Blood Type: " + bloodType);
-        }
-
-        if (address != null) {
-            System.out.println("Address: " + address);
-        }
-
-        if (region != null) {
-            System.out.println("Region: " + region);
-        }
-
-        if (organs.size() > 0) {
-            viewOrgans();
-        }
-
-        System.out.println("IRD: " + irdNumber);
-
-        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
     }
 
+    // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
         summary = summary +("ird=" + irdNumber);
@@ -290,21 +304,27 @@ public class Profile {
     }
 
     /**
-     * This will add a csv list to the list of organs
-     * @param organs the organs to add as a csv
+     * Add a comma delimited organ string to the Organs Donating
+     * @param organString the Comma delimited organ string
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansFromString(String organs) {
-        String[] org = organs.split(",");
-        addOrgans(new HashSet<>(Arrays.asList(org)));
+    public void addOrgansDonatingFromString(String organString) throws OrganConflictException {
+        String[] organStrings = organString.split("(,\\s+|,)");
+
+        for (String organ : organStrings) {
+            organsDonating.add(Organ.valueOf(organ));
+        }
+
+        addOrgansDonating(organsDonating);
     }
 
     /**
      * Adds a csv list to the list of donations
-     * @param organs the organs to add as a csv
+     * @param organString the organs to add as a csv
      */
-    public void addDonationFromString(String organs) {
-        String[] org = organs.split(",");
-        addDonations(new HashSet<>(Arrays.asList(org)));
+    public void addDonationFromString(String organString) {
+        String[] organStrings = organString.split("(,\\s+|,)");
+        this.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organStrings)));
     }
 
     /**
@@ -320,97 +340,198 @@ public class Profile {
     }
 
     /**
-     * Returns the organs as a csv string
-     * @return string of the organs
+     * Add an organ to the organs donate list.
+     * @param organ the organ the profile wishes to donate
      */
-    public String getOrgansAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = organs.size();
-
-        for (Organ org : organs) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
-            }
+    public void addOrgan(Organ organ) throws OrganConflictException {
+        if (this.organsRequired.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently receiver for " + organ,
+                    organ
+            );
         }
-        return out;
+        this.organsDonating.add(organ);
     }
 
     /**
-     * returns the chronic diseases as a csv string
-     * @return list of chronic dieseases
+     * Add an organ to the organs required list.
+     * @param organ the organ the profile requires
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public String getChronicDiseasesAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = chronicDiseases.size();
-
-        for (String disease : chronicDiseases) {
-            count++;
-            if (count == len) {
-                out += disease;
-            } else {
-                out += disease + ", ";
-            }
+    public void addOrganRequired(Organ organ) throws OrganConflictException {
+        if (this.organsDonating.contains(organ)) {
+            throw new OrganConflictException(
+                    "Profile is currently donor for  " + organ,
+                    organ
+            );
         }
-        return out;
+        this.organsRequired.add(organ);
     }
 
     /**
-     * returns the donations as a csv
-     * @return String of donations as csv
+     * Consume a set of organs that the profile wants to receive and updates the profile to use this
+     * new set.
+     * @param organs the set of organs to be received
      */
-    public String getDonationsAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = donatedOrgans.size();
+    public void setOrgansRequired(HashSet<Organ> organs) {
+        generateUpdateInfo("organsRequired");
 
-        for (Organ org : donatedOrgans) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
+        try {
+            this.organsRequired.clear();
+            for (Organ organ : organs) {
+                addOrganRequired(organ);
+
+                // TODO history refactor
+                String action = "Profile " +
+                        this.getId() +
+                        " required organ " +
+                        organ.getNamePlain() +
+                        " at " +
+                        LocalDateTime.now();
+                if (CommandUtils.getHistory().size() != 0) {
+                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                                CommandUtils.getHistory().size() - 1).clear();
+                    }
+                }
+                CommandUtils.currentSessionHistory.add(action);
+                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             }
+        } catch (OrganConflictException e) {
+            AlertController.invalidOrgan();
         }
-        return out;
     }
 
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
-     * @param organs a set of organs they want to donate
+     * @param organs the set of organs to donate
+     * @throws IllegalArgumentException if a bad argument is used
+     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgans(Set<String> organs) throws IllegalArgumentException {
-        generateUpdateInfo("donatedOrgans");
+    public void addOrgansDonating(Set<Organ> organs)
+            throws IllegalArgumentException, OrganConflictException {
+        // TODO shouldn't be checking for args here
+        generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
 
-        Set<Organ> newOrgans = new HashSet<>();
+        for (Organ organ : organs) {
+            if (this.organsDonating.contains(organ)) {
+                throw new IllegalArgumentException(
+                        "Organ " + organ + " already exists in donating list"
+                );
+            }
+            this.addOrgan(organ);
 
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-        }
+            String action = "Profile " +
+                    this.getId() +
+                    " added " +
+                    organ +
+                    " to donate at " +
+                    LocalDateTime.now();
 
-        if (Collections.disjoint(newOrgans, this.organs) && registered) {
-            this.organs.addAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
+            // TODO abstract history
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition()
+                        != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory
+                            .subList(CommandUtils.getPosition(),
+                                    CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 
+    public HashSet<Organ> getOrgansRequired() {
+        return organsRequired;
+    }
+
     /**
-     * Add a set of organs to the list of organs that the profile has donated
-     * @param organs a set of organs that the profile has donated
+     * Add an organ to the set of received organs.
+     * If the organ exists in the receiving set, remove it.
+     * @param organ to be added
      */
-    public void addDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.add(organ);
+    public void addOrganReceived(Organ organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
+
+        this.organsReceived.add(organ);
+    }
+
+    /**
+     * Add a set of organs to the set of received organs.
+     * @param organs set to be added
+     */
+    public void addOrgansReceived(Set<Organ> organs) {
+        generateUpdateInfo("organsReceived");
+
+        for (Organ organ : organs) {
+            addOrganReceived(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " added " +
+                    organ.getNamePlain() +
+                    " to received organs " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        }
+    }
+
+    public HashSet<Organ> getOrgansReceived() {
+        return organsReceived;
+    }
+
+    /**
+     * Add an organ to the list of donated organsDonating.
+     * If the organ exists in the donating list, remove it from the donating list.
+     * @param organ the organ to be added
+     */
+    public void addOrganDonated(Organ organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
+
+        this.organsDonated.add(organ);
+    }
+
+    /**
+     * Add a set of organsDonating to the list of organsDonating that the profile has donated
+     * @param organs a set of organsDonating that the profile has donated
+     */
+    public void addOrgansDonated(Set<Organ> organs) {
+        generateUpdateInfo("pastDonations");
+
+        for (Organ organ : organs) {
+            this.organsDonated.add(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " added " +
+                    organ.getNamePlain() +
+                    " to past donations " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 
@@ -419,11 +540,11 @@ public class Profile {
      * @param organs a set of organs to remove from the list
      */
     public void removeDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
+        generateUpdateInfo("organsDonated");
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
             Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.remove(organ);
+            this.organsDonated.remove(organ);
         }
     }
 
@@ -432,9 +553,9 @@ public class Profile {
      * @param organs a set of organs to be removed
      */
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
-        generateUpdateInfo("organs");
+        generateUpdateInfo("organsDonating");
 
-        Set<Organ> newOrgans = new HashSet<>();
+        HashSet<Organ> newOrgans = new HashSet<>();
 
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
@@ -442,11 +563,20 @@ public class Profile {
             newOrgans.add(organ);
         }
 
-        if (!Collections.disjoint(newOrgans, this.organs)) {
-            this.organs.removeAll(newOrgans);
+        if (!Collections.disjoint(newOrgans, this.organsDonating)) {
+            this.organsDonating.removeAll(newOrgans);
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+
+    public void setReceiver(boolean receiver) {
+        this.receiver = receiver;
+    }
+
+    public boolean isReceiver() {
+        return receiver;
     }
 
     /**
@@ -454,7 +584,7 @@ public class Profile {
      * @return BMI
      */
     public Double calculateBMI() {
-        return this.weight / ((this.height / 100) * (this.height / 100));
+        return this.weight / ((this.height) * (this.height));
     }
 
     /**
@@ -488,13 +618,166 @@ public class Profile {
         updateActions.add(output);
     }
 
-    public Set<Organ> getDonatedOrgans() {
-        return donatedOrgans;
+    /**
+     * adds a drug to the list of current medications a donor is on.
+     * @param drug the drug to be added
+     */
+    public void addDrug(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        currentMedications.add(drug);
+        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        medicationTimestamps.add(data);
+        generateUpdateInfo(drug.getDrugName());
     }
 
-    public Set<Organ> getOrgans() {
-        return organs;
+    /**
+     * deletes a drug from the list of current medications if it was added by accident.
+     * @param drug the drug to be deleted.
+     */
+    public void deleteDrug(Drug drug) {
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        } else if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
     }
+
+    /**
+     * Moves the drug to the history of drugs the donor has taken.
+     * @param drug the drug to be moved to the history
+     */
+    public void moveDrugToHistory(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(currentMedications.contains(drug)){
+            currentMedications.remove(drug);
+            historyOfMedication.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+
+
+    }
+
+    /**
+     * Moves the drug to the list of current drugs the donor is taking.
+     * @param drug the drug to be moved to the current drug list
+     */
+    public void moveDrugToCurrent(Drug drug){
+        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
+        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(historyOfMedication.contains(drug)){
+            historyOfMedication.remove(drug);
+            currentMedications.add(drug);
+            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            generateUpdateInfo(drug.getDrugName());
+        }
+
+    }
+
+    public ArrayList<Drug> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    public ArrayList<Drug> getHistoryOfMedication() {
+        return historyOfMedication;
+    }
+
+    public ArrayList<String> getMedicationTimestamps() {
+        return medicationTimestamps;
+    }
+
+    public HashSet<Organ> getOrgansDonated() {
+        return organsDonated;
+    }
+
+    public HashSet<Organ> getOrgansDonating() {
+        return organsDonating;
+    }
+
+
+    // Condition functions
+
+    /**
+     * Gets all the current conditions of the user
+     * @return the conditions of the user
+     */
+    public ArrayList<Condition> getAllConditions() { return conditions; }
+
+    /**
+     * Gets all the cured conditions of the user
+     * @return the cured conditions of the user
+     */
+    public ArrayList<Condition> getCuredConditions() {
+        ArrayList<Condition> curedConditions = new ArrayList<>();
+        try {
+            for (Condition condition : conditions) {
+                if (condition.getCured()) {
+                    curedConditions.add(condition);
+                }
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return curedConditions;
+    }
+
+    /**
+     * Gets all the current conditions of the user
+     * @return the current conditions of the user
+     */
+    public ArrayList<Condition> getCurrentConditions() {
+        ArrayList<Condition> currentConditions = new ArrayList<>();
+        try {
+            for (Condition condition : conditions) {
+                if (!condition.getCured()) {
+                    currentConditions.add(condition);
+                }
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return currentConditions;
+    }
+
+    /**
+     * adds a condition from the user
+     * @param condition to be added
+     */
+    public void addCondition(Condition condition) {
+        if (conditions == null) { conditions = new ArrayList<>(); }
+        conditions.add(condition);
+    }
+
+    /**
+     * removes a condition from the user
+     * @param condition to be removed
+     */
+    public void removeCondition(Condition condition) {
+        conditions.remove(condition);
+    }
+    // -------
 
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
@@ -570,8 +853,10 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        generateUpdateInfo("blood-type");
-        this.bloodType = bloodType;
+        if(bloodType != null) {
+            generateUpdateInfo("blood-type");
+            this.bloodType = bloodType;
+        }
     }
 
     public String getAddress() {
@@ -599,6 +884,22 @@ public class Profile {
     public void setIrdNumber(Integer irdNumber) {
         generateUpdateInfo("ird");
         this.irdNumber = irdNumber;
+    }
+
+    public Boolean getDonor() {
+        return donor;
+    }
+
+    public void setDonor(Boolean donor) {
+        this.donor = donor;
+    }
+
+    public Boolean getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Boolean receiver) {
+        this.receiver = receiver;
     }
 
     public Integer getId() {
@@ -641,25 +942,21 @@ public class Profile {
         this.bloodPressureDiastolic = bloodPressureDiastolic;
     }
 
+    /**
+     * Returns a string formatted Systolic / Diastolic.
+     *
+     * @return blood pressure string
+     */
     public String getBloodPressure() {
         return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
 
-    public Set<String> getChronicDiseases() {
+    public HashSet<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
-
-    public void setChronicDiseases(Set<String> chronicDiseases) {
+    public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
-    }
-
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
-    }
-
-    public Boolean getRegistered() {
-        return registered;
     }
 
     public String getPhone() {
@@ -677,4 +974,9 @@ public class Profile {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setAllConditions(ArrayList<Condition> conditions) {
+        this.conditions = conditions;
+    }
+
 }
