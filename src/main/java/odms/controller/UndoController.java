@@ -2,8 +2,10 @@ package odms.controller;
 
 import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 import odms.profile.Organ;
 import odms.profile.Profile;
+import odms.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +22,9 @@ public class UndoController {
         currentSessionHistory = HistoryController.getHistory();
         try {
             String action = currentSessionHistory.get(historyPosition);
-            action = action.substring(0, action.indexOf(" at"));
+            if(action!= "") {
+                action = action.substring(0, action.indexOf(" at"));
+            }
             if (action.contains("added")) {
                 added(currentDatabase, action);
             } else if (action.contains("deleted")) {
@@ -31,16 +35,33 @@ public class UndoController {
                 set(currentDatabase, action);
             } else if (action.contains("donate")) {
                 donate(currentDatabase, action);
-            } else if (action.contains("update")) {
+            } else if (action.contains("update") && !action.contains("updated")) {
                 update(currentDatabase, action);
             } else if (action.contains("EDITED")) {
                 edited(currentDatabase, action);
+            } else if (action.contains("updated")) {
+                updated(action);
             }
-            HistoryController.setPosition(historyPosition);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("No commands have been entered");
         }
+    }
+
+    private static void updated(String action) {
+        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+        User user = LoginController.userDatabase.getClinician(id);
+        String previous = action.substring(action.indexOf("(")+1,action.indexOf(")"));
+        String[] previousValues = previous.split(",");
+        user.setName(previousValues[1].replace("name=",""));
+        user.setStaffId(Integer.valueOf(previousValues[0].replace("staffId=","").replace(" ","")));
+        user.setWorkAddress(previousValues[2].replace("workAddress=",""));
+        user.setRegion(previousValues[3].replace("region=",""));
+        if (historyPosition > 0) {
+            historyPosition -= 1;
+        }
+
+        HistoryController.setPosition(historyPosition);
     }
 
     public static void added(ProfileDatabase currentDatabase, String action) {
@@ -48,11 +69,11 @@ public class UndoController {
         Profile profile = currentDatabase.getProfile(id);
         currentDatabase.deleteProfile(id);
         unaddedProfiles.add(profile);
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
-        } else {
-            historyPosition = 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
     public static void deleted(ProfileDatabase currentDatabase, String action) {
         int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
@@ -71,9 +92,11 @@ public class UndoController {
         currentSessionHistory
                 .set(historyPosition,
                         ("Profile " + id + " deleted at " + LocalDateTime.now()));
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
 }
 
     public static void removed(ProfileDatabase currentDatabase, String action) throws Exception{
@@ -84,9 +107,11 @@ public class UndoController {
                         action.indexOf("[") + 1,
                         action.indexOf("]")).split(",")
         )));
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
     public static void set(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
@@ -94,9 +119,11 @@ public class UndoController {
         Set<String> organSet = new HashSet<>(Arrays.asList(
                 action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
         profile.removeOrgans(organSet);
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
     public static void donate(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
@@ -104,9 +131,11 @@ public class UndoController {
         Set<String> organSet = new HashSet<>(Arrays.asList(
                 action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
         profile.removeDonations(organSet);
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
     public static void update(ProfileDatabase currentDatabase, String action){
         int id = Integer.parseInt(
@@ -115,9 +144,11 @@ public class UndoController {
         System.out.println(action);
         String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
         profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
     public static void edited(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(
@@ -150,9 +181,11 @@ public class UndoController {
                     .setLongDescription(previousValues[2]);
         }
         profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
-        if (historyPosition != 0) {
+        if (historyPosition > 0) {
             historyPosition -= 1;
         }
+
+        HistoryController.setPosition(historyPosition);
     }
 
 }

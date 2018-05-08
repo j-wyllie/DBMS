@@ -4,6 +4,7 @@ import odms.data.ProfileDatabase;
 import odms.profile.Organ;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
+import odms.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,10 +17,9 @@ public class RedoController {
 
     public static void redo(ProfileDatabase currentDatabase) {
         try {
-            System.out.println(historyPosition);
-            System.out.println(currentSessionHistory.size());
-
-            if (historyPosition != currentSessionHistory.size()) {
+            currentSessionHistory = HistoryController.getHistory();
+            historyPosition = HistoryController.getPosition();
+            if (historyPosition != currentSessionHistory.size()-1) {
                 historyPosition += 1;
                 String action;
                 if (historyPosition == 0) {
@@ -31,7 +31,7 @@ public class RedoController {
                     System.out.println(currentSessionHistory);
                     action = currentSessionHistory.get(historyPosition);
                 }
-                System.out.println(action);
+                int end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
                 if (action.contains("added")) {
                     added(currentDatabase, action);
@@ -43,10 +43,12 @@ public class RedoController {
                     set(currentDatabase, action);
                 } else if (action.contains("donate")) {
                     donate(currentDatabase, action);
-                } else if (action.contains("update")) {
+                } else if (action.contains("update") && !action.contains("updated")) {
                     update(currentDatabase, action);
                 } else if (action.contains("EDITED")) {
                     edited(currentDatabase, action);
+                }  else if (action.contains("updated")) {
+                    updated(action, end);
                 }
                 HistoryController.setPosition(historyPosition);
                 System.out.println("Command redone");
@@ -57,6 +59,17 @@ public class RedoController {
             System.out.println(e.getMessage());
             System.out.println("No commands have been entered.");
         }
+    }
+
+    private static void updated(String action, int end) {
+        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+        User user = LoginController.userDatabase.getClinician(id);
+        String newString = action.substring(action.indexOf("new = (")+7,end);
+        String[] newValues = newString.split(",");
+        user.setName(newValues[1].replace("name=",""));
+        user.setStaffId(Integer.valueOf(newValues[0].replace("staffId=","").replace(" ","")));
+        user.setWorkAddress(newValues[2].replace("workAddress=",""));
+        user.setRegion(newValues[3].replace("region=",""));
     }
 
     public static void added(ProfileDatabase currentDatabase, String action) {

@@ -15,6 +15,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -95,6 +97,11 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         undo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -104,6 +111,11 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         redo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**

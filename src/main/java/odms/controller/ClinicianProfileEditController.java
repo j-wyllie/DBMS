@@ -81,14 +81,14 @@ public class ClinicianProfileEditController extends CommonController{
         boolean error = false;
         if (saveBool) {
             String action =
-                    "Clinician " + currentUser.getStaffId() + " updated details previous = " + currentUser
-                            .getAttributesSummary() + " new = ";
+                    "Clinician " + currentUser.getStaffId() + " updated details previous = (" + currentUser
+                            .getAttributesSummary() + ") new = (";
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());
             currentUser.setRegion(regionField.getText());
 
-            action = action + currentUser.getAttributesSummary() + " at " + LocalDateTime.now();
+            action = action + currentUser.getAttributesSummary() + ") at " + LocalDateTime.now();
             HistoryController.updateHistory(action);
 
             if(error == true) {

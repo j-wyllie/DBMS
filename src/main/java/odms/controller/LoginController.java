@@ -21,7 +21,7 @@ import odms.user.User;
 public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
-    private static UserDatabase userDatabase = getUserDatabase();
+    public static UserDatabase userDatabase = getUserDatabase();
     private static Profile currentProfile = null;
     private static User currentUser;
 
