@@ -467,7 +467,9 @@ public class ProfileDisplayController extends CommonController {
                 Comparator<Condition> comparator = new Comparator<Condition>() {
                     @Override
                     public int compare(Condition o1, Condition o2) {
-                        if (o1.getChronic() && o2.getChronic()) {
+                        if (o1 == null || o2 == null) {
+                            return 0;
+                        } else if (o1.getChronic() && o2.getChronic()) {
                             if (param.getComparator() == null) {
                                 return 0;
                             } else {
@@ -484,15 +486,31 @@ public class ProfileDisplayController extends CommonController {
                         }
                     }
                 };
-                FXCollections.sort(curConditionsTable.getItems(), comparator);
+                if (curConditionsTable.getItems().size() > 1) { // Can't sort one item
+                    FXCollections.sort(curConditionsTable.getItems(), comparator);
+                }
                 return true;
             }
         });
 
-        //forceSortOrder();
+        forceConditionSortOrder();
         refreshPageElements();
 
     }
+
+    /**
+     * forces the sort order of the conditions tables to default to the diagnoses date in Descending order
+     */
+    @FXML
+    private void forceConditionSortOrder() {
+        curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
+        curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+        pastConditionsTable.getSortOrder().clear();
+        pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
+        pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+    }
+
 
     /**
      * forces the sort order of the current conditions table so that Chronic conditions are always at the top

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -15,6 +10,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -26,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -598,15 +594,15 @@
                                     <TableView fx:id="curConditionsTable" onMouseReleased="#refreshPageElements" prefHeight="458.0" prefWidth="414.0" GridPane.rowIndex="1">
                                       <columns>
                                         <TableColumn fx:id="curDescriptionColumn" prefWidth="205.0" text="Description" />
-                                        <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="58.0" />
-                                          <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="150.0" text="Date of diagnosis" />
+                                        <TableColumn fx:id="curChronicColumn" minWidth="82.0" prefWidth="82.0" maxWidth="82.0" text="Chronic" />
+                                          <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="219.0" text="Date of diagnosis" />
                                       </columns>
                                     </TableView>
                                     <TableView fx:id="pastConditionsTable" onMouseReleased="#refreshPageElements" prefHeight="453.0" prefWidth="423.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                       <columns>
-                                        <TableColumn fx:id="pastDescriptionColumn" prefWidth="200.0" text="Description" />
-                                        <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="109.0" text="Date of diagnosis" />
-                                          <TableColumn fx:id="pastDateCuredColumn" prefWidth="113.0" text="Date cured" />
+                                        <TableColumn fx:id="pastDescriptionColumn" prefWidth="193.0" text="Description" />
+                                        <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="152.0" text="Date of diagnosis" />
+                                          <TableColumn fx:id="pastDateCuredColumn" prefWidth="161.0" text="Date cured" />
                                       </columns>
                                     </TableView>
                                     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -670,9 +666,9 @@
                                         </Text>
                                         <TableView fx:id="pendingProcedureTable" prefHeight="458.0" prefWidth="455.0" GridPane.rowIndex="1">
                                             <columns>
-                                                <TableColumn fx:id="pendingSummaryColumn" prefWidth="138.0" text="Summary" />
-                                                <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="0.0" />
-                                                <TableColumn fx:id="pendingDateColumn" prefWidth="140.0" text="Date of Procedure" />
+                                                <TableColumn fx:id="pendingSummaryColumn"  minWidth="138.0" prefWidth="138.0" text="Summary" />
+                                                <TableColumn fx:id="curChronicColumn" minWidth="82.0" prefWidth="82.0" />
+                                                <TableColumn fx:id="pendingDateColumn" minWidth="140.0" prefWidth="140.0" text="Date of Procedure" />
                                           <TableColumn fx:id="pendingAffectsColumn" prefWidth="176.0" text="Affects" />
                                             </columns>
                                         </TableView>
