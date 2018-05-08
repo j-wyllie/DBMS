@@ -1,8 +1,8 @@
 package odms.controller;
 
 import static odms.controller.LoginController.getCurrentUser;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.UndoController.undo;
+import static odms.controller.RedoController.redo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undo();
+        undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -103,7 +103,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redo();
+        redo(GuiMain.getCurrentDatabase());
     }
 
     /**

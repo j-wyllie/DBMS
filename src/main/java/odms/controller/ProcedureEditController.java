@@ -1,8 +1,8 @@
 package odms.controller;
 
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.RedoController.redo;
+import static odms.controller.UndoController.undo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,7 +81,7 @@ public class ProcedureEditController {
     }
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
-        undo();
+        undo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -90,7 +90,7 @@ public class ProcedureEditController {
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
-        redo();
+        redo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -130,14 +130,7 @@ public class ProcedureEditController {
         action += oldValues+newValues;
         action = action +"END at " + LocalDateTime.now();
         System.out.println(action);
-        if (CommandUtils.getHistory().size() != 0) {
-            if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                        CommandUtils.getHistory().size() - 1).clear();
-            }
-        }
-        CommandUtils.currentSessionHistory.add(action);
-        CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        HistoryController.updateHistory(action);
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
+import odms.controller.HistoryController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 
@@ -12,7 +13,7 @@ public class App {
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
 
     public static void main(String[] args) {
-        CommandUtils.currentSessionHistory.add("");
+        HistoryController.currentSessionHistory.add("");
         try {
 
             if (args == null || args.length == 0) {

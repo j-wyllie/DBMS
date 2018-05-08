@@ -6,8 +6,8 @@ import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.OrganController.setWindowType;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.RedoController.redo;
+import static odms.controller.UndoController.undo;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -120,7 +120,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -130,7 +130,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -234,14 +234,7 @@ public class ProfileEditController extends CommonController {
                     currentProfile.getAttributesSummary() +
                     " at " +
                     LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
-                }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+                HistoryController.updateHistory(action);
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");

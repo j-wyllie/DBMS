@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import com.google.gson.GsonBuilder;
 import odms.cli.CommandUtils;
+import odms.controller.HistoryController;
 
 public class ProfileDataIO extends CommonDataIO {
 
@@ -43,10 +44,10 @@ public class ProfileDataIO extends CommonDataIO {
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
             if(history.equals("")) {
-                history = gson.toJson(CommandUtils.getHistory());
+                history = gson.toJson(HistoryController.getHistory());
             } else {
                 history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+                history = history+","+gson.toJson(HistoryController.getHistory()).substring(1);
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();

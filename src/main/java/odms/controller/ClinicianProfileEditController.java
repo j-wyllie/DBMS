@@ -20,8 +20,8 @@ import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.RedoController.redo;
+import static odms.controller.UndoController.undo;
 import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
@@ -89,14 +89,7 @@ public class ClinicianProfileEditController extends CommonController{
             currentUser.setRegion(regionField.getText());
 
             action = action + currentUser.getAttributesSummary() + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
 
             if(error == true) {
                 guiPopup("Error. Not all fields were updated.");

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import odms.controller.HistoryController;
 import odms.medications.Drug;
 import odms.cli.CommandUtils;
 import org.junit.Test;
@@ -1115,8 +1116,8 @@ public class ProfileTest {
         someOrgans.add("Heart");
         testProfile.setOrgansRequired(Organ.stringListToOrganSet(someOrgans));
 
-        assertTrue(CommandUtils.currentSessionHistory
-                .get(CommandUtils.historyPosition)
+        assertTrue(HistoryController.currentSessionHistory
+                .get(HistoryController.historyPosition)
                 .contains(Organ.HEART.getNamePlain()
                 )
         );

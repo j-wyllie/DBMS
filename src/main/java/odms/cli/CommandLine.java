@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
+import odms.controller.RedoController;
+import odms.controller.UndoController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import org.jline.reader.LineReader;
@@ -180,12 +182,12 @@ public class CommandLine {
 
             case UNDO:
                 // Undoes the previously done action
-                CommandUtils.undo(currentDatabase);
+                UndoController.undo(currentDatabase);
                 break;
 
             case REDO:
                 //Redoes the previously undone action
-                CommandUtils.redo(currentDatabase);
+                RedoController.redo(currentDatabase);
                 break;
         }
     }

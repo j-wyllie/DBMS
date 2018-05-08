@@ -3,8 +3,8 @@ package odms.controller;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.RedoController.redo;
+import static odms.controller.UndoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
@@ -678,7 +678,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -687,7 +687,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -1078,10 +1078,10 @@ public class ProfileDisplayController extends CommonController {
             Gson gson = new Gson();
 
             if (history.equals("")) {
-                history = gson.toJson(CommandUtils.getHistory());
+                history = gson.toJson(HistoryController.getHistory());
             } else {
                 history = history.substring(0, history.length() - 1);
-                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
+                history = history + "," + gson.toJson(HistoryController.getHistory()).substring(1);
             }
             history = history.substring(1, history.length() - 1);
             String[] actionHistory = history.split(",");

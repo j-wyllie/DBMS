@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import odms.cli.CommandUtils;
 import odms.controller.AlertController;
+import odms.controller.HistoryController;
 import odms.medications.Drug;
 
 public class Profile {
@@ -388,14 +389,7 @@ public class Profile {
                         organ.getNamePlain() +
                         " at " +
                         LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
-                }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+                HistoryController.updateHistory(action);
             }
         } catch (OrganConflictException e) {
             AlertController.invalidOrgan();
@@ -430,16 +424,7 @@ public class Profile {
 
             // TODO abstract history
 
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition()
-                        != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory
-                            .subList(CommandUtils.getPosition(),
-                                    CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -478,14 +463,7 @@ public class Profile {
                     " to received organs " +
                     LocalDateTime.now();
 
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -524,14 +502,7 @@ public class Profile {
                     " to past donations " +
                     LocalDateTime.now();
 
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
         }
     }
 
