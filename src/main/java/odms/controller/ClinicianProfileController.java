@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
+import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -111,7 +112,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/EditClinicianProfile.fxml";
+        String scene = "/view/ClinicianProfileEdit.fxml";
         String title = "Edit Profile";
 
         showScene(event, scene, title, true);
@@ -294,6 +295,7 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private void initialize(){
+
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
@@ -301,7 +303,10 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        new TableFilter(transplantTable);
+
+
+        TableFilter filter = new TableFilter<>(transplantTable);
+        //filter.getColumnFilters().setAll(transplantTable.getItems());
 
     }
 }
