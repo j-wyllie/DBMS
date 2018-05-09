@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +24,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -297,23 +296,21 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs to Donate");
-        stage.show();
+        showOrgansSelectionWindow(event, "Organs to Donate");
     }
 
     @FXML
     private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs Required");
-        stage.show();
+        showOrgansSelectionWindow(event, "Organs Required");
     }
 
     @FXML
     private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Past Donations");
-        stage.show();
+        showOrgansSelectionWindow(event, "Past Donations");
     }
 
-    private Stage showOrgansSelectionWindow(String windowTitle) throws IOException {
+    private void showOrgansSelectionWindow(ActionEvent event, String windowTitle) throws IOException {
+        Node source = (Node) event.getSource();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/OrganEdit.fxml"));
 
@@ -326,7 +323,10 @@ public class ProfileEditController extends CommonController {
         stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.setResizable(false);
-        return stage;
+        stage.initOwner(source.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     /**
