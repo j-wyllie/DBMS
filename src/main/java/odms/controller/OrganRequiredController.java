@@ -1,12 +1,15 @@
 package odms.controller;
 
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -155,6 +158,7 @@ public class OrganRequiredController {
                 String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
                 observableListOrgansRequired.remove(itemToRemove);
                 observableListOrgansAvailable.add(itemToRemove);
+                giveReasonForRemoval(itemToRemove);
             }
         }
 
@@ -166,4 +170,22 @@ public class OrganRequiredController {
         viewOrgansRequired.getSelectionModel().clearSelection();
     }
 
+    private void giveReasonForRemoval(String organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganRemoval.fxml"));
+
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        OrganRemovalController controller = fxmlLoader.<OrganRemovalController>getController();
+        controller.initialize(organ);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Organ removal");
+        stage.show();
+    }
 }
