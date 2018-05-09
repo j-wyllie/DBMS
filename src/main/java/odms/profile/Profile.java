@@ -1,17 +1,14 @@
 package odms.profile;
 
+import odms.cli.CommandUtils;
+import odms.controller.AlertController;
+import odms.medications.Drug;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import odms.cli.CommandUtils;
-import odms.controller.AlertController;
-import odms.medications.Drug;
+import java.util.*;
 
 public class Profile {
 
@@ -23,6 +20,7 @@ public class Profile {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
+    private String preferredGender;
     private Double height;
     private Double weight;
     private String bloodType;
@@ -979,4 +977,11 @@ public class Profile {
         this.conditions = conditions;
     }
 
+    public void setPreferredGender(String preferredGender) {
+        this.preferredGender = preferredGender;
+    }
+
+    public String getPreferredGender() {
+        return this.preferredGender;
+    }
 }
