@@ -101,7 +101,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/EditClinicianProfile.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
