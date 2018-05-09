@@ -1,6 +1,7 @@
 package odms.controller;
 
 import odms.data.ProfileDatabase;
+import odms.medications.Drug;
 import odms.profile.Organ;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
@@ -27,17 +28,15 @@ public class RedoController {
                     action = currentSessionHistory.get(historyPosition);
                     historyPosition = 0;
                 } else {
-                    System.out.println(historyPosition);
-                    System.out.println(currentSessionHistory);
                     action = currentSessionHistory.get(historyPosition);
                 }
                 int end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
-                if (action.contains("added")) {
+                if (action.contains("added") && !action.contains("drug")) {
                     added(currentDatabase, action);
                 } else if (action.contains("deleted")) {
                     deleted(currentDatabase, action);
-                } else if (action.contains("removed")) {
+                } else if (action.contains("removed") && !action.contains("drug")) {
                     removed(currentDatabase, action);
                 } else if (action.contains("set")) {
                     set(currentDatabase, action);
@@ -49,6 +48,10 @@ public class RedoController {
                     edited(currentDatabase, action);
                 }  else if (action.contains("updated")) {
                     updated(action, end);
+                }  else if (action.contains("drug") && !(action.contains("removed"))) {
+                    addDrug(currentDatabase, action, end);
+                } else if (action.contains("removed drug")) {
+                    deleteDrug(currentDatabase, action, end);
                 }
                 HistoryController.setPosition(historyPosition);
                 System.out.println("Command redone");
@@ -56,8 +59,32 @@ public class RedoController {
                 System.out.println("There are no commands to redo");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             System.out.println("No commands have been entered.");
+        }
+    }
+
+    private static void deleteDrug(ProfileDatabase currentDatabase, String action, int end) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String drug = action.substring(action.indexOf("index of")+9,end);
+        int d = Integer.parseInt(action.substring(action.indexOf("drug")).replaceAll("[\\D]", ""));
+        ArrayList<Drug> drugs = profile.getCurrentMedications();
+        profile.deleteDrug(drugs.get(d));
+    }
+
+    private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
+        System.out.println("a");
+        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        if(action.contains("history")) {
+            String drug = action.substring(action.indexOf("tory")+5,action.indexOf(" index of"));
+            Drug d = new Drug(drug);
+            profile.addDrug(d);
+            profile.moveDrugToHistory(d);
+        } else {
+            String drug = action.substring(action.indexOf("drug") + 5,action.indexOf(" index of"));
+            profile.addDrug(new Drug(drug));
         }
     }
 

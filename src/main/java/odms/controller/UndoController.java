@@ -3,6 +3,7 @@ package odms.controller;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
+import odms.medications.Drug;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
@@ -22,14 +23,16 @@ public class UndoController {
         currentSessionHistory = HistoryController.getHistory();
         try {
             String action = currentSessionHistory.get(historyPosition);
+            int end = 0;
             if(action!= "") {
+                end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
             }
-            if (action.contains("added")) {
+            if (action.contains("added") && !action.contains("drug")) {
                 added(currentDatabase, action);
             } else if (action.contains("deleted")) {
                 deleted(currentDatabase, action);
-            } else if (action.contains("removed")) {
+            } else if (action.contains("removed") && !action.contains("drug")) {
                 removed(currentDatabase, action);
             } else if (action.contains("set")) {
                 set(currentDatabase, action);
@@ -41,11 +44,48 @@ public class UndoController {
                 edited(currentDatabase, action);
             } else if (action.contains("updated")) {
                 updated(action);
+            } else if (action.contains("added drug")) {
+                addDrug(currentDatabase, action, end);
+            } else if (action.contains("removed drug")) {
+                deleteDrug(currentDatabase, action, end);
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("No commands have been entered");
         }
+    }
+
+    private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String drug = action.substring(action.indexOf("index of")+9,end);
+        int d = Integer.parseInt(action.substring(action.indexOf("drug")).replaceAll("[\\D]", ""));
+        ArrayList<Drug> drugs = profile.getCurrentMedications();
+        profile.deleteDrug(drugs.get(d));
+        if (historyPosition > 0) {
+            historyPosition -= 1;
+        }
+
+        HistoryController.setPosition(historyPosition);
+    }
+
+    private static void deleteDrug(ProfileDatabase currentDatabase, String action, int end) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        if(action.contains("history")) {
+            String drug = action.substring(action.indexOf("tory")+5,end);
+            Drug d = new Drug(drug);
+            profile.addDrug(d);
+            profile.moveDrugToHistory(d);
+        } else {
+            String drug = action.substring(action.indexOf("drug") + 5,end);
+            profile.addDrug(new Drug(drug));
+        }
+        if (historyPosition > 0) {
+            historyPosition -= 1;
+        }
+
+        HistoryController.setPosition(historyPosition);
     }
 
     private static void updated(String action) {

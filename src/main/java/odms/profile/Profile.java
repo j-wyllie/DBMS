@@ -56,9 +56,9 @@ public class Profile {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications;
-    private ArrayList<Drug> historyOfMedication;
-    private ArrayList<String> medicationTimestamps;
+    private ArrayList<Drug> currentMedications = new ArrayList<>();
+    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
+    private ArrayList<String> medicationTimestamps = new ArrayList<>();
 
     /**
      * Instantiates the Profile class with data from the CLI
@@ -67,9 +67,6 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
         procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -86,9 +83,6 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
 
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
@@ -594,14 +588,15 @@ public class Profile {
      * @param drug the drug to be added
      */
     public void addDrug(Drug drug){
-        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
+        //if (currentMedications.equals(null)) { currentMedications = new ArrayList<>(); }
         if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Donor " + this.getId() + "added drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         medicationTimestamps.add(data);
+        HistoryController.updateHistory(data);
         generateUpdateInfo(drug.getDrugName());
     }
 
@@ -615,14 +610,18 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
+        String data = "Donor " + this.getId() + "removed drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
+            HistoryController.updateHistory(data);
         } else if(historyOfMedication.contains(drug)){
+            data = "Donor " + this.getId() + "removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             historyOfMedication.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
+            HistoryController.updateHistory(data);
         }
 
     }
