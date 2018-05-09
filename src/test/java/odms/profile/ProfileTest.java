@@ -865,13 +865,11 @@ public class ProfileTest {
         try {
             donor1.addDrug(drug1);
             assertEquals(donor1.getCurrentMedications().get(0).getDrugName(), "acetaminophen");
-            assertEquals(donor1.getMedicationTimestamps().get(0), ("acetaminophen added on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+            assertTrue(donor1.getMedicationTimestamps().get(0).contains("added drug acetaminophen index of 0 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
 
             donor1.addDrug(drug2);
             assertEquals(donor1.getCurrentMedications().get(1).getDrugName(), "paracetamol");
-            assertEquals(donor1.getMedicationTimestamps().get(1), ("paracetamol added on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+            assertTrue(donor1.getMedicationTimestamps().get(1).contains("added drug paracetamol index of 1 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
 
@@ -903,8 +901,7 @@ public class ProfileTest {
             donor1.deleteDrug(drug1);
             assertEquals(donor1.getCurrentMedications().get(0).getDrugName(), "paracetamol");
             assertEquals(donor1.getCurrentMedications().size(), 1);
-            assertEquals(donor1.getMedicationTimestamps().get(2), "acetaminophen removed on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(2).contains("removed drug acetaminophen index of 0 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
 
             assertEquals(donor1.getCurrentMedications().size(), 1);
             donor1.deleteDrug(drug1);
@@ -912,8 +909,7 @@ public class ProfileTest {
 
             donor1.deleteDrug(drug2);
             assertEquals(donor1.getCurrentMedications().size(), 0);
-            assertEquals(donor1.getMedicationTimestamps().get(3), "paracetamol removed on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(3).contains("removed drug paracetamol index of 0 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
         } catch (Exception e){
@@ -943,15 +939,13 @@ public class ProfileTest {
             assertEquals(donor1.getCurrentMedications().size(), 2);
             donor1.moveDrugToHistory(drug1);
             assertEquals(donor1.getCurrentMedications().size(), 1);
-            assertEquals(donor1.getMedicationTimestamps().get(2), "acetaminophen stopped on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(2).contains("stopped acetaminophen index of 0 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
 
             donor1.moveDrugToHistory(drug2);
             assertEquals(donor1.getCurrentMedications().size(), 0);
-            assertEquals(donor1.getMedicationTimestamps().get(3), "paracetamol stopped on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(3).contains("stopped paracetamol index of 1 at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
 
@@ -992,16 +986,14 @@ public class ProfileTest {
             donor1.moveDrugToCurrent(drug1);
             assertEquals(donor1.getCurrentMedications().size(), 1);
             assertEquals(donor1.getHistoryOfMedication().size(), 1);
-            assertEquals(donor1.getMedicationTimestamps().get(4), "acetaminophen added back to current list on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(4).contains("started using acetaminophen index of 0 again at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
 
             donor1.moveDrugToCurrent(drug2);
             assertEquals(donor1.getCurrentMedications().size(), 2);
             assertEquals(donor1.getHistoryOfMedication().size(), 0);
-            assertEquals(donor1.getMedicationTimestamps().get(5), "paracetamol added back to current list on " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            assertTrue(donor1.getMedicationTimestamps().get(5).contains("started using paracetamol index of 1 again at "+currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
             assertEquals(donor1.getLastUpdated().format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                     currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
 

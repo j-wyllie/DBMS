@@ -761,6 +761,7 @@ public class ProfileDisplayController extends CommonController {
             String medicationName = textFieldMedicationSearch.getText();
 
             searchedDonor.addDrug(new Drug(medicationName));
+            HistoryController.updateHistory(searchedDonor.getMedicationTimestamps().get(searchedDonor.getMedicationTimestamps().size()-1));
 
             refreshMedicationsTable();
         }
@@ -849,8 +850,9 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
         for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));}
+            if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));HistoryController.updateHistory(searchedDonor.getMedicationTimestamps().get(searchedDonor.getMedicationTimestamps().size()-1));}
         }
+
 
 
         refreshMedicationsTable();
@@ -866,7 +868,7 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
         for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.moveDrugToCurrent(drugs.get(i));}
+            if (drugs.get(i) != null) { searchedDonor.moveDrugToCurrent(drugs.get(i));HistoryController.updateHistory(searchedDonor.getMedicationTimestamps().get(searchedDonor.getMedicationTimestamps().size()-1));}
         }
 
         refreshMedicationsTable();
@@ -883,7 +885,7 @@ public class ProfileDisplayController extends CommonController {
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
         for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.deleteDrug(drugs.get(i));}
+            if (drugs.get(i) != null) { searchedDonor.deleteDrug(drugs.get(i));HistoryController.updateHistory(searchedDonor.getMedicationTimestamps().get(searchedDonor.getMedicationTimestamps().size()-1));}
         }
 
         refreshMedicationsTable();

@@ -594,9 +594,8 @@ public class Profile {
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data ="Donor " + this.getId() + "added drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Donor " + this.getId() + " added drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         medicationTimestamps.add(data);
-        HistoryController.updateHistory(data);
         generateUpdateInfo(drug.getDrugName());
     }
 
@@ -610,18 +609,16 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Donor " + this.getId() + "removed drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data = "Donor " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
             HistoryController.updateHistory(data);
         } else if(historyOfMedication.contains(drug)){
-            data = "Donor " + this.getId() + "removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             historyOfMedication.remove(drug);
+            data = "Donor " + this.getId() + " removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             medicationTimestamps.add(data);
-            generateUpdateInfo(drug.getDrugName());
-            HistoryController.updateHistory(data);
         }
 
     }
@@ -639,7 +636,8 @@ public class Profile {
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Donor " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+ historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
 
@@ -660,7 +658,8 @@ public class Profile {
         if(historyOfMedication.contains(drug)){
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Donor " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
 

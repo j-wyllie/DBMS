@@ -9,6 +9,7 @@ import odms.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class RedoController {
@@ -52,6 +53,10 @@ public class RedoController {
                     addDrug(currentDatabase, action, end);
                 } else if (action.contains("removed drug")) {
                     deleteDrug(currentDatabase, action, end);
+                } else if (action.contains("stopped")) {
+                    stopDrug(currentDatabase, action);
+                } else if (action.contains("started")) {
+                    renewDrug(currentDatabase, action);
                 }
                 HistoryController.setPosition(historyPosition);
                 System.out.println("Command redone");
@@ -71,6 +76,30 @@ public class RedoController {
         int d = Integer.parseInt(action.substring(action.indexOf("drug")).replaceAll("[\\D]", ""));
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         profile.deleteDrug(drugs.get(d));
+    }
+
+    private static void stopDrug(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("stopped")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        int d = Integer.parseInt(action.substring(action.indexOf("stopped")).replaceAll("[\\D]", ""));
+        ArrayList<Drug> drugs = profile.getCurrentMedications();
+        Drug drug = drugs.get(d);
+        profile.moveDrugToHistory(drug);
+        LocalDateTime currentTime = LocalDateTime.now();
+        String data = "Donor " + profile.getId()  + " stopped "  + drug.getDrugName() + " index of "+ profile.getHistoryOfMedication().indexOf(drug) + " at" +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        HistoryController.currentSessionHistory.set(historyPosition-1, data);
+    }
+
+    private static void renewDrug(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("started")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        int d = Integer.parseInt(action.substring(action.indexOf("started")).replaceAll("[\\D]", ""));
+        ArrayList<Drug> drugs = profile.getHistoryOfMedication();
+        Drug drug = drugs.get(d);
+        profile.moveDrugToCurrent(drug);
+        LocalDateTime currentTime = LocalDateTime.now();
+        String data = "Donor " + profile.getId()  + " started using "  + drug.getDrugName() + " index of "+ profile.getCurrentMedications().indexOf(drug) + "again at" +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        HistoryController.currentSessionHistory.set(historyPosition-1, data);
     }
 
     private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
