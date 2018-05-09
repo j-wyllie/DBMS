@@ -1,5 +1,8 @@
 # Things that don't belong under source control see https://github.com/github/gitignore
 
+# ODMS Specific
+CommandUtilsTestHistory.json
+
 # Java
 *.class
 

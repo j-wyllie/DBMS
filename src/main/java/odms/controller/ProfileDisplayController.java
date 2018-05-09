@@ -10,45 +10,50 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
-import javafx.scene.control.*;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.medications.Drug;
 import odms.profile.Condition;
+import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 
 public class ProfileDisplayController extends CommonController {
@@ -199,6 +204,9 @@ public class ProfileDisplayController extends CommonController {
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
     @FXML
+    private Label organsRequiredLabel;
+
+    @FXML
     private TableView<String> tableViewDrugInteractionsNames;
 
     @FXML
@@ -274,6 +282,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private TableColumn previousAffectsColumn;
 
+    @FXML
+    private Label receiverStatusLabel;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -282,9 +293,6 @@ public class ProfileDisplayController extends CommonController {
     }
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
-
-
-
 
     /**
      * initializes and refreshes the current and past conditions tables
@@ -311,34 +319,16 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void disableTableHeaderReorder() {
 
-        pastConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
-            {
-                TableHeaderRow header = (TableHeaderRow) pastConditionsTable.lookup("TableHeaderRow");
-                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        header.setReordering(false);
-                    }
-                });
-            }
+        pastConditionsTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) pastConditionsTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener(
+                    (observable, oldValue, newValue) -> header.setReordering(false));
         });
 
-        curConditionsTable.widthProperty().addListener(new ChangeListener<Number>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Number> source, Number oldWidth, Number newWidth)
-            {
-                TableHeaderRow header = (TableHeaderRow) curConditionsTable.lookup("TableHeaderRow");
-                header.reorderingProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        header.setReordering(false);
-                    }
-                });
-            }
+        curConditionsTable.widthProperty().addListener((source, oldWidth, newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) curConditionsTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener(
+                    (observable, oldValue, newValue) -> header.setReordering(false));
         });
     }
 
@@ -358,19 +348,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     protected void refreshConditionTable() {
 
-        Callback<TableColumn, TableCell> cellFactory =
-                new Callback<TableColumn, TableCell>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditingConditionsCell();
-                    }
-                };
+        Callback<TableColumn, TableCell> cellFactory = p -> new EditingConditionsCell();
 
-        Callback<TableColumn, TableCell> cellFactoryDate =
-                new Callback<TableColumn, TableCell>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditDateCell();
-                    }
-                };
+        Callback<TableColumn, TableCell> cellFactoryDate = p -> new EditDateCell();
 
 //
 //        try {
@@ -420,7 +400,6 @@ public class ProfileDisplayController extends CommonController {
                 };
             }
         });
-
 
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
@@ -537,7 +516,7 @@ public class ProfileDisplayController extends CommonController {
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            AddConditionController controller = fxmlLoader.<AddConditionController>getController();
+            ConditionAddController controller = fxmlLoader.<ConditionAddController>getController();
             controller.init(this);
 
             Stage stage = new Stage();
@@ -1006,9 +985,24 @@ public class ProfileDisplayController extends CommonController {
             donorFullNameLabel
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
+            receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
+            organsRequiredLabel.setText("");
 
-            if (currentDonor.getRegistered() != null && currentDonor.getRegistered()) {
-                donorStatusLabel.setText("Donor Status: Registered");
+            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
+                if (currentDonor.getOrgansDonated().size() > 0) {
+                    donorStatusLabel.setText("Donor Status: Registered");
+                }
+            }
+
+            if (currentDonor.getOrgansRequired().size() < 1) {
+                currentDonor.setReceiver(false);
+            } else {
+                currentDonor.setReceiver(true);
+            }
+
+            if (currentDonor.isReceiver()) {
+                receiverStatusLabel.setText("Receiver Status: Registered");
+                organsRequiredLabel.setText("Organs Required : " + Organ.organSetToString(currentDonor.getOrgansRequired()));
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -1063,8 +1057,11 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
-            organsLabel.setText(organsLabel.getText() + currentDonor.getOrgans().toString());
-            donationsLabel.setText(donationsLabel.getText() + currentDonor.getDonatedOrgans().toString());
+
+            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonating()));
+
+            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonated()));
+
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }

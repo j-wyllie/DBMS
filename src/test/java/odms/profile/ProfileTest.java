@@ -5,10 +5,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import odms.cli.CommandUtils;
 import odms.medications.Drug;
+import odms.cli.CommandUtils;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -107,7 +108,7 @@ public class ProfileTest {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
-        profileAttr.add("ird=\"123456879\"");;
+        profileAttr.add("ird=\"123456879\"");
 
         Profile profileOnlyAttr = new Profile(profileAttr);
     }
@@ -169,22 +170,23 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            List<String> someOrgans = new ArrayList<>();
+            someOrgans.add("bone");
+            someOrgans.add("heart");
+            someOrgans.add("cornea");
+            testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.BONE);
+            expected.add(Organ.HEART);
+            expected.add(Organ.CORNEA);
+
+            assertEquals(expected, testProfile.getOrgansDonated());
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        Set<String> someOrgans = new HashSet<>();
-        someOrgans.add("bone");
-        someOrgans.add("heart");
-        someOrgans.add("cornea");
-        testProfile.addDonations(someOrgans);
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.BONE);
-        expected.add(Organ.HEART);
-        expected.add(Organ.CORNEA);
-
-        assertEquals(expected, testProfile.getDonatedOrgans());
     }
 
     /**
@@ -203,20 +205,20 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setRegistered(true);
+            testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.BONE);
             expected.add(Organ.HEART);
             expected.add(Organ.CORNEA);
 
-            assertEquals(expected, testProfile.getOrgans());
+            assertEquals(expected, testProfile.getOrgansDonating());
 
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
@@ -236,8 +238,8 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setRegistered(true);
-            testProfile.addOrgansFromString("bone, heart, cornea");
+            testProfile.setDonor(true);
+            testProfile.addOrgansDonatingFromString("bone, heart, cornea");
 
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.BONE);
@@ -246,10 +248,9 @@ public class ProfileTest {
 
             String expectedString = "heart, bone, cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(
-                    Arrays.asList(testProfile.getOrgansAsCSV().split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonating()).split(", ")));
 
-            assertEquals(expected, testProfile.getOrgans());
+            assertEquals(expected, testProfile.getOrgansDonating());
             assertEquals(expectedStrings, outputStrings);
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
@@ -265,27 +266,28 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+
+            testProfile.setDonor(true);
+            testProfile.addDonationFromString("Heart, Bone, Cornea");
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.BONE);
+            expected.add(Organ.HEART);
+            expected.add(Organ.CORNEA);
+
+            String expectedString = "Heart, Bone, Cornea";
+            Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonated()).split(", ")));
+
+            assertEquals(expected, testProfile.getOrgansDonated());
+            assertEquals(expectedStrings, outputStrings);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.setRegistered(true);
-        testProfile.addDonationFromString("bone, heart, cornea");
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.BONE);
-        expected.add(Organ.HEART);
-        expected.add(Organ.CORNEA);
-
-        String expectedString = "heart, bone, cornea";
-        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getDonationsAsCSV().split(", ")));
-
-        assertEquals(expected, testProfile.getDonatedOrgans());
-        assertEquals(expectedStrings, outputStrings);
     }
 
     @Test
@@ -296,27 +298,29 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+
+            testProfile.setDonor(true);
+            testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
+
+            Set<String> expected = new HashSet<>();
+            expected.add("cancer");
+            expected.add("more cancer");
+            expected.add("even more cancer");
+
+            String expectedString = "cancer, more cancer, even more cancer";
+
+            Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+            Set<String> outputStrings = testProfile.getChronicDiseases();
+
+            assertEquals(expected, testProfile.getChronicDiseases());
+            assertEquals(expectedStrings, outputStrings);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.setRegistered(true);
-        testProfile.addChronicDiseases("cancer, more cancer, even more cancer");
-
-        Set<String> expected = new HashSet<>();
-        expected.add("cancer");
-        expected.add("more cancer");
-        expected.add("even more cancer");
-
-        String expectedString = "cancer, more cancer, even more cancer";
-        Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-        Set<String> outputStrings = new HashSet<>(Arrays.asList(testProfile.getChronicDiseasesAsCSV().split(", ")));
-
-        assertEquals(expected, testProfile.getChronicDiseases());
-        assertEquals(expectedStrings, outputStrings);
     }
 
     /**
@@ -333,25 +337,26 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            List<String> someOrgans = new ArrayList<>();
+            someOrgans.add("bone");
+            someOrgans.add("heart");
+            someOrgans.add("cornea");
+            testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
+
+            Set<String> removedOrgans = new HashSet<>();
+            removedOrgans.add("bone");
+            removedOrgans.add("heart");
+            testProfile.removeDonations(removedOrgans);
+
+            Set<Organ> expected = new HashSet<>();
+            expected.add(Organ.CORNEA);
+
+            assertEquals(testProfile.getOrgansDonated(), expected);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        Set<String> someOrgans = new HashSet<>();
-        someOrgans.add("bone");
-        someOrgans.add("heart");
-        someOrgans.add("cornea");
-        testProfile.addDonations(someOrgans);
-
-        Set<String> removedOrgans = new HashSet<>();
-        removedOrgans.add("bone");
-        removedOrgans.add("heart");
-        testProfile.removeDonations(removedOrgans);
-
-        Set<Organ> expected = new HashSet<>();
-        expected.add(Organ.CORNEA);
-
-        assertEquals(testProfile.getDonatedOrgans(), expected);
     }
 
     /*
@@ -371,13 +376,13 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setRegistered(true);
+            testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
             Set<String> removedOrgans = new HashSet<>();
             removedOrgans.add("bone");
@@ -387,7 +392,7 @@ public class ProfileTest {
             Set<Organ> expected = new HashSet<>();
             expected.add(Organ.CORNEA);
 
-            assertEquals(testProfile.getOrgans(), expected);
+            assertEquals(testProfile.getOrgansDonating(), expected);
 
         } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
@@ -410,13 +415,13 @@ public class ProfileTest {
         try {
             testProfile = new Profile(profileAttr);
 
-            testProfile.setRegistered(true);
+            testProfile.setDonor(true);
 
-            Set<String> someOrgans = new HashSet<>();
+            List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
 
-            testProfile.addOrgansDonate(someOrgans);
-            testProfile.addOrgansDonate(someOrgans);
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
 
         } catch (OrganConflictException e) {
             // pass
@@ -437,11 +442,12 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            assertEquals(testProfile.getUpdateActions().size(), 4);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        assertEquals(testProfile.getUpdateActions().size(), 4);
     }
 
     /**
@@ -462,12 +468,13 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            double bmi = testProfile.calculateBMI();
+            assertEquals("23.51", df.format(bmi));
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        double bmi = testProfile.calculateBMI();
-        assertEquals("23.51", df.format(bmi));
     }
 
     /**
@@ -487,13 +494,14 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            int age = testProfile.calculateAge();
+            int year = LocalDate.now().getYear() - 2000;
+            assertEquals(age, year);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testProfile.calculateAge();
-        int year = LocalDate.now().getYear() - 2000;
-        assertEquals(age, year);
     }
 
 
@@ -513,12 +521,13 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(profileAttr);
+
+            int age = testProfile.calculateAge();
+            assertEquals(age, 49);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testProfile.calculateAge();
-        assertEquals(age, 49);
     }
 
     /**
@@ -533,15 +542,16 @@ public class ProfileTest {
         profileAttr.add("dod=\"01-01-2050\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+
+            int age = testProfile.calculateAge();
+            assertEquals(age, 50);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        int age = testProfile.calculateAge();
-        assertEquals(age, 50);
     }
 
 
@@ -554,18 +564,19 @@ public class ProfileTest {
         profileAttr.add("dod=\"01-01-2050\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+
+            testProfile.setBloodPressureSystolic(120);
+            testProfile.setBloodPressureDiastolic(80);
+
+            String bloodPressure = testProfile.getBloodPressure();
+            assertEquals(bloodPressure, "120/80");
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.setBloodPressureSystolic(120);
-        testProfile.setBloodPressureDiastolic(80);
-
-        String bloodPressure = testProfile.getBloodPressure();
-        assertEquals(bloodPressure, "120/80");
     }
 
     /**
@@ -576,25 +587,26 @@ public class ProfileTest {
         Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
         Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure0);
+            testProfile.addProcedure(procedure1);
+
+            assertEquals(testProfile.getAllProcedures().contains(procedure0), true);
+            assertEquals(testProfile.getAllProcedures().contains(procedure1), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure0);
-        testProfile.addProcedure(procedure1);
-
-        assertEquals(testProfile.getAllProcedures().contains(procedure0), true);
-        assertEquals(testProfile.getAllProcedures().contains(procedure1), true);
     }
 
     /**
@@ -605,7 +617,7 @@ public class ProfileTest {
         Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
         Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
@@ -615,16 +627,17 @@ public class ProfileTest {
         Profile testProfile = null;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure0);
+            testProfile.addProcedure(procedure1);
+
+            testProfile.removeProcedure(procedure0);
+
+            assertEquals(testProfile.getAllProcedures().size(), 1);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure0);
-        testProfile.addProcedure(procedure1);
-
-        testProfile.removeProcedure(procedure0);
-
-        assertEquals(testProfile.getAllProcedures().size(), 1);
     }
 
     /**
@@ -636,26 +649,27 @@ public class ProfileTest {
         Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
         Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure0);
+            testProfile.addProcedure(procedure1);
+            testProfile.addProcedure(procedure2);
+
+            assertEquals(testProfile.getPreviousProcedures().contains(procedure1), true);
+            assertEquals(testProfile.getPreviousProcedures().size(), 1);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure0);
-        testProfile.addProcedure(procedure1);
-        testProfile.addProcedure(procedure2);
-
-        assertEquals(testProfile.getPreviousProcedures().contains(procedure1), true);
-        assertEquals(testProfile.getPreviousProcedures().size(), 1);
     }
 
     /**
@@ -667,27 +681,28 @@ public class ProfileTest {
         Procedure procedure1 = new Procedure("Aputation", "2-11-2012", "Removed all the patients limbs");
         Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure0);
+            testProfile.addProcedure(procedure1);
+            testProfile.addProcedure(procedure2);
+
+            assertEquals(testProfile.getPendingProcedures().contains(procedure0), true);
+            assertEquals(testProfile.getPendingProcedures().contains(procedure2), true);
+            assertEquals(testProfile.getPendingProcedures().size(), 2);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure0);
-        testProfile.addProcedure(procedure1);
-        testProfile.addProcedure(procedure2);
-
-        assertEquals(testProfile.getPendingProcedures().contains(procedure0), true);
-        assertEquals(testProfile.getPendingProcedures().contains(procedure2), true);
-        assertEquals(testProfile.getPendingProcedures().size(), 2);
     }
 
     /**
@@ -698,25 +713,26 @@ public class ProfileTest {
         Procedure procedure0 = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
         Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2012", "Will correct the patients vision");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure0);
+            testProfile.addProcedure(procedure1);
+
+            assertEquals(testProfile.isPreviousProcedure(procedure0), false);
+            assertEquals(testProfile.isPreviousProcedure(procedure1), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure0);
-        testProfile.addProcedure(procedure1);
-
-        assertEquals(testProfile.isPreviousProcedure(procedure0), false);
-        assertEquals(testProfile.isPreviousProcedure(procedure1), true);
     }
 
     /**
@@ -727,56 +743,62 @@ public class ProfileTest {
         // create a profile and add a procedure
         Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure);
+
+            testProfile.addDonationFromString("heart");
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
+
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure);
-
-        testProfile.addDonationFromString("heart");
-        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
-
-        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), true);
     }
 
     /**
-     * Tests that adding an affected organ to a procedure that from a profile that does not have that organ listed as donated throws the correct exception
+     * Tests that adding an affected organ to a procedure that from a profile that does
+     * not have that organ listed as donated throws the correct exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIllegalAddAffectedOrgan() {
+    public void testIllegalAddAffectedOrgan() throws IllegalArgumentException {
         // create a profile and add a procedure
-        Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure = new Procedure(
+                "Appendix Removal",
+                "2-11-2018",
+                "Will remove the appendix via key hole surgery"
+        );
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure);
+
+            Organ testOrgan = Organ.HEART;
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, testOrgan);
         } catch (IllegalArgumentException e) {
-            // pass
+            assertEquals(e.getMessage(), "Not an organ with donor status on this profile");
+            throw e;
         }
 
-        testProfile.addProcedure(procedure);
-
-        Organ testOrgan = Organ.HEART;
-        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, testOrgan);
-
-        testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART);
     }
 
     /**
@@ -785,47 +807,48 @@ public class ProfileTest {
     @Test
     public void testRemoveAffectedOrgans() {
         // create a profile and add a procedure
-        Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
+        Procedure procedure = new Procedure(
+                "Appendix Removal",
+                "2-11-2018",
+                "Will remove the appendix via key hole surgery"
+        );
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+
+            testProfile.addProcedure(procedure);
+
+            // add heart and liver
+            testProfile.addDonationFromString("heart, liver");
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.LIVER);
+
+            // remove the heart
+            testProfile.getAllProcedures().get(0).removeAffectedOrgen(Organ.HEART);
+
+            // test that heart has been removed
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), false);
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.LIVER), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addProcedure(procedure);
-
-        // add heart and liver
-        testProfile.addDonationFromString("heart, liver");
-        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
-        testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.LIVER);
-
-        // remove the heart
-        testProfile.getAllProcedures().get(0).removeAffectedOrgen(Organ.HEART);
-
-        // test that heart has been removed
-        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), false);
-        assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.LIVER), true);
     }
-
-
-
-
 
     @Test
     public void testAddDrug(){
         Drug drug1 = new Drug("acetaminophen");
         Drug drug2 = new Drug("paracetamol");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
@@ -861,7 +884,7 @@ public class ProfileTest {
         Drug drug1 = new Drug("acetaminophen");
         Drug drug2 = new Drug("paracetamol");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
@@ -902,7 +925,7 @@ public class ProfileTest {
         Drug drug1 = new Drug("acetaminophen");
         Drug drug2 = new Drug("paracetamol");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
@@ -995,8 +1018,7 @@ public class ProfileTest {
      */
     @Test
     public void testAddConditionandGetAllConditions() {
-        Condition condition = new Condition("aids", "18-7-1997", "15-09-2014", false);
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
 
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
@@ -1004,15 +1026,18 @@ public class ProfileTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
+            Condition condition = new Condition("aids", "18-7-1997", "15-09-2014", false);
             testProfile = new Profile(donorAttr);
+            testProfile.addCondition(condition);
+
+            assertTrue(testProfile.getAllConditions().contains(condition));
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-        testProfile.addCondition(condition);
-        assert testProfile.getAllConditions().contains(condition);
+
     }
 
     /**
@@ -1020,8 +1045,7 @@ public class ProfileTest {
      */
     @Test
     public void testDeleteCondition() {
-        Condition condition = new Condition("aids", "18-7-1997", "15-9-2013", false);
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
 
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
@@ -1029,18 +1053,18 @@ public class ProfileTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testDonor = null;
+        Profile testDonor;
         try {
+            Condition condition = new Condition("aids", "18-7-1997", "15-9-2013", false);
             testDonor = new Profile(donorAttr);
+            testDonor.addCondition(condition);
+            testDonor.removeCondition(condition);
+
+            assertTrue(testDonor.getAllConditions().size() == 0);
         } catch (IllegalArgumentException e) {
             // pass
         }
 
-
-        testDonor.addCondition(condition);
-        testDonor.removeCondition(condition);
-
-        assert testDonor.getAllConditions().size() == 0;
     }
 
     /**
@@ -1048,36 +1072,28 @@ public class ProfileTest {
      */
     @Test
     public void testGetCuredConditions() {
-        Condition condition0 = new Condition("aids", "18-7-1997", true);
-        ArrayList<String> donorAttr0 = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
 
-        donorAttr0.add("given-names=\"John\"");
-        donorAttr0.add("last-names=\"Smithy Smith Face\"");
-        donorAttr0.add("dob=\"01-01-2000\"");
-        donorAttr0.add("dod=\"01-01-2050\"");
-        donorAttr0.add("ird=\"123456879\"");
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
 
-        Profile testDonor = null;
+        Profile testDonor;
         try {
-            testDonor = new Profile(donorAttr0);
+            Condition condition0 = new Condition("Aids", "18-7-1997", true);
+            Condition condition1 = new Condition("Aids", "28-7-1994", "15-9-2013", false);
+
+            testDonor = new Profile(donorAttr);
+            testDonor.addCondition(condition0);
+            testDonor.addCondition(condition1);
+
+            assertTrue(testDonor.getCuredConditions().size() == 1);
+            assertTrue(testDonor.getCuredConditions().contains(condition1));
         } catch (IllegalArgumentException e) {
             // pass
         }
-
-        testDonor.addCondition(condition0);
-
-        Condition condition1 = new Condition("aids", "28-7-1994", "15-9-2013", false);
-        ArrayList<String> donorAttr1 = new ArrayList<String>();
-
-        donorAttr1.add("given-names=\"John\"");
-        donorAttr1.add("last-names=\"Smithy Smith Face\"");
-        donorAttr1.add("dob=\"01-01-2000\"");
-        donorAttr1.add("dod=\"01-01-2050\"");
-        donorAttr1.add("ird=\"123456879\"");
-
-        testDonor.addCondition(condition1);
-
-        assert testDonor.getCuredConditions().size() == 1 && testDonor.getCuredConditions().contains(condition1);
     }
 
     @Test
@@ -1095,9 +1111,14 @@ public class ProfileTest {
         } catch (IllegalArgumentException e) {
             // pass
         }
-        Set<String> testSet = new HashSet<String>();
-        testSet.add("Heart");
-        testProfile.setOrgansRequired(testSet);
-        assertTrue(CommandUtils.currentSessionHistory.get(CommandUtils.historyPosition).contains("HEART"));
+        List<String> someOrgans = new ArrayList<>();
+        someOrgans.add("Heart");
+        testProfile.setOrgansRequired(Organ.stringListToOrganSet(someOrgans));
+
+        assertTrue(CommandUtils.currentSessionHistory
+                .get(CommandUtils.historyPosition)
+                .contains(Organ.HEART.getNamePlain()
+                )
+        );
     }
 }

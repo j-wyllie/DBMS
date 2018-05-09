@@ -5,19 +5,17 @@ import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
-
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
-import odms.profile.Profile;
 import odms.data.UserDatabase;
+import odms.profile.Profile;
 import odms.user.User;
 
 public class LoginController extends CommonController {
@@ -52,25 +50,15 @@ public class LoginController extends CommonController {
                 if (userId == 0) {
                     currentUser = userDatabase.getClinician(0);
                     String scene = "/view/ClinicianProfile.fxml";
-                    //TODO set the appstage title
-                    showScene(event, scene);
+                    String title = "Clinician";
+                    showScene(event, scene, title, true);
                 } else {
                     currentProfile = currentDatabase.getProfile(userId);
 
                     if (currentProfile != null) {
-
-                        FXMLLoader fxmlLoader = new FXMLLoader(
-                                getClass().getResource("/view/ProfileDisplay.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        ProfileDisplayController controller = fxmlLoader.getController();
-
-                        controller.setLoggedInProfile(currentProfile);
-                        controller.initialize();
-                        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        appStage.setTitle("Donor Profile");
-
-                        appStage.setScene(scene);
-                        appStage.show();
+                        String scene = "/view/ProfileDisplay.fxml";
+                        String title = "Profile";
+                        showScene(event, scene, title, true);
                     } else {
                         invalidUsername();
                     }
@@ -94,14 +82,9 @@ public class LoginController extends CommonController {
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
-        showScene(event, "/view/ProfileCreate.fxml", true);
-        //TODO SET TITLE
-//        Parent parent = FXMLLoader.load(getClass().getResource("/view/CreateProfile.fxml"));
-//        Scene newScene = new Scene(parent);
-//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        appStage.setScene(newScene);
-//        appStage.setTitle("Create Profile");
-//        appStage.show();
+        String scene = "/view/ProfileCreate.fxml";
+        String title = "Create Profile";
+        showScene(event, scene, title, false);
     }
 
     public static Profile getCurrentProfile() {

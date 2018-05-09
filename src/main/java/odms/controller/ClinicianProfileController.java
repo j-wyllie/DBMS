@@ -1,34 +1,37 @@
 package odms.controller;
 
-import javafx.application.Application;
-import javafx.beans.property.SimpleObjectProperty;
+import static odms.controller.LoginController.getCurrentUser;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static odms.controller.LoginController.getCurrentUser;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
-    //Get the default clinician
     private static User currentUser = getCurrentUser();
 
     @FXML
@@ -64,7 +67,15 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TextField searchField;
 
+    @FXML
+    private TextField transplantSearchField;
+
+    @FXML
+    private TableView transplantTable;
+
     private ObservableList<Profile> donorObservableList;
+
+    private ObservableList<Entry<Profile, Organ>> receiverObservableList;
 
     private Profile selectedDonor;
 
@@ -101,12 +112,10 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.setTitle("Edit Profile");
-        appStage.show();
+        String scene = "/view/ClinicianProfileEdit.fxml";
+        String title = "Edit Profile";
+
+        showScene(event, scene, title, true);
     }
 
     /**
@@ -149,12 +158,14 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Profile> donors){
+        searchTable.getItems().clear();
+
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
-        regionColumn.setCellValueFactory(new PropertyValueFactory("region"));
-        ageColumn.setCellValueFactory(new PropertyValueFactory("age"));
-        genderColumn.setCellValueFactory(new PropertyValueFactory("gender"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
+        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
@@ -163,6 +174,7 @@ public class ClinicianProfileController extends CommonController {
                 createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
             }
         });
+
         addTooltipToRow();
     }
 
@@ -178,8 +190,8 @@ public class ClinicianProfileController extends CommonController {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
-                    if(donor.getDonatedOrgans().size() > 0) {
-                        donations = ". Donor: " + donor.getDonatedOrgans().toString();
+                    if(donor.getOrgansDonated().size() > 0) {
+                        donations = ". Donor: " + donor.getOrgansDonated().toString();
                     }
                     row.setTooltip(new Tooltip(donor.getFullName() + donations));
                 }
@@ -215,9 +227,86 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    /**
+     * Initializes and refreshes the search table
+     * Adds a listener to each row so that when it is double clicked
+     * a new donor window is opened.
+     * Calls the setTooltipToRow function.
+     */
+    @FXML
+    private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
+        transplantTable.getColumns().clear();
+
+        receiverObservableList = FXCollections.observableList(receivers);
+        //transplantTable.setItems(receiverObservableList);
+        //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
+        //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
+        //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
+        //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
+        //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
+        transplantOrganRequiredCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
+        transplantReceiverNameCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantRegionCol  = new TableColumn<>("Region");
+        transplantRegionCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
+
+        TableColumn<Map.Entry<Profile, Organ>, String> transplantDateCol  = new TableColumn<>("Date");
+        transplantDateCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
+
+        transplantTable.getColumns().add(transplantOrganRequiredCol);
+        transplantTable.getColumns().add(transplantReceiverNameCol);
+        transplantTable.getColumns().add(transplantRegionCol);
+        transplantTable.getColumns().add(transplantDateCol);
+        transplantTable.setItems(receiverObservableList);
+
+        transplantTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() &&
+                event.getClickCount() == 2 &&
+                transplantTable.getSelectionModel().getSelectedItem() != null) {
+
+                createNewDonorWindow(((Entry<Profile, Organ>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
+            }
+        });
+
+        addTooltipToRow();
+
+    }
+
+    /**
+     * Refresh the search and transplant medication tables with the most up to date data
+     */
+    @FXML
+    private void refreshTable() {
+        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        try {
+            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void initialize(){
+
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        try {
+            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        TableFilter filter = new TableFilter<>(transplantTable);
+        //filter.getColumnFilters().setAll(transplantTable.getItems());
+
     }
 }

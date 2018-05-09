@@ -2,8 +2,10 @@ package odms.controller;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,15 +13,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Organ;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
-public class OrganRequiredController {
+public class OrganController {
     private Profile profile;
 
     private ObservableList<String> observableListOrgansAvailable;
@@ -38,7 +42,21 @@ public class OrganRequiredController {
     private Button btnSave;
 
     @FXML
+    private Label bannerLabel;
+
+    private static int windowType;
+
+    @FXML
     public void initialize() {
+
+        if (windowType == 1) {
+            bannerLabel.setText("Organs to Donate");
+        } else if (windowType == 2) {
+            bannerLabel.setText("Organs Required");
+        } else if (windowType == 3) {
+            bannerLabel.setText("Past Donations");
+        }
+
         if (profile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
@@ -57,9 +75,19 @@ public class OrganRequiredController {
      * Populate the ListView with the organs the profile currently requires.
      */
     private void buildOrgansRequired() {
+        Set<Organ> organs = new HashSet<>();
+        if (windowType == 1) {
+            organs = profile.getOrgansDonating();
+        }
+        else if (windowType == 2) {
+            organs = profile.getOrgansRequired();
+        }
+        else if (windowType == 3) {
+            organs = profile.getOrgansDonated();
+        }
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
-            for (Organ organ : profile.getOrgansRequired()) {
+            for (Organ organ : organs) {
                 observableListOrgansRequired.add(organ.getNamePlain());
             }
             Collections.sort(observableListOrgansRequired);
@@ -123,10 +151,35 @@ public class OrganRequiredController {
      */
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
-        Set<String> set = new HashSet<>(observableListOrgansRequired);
-        profile.setOrgansRequired(set);
+        HashSet<Organ> organs = OrganController.observableListStringsToOrgans(
+                new HashSet<>(observableListOrgansRequired)
+        );
+
+        try {
+            if (windowType == 1) {
+                profile.addOrgansDonating(organs);
+            } else if (windowType == 2) {
+                profile.setOrgansRequired(organs);
+            } else if (windowType == 3) {
+                profile.addOrgansDonated(organs);
+            }
+        } catch (OrganConflictException e) {
+
+            // TODO handle error correctly.
+
+        }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
+    }
+
+    private static HashSet<Organ> observableListStringsToOrgans(HashSet<String> organStrings) {
+        List<String> correctedOrganStrings = new ArrayList<>();
+
+        for (String organ : organStrings) {
+            correctedOrganStrings.add(organ.trim().toUpperCase().replace(" ", "_"));
+        }
+
+        return Organ.stringListToOrganSet(correctedOrganStrings);
     }
 
     private void refresh() {
@@ -168,6 +221,20 @@ public class OrganRequiredController {
 
         viewOrgansAvailable.getSelectionModel().clearSelection();
         viewOrgansRequired.getSelectionModel().clearSelection();
+    }
+
+    public static void setWindowType(String type) {
+        switch (type) {
+            case "Organs to Donate":
+                windowType = 1;
+                break;
+            case "Organs Required":
+                windowType = 2;
+                break;
+            case "Past Donations":
+                windowType = 3;
+                break;
+        }
     }
 
     private void giveReasonForRemoval(String organ) {

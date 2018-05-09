@@ -1,6 +1,10 @@
 package GUI;
 
-
+import java.util.concurrent.TimeoutException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import odms.medications.Drug;
 import odms.profile.Profile;
@@ -16,7 +20,7 @@ public class DonorProfileControllerTest extends TestFxMethods {
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() throws TimeoutException {
+    public static void headless() {
         GUITestSetup.headless();
     }
 
@@ -69,7 +73,6 @@ public class DonorProfileControllerTest extends TestFxMethods {
         closeCurrentWindow();
     }
 
-
     @Test
     public void moveMedicationToHistoricTest() {
         //open up the first donor
@@ -93,7 +96,6 @@ public class DonorProfileControllerTest extends TestFxMethods {
         closeCurrentWindow();
         closeCurrentWindow();
     }
-
 
     @Test
     public void moveMedicationToCurrentTest() {

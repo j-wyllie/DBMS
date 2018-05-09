@@ -2,8 +2,11 @@ package odms.data;
 
 import java.util.*;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
+import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileDatabase {
@@ -173,7 +176,7 @@ public class ProfileDatabase {
 
         profileDb.forEach((id, profile) -> {
             if (donating) {
-                if (profile.getOrgans().size() > 0) {
+                if (profile.getOrgansDonating().size() > 0) {
                     profiles.add(profile);
                 }
             } else {
@@ -204,7 +207,7 @@ public class ProfileDatabase {
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
         List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 30);
+        result = FuzzySearch.extractSorted(searchString, profiles, 50);
 
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
         ArrayList<Profile> resultProfiles = new ArrayList<>();
@@ -212,6 +215,54 @@ public class ProfileDatabase {
             resultProfiles.add(getProfiles(false).get(er.getIndex()));
         }
         return resultProfiles;
+    }
+
+    /**
+     * Generates a list of profiles receiving organs ordered by last names.
+     * Parameter to specify whether or not the list contains every receiver or only receivers that
+     * are currently receiving organs.
+     *
+     * @param receiving specify currently receiving organs or not
+     * @return Array of profiles found that match
+     */
+    public ArrayList<Profile> getReceivers(Boolean receiving) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+
+            if (profile.isReceiver()) {
+                if (receiving) {
+                    if (profile.getOrgansRequired().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+        return profiles;
+    }
+
+
+    /**
+     * Generates a collection of a profile and organ for each organ that a receiver requires
+     *
+     *  @return Collection of Profile and Organ that match
+     */
+    public List<Entry<Profile, Organ>> getAllOrgansRequired() {
+        List<Entry<Profile, Organ>> receivers = new ArrayList<>();
+
+        ArrayList<Profile> allReceivers = getReceivers(true);
+
+        for (Profile profile : allReceivers) {
+            for (Organ organ : profile.getOrgansRequired()) {
+                Map.Entry<Profile, Organ> pair = new SimpleEntry<>(profile, organ);
+                receivers.add(pair);
+            }
+        }
+        return receivers;
     }
 
 }

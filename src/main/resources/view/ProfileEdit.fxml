@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -369,7 +369,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="organsLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                <Label fx:id="organsDonateLabel" layoutX="30.0" layoutY="99.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -456,17 +456,7 @@
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="organField" layoutX="278.0" layoutY="259.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="donationsField" layoutX="278.0" layoutY="306.0" promptText="organ1, organ2, organ3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                <Label fx:id="organsLabel1" layoutX="30.0" layoutY="278.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                <Label fx:id="organsRequiredLabel" layoutX="30.0" layoutY="278.0" prefHeight="47.0" prefWidth="1162.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2" GridPane.rowIndex="7">
                                                    <font>
                                                       <Font size="22.0" />
                                                    </font>
@@ -474,9 +464,21 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                                                <RadioButton fx:id="smokerTrueRadio" mnemonicParsing="false" text="True" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                <RadioButton fx:id="smokerFalseRadio" mnemonicParsing="false" selected="true" text="False" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                <Button fx:id="btnOrgansRequired" mnemonicParsing="false" onAction="#handleBtnOrgansRequiredClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin></Button>
+                                                <Button fx:id="btnOrgansDonate" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonateClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <Button fx:id="btnOrgansDonations" layoutX="278.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleBtnOrgansDonationsClicked" text="Select" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                      <Insets left="120.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <RadioButton fx:id="isSmokerRadioButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                             </children>
                                                         </GridPane>
                                                     </children>
@@ -511,7 +513,7 @@
                         </Tab>
                     </tabs>
                 </TabPane>
-                  <GridPane prefHeight="146.0" prefWidth="1203.0" styleClass="banner" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
+                  <GridPane prefHeight="146.0" prefWidth="1203.0" stylesheets="@../styles/Common.css" GridPane.columnSpan="2">
                       <columnConstraints>
                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0" prefWidth="966.0" />
                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="20.0" />
@@ -520,9 +522,9 @@
                       </columnConstraints>
                       <rowConstraints>
                           <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0" vgrow="NEVER" />
-                          <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="74.0" vgrow="NEVER" />
-                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="45.0" vgrow="NEVER" />
+                          <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
                       </rowConstraints>
                       <children>
                           <Label fx:id="donorFullNameLabel" prefHeight="52.0" prefWidth="972.0" styleClass="banner-text-header" stylesheets="@../styles/Profile.css" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.rowIndex="1">
@@ -530,7 +532,7 @@
                                   <Font name="System Bold" size="40.0" />
                               </font>
                               <GridPane.margin>
-                                  <Insets left="40.0" />
+                                  <Insets bottom="10.0" left="40.0" />
                               </GridPane.margin>
                           </Label>
                           <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Donor Status: " textFill="WHITE" GridPane.rowIndex="2">
@@ -538,13 +540,25 @@
                                   <Font size="28.0" />
                               </font>
                               <GridPane.margin>
-                                  <Insets left="40.0" />
+                                  <Insets bottom="10.0" left="40.0" />
                               </GridPane.margin>
                           </Label>
+                  <Label fx:id="receiverStatusLabel" layoutX="60.0" layoutY="96.0" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Receiver Status: " textFill="WHITE" GridPane.rowIndex="3">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="40.0" />
+                     </GridPane.margin>
+                  </Label>
                       </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
+               <styleClass>
+                  <String fx:value="banner" />
+                  <String fx:value="banner-default" />
+               </styleClass>
                   </GridPane>
             </children>
         </GridPane>

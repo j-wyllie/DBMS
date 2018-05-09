@@ -3,13 +3,12 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
-import java.util.ArrayList;
-
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;

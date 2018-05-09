@@ -2,22 +2,21 @@ package odms.controller;
 
 import static odms.controller.AlertController.donorCancelChanges;
 import static odms.controller.AlertController.donorSaveChanges;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.OrganController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,10 +25,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -100,14 +99,9 @@ public class ProfileEditController extends CommonController {
     private TextField donationsField;
 
     @FXML
-    private RadioButton smokerTrueRadio;
-
-    @FXML
-    private RadioButton smokerFalseRadio;
+    private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
-
-    final ToggleGroup smokerGroup = new ToggleGroup();
 
 
     /**
@@ -146,7 +140,9 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        showScene(event, "/view/ProfileEdit.fxml", true);
+        String scene = "/view/ProfileEdit.fxml";
+        String title = "Edit Profile";
+        showScene(event, scene, title, true);
     }
 
     /**
@@ -172,9 +168,8 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
-                if (!givenNamesField.getText().isEmpty()) {
-                    currentProfile.setLastNames(lastNamesField.getText());
-                }
+                currentProfile.setLastNames(lastNamesField.getText());
+
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
@@ -204,7 +199,10 @@ public class ProfileEditController extends CommonController {
                 } catch (DateTimeParseException e) {
                     error = true;
                 }
-                currentProfile.setGender(genderField.getText());
+                if (!genderField.getText().isEmpty()) {
+                    currentProfile.setGender(genderField.getText());
+                }
+
                 try {
                     if (!weightField.getText().isEmpty()) {
                         currentProfile.setWeight(Double.valueOf(weightField.getText()));
@@ -229,36 +227,8 @@ public class ProfileEditController extends CommonController {
                         bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
                 }
-                try {
-                    if (!organField.getText().equals(currentProfile.getOrgansAsCSV())) {
-                        Set<String> organSet = new HashSet<>(
-                            Arrays.asList(organField.getText().split(", "))
-                        );
-                        if (!organSet.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addOrgansDonate(organSet);
-                        }
-                    }
 
-                } catch (Exception e) {
-                    error = true;
-                }
-
-                try {
-                    if (!donationsField.getText().equals(currentProfile.getDonationsAsCSV())) {
-                        Set<String> set = new HashSet<>(
-                            Arrays.asList(donationsField.getText().split(", "))
-                        );
-                        if (!set.isEmpty()) {
-                            currentProfile.setRegistered(true);
-                            currentProfile.addDonations(set);
-                        }
-                    }
-                } catch (Exception e) {
-                    error = true;
-                }
-
-                currentProfile.setSmoker(smokerTrueRadio.isSelected());
+                currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
                 action = action +
                     currentProfile.getAttributesSummary() +
@@ -275,7 +245,7 @@ public class ProfileEditController extends CommonController {
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");
-                    Set<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
+                    HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
                 if (error) {
@@ -326,20 +296,37 @@ public class ProfileEditController extends CommonController {
     }
 
     @FXML
+    private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow("Organs to Donate");
+        stage.show();
+    }
+
+    @FXML
     private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow("Organs Required");
+        stage.show();
+    }
+
+    @FXML
+    private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
+        Stage stage = showOrgansSelectionWindow("Past Donations");
+        stage.show();
+    }
+
+    private Stage showOrgansSelectionWindow(String windowTitle) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/OrganRequiredEdit.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        OrganRequiredController controller = fxmlLoader.getController();
+        OrganController controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
+        setWindowType(windowTitle);
         controller.initialize();
         Stage stage = new Stage();
+        stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setTitle("Organs Required");
-
-        stage.show();
+        return stage;
     }
 
     /**
@@ -352,14 +339,12 @@ public class ProfileEditController extends CommonController {
         }
 
         if (currentProfile != null) {
-            smokerFalseRadio.setToggleGroup(smokerGroup);
-            smokerTrueRadio.setToggleGroup(smokerGroup);
             try {
                 donorFullNameLabel.setText(currentProfile.getFullName());
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getRegistered() != null && currentProfile.getRegistered()) {
+                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
 
@@ -409,11 +394,9 @@ public class ProfileEditController extends CommonController {
                     bloodTypeField.setText(currentProfile.getBloodType());
                 }
                 if (currentProfile.getSmoker() == null || !currentProfile.getSmoker()) {
-                    smokerFalseRadio.setSelected(true);
-                    smokerTrueRadio.setSelected(false);
+                    isSmokerRadioButton.setSelected(false);
                 } else {
-                    smokerTrueRadio.setSelected(true);
-                    smokerFalseRadio.setSelected(false);
+                    isSmokerRadioButton.setSelected(true);
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
@@ -422,8 +405,8 @@ public class ProfileEditController extends CommonController {
 //                bloodPressureField.setText(currentProfile.getBloodPressure());
 //            }
 //            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-                organField.setText(currentProfile.getOrgansAsCSV());
-                donationsField.setText(currentProfile.getDonationsAsCSV());
+//                organField.setText(currentProfile.getOrgansAsCSV());
+//                donationsField.setText(currentProfile.getDonationsAsCSV());
             } catch (Exception e) {
                 e.printStackTrace();
             }

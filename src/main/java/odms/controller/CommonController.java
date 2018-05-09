@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 class CommonController {
-    private final String appTitle = "ODMS";
 
     /**
      * Scene change to log in view.
@@ -24,30 +23,44 @@ class CommonController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.setResizable(false);
-        appStage.setTitle(appTitle);
+        appStage.setTitle("ODMS");
         appStage.show();
     }
 
-    protected void showScene(ActionEvent event, String scene) throws IOException {
-        showScene(event, scene, false);
+    /**
+     * JavaFX Scene loader
+     * @param event the ActionEvent
+     * @param scene the fxml path
+     * @param title the window title
+     * @throws IOException if the path is invalid
+     */
+    protected void showScene(ActionEvent event, String scene, String title) throws IOException {
+        showScene(event, scene, title, false);
     }
 
-    protected void showScene(ActionEvent event, String scene, Boolean resizeable) throws IOException {
+    /**
+     * JavaFX Scene loader
+     * @param event the ActionEvent
+     * @param scene the fxml path
+     * @param title the window title
+     * @param resizeable if the window can be resized
+     * @throws IOException if the path is invalid
+     */
+    protected void showScene(ActionEvent event, String scene, String title, Boolean resizeable)
+        throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(scene));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.setResizable(resizeable);
-        appStage.setTitle(appTitle);
+        appStage.setTitle(title);
         appStage.show();
     }
-
 
     /**
      * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
      * @param event Any key event within the text boxes.
      */
-
     @FXML
     protected void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

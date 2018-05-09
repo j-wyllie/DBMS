@@ -5,17 +5,17 @@ import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import odms.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import odms.data.IrdNumberConflictException;
+import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
 import odms.profile.Profile;
 
 public class ProfileCreateController extends CommonController {
@@ -49,9 +49,9 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = givenNamesField.getText();
                 String surnames = surnamesField.getText();
                 String dob = dobField.getText();
-                Integer ird = Integer.parseInt(irdField.getText());
+                String ird = irdField.getText();
 
-                Profile newProfile = new Profile(givenNames, surnames, dob, ird);
+                Profile newProfile = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);

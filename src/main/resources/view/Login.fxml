@@ -28,7 +28,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-        <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" styleClass="banner" stylesheets="@../styles/Common.css" text="Organ Donor Management System" textAlignment="CENTER" textFill="#fffbfb" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="TOP">
+        <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" styleClass="banner-default" stylesheets="@../styles/Common.css" text="Organ Donor Management System" textAlignment="CENTER" textFill="#fffbfb" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="TOP">
           <font>
             <Font size="30.0" />
           </font></Label>
