@@ -1,23 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
-
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,18 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -55,6 +29,19 @@ import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 import org.controlsfx.control.table.TableFilter;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
 
 public class ProfileDisplayController extends CommonController {
 
@@ -284,6 +271,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label receiverStatusLabel;
+
+    @FXML
+    private Label preferredGenderLabel;
 
     /**
      * Called when there has been an edit to the current profile.
@@ -1025,6 +1015,9 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
+            }
+            if (currentDonor.getGender() != null) {
+                preferredGenderLabel.setText(genderLabel.getText() + currentDonor.getPreferredGender());
             }
             if (currentDonor.getHeight() != null) {
                 heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
