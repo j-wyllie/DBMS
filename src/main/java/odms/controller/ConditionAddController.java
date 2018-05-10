@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.rmi.registry.LocateRegistry;
 import java.sql.Date;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -7,10 +8,7 @@ import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javax.swing.Action;
 import odms.profile.Condition;
@@ -28,10 +26,10 @@ public class ConditionAddController {
     private javafx.scene.control.TextField nameField;
 
     @FXML
-    private javafx.scene.control.TextField dateDiagnosedField;
+    private DatePicker dateDiagnosedDatePicker;
 
     @FXML
-    private TextField dateCuredField;
+    private DatePicker dateCuredDatePicker;
 
     @FXML
     private CheckBox chronicCheckBox;
@@ -48,28 +46,19 @@ public class ConditionAddController {
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         String name = nameField.getText();
-        String dateDiagnosed = dateDiagnosedField.getText();
+        LocalDate dateDiagnosed = dateDiagnosedDatePicker.getValue();
         Boolean isChronic = chronicCheckBox.isSelected();
-        String dateCured = dateCuredField.getText();
+        LocalDate dateCured = dateCuredDatePicker.getValue();
 
         Condition condition;
 
         try {
-            String[] diagDates = dateDiagnosed.split("-");
-            LocalDate dateDiagnoses = LocalDate.of(Integer.valueOf(diagDates[2]), Integer.valueOf(diagDates[1]), Integer.valueOf(diagDates[0]));
-
-            if (name.equals("")) {
-                throw new IllegalArgumentException();
-            }
-
             LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
-            if (dob.isAfter(dateDiagnoses) || dateDiagnoses.isAfter(LocalDate.now())){
+            if (dob.isAfter(dateDiagnosed) || dateDiagnosed.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException();
             }
             if (curedCheckBox.isSelected()) {
-                String[] cureDates = dateCured.split("-");
-                LocalDate dateCures = LocalDate.of(Integer.valueOf(cureDates[2]), Integer.valueOf(cureDates[1]), Integer.valueOf(cureDates[0]));
-                if(dateCures.isAfter(LocalDate.now()) || dob.isAfter(dateCures) || dateDiagnoses.isAfter(dateCures)){
+                if(dateCured.isAfter(LocalDate.now()) || dob.isAfter(dateCured) || dateDiagnosed.isAfter(dateCured)){
                     throw new IllegalArgumentException();
                 } else {
                     condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
@@ -98,17 +87,17 @@ public class ConditionAddController {
     @FXML
     public void handleCuredChecked(ActionEvent actionEvent) {
         if (curedCheckBox.isSelected()) {
-            dateCuredField.setDisable(false);
+            dateCuredDatePicker.setDisable(false);
             chronicCheckBox.setSelected(false);
         } else {
-            dateCuredField.setDisable(true);
+            dateCuredDatePicker.setDisable(true);
         }
     }
 
     @FXML
     public void handleChronicChecked(ActionEvent actionEvent) {
         if (chronicCheckBox.isSelected()) {
-            dateCuredField.setDisable(true);
+            dateCuredDatePicker.setDisable(true);
             curedCheckBox.setSelected(false);
         }
     }
@@ -119,8 +108,8 @@ public class ConditionAddController {
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dateDiagnosedField.setText(now.format(formatter));
-        dateCuredField.setDisable(true);
+        dateCuredDatePicker.setValue(LocalDate.now());
+        dateCuredDatePicker.setDisable(true);
     }
 
 }

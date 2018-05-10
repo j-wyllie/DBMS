@@ -2,6 +2,8 @@ package odms.profile;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 /**
@@ -56,6 +58,14 @@ public class Condition {
      */
     public Condition(String name, String dateOfDiagnosis, boolean isChronic) throws IllegalArgumentException {
         this(name, dateOfDiagnosis, null, isChronic);
+    }
+
+    public Condition(String name, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) throws IllegalArgumentException {
+        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), dateCured.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), isChronic);
+    }
+
+    public Condition(String name, LocalDate dateOfDiagnosis, boolean isChronic) throws IllegalArgumentException {
+        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), null, isChronic);
     }
 
     // getters
