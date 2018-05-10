@@ -16,18 +16,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
+import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
@@ -68,7 +64,25 @@ public class ClinicianProfileController extends CommonController {
     private TextField searchField;
 
     @FXML
+    private TextField ageField;
+
+    @FXML
+    private TextField regionField;
+
+    @FXML
+    private CheckComboBox genderCombobox;
+
+    @FXML
+    private CheckComboBox typeCombobox;
+
+    @FXML
+    private CheckComboBox organsCombobox;
+
+    @FXML
     private TextField transplantSearchField;
+
+    @FXML
+    private Button applyFilterButton;
 
     @FXML
     private TableView transplantTable;
@@ -78,6 +92,13 @@ public class ClinicianProfileController extends CommonController {
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    private ObservableList<String> genderStrings = FXCollections.observableArrayList();
+
+    private ObservableList<String> typeStrings = FXCollections.observableArrayList();
+
+    private ObservableList<String> organsStrings = FXCollections.observableArrayList();
+
 
     /**
      * Scene change to log in view.
@@ -119,6 +140,15 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
+     * Button handler to apply search filters
+     * @param event clicking on the apply filters button.
+     */
+    @FXML
+    private void handleApplyFilterButton(ActionEvent event) {
+
+    }
+
+    /**
      * Button handler to update donor table based on search results.
      * @param event releasing a key on the keyboard.
      */
@@ -131,7 +161,21 @@ public class ClinicianProfileController extends CommonController {
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
     private void updateTable() {
+
+
+        List selectedGenders;
+        List selectedTypes;
+        List selectedOrgans;
+
+        selectedGenders = genderCombobox.getCheckModel().getCheckedItems();
+        selectedTypes = typeCombobox.getCheckModel().getCheckedItems();
+        selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
+
+
         String searchString = searchField.getText();
+        String ageSearchString = ageField.getText();
+        String regionSearchString = regionField.getText();
+
 
         searchTable.getItems().clear();
         donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
@@ -296,6 +340,20 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void initialize(){
 
+        genderStrings.add("male");
+        genderStrings.add("female");
+        genderStrings.add("other");
+        genderCombobox.getItems().setAll(genderStrings);
+
+        organsStrings.addAll(Organ.toArrayList());
+        organsCombobox.getItems().setAll(organsStrings);
+
+        typeStrings.add("receiver");
+        typeStrings.add("donor");
+        typeCombobox.getItems().setAll(typeStrings);
+
+
+
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
@@ -303,6 +361,10 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
 
 
         TableFilter filter = new TableFilter<>(transplantTable);
