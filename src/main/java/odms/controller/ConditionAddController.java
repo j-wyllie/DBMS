@@ -66,6 +66,9 @@ public class ConditionAddController {
             } else {
                 condition = new Condition(name, dateDiagnosed, isChronic);
             }
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException();
+            }
             addCondition(condition);
 
         } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
