@@ -36,6 +36,8 @@ public class ProcedureEditController {
     private TextField summaryEntry;
     @FXML
     private Button editButton;
+    @FXML
+    private Label warningLabel;
 
     @FXML
     private ListView<Organ> affectedOrgansListView;
@@ -47,6 +49,7 @@ public class ProcedureEditController {
 
     @FXML
     public void initialize(Procedure selectedProcedure, ProfileDisplayController selectedController) {
+        warningLabel.setVisible(false);
         controller = selectedController;
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());
@@ -94,6 +97,7 @@ public class ProcedureEditController {
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
+        warningLabel.setVisible(false);
         affectedOrgansListView.setDisable(false);
         affectedOrgansListView.setVisible(true);
         descEntry.setDisable(false);
@@ -119,7 +123,18 @@ public class ProcedureEditController {
         System.out.println(action);
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
-        currentProcedure.setDate(dateOfProcedureDatePicker.getValue());
+
+        // date validation
+        LocalDate dateOfProcedure = dateOfProcedureDatePicker.getValue();
+        LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
+        if (dob.isAfter(dateOfProcedure)){
+            warningLabel.setVisible(true);
+            return;
+        } else {
+            currentProcedure.setDate(dateOfProcedure);
+            warningLabel.setVisible(false);
+        }
+
         currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
         String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action += oldValues+newValues;

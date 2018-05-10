@@ -66,7 +66,7 @@ public class ProcedureAddController {
 
             addProcedure(procedure);
 
-        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException |DateTimeException e) {
+        } catch (Exception e) {
             warningLabel.setVisible(true);
         }
     }

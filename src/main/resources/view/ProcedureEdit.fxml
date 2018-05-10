@@ -130,6 +130,7 @@
                      </GridPane.margin></Button>
                   <ListView fx:id="affectedOrgansListView" prefHeight="61.0" prefWidth="330.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                   <DatePicker fx:id="dateOfProcedureDatePicker" prefHeight="26.0" prefWidth="426.0" promptText="Date of Procedure" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                  <Label fx:id="warningLabel" prefHeight="15.0" prefWidth="139.0" text="Invalid Date" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                </children>
             </GridPane>
          </children>

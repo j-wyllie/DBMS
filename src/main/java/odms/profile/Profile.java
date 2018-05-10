@@ -59,6 +59,7 @@ public class Profile {
     private ArrayList<Drug> historyOfMedication;
     private ArrayList<String> medicationTimestamps;
 
+
     /**
      * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
@@ -102,6 +103,10 @@ public class Profile {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
+    }
+
+    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+        this(givenNames, lastNames, dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), irdNumber);
     }
 
     /**

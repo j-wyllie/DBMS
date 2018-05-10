@@ -56,11 +56,6 @@
                   <Insets />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="dobField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="Date of Birth (dd-mm-yy)" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </TextField>
             <TextField fx:id="irdField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="IRD Number" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
@@ -84,6 +79,7 @@
                <padding>
                   <Insets bottom="10.0" />
                </padding></Hyperlink>
+            <DatePicker fx:id="dobDatePicker" prefHeight="25.0" prefWidth="423.0" promptText="Date of Birth" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>
