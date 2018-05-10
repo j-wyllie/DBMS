@@ -11,12 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Organ;
@@ -34,7 +29,7 @@ public class ProcedureEditController {
     @FXML
     private TextArea descEntry;
     @FXML
-    private TextField dateEntry;
+    private DatePicker dateOfProcedureDatePicker;
     @FXML
     private Button saveButton;
     @FXML
@@ -62,8 +57,8 @@ public class ProcedureEditController {
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
-        dateEntry.setDisable(true);
-        dateEntry.setVisible(false);
+        dateOfProcedureDatePicker.setDisable(true);
+        dateOfProcedureDatePicker.setVisible(false);
         summaryEntry.setDisable(true);
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
@@ -103,14 +98,14 @@ public class ProcedureEditController {
         affectedOrgansListView.setVisible(true);
         descEntry.setDisable(false);
         descEntry.setVisible(true);
-        dateEntry.setDisable(false);
-        dateEntry.setVisible(true);
+        dateOfProcedureDatePicker.setDisable(false);
+        dateOfProcedureDatePicker.setVisible(true);
         saveButton.setDisable(false);
         saveButton.setVisible(true);
         summaryEntry.setDisable(false);
         summaryEntry.setVisible(true);
         descEntry.setText(currentProcedure.getLongDescription());
-        dateEntry.setText(currentProcedure.getDate().toString());
+        dateOfProcedureDatePicker.setValue(currentProcedure.getDate());
         summaryEntry.setText(currentProcedure.getSummary());
         procedureSummaryLabel.setText("");
         procedureDateLabel.setText("Date:");
@@ -124,7 +119,7 @@ public class ProcedureEditController {
         System.out.println(action);
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
-        currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
+        currentProcedure.setDate(dateOfProcedureDatePicker.getValue());
         currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
         String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action += oldValues+newValues;
@@ -143,8 +138,8 @@ public class ProcedureEditController {
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
-        dateEntry.setDisable(true);
-        dateEntry.setVisible(false);
+        dateOfProcedureDatePicker.setDisable(true);
+        dateOfProcedureDatePicker.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
         summaryEntry.setDisable(true);

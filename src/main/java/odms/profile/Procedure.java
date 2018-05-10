@@ -26,6 +26,16 @@ public class Procedure {
         this(summary, date, "");
     }
 
+    public Procedure(String summary, LocalDate date, String longDescription) {
+        this.summary = summary;
+        this.date = date;
+        this.longDescription = longDescription;
+    }
+
+    public Procedure(String summary, LocalDate date) {
+        this(summary, date, "");
+    }
+
     public void update() {
         if (organsAffected.size() == 0) {
             this.affectsOrgansText = "";
@@ -60,7 +70,7 @@ public class Procedure {
             throw new IllegalArgumentException("Not an organ with donor status on this profile");
         }
     }
-    public void removeAffectedOrgen(Organ organ) {
+    public void removeAffectedOrgan(Organ organ) {
         organsAffected.remove(organ);
     }
 }
