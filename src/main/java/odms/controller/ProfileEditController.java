@@ -1,7 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.donorCancelChanges;
-import static odms.controller.AlertController.donorSaveChanges;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
@@ -151,7 +151,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = donorSaveChanges();
+        boolean saveBool = profileSaveChanges();
         boolean error = false;
 
         if (saveBool) {
@@ -264,7 +264,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = donorCancelChanges();
+        boolean cancelBool = profileCancelChanges();
 
         if (cancelBool) {
             closeEditWindow(event);
@@ -282,9 +282,9 @@ public class ProfileEditController extends CommonController {
         Scene scene = new Scene(fxmlLoader.load());
         ProfileDisplayController controller = fxmlLoader.getController();
         if (isClinician) {
-            controller.setDonor(currentProfile);
+            controller.setProfileViaClinician(currentProfile);
         } else {
-            controller.setLoggedInProfile(currentProfile);
+            controller.setProfile(currentProfile);
         }
         controller.initialize();
 
@@ -413,7 +413,7 @@ public class ProfileEditController extends CommonController {
         }
     }
 
-    public void setDonor(Profile donor) {
+    public void setProfile(Profile donor) {
         currentProfile = donor;
     }
 

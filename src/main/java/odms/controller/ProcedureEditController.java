@@ -45,8 +45,6 @@ public class ProcedureEditController {
     @FXML
     private ListView<Organ> affectedOrgansListView;
 
-    private ObservableList<Organ> donatedOrgans;
-
     private Procedure currentProcedure;
     private ProfileDisplayController controller;
 
@@ -70,8 +68,9 @@ public class ProcedureEditController {
         saveButton.setVisible(false);
         try{
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
-            affectedOrgansListView.setItems(donatedOrgans);
+            ObservableList<Organ> organsDonated = FXCollections
+                    .observableArrayList(controller.getCurrentProfile().getOrgansDonated());
+            affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
         } catch (NullPointerException e){
             System.out.println("Not clinician");
@@ -119,7 +118,7 @@ public class ProcedureEditController {
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
-        String action = "Donor "+controller.getSearchedDonor().getId()+" PROCEDURE "+controller.getSearchedDonor().getAllProcedures().indexOf(currentProcedure)+" EDITED";
+        String action = "Donor "+controller.getCurrentProfile().getId()+" PROCEDURE "+controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure)+" EDITED";
         String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
         System.out.println(action);
         currentProcedure.setLongDescription(descEntry.getText());

@@ -61,7 +61,7 @@ public class ProcedureAddController {
                 throw new IllegalArgumentException();
             }
 
-            LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
+            LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
             if (dob.isAfter(date3)){
                 throw new IllegalArgumentException();
             }
@@ -105,10 +105,10 @@ public class ProcedureAddController {
      */
     public void init(ProfileDisplayController controller) {
         this.controller = controller;
-        searchedDonor = controller.getSearchedDonor();
+        searchedDonor = controller.getCurrentProfile();
 
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
+        donatedOrgans =  FXCollections.observableArrayList(controller.getCurrentProfile().getOrgansDonated());
         affectedOrgansListView.setItems(donatedOrgans);
     }
 

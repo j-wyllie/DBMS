@@ -108,7 +108,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorSaveChanges() {
+    static boolean profileSaveChanges() {
         Alert saveAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to save your changes?",
@@ -125,7 +125,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorCancelChanges() {
+    static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to cancel your changes?",

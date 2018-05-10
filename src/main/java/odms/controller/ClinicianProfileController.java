@@ -214,7 +214,7 @@ public class ClinicianProfileController extends CommonController {
 
             Scene scene = new Scene(fxmlLoader.load());
             ProfileDisplayController controller = fxmlLoader.getController();
-            controller.setDonor(selectedDonor);
+            controller.setProfileViaClinician(selectedDonor);
             controller.initialize();
 
             Stage stage = new Stage();

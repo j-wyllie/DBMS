@@ -91,12 +91,11 @@ public class LoginController extends CommonController {
         return currentProfile;
     }
 
-
     @FXML
     private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
     }
 
     public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+    public static void setCurrentProfile(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }

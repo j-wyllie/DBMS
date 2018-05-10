@@ -9,19 +9,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.data.UserDataIO;
-import odms.profile.Profile;
 import odms.user.User;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static odms.controller.AlertController.donorCancelChanges;
-import static odms.controller.AlertController.donorSaveChanges;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+
 import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
@@ -60,7 +58,7 @@ public class ClinicianProfileEditController extends CommonController{
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = donorCancelChanges();
+        boolean cancelBool = profileCancelChanges();
 
         if (cancelBool) {
             Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
@@ -77,7 +75,7 @@ public class ClinicianProfileEditController extends CommonController{
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = donorSaveChanges();
+        boolean saveBool = profileSaveChanges();
         boolean error = false;
         if (saveBool) {
             String action =
