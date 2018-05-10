@@ -263,17 +263,7 @@
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="dobField" layoutX="210.0" layoutY="163.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="dodField" layoutX="210.0" layoutY="211.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" prefHeight="25.0" prefWidth="387.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
@@ -293,6 +283,16 @@
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
+                                                <DatePicker fx:id="dobDatePicker" prefHeight="25.0" prefWidth="427.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="4">
+                                                   <GridPane.margin>
+                                                      <Insets left="80.0" />
+                                                   </GridPane.margin>
+                                                </DatePicker>
+                                                <DatePicker fx:id="dodDatePicker" prefHeight="25.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                      <Insets left="80.0" />
+                                                   </GridPane.margin>
+                                                </DatePicker>
                                                             </children>
                                                         </GridPane>
                                                     </children>

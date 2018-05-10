@@ -6,16 +6,48 @@
       "givenNames": "Ash",
       "lastNames": "Ketchup",
       "dateOfBirth": {
-        "year": 1978,
+        "year": 1979,
         "month": 11,
-        "day": 27
+        "day": 15
       },
+      "dateOfDeath": {
+        "year": 2012,
+        "month": 5,
+        "day": 9
+      },
+      "bloodType": "",
+      "address": "",
+      "region": "",
+      "smoker": false,
+      "alcoholConsumption": "",
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
         "ird updated at 09:59 AM 07-05-2018",
-        "dob updated at 09:59 AM 07-05-2018"
+        "dob updated at 09:59 AM 07-05-2018",
+        "given-names updated at 11:34 PM 10-05-2018",
+        "last-names updated at 11:34 PM 10-05-2018",
+        "ird updated at 11:34 PM 10-05-2018",
+        "dob updated at 11:34 PM 10-05-2018",
+        "address updated at 11:34 PM 10-05-2018",
+        "region updated at 11:34 PM 10-05-2018",
+        "blood-type updated at 11:34 PM 10-05-2018",
+        "given-names updated at 11:34 PM 10-05-2018",
+        "last-names updated at 11:34 PM 10-05-2018",
+        "ird updated at 11:34 PM 10-05-2018",
+        "dob updated at 11:34 PM 10-05-2018",
+        "address updated at 11:34 PM 10-05-2018",
+        "region updated at 11:34 PM 10-05-2018",
+        "blood-type updated at 11:34 PM 10-05-2018",
+        "given-names updated at 11:34 PM 10-05-2018",
+        "last-names updated at 11:34 PM 10-05-2018",
+        "ird updated at 11:34 PM 10-05-2018",
+        "dob updated at 11:34 PM 10-05-2018",
+        "dod updated at 11:34 PM 10-05-2018",
+        "address updated at 11:34 PM 10-05-2018",
+        "region updated at 11:34 PM 10-05-2018",
+        "blood-type updated at 11:34 PM 10-05-2018"
       ],
       "procedures": [],
       "organsDonating": [],
@@ -34,6 +66,8 @@
       ],
       "organsReceived": [],
       "conditions": [],
+      "phone": "",
+      "email": "",
       "irdNumber": 177076084,
       "timeOfCreation": {
         "date": {
@@ -52,13 +86,13 @@
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 7
+          "day": 10
         },
         "time": {
-          "hour": 9,
-          "minute": 59,
-          "second": 26,
-          "nano": 456000000
+          "hour": 23,
+          "minute": 34,
+          "second": 57,
+          "nano": 263000000
         }
       },
       "id": 0,
