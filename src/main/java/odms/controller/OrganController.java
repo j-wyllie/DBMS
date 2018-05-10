@@ -26,8 +26,8 @@ import odms.profile.Profile;
 public class OrganController {
     private Profile profile;
 
-    private ObservableList<String> observableListOrgansAvailable;
-    private ObservableList<String> observableListOrgansRequired;
+    public ObservableList<String> observableListOrgansAvailable;
+    public ObservableList<String> observableListOrgansRequired;
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -144,6 +144,7 @@ public class OrganController {
     public void onBtnCancelClicked() {
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
+        profile.setDateOfDeath(null);
     }
 
     /**
@@ -209,8 +210,8 @@ public class OrganController {
             final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
             if(selectedIdxRequired != -1) {
                 String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
-                observableListOrgansRequired.remove(itemToRemove);
-                observableListOrgansAvailable.add(itemToRemove);
+//                observableListOrgansRequired.remove(itemToRemove);
+//                observableListOrgansAvailable.add(itemToRemove);
                 giveReasonForRemoval(itemToRemove);
             }
         }
@@ -248,7 +249,7 @@ public class OrganController {
             e.printStackTrace();
         }
         OrganRemovalController controller = fxmlLoader.<OrganRemovalController>getController();
-        controller.initialize(organ);
+        controller.initialize(organ, profile, this);
 
         Stage stage = new Stage();
         stage.setScene(scene);
