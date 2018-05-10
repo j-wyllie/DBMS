@@ -34,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -234,6 +235,12 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Button buttonViewActiveIngredients;
+
+    @FXML
+    private Tab tabPageOrganDisplay;
+
+    @FXML
+    private ProfileOrganDisplayController profileOrganDisplayController;
 
     /**
      * Text for showing recent edits.
