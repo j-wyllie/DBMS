@@ -405,7 +405,7 @@ public class ProfileEditController extends CommonController {
                 }
 
                 comboGenderPref.setEditable(true);
-                comboGenderPref.getItems().addAll("Male", "Female", "Other"); //TODO Add database call for all preferred genders.
+                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
 
                 if (currentProfile.getPreferredGender() != null) {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
