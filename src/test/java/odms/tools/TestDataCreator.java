@@ -139,7 +139,7 @@ public class TestDataCreator {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonating; i++) {
                 try {
-                    profile.addOrgan(organs.get(i));
+                    profile.addOrganDonating(organs.get(i));
                 } catch (OrganConflictException e) {
                     // As is test data, no action required.
                 }
@@ -158,11 +158,7 @@ public class TestDataCreator {
         if (numberReceiving > 0) {
             profile.setReceiver(true);
             for (Integer i = 0; i < numberReceiving; i++) {
-                try {
-                    profile.addOrganRequired(organs.get(i));
-                } catch (OrganConflictException e) {
-                    // As is test data, no action required.
-                }
+                profile.addOrganRequired(organs.get(i));
             }
         }
     }

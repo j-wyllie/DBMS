@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import odms.cli.CommandUtils;
-import odms.controller.AlertController;
 import odms.medications.Drug;
 
 public class Profile {
@@ -343,10 +342,11 @@ public class Profile {
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrgan(Organ organ) throws OrganConflictException {
-        if (this.organsRequired.contains(organ)) {
+    public void addOrganDonating(Organ organ) throws OrganConflictException {
+        if (this.organsReceived.contains(organ)) {
+            // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
-                    "Profile is currently receiver for " + organ,
+                    "Profile has previously received " + organ,
                     organ
             );
         }
@@ -356,15 +356,8 @@ public class Profile {
     /**
      * Add an organ to the organs required list.
      * @param organ the organ the profile requires
-     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrganRequired(Organ organ) throws OrganConflictException {
-        if (this.organsDonating.contains(organ)) {
-            throw new OrganConflictException(
-                    "Profile is currently donor for  " + organ,
-                    organ
-            );
-        }
+    public void addOrganRequired(Organ organ) {
         this.organsRequired.add(organ);
     }
 
@@ -375,29 +368,26 @@ public class Profile {
     public void addOrgansRequired(HashSet<Organ> organs) {
         generateUpdateInfo("organsRequired");
 
-        try {
-            for (Organ organ : organs) {
-                addOrganRequired(organ);
+        for (Organ organ : organs) {
+            addOrganRequired(organ);
 
-                // TODO history refactor
-                String action = "Profile " +
-                        this.getId() +
-                        " required organ " +
-                        organ.getNamePlain() +
-                        " at " +
-                        LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
+            // TODO history refactor
+            String action = "Profile " +
+                    this.getId() +
+                    " required organ " +
+                    organ.getNamePlain() +
+                    " at " +
+                    LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
                 }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             }
-        } catch (OrganConflictException e) {
-            AlertController.invalidOrgan();
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
+
     }
 
     /**
@@ -416,7 +406,7 @@ public class Profile {
                         "Organ " + organ + " already exists in donating list"
                 );
             }
-            this.addOrgan(organ);
+            this.addOrganDonating(organ);
 
             String action = "Profile " +
                     this.getId() +

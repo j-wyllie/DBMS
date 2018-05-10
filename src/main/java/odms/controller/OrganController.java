@@ -149,23 +149,23 @@ public class OrganController {
                 new HashSet<>(observableListOrgansRequired)
         );
 
-        try {
-            switch (windowType) {
-                case DONATED:
-                    profile.addOrgansDonated(organs);
-                    break;
-                case DONATING:
+        switch (windowType) {
+            case DONATED:
+                profile.addOrgansDonated(organs);
+                break;
+            case DONATING:
+                try {
+                    organs.removeAll(profile.getOrgansDonating());
                     profile.addOrgansDonating(organs);
-                    break;
-                case REQUIRED:
-                    profile.addOrgansRequired(organs);
-                    break;
-            }
-        } catch (OrganConflictException e) {
-
-            // TODO handle error correctly.
-
+                } catch (OrganConflictException e) {
+                    AlertController.invalidOrgan(e.getOrgan());
+                }
+                break;
+            case REQUIRED:
+                profile.addOrgansRequired(organs);
+                break;
         }
+
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
