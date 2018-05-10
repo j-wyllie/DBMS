@@ -28,10 +28,9 @@ public class MedicationDataIO {
             substring = replaceSpace(substring, false);
             String urlString = String
                     .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
-            URL url = new URL(urlString);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
 
             if (response == null || response.toString().equals("1")) {
                 return suggestionList;
@@ -55,10 +54,9 @@ public class MedicationDataIO {
             drugName = replaceSpace(drugName, false);
             String urlString = String
                     .format("http://mapi-us.iterar.co/api/%s/substances.json", drugName);
-            URL url = new URL(urlString);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
 
             if (response == null || response.toString().equals("1")) {
                 return activeList;
@@ -88,12 +86,12 @@ public class MedicationDataIO {
 
     /**
      * Makes a HTTP GET request to the url passed as a parameter and then returns the response.
-     * @param url represents the address the HTTP GET request is made to.
+     * @param urlString represents the address the HTTP GET request is made to.
      * @throws IOException URL and HttpURLConnection may cause IOExceptions
      */
-    private static StringBuffer makeRequest(URL url) throws IOException {
+    private static StringBuffer makeRequest(String urlString) throws IOException {
+        URL url = new URL(urlString);
         StringBuffer responseContent;
-        responseContent = new StringBuffer();
         //Creating the connection to the API server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -102,6 +100,7 @@ public class MedicationDataIO {
         con.setReadTimeout(5000);
 
         if (con.getResponseCode() == 200) {
+            responseContent = new StringBuffer();
             BufferedReader response = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
 
@@ -113,6 +112,7 @@ public class MedicationDataIO {
             response.close();
             con.disconnect();
         } else if (con.getResponseCode() < 600 && con.getResponseCode() > 499){ // Catch server errors
+            responseContent = new StringBuffer();
             return responseContent.append(1);
         } else {
             return null;
@@ -164,10 +164,9 @@ public class MedicationDataIO {
             drug2 = replaceSpace(drug2, true);
             String urlString = String
                     .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug1, drug2);
-            URL url = new URL(urlString);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
 
             if (response == null) {
                 return  interactions;
@@ -176,8 +175,7 @@ public class MedicationDataIO {
                 // in different order.
                 urlString = String
                         .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug2, drug1);
-                url = new URL(urlString);
-                response = makeRequest(url);
+                response = makeRequest(urlString);
                 if (response == null) {
                     return interactions;
                 } else if (response.toString().equals("1")) {
