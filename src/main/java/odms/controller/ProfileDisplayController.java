@@ -25,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -412,7 +413,6 @@ public class ProfileDisplayController extends CommonController {
                         t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
                 searchedDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
-                System.out.println(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             }
 
             refreshConditionTable();
@@ -470,7 +470,6 @@ public class ProfileDisplayController extends CommonController {
                     public int compare(Condition o1, Condition o2) {
                         if (o1.getChronic() && o2.getChronic()) {
                             if (param.getComparator() == null) { // if no comparator is set then return 0 (nothing changes)
-                                System.out.println("help me obiwan");
                                 return 0;
                             } else { // otherwise sort the two conditions
                                 return param.getComparator().compare(o1,o2);
@@ -501,12 +500,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void forceConditionSortOrder() {
-        curConditionsTable.getSortOrder().clear();
-        curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
-        curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
-        pastConditionsTable.getSortOrder().clear();
-        pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
-        pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+
     }
 
 
@@ -1119,6 +1113,7 @@ public class ProfileDisplayController extends CommonController {
             e.printStackTrace();
             invalidUsername();
         }
+        refreshConditionTable();
 
     }
 
@@ -1397,11 +1392,7 @@ public class ProfileDisplayController extends CommonController {
 
         if(searchedDonor != null) {
             setPage(searchedDonor);
-
-            //if(!isClinician) {
-                hideItems();
-            //}
-            //Profile currentDonor = getCurrentProfile();
+            hideItems();
         }
 
         if (searchedDonor != null) {
@@ -1409,13 +1400,16 @@ public class ProfileDisplayController extends CommonController {
             makeProcedureTable(searchedDonor.getPreviousProcedures(), searchedDonor.getPendingProcedures());
 
         }
-        refreshPageElements();
 
+        refreshPageElements();
 
         disableTableHeaderReorder();
         @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(curConditionsTable);
         @SuppressWarnings("deprecation") TableFilter tableFilter2 = new TableFilter(pastConditionsTable);
 
+        try { // Can't refresh the condition table on the initial initialize
+            refreshConditionTable();
+        } catch (NullPointerException e) { }
     }
 
     /**
