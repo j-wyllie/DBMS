@@ -122,5 +122,4 @@ public class ConditionAddController {
         dateDiagnosedField.setText(now.format(formatter));
         dateCuredField.setDisable(true);
     }
-
 }

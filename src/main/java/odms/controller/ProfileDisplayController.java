@@ -469,18 +469,19 @@ public class ProfileDisplayController extends CommonController {
                     @Override
                     public int compare(Condition o1, Condition o2) {
                         if (o1.getChronic() && o2.getChronic()) {
-                            if (param.getComparator() == null) {
+                            if (param.getComparator() == null) { // if no comparator is set then return 0 (nothing changes)
+                                System.out.println("help me obiwan");
                                 return 0;
-                            } else {
+                            } else { // otherwise sort the two conditions
                                 return param.getComparator().compare(o1,o2);
                             }
-                        } else if (o1.getChronic()) {
+                        } else if (o1.getChronic()) { // o1 is chronic and o2 isn't so return -1 (o1 comes first)
                             return -1;
-                        } else if (o2.getChronic()) {
+                        } else if (o2.getChronic()) { // o2 is chronic and o1 isn't so return 1 (o2 comes first)
                             return 1;
-                        } else if (param.getComparator() == null) {
+                        } else if (param.getComparator() == null) { // there is no comparator so return 0 (nothing changes)
                             return 0;
-                        } else {
+                        } else { // otherwise just compare them as usual
                             return param.getComparator().compare(o1,o2);
                         }
                     }

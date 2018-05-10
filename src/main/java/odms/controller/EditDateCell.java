@@ -67,7 +67,6 @@ class EditDateCell extends TableCell<Condition, LocalDate> {
 
         ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) ->
         {
-            System.out.println("another press");
             if (!newSelection) {
                 try {
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
@@ -81,7 +80,6 @@ class EditDateCell extends TableCell<Condition, LocalDate> {
         textField.setOnKeyPressed((ke) -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 try {
-                    System.out.println("enter press");
                     textField.focusedProperty().removeListener(changeListener);
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
