@@ -55,7 +55,7 @@
                   </Label>
                </children>
             </GridPane>
-              <Label fx:id="ProcedureDetailsLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="126.0" prefWidth="352.0" stylesheets="@../styles/Common.css" text="Procedure Details" GridPane.halignment="CENTER">
+              <Label fx:id="ProcedureDetailsLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Procedure Details" GridPane.halignment="CENTER">
                <styleClass>
                   <String fx:value="banner" />
                   <String fx:value="banner-default" />
