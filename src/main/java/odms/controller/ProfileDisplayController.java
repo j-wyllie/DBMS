@@ -301,7 +301,7 @@ public class ProfileDisplayController extends CommonController {
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
         //curDiseasesTable.getSortOrder().add(curChronicColumn);}
 
-        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
+        //curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
         //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
@@ -412,6 +412,7 @@ public class ProfileDisplayController extends CommonController {
                         t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
                 searchedDonor.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
+                System.out.println(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             }
 
             refreshConditionTable();
@@ -467,9 +468,7 @@ public class ProfileDisplayController extends CommonController {
                 Comparator<Condition> comparator = new Comparator<Condition>() {
                     @Override
                     public int compare(Condition o1, Condition o2) {
-                        if (o1 == null || o2 == null) {
-                            return 0;
-                        } else if (o1.getChronic() && o2.getChronic()) {
+                        if (o1.getChronic() && o2.getChronic()) {
                             if (param.getComparator() == null) {
                                 return 0;
                             } else {
