@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -551,7 +552,12 @@ public class ProfileDisplayController extends CommonController {
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
 
         for (int i = 0; i<conditions.size(); i++) {
-            if (conditions.get(i) != null) { searchedDonor.removeCondition(conditions.get(i));}
+            if (conditions.get(i) != null) {
+                searchedDonor.removeCondition(conditions.get(i));
+                LocalDateTime currentTime = LocalDateTime.now();
+                String action = "Donor " + searchedDonor.getId()  + " removed condition with values("  +conditions.get(i).getName()+","+conditions.get(i).getDateOfDiagnosis()+","+conditions.get(i).getChronic()+","+conditions.get(i).getDateCuredString()+ ") index of "+ searchedDonor.getCurrentConditions().indexOf(conditions.get(i)) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                HistoryController.updateHistory(action);
+            }
         }
 
         refreshConditionTable();

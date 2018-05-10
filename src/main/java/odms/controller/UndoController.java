@@ -4,6 +4,7 @@ import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.medications.Drug;
+import odms.profile.Condition;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
@@ -29,11 +30,11 @@ public class UndoController {
                 end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
             }
-            if (action.contains("added") && !action.contains("drug")) {
+            if (action.contains("added") && !action.contains("drug") && !action.contains("condition")) {
                 added(currentDatabase, action);
             } else if (action.contains("deleted")) {
                 deleted(currentDatabase, action);
-            } else if (action.contains("removed") && !action.contains("drug")) {
+            } else if (action.contains("removed") && !action.contains("drug") && !action.contains("condition")) {
                 removed(currentDatabase, action);
             } else if (action.contains("set")) {
                 set(currentDatabase, action);
@@ -53,11 +54,51 @@ public class UndoController {
                 stopDrug(currentDatabase, action);
             } else if (action.contains("started")) {
                 renewDrug(currentDatabase, action);
+            } else if (action.contains("added condition")) {
+                addCondition(currentDatabase,action);
+            } else if (action.contains("removed condition")) {
+                removedCondition(currentDatabase,action);
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("No commands have been entered");
         }
+    }
+
+    private static void removedCondition(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("removed")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String s = action.substring(action.indexOf("(")+1,action.indexOf(")"));
+        System.out.println(s);
+        String[] values = s.split(",");
+        String diagDate = values[1].substring(8)+"-"+values[1].substring(5,7)+"-"+values[1].substring(0,4);
+        String cureDate = null;
+        System.out.println(diagDate);
+        if(!values[3].equals("null")) {
+            cureDate = values[3].substring(8) + "-" + values[3].substring(5, 7) + "-" + values[3].substring(0, 4);
+        }
+        Condition condition = new Condition(values[0], diagDate, cureDate, Boolean.valueOf(values[2]));
+        profile.addCondition(condition);
+        LocalDateTime currentTime = LocalDateTime.now();
+        currentSessionHistory.set(historyPosition,"Donor " + profile.getId()  + " removed condition with values("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ") index of "+ profile.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        if (historyPosition > 0) {
+            historyPosition -= 1;
+        }
+
+        HistoryController.setPosition(historyPosition);
+    }
+
+    private static void addCondition(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        int c = Integer.parseInt(action.substring(action.indexOf("index of")).replaceAll("[\\D]", ""));
+        Condition condition = profile.getCurrentConditions().get(c);
+        profile.removeCondition(condition);
+        if (historyPosition > 0) {
+            historyPosition -= 1;
+        }
+
+        HistoryController.setPosition(historyPosition);
     }
 
     private static void stopDrug(ProfileDatabase currentDatabase, String action) {

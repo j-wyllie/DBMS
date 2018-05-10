@@ -78,7 +78,9 @@ public class ConditionAddController {
                 condition = new Condition(name, dateDiagnosed, isChronic);
             }
             addCondition(condition);
-
+            LocalDateTime currentTime = LocalDateTime.now();
+            String action = "Donor " + searchedDonor.getId()  + " added condition with values("  + name+","+dateDiagnosed+","+isChronic+ ") index of "+ searchedDonor.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            HistoryController.updateHistory(action);
         } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
             warningLabel.setVisible(true);
         }

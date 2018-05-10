@@ -2,6 +2,7 @@ package odms.controller;
 
 import odms.data.ProfileDatabase;
 import odms.medications.Drug;
+import odms.profile.Condition;
 import odms.profile.Organ;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
@@ -33,11 +34,11 @@ public class RedoController {
                 }
                 int end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
-                if (action.contains("added") && !action.contains("drug")) {
+                if (action.contains("added") && !action.contains("drug") && !action.contains("condition")) {
                     added(currentDatabase, action);
                 } else if (action.contains("deleted")) {
                     deleted(currentDatabase, action);
-                } else if (action.contains("removed") && !action.contains("drug")) {
+                } else if (action.contains("removed") && !action.contains("drug") && !action.contains("condition")) {
                     removed(currentDatabase, action);
                 } else if (action.contains("set")) {
                     set(currentDatabase, action);
@@ -57,6 +58,10 @@ public class RedoController {
                     stopDrug(currentDatabase, action);
                 } else if (action.contains("started")) {
                     renewDrug(currentDatabase, action);
+                }  else if (action.contains("added condition")) {
+                    addCondition(currentDatabase,action,end);
+                }  else if (action.contains("removed condition")) {
+                    removedCondition(currentDatabase,action);
                 }
                 HistoryController.setPosition(historyPosition);
                 System.out.println("Command redone");
@@ -67,6 +72,23 @@ public class RedoController {
             e.printStackTrace();
             System.out.println("No commands have been entered.");
         }
+    }
+
+    private static void removedCondition(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("removed")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        int c = Integer.parseInt(action.substring(action.indexOf("index of")).replaceAll("[\\D]", ""));
+        Condition condition = profile.getCurrentConditions().get(c);
+        profile.removeCondition(condition);
+    }
+
+    private static void addCondition(ProfileDatabase currentDatabase, String action, int end) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String s = action.substring(action.indexOf("(")+1,action.indexOf(")"));
+        String[] values = s.split(",");
+        Condition condition = new Condition(values[0], values[1], null, Boolean.valueOf(values[2]));
+        profile.addCondition(condition);
     }
 
     private static void deleteDrug(ProfileDatabase currentDatabase, String action, int end) {
@@ -103,7 +125,6 @@ public class RedoController {
     }
 
     private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
-        System.out.println("a");
         int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
         if(action.contains("history")) {
