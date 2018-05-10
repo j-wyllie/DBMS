@@ -51,7 +51,7 @@ import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.medications.Drug;
 import odms.profile.Condition;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -976,7 +976,7 @@ public class ProfileDisplayController extends CommonController {
 
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
-                organsRequiredLabel.setText("Organs Required : " + Organ.organSetToString(currentDonor.getOrgansRequired()));
+                organsRequiredLabel.setText("Organs Required : " + OrganEnum.organSetToString(currentDonor.getOrgansRequired()));
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -1029,9 +1029,9 @@ public class ProfileDisplayController extends CommonController {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
 
-            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonating()));
+            organsLabel.setText(organsLabel.getText() + OrganEnum.organSetToString(currentDonor.getOrgansDonating()));
 
-            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonated()));
+            donationsLabel.setText(donationsLabel.getText() + OrganEnum.organSetToString(currentDonor.getOrgansDonated()));
 
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());

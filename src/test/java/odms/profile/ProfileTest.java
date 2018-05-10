@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.cli.CommandUtils;
 import org.junit.Test;
@@ -175,12 +176,12 @@ public class ProfileTest {
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(someOrgans));
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.BONE);
-            expected.add(Organ.HEART);
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.BONE);
+            expected.add(OrganEnum.HEART);
+            expected.add(OrganEnum.CORNEA);
 
             assertEquals(expected, testProfile.getOrgansDonated());
         } catch (IllegalArgumentException e) {
@@ -211,12 +212,12 @@ public class ProfileTest {
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.BONE);
-            expected.add(Organ.HEART);
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.BONE);
+            expected.add(OrganEnum.HEART);
+            expected.add(OrganEnum.CORNEA);
 
             assertEquals(expected, testProfile.getOrgansDonating());
 
@@ -241,14 +242,15 @@ public class ProfileTest {
             testProfile.setDonor(true);
             testProfile.addOrgansDonatingFromString("bone, heart, cornea");
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.BONE);
-            expected.add(Organ.HEART);
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.BONE);
+            expected.add(OrganEnum.HEART);
+            expected.add(OrganEnum.CORNEA);
 
             String expectedString = "heart, bone, cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonating()).split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(
+                    OrganEnum.organSetToString(testProfile.getOrgansDonating()).split(", ")));
 
             assertEquals(expected, testProfile.getOrgansDonating());
             assertEquals(expectedStrings, outputStrings);
@@ -273,14 +275,15 @@ public class ProfileTest {
             testProfile.setDonor(true);
             testProfile.addDonationFromString("Heart, Bone, Cornea");
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.BONE);
-            expected.add(Organ.HEART);
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.BONE);
+            expected.add(OrganEnum.HEART);
+            expected.add(OrganEnum.CORNEA);
 
             String expectedString = "Heart, Bone, Cornea";
             Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
-            Set<String> outputStrings = new HashSet<>(Arrays.asList(Organ.organSetToString(testProfile.getOrgansDonated()).split(", ")));
+            Set<String> outputStrings = new HashSet<>(Arrays.asList(
+                    OrganEnum.organSetToString(testProfile.getOrgansDonated()).split(", ")));
 
             assertEquals(expected, testProfile.getOrgansDonated());
             assertEquals(expectedStrings, outputStrings);
@@ -342,15 +345,15 @@ public class ProfileTest {
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonated(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(someOrgans));
 
             Set<String> removedOrgans = new HashSet<>();
             removedOrgans.add("bone");
             removedOrgans.add("heart");
             testProfile.removeDonations(removedOrgans);
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.CORNEA);
 
             assertEquals(testProfile.getOrgansDonated(), expected);
         } catch (IllegalArgumentException e) {
@@ -382,15 +385,15 @@ public class ProfileTest {
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
             Set<String> removedOrgans = new HashSet<>();
             removedOrgans.add("bone");
             removedOrgans.add("heart");
             testProfile.removeOrgans(removedOrgans);
 
-            Set<Organ> expected = new HashSet<>();
-            expected.add(Organ.CORNEA);
+            Set<OrganEnum> expected = new HashSet<>();
+            expected.add(OrganEnum.CORNEA);
 
             assertEquals(testProfile.getOrgansDonating(), expected);
 
@@ -420,8 +423,8 @@ public class ProfileTest {
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
 
-            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
-            testProfile.addOrgansDonating(Organ.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
         } catch (OrganConflictException e) {
             // pass
@@ -757,9 +760,10 @@ public class ProfileTest {
             testProfile.addProcedure(procedure);
 
             testProfile.addDonationFromString("heart");
-            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, OrganEnum.HEART);
 
-            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), true);
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(
+                    OrganEnum.HEART), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -792,7 +796,7 @@ public class ProfileTest {
 
             testProfile.addProcedure(procedure);
 
-            Organ testOrgan = Organ.HEART;
+            OrganEnum testOrgan = OrganEnum.HEART;
             testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, testOrgan);
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(), "Not an organ with donor status on this profile");
@@ -828,15 +832,17 @@ public class ProfileTest {
 
             // add heart and liver
             testProfile.addDonationFromString("heart, liver");
-            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.HEART);
-            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, Organ.LIVER);
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, OrganEnum.HEART);
+            testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, OrganEnum.LIVER);
 
             // remove the heart
-            testProfile.getAllProcedures().get(0).removeAffectedOrgen(Organ.HEART);
+            testProfile.getAllProcedures().get(0).removeAffectedOrgen(OrganEnum.HEART);
 
             // test that heart has been removed
-            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.HEART), false);
-            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(Organ.LIVER), true);
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(
+                    OrganEnum.HEART), false);
+            assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(
+                    OrganEnum.LIVER), true);
         } catch (IllegalArgumentException e) {
             // pass
         }
@@ -1113,11 +1119,11 @@ public class ProfileTest {
         }
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("Heart");
-        testProfile.addOrgansRequired(Organ.stringListToOrganSet(someOrgans));
+        testProfile.addOrgansRequired(OrganEnum.stringListToOrganSet(someOrgans));
 
         assertTrue(CommandUtils.currentSessionHistory
                 .get(CommandUtils.historyPosition)
-                .contains(Organ.HEART.getNamePlain()
+                .contains(OrganEnum.HEART.getNamePlain()
                 )
         );
     }

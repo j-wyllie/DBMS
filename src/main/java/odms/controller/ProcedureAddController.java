@@ -16,7 +16,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -41,9 +41,9 @@ public class ProcedureAddController {
     private Button addButton;
 
     @FXML
-    private ListView<Organ> affectedOrgansListView;
+    private ListView<OrganEnum> affectedOrgansListView;
 
-    private ObservableList<Organ> donatedOrgans;
+    private ObservableList<OrganEnum> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {

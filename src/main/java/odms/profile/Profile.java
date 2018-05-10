@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import odms.cli.CommandUtils;
+import odms.enums.OrganEnum;
 import odms.medications.Drug;
 
 public class Profile {
@@ -38,10 +39,10 @@ public class Profile {
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private HashSet<Organ> organsDonating = new HashSet<>();
-    private HashSet<Organ> organsDonated = new HashSet<>();
-    private HashSet<Organ> organsRequired = new HashSet<>();
-    private HashSet<Organ> organsReceived = new HashSet<>();
+    private HashSet<OrganEnum> organsDonating = new HashSet<>();
+    private HashSet<OrganEnum> organsDonated = new HashSet<>();
+    private HashSet<OrganEnum> organsRequired = new HashSet<>();
+    private HashSet<OrganEnum> organsReceived = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -311,7 +312,7 @@ public class Profile {
         String[] organStrings = organString.split("(,\\s+|,)");
 
         for (String organ : organStrings) {
-            organsDonating.add(Organ.valueOf(organ));
+            organsDonating.add(OrganEnum.valueOf(organ));
         }
 
         addOrgansDonating(organsDonating);
@@ -323,7 +324,7 @@ public class Profile {
      */
     public void addDonationFromString(String organString) {
         String[] organStrings = organString.split("(,\\s+|,)");
-        this.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organStrings)));
+        this.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organStrings)));
     }
 
     /**
@@ -342,7 +343,7 @@ public class Profile {
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrganDonating(Organ organ) throws OrganConflictException {
+    public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
         if (this.organsReceived.contains(organ)) {
             // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
@@ -357,7 +358,7 @@ public class Profile {
      * Add an organ to the organs required list.
      * @param organ the organ the profile requires
      */
-    public void addOrganRequired(Organ organ) {
+    public void addOrganRequired(OrganEnum organ) {
         this.organsRequired.add(organ);
     }
 
@@ -365,10 +366,10 @@ public class Profile {
      * Add a set of organs that the profile requires to the required organs set.
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(HashSet<Organ> organs) {
+    public void addOrgansRequired(HashSet<OrganEnum> organs) {
         generateUpdateInfo("organsRequired");
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             addOrganRequired(organ);
 
             // TODO history refactor
@@ -396,11 +397,11 @@ public class Profile {
      * @throws IllegalArgumentException if a bad argument is used
      * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansDonating(Set<Organ> organs)
+    public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
         generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             if (this.organsDonating.contains(organ)) {
                 throw new IllegalArgumentException(
                         "Organ " + organ + " already exists in donating list"
@@ -430,7 +431,7 @@ public class Profile {
         }
     }
 
-    public HashSet<Organ> getOrgansRequired() {
+    public HashSet<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
 
@@ -439,7 +440,7 @@ public class Profile {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    public void addOrganReceived(Organ organ) {
+    public void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -451,10 +452,10 @@ public class Profile {
      * Add a set of organs to the set of received organs.
      * @param organs set to be added
      */
-    public void addOrgansReceived(Set<Organ> organs) {
+    public void addOrgansReceived(Set<OrganEnum> organs) {
         generateUpdateInfo("organsReceived");
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             addOrganReceived(organ);
 
             // TODO history abstraction
@@ -476,7 +477,7 @@ public class Profile {
         }
     }
 
-    public HashSet<Organ> getOrgansReceived() {
+    public HashSet<OrganEnum> getOrgansReceived() {
         return organsReceived;
     }
 
@@ -485,7 +486,7 @@ public class Profile {
      * If the organ exists in the donating list, remove it from the donating list.
      * @param organ the organ to be added
      */
-    public void addOrganDonated(Organ organ) {
+    public void addOrganDonated(OrganEnum organ) {
         if (this.organsDonating.contains(organ)) {
             this.organsDonating.remove(organ);
         }
@@ -497,10 +498,10 @@ public class Profile {
      * Add a set of organsDonating to the list of organsDonating that the profile has donated
      * @param organs a set of organsDonating that the profile has donated
      */
-    public void addOrgansDonated(Set<Organ> organs) {
+    public void addOrgansDonated(Set<OrganEnum> organs) {
         generateUpdateInfo("pastDonations");
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
 
             // TODO history abstraction
@@ -530,7 +531,7 @@ public class Profile {
         generateUpdateInfo("organsDonated");
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
+            OrganEnum organ = OrganEnum.valueOf(newOrgan);
             this.organsDonated.remove(organ);
         }
     }
@@ -542,11 +543,11 @@ public class Profile {
     public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
         generateUpdateInfo("organsDonating");
 
-        HashSet<Organ> newOrgans = new HashSet<>();
+        HashSet<OrganEnum> newOrgans = new HashSet<>();
 
         for (String org : organs) {
             String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
+            OrganEnum organ = OrganEnum.valueOf(newOrgan);
             newOrgans.add(organ);
         }
 
@@ -695,11 +696,11 @@ public class Profile {
         return medicationTimestamps;
     }
 
-    public HashSet<Organ> getOrgansDonated() {
+    public HashSet<OrganEnum> getOrgansDonated() {
         return organsDonated;
     }
 
-    public HashSet<Organ> getOrgansDonating() {
+    public HashSet<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
 

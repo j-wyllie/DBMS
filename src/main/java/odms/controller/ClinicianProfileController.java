@@ -25,7 +25,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import org.controlsfx.control.table.TableFilter;
@@ -75,7 +75,7 @@ public class ClinicianProfileController extends CommonController {
 
     private ObservableList<Profile> donorObservableList;
 
-    private ObservableList<Entry<Profile, Organ>> receiverObservableList;
+    private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
 
@@ -234,7 +234,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
+    private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers){
         transplantTable.getColumns().clear();
 
         receiverObservableList = FXCollections.observableList(receivers);
@@ -244,20 +244,20 @@ public class ClinicianProfileController extends CommonController {
         //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
         //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantRegionCol  = new TableColumn<>("Region");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantRegionCol  = new TableColumn<>("Region");
         transplantRegionCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantDateCol  = new TableColumn<>("Date");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol  = new TableColumn<>("Date");
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
 
@@ -272,7 +272,7 @@ public class ClinicianProfileController extends CommonController {
                 event.getClickCount() == 2 &&
                 transplantTable.getSelectionModel().getSelectedItem() != null) {
 
-                createNewDonorWindow(((Entry<Profile, Organ>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
+                createNewDonorWindow(((Entry<Profile, OrganEnum>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
             }
         });
 

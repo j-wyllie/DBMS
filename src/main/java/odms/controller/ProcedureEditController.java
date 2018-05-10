@@ -19,7 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 
 public class ProcedureEditController {
@@ -43,7 +43,7 @@ public class ProcedureEditController {
     private Button editButton;
 
     @FXML
-    private ListView<Organ> affectedOrgansListView;
+    private ListView<OrganEnum> affectedOrgansListView;
 
     private Procedure currentProcedure;
     private ProfileDisplayController controller;
@@ -68,7 +68,7 @@ public class ProcedureEditController {
         saveButton.setVisible(false);
         try{
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            ObservableList<Organ> organsDonated = FXCollections
+            ObservableList<OrganEnum> organsDonated = FXCollections
                     .observableArrayList(controller.getCurrentProfile().getOrgansDonated());
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);

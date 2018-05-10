@@ -16,7 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.enums.OrganSelectEnum;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
@@ -65,7 +65,7 @@ public class OrganController {
      * Populate the ListView with the organs the profile currently requires.
      */
     private void buildOrgansRequired() {
-        Set<Organ> organs = new HashSet<>();
+        Set<OrganEnum> organs = new HashSet<>();
 
         switch (windowType) {
             case DONATED:
@@ -81,7 +81,7 @@ public class OrganController {
 
         observableListOrgansRequired = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
-            for (Organ organ : organs) {
+            for (OrganEnum organ : organs) {
                 observableListOrgansRequired.add(organ.getNamePlain());
             }
             Collections.sort(observableListOrgansRequired);
@@ -94,7 +94,7 @@ public class OrganController {
      */
     private void buildOrgansAvailable() {
         observableListOrgansAvailable = FXCollections.observableArrayList();
-        observableListOrgansAvailable.addAll(Organ.toArrayList());
+        observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
         observableListOrgansAvailable.removeIf(str -> observableListOrgansRequired.contains(str));
     }
 
@@ -145,7 +145,7 @@ public class OrganController {
      */
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
-        HashSet<Organ> organs = OrganController.observableListStringsToOrgans(
+        HashSet<OrganEnum> organs = OrganController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansRequired)
         );
 
@@ -170,14 +170,14 @@ public class OrganController {
         stage.close();
     }
 
-    private static HashSet<Organ> observableListStringsToOrgans(HashSet<String> organStrings) {
+    private static HashSet<OrganEnum> observableListStringsToOrgans(HashSet<String> organStrings) {
         List<String> correctedOrganStrings = new ArrayList<>();
 
         for (String organ : organStrings) {
             correctedOrganStrings.add(organ.trim().toUpperCase().replace(" ", "_"));
         }
 
-        return Organ.stringListToOrganSet(correctedOrganStrings);
+        return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
     private void refresh() {

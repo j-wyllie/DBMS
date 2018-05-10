@@ -3,7 +3,7 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 
 public class AlertController {
 
@@ -26,7 +26,7 @@ public class AlertController {
     /**
      * Creates a popup when the details were entered incorrectly
      */
-    public static void invalidOrgan(Organ organ) {
+    public static void invalidOrgan(OrganEnum organ) {
         String error = "Cannot donate organ received from another donor.\n" +
                 String.format("Organ '%s' received previously.", organ.getNamePlain());
         Alert invalidAlert = new Alert(
