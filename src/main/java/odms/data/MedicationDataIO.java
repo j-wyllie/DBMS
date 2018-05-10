@@ -33,6 +33,10 @@ public class MedicationDataIO {
             //Reading the response from the connection.
             StringBuffer response = makeRequest(url);
 
+            if (response == null || response.toString().equals("1")) {
+                return suggestionList;
+            }
+
             //Parsing the list of suggestions from the response.
             suggestionList = parseJSON(response, false);
         }
@@ -55,6 +59,10 @@ public class MedicationDataIO {
 
             //Reading the response from the connection.
             StringBuffer response = makeRequest(url);
+
+            if (response == null || response.toString().equals("1")) {
+                return activeList;
+            }
 
             //Parsing the list of suggestions from the response.
             activeList = parseJSON(response, true);
@@ -85,6 +93,7 @@ public class MedicationDataIO {
      */
     private static StringBuffer makeRequest(URL url) throws IOException {
         StringBuffer responseContent;
+        responseContent = new StringBuffer();
         //Creating the connection to the API server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -96,7 +105,6 @@ public class MedicationDataIO {
             BufferedReader response = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
 
-            responseContent = new StringBuffer();
             String line = response.readLine();
             while (line != null) {
                 responseContent.append(line);
@@ -104,6 +112,8 @@ public class MedicationDataIO {
             }
             response.close();
             con.disconnect();
+        } else if (con.getResponseCode() < 600 && con.getResponseCode() > 499){ // Catch server errors
+            return responseContent.append(1);
         } else {
             return null;
         }
@@ -160,6 +170,8 @@ public class MedicationDataIO {
             StringBuffer response = makeRequest(url);
 
             if (response == null) {
+                return  interactions;
+            } else if (response.toString().equals("1")) {
                 // Server is fussy about what order the drugs are in the url, if request fails will try again with drugs
                 // in different order.
                 urlString = String
@@ -167,6 +179,9 @@ public class MedicationDataIO {
                 url = new URL(urlString);
                 response = makeRequest(url);
                 if (response == null) {
+                    return interactions;
+                } else if (response.toString().equals("1")) {
+                    interactions.put("error", "error getting data");
                     return interactions;
                 }
             }

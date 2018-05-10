@@ -814,26 +814,28 @@ public class ProfileDisplayController extends CommonController {
 
             if (interactionsRaw.isEmpty()) {
                 tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
+            } else if (interactionsRaw.containsKey("error")) {
+                tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+            } else {
+                ObservableList<String> drugsList = FXCollections.observableArrayList();
+                drugsList.add("Interactions between:");
+                drugsList.add(drugs.get(0).getDrugName());
+                drugsList.add(drugs.get(1).getDrugName());
+
+                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+
+                tableViewDrugInteractionsNames.getItems().clear();
+                tableViewDrugInteractions.getItems().clear();
+
+                tableViewDrugInteractionsNames.setItems(drugsList);
+                tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+                tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+
+                tableViewDrugInteractions.setItems(interactions);
+                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
+                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
             }
-
-            ObservableList<String> drugsList = FXCollections.observableArrayList();
-            drugsList.add("Interactions between:");
-            drugsList.add(drugs.get(0).getDrugName());
-            drugsList.add(drugs.get(1).getDrugName());
-
-            interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-
-            tableViewDrugInteractionsNames.getItems().clear();
-            tableViewDrugInteractions.getItems().clear();
-
-            tableViewDrugInteractionsNames.setItems(drugsList);
-            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
-
-            tableViewDrugInteractions.setItems(interactions);
-            tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
-            tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
-            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
         } catch (IOException e) {
             tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
         }
