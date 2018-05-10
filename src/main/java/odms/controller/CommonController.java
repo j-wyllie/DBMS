@@ -108,7 +108,7 @@ class CommonController {
                 .hideAfter(Duration.millis(2500))
                 .position(Pos.BOTTOM_LEFT)
                 .owner(currentStage)
-                .showWarning();
+                .show();
 
     }
 
