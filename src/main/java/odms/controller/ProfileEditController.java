@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.enums.OrganSelectEnum;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -296,31 +297,31 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, "Organs to Donate");
+        showOrgansSelectionWindow(event, OrganSelectEnum.DONATING);
     }
 
     @FXML
     private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, "Organs Required");
+        showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
     }
 
     @FXML
     private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, "Past Donations");
+        showOrgansSelectionWindow(event, OrganSelectEnum.DONATED);
     }
 
-    private void showOrgansSelectionWindow(ActionEvent event, String windowTitle) throws IOException {
+    private void showOrgansSelectionWindow(ActionEvent event, OrganSelectEnum selectType) throws IOException {
         Node source = (Node) event.getSource();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/OrganEdit.fxml"));
+        setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
         OrganController controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
-        setWindowType(windowTitle);
         controller.initialize();
         Stage stage = new Stage();
-        stage.setTitle(windowTitle);
+        stage.setTitle(selectType.toString());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(source.getScene().getWindow());
