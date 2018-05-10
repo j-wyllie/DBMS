@@ -1211,6 +1211,8 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(true);
             addNewConditionButton.setVisible(true);
             deleteConditionButton.setVisible(true);
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1223,6 +1225,8 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(false);
             addNewConditionButton.setVisible(false);
             deleteConditionButton.setVisible(false);
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setVisible(false);
         }
 
     }
@@ -1384,14 +1388,10 @@ public class ProfileDisplayController extends CommonController {
         curChronicColumn.setSortable(false);
 
 
-        if(searchedDonor != null) {
+        if (searchedDonor != null) {
             setPage(searchedDonor);
-
-            //if(!isClinician) {
-                hideItems();
-            //}
-            //Profile currentDonor = getCurrentProfile();
         }
+        hideItems();
 
         if (searchedDonor != null) {
             refreshMedicationsTable();
