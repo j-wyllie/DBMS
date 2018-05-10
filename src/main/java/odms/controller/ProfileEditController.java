@@ -1,13 +1,18 @@
 package odms.controller;
 
-import static odms.controller.AlertController.donorCancelChanges;
-import static odms.controller.AlertController.donorSaveChanges;
-import static odms.controller.AlertController.guiPopup;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.OrganController.setWindowType;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import odms.cli.CommandUtils;
+import odms.data.ProfileDataIO;
+import odms.profile.Profile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,20 +21,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import odms.cli.CommandUtils;
-import odms.data.ProfileDataIO;
-import odms.profile.Organ;
-import odms.profile.Profile;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.LoginController.getCurrentProfile;
+import static odms.controller.OrganController.setWindowType;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 public class ProfileEditController extends CommonController {
 
@@ -103,7 +101,8 @@ public class ProfileEditController extends CommonController {
 
     private Boolean isClinician;
 
-
+    @FXML
+    private ComboBox comboGenderPref;
     /**
      * Scene change to log in view.
      * @param event clicking on the logout button.
@@ -248,6 +247,9 @@ public class ProfileEditController extends CommonController {
                     HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
+
+                currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+
                 if (error) {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
@@ -401,6 +403,14 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
+
+                comboGenderPref.setEditable(true);
+                comboGenderPref.getItems().addAll("Male", "Female", "Other"); //TODO Add database call for all preferred genders.
+
+                if (currentProfile.getPreferredGender() != null) {
+                    comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
+                }
+
 //            if (currentProfile.getBloodPressure() != null) {
 //                bloodPressureField.setText(currentProfile.getBloodPressure());
 //            }

@@ -6,22 +6,6 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.TilePane?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
@@ -169,6 +153,7 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
@@ -197,7 +182,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="heightLabel" layoutX="30.0" layoutY="167.0" prefHeight="75.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Height : " GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                                <Label fx:id="heightLabel" layoutX="30.0" layoutY="167.0" prefHeight="75.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Height : " GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -205,7 +190,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="weightLabel" layoutX="30.0" layoutY="235.0" prefHeight="69.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Weight : " GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                <Label fx:id="weightLabel" layoutX="30.0" layoutY="235.0" prefHeight="69.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Weight : " GridPane.columnSpan="2" GridPane.rowIndex="9">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -253,46 +238,59 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </Label>
-                                                                <TextField fx:id="givenNamesField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                                <TextField fx:id="givenNamesField" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="lastNamesField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                                <TextField fx:id="lastNamesField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="dobField" layoutX="210.0" layoutY="163.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                <TextField fx:id="dobField" layoutX="210.0" layoutY="163.0" promptText="dd-mm-yyyy" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="dodField" layoutX="210.0" layoutY="211.0" promptText="dd-mm-yyyy" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                <TextField fx:id="dodField" layoutX="210.0" layoutY="211.0" promptText="dd-mm-yyyy" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="genderField" layoutX="210.0" layoutY="259.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                                <TextField fx:id="genderField" layoutX="210.0" layoutY="259.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="heightField" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
+                                                                <TextField fx:id="heightField" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="weightField" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+                                                                <TextField fx:id="weightField" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
                                                                     <GridPane.margin>
-                                                                        <Insets left="80.0" right="100.0" />
+                                                                        <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
+                                                <Label layoutX="30.0" layoutY="270.0" prefHeight="74.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Preferred Gender :" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="comboGenderPref" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </ComboBox>
                                                             </children>
                                                         </GridPane>
                                                     </children>
