@@ -1113,7 +1113,7 @@ public class ProfileTest {
         }
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("Heart");
-        testProfile.setOrgansRequired(Organ.stringListToOrganSet(someOrgans));
+        testProfile.addOrgansRequired(Organ.stringListToOrganSet(someOrgans));
 
         assertTrue(CommandUtils.currentSessionHistory
                 .get(CommandUtils.historyPosition)

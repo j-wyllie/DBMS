@@ -369,15 +369,13 @@ public class Profile {
     }
 
     /**
-     * Consume a set of organs that the profile wants to receive and updates the profile to use this
-     * new set.
+     * Add a set of organs that the profile requires to the required organs set.
      * @param organs the set of organs to be received
      */
-    public void setOrgansRequired(HashSet<Organ> organs) {
+    public void addOrgansRequired(HashSet<Organ> organs) {
         generateUpdateInfo("organsRequired");
 
         try {
-            this.organsRequired.clear();
             for (Organ organ : organs) {
                 addOrganRequired(organ);
 
@@ -410,7 +408,6 @@ public class Profile {
      */
     public void addOrgansDonating(Set<Organ> organs)
             throws IllegalArgumentException, OrganConflictException {
-        // TODO shouldn't be checking for args here
         generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
 
         for (Organ organ : organs) {

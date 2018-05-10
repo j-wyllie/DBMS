@@ -158,7 +158,7 @@ public class OrganController {
                     profile.addOrgansDonating(organs);
                     break;
                 case REQUIRED:
-                    profile.setOrgansRequired(organs);
+                    profile.addOrgansRequired(organs);
                     break;
             }
         } catch (OrganConflictException e) {
