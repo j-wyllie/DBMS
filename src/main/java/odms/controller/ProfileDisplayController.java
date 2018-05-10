@@ -485,9 +485,7 @@ public class ProfileDisplayController extends CommonController {
                         }
                     }
                 };
-                if (curConditionsTable.getItems().size() > 1) { // Can't sort one item
-                    FXCollections.sort(curConditionsTable.getItems(), comparator);
-                }
+                FXCollections.sort(curConditionsTable.getItems(), comparator);
                 return true;
             }
         });
