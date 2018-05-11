@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -15,6 +10,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -26,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -557,7 +553,7 @@
                                             </rowConstraints>
                                              <children>
                                                 <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDeleteMedication" text="Delete" GridPane.rowIndex="1" />
                                                  <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
                                              </children>

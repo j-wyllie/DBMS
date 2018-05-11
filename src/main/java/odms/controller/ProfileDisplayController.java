@@ -762,6 +762,7 @@ public class ProfileDisplayController extends CommonController {
 
             searchedDonor.addDrug(new Drug(medicationName));
 
+            ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
             refreshMedicationsTable();
         }
     }
@@ -786,51 +787,41 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleShowInteractions(ActionEvent event) {
-        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        ArrayList<Drug> drugs;
 
         Map<String, String> interactionsRaw;
 
-        if (drugs.size() != 2) {
-            if (drugs.size() == 1) {
-                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-                if (toAdd == null) {
-                    tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                    return;
-                }
-                drugs.add(toAdd);
-            }
-            else if (drugs.size() == 0) {
+        if (convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()).size() == 2) {
+            drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        } else {
+            if (tableViewHistoricMedications.getSelectionModel().getSelectedItems().size() == 2) {
                 drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            } else {
+                drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+                drugs.add(tableViewHistoricMedications.getSelectionModel().getSelectedItem());
             }
-
-            if (drugs.size() != 2) {
-                tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                return; }
         }
 
         try {
             interactionsRaw = MedicationDataIO
                     .getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
 
+            tableViewDrugInteractionsNames.getItems().clear();
+            tableViewDrugInteractions.getItems().clear();
+            ObservableList<String> drugsList = FXCollections.observableArrayList();
+            drugsList.add("Interactions between:");
+            drugsList.add(drugs.get(0).getDrugName());
+            drugsList.add(drugs.get(1).getDrugName());
+            tableViewDrugInteractionsNames.setItems(drugsList);
+            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+
             if (interactionsRaw.isEmpty()) {
                 tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
             } else if (interactionsRaw.containsKey("error")) {
                 tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
             } else {
-                ObservableList<String> drugsList = FXCollections.observableArrayList();
-                drugsList.add("Interactions between:");
-                drugsList.add(drugs.get(0).getDrugName());
-                drugsList.add(drugs.get(1).getDrugName());
-
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-
-                tableViewDrugInteractionsNames.getItems().clear();
-                tableViewDrugInteractions.getItems().clear();
-
-                tableViewDrugInteractionsNames.setItems(drugsList);
-                tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-                tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
-
                 tableViewDrugInteractions.setItems(interactions);
                 tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
                 tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
@@ -854,7 +845,7 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));}
         }
 
-
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 
@@ -871,6 +862,7 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.moveDrugToCurrent(drugs.get(i));}
         }
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 
@@ -879,7 +871,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the delete button.
      */
     @FXML
-    private void handleDelete(ActionEvent event)  {
+    private void handleDeleteMedication(ActionEvent event)  {
 
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
@@ -888,6 +880,7 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.deleteDrug(drugs.get(i));}
         }
 
+        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 
@@ -915,7 +908,6 @@ public class ProfileDisplayController extends CommonController {
                 }, 1000
         );
     }
-
 
     /**
      * Set the listener for the change of value in the medication search field. Also binds the
@@ -1127,7 +1119,6 @@ public class ProfileDisplayController extends CommonController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
 
     }
