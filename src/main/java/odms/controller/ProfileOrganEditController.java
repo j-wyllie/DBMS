@@ -20,11 +20,9 @@ import odms.enums.OrganEnum;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
-public class ProfileOrganEditController {
-    private Profile profile;
+public class ProfileOrganEditController extends ProfileOrganCommonController {
 
-    private ObservableList<String> observableListOrgansAvailable;
-    private ObservableList<String> observableListOrgansSelected;
+    private ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -43,15 +41,14 @@ public class ProfileOrganEditController {
 
     private static OrganSelectEnum windowType;
 
-    @FXML
     public void initialize() {
         bannerLabel.setText(windowType.toString());
 
         if (profile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
-            buildOrgansRequired();
-            buildOrgansAvailable();
+            buildOrgansSelected();
+            buildOrgansAvailable(observableListOrgansSelected);
             viewOrgansAvailable.setItems(observableListOrgansAvailable);
             viewOrgansRequired.setItems(observableListOrgansSelected);
         }
@@ -64,7 +61,7 @@ public class ProfileOrganEditController {
     /**
      * Populate the ListView with the organs the profile currently requires.
      */
-    private void buildOrgansRequired() {
+    private void buildOrgansSelected() {
         Set<OrganEnum> organs = new HashSet<>();
 
         switch (windowType) {
@@ -79,23 +76,7 @@ public class ProfileOrganEditController {
                 break;
         }
 
-        observableListOrgansSelected = FXCollections.observableArrayList();
-        if(profile.getOrgansRequired() != null) {
-            for (OrganEnum organ : organs) {
-                observableListOrgansSelected.add(organ.getNamePlain());
-            }
-            Collections.sort(observableListOrgansSelected);
-        }
-    }
-
-    /**
-     * Populate the ListView with the organs that are available and that are not in the
-     * required list.
-     */
-    private void buildOrgansAvailable() {
-        observableListOrgansAvailable = FXCollections.observableArrayList();
-        observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
-        observableListOrgansAvailable.removeIf(str -> observableListOrgansSelected.contains(str));
+        populateOrganList(observableListOrgansSelected, organs);
     }
 
     /**
@@ -144,7 +125,6 @@ public class ProfileOrganEditController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        profile.setReceiver(true);
         HashSet<OrganEnum> organs = ProfileOrganEditController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
@@ -154,6 +134,8 @@ public class ProfileOrganEditController {
                 profile.addOrgansDonated(organs);
                 break;
             case DONATING:
+                profile.setDonor(true);
+
                 try {
                     organs.removeAll(profile.getOrgansDonating());
                     profile.addOrgansDonating(organs);
@@ -162,6 +144,8 @@ public class ProfileOrganEditController {
                 }
                 break;
             case REQUIRED:
+                profile.setReceiver(true);
+
                 profile.addOrgansRequired(organs);
                 break;
         }
@@ -170,6 +154,12 @@ public class ProfileOrganEditController {
         stage.close();
     }
 
+    /**
+     * Convert an HashSet of Organ Strings to a HashSet of OrganEnum.
+     *
+     * @param organStrings strings to convert
+     * @return set of OrganEnum
+     */
     private static HashSet<OrganEnum> observableListStringsToOrgans(HashSet<String> organStrings) {
         List<String> correctedOrganStrings = new ArrayList<>();
 
@@ -180,6 +170,9 @@ public class ProfileOrganEditController {
         return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
+    /**
+     * Refresh the listViews
+     */
     private void refresh() {
         viewOrgansRequired.refresh();
         viewOrgansAvailable.refresh();

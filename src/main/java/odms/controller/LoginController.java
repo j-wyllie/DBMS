@@ -96,6 +96,11 @@ public class LoginController extends CommonController {
         handleLoginButtonClicked(event);
     }
 
-    public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentProfile(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentProfile(Integer id) {
+        currentProfile = currentDatabase.getProfile(id);
+    }
 }
