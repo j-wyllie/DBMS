@@ -5,7 +5,7 @@ import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.OrganController.setWindowType;
+import static odms.controller.OrganEditController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -317,7 +317,7 @@ public class ProfileEditController extends CommonController {
         setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
-        OrganController controller = fxmlLoader.getController();
+        OrganEditController controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();

@@ -20,7 +20,7 @@ import odms.enums.OrganEnum;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
-public class OrganController {
+public class OrganEditController {
     private Profile profile;
 
     private ObservableList<String> observableListOrgansAvailable;
@@ -145,7 +145,7 @@ public class OrganController {
      */
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
-        HashSet<OrganEnum> organs = OrganController.observableListStringsToOrgans(
+        HashSet<OrganEnum> organs = OrganEditController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansRequired)
         );
 
