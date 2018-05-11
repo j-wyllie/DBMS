@@ -12,9 +12,9 @@ public enum OrganSelectEnum {
     public String toString() {
         switch (this) {
             case DONATED:
-                return "Organs to Donate";
-            case DONATING:
                 return "Past Donations";
+            case DONATING:
+                return "Organs to Donate";
             case REQUIRED:
                 return "Organs Required";
             default:

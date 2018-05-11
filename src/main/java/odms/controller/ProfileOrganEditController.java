@@ -15,8 +15,8 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import odms.enums.OrganSelectEnum;
 import odms.enums.OrganEnum;
+import odms.enums.OrganSelectEnum;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
@@ -44,7 +44,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     public void initialize() {
         bannerLabel.setText(windowType.toString());
 
-        if (profile != null) {
+        if (currentProfile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
             buildOrgansSelected();
@@ -66,13 +66,13 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         switch (windowType) {
             case DONATED:
-                organs = profile.getOrgansDonated();
+                organs = currentProfile.getOrgansDonated();
                 break;
             case DONATING:
-                organs = profile.getOrgansDonating();
+                organs = currentProfile.getOrgansDonating();
                 break;
             case REQUIRED:
-                organs = profile.getOrgansRequired();
+                organs = currentProfile.getOrgansRequired();
                 break;
         }
 
@@ -131,22 +131,22 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         switch (windowType) {
             case DONATED:
-                profile.addOrgansDonated(organs);
+                currentProfile.addOrgansDonated(organs);
                 break;
             case DONATING:
-                profile.setDonor(true);
+                currentProfile.setDonor(true);
 
                 try {
-                    organs.removeAll(profile.getOrgansDonating());
-                    profile.addOrgansDonating(organs);
+                    organs.removeAll(currentProfile.getOrgansDonating());
+                    currentProfile.addOrgansDonating(organs);
                 } catch (OrganConflictException e) {
                     AlertController.invalidOrgan(e.getOrgan());
                 }
                 break;
             case REQUIRED:
-                profile.setReceiver(true);
+                currentProfile.setReceiver(true);
 
-                profile.addOrgansRequired(organs);
+                currentProfile.addOrgansRequired(organs);
                 break;
         }
 
@@ -173,7 +173,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     /**
      * Refresh the listViews
      */
-    private void refresh() {
+    private void refreshListViews() {
         viewOrgansRequired.refresh();
         viewOrgansAvailable.refresh();
     }
@@ -183,8 +183,8 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      *
      * @param profile the profile to operate against.
      */
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setCurrentProfile(Profile profile) {
+        this.currentProfile = profile;
     }
 
     /**
@@ -207,7 +207,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         Collections.sort(observableListOrgansSelected);
         Collections.sort(observableListOrgansAvailable);
-        refresh();
+        refreshListViews();
 
         viewOrgansAvailable.getSelectionModel().clearSelection();
         viewOrgansRequired.getSelectionModel().clearSelection();

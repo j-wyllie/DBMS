@@ -8,7 +8,7 @@ import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class ProfileOrganCommonController {
-    protected Profile profile;
+    protected Profile currentProfile;
 
     protected ObservableList<String> observableListOrgansAvailable;
 
@@ -29,6 +29,8 @@ public class ProfileOrganCommonController {
      * @param organs source list of organs to populate from
      */
     protected void populateOrganList(ObservableList<String> destinationList, Set<OrganEnum> organs) {
+        destinationList.clear();
+
         if (organs != null) {
             for (OrganEnum organ : organs) {
                 destinationList.add(organ.getNamePlain());
@@ -37,8 +39,8 @@ public class ProfileOrganCommonController {
         }
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setCurrentProfile(Profile profile) {
+        this.currentProfile = profile;
     }
 
 }
