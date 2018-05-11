@@ -419,10 +419,9 @@
                 </Tab>
                   <Tab text="Organs">
                       <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                              prefWidth="200.0">
+                          <AnchorPane>
                               <children>
-                                  <fx:include fx:id="tabPageOrganDisplay" source="ProfileOrganDisplay.fxml" />
+                                  <fx:include source="ProfileOrganOverview.fxml" />
                               </children>
                           </AnchorPane>
                       </content>
