@@ -162,7 +162,7 @@ public class ProfileEditController extends CommonController {
             } else {
                 String action = "Profile " +
                     currentProfile.getId() +
-                    " updated details previous = " +
+                    " update details previous = " +
                     currentProfile.getAttributesSummary() +
                     " new = ";
 

@@ -138,7 +138,7 @@ public class UndoController {
     private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
         int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        int d = Integer.parseInt(action.substring(action.indexOf("drug")).replaceAll("[\\D]", ""));
+        int d = Integer.parseInt(action.substring(action.indexOf(" index of")).replaceAll("[\\D]", ""));
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         profile.deleteDrug(drugs.get(d));
         if (historyPosition > 0) {
@@ -152,12 +152,12 @@ public class UndoController {
         int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
         if(action.contains("history")) {
-            String drug = action.substring(action.indexOf("tory")+5,end);
+            String drug = action.substring(action.indexOf("tory")+5,action.indexOf(" index of"));
             Drug d = new Drug(drug);
             profile.addDrug(d);
             profile.moveDrugToHistory(d);
         } else {
-            String drug = action.substring(action.indexOf("drug") + 5,end);
+            String drug = action.substring(action.indexOf("drug") + 5,action.indexOf(" index of"));
             profile.addDrug(new Drug(drug));
         }
         if (historyPosition > 0) {
@@ -168,7 +168,7 @@ public class UndoController {
     }
 
     private static void updated(String action) {
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+        int id = Integer.parseInt(action.substring(0,action.indexOf("update")).replaceAll("[\\D]", ""));
         User user = LoginController.userDatabase.getClinician(id);
         String previous = action.substring(action.indexOf("(")+1,action.indexOf(")"));
         String[] previousValues = previous.split(",");

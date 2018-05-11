@@ -1083,6 +1083,7 @@ public class ProfileDisplayController extends CommonController {
             //organs to donate.
             //past donations.
             String history = ProfileDataIO.getHistory();
+            System.out.println(history);
             Gson gson = new Gson();
 
             if (history.equals("")) {
@@ -1095,14 +1096,14 @@ public class ProfileDisplayController extends CommonController {
             String[] actionHistory = history.split(",");
 
             ArrayList<String> userHistory = new ArrayList<>();
-
+            String historyDisplay = "";
             for (String str : actionHistory) {
                 if (str.contains("Donor " + currentDonor.getId())) {
                     userHistory.add(str);
+                    historyDisplay+=str.replace("\"","")+"\n";
                 }
             }
-
-            historyView.setText(userHistory.toString());
+            historyView.setText(historyDisplay);
             setMedicationSearchFieldListener();
 
             refreshConditionTable();

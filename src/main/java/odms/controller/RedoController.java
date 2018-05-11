@@ -94,8 +94,7 @@ public class RedoController {
     private static void deleteDrug(ProfileDatabase currentDatabase, String action, int end) {
         int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        String drug = action.substring(action.indexOf("index of")+9,end);
-        int d = Integer.parseInt(action.substring(action.indexOf("drug")).replaceAll("[\\D]", ""));
+        int d = Integer.parseInt(action.substring(action.indexOf("index of")).replaceAll("[\\D]", ""));
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         profile.deleteDrug(drugs.get(d));
     }
