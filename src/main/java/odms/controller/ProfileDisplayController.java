@@ -50,9 +50,9 @@ import javafx.util.Callback;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.profile.Condition;
-import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -64,6 +64,8 @@ public class ProfileDisplayController extends CommonController {
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
     private ObservableList<Map.Entry<String, String>> interactions;
     private ContextMenu suggestionMenu = new ContextMenu();
+    private ObservableList<Condition> curConditionsObservableList;
+    private ObservableList<Condition> pastConditionsObservableList;
 
     @FXML
     private Label donorFullNameLabel;
@@ -121,12 +123,6 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label chronicConditionsLabel;
-
-    @FXML
-    private Label organsLabel;
-
-    @FXML
-    private Label donationsLabel;
 
     @FXML
     private TextArea historyView;
@@ -207,9 +203,6 @@ public class ProfileDisplayController extends CommonController {
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
 
     @FXML
-    private Label organsRequiredLabel;
-
-    @FXML
     private TableView<String> tableViewDrugInteractionsNames;
 
     @FXML
@@ -244,11 +237,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public Text editedText;
-
-
-    private ObservableList<Condition> curConditionsObservableList;
-    private ObservableList<Condition> pastConditionsObservableList;
-
 
     @FXML
     private Button addNewProcedureButton;
@@ -682,7 +670,7 @@ public class ProfileDisplayController extends CommonController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
-        controller.setProfile(currentProfile);
+        controller.setCurrentProfile(currentProfile);
         controller.setIsClinician(isOpenedByClinician);
         controller.initialize();
 
@@ -968,7 +956,6 @@ public class ProfileDisplayController extends CommonController {
                     .setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
-            organsRequiredLabel.setText("");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 if (currentDonor.getOrgansDonated().size() > 0) {
@@ -984,7 +971,6 @@ public class ProfileDisplayController extends CommonController {
 
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
-                organsRequiredLabel.setText("Organs Required : " + OrganEnum.organSetToString(currentDonor.getOrgansRequired()));
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -1036,23 +1022,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
-
-            organsLabel.setText(organsLabel.getText() + OrganEnum.organSetToString(currentDonor.getOrgansDonating()));
-
-            donationsLabel.setText(donationsLabel.getText() + OrganEnum.organSetToString(currentDonor.getOrgansDonated()));
-
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }
-            /*if (currentDonor.getAlcoholConsumption() != null) {
-                alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentDonor.getAlcoholConsumption());
-            }*/
-            /*if (currentDonor.getBloodPressure() != null) {
-                bloodPressureLabel.setText(bloodPressureLabel.getText() + currentDonor.getBloodPressure());
-            }*/
-            //chronic diseases.
-            //organs to donate.
-            //past donations.
+
             String history = ProfileDataIO.getHistory();
             Gson gson = new Gson();
 
@@ -1110,9 +1083,7 @@ public class ProfileDisplayController extends CommonController {
 
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
-
     }
-
 
     /**
      * Enables the relevant buttons on medications tab for how many drugs are selected
@@ -1182,7 +1153,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void hideItems() {
-        if(isOpenedByClinician){
+        if (isOpenedByClinician) {
             //User is a clinician looking at donors profile, maximise functionality
             curConditionsTable.setEditable(true);
             pastConditionsTable.setEditable(true);
@@ -1209,7 +1180,6 @@ public class ProfileDisplayController extends CommonController {
             addNewProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         }
-
     }
 
     /**
@@ -1251,7 +1221,6 @@ public class ProfileDisplayController extends CommonController {
                 }
             }
         });
-
     }
 
     /**
@@ -1274,8 +1243,6 @@ public class ProfileDisplayController extends CommonController {
             e.printStackTrace();
         }
     }
-
-
 
     /**
      * Refreshes the procedure table, updating it with the current values

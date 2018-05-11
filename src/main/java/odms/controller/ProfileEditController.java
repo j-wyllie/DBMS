@@ -1,11 +1,10 @@
 package odms.controller;
 
+import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.ProfileOrganEditController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -24,11 +23,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.enums.OrganSelectEnum;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -93,25 +90,9 @@ public class ProfileEditController extends CommonController {
     private TextField diseaseField;
 
     @FXML
-    private TextField organField;
-
-    @FXML
-    private TextField donationsField;
-
-    @FXML
     private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
-
-
-    /**
-     * Scene change to log in view.
-     * @param event clicking on the logout button.
-     */
-    @FXML
-    private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        showLoginScene(event);
-    }
 
     /**
      * Button handler to undo last action.
@@ -131,18 +112,6 @@ public class ProfileEditController extends CommonController {
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
         redo();
-    }
-
-    /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/ProfileEdit.fxml";
-        String title = "Edit Profile";
-        showScene(event, scene, title, true);
     }
 
     /**
@@ -295,41 +264,6 @@ public class ProfileEditController extends CommonController {
         appStage.show();
     }
 
-    @FXML
-    private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, OrganSelectEnum.DONATING);
-    }
-
-    @FXML
-    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
-    }
-
-    @FXML
-    private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        showOrgansSelectionWindow(event, OrganSelectEnum.DONATED);
-    }
-
-    private void showOrgansSelectionWindow(ActionEvent event, OrganSelectEnum selectType) throws IOException {
-        Node source = (Node) event.getSource();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganEdit.fxml"));
-        setWindowType(selectType);
-
-        Scene scene = new Scene(fxmlLoader.load());
-        ProfileOrganEditController controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile);
-        controller.initialize();
-        Stage stage = new Stage();
-        stage.setTitle(selectType.toString());
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.initOwner(source.getScene().getWindow());
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.centerOnScreen();
-        stage.show();
-    }
-
     /**
      * Sets the current profile attributes to the labels on start up.
      */
@@ -402,19 +336,13 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
-//            if (currentProfile.getBloodPressure() != null) {
-//                bloodPressureField.setText(currentProfile.getBloodPressure());
-//            }
-//            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-//                organField.setText(currentProfile.getOrgansAsCSV());
-//                donationsField.setText(currentProfile.getDonationsAsCSV());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void setProfile(Profile donor) {
+    public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
     }
 

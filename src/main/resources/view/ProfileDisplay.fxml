@@ -338,22 +338,6 @@
                                                 <Font size="22.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="organsLabel" layoutX="30.0" layoutY="99.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs to Donate : " GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                             <GridPane.margin>
-                                                <Insets left="20.0" />
-                                             </GridPane.margin>
-                                             <font>
-                                                <Font size="22.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="donationsLabel" layoutX="30.0" layoutY="167.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Past Donations : " GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                             <GridPane.margin>
-                                                <Insets left="20.0" />
-                                             </GridPane.margin>
-                                             <font>
-                                                <Font size="22.0" />
-                                             </font>
-                                          </Label>
                                           <Label fx:id="bloodTypeLabel" layoutX="30.0" layoutY="235.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Type : " GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets left="20.0" />
@@ -386,7 +370,7 @@
                                                 <Font size="22.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="bmiLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="BMI : " GridPane.rowIndex="9">
+                                          <Label fx:id="bmiLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="BMI : " GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                              <font>
                                                 <Font size="22.0" />
                                              </font>
@@ -398,11 +382,6 @@
                                              <font>
                                                 <Font size="22.0" />
                                              </font>
-                                             <GridPane.margin>
-                                                <Insets left="20.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label fx:id="organsRequiredLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Required : " GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
                                              <GridPane.margin>
                                                 <Insets left="20.0" />
                                              </GridPane.margin>
@@ -430,7 +409,7 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                   <children>
-                                      <fx:include source="ProfileOrganOverview.fxml" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+                                      <fx:include source="ProfileOrganOverview.fxml" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                   </children>
                               </GridPane>
                               </children>
