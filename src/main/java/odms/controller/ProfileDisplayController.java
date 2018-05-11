@@ -44,6 +44,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import odms.cli.CommandUtils;
@@ -534,6 +535,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         try {
+            Node source = (Node) actionEvent.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureAdd.fxml"));
 
@@ -543,7 +545,10 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Procedure");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1138,8 +1143,7 @@ public class ProfileDisplayController extends CommonController {
                     drugs.add(toAdd);
                 }
             } else if (drugs.size() == 0) {
-                drugs = convertObservableToArray(
-                        tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+                drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
             }
 
             if (drugs.size() != 2) {
@@ -1188,6 +1192,8 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(true);
             addNewConditionButton.setVisible(true);
             deleteConditionButton.setVisible(true);
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1200,6 +1206,8 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(false);
             addNewConditionButton.setVisible(false);
             deleteConditionButton.setVisible(false);
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setVisible(false);
         }
 
     }
@@ -1361,11 +1369,12 @@ public class ProfileDisplayController extends CommonController {
 
         if (currentProfile != null) {
             setPage(currentProfile);
-            hideItems();
 
             refreshMedicationsTable();
             makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
         }
+
+        hideItems();
 
         refreshPageElements();
 

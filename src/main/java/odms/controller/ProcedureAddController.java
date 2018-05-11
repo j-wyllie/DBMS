@@ -62,7 +62,7 @@ public class ProcedureAddController {
             }
 
             LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
-            if (dob.isAfter(date3)){
+            if (dob.isAfter(date3)) {
                 throw new IllegalArgumentException();
             }
 
@@ -104,6 +104,7 @@ public class ProcedureAddController {
      * @param controller
      */
     public void init(ProfileDisplayController controller) {
+        warningLabel.setVisible(false);
         this.controller = controller;
         searchedDonor = controller.getCurrentProfile();
 
