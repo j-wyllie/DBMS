@@ -168,9 +168,8 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
-                if (!givenNamesField.getText().isEmpty()) {
-                    currentProfile.setLastNames(lastNamesField.getText());
-                }
+                currentProfile.setLastNames(lastNamesField.getText());
+
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
@@ -200,7 +199,10 @@ public class ProfileEditController extends CommonController {
                 } catch (DateTimeParseException e) {
                     error = true;
                 }
-                currentProfile.setGender(genderField.getText());
+                if (!genderField.getText().isEmpty()) {
+                    currentProfile.setGender(genderField.getText());
+                }
+
                 try {
                     if (!weightField.getText().isEmpty()) {
                         currentProfile.setWeight(Double.valueOf(weightField.getText()));
@@ -224,31 +226,6 @@ public class ProfileEditController extends CommonController {
                     String diastolic = bloodPressureField.getText().substring(
                         bloodPressureField.getText().lastIndexOf('/') + 1).trim();
                     currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
-                }
-                try {
-                    if (!organField.getText().equals(Organ.organSetToString(currentProfile.getOrgansDonating()))) {
-                        List<String> organList = Arrays.asList(organField.getText().split(", "));
-                        if (!organList.isEmpty()) {
-                            currentProfile.setDonor(true);
-                            currentProfile.addOrgansDonating(Organ.stringListToOrganSet(organList));
-                        }
-                    }
-
-                } catch (Exception e) {
-                    error = true;
-                }
-
-                try {
-                    if (!donationsField.getText().equals(Organ.organSetToString(currentProfile.getOrgansDonated()))) {
-                        List<String> organList = Arrays.asList(donationsField.getText().split(", "));
-
-                        if (!organList.isEmpty()) {
-                            currentProfile.setDonor(true);
-                            currentProfile.addOrgansDonated(Organ.stringListToOrganSet(organList));
-                        }
-                    }
-                } catch (Exception e) {
-                    error = true;
                 }
 
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
@@ -275,6 +252,7 @@ public class ProfileEditController extends CommonController {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
                     ProfileDataIO.saveData(getCurrentDatabase());
+                    showNotification("Profile", event);
                     closeEditWindow(event);
                 }
             }
@@ -315,6 +293,7 @@ public class ProfileEditController extends CommonController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
+        appStage.setTitle("Profile");
         appStage.show();
     }
 
