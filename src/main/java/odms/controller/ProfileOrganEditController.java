@@ -24,7 +24,7 @@ public class ProfileOrganEditController {
     private Profile profile;
 
     private ObservableList<String> observableListOrgansAvailable;
-    private ObservableList<String> observableListOrgansRequired;
+    private ObservableList<String> observableListOrgansSelected;
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -53,7 +53,7 @@ public class ProfileOrganEditController {
             buildOrgansRequired();
             buildOrgansAvailable();
             viewOrgansAvailable.setItems(observableListOrgansAvailable);
-            viewOrgansRequired.setItems(observableListOrgansRequired);
+            viewOrgansRequired.setItems(observableListOrgansSelected);
         }
 
         btnOrganSwitch.setOnAction(event -> handleBtnOrganSwitchClicked());
@@ -79,12 +79,12 @@ public class ProfileOrganEditController {
                 break;
         }
 
-        observableListOrgansRequired = FXCollections.observableArrayList();
+        observableListOrgansSelected = FXCollections.observableArrayList();
         if(profile.getOrgansRequired() != null) {
             for (OrganEnum organ : organs) {
-                observableListOrgansRequired.add(organ.getNamePlain());
+                observableListOrgansSelected.add(organ.getNamePlain());
             }
-            Collections.sort(observableListOrgansRequired);
+            Collections.sort(observableListOrgansSelected);
         }
     }
 
@@ -95,7 +95,7 @@ public class ProfileOrganEditController {
     private void buildOrgansAvailable() {
         observableListOrgansAvailable = FXCollections.observableArrayList();
         observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
-        observableListOrgansAvailable.removeIf(str -> observableListOrgansRequired.contains(str));
+        observableListOrgansAvailable.removeIf(str -> observableListOrgansSelected.contains(str));
     }
 
     /**
@@ -146,7 +146,7 @@ public class ProfileOrganEditController {
     public void onBtnSaveClicked() {
         profile.setReceiver(true);
         HashSet<OrganEnum> organs = ProfileOrganEditController.observableListStringsToOrgans(
-                new HashSet<>(observableListOrgansRequired)
+                new HashSet<>(observableListOrgansSelected)
         );
 
         switch (windowType) {
@@ -202,17 +202,17 @@ public class ProfileOrganEditController {
         if (selectedIdxAvailable != -1) {
             String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
             observableListOrgansAvailable.remove(itemToRemove);
-            observableListOrgansRequired.add(itemToRemove);
+            observableListOrgansSelected.add(itemToRemove);
         } else {
             final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
             if(selectedIdxRequired != -1) {
                 String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
-                observableListOrgansRequired.remove(itemToRemove);
+                observableListOrgansSelected.remove(itemToRemove);
                 observableListOrgansAvailable.add(itemToRemove);
             }
         }
 
-        Collections.sort(observableListOrgansRequired);
+        Collections.sort(observableListOrgansSelected);
         Collections.sort(observableListOrgansAvailable);
         refresh();
 
