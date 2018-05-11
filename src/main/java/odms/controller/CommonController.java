@@ -97,7 +97,11 @@ class CommonController {
         }
     }
 
-    //TODO
+    /**
+     * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
+     * @param event The event which is wanted to trigger a notification
+     * @param editedField String of which is the thing edited.
+     */
     @FXML
     protected void showNotification(String editedField, ActionEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

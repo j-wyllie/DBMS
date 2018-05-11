@@ -71,8 +71,6 @@ public class ClinicianProfileEditController extends CommonController{
         }
     }
 
-
-
     /**
      * Button handler to save the changes made to the fields.
      * @param event clicking on the save (tick) button.
@@ -115,7 +113,6 @@ public class ClinicianProfileEditController extends CommonController{
             appStage.show();
         }
         else {
-            System.out.println("HERE");
             Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -125,8 +122,6 @@ public class ClinicianProfileEditController extends CommonController{
 
         }
     }
-
-
 
     /**
      * Sets the current clinician attributes to the labels on start up.
