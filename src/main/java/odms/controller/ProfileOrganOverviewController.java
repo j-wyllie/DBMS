@@ -10,15 +10,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.enums.OrganSelectEnum;
 
 public class ProfileOrganOverviewController extends ProfileOrganCommonController {
+    private ObservableList<String> checkList = FXCollections.observableArrayList();
+
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
-    private ObservableList<String> observableListReceived = FXCollections.observableArrayList();
+    private ObservableList<String> observableListReceiving = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> tableDonated;
@@ -29,14 +33,34 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     @FXML
     private ListView<String> tableReceiving;
 
+    /**
+     * Override the Cell Formatting for colour highlighting.
+     */
+    class HighlightedCell extends ListCell<String> {
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            setText(item);
+
+            if (checkList.contains(item)) {
+                setTextFill(Color.RED);
+            } else {
+                setTextFill(Color.BLACK);
+            }
+        }
+    }
+
     public void initialize() {
         currentProfile = LoginController.getCurrentProfile();
 
         populateOrganLists();
 
+        tableDonating.setCellFactory(param -> new HighlightedCell());
+        tableReceiving.setCellFactory(param -> new HighlightedCell());
+
         tableDonated.setItems(observableListDonated);
         tableDonating.setItems(observableListDonating);
-        tableReceiving.setItems(observableListReceived);
+        tableReceiving.setItems(observableListReceiving);
     }
 
     @FXML
@@ -54,10 +78,22 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
     }
 
+    /**
+     * Repopulate the ObservableLists with any Organ changes and repopulate the
+     * check list for conflicting organs.
+     */
     private void populateOrganLists() {
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
-        populateOrganList(observableListReceived, currentProfile.getOrgansRequired());
+        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
+
+        checkList.clear();
+
+        for (String organ : observableListDonating) {
+            if (observableListReceiving.contains(organ)) {
+                checkList.add(organ);
+            }
+        }
     }
 
     /**
