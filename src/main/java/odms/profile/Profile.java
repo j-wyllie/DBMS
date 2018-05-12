@@ -15,8 +15,8 @@ import odms.medications.Drug;
 
 public class Profile {
 
-    private Boolean donor;
-    private Boolean receiver;
+    private Boolean donor = false;
+    private Boolean receiver = false;
 
     private String givenNames;
     private String lastNames;

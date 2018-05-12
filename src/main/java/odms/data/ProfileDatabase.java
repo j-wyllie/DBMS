@@ -1,9 +1,12 @@
 package odms.data;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.profile.Organ;
@@ -194,14 +197,119 @@ public class ProfileDatabase {
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfiles(String searchString) {
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, String regionSearchString, List selectedGenders, List selectedTypes, List selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
+        ArrayList<Profile> resultProfiles = getProfiles(false);
 
-        if (searchString == null || searchString.equals("")) {
+        //parsing out organs as strings for use
+        List<String> selectedOrgansStrings = new ArrayList<>();
+        if (selectedOrgans != null) {
+            for (int i = 0; i< selectedOrgans.size(); i++) {
+                //todo need some consistency in how we are naming organs that have two words in them.
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
+                    selectedOrgansStrings.add("connective-tissue");
+                }
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
+                    selectedOrgansStrings.add("bone-marrow");
+                }
+                selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
+            }
+        }
+
+        //need some data for testing, test data not fully populated i think--------
+        resultProfiles.forEach(profile -> profile.setGender("male"));
+        //resultProfiles.forEach(profile -> profile.setReceiver(false));
+
+        resultProfiles.get(0).setGender("female");
+        resultProfiles.get(3).setGender("female");
+        resultProfiles.get(7).setGender("female");
+        resultProfiles.get(10).setGender("female");
+        resultProfiles.get(11).setGender("female");
+
+        resultProfiles.get(0).setReceiver(true);
+        resultProfiles.get(0).setDonor(false);
+        // ------------------------------------------------------------------------
+
+        if (searchString.equals("") && searchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()) {
             return getProfiles(false);
         }
 
-        for (Profile profile : getProfiles(false)) {
+        //definitely need a better way than just a magic number lol
+        if (ageSearchInt != -999) {
+            resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
+
+        }
+
+        //todo i think region might need some work, not initialized in test data? same as some genders
+        //resultProfiles.forEach(profile -> System.out.println(profile.getRegion()));          // <<<<<< they are all null
+
+        if (!regionSearchString.equals("")) {
+            resultProfiles.removeIf(profile -> !profile.getRegion().equals(regionSearchString));
+        }
+
+
+        if (!selectedGenders.isEmpty()) {
+            System.out.println("genders");
+            resultProfiles.removeIf(profile -> !selectedGenders.contains(profile.getGender()));
+        }
+
+
+        if (!selectedOrgans.isEmpty()) {
+            System.out.println("organs");
+            resultProfiles.removeIf(profile -> {
+
+                HashSet<Organ> organsDonatingHash = profile.getOrgansDonating();
+                List<String> organsDonating = new ArrayList<String>();
+
+                for (Organ temp : organsDonatingHash) {
+                    organsDonating.add(temp.getName());
+                }
+
+                if (organsDonating == null || organsDonating.size() == 0) {
+                    return true;
+                }
+                organsDonating.retainAll(selectedOrgansStrings);         //intersection
+                return organsDonating.size() == 0;
+            });
+
+        }
+
+        if (!selectedTypes.isEmpty()) {
+            resultProfiles.removeIf(profile -> {
+                ArrayList<String> profileTypes = new ArrayList();
+                System.out.println("types");
+
+                if (profile.isReceiver()) {profileTypes.add("receiver");}
+                try {
+                    if (profile.getDonor()) {profileTypes.add("donor");}
+                } catch (NullPointerException e) {
+                    //profile.getDonor() throws null pointer, is this not initialized for all?
+                    return true;
+                }
+
+                if (profileTypes.size() == 0) {
+                    return true;
+                }
+
+                //edge case, if they only ask for donors, and a profile is a donor and receiver, it would display.
+                //since they can specify if they want BOTH receivers and donors
+                if (profileTypes.size() == 2 && selectedTypes.size() == 1) {
+                    return true;
+                }
+
+
+                profileTypes.retainAll(selectedTypes);
+                return (profileTypes.size() == 0);
+            });
+        }
+
+
+
+        if (searchString.equals("")) {
+            return resultProfiles;
+        }
+
+        for (Profile profile : resultProfiles) {
             profiles.add(profile.getFullName());
         }
 
@@ -210,7 +318,7 @@ public class ProfileDatabase {
         result = FuzzySearch.extractSorted(searchString, profiles, 50);
 
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
-        ArrayList<Profile> resultProfiles = new ArrayList<>();
+        resultProfiles = new ArrayList<>();
         for (ExtractedResult er : result) {
             resultProfiles.add(getProfiles(false).get(er.getIndex()));
         }

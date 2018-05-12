@@ -6,6 +6,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -145,7 +146,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleApplyFilterButton(ActionEvent event) {
-
+        updateTable();
     }
 
     /**
@@ -162,10 +163,11 @@ public class ClinicianProfileController extends CommonController {
      */
     private void updateTable() {
 
+        System.out.println("update table");
 
         List selectedGenders;
         List selectedTypes;
-        List selectedOrgans;
+        ObservableList selectedOrgans;
 
         selectedGenders = genderCombobox.getCheckModel().getCheckedItems();
         selectedTypes = typeCombobox.getCheckModel().getCheckedItems();
@@ -173,12 +175,18 @@ public class ClinicianProfileController extends CommonController {
 
 
         String searchString = searchField.getText();
-        String ageSearchString = ageField.getText();
         String regionSearchString = regionField.getText();
+
+        int ageSearchInt;
+        try {
+            ageSearchInt = Integer.parseInt(ageField.getText());
+        } catch (NumberFormatException e) {
+            ageSearchInt = -999;
+        }
 
 
         searchTable.getItems().clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, regionSearchString, selectedGenders, selectedTypes, selectedOrgans));
         searchTable.setItems(donorObservableList);
     }
 
@@ -353,7 +361,6 @@ public class ClinicianProfileController extends CommonController {
         typeCombobox.getItems().setAll(typeStrings);
 
 
-
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
@@ -361,11 +368,6 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-
 
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
