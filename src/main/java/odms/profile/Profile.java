@@ -412,7 +412,7 @@ public class Profile {
             String action = "Profile " +
                     this.getId() +
                     " added " +
-                    organ +
+                    organ.getNamePlain() +
                     " to donate at " +
                     LocalDateTime.now();
 
@@ -527,12 +527,28 @@ public class Profile {
      * Remove a set of organs from the list of organs that the profile has donated
      * @param organs a set of organs to remove from the list
      */
-    public void removeDonations(Set<String> organs) {
+    public void removeOrgansDonated(Set<OrganEnum> organs) {
         generateUpdateInfo("organsDonated");
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            OrganEnum organ = OrganEnum.valueOf(newOrgan);
+
+        for (OrganEnum organ : organs) {
             this.organsDonated.remove(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs donated " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 
@@ -540,21 +556,28 @@ public class Profile {
      * Remove a set of organs from the list of organs that the use wants to donate
      * @param organs a set of organs to be removed
      */
-    public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
+    public void removeOrgansDonating(Set<OrganEnum> organs) {
         generateUpdateInfo("organsDonating");
 
-        HashSet<OrganEnum> newOrgans = new HashSet<>();
+        for (OrganEnum organ : organs) {
+            this.organsDonating.remove(organ);
 
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            OrganEnum organ = OrganEnum.valueOf(newOrgan);
-            newOrgans.add(organ);
-        }
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs donating " +
+                    LocalDateTime.now();
 
-        if (!Collections.disjoint(newOrgans, this.organsDonating)) {
-            this.organsDonating.removeAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 

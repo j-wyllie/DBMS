@@ -1,22 +1,23 @@
 package odms.profile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import odms.cli.CommandUtils;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
-import odms.cli.CommandUtils;
 import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class ProfileTest {
 
@@ -97,7 +98,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
 
-        Profile profileOnlyAttr = new Profile(profileAttr);
+        new Profile(profileAttr);
     }
 
     /**
@@ -111,7 +112,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(profileAttr);
+        new Profile(profileAttr);
     }
 
     /**
@@ -125,7 +126,7 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(profileAttr);
+        new Profile(profileAttr);
     }
 
     /**
@@ -139,7 +140,7 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(profileAttr);
+        new Profile(profileAttr);
     }
 
     /**
@@ -154,7 +155,7 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile profileOnlyAttr = new Profile(profileAttr);
+        new Profile(profileAttr);
     }
 
     /**
@@ -168,7 +169,8 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
 
@@ -327,17 +329,17 @@ public class ProfileTest {
     }
 
     /**
-     * Test the ability to remove organs from the list of donatable organs
+     * Test the ability to remove organs from the list of donating organs
      */
     @Test
-    public void testRemoveDonatableOrgans() {
+    public void testRemoveOrgansDonating() {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
 
@@ -347,10 +349,10 @@ public class ProfileTest {
             someOrgans.add("cornea");
             testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(someOrgans));
 
-            Set<String> removedOrgans = new HashSet<>();
+            List<String> removedOrgans = new ArrayList<>();
             removedOrgans.add("bone");
             removedOrgans.add("heart");
-            testProfile.removeDonations(removedOrgans);
+            testProfile.removeOrgansDonating(OrganEnum.stringListToOrganSet(removedOrgans));
 
             Set<OrganEnum> expected = new HashSet<>();
             expected.add(OrganEnum.CORNEA);
@@ -362,7 +364,7 @@ public class ProfileTest {
 
     }
 
-    /*
+    /**
      * Tests the ability to remove an organ from the list of organs that the
      * profile has donated
      */
@@ -387,10 +389,10 @@ public class ProfileTest {
             someOrgans.add("cornea");
             testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
-            Set<String> removedOrgans = new HashSet<>();
+            List<String> removedOrgans = new ArrayList<>();
             removedOrgans.add("bone");
             removedOrgans.add("heart");
-            testProfile.removeOrgans(removedOrgans);
+            testProfile.removeOrgansDonated(OrganEnum.stringListToOrganSet(removedOrgans));
 
             Set<OrganEnum> expected = new HashSet<>();
             expected.add(OrganEnum.CORNEA);
@@ -442,7 +444,8 @@ public class ProfileTest {
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
 
@@ -468,7 +471,8 @@ public class ProfileTest {
         profileAttr.add("weight=\"72.0\"");
         profileAttr.add("height=\"1.75\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
 
@@ -494,7 +498,8 @@ public class ProfileTest {
         profileAttr.add("dob=\"01-01-2000\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
 
@@ -521,7 +526,8 @@ public class ProfileTest {
         profileAttr.add("dod=\"01-01-2050\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
 
@@ -627,7 +633,8 @@ public class ProfileTest {
         donorAttr.add("dod=\"01-01-2050\"");
         donorAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(donorAttr);
 
@@ -974,7 +981,7 @@ public class ProfileTest {
         Drug drug1 = new Drug("acetaminophen");
         Drug drug2 = new Drug("paracetamol");
 
-        ArrayList<String> donorAttr = new ArrayList<String>();
+        ArrayList<String> donorAttr = new ArrayList<>();
         donorAttr.add("given-names=\"John\"");
         donorAttr.add("last-names=\"Smithy Smith Face\"");
         donorAttr.add("dob=\"01-01-2000\"");
@@ -1111,20 +1118,22 @@ public class ProfileTest {
         profileAttr.add("dod=\"01-01-2050\"");
         profileAttr.add("ird=\"123456879\"");
 
-        Profile testProfile = null;
+        Profile testProfile;
+
         try {
             testProfile = new Profile(profileAttr);
+
+            List<String> someOrgans = new ArrayList<>();
+            someOrgans.add("Heart");
+            testProfile.addOrgansRequired(OrganEnum.stringListToOrganSet(someOrgans));
+
+            assertTrue(CommandUtils.currentSessionHistory
+                    .get(CommandUtils.historyPosition)
+                    .contains(OrganEnum.HEART.getNamePlain()
+                    )
+            );
         } catch (IllegalArgumentException e) {
             // pass
         }
-        List<String> someOrgans = new ArrayList<>();
-        someOrgans.add("Heart");
-        testProfile.addOrgansRequired(OrganEnum.stringListToOrganSet(someOrgans));
-
-        assertTrue(CommandUtils.currentSessionHistory
-                .get(CommandUtils.historyPosition)
-                .contains(OrganEnum.HEART.getNamePlain()
-                )
-        );
     }
 }

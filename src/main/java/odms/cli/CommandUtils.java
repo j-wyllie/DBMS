@@ -168,16 +168,16 @@ public class CommandUtils {
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -316,13 +316,13 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList list of organs to be removed
      */
-    private static void removeOrgans(ArrayList<Profile> profileList, String[] organList) {
+    private static void removeOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgans(organSet);
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -399,18 +399,25 @@ public class CommandUtils {
             } else if (action.contains("set")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeOrgans(organSet);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("donate")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeDonations(organSet);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                // TODO bug here for removing organs from wrong list based on command
+                profile.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -512,9 +519,9 @@ public class CommandUtils {
                 } else if (action.contains("removed")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
+                    List<String> organSet = new ArrayList<>(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.removeOrgans(organSet);
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
