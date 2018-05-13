@@ -1,5 +1,6 @@
 package odms.controller;
 
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
@@ -722,6 +723,20 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
+     * Button handler to save changes made on medications tab. If a save is made else where in the program changes to
+     * the medications will also be saved.
+     * @param event clicking on the save button
+     */
+    @FXML
+    private void handleSaveMedications(ActionEvent event) {
+        boolean saveBool = donorSaveChanges();
+
+        if (saveBool) {
+            ProfileDataIO.saveData(getCurrentDatabase());
+        }
+    }
+
+    /**
      * Button handler to view a drugs active ingredients
      * @param event clicking on the active ingredients button
      */
@@ -767,7 +782,6 @@ public class ProfileDisplayController extends CommonController {
 
             searchedDonor.addDrug(new Drug(medicationName));
 
-            ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
             refreshMedicationsTable();
         }
     }
@@ -850,7 +864,6 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));}
         }
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 
@@ -867,7 +880,6 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.moveDrugToCurrent(drugs.get(i));}
         }
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 
@@ -885,7 +897,6 @@ public class ProfileDisplayController extends CommonController {
             if (drugs.get(i) != null) { searchedDonor.deleteDrug(drugs.get(i));}
         }
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshMedicationsTable();
     }
 

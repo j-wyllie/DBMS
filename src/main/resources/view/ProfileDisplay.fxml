@@ -538,10 +538,11 @@
                                           </GridPane>
                                        </children>
                                     </TilePane>
-                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="5">
                                        <children>
-                                          <GridPane prefHeight="61.0" prefWidth="390.0">
+                                          <GridPane prefHeight="61.0" prefWidth="469.0">
                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="50.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="69.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.0" minWidth="10.0" prefWidth="144.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="177.0" />
@@ -552,9 +553,10 @@
                                               <RowConstraints maxHeight="21.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
-                                                <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDeleteMedication" text="Delete" GridPane.rowIndex="1" />
-                                                 <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDeleteMedication" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                 <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonSaveMedications" mnemonicParsing="false" onAction="#handleSaveMedications" text="Save" GridPane.rowIndex="1" />
 
                                              </children>
                                           </GridPane>

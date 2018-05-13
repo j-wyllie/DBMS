@@ -10,7 +10,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +42,6 @@ public class MedicationDataIOTest {
     private String drugSeven;
     private String drugEight;
     private Map<String, String> interactions;
-
-
-    private StringBuffer response;
-    private StringBuffer response1;
-    private StringBuffer response1_1;
-    private StringBuffer response2;
 
     @Before
     public void setUp() {
@@ -116,250 +114,8 @@ public class MedicationDataIOTest {
         interactions.put("cholestasis", "not specified");
         interactions.put("drug eruption", "not specified");
         interactions.put("hepatitis acute", "not specified");
-
-        response = new StringBuffer();
-        response.append("{\"query\":\"res\",\"suggestions\":[\"Reserpine\",\"Resectisol\",\"Resectisol " +
-                "in plastic container\",\"Restoril\",\"Rescriptor\",\"Restasis\",\"Rescula\",\"Reserpine " +
-                "and hydrochlorothiazide\",\"Reserpine, hydralazine hydrochloride and hydrochlorothiazide\"" +
-                ",\"Reserpine, hydrochlorothiazide, and hydralazine hydrochloride\",\"Reserpine and " +
-                "hydrochlorothiazide-50\",\"Reserpine and hydroflumethiazide\",\"Resporal\"]}");
-
-        response1 = new StringBuffer();
-        response1.append("[\"Hydralazine hydrochloride; hydrochlorothiazide; reserpine\",\"Hydrochlorothiazide; " +
-                "reserpine\",\"Hydroflumethiazide; reserpine\",\"Reserpine\"]");
-
-        response1_1 = new StringBuffer();
-        response1_1.append("[\"Methadone hydrochloride\"]");
-
-        response2 = new StringBuffer();
-        response2.append("{\n" +
-                "  \"age_interaction\": {\n" +
-                "    \"0-1\": [\n" +
-                "      \"orthostatic hypotension\"\n" +
-                "    ], \n" +
-                "    \"10-19\": [\n" +
-                "      \"dizziness\", \n" +
-                "      \"phlebitis\", \n" +
-                "      \"tachycardia\", \n" +
-                "      \"thrombosis\", \n" +
-                "      \"convulsion\", \n" +
-                "      \"abdominal pain upper\", \n" +
-                "      \"chest pain\", \n" +
-                "      \"cough\", \n" +
-                "      \"drug ineffective\", \n" +
-                "      \"dyspnoea\"\n" +
-                "    ], \n" +
-                "    \"2-9\": [\n" +
-                "      \"glomerulonephritis membranous\", \n" +
-                "      \"nephritic syndrome\", \n" +
-                "      \"disease recurrence\", \n" +
-                "      \"mucopolysaccharidosis\", \n" +
-                "      \"nephrotic syndrome\", \n" +
-                "      \"procedural pain\"\n" +
-                "    ], \n" +
-                "    \"20-29\": [\n" +
-                "      \"drug ineffective\", \n" +
-                "      \"neuropathy peripheral\", \n" +
-                "      \"oedema peripheral\", \n" +
-                "      \"infusion related reaction\", \n" +
-                "      \"autoimmune hepatitis\", \n" +
-                "      \"catheter site related reaction\", \n" +
-                "      \"cerebrovascular accident\", \n" +
-                "      \"cholestasis\", \n" +
-                "      \"drug eruption\", \n" +
-                "      \"hepatitis acute\"\n" +
-                "    ], \n" +
-                "    \"30-39\": [\n" +
-                "      \"pulmonary embolism\", \n" +
-                "      \"anxiety\", \n" +
-                "      \"injury\", \n" +
-                "      \"vomiting\", \n" +
-                "      \"anhedonia\", \n" +
-                "      \"nausea\", \n" +
-                "      \"pain in extremity\", \n" +
-                "      \"chest pain\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"cough\"\n" +
-                "    ], \n" +
-                "    \"40-49\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"hypotension\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"thrombosis\", \n" +
-                "      \"cellulitis\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"oedema peripheral\", \n" +
-                "      \"alanine aminotransferase increased\", \n" +
-                "      \"aspartate aminotransferase increased\", \n" +
-                "      \"chest pain\"\n" +
-                "    ], \n" +
-                "    \"50-59\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"renal failure acute\", \n" +
-                "      \"nausea\", \n" +
-                "      \"gastrointestinal haemorrhage\", \n" +
-                "      \"fatigue\", \n" +
-                "      \"vomiting\", \n" +
-                "      \"cardiac failure congestive\", \n" +
-                "      \"diarrhoea\", \n" +
-                "      \"hypotension\", \n" +
-                "      \"rash\"\n" +
-                "    ], \n" +
-                "    \"60+\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"renal failure acute\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"hypotension\", \n" +
-                "      \"pneumonia\", \n" +
-                "      \"cardiac failure congestive\", \n" +
-                "      \"nausea\", \n" +
-                "      \"pyrexia\", \n" +
-                "      \"fall\"\n" +
-                "    ], \n" +
-                "    \"nan\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"death\", \n" +
-                "      \"nausea\", \n" +
-                "      \"arthralgia\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"hypertension\", \n" +
-                "      \"injury\", \n" +
-                "      \"joint swelling\", \n" +
-                "      \"osteonecrosis of jaw\"\n" +
-                "    ]\n" +
-                "  }, \n" +
-                "  \"co_existing_conditions\": null, \n" +
-                "  \"duration_interaction\": {\n" +
-                "    \"1 - 2 years\": [\n" +
-                "      \"cerebrovascular accident\", \n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"gastrointestinal haemorrhage\", \n" +
-                "      \"pneumonia\", \n" +
-                "      \"blood electrolytes abnormal\", \n" +
-                "      \"blood pressure increased\", \n" +
-                "      \"coma\", \n" +
-                "      \"death\", \n" +
-                "      \"dysstasia\", \n" +
-                "      \"epistaxis\"\n" +
-                "    ], \n" +
-                "    \"1 - 6 months\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"dehydration\", \n" +
-                "      \"dizziness\", \n" +
-                "      \"epigastric discomfort\", \n" +
-                "      \"inferior vena caval occlusion\", \n" +
-                "      \"oedema peripheral\", \n" +
-                "      \"superior vena cava syndrome\", \n" +
-                "      \"thrombosis\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"confusional state\"\n" +
-                "    ], \n" +
-                "    \"10+ years\": [\n" +
-                "      \"blood electrolytes abnormal\", \n" +
-                "      \"blood pressure increased\", \n" +
-                "      \"coma\", \n" +
-                "      \"death\", \n" +
-                "      \"dysstasia\", \n" +
-                "      \"pyrexia\", \n" +
-                "      \"serotonin syndrome\", \n" +
-                "      \"unresponsive to stimuli\", \n" +
-                "      \"fall\", \n" +
-                "      \"haematoma\"\n" +
-                "    ], \n" +
-                "    \"2 - 5 years\": [\n" +
-                "      \"myelodysplastic syndrome\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"epistaxis\", \n" +
-                "      \"thrombocytopenia\", \n" +
-                "      \"faeces discoloured\", \n" +
-                "      \"haematocrit decreased\", \n" +
-                "      \"haemoglobin decreased\", \n" +
-                "      \"melaena\", \n" +
-                "      \"abdominal pain upper\", \n" +
-                "      \"abortion induced\"\n" +
-                "    ], \n" +
-                "    \"5 - 10 years\": [\n" +
-                "      \"anaemia\", \n" +
-                "      \"cerebrovascular accident\", \n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"chest pain\", \n" +
-                "      \"duodenal ulcer\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"dyspnoea exertional\", \n" +
-                "      \"faeces discoloured\", \n" +
-                "      \"haematemesis\", \n" +
-                "      \"melaena\"\n" +
-                "    ], \n" +
-                "    \"6 - 12 months\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"anhedonia\", \n" +
-                "      \"anxiety\", \n" +
-                "      \"cyst\", \n" +
-                "      \"disability\", \n" +
-                "      \"dysphagia\", \n" +
-                "      \"epistaxis\", \n" +
-                "      \"gingival swelling\", \n" +
-                "      \"injury\", \n" +
-                "      \"lung disorder\"\n" +
-                "    ], \n" +
-                "    \"< 1 month\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"pulmonary embolism\", \n" +
-                "      \"urinary tract infection\", \n" +
-                "      \"death\", \n" +
-                "      \"multi-organ failure\", \n" +
-                "      \"renal failure acute\", \n" +
-                "      \"acute respiratory failure\", \n" +
-                "      \"blood pressure decreased\", \n" +
-                "      \"renal failure\", \n" +
-                "      \"thrombocytopenia\"\n" +
-                "    ], \n" +
-                "    \"not specified\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"nausea\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"renal failure acute\", \n" +
-                "      \"hypotension\", \n" +
-                "      \"oedema peripheral\", \n" +
-                "      \"vomiting\", \n" +
-                "      \"cardiac failure congestive\", \n" +
-                "      \"fatigue\"\n" +
-                "    ]\n" +
-                "  }, \n" +
-                "  \"gender_interaction\": {\n" +
-                "    \"female\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"oedema peripheral\", \n" +
-                "      \"nausea\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"vomiting\", \n" +
-                "      \"pneumonia\", \n" +
-                "      \"fall\", \n" +
-                "      \"diarrhoea\", \n" +
-                "      \"asthenia\"\n" +
-                "    ], \n" +
-                "    \"male\": [\n" +
-                "      \"international normalised ratio increased\", \n" +
-                "      \"dyspnoea\", \n" +
-                "      \"renal failure acute\", \n" +
-                "      \"hypotension\", \n" +
-                "      \"anaemia\", \n" +
-                "      \"cardiac failure congestive\", \n" +
-                "      \"nausea\", \n" +
-                "      \"pyrexia\", \n" +
-                "      \"fatigue\", \n" +
-                "      \"pneumonia\"\n" +
-                "    ]\n" +
-                "  }, \n" +
-                "  \"reports\": {\n" +
-                "    \"amount\": 1853\n" +
-                "  }\n" +
-                "}\n");
     }
+
 
     @Test
     public void testEmptyOrNullStringGetSuggestionList() throws IOException {
@@ -370,9 +126,15 @@ public class MedicationDataIOTest {
 
     @Test
     public void testValidStringGetSuggestionList() throws Exception {
+        // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        byte[] encoded = Files.readAllBytes(Paths.get("./src/test/java/odms/data/medicationTestData/suggestionListSampleResponse.json"));
+        StringBuffer suggestionData = new StringBuffer();
+        suggestionData.append(encoded);
+
+
         // Mock makeRequests method
         PowerMockito.spy(MedicationDataIO.class);
-        PowerMockito.doReturn(response).when(MedicationDataIO.class, "makeRequest", "String");
+        PowerMockito.doReturn(suggestionData).when(MedicationDataIO.class, "makeRequest", "String");
 
         //Test for substring with valid value.
         assertArrayEquals(expectedList2, getSuggestionList(substring3).toArray());
@@ -387,9 +149,14 @@ public class MedicationDataIOTest {
 
     @Test
     public void testValidStringGetActiveIngredients() throws Exception {
+        // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        byte[] encoded = Files.readAllBytes(Paths.get("./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse1.json"));
+        StringBuffer ingredientData = new StringBuffer();
+        ingredientData.append(encoded);
+
         // Mock makeRequests method
         PowerMockito.spy(MedicationDataIO.class);
-        PowerMockito.doReturn(response1).when(MedicationDataIO.class, "makeRequest", "String");
+        PowerMockito.doReturn(ingredientData).when(MedicationDataIO.class, "makeRequest", "String");
 
         //Test for drug name with valid value.
         assertArrayEquals(expectedList3, getActiveIngredients(drugName).toArray());
@@ -397,9 +164,14 @@ public class MedicationDataIOTest {
 
     @Test
     public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws Exception {
+        // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        byte[] encoded = Files.readAllBytes(Paths.get("./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
+        StringBuffer ingredientData = new StringBuffer();
+        ingredientData.append(encoded);
+
         // Mock makeRequests method
         PowerMockito.spy(MedicationDataIO.class);
-        PowerMockito.doReturn(response1_1).when(MedicationDataIO.class, "makeRequest", "String");
+        PowerMockito.doReturn(ingredientData).when(MedicationDataIO.class, "makeRequest", "String");
 
         //Test for drug name with valid value and it has a space in drug name.
         assertArrayEquals(expectedList4, getActiveIngredients(drugName2).toArray());
@@ -407,9 +179,14 @@ public class MedicationDataIOTest {
 
     @Test
     public void testGetDrugInteractions() throws Exception {
+        // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        byte[] encoded = Files.readAllBytes(Paths.get("./src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
+        StringBuffer interactionData = new StringBuffer();
+        interactionData.append(encoded);
+
         // Mock makeRequests method
         PowerMockito.spy(MedicationDataIO.class);
-        PowerMockito.doReturn(response2).when(MedicationDataIO.class, "makeRequest", "String");
+        PowerMockito.doReturn(interactionData).when(MedicationDataIO.class, "makeRequest", "String");
 
         // Test valid request
         Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugTwo, "male", 29);
