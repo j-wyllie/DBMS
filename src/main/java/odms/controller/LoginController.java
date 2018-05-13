@@ -44,25 +44,22 @@ public class LoginController extends CommonController {
         String scene;
         String title;
 
-        try {
             if (!usernameField.getText().equals("")) {
 
                 String username = usernameField.getText();
                 if (username.equals("admin")) {
                     try {
                         currentUser = userDatabase.getUser("admin");
-                        System.out.println(currentUser.getName());
                         scene = "/view/ClinicianProfile.fxml";
                         title = "Clinician";
                         showScene(event, scene, title, true);
-                    } catch (Exception e) {
+                    } catch (UserNotFoundException | IOException e) {
                         invalidUsername();
                     }
 
                 } else {
-                    System.out.println("REEEE");
-                    int userId = Integer.valueOf(usernameField.getText());
-
+                    try {
+                        int userId = Integer.valueOf(usernameField.getText());
                     if (userId == 0) {
                         currentUser = userDatabase.getUser(0);
                         scene = "/view/ClinicianProfile.fxml";
@@ -79,17 +76,10 @@ public class LoginController extends CommonController {
                             invalidUsername();
                         }
                     }
-                }
+                } catch (UserNotFoundException | IOException | NumberFormatException e) {
+                        invalidUsername();
+                    }
             }
-
-        } catch (NumberFormatException e) {
-
-            invalidEntry();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            invalidUsername();
         }
     }
 

@@ -1,5 +1,6 @@
 package odms.data;
 
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 
 import java.util.HashMap;
@@ -16,11 +17,11 @@ public class UserDatabase {
      * @param id unique ID for requested User
      * @return User object
      */
-    public User getUser(Integer id) throws Exception {
+    public User getUser(Integer id) throws UserNotFoundException {
 
         User user = userDb.get(id);
         if (user == null) {
-            throw new Exception();
+            throw new UserNotFoundException("User not found with id " + id, id);
         }
         return user;
     }
@@ -32,7 +33,7 @@ public class UserDatabase {
      * @param username username requested
      * @return the user object.
      */
-    public User getUser(String username) throws Exception {
+    public User getUser(String username) throws UserNotFoundException {
         for(User value : userDb.values()) {
             if (value.getUsername() != null) {
                 if (value.getUsername().equals(username)) {
@@ -40,7 +41,7 @@ public class UserDatabase {
                 }
             }
         }
-        throw new Exception();
+        throw new UserNotFoundException("User not found with username " + username, username);
     }
     /**
      * Checks whether a user exists in the database with a certain username

@@ -71,8 +71,45 @@
           "nano": 486000000
         }
       }
+    },
+    "2": {
+      "userType": "ADMIN",
+      "name": "admin",
+      "staffId": 2,
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 13
+        },
+        "time": {
+          "hour": 20,
+          "minute": 3,
+          "second": 43,
+          "nano": 94000000
+        }
+      },
+      "updateActions": [
+        "ADMINaccount for admincreated at 2018-05-13T20:03:43.075",
+        "admin updated at 08:03 PM 13-05-2018",
+        "2 updated at 08:03 PM 13-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 13
+        },
+        "time": {
+          "hour": 20,
+          "minute": 3,
+          "second": 43,
+          "nano": 75000000
+        }
+      },
+      "username": "admin"
     }
   },
-  "lastID": 1,
+  "lastID": 2,
   "path": "example/users.json"
 }
