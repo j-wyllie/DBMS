@@ -108,13 +108,16 @@ public class ClinicianProfileEditController extends CommonController{
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            showNotification("Clinician with ID " + currentUser.getStaffId(), event);
+            appStage.setTitle("Clinician");
             appStage.show();
         }
         else {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/DonorProfile.fxml"));
+            Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
+            appStage.setTitle("Clinician");
             appStage.show();
 
         }
