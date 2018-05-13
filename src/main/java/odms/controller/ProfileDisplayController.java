@@ -1083,26 +1083,16 @@ public class ProfileDisplayController extends CommonController {
             //organs to donate.
             //past donations.
             String history = ProfileDataIO.getHistory();
+            history = history.replace(",","").replace("]","").replace("[","").replace("\\u003d","=");
             System.out.println(history);
-            Gson gson = new Gson();
-
-            if (history.equals("")) {
-                history = gson.toJson(HistoryController.getHistory());
-            } else {
-                history = history.substring(0, history.length() - 1);
-                history = history + "," + gson.toJson(HistoryController.getHistory()).substring(1);
-            }
-            history = history.substring(1, history.length() - 1);
-            String[] actionHistory = history.split(",");
-
-            ArrayList<String> userHistory = new ArrayList<>();
+            String[] histories = history.split("\"");
             String historyDisplay = "";
-            for (String str : actionHistory) {
-                if (str.contains("Donor " + currentDonor.getId())) {
-                    userHistory.add(str);
-                    historyDisplay+=str.replace("\"","")+"\n";
+            for(String h : histories) {
+                if(!h.equals("") && h.contains("Donor "+searchedDonor.getId()+" ")) {
+                    historyDisplay += h + "\n";
                 }
             }
+
             historyView.setText(historyDisplay);
             setMedicationSearchFieldListener();
 
