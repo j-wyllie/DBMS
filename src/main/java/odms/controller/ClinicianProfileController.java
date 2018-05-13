@@ -85,6 +85,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TextField transplantSearchField;
+    
+    @FXML
+    private CheckBox ageRangeCheckbox;
 
 
     @FXML
@@ -140,6 +143,17 @@ public class ClinicianProfileController extends CommonController {
         String title = "Edit Profile";
 
         showScene(event, scene, title, true);
+    }
+    
+    @FXML
+    private void handleAgeRangeCheckboxChecked(ActionEvent event) {
+        if (ageRangeCheckbox.isSelected()) {
+            ageRangeField.setVisible(true);
+            ageField.setPromptText("Lower Age");
+        } else {
+            ageRangeField.setVisible(false);
+            ageField.setPromptText("Age");
+        }
     }
 
 
@@ -369,6 +383,8 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private void initialize(){
+
+        ageRangeField.setVisible(false);
 
         genderStrings.add("male");
         genderStrings.add("female");

@@ -245,7 +245,7 @@ public class ProfileDatabase {
 
 
         if (!regionSearchString.equals("")) {
-            resultProfiles.removeIf(profile -> !profile.getRegion().equals(regionSearchString));
+            resultProfiles.removeIf(profile -> !profile.getRegion().toLowerCase().equals(regionSearchString.toLowerCase()));
         }
 
 
