@@ -98,7 +98,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         actualAlertDialog = getAlertDialogue();
         dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-        assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
+        assertEquals("Please enter your details correctly.", dialogPane.getContentText());
         closeDialog(dialogPane);
 
         //tests duplicate IRD number.
