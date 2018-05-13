@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
@@ -68,6 +69,9 @@ public class ClinicianProfileController extends CommonController {
     private TextField ageField;
 
     @FXML
+    private TextField ageRangeField;
+
+    @FXML
     private TextField regionField;
 
     @FXML
@@ -82,8 +86,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TextField transplantSearchField;
 
-    @FXML
-    private Button applyFilterButton;
 
     @FXML
     private TableView transplantTable;
@@ -140,14 +142,6 @@ public class ClinicianProfileController extends CommonController {
         showScene(event, scene, title, true);
     }
 
-    /**
-     * Button handler to apply search filters
-     * @param event clicking on the apply filters button.
-     */
-    @FXML
-    private void handleApplyFilterButton(ActionEvent event) {
-        updateTable();
-    }
 
     /**
      * Button handler to update donor table based on search results.
@@ -155,15 +149,16 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        updateTable();
+        updateSearchTable();
     }
+
 
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
-    private void updateTable() {
+    private void updateSearchTable() {
 
-        System.out.println("update table");
+        System.out.println("update search table");
 
         List selectedGenders;
         List selectedTypes;
@@ -184,9 +179,16 @@ public class ClinicianProfileController extends CommonController {
             ageSearchInt = -999;
         }
 
+        int ageRangeSearchInt;
+        try {
+            ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
+        } catch (NumberFormatException e) {
+            ageRangeSearchInt = -999;
+        }
+
 
         searchTable.getItems().clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, regionSearchString, selectedGenders, selectedTypes, selectedOrgans));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGenders, selectedTypes, selectedOrgans));
         searchTable.setItems(donorObservableList);
     }
 
@@ -226,6 +228,26 @@ public class ClinicianProfileController extends CommonController {
                 createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
             }
         });
+
+        genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
+            updateSearchTable();
+        });
+        genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
+            updateSearchTable();
+        });
+        organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
+            updateSearchTable();
+        });
+        organsCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
+            updateSearchTable();
+        });
+        typeCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
+            updateSearchTable();
+        });
+        typeCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
+            updateSearchTable();
+        });
+
 
         addTooltipToRow();
     }

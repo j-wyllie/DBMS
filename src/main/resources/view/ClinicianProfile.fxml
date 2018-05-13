@@ -189,20 +189,20 @@
                                         <TableView fx:id="searchTable" prefHeight="461.0" prefWidth="1178.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                             <columns>
                                                 <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
-                                                <TableColumn fx:id="ageColumn" prefWidth="107.0" text="Age" />
-                                                <TableColumn fx:id="genderColumn" prefWidth="138.0" text="Gender" />
+                                                <TableColumn fx:id="ageColumn" prefWidth="117.0" text="Age" />
+                                                <TableColumn fx:id="genderColumn" prefWidth="128.0" text="Gender" />
                                                 <TableColumn fx:id="regionColumn" prefWidth="226.0" text="Region" />
                                             </columns>
                                         </TableView>
                                  </children>
                               </GridPane>
                                   <TextField fx:id="searchField" layoutX="24.0" layoutY="14.0" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="232.0" promptText="Enter name" />
-                              <CheckComboBox fx:id="organsCombobox" layoutX="736.0" layoutY="14.0" onContextMenuRequested="#handleSearchDonors" onInputMethodTextChanged="#handleSearchDonors" onMouseClicked="#handleSearchDonors" onMousePressed="#handleSearchDonors" onMouseReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="116.0" />
-                              <CheckComboBox fx:id="genderCombobox" layoutX="385.0" layoutY="14.0" onContextMenuRequested="#handleSearchDonors" onInputMethodTextChanged="#handleSearchDonors" onMouseClicked="#handleSearchDonors" onMousePressed="#handleSearchDonors" onMouseReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="117.0" />
+                              <CheckComboBox fx:id="organsCombobox" layoutX="736.0" layoutY="14.0" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="116.0" />
+                              <CheckComboBox fx:id="genderCombobox" layoutX="410.0" layoutY="14.0" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="97.0" />
                               <TextField fx:id="regionField" layoutX="528.0" layoutY="14.0" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="188.0" promptText="Region" />
-                              <TextField fx:id="ageField" layoutX="287.0" layoutY="14.0" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="53.0" promptText="Age" />
-                              <CheckComboBox fx:id="typeCombobox" layoutX="874.0" layoutY="14.0" onContextMenuRequested="#handleSearchDonors" onInputMethodTextChanged="#handleSearchDonors" onMousePressed="#handleSearchDonors" onMouseReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="115.0" />
-                              <Button fx:id="applyFilterButton" layoutX="1022.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleApplyFilterButton" text="Apply Filter" />
+                              <TextField fx:id="ageField" layoutX="273.0" layoutY="2.0" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="122.0" promptText="Age" />
+                              <CheckComboBox fx:id="typeCombobox" layoutX="874.0" layoutY="14.0" onInputMethodTextChanged="#handleSearchDonors" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="115.0" />
+                              <TextField fx:id="ageRangeField" layoutX="273.0" layoutY="34.0" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="123.0" promptText="Age range (optional)" />
                               </children>
                           </AnchorPane>
                       </content>

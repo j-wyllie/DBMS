@@ -197,11 +197,11 @@ public class ProfileDatabase {
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, String regionSearchString, List selectedGenders, List selectedTypes, List selectedOrgans) {
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, List selectedGenders, List selectedTypes, List selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles = getProfiles(false);
 
-        //parsing out organs as strings for use
+        //parsing out organs as strings for later use
         List<String> selectedOrgansStrings = new ArrayList<>();
         if (selectedOrgans != null) {
             for (int i = 0; i< selectedOrgans.size(); i++) {
@@ -215,6 +215,8 @@ public class ProfileDatabase {
                 selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
             }
         }
+
+
 
         //need some data for testing, test data not fully populated i think--------
         resultProfiles.forEach(profile -> profile.setGender("male"));
@@ -230,14 +232,23 @@ public class ProfileDatabase {
         resultProfiles.get(0).setDonor(false);
         // ------------------------------------------------------------------------
 
+
+
         if (searchString.equals("") && searchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()) {
             return getProfiles(false);
         }
 
         //definitely need a better way than just a magic number lol
         if (ageSearchInt != -999) {
-            resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
+            if (ageRangeSearchInt != -999) {
+                //use a range
+                if (ageRangeSearchInt > ageSearchInt ) {resultProfiles.removeIf(profile -> ((profile.getAge() > ageRangeSearchInt) || (profile.getAge() < ageSearchInt))); }
+                else { resultProfiles.removeIf(profile -> ((profile.getAge() < ageRangeSearchInt) || (profile.getAge() > ageSearchInt))); }
 
+            } else {
+                //just the age specified
+                resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
+            }
         }
 
         //todo i think region might need some work, not initialized in test data? same as some genders
