@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.enums.OrganSelectEnum;
@@ -37,15 +36,26 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
      * Override the Cell Formatting for colour highlighting.
      */
     class HighlightedCell extends ListCell<String> {
+        private final String highlight = "cell-highlighted";
+
         @Override
         protected void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
+
+            // Handle null item case
+            if (item == null) {
+                setText("");
+                getStyleClass().remove(highlight);
+                return;
+            }
+
             setText(item);
 
             if (checkList.contains(item)) {
-                setTextFill(Color.RED);
+                getStyleClass().add(highlight);
+
             } else {
-                setTextFill(Color.BLACK);
+                getStyleClass().remove(highlight);
             }
         }
     }
