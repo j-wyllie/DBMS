@@ -6,14 +6,34 @@ import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
+import odms.data.UserDataIO;
+import odms.data.UserDatabase;
+
+import java.io.File;
 
 public class App {
     private static final String DONOR_DATABASE = "example/example.json";
-    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+    private static final String USER_DATABASE = "example/users.json";
+    private static ProfileDatabase profileDb;
+    private static UserDatabase userDb;
 
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");
         try {
+
+            File userDbFile = new File(USER_DATABASE);
+            if (!userDbFile.isFile()) {
+                userDb = new UserDatabase();
+            } else {
+                userDb = UserDataIO.loadData(USER_DATABASE);
+            }
+
+            File profileDbFile = new File(DONOR_DATABASE);
+            if (!profileDbFile.isFile()) {
+                profileDb = new ProfileDatabase();
+            } else {
+                profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+            }
 
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);
@@ -31,4 +51,17 @@ public class App {
         }
 
     }
+
+    public static ProfileDatabase getProfileDb() {
+        return profileDb;
+    }
+
+    public static UserDatabase getUserDb() {
+        return userDb;
+    }
+
+    public void setCurrentDatabase(ProfileDatabase profileDb) {
+        profileDb = profileDb;
+    }
+
 }

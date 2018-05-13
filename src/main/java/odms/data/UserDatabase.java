@@ -1,7 +1,8 @@
 package odms.data;
 
-import java.util.HashMap;
 import odms.user.User;
+
+import java.util.HashMap;
 
 public class UserDatabase {
 
@@ -12,19 +13,66 @@ public class UserDatabase {
     /**
      * Find clinician by ID
      *
-     * @param id unique ID for requested clinician
+     * @param id unique ID for requested User
      * @return User object
      */
-    public User getClinician(Integer id){
-        return userDb.get(id);
+    public User getUser(Integer id) throws Exception {
+
+        User user = userDb.get(id);
+        if (user == null) {
+            throw new Exception();
+        }
+        return user;
+    }
+
+    // TODO REMOVE THE EXCEPTION() AND MAKE IT PROPER
+    /**
+     * find user by username
+     *
+     * @param username username requested
+     * @return the user object.
+     */
+    public User getUser(String username) throws Exception {
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null) {
+                if (value.getUsername().equals(username)) {
+                    return value;
+                }
+            }
+        }
+        throw new Exception();
+    }
+    /**
+     * Checks whether a user exists in the database with a certain username
+     * @param username Username to be searched for
+     * @return Boolean based on whether the user exists or not.
+     */
+    public Boolean isUser(String username) {
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null) {
+                if (value.getUsername().equals(username)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
-     * Determine unique ID for profile and add the profile the the database
+     * Checks whether a user exists in the database with a certain user id
+     * @param userId Id to be searched for
+     * @return Boolean based on whether the user exists or not.
+     */
+    public Boolean isUser(Integer userId) {
+        return userDb.containsKey(userId);
+    }
+
+    /**
+     * Determine unique ID for the user and add the user to the database
      *
      * @param user new user object
      */
-    public void addClinician(User user){
+    public void addUser(User user){
         lastID += 1;
         user.setStaffId(lastID);
 

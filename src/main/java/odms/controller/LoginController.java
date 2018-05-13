@@ -1,22 +1,19 @@
 package odms.controller;
 
-import static odms.controller.AlertController.invalidEntry;
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.GuiMain.getUserDatabase;
-
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
 import odms.user.User;
+
+import java.io.IOException;
+
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.GuiMain.getUserDatabase;
 
 public class LoginController extends CommonController {
 
@@ -39,31 +36,52 @@ public class LoginController extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     *
      * @param event clicking on the login button.
      */
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
+        String scene;
+        String title;
+
         try {
             if (!usernameField.getText().equals("")) {
-                int userId = Integer.valueOf(usernameField.getText());
 
-                if (userId == 0) {
-                    currentUser = userDatabase.getClinician(0);
-                    String scene = "/view/ClinicianProfile.fxml";
-                    String title = "Clinician";
-                    showScene(event, scene, title, true);
+                String username = usernameField.getText();
+                if (username.equals("admin")) {
+                    try {
+                        currentUser = userDatabase.getUser("admin");
+                        System.out.println(currentUser.getName());
+                        scene = "/view/ClinicianProfile.fxml";
+                        title = "Clinician";
+                        showScene(event, scene, title, true);
+                    } catch (Exception e) {
+                        invalidUsername();
+                    }
+
                 } else {
-                    currentProfile = currentDatabase.getProfile(userId);
+                    System.out.println("REEEE");
+                    int userId = Integer.valueOf(usernameField.getText());
 
-                    if (currentProfile != null) {
-                        String scene = "/view/ProfileDisplay.fxml";
-                        String title = "Profile";
+                    if (userId == 0) {
+                        currentUser = userDatabase.getUser(0);
+                        scene = "/view/ClinicianProfile.fxml";
+                        title = "Clinician";
                         showScene(event, scene, title, true);
                     } else {
-                        invalidUsername();
+                        currentProfile = currentDatabase.getProfile(userId);
+
+                        if (currentProfile != null) {
+                            scene = "/view/ProfileDisplay.fxml";
+                            title = "Profile";
+                            showScene(event, scene, title, true);
+                        } else {
+                            invalidUsername();
+                        }
                     }
                 }
             }
+
         } catch (NumberFormatException e) {
 
             invalidEntry();
@@ -77,6 +95,7 @@ public class LoginController extends CommonController {
 
     /**
      * Scene change to create account view.
+     *
      * @param event clicking on the create new account link.
      * @throws IOException
      */
@@ -97,6 +116,11 @@ public class LoginController extends CommonController {
         handleLoginButtonClicked(event);
     }
 
-    public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentDonor(Integer id) {
+        currentProfile = currentDatabase.getProfile(id);
+    }
 }

@@ -1,14 +1,5 @@
 package odms.controller;
 
-import static odms.controller.LoginController.getCurrentUser;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,12 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -30,9 +16,19 @@ import odms.profile.Profile;
 import odms.user.User;
 import org.controlsfx.control.table.TableFilter;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static odms.controller.LoginController.getCurrentUser;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+
 public class ClinicianProfileController extends CommonController {
 
-    private static User currentUser = getCurrentUser();
+    private User currentUser = getCurrentUser();
 
     @FXML
     private Label clinicianFullName;
@@ -303,7 +299,6 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
