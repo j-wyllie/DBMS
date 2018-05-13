@@ -17,7 +17,7 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-public class CommandLine {
+public class CommandLine implements Runnable {
 
     private ProfileDatabase currentDatabase;
     private LineReader reader;
@@ -41,6 +41,10 @@ public class CommandLine {
             e.printStackTrace();
         }
 
+    }
+
+    public void run() {
+        initialiseConsole();
     }
 
     /**

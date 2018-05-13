@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +22,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import odms.App;
 import odms.cli.CommandGUI;
+import odms.cli.CommandLine;
+import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
+import odms.data.UserDataIO;
+import odms.data.UserDatabase;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
@@ -298,7 +306,7 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() throws IOException {
 
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
@@ -311,6 +319,19 @@ public class ClinicianProfileController extends CommonController {
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 
+        // Initialize command line GUI
         commandGUI = new CommandGUI(displayTextArea, inputTextField);
+        System.setOut(commandGUI.getOut());
+        System.setIn(commandGUI.getIn());
+        System.setErr(commandGUI.getOut());
+
+
+
+        System.out.println("testing the cli--------");
+        CommandLine commandLine = new CommandLine(App.profileDb);
+        //commandLine.initialiseConsole();
+
+        Thread t = new Thread(commandLine);
+        t.start();
     }
 }
