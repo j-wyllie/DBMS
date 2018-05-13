@@ -24,13 +24,13 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     private ObservableList<String> observableListReceiving = FXCollections.observableArrayList();
 
     @FXML
-    private ListView<String> tableDonated;
+    private ListView<String> listViewDonated;
 
     @FXML
-    private ListView<String> tableDonating;
+    private ListView<String> listViewDonating;
 
     @FXML
-    private ListView<String> tableReceiving;
+    private ListView<String> listViewReceiving;
 
     /**
      * Override the Cell Formatting for colour highlighting.
@@ -65,12 +65,12 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
         populateOrganLists();
 
-        tableDonating.setCellFactory(param -> new HighlightedCell());
-        tableReceiving.setCellFactory(param -> new HighlightedCell());
+        listViewDonating.setCellFactory(param -> new HighlightedCell());
+        listViewReceiving.setCellFactory(param -> new HighlightedCell());
 
-        tableDonated.setItems(observableListDonated);
-        tableDonating.setItems(observableListDonating);
-        tableReceiving.setItems(observableListReceiving);
+        listViewDonated.setItems(observableListDonated);
+        listViewDonating.setItems(observableListDonating);
+        listViewReceiving.setItems(observableListReceiving);
     }
 
     @FXML
@@ -110,9 +110,9 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
      * Refresh the ListViews to reflect changes made from the edit pane.
      */
     private void refreshListViews() {
-        tableDonated.refresh();
-        tableDonating.refresh();
-        tableReceiving.refresh();
+        listViewDonated.refresh();
+        listViewDonating.refresh();
+        listViewReceiving.refresh();
     }
 
     /**
