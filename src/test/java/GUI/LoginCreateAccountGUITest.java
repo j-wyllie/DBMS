@@ -92,7 +92,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         //tests invalid date format
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
-        clickOn("#dobField").write("14.11.1997");
+            //clickOn("#dobField").write("14.11.1997");
         clickOn("#irdField").write("100132122");
         clickOn("#createAccountButton");
 

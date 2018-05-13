@@ -16,15 +16,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import odms.cli.CommandGUI;
 import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
@@ -73,11 +69,19 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TableView transplantTable;
 
+    @FXML
+    private TextArea displayTextArea;
+
+    @FXML
+    private TextField inputTextField;
+
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    private CommandGUI commandGUI;
 
     /**
      * Scene change to log in view.
@@ -304,9 +308,9 @@ public class ClinicianProfileController extends CommonController {
             e.printStackTrace();
         }
 
-
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 
+        commandGUI = new CommandGUI(displayTextArea, inputTextField);
     }
 }
