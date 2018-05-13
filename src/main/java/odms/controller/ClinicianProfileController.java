@@ -391,6 +391,7 @@ public class ClinicianProfileController extends CommonController {
             e.printStackTrace();
         }
 
+
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 

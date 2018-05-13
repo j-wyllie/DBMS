@@ -218,18 +218,10 @@ public class ProfileDatabase {
 
 
 
-        //need some data for testing, test data not fully populated i think--------
-        resultProfiles.forEach(profile -> profile.setGender("male"));
-        //resultProfiles.forEach(profile -> profile.setReceiver(false));
-
-        resultProfiles.get(0).setGender("female");
-        resultProfiles.get(3).setGender("female");
-        resultProfiles.get(7).setGender("female");
-        resultProfiles.get(10).setGender("female");
-        resultProfiles.get(11).setGender("female");
-
-        resultProfiles.get(0).setReceiver(true);
-        resultProfiles.get(0).setDonor(false);
+        //need some data for testing-----------------------------------------------
+        //TODO need profiles to be automatically set as donor or receiver etc
+        //resultProfiles.get(0).setReceiver(true);
+        //resultProfiles.get(0).setDonor(false);
         // ------------------------------------------------------------------------
 
 
@@ -251,8 +243,6 @@ public class ProfileDatabase {
             }
         }
 
-        //todo i think region might need some work, not initialized in test data? same as some genders
-        //resultProfiles.forEach(profile -> System.out.println(profile.getRegion()));          // <<<<<< they are all null
 
         if (!regionSearchString.equals("")) {
             resultProfiles.removeIf(profile -> !profile.getRegion().equals(regionSearchString));
