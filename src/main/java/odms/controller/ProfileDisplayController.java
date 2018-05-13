@@ -229,9 +229,6 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Button buttonViewActiveIngredients;
 
-    @FXML
-    private ProfileOrganOverviewController profileOrganDisplayController;
-
     /**
      * Text for showing recent edits.
      */
@@ -1314,22 +1311,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void initialize() {
-        curConditionsTable.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-        pastConditionsTable.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-
-        tableViewCurrentMedications.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-        tableViewHistoricMedications.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-
-        curChronicColumn.setSortable(false);
-
         if (currentProfile == null) {
             currentProfile = LoginController.getCurrentProfile();
         }
@@ -1338,13 +1319,22 @@ public class ProfileDisplayController extends CommonController {
             setPage(currentProfile);
 
             refreshMedicationsTable();
-            makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
+            makeProcedureTable(
+                    currentProfile.getPreviousProcedures(),
+                    currentProfile.getPendingProcedures()
+            );
         }
 
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        curChronicColumn.setSortable(false);
+
         hideItems();
-
         refreshPageElements();
-
         disableTableHeaderReorder();
     }
 
