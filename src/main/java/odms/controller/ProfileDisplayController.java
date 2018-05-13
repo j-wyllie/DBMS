@@ -191,6 +191,9 @@ public class ProfileDisplayController extends CommonController {
     private Button buttonMedicationHistoricToCurrent;
 
     @FXML
+    private Button buttonSaveMedications;
+
+    @FXML
     private TextField textFieldMedicationSearch;
 
     @FXML
@@ -1217,6 +1220,17 @@ public class ProfileDisplayController extends CommonController {
             deleteConditionButton.setVisible(true);
             addNewProcedureButton.setVisible(true);
             deleteProcedureButton.setVisible(true);
+            buttonSaveMedications.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonShowDrugInteractions.setVisible(true);
+            buttonViewActiveIngredients.setVisible(true);
+            buttonAddMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+            tableViewActiveIngredients.setVisible(true);
+            tableViewDrugInteractionsNames.setVisible(true);
+            tableViewDrugInteractions.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1231,6 +1245,17 @@ public class ProfileDisplayController extends CommonController {
             deleteConditionButton.setVisible(false);
             addNewProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
+            buttonSaveMedications.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonShowDrugInteractions.setVisible(false);
+            buttonViewActiveIngredients.setVisible(false);
+            buttonAddMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
+            tableViewDrugInteractionsNames.setVisible(false);
+            tableViewDrugInteractions.setVisible(false);
         }
 
     }
