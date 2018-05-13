@@ -242,17 +242,25 @@ public class ProfileTest {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
-            testProfile.addOrgansDonatingFromString("bone, heart, cornea");
+
+            List<String> someOrgans = new ArrayList<>();
+            someOrgans.add("bone");
+            someOrgans.add("heart");
+            someOrgans.add("cornea");
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
             Set<OrganEnum> expected = new HashSet<>();
             expected.add(OrganEnum.BONE);
             expected.add(OrganEnum.HEART);
             expected.add(OrganEnum.CORNEA);
 
-            String expectedString = "heart, bone, cornea";
-            Set<String> expectedStrings = new HashSet<>(Arrays.asList(expectedString.split(", ")));
+            Set<String> expectedStrings = new HashSet<>(Arrays.asList(
+                    "Heart, Bone, Cornea".split(", "))
+            );
             Set<String> outputStrings = new HashSet<>(Arrays.asList(
-                    OrganEnum.organSetToString(testProfile.getOrgansDonating()).split(", ")));
+                    OrganEnum.organSetToString(
+                            testProfile.getOrgansDonating()).split(", "))
+            );
 
             assertEquals(expected, testProfile.getOrgansDonating());
             assertEquals(expectedStrings, outputStrings);
@@ -347,7 +355,7 @@ public class ProfileTest {
             someOrgans.add("bone");
             someOrgans.add("heart");
             someOrgans.add("cornea");
-            testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(someOrgans));
+            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
 
             List<String> removedOrgans = new ArrayList<>();
             removedOrgans.add("bone");
@@ -357,8 +365,8 @@ public class ProfileTest {
             Set<OrganEnum> expected = new HashSet<>();
             expected.add(OrganEnum.CORNEA);
 
-            assertEquals(testProfile.getOrgansDonated(), expected);
-        } catch (IllegalArgumentException e) {
+            assertEquals(expected, testProfile.getOrgansDonating());
+        } catch (IllegalArgumentException | OrganConflictException e) {
             // pass
         }
 
@@ -383,11 +391,11 @@ public class ProfileTest {
 
             testProfile.setDonor(true);
 
-            List<String> someOrgans = new ArrayList<>();
-            someOrgans.add("bone");
-            someOrgans.add("heart");
-            someOrgans.add("cornea");
-            testProfile.addOrgansDonating(OrganEnum.stringListToOrganSet(someOrgans));
+            List<String> addOrgans = new ArrayList<>();
+            addOrgans.add("bone");
+            addOrgans.add("heart");
+            addOrgans.add("cornea");
+            testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(addOrgans));
 
             List<String> removedOrgans = new ArrayList<>();
             removedOrgans.add("bone");
@@ -397,11 +405,35 @@ public class ProfileTest {
             Set<OrganEnum> expected = new HashSet<>();
             expected.add(OrganEnum.CORNEA);
 
-            assertEquals(testProfile.getOrgansDonating(), expected);
+            assertEquals(expected, testProfile.getOrgansDonated());
 
-        } catch (IllegalArgumentException | OrganConflictException e) {
+        } catch (IllegalArgumentException e) {
             // pass
         }
+    }
+
+    /**
+     * Test that a profile cannot donate an organ they have received.
+     */
+    @Test(expected = OrganConflictException.class)
+    public void testOrganDonateReceiveConflict() throws OrganConflictException {
+        ArrayList<String> profileAttr = new ArrayList<>();
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"17-01-1998\"");
+        profileAttr.add("ird=\"123456879\"");
+
+        Profile testProfile;
+
+        testProfile = new Profile(profileAttr);
+        testProfile.setDonor(true);
+
+        HashSet<OrganEnum> organs = new HashSet<>();
+        organs.add(OrganEnum.BONE);
+        organs.add(OrganEnum.INTESTINE);
+
+        testProfile.addOrgansReceived(organs);
+        testProfile.addOrgansDonating(organs);
     }
 
     /**

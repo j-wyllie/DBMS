@@ -304,21 +304,6 @@ public class Profile {
     }
 
     /**
-     * Add a comma delimited organ string to the Organs Donating
-     * @param organString the Comma delimited organ string
-     * @throws OrganConflictException if there is a conflicting organ
-     */
-    public void addOrgansDonatingFromString(String organString) throws OrganConflictException {
-        String[] organStrings = organString.split("(,\\s+|,)");
-
-        for (String organ : organStrings) {
-            organsDonating.add(OrganEnum.valueOf(organ));
-        }
-
-        addOrgansDonating(organsDonating);
-    }
-
-    /**
      * Adds a csv list to the list of donations
      * @param organString the organs to add as a csv
      */
@@ -727,14 +712,15 @@ public class Profile {
         return organsDonating;
     }
 
-
     // Condition functions
 
     /**
      * Gets all the current conditions of the user
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() { return conditions; }
+    public ArrayList<Condition> getAllConditions() {
+        return this.conditions;
+    }
 
     /**
      * Gets all the cured conditions of the user
@@ -742,15 +728,12 @@ public class Profile {
      */
     public ArrayList<Condition> getCuredConditions() {
         ArrayList<Condition> curedConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (condition.getCured()) {
-                    curedConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (condition.getCured()) {
+                curedConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
+
         return curedConditions;
     }
 
@@ -760,14 +743,10 @@ public class Profile {
      */
     public ArrayList<Condition> getCurrentConditions() {
         ArrayList<Condition> currentConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (!condition.getCured()) {
-                    currentConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (!condition.getCured()) {
+                currentConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
         return currentConditions;
     }
@@ -777,8 +756,7 @@ public class Profile {
      * @param condition to be added
      */
     public void addCondition(Condition condition) {
-        if (conditions == null) { conditions = new ArrayList<>(); }
-        conditions.add(condition);
+        this.conditions.add(condition);
     }
 
     /**
@@ -786,19 +764,20 @@ public class Profile {
      * @param condition to be removed
      */
     public void removeCondition(Condition condition) {
-        conditions.remove(condition);
+        this.conditions.remove(condition);
     }
-    // -------
 
     public LocalDateTime getTimeOfCreation() {
-        return timeOfCreation;
+        return this.timeOfCreation;
     }
 
     public String getGivenNames() {
-        return givenNames;
+        return this.givenNames;
     }
 
-    public String getFullName() { return givenNames + " " + lastNames; }
+    public String getFullName() {
+        return givenNames + " " + lastNames;
+    }
 
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");

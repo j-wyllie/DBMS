@@ -46,8 +46,6 @@ public class Procedure {
     public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
     public void setOrgansAffected(ArrayList<OrganEnum> organs) { this.organsAffected = organs; }
 
-    // organ methods
-
     /**
      * Adds an organ to the list of affected organs for this procedure
      * @param profile
@@ -61,6 +59,7 @@ public class Procedure {
             throw new IllegalArgumentException("Not an organ with donor status on this profile");
         }
     }
+
     public void removeAffectedOrgen(OrganEnum organ) {
         organsAffected.remove(organ);
     }
