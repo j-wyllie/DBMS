@@ -80,6 +80,23 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     }
 
     /**
+     * Support function to detect organs removed from the selected list view.
+     * @param currentOrgans the current organ list to detect against
+     * @param changedOrgans changed organs list to search with
+     * @return a list of organs to remove from the profile
+     */
+    private HashSet<OrganEnum> findOrgansRemoved(HashSet<OrganEnum> currentOrgans,
+            HashSet<OrganEnum> changedOrgans) {
+        HashSet<OrganEnum> organsRemoved = new HashSet<>();
+        for (OrganEnum organ : currentOrgans) {
+            if (!changedOrgans.contains(organ)) {
+                organsRemoved.add(organ);
+            }
+        }
+        return organsRemoved;
+    }
+
+    /**
      * Button to perform moving the organ from one ListView to the other ListView
      */
     private void handleBtnOrganSwitchClicked() {
@@ -125,20 +142,33 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        HashSet<OrganEnum> organs = ProfileOrganEditController.observableListStringsToOrgans(
+        HashSet<OrganEnum> organsAdded = ProfileOrganEditController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
+        HashSet<OrganEnum> organsRemoved;
 
         switch (windowType) {
             case DONATED:
-                currentProfile.addOrgansDonated(organs);
+                organsRemoved = findOrgansRemoved(
+                        currentProfile.getOrgansDonated(),
+                        organsAdded
+                );
+
+                currentProfile.addOrgansDonated(organsAdded);
+                currentProfile.removeOrgansDonated(organsRemoved);
                 break;
             case DONATING:
-                currentProfile.setDonor(true);
-
                 try {
-                    organs.removeAll(currentProfile.getOrgansDonating());
-                    currentProfile.addOrgansDonating(organs);
+                    currentProfile.setDonor(true);
+
+                    organsRemoved = findOrgansRemoved(
+                            currentProfile.getOrgansDonating(),
+                            organsAdded
+                    );
+
+                    organsAdded.removeAll(currentProfile.getOrgansDonating());
+                    currentProfile.addOrgansDonating(organsAdded);
+                    currentProfile.removeOrgansDonating(organsRemoved);
                 } catch (OrganConflictException e) {
                     AlertController.invalidOrgan(e.getOrgan());
                 }
@@ -146,7 +176,13 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
             case REQUIRED:
                 currentProfile.setReceiver(true);
 
-                currentProfile.addOrgansRequired(organs);
+                organsRemoved = findOrgansRemoved(
+                        currentProfile.getOrgansRequired(),
+                        organsAdded
+                );
+
+                currentProfile.addOrgansRequired(organsAdded);
+                currentProfile.removeOrgansRequired(organsRemoved);
                 break;
         }
 
@@ -191,18 +227,14 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Take the selected organ from the ListView and move it to the other ListView.
      */
     private void switchOrgans() {
-        final int selectedIdxAvailable = viewOrgansAvailable.getFocusModel().getFocusedIndex();
-        if (selectedIdxAvailable != -1) {
-            String itemToRemove = viewOrgansAvailable.getSelectionModel().getSelectedItem();
-            observableListOrgansAvailable.remove(itemToRemove);
-            observableListOrgansSelected.add(itemToRemove);
-        } else {
-            final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
-            if(selectedIdxRequired != -1) {
-                String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
-                observableListOrgansSelected.remove(itemToRemove);
-                observableListOrgansAvailable.add(itemToRemove);
-            }
+        if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
+            String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
+            observableListOrgansAvailable.remove(item);
+            observableListOrgansSelected.add(item);
+        } else if (viewOrgansRequired.getSelectionModel().getSelectedIndex() != -1) {
+            String item = viewOrgansRequired.getSelectionModel().getSelectedItem();
+            observableListOrgansSelected.remove(item);
+            observableListOrgansAvailable.add(item);
         }
 
         Collections.sort(observableListOrgansSelected);

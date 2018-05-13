@@ -566,6 +566,35 @@ public class Profile {
         }
     }
 
+    /**
+     * Remove a set of organs from the list of organs required.
+     * @param organs a set of organs to be removed
+     */
+    public void removeOrgansRequired(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsReceiving");
+
+        for (OrganEnum organ : organs) {
+            this.organsRequired.remove(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs required " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+        }
+    }
+
 
     public void setReceiver(boolean receiver) {
         this.receiver = receiver;
