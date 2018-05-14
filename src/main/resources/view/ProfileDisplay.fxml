@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -22,7 +28,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -538,13 +544,14 @@
                                           </GridPane>
                                        </children>
                                     </TilePane>
-                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="5">
+                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5">
                                        <children>
-                                          <GridPane prefHeight="61.0" prefWidth="469.0">
+                                          <GridPane prefHeight="62.0" prefWidth="820.0">
                                             <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="50.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="69.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.0" minWidth="10.0" prefWidth="144.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="177.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="177.0" />
                                             </columnConstraints>
                                             <rowConstraints>
@@ -557,6 +564,7 @@
                                                 <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDeleteMedication" onMouseClicked="#editTrueClick" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                  <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                 <Button fx:id="buttonSaveMedications" mnemonicParsing="false" onAction="#handleSaveMedications" text="Save" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonViewMedicationHistory" mnemonicParsing="false" onAction="#handleViewMedicationHistory" text="View Medication History" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
                                              </children>
                                           </GridPane>

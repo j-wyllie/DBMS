@@ -12,7 +12,6 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +19,6 @@ import java.util.*;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +32,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -248,6 +245,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Button buttonViewActiveIngredients;
+
+    @FXML
+    private Button buttonViewMedicationHistory;
 
     /**
      * Text for showing recent edits.
@@ -908,6 +908,27 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
+     * Button handler to open medicationHistory scene
+     * @param event clicking on delete button.
+     * @throws IOException If MedicationHistory fxml is not found.
+     */
+    @FXML
+    private void handleViewMedicationHistory(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/MedicationHistory.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        MedicationHistory controller = fxmlLoader.getController();
+        controller.setProfile(searchedDonor);
+        controller.initialize();
+        Stage stage = new Stage();
+        stage.setTitle("Medication History");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    /**
      * Set the listener for the change of value in the medication search field. Also binds the
      * suggestion list to the field, and a listener for the enter key to add the drug to the current
      * medication table.
@@ -1216,6 +1237,7 @@ public class ProfileDisplayController extends CommonController {
             tableViewActiveIngredients.setVisible(true);
             tableViewDrugInteractionsNames.setVisible(true);
             tableViewDrugInteractions.setVisible(true);
+            buttonViewMedicationHistory.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1241,6 +1263,7 @@ public class ProfileDisplayController extends CommonController {
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
+            buttonViewMedicationHistory.setVisible(false);
         }
 
     }
