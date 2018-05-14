@@ -181,16 +181,16 @@
                                     <ColumnConstraints hgrow="NEVER" maxWidth="248.0" minWidth="10.0" prefWidth="75.0" />
                                     <ColumnConstraints hgrow="NEVER" maxWidth="248.0" minWidth="3.0" prefWidth="16.0" />
                                     <ColumnConstraints hgrow="NEVER" maxWidth="248.0" minWidth="10.0" prefWidth="72.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="248.0" minWidth="10.0" prefWidth="63.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="338.0" minWidth="10.0" prefWidth="210.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="296.0" minWidth="10.0" prefWidth="182.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="296.0" minWidth="10.0" prefWidth="44.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="254.0" minWidth="10.0" prefWidth="124.0" />
-                                    <ColumnConstraints hgrow="NEVER" maxWidth="245.0" minWidth="10.0" prefWidth="118.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="248.0" minWidth="10.0" prefWidth="32.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="338.0" minWidth="10.0" prefWidth="173.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="296.0" minWidth="10.0" prefWidth="154.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="296.0" minWidth="10.0" prefWidth="41.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="254.0" minWidth="10.0" prefWidth="141.0" />
+                                    <ColumnConstraints hgrow="NEVER" maxWidth="245.0" minWidth="10.0" prefWidth="193.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
-                                  <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
+                                    <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="31.0" vgrow="NEVER" />
+                                  <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="39.0" vgrow="NEVER" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints />
                                 </rowConstraints>
@@ -202,18 +202,21 @@
                                             <columns>
                                                 <TableColumn fx:id="fullNameColumn" prefWidth="280.99998474121094" text="Full Name" />
                                                 <TableColumn fx:id="ageColumn" prefWidth="211.0" text="Age" />
-                                                <TableColumn fx:id="genderColumn" prefWidth="214.0" text="Gender" />
-                                                <TableColumn fx:id="regionColumn" prefWidth="328.0" text="Region" />
+                                                <TableColumn fx:id="genderColumn" prefWidth="150.0" text="Gender" />
+                                                <TableColumn fx:id="regionColumn" prefWidth="392.0" text="Region" />
                                             </columns>
                                         </TableView>
-                                        <TextField fx:id="searchField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="249.0" promptText="Enter name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <CheckComboBox fx:id="genderCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="155.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                    <TextField fx:id="regionField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="188.0" promptText="Region" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                    <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="108.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                                        <TextField fx:id="searchField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="249.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <CheckComboBox fx:id="genderCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="140.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                    <TextField fx:id="regionField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="140.0" promptText="Region" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                                    <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
                                     <TextField fx:id="ageField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="66.0" promptText="Age" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                    <CheckComboBox fx:id="typeCombobox" onInputMethodTextChanged="#handleSearchDonors" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="97.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                    <CheckComboBox fx:id="typeCombobox" onInputMethodTextChanged="#handleSearchDonors" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
                                     <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" text="Age range" GridPane.columnIndex="3" GridPane.columnSpan="3" />
                                     <TextField fx:id="ageRangeField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="104.0" promptText="Upper age" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="84.0" text="Gender filter" GridPane.columnIndex="7" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Donating organs filter" GridPane.columnIndex="10" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Type filter" GridPane.columnIndex="11" />
                                  </children>
                               </GridPane>
                               </children>
