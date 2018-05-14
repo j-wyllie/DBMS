@@ -25,9 +25,9 @@
                </styleClass></Label>
             <GridPane alignment="CENTER" GridPane.rowIndex="1">
               <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="244.0" minWidth="0.0" prefWidth="34.0" />
-                <ColumnConstraints maxWidth="461.0" minWidth="10.0" prefWidth="461.0" />
-                  <ColumnConstraints hgrow="ALWAYS" maxWidth="130.0" minWidth="10.0" prefWidth="49.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="440.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="0.0" prefWidth="80.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
