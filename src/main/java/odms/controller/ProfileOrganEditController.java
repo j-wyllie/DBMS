@@ -44,7 +44,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     public void initialize() {
         bannerLabel.setText(windowType.toString());
 
-        if (currentProfile != null) {
+        if (currentProfile.get() != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
             buildOrgansSelected();
@@ -66,13 +66,13 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         switch (windowType) {
             case DONATED:
-                organs = currentProfile.getOrgansDonated();
+                organs = currentProfile.get().getOrgansDonated();
                 break;
             case DONATING:
-                organs = currentProfile.getOrgansDonating();
+                organs = currentProfile.get().getOrgansDonating();
                 break;
             case REQUIRED:
-                organs = currentProfile.getOrgansRequired();
+                organs = currentProfile.get().getOrgansRequired();
                 break;
         }
 
@@ -150,39 +150,39 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
         switch (windowType) {
             case DONATED:
                 organsRemoved = findOrgansRemoved(
-                        currentProfile.getOrgansDonated(),
+                        currentProfile.get().getOrgansDonated(),
                         organsAdded
                 );
 
-                currentProfile.addOrgansDonated(organsAdded);
-                currentProfile.removeOrgansDonated(organsRemoved);
+                currentProfile.get().addOrgansDonated(organsAdded);
+                currentProfile.get().removeOrgansDonated(organsRemoved);
                 break;
             case DONATING:
                 try {
-                    currentProfile.setDonor(true);
+                    currentProfile.get().setDonor(true);
 
                     organsRemoved = findOrgansRemoved(
-                            currentProfile.getOrgansDonating(),
+                            currentProfile.get().getOrgansDonating(),
                             organsAdded
                     );
 
-                    organsAdded.removeAll(currentProfile.getOrgansDonating());
-                    currentProfile.addOrgansDonating(organsAdded);
-                    currentProfile.removeOrgansDonating(organsRemoved);
+                    organsAdded.removeAll(currentProfile.get().getOrgansDonating());
+                    currentProfile.get().addOrgansDonating(organsAdded);
+                    currentProfile.get().removeOrgansDonating(organsRemoved);
                 } catch (OrganConflictException e) {
                     AlertController.invalidOrgan(e.getOrgan());
                 }
                 break;
             case REQUIRED:
-                currentProfile.setReceiver(true);
+                currentProfile.get().setReceiver(true);
 
                 organsRemoved = findOrgansRemoved(
-                        currentProfile.getOrgansRequired(),
+                        currentProfile.get().getOrgansRequired(),
                         organsAdded
                 );
 
-                currentProfile.addOrgansRequired(organsAdded);
-                currentProfile.removeOrgansRequired(organsRemoved);
+                currentProfile.get().addOrgansRequired(organsAdded);
+                currentProfile.get().removeOrgansRequired(organsRemoved);
                 break;
         }
 
@@ -220,7 +220,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * @param profile the profile to operate against.
      */
     public void setCurrentProfile(Profile profile) {
-        this.currentProfile = profile;
+        this.currentProfile.set(profile);
     }
 
     /**

@@ -2,13 +2,15 @@ package odms.controller;
 
 import java.util.Collections;
 import java.util.Set;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class ProfileOrganCommonController {
-    protected Profile currentProfile;
+    protected ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
 
     protected ObservableList<String> observableListOrgansAvailable;
 
@@ -39,8 +41,8 @@ public class ProfileOrganCommonController {
         }
     }
 
-    public void setCurrentProfile(Profile profile) {
-        this.currentProfile = profile;
+    public ObjectProperty<Profile> getCurrentProfile() {
+        return currentProfile;
     }
 
 }

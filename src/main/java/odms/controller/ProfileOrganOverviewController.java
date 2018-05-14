@@ -61,10 +61,6 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     }
 
     public void initialize() {
-        currentProfile = LoginController.getCurrentProfile();
-
-        populateOrganLists();
-
         listViewDonating.setCellFactory(param -> new HighlightedCell());
         listViewReceiving.setCellFactory(param -> new HighlightedCell());
 
@@ -92,10 +88,10 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
      * Repopulate the ObservableLists with any Organ changes and repopulate the
      * check list for conflicting organs.
      */
-    private void populateOrganLists() {
-        populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
+    public void populateOrganLists() {
+        populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
+        populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
+        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
 
         checkList.clear();
 
@@ -130,7 +126,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
         Scene scene = new Scene(fxmlLoader.load());
         ProfileOrganEditController controller = fxmlLoader.getController();
-        controller.setCurrentProfile(currentProfile);
+        controller.setCurrentProfile(currentProfile.get());
         controller.initialize();
 
         Stage stage = new Stage();

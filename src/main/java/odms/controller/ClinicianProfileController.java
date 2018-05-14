@@ -171,7 +171,7 @@ public class ClinicianProfileController extends CommonController {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem());
             }
         });
 

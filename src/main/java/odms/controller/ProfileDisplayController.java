@@ -1,6 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.donorSaveChanges;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
@@ -10,7 +10,6 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,13 +17,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.*;
-
-import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,6 +43,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -57,7 +53,6 @@ import javafx.util.Duration;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
-import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
@@ -73,6 +68,15 @@ public class ProfileDisplayController extends CommonController {
     private ContextMenu suggestionMenu = new ContextMenu();
     private ObservableList<Condition> curConditionsObservableList;
     private ObservableList<Condition> pastConditionsObservableList;
+
+    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
+
+    // Displays in IntelliJ as unused but is a false positive
+    // The FXML includes operate this way and allow access to the instantiated controller.
+    @FXML
+    private AnchorPane profileOrganOverview;
+    @FXML
+    private ProfileOrganOverviewController profileOrganOverviewController;
 
     @FXML
     private Label donorFullNameLabel;
@@ -697,9 +701,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
-        boolean saveBool = donorSaveChanges();
-
-        if (saveBool) {
+        if (profileSaveChanges()) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }
@@ -896,7 +898,7 @@ public class ProfileDisplayController extends CommonController {
 
         Scene scene = new Scene(fxmlLoader.load());
         MedicationHistory controller = fxmlLoader.getController();
-        controller.setProfile(searchedDonor);
+        controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();
         stage.setTitle("Medication History");
@@ -1288,11 +1290,8 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void refreshProcedureTable() {
-        Profile currentDonor;
-        if (currentProfile != null) {
-            currentDonor = currentProfile;
-        } else {
-            currentDonor = LoginController.getCurrentProfile();
+        if (currentProfile == null) {
+            currentProfile = LoginController.getCurrentProfile();
         }
 
         if (previousProceduresObservableList == null) {
@@ -1303,18 +1302,18 @@ public class ProfileDisplayController extends CommonController {
         }
 
         // update all procedures
-        if (currentDonor.getAllProcedures() != null) {
-            for (Procedure procedure : currentDonor.getAllProcedures()) {
+        if (currentProfile.getAllProcedures() != null) {
+            for (Procedure procedure : currentProfile.getAllProcedures()) {
                 procedure.update();
             }
         }
 
         pendingProcedureTable.getItems().clear();
         previousProcedureTable.getItems().clear();
-        if (currentDonor.getPendingProcedures() != null) {
-            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
-        if (currentDonor.getPreviousProcedures() != null) {
-            previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());
+        if (currentProfile.getPendingProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentProfile.getPendingProcedures());}
+        if (currentProfile.getPreviousProcedures() != null) {
+            previousProceduresObservableList.addAll(currentProfile.getPreviousProcedures());
         } else {
             return;
         }
@@ -1347,6 +1346,12 @@ public class ProfileDisplayController extends CommonController {
         return currentProfile;
     }
 
+    @FXML
+    private void onTabOrgansSelected() {
+        profileOrganOverviewController.getCurrentProfile().bind(currentProfileBound);
+        profileOrganOverviewController.populateOrganLists();
+    }
+
     /**
      * Sets the current donor attributes to the labels on start up.
      */
@@ -1354,6 +1359,7 @@ public class ProfileDisplayController extends CommonController {
     public void initialize() {
         if (currentProfile == null) {
             currentProfile = LoginController.getCurrentProfile();
+            currentProfileBound.set(currentProfile);
         }
 
         if (currentProfile != null) {
@@ -1387,6 +1393,7 @@ public class ProfileDisplayController extends CommonController {
     public void setProfileViaClinician(Profile profile) {
         isOpenedByClinician = true;
         currentProfile = profile;
+        setPage(currentProfile);
     }
 
     /**
