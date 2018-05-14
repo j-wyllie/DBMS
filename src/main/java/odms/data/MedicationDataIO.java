@@ -268,13 +268,13 @@ public class MedicationDataIO {
             ageGroup = entry.getKey();
             if (ageGroup.equals("nan")) {
                 return interactions;
-            } else if (ageGroup.equals("60+") && age > 60) {
+            } else if (ageGroup.equals("60+") && age >= 60) {
                 interactionArray = entry.getValue().getAsJsonArray();
                 for (JsonElement value : interactionArray) {
                     interactions.put(value.toString().replace("\"", ""), "");
                 }
                 return interactions;
-            } else {
+            } else if (!ageGroup.equals("60+")) {
                 ageGroupArray = ageGroup.split("-");
                 lowerBound = Integer.parseInt(ageGroupArray[0]);
                 upperBound = Integer.parseInt(ageGroupArray[1]);
