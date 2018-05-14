@@ -11,14 +11,16 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,6 +50,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
@@ -904,31 +907,6 @@ public class ProfileDisplayController extends CommonController {
         refreshMedicationsTable();
     }
 
-
-    private void delayedRequest(String substring) {
-        new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            ArrayList<String> suggestions = getSuggestionList(substring);
-                            ArrayList<MenuItem> menuItems = new ArrayList<>();
-                            for (String drug : suggestions) {
-                                menuItems.add(new Menu(drug));
-                            }
-                            final ContextMenu suggestionMenu = new ContextMenu();
-                            suggestionMenu.getItems().setAll(menuItems);
-                            textFieldMedicationSearch.setContextMenu(suggestionMenu);
-                            suggestionMenu.show(textFieldMedicationSearch,
-                                    Side.BOTTOM, 0, 0);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 1000
-        );
-    }
-
     /**
      * Set the listener for the change of value in the medication search field. Also binds the
      * suggestion list to the field, and a listener for the enter key to add the drug to the current
@@ -938,28 +916,34 @@ public class ProfileDisplayController extends CommonController {
     private void setMedicationSearchFieldListener() {
         textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
             if (!oldValue.equals(newValue)) {
-//                delayedRequest(newValue);
-                try {
-                    ArrayList<String> suggestions = getSuggestionList(newValue);
-                    ArrayList<MenuItem> menuItems = new ArrayList<>();
-                    for (String drug : suggestions) {
-                        MenuItem temp = new MenuItem(drug);
-                        temp.setOnAction(event -> {
-                            MenuItem eventItem = (MenuItem)event.getTarget();
-                            textFieldMedicationSearch.setText(eventItem.getText());
-                            suggestionMenu.hide();
-                        });
-                        menuItems.add(temp);
-                    }
-                    suggestionMenu.getItems().setAll(menuItems);
-                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
-                    suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
-                    menuItems.clear();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                new Timeline(new KeyFrame(
+                    Duration.millis(1000),
+                    ae -> {
+
+                        try {
+                            System.out.println(newValue);
+                            ArrayList<String> suggestions = getSuggestionList(newValue);
+                            ArrayList<MenuItem> menuItems = new ArrayList<>();
+                            for (String drug : suggestions) {
+                                MenuItem temp = new MenuItem(drug);
+                                temp.setOnAction(event -> {
+                                    MenuItem eventItem = (MenuItem) event.getTarget();
+                                    textFieldMedicationSearch.setText(eventItem.getText());
+                                    suggestionMenu.hide();
+                                });
+                                menuItems.add(temp);
+                            }
+                            suggestionMenu.getItems().setAll(menuItems);
+                            textFieldMedicationSearch.setContextMenu(suggestionMenu);
+                            suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
+                            menuItems.clear();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    })).play();
             }
         });
+
         textFieldMedicationSearch.setOnKeyPressed(event -> {
 
             if (event.getCode() == KeyCode.ENTER) {
