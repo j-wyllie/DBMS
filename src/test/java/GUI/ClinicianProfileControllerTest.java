@@ -165,6 +165,20 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         clickOn(yesButton);
     }
 
+    @Test
+    public void searchProfileNameTest() {
+        // Search for profiles with name Jack Smith
+        clickOn("#searchTab");
+        clickOn("#searchField").write("Jack Smith");
+
+        doubleClickOn(row("#searchTable", 0));
+        Scene scene = getTopModalStage();
+
+        Label userIdLabel = (Label) scene.lookup("#userIdLabel");
+        Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
+        assertTrue(userId == 1);
+    }
+
     /**
      * @param tableSelector The id of the table that contains the cell wanted
      * @param row           row number
