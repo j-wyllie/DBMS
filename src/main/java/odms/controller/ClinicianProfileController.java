@@ -6,7 +6,6 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
@@ -172,7 +170,7 @@ public class ClinicianProfileController extends CommonController {
      */
     private void updateSearchTable() {
 
-        System.out.println("update search table");
+        //System.out.println("update search table");
 
         List selectedGenders;
         List selectedTypes;
@@ -225,7 +223,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTable(ArrayList<Profile> donors){
+    private void makeSearchTable(ArrayList<Profile> donors){
         searchTable.getItems().clear();
 
         donorObservableList = FXCollections.observableArrayList(donors);
@@ -373,7 +371,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void refreshTable() {
-        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
@@ -400,7 +398,7 @@ public class ClinicianProfileController extends CommonController {
 
 
         setClinicianDetails();
-        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
@@ -409,7 +407,6 @@ public class ClinicianProfileController extends CommonController {
 
 
         TableFilter filter = new TableFilter<>(transplantTable);
-        //filter.getColumnFilters().setAll(transplantTable.getItems());
 
     }
 }

@@ -199,7 +199,9 @@ public class ProfileDatabase {
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, List selectedGenders, List selectedTypes, List selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
-        ArrayList<Profile> resultProfiles = getProfiles(false);
+        ArrayList<Profile> allProfiles = getProfiles(false);
+        ArrayList<Profile> resultProfiles = null;
+
 
         //parsing out organs as strings for later use
         List<String> selectedOrgansStrings = new ArrayList<>();
@@ -227,8 +229,28 @@ public class ProfileDatabase {
 
 
         if (searchString.equals("") && searchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()) {
-            return getProfiles(false);
+            return allProfiles;
         }
+
+        if (searchString.equals("")) {
+            resultProfiles = allProfiles;
+        } else {
+
+            for (Profile profile : allProfiles) {
+                profiles.add(profile.getFullName());
+            }
+
+            //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
+            List<ExtractedResult> result;
+            result = FuzzySearch.extractSorted(searchString, profiles, 50);
+
+            //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
+            resultProfiles = new ArrayList<>();
+            for (ExtractedResult er : result) {
+                resultProfiles.add(allProfiles.get(er.getIndex()));
+            }
+        }
+
 
         //definitely need a better way than just a magic number lol
         if (ageSearchInt != -999) {
@@ -250,13 +272,11 @@ public class ProfileDatabase {
 
 
         if (!selectedGenders.isEmpty()) {
-            System.out.println("genders");
             resultProfiles.removeIf(profile -> !selectedGenders.contains(profile.getGender()));
         }
 
 
         if (!selectedOrgans.isEmpty()) {
-            System.out.println("organs");
             resultProfiles.removeIf(profile -> {
 
                 HashSet<Organ> organsDonatingHash = profile.getOrgansDonating();
@@ -278,7 +298,6 @@ public class ProfileDatabase {
         if (!selectedTypes.isEmpty()) {
             resultProfiles.removeIf(profile -> {
                 ArrayList<String> profileTypes = new ArrayList();
-                System.out.println("types");
 
                 if (profile.isReceiver()) {profileTypes.add("receiver");}
                 try {
@@ -305,24 +324,6 @@ public class ProfileDatabase {
         }
 
 
-
-        if (searchString.equals("")) {
-            return resultProfiles;
-        }
-
-        for (Profile profile : resultProfiles) {
-            profiles.add(profile.getFullName());
-        }
-
-        //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
-        List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 50);
-
-        //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
-        resultProfiles = new ArrayList<>();
-        for (ExtractedResult er : result) {
-            resultProfiles.add(getProfiles(false).get(er.getIndex()));
-        }
         return resultProfiles;
     }
 
