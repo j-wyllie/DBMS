@@ -187,28 +187,49 @@ public class MedicationDataIOTest {
         Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugTwo, "male", 29);
         assertEquals(interactions, results);
 
+        // Test valid request with drug with space in name
+        results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
+        assertEquals(interactions, results);
+    }
+
+    @Test
+    public void testGetDrugInteractionsWithSpaceInName() throws Exception {
+        // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
+        StringBuffer interactionData = new StringBuffer();
+        interactionData.append(bufferedReader.readLine());
+
+
+        // Mock makeRequests method, returns json data of interactions in a stringBuffer
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(interactionData);
+
+        // Test valid request with drug with space in name
+        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
+        assertEquals(interactions, results);
+    }
+
+    @Test
+    public void testGetDrugInteractionsNullOrEmptyString() throws Exception {
         //Test for null drug string
-        results = MedicationDataIO.getDrugInteractions(drugOne, drugSix, "male", 29);
+        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugSix, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for empty drug string
         results = MedicationDataIO.getDrugInteractions(drugOne, drugSeven, "male", 29);
         assertTrue(results.isEmpty());
+    }
 
-        // Test valid request with drug with space in name
-        results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
-        assertEquals(interactions, results);
-
+    @Test
+    public void testGetDrugInteractionsValidStringsWithNoInteractions() throws Exception {
         // makeRequest will return null for these tests
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(null);
 
         // Test for two valid drugs, should return empty map.
-        results = MedicationDataIO.getDrugInteractions(drugOne, drugFive, "male", 29);
+        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugFive, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for invalid drugs, should return empty map.
         results = MedicationDataIO.getDrugInteractions(drugThree, drugFour, "male", 29);
         assertTrue(results.isEmpty());
     }
-
 }
