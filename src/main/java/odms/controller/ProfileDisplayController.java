@@ -926,6 +926,8 @@ public class ProfileDisplayController extends CommonController {
         stage.setTitle("Medication History");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
     }
 
