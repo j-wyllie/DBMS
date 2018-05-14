@@ -731,10 +731,11 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the save button
      */
     @FXML
-    private void handleSaveMedications(ActionEvent event) {
+    private void handleSaveMedications(ActionEvent event) throws IOException {
         boolean saveBool = donorSaveChanges();
 
         if (saveBool) {
+            showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }
     }
