@@ -1,5 +1,6 @@
 package odms.controller;
 
+import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.LoginController.getCurrentProfile;
@@ -188,6 +189,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Button buttonMedicationHistoricToCurrent;
+
+    @FXML
+    private Button buttonSaveMedications;
 
     @FXML
     private TextField textFieldMedicationSearch;
@@ -722,6 +726,20 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
+     * Button handler to save changes made on medications tab. If a save is made else where in the program changes to
+     * the medications will also be saved.
+     * @param event clicking on the save button
+     */
+    @FXML
+    private void handleSaveMedications(ActionEvent event) {
+        boolean saveBool = donorSaveChanges();
+
+        if (saveBool) {
+            ProfileDataIO.saveData(getCurrentDatabase());
+        }
+    }
+
+    /**
      * Button handler to view a drugs active ingredients
      * @param event clicking on the active ingredients button
      */
@@ -791,51 +809,41 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleShowInteractions(ActionEvent event) {
-        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        ArrayList<Drug> drugs;
 
         Map<String, String> interactionsRaw;
 
-        if (drugs.size() != 2) {
-            if (drugs.size() == 1) {
-                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-                if (toAdd == null) {
-                    tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                    return;
-                }
-                drugs.add(toAdd);
-            }
-            else if (drugs.size() == 0) {
+        if (convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()).size() == 2) {
+            drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        } else {
+            if (tableViewHistoricMedications.getSelectionModel().getSelectedItems().size() == 2) {
                 drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            } else {
+                drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+                drugs.add(tableViewHistoricMedications.getSelectionModel().getSelectedItem());
             }
-
-            if (drugs.size() != 2) {
-                tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                return; }
         }
 
         try {
             interactionsRaw = MedicationDataIO
                     .getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
 
+            tableViewDrugInteractionsNames.getItems().clear();
+            tableViewDrugInteractions.getItems().clear();
+            ObservableList<String> drugsList = FXCollections.observableArrayList();
+            drugsList.add("Interactions between:");
+            drugsList.add(drugs.get(0).getDrugName());
+            drugsList.add(drugs.get(1).getDrugName());
+            tableViewDrugInteractionsNames.setItems(drugsList);
+            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+
             if (interactionsRaw.isEmpty()) {
                 tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
             } else if (interactionsRaw.containsKey("error")) {
                 tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
             } else {
-                ObservableList<String> drugsList = FXCollections.observableArrayList();
-                drugsList.add("Interactions between:");
-                drugsList.add(drugs.get(0).getDrugName());
-                drugsList.add(drugs.get(1).getDrugName());
-
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-
-                tableViewDrugInteractionsNames.getItems().clear();
-                tableViewDrugInteractions.getItems().clear();
-
-                tableViewDrugInteractionsNames.setItems(drugsList);
-                tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-                tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
-
                 tableViewDrugInteractions.setItems(interactions);
                 tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
                 tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
@@ -858,7 +866,6 @@ public class ProfileDisplayController extends CommonController {
         for (int i = 0; i<drugs.size(); i++) {
             if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));}
         }
-
 
         refreshMedicationsTable();
     }
@@ -884,7 +891,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the delete button.
      */
     @FXML
-    private void handleDelete(ActionEvent event)  {
+    private void handleDeleteMedication(ActionEvent event)  {
 
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
@@ -920,7 +927,6 @@ public class ProfileDisplayController extends CommonController {
                 }, 1000
         );
     }
-
 
     /**
      * Set the listener for the change of value in the medication search field. Also binds the
@@ -1132,7 +1138,6 @@ public class ProfileDisplayController extends CommonController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
 
     }
@@ -1215,6 +1220,17 @@ public class ProfileDisplayController extends CommonController {
             deleteConditionButton.setVisible(true);
             addNewProcedureButton.setVisible(true);
             deleteProcedureButton.setVisible(true);
+            buttonSaveMedications.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonShowDrugInteractions.setVisible(true);
+            buttonViewActiveIngredients.setVisible(true);
+            buttonAddMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+            tableViewActiveIngredients.setVisible(true);
+            tableViewDrugInteractionsNames.setVisible(true);
+            tableViewDrugInteractions.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1229,6 +1245,17 @@ public class ProfileDisplayController extends CommonController {
             deleteConditionButton.setVisible(false);
             addNewProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
+            buttonSaveMedications.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonShowDrugInteractions.setVisible(false);
+            buttonViewActiveIngredients.setVisible(false);
+            buttonAddMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
+            tableViewDrugInteractionsNames.setVisible(false);
+            tableViewDrugInteractions.setVisible(false);
         }
 
     }
