@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -935,34 +936,30 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void setMedicationSearchFieldListener() {
-        textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
-            if (!oldValue.equals(newValue)) {
-                new Timeline(new KeyFrame(
-                    Duration.millis(1000),
-                    ae -> {
-
-                        try {
-                            System.out.println(newValue);
-                            ArrayList<String> suggestions = getSuggestionList(newValue);
-                            ArrayList<MenuItem> menuItems = new ArrayList<>();
-                            for (String drug : suggestions) {
-                                MenuItem temp = new MenuItem(drug);
-                                temp.setOnAction(event -> {
-                                    MenuItem eventItem = (MenuItem) event.getTarget();
-                                    textFieldMedicationSearch.setText(eventItem.getText());
-                                    suggestionMenu.hide();
-                                });
-                                menuItems.add(temp);
-                            }
-                            suggestionMenu.getItems().setAll(menuItems);
-                            textFieldMedicationSearch.setContextMenu(suggestionMenu);
-                            suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
-                            menuItems.clear();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    })).play();
-            }
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
+        textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
+                try {
+                    ArrayList<String> suggestions = getSuggestionList(newValue);
+                    ArrayList<MenuItem> menuItems = new ArrayList<>();
+                    for (String drug : suggestions) {
+                        MenuItem temp = new MenuItem(drug);
+                        temp.setOnAction(event -> {
+                            MenuItem eventItem = (MenuItem) event.getTarget();
+                            textFieldMedicationSearch.setText(eventItem.getText());
+                            suggestionMenu.hide();
+                        });
+                        menuItems.add(temp);
+                    }
+                    suggestionMenu.getItems().setAll(menuItems);
+                    textFieldMedicationSearch.setContextMenu(suggestionMenu);
+                    suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
+                    menuItems.clear();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            pauseTransition.playFromStart();
         });
 
         textFieldMedicationSearch.setOnKeyPressed(event -> {
