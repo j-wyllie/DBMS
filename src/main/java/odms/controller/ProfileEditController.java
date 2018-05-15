@@ -99,6 +99,9 @@ public class ProfileEditController extends CommonController {
     @FXML
     private RadioButton isSmokerRadioButton;
 
+    @FXML
+    private TextField preferredNameField;
+
     private Boolean isClinician;
 
     @FXML
@@ -168,6 +171,8 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setGivenNames(givenNamesField.getText());
 
                 currentProfile.setLastNames(lastNamesField.getText());
+
+                currentProfile.setPreferredName(preferredNameField.getText());
 
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
@@ -355,6 +360,9 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getLastNames() != null) {
                     lastNamesField.setText(currentProfile.getLastNames());
+                }
+                if (currentProfile.getPreferredName() != null) {
+                    preferredNameField.setText(currentProfile.getPreferredName());
                 }
                 if (currentProfile.getIrdNumber() != null) {
                     irdField.setText(currentProfile.getIrdNumber().toString());
