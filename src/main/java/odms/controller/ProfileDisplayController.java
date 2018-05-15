@@ -961,8 +961,7 @@ public class ProfileDisplayController extends CommonController {
         refreshConditionTable();
 
         try {
-            donorFullNameLabel
-                    .setText(currentDonor.getFullName());
+            donorFullNameLabel.setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
@@ -1379,7 +1378,6 @@ public class ProfileDisplayController extends CommonController {
     public void setProfileViaClinician(Profile profile) {
         isOpenedByClinician = true;
         currentProfile = profile;
-        setPage(currentProfile);
     }
 
     /**
@@ -1389,7 +1387,6 @@ public class ProfileDisplayController extends CommonController {
      */
     public void setProfile(Profile profile) {
         currentProfile = profile;
-        setPage(currentProfile);
     }
 
 }
