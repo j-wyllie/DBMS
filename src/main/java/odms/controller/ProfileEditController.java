@@ -4,7 +4,6 @@ import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -271,9 +270,6 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     public void initialize() {
-        if(currentProfile == null) {
-            currentProfile = getCurrentProfile();
-        }
 
         if (currentProfile != null) {
             try {

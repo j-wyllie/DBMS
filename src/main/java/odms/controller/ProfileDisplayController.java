@@ -565,12 +565,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
-        Profile currentDonor;
-        if (currentProfile != null) {
-            currentDonor = currentProfile;
-        } else {
-            currentDonor = LoginController.getCurrentProfile();
-        }
 
         Procedure procedure = (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
         if (procedure == null) {
@@ -581,7 +575,7 @@ public class ProfileDisplayController extends CommonController {
             return;
         }
 
-        currentDonor.removeProcedure(procedure);
+        currentProfile.removeProcedure(procedure);
         refreshProcedureTable();
 
     }
@@ -1290,10 +1284,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void refreshProcedureTable() {
-        if (currentProfile == null) {
-            currentProfile = LoginController.getCurrentProfile();
-        }
-
         if (previousProceduresObservableList == null) {
             previousProceduresObservableList = FXCollections.observableArrayList();
         }
@@ -1348,7 +1338,7 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private void onTabOrgansSelected() {
-        profileOrganOverviewController.getCurrentProfile().bind(currentProfileBound);
+        profileOrganOverviewController.currentProfile.bind(currentProfileBound);
         profileOrganOverviewController.populateOrganLists();
     }
 
@@ -1357,12 +1347,10 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void initialize() {
-        if (currentProfile == null) {
-            currentProfile = LoginController.getCurrentProfile();
-            currentProfileBound.set(currentProfile);
-        }
 
         if (currentProfile != null) {
+            currentProfileBound.set(currentProfile);
+
             setPage(currentProfile);
 
             refreshMedicationsTable();

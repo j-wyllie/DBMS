@@ -8,7 +8,10 @@ import static odms.controller.GuiMain.getUserDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -52,9 +55,18 @@ public class LoginController extends CommonController {
                     currentProfile = currentDatabase.getProfile(userId);
 
                     if (currentProfile != null) {
-                        String scene = "/view/ProfileDisplay.fxml";
-                        String title = "Profile";
-                        showScene(event, scene, title, true);
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
+
+                        Scene scene = new Scene(fxmlLoader.load());
+                        ProfileDisplayController controller = fxmlLoader.getController();
+                        controller.setProfile(currentProfile);
+                        controller.initialize();
+
+                        Stage stage = new Stage();
+                        stage.setTitle(currentProfile.getFullName() + "'s Profile");
+                        stage.setScene(scene);
+                        stage.show();
                     } else {
                         invalidUsername();
                     }
@@ -81,10 +93,6 @@ public class LoginController extends CommonController {
         String scene = "/view/ProfileCreate.fxml";
         String title = "Create Profile";
         showScene(event, scene, title, false);
-    }
-
-    public static Profile getCurrentProfile() {
-        return currentProfile;
     }
 
     @FXML
