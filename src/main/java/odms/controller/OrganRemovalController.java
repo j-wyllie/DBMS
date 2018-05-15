@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -132,9 +133,11 @@ public class OrganRemovalController {
         organLabel.setText(organLabel.getText() + organ);
         reasonSelector.getItems().addAll("Error", "No longer required", "Patient deceased");
         reasonSelector.setValue(reasonSelector.getItems().get(0));
-        windowGrid.add(dodPicker, 1,3, 2, 1);
+        GridPane.setMargin(dodPicker, new Insets(0, 40, 0, 0));
+        windowGrid.add(dodPicker, 2,2, 2, 1);
         dodPicker.setVisible(false);
-        windowGrid.add(curedCheck, 1,3, 2, 1);
+        GridPane.setMargin(curedCheck, new Insets(5, 0, 0, 0));
+        windowGrid.add(curedCheck, 2,2, 2, 1);
         curedCheck.setVisible(false);
     }
 }
