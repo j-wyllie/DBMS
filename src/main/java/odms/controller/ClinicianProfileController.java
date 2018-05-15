@@ -1,6 +1,5 @@
 package odms.controller;
 
-import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -15,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -32,7 +32,7 @@ import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
-    private static User currentUser = getCurrentUser();
+    private static User currentUser;
 
     @FXML
     private Label clinicianFullName;
@@ -112,10 +112,19 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/ClinicianProfileEdit.fxml";
-        String title = "Edit Profile";
 
-        showScene(event, scene, title, true);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        ClinicianProfileEditController controller = fxmlLoader.getController();
+        controller.setCurrentUser(currentUser);
+        controller.initialize();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Edit Profile");
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
@@ -294,19 +303,23 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    private void initialize(){
+    public void initialize(){
+        if (currentUser != null) {
+            setClinicianDetails();
+            makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            try {
+                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        setClinicianDetails();
-        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
-        try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            TableFilter filter = new TableFilter<>(transplantTable);
+            //filter.getColumnFilters().setAll(transplantTable.getItems());
         }
+    }
 
-
-        TableFilter filter = new TableFilter<>(transplantTable);
-        //filter.getColumnFilters().setAll(transplantTable.getItems());
-
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }

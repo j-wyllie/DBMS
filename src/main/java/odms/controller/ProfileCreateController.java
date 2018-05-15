@@ -54,13 +54,12 @@ public class ProfileCreateController extends CommonController {
                 Profile newProfile = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
 
                 currentDatabase.addProfile(newProfile);
-                LoginController.setCurrentProfile(newProfile.getId());
                 ProfileDataIO.saveData(currentDatabase);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+
                 Scene scene = new Scene(fxmlLoader.load());
                 ProfileDisplayController controller = fxmlLoader.getController();
-
                 controller.setProfile(currentDatabase.getProfile(newProfile.getId()));
                 controller.initialize();
 

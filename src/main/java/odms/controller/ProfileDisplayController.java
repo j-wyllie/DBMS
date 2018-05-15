@@ -646,8 +646,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        LoginController.setCurrentProfile(null); //clears current donor
-
         showLoginScene(event);
     }
 

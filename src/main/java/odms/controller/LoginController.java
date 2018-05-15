@@ -48,9 +48,20 @@ public class LoginController extends CommonController {
 
                 if (userId == 0) {
                     currentUser = userDatabase.getClinician(0);
-                    String scene = "/view/ClinicianProfile.fxml";
-                    String title = "Clinician";
-                    showScene(event, scene, title, true);
+
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+                    Scene scene = new Scene(fxmlLoader.load());
+                    ClinicianProfileController controller = fxmlLoader.getController();
+                    controller.setCurrentUser(currentUser);
+                    controller.initialize();
+
+                    Stage stage = new Stage();
+                    stage.setTitle("Clinician");
+                    stage.setScene(scene);
+                    stage.show();
+                    closeCurrentStage();
                 } else {
                     currentProfile = currentDatabase.getProfile(userId);
 
@@ -67,6 +78,8 @@ public class LoginController extends CommonController {
                         stage.setTitle(currentProfile.getFullName() + "'s Profile");
                         stage.setScene(scene);
                         stage.show();
+
+                        closeCurrentStage();
                     } else {
                         invalidUsername();
                     }
@@ -81,6 +94,12 @@ public class LoginController extends CommonController {
 
             invalidUsername();
         }
+    }
+
+    private void closeCurrentStage() {
+        Stage currentStage = (Stage) usernameField.getScene().getWindow();
+        // do what you have to do
+        currentStage.close();
     }
 
     /**
@@ -98,13 +117,5 @@ public class LoginController extends CommonController {
     @FXML
     private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
-    }
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentProfile(Integer id) {
-        currentProfile = currentDatabase.getProfile(id);
     }
 }
