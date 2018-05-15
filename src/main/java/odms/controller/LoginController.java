@@ -21,8 +21,8 @@ public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
-    private static Profile currentProfile = null;
-    private static User currentUser;
+    private Profile currentProfile = null;
+    private User currentUser;
 
     /**
      * TextField to input username.
