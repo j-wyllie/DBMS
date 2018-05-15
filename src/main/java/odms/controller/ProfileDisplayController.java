@@ -309,9 +309,7 @@ public class ProfileDisplayController extends CommonController {
         else {curConditionsObservableList = FXCollections.observableArrayList(); }
         if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
         else {pastConditionsObservableList = FXCollections.observableArrayList(); }
-
         refreshConditionTable();
-
     }
 
     /**
@@ -490,7 +488,6 @@ public class ProfileDisplayController extends CommonController {
             }
         });
 
-        forceConditionSortOrder();
         refreshPageElements();
 
     }
@@ -500,19 +497,14 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void forceConditionSortOrder() {
+        //curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
+        curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
 
+        //pastConditionsTable.getSortOrder().clear();
+        pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
+        pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
     }
-
-
-    /**
-     * forces the sort order of the current conditions table so that Chronic conditions are always at the top
-     */
-    @FXML
-    private void forceSortOrder() {
-        curConditionsTable.getSortOrder().clear();
-        curConditionsTable.getSortOrder().add(curChronicColumn);
-    }
-
 
 
     /**
@@ -1409,6 +1401,7 @@ public class ProfileDisplayController extends CommonController {
 
         try { // Can't refresh the condition table on the initial initialize
             refreshConditionTable();
+            forceConditionSortOrder();
         } catch (NullPointerException e) { }
     }
 
