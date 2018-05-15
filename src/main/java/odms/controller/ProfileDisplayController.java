@@ -45,6 +45,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import odms.cli.CommandUtils;
@@ -514,6 +515,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
         try {
+            Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
@@ -523,7 +525,10 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Condition");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
