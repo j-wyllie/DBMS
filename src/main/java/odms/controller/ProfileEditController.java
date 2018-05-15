@@ -1,5 +1,6 @@
 package odms.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,9 +56,6 @@ public class ProfileEditController extends CommonController {
     private TextField dodField;
 
     @FXML
-    private TextField genderField;
-
-    @FXML
     private TextField heightField;
 
     @FXML
@@ -106,6 +104,10 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private ComboBox comboGenderPref;
+
+    @FXML
+    private ComboBox comboGender;
+
     /**
      * Scene change to log in view.
      * @param event clicking on the logout button.
@@ -203,9 +205,6 @@ public class ProfileEditController extends CommonController {
                 } catch (DateTimeParseException e) {
                     error = true;
                 }
-                if (!genderField.getText().isEmpty()) {
-                    currentProfile.setGender(genderField.getText());
-                }
 
                 try {
                     if (!weightField.getText().isEmpty()) {
@@ -253,7 +252,12 @@ public class ProfileEditController extends CommonController {
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
 
-                currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+                currentProfile.setGender(comboGender.getEditor().getText());
+                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
+                    currentProfile.setPreferredGender(comboGender.getEditor().getText());
+                } else {
+                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+                }
 
                 if (error) {
                     guiPopup("Error. Not all fields were updated.");
@@ -294,6 +298,7 @@ public class ProfileEditController extends CommonController {
         } else {
             controller.setLoggedInProfile(currentProfile);
         }
+        controller.initialize();
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -377,9 +382,6 @@ public class ProfileEditController extends CommonController {
                         DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     );
                 }
-                if (currentProfile.getGender() != null) {
-                    genderField.setText(currentProfile.getGender());
-                }
                 if (currentProfile.getHeight() != null){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
 
@@ -410,6 +412,13 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+
+                comboGender.setEditable(true);
+                comboGender.getItems().addAll("Male", "Female", "Non binary");
+
+                if (currentProfile.getGender() != null) {
+                    comboGender.getEditor().setText(currentProfile.getGender());
                 }
 
                 comboGenderPref.setEditable(true);
