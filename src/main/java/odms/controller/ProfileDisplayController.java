@@ -11,15 +11,13 @@ import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import javafx.animation.KeyFrame;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -1213,8 +1211,8 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void hideItems() {
-        if(isClinician){
-            //User is a clinician looking at donors profile, maximise functionality
+        if (isClinician) {
+            // User is a clinician looking at profile, maximise functionality
             curConditionsTable.setEditable(true);
             pastConditionsTable.setEditable(true);
             toggleChronicButton.setDisable(false);
@@ -1240,7 +1238,7 @@ public class ProfileDisplayController extends CommonController {
 
             logoutButton.setVisible(false);
         } else {
-            //User is a donor, limit functionality
+            // User is a standard profile, limit functionality
             curConditionsTable.setEditable(false);
             pastConditionsTable.setEditable(false);
             toggleChronicButton.setDisable(true);
@@ -1259,6 +1257,7 @@ public class ProfileDisplayController extends CommonController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
