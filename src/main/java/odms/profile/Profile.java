@@ -17,6 +17,7 @@ public class Profile {
 
     private String givenNames;
     private String lastNames;
+    private String preferredName;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
@@ -983,5 +984,13 @@ public class Profile {
 
     public String getPreferredGender() {
         return this.preferredGender;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
     }
 }

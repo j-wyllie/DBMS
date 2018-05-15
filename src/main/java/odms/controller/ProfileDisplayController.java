@@ -275,6 +275,9 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Label labelGenderPreferred;
 
+    @FXML
+    private Label labelNamePreferred;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -1016,9 +1019,11 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
             }
-            System.out.println(currentProfile.getPreferredGender());
             if (currentProfile.getPreferredGender() != null) {
                 labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
+            }
+            if (currentProfile.getPreferredName() != null) {
+                labelNamePreferred.setText(labelNamePreferred.getText() + currentProfile.getPreferredName());
             }
             if (currentProfile.getHeight() != null) {
                 heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "m");
