@@ -196,13 +196,20 @@ public class ProfileDatabase {
      */
     public ArrayList<Profile> searchProfiles(String searchString) {
         ArrayList<String> profiles = new ArrayList<>();
-
-        if (searchString == null || searchString.equals("")) {
-            return getProfiles(false);
+        int searchLength = searchString.length();
+        if (searchString.equals("")) {
+            return null;
         }
 
         for (Profile profile : getProfiles(false)) {
-            profiles.add(profile.getFullName());
+            if (profile.getGivenNames().length() < searchLength) {
+                profiles.add(profile.getGivenNames());
+                //profiles.add(profile.getLastNames());
+            } else {
+                profiles.add(profile.getGivenNames().substring(0, searchLength));
+                //profiles.add(profile.getLastNames().substring(0, searchLength));
+            }
+
         }
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.

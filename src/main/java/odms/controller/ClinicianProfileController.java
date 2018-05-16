@@ -124,7 +124,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        updateTable();
+            updateTable();
     }
 
     /**
@@ -134,8 +134,11 @@ public class ClinicianProfileController extends CommonController {
         String searchString = searchField.getText();
 
         searchTable.getItems().clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString));
-        searchTable.setItems(donorObservableList);
+        ArrayList<Profile> results = GuiMain.getCurrentDatabase().searchProfiles(searchString);
+        if (results != null) {
+            donorObservableList.addAll(results);
+            searchTable.setItems(donorObservableList);
+        }
     }
 
     /**
@@ -298,6 +301,8 @@ public class ClinicianProfileController extends CommonController {
 
         setClinicianDetails();
         makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        searchTable.getItems().clear();
+        searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
