@@ -10,8 +10,8 @@ import odms.user.User;
 
 import java.io.IOException;
 
-import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsernameOrPassword;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
@@ -44,22 +44,26 @@ public class LoginController extends CommonController {
         String scene;
         String title;
 
-            if (!usernameField.getText().equals("")) {
+        if (!usernameField.getText().equals("")) {
 
-                String username = usernameField.getText();
-                if (username.equals("admin")) {
+            String username = usernameField.getText();
+            try {
+                currentUser = userDatabase.getUser(username);
+
+                if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
-                        currentUser = userDatabase.getUser("admin");
                         scene = "/view/ClinicianProfile.fxml";
                         title = "Clinician";
                         showScene(event, scene, title, true);
-                    } catch (UserNotFoundException | IOException e) {
+                    } catch (IOException e) {
                         invalidUsername();
                     }
-
                 } else {
-                    try {
-                        int userId = Integer.valueOf(usernameField.getText());
+                    invalidUsernameOrPassword();
+                }
+            } catch (UserNotFoundException u) {
+                try {
+                    int userId = Integer.valueOf(usernameField.getText());
                     if (userId == 0) {
                         currentUser = userDatabase.getUser(0);
                         scene = "/view/ClinicianProfile.fxml";
@@ -77,10 +81,12 @@ public class LoginController extends CommonController {
                         }
                     }
                 } catch (UserNotFoundException | IOException | NumberFormatException e) {
-                        invalidUsername();
-                    }
+                    invalidUsername();
+                }
             }
+
         }
+
     }
 
     /**

@@ -39,6 +39,7 @@ public class GuiMain extends Application {
             if (!userDb.isUser("admin")) {
                 User user = new User(UserType.ADMIN, "admin");
                 user.setUsername("admin");
+                user.setPassword("admin");
                 userDb.addUser(user);
                 UserDataIO.saveUsers(userDb, USER_DATABASE);
             }

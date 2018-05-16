@@ -2,114 +2,79 @@
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "John Smith",
+      "name": "Doc",
       "staffId": 0,
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 5
+          "day": 17
         },
         "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 18,
-          "nano": 487000000
+          "hour": 10,
+          "minute": 45,
+          "second": 8,
+          "nano": 170000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-05-05T14:04:18.486",
-        "0 updated at 02:04 PM 05-05-2018"
+        "Account for Doccreated at 2018-05-17T10:45:08.170",
+        "0 updated at 10:45 AM 17-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 5
+          "day": 17
         },
         "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 18,
-          "nano": 480000000
+          "hour": 10,
+          "minute": 45,
+          "second": 8,
+          "nano": 170000000
         }
       }
     },
     "1": {
-      "userType": "CLINICIAN",
-      "name": "Matt Smith",
-      "staffId": 1,
-      "region": "Auckland",
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 5,
-          "day": 5
-        },
-        "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 18,
-          "nano": 494000000
-        }
-      },
-      "updateActions": [
-        "Account for Matt Smithcreated at 2018-05-05T14:04:18.487",
-        "1 updated at 02:04 PM 05-05-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 5,
-          "day": 5
-        },
-        "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 18,
-          "nano": 486000000
-        }
-      }
-    },
-    "2": {
       "userType": "ADMIN",
       "name": "admin",
-      "staffId": 2,
+      "staffId": 1,
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 13
+          "day": 17
         },
         "time": {
-          "hour": 20,
-          "minute": 3,
-          "second": 43,
-          "nano": 94000000
+          "hour": 10,
+          "minute": 45,
+          "second": 8,
+          "nano": 196000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-05-13T20:03:43.075",
-        "admin updated at 08:03 PM 13-05-2018",
-        "2 updated at 08:03 PM 13-05-2018"
+        "ADMINaccount for admincreated at 2018-05-17T10:45:08.196",
+        "admin updated at 10:45 AM 17-05-2018",
+        "1 updated at 10:45 AM 17-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 13
+          "day": 17
         },
         "time": {
-          "hour": 20,
-          "minute": 3,
-          "second": 43,
-          "nano": 75000000
+          "hour": 10,
+          "minute": 45,
+          "second": 8,
+          "nano": 196000000
         }
       },
-      "username": "admin"
+      "username": "admin",
+      "password": "admin"
     }
   },
-  "lastID": 2,
+  "lastID": 1,
   "path": "example/users.json"
 }

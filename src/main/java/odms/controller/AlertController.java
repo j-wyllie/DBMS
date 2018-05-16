@@ -55,6 +55,22 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup when the username or password entered was invalid.
+     */
+    static void invalidUsernameOrPassword() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Incorrect username or password.",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Creates a popup when the IRD number entered was invalid
      */
     static void invalidIrd() {

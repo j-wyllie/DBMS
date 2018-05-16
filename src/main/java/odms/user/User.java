@@ -144,4 +144,12 @@ public class User {
     public ArrayList<String> getUpdateActions() {
         return updateActions;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
