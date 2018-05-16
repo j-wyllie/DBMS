@@ -197,15 +197,19 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </TextField>
-                                        <TableView fx:id="searchTable" prefHeight="404.0" prefWidth="1184.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                            <columns>
-                                                <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
-                                          <TableColumn fx:id="donorReceiverColumn" prefWidth="209.0" text="Donor/Receiver" />
-                                                <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="110.0" text="Age" />
-                                                <TableColumn fx:id="genderColumn" prefWidth="148.0" text="Gender" />
-                                                <TableColumn fx:id="regionColumn" prefWidth="179.0" text="Region" />
-                                            </columns>
-                                        </TableView>
+                                    <Pagination fx:id="pagination" prefHeight="404.0" prefWidth="1184.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                        <fx:define>
+                                            <TableView fx:id="searchTable">
+                                                <columns>
+                                                    <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
+                                                    <TableColumn fx:id="donorReceiverColumn" prefWidth="209.0" text="Donor/Receiver" />
+                                                    <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="110.0" text="Age" />
+                                                    <TableColumn fx:id="genderColumn" prefWidth="148.0" text="Gender" />
+                                                    <TableColumn fx:id="regionColumn" prefWidth="179.0" text="Region" />
+                                                </columns>
+                                            </TableView>
+                                        </fx:define>
+                                    </Pagination>
                                     <Label fx:id="resultCountLabel" prefHeight="36.0" prefWidth="633.0" text=" results found" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets left="10.0" />

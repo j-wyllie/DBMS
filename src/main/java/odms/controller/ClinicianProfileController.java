@@ -15,15 +15,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
@@ -78,6 +75,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private Label resultCountLabel;
+
+    @FXML
+    private Pagination pagination;
 
     private ObservableList<Profile> donorObservableList;
 
@@ -318,11 +318,13 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private void initialize(){
-
         setClinicianDetails();
-        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
-        searchTable.getItems().clear();
-        searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+
+        pagination.setPageFactory(this::createPage);
+
+        //makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        //searchTable.getItems().clear();
+        //searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
@@ -333,5 +335,15 @@ public class ClinicianProfileController extends CommonController {
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 
+    }
+
+    private int rowsPerPage = 1;
+
+    private Node createPage(int pageIndex) {
+        int fromIndex = pageIndex * rowsPerPage;
+        int toIndex = Math.min(fromIndex + rowsPerPage, GuiMain.getCurrentDatabase().searchProfiles("j").size());
+        searchTable.setItems(FXCollections.observableArrayList(GuiMain.getCurrentDatabase().searchProfiles("j").subList(fromIndex, toIndex)));
+
+        return new BorderPane(searchTable);
     }
 }
