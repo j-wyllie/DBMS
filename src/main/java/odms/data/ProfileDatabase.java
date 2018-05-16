@@ -228,17 +228,16 @@ public class ProfileDatabase {
 
 
 
-        if (searchString.equals("") && searchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()) {
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()){
             return allProfiles;
         }
 
-        if (searchString.equals("")) {
-            resultProfiles = allProfiles;
-        } else {
+        if (!searchString.equals("")) {
 
             for (Profile profile : allProfiles) {
                 profiles.add(profile.getFullName());
             }
+
 
             //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
             List<ExtractedResult> result;
@@ -249,7 +248,36 @@ public class ProfileDatabase {
             for (ExtractedResult er : result) {
                 resultProfiles.add(allProfiles.get(er.getIndex()));
             }
+            //resetting for re use
+            profiles = new ArrayList<>();
+        } else {
+            resultProfiles = allProfiles;
         }
+
+
+
+        if (!regionSearchString.equals("")) {
+            ArrayList<Profile> resultProfilesBefore = resultProfiles;
+
+            //TODO wort out why fuzzy search can only search through strings with two parts, throws null pointer when just one word
+            for (Profile profile : resultProfilesBefore) {
+                profiles.add(profile.getRegion() + " " + profile.getRegion());
+            }
+
+            //Fuzzywuzzy, fuzzy search algorithm. Returns list of profile names sorted by closest match to the search string.
+            List<ExtractedResult> result;
+            result = FuzzySearch.extractSorted(regionSearchString, profiles, 50);
+
+            System.out.println(result.size());
+
+            //Use index values from fuzzywuzzy search to build list of profile object in same order returned from fuzzywuzzy.
+            resultProfiles = new ArrayList<>();
+            for (ExtractedResult er : result) {
+                resultProfiles.add(resultProfilesBefore.get(er.getIndex()));
+            }
+        }
+
+
 
 
         //definitely need a better way than just a magic number lol
@@ -263,14 +291,6 @@ public class ProfileDatabase {
                 //just the age specified
                 resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
             }
-        }
-
-
-        if (!regionSearchString.equals("")) {
-            resultProfiles.removeIf(profile -> {
-                if (profile.getRegion() == null) {return true;}
-                return !profile.getRegion().toLowerCase().equals(regionSearchString.toLowerCase());
-            });
         }
 
 

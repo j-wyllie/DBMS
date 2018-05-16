@@ -156,7 +156,7 @@ public class ClinicianProfileController extends CommonController {
 
 
     /**
-     * Button handler to update donor table based on search results.
+     * Button handler to update search table based on search results.
      * @param event releasing a key on the keyboard.
      */
     @FXML

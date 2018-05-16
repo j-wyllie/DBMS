@@ -59,7 +59,7 @@ public class TestDataCreator {
             "Southland",
             "Northland",
             "Auckland",
-            "Manawatu-Wanganui",
+            "Wanganui",
             "Waikato"
             );
 
