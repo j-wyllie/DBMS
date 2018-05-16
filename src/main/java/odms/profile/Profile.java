@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javax.swing.DebugGraphics;
 import odms.cli.CommandUtils;
 import odms.controller.AlertController;
 import odms.medications.Drug;
@@ -790,15 +791,16 @@ public class Profile {
     public SimpleStringProperty donorReceiverProperty() {
         SimpleStringProperty result = new SimpleStringProperty();
         if (!(donor == null) && donor) {
-            result.setValue("Donor");
-        }
-        if (!(receiver == null) && receiver) {
-            if (result.toString().length() == 0) {
-                result.setValue("Receiver");
-            }
-            else {
+            if (!(receiver == null) && receiver) {
                 result.setValue("Donor/Receiver");
             }
+            else {
+                result.setValue("Donor");
+            }
+        }
+        else if (!(receiver == null) && receiver) {
+            result.setValue("Receiver");
+
         }
         return result;
     }
