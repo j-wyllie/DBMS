@@ -130,20 +130,29 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-            updateTable();
+            updateTable(0);
     }
 
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
-    private void updateTable() {
+    private void updateTable(int start) {
         String searchString = searchField.getText();
 
         searchTable.getItems().clear();
         ArrayList<Profile> results = GuiMain.getCurrentDatabase().searchProfiles(searchString);
         if (results != null) {
+            if (results.size() == 1) {
+                resultCountLabel.setText(results.size() + " result found");
+            } else {
+                resultCountLabel.setText(results.size() + " results found");
+            }
+
+            //donorObservableList.addAll(results.subList(start, start + 16));
             donorObservableList.addAll(results);
             searchTable.setItems(donorObservableList);
+        } else {
+            resultCountLabel.setText(0 + " results found");
         }
     }
 
@@ -167,7 +176,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Profile> donors){
-        resultCountLabel.setText(donors.size() + resultCountLabel.getText());
+        resultCountLabel.setText(0 + " results found");
         if (donors.size() > 30) {
             donors.clear();
             donors.addAll(donors.subList(0, 30));
@@ -300,7 +309,6 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void refreshTable() {
-        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
