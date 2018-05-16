@@ -14,8 +14,8 @@ import java.io.File;
 public class App {
     private static final String DONOR_DATABASE = "example/example.json";
     private static final String USER_DATABASE = "example/users.json";
-    private static ProfileDatabase profileDb;
-    private static UserDatabase userDb;
+    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+    private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");

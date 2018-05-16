@@ -29,20 +29,19 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
+        if (!userDb.isUser(0)) {
+            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
+            userDb.addUser(user);
+            UserDataIO.saveUsers(userDb, USER_DATABASE);
+        }
 
-            if (!userDb.isUser(0)) {
-                User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
-                userDb.addUser(user);
-                UserDataIO.saveUsers(userDb, USER_DATABASE);
-            }
-
-            if (!userDb.isUser("admin")) {
-                User user = new User(UserType.ADMIN, "admin");
-                user.setUsername("admin");
-                user.setPassword("admin");
-                userDb.addUser(user);
-                UserDataIO.saveUsers(userDb, USER_DATABASE);
-            }
+        if (!userDb.isUser("admin")) {
+            User user = new User(UserType.ADMIN, "admin");
+            user.setUsername("admin");
+            user.setPassword("admin");
+            userDb.addUser(user);
+            UserDataIO.saveUsers(userDb, USER_DATABASE);
+        }
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));

@@ -67,6 +67,9 @@ public class ClinicianProfileController extends CommonController {
     private TextField transplantSearchField;
 
     @FXML
+    private Label donorStatusLabel;
+
+    @FXML
     private TableView transplantTable;
 
     private ObservableList<Profile> donorObservableList;
@@ -139,6 +142,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void setClinicianDetails(){
+        donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
