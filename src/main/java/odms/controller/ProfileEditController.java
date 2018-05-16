@@ -263,6 +263,7 @@ public class ProfileEditController extends CommonController {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
                     ProfileDataIO.saveData(getCurrentDatabase());
+                    showNotification("Profile", event);
                     closeEditWindow(event);
                 }
             }
@@ -304,6 +305,7 @@ public class ProfileEditController extends CommonController {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
+        appStage.setTitle("Profile");
         appStage.show();
     }
 

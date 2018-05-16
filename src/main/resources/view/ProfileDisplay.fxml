@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -488,15 +495,15 @@
                                     <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" onAction="#handleAddNewMedications" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                    <Button fx:id="buttonAddMedication" mnemonicParsing="false" onAction="#handleAddNewMedications" onMouseClicked="#editTrueClick" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                        <graphic>
-                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                          <ImageView onMouseClicked="#editTrueClick" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../icons/arrow0.png" />
                                              </image>
                                           </ImageView>
                                        </graphic></Button>
-                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" onAction="#handleMoveMedicationToHistoric" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                                    <Button fx:id="buttonMedicationCurrentToHistoric" mnemonicParsing="false" onAction="#handleMoveMedicationToHistoric" onMouseClicked="#editTrueClick" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -515,7 +522,7 @@
                                       </columns>
                                     </TableView>
                                     <TextField fx:id="textFieldMedicationSearch" promptText="Enter medication name" GridPane.columnIndex="1" GridPane.columnSpan="3" />
-                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                    <Button fx:id="buttonMedicationHistoricToCurrent" mnemonicParsing="false" onAction="#handleMoveMedicationToCurrent" onMouseClicked="#editTrueClick" GridPane.columnIndex="5" GridPane.rowIndex="4">
                                        <graphic>
                                           <ImageView pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -556,13 +563,15 @@
                                           </GridPane>
                                        </children>
                                     </TilePane>
-                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                    <TilePane minWidth="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5">
                                        <children>
-                                          <GridPane prefHeight="61.0" prefWidth="390.0">
+                                          <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="61.0" prefWidth="819.0">
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="69.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.0" minWidth="10.0" prefWidth="144.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="177.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="57.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="69.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="143.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="180.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="367.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                               <RowConstraints maxHeight="14.0" minHeight="10.0" prefHeight="13.0" vgrow="SOMETIMES" />
@@ -570,9 +579,11 @@
                                               <RowConstraints maxHeight="21.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
-                                                <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.rowIndex="1" />
-                                                 <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonShowDrugInteractions" mnemonicParsing="false" onAction="#handleShowInteractions" text="Show interactions" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonDeleteMedication" mnemonicParsing="false" onAction="#handleDeleteMedication" onMouseClicked="#editTrueClick" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                 <Button fx:id="buttonViewActiveIngredients" mnemonicParsing="false" onAction="#handleViewActiveIngredients" text="View active ingredients" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonSaveMedications" mnemonicParsing="false" onAction="#handleSaveMedications" text="Save" GridPane.rowIndex="1" />
+                                                <Button fx:id="buttonViewMedicationHistory" mnemonicParsing="false" onAction="#handleViewMedicationHistory" text="View Medication History" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
                                              </children>
                                           </GridPane>
