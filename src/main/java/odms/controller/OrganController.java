@@ -1,5 +1,7 @@
 package odms.controller;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,6 +10,8 @@ import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -22,8 +26,8 @@ import odms.profile.Profile;
 public class OrganController {
     private Profile profile;
 
-    private ObservableList<String> observableListOrgansAvailable;
-    private ObservableList<String> observableListOrgansRequired;
+    public ObservableList<String> observableListOrgansAvailable;
+    public ObservableList<String> observableListOrgansRequired;
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -140,6 +144,7 @@ public class OrganController {
     public void onBtnCancelClicked() {
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
+        profile.setDateOfDeath(null);
     }
 
     /**
@@ -205,8 +210,9 @@ public class OrganController {
             final int selectedIdxRequired = viewOrgansRequired.getSelectionModel().getSelectedIndex();
             if(selectedIdxRequired != -1) {
                 String itemToRemove = viewOrgansRequired.getSelectionModel().getSelectedItem();
-                observableListOrgansRequired.remove(itemToRemove);
-                observableListOrgansAvailable.add(itemToRemove);
+//                observableListOrgansRequired.remove(itemToRemove);
+//                observableListOrgansAvailable.add(itemToRemove);
+                giveReasonForRemoval(itemToRemove);
             }
         }
 
@@ -232,4 +238,22 @@ public class OrganController {
         }
     }
 
+    private void giveReasonForRemoval(String organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/OrganRemoval.fxml"));
+
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        OrganRemovalController controller = fxmlLoader.<OrganRemovalController>getController();
+        controller.initialize(organ, profile, this);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Organ removal");
+        stage.show();
+    }
 }
