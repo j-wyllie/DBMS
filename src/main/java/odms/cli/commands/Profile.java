@@ -198,11 +198,11 @@ public class Profile extends CommandUtils {
                 expression.lastIndexOf("\""));
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                Print.printSearchResults(currentDatabase.searchGivenNames(attr));
+                Print.printProfileSearchResults(currentDatabase.searchGivenNames(attr));
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                Print.printSearchResults(currentDatabase.searchLastNames(attr));
+                Print.printProfileSearchResults(currentDatabase.searchLastNames(attr));
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                Print.printSearchResults(currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
+                Print.printProfileSearchResults(currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
             } else {
                 System.out.println(searchErrorText);
             }

@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.data.UserDataIO;
-import odms.profile.Profile;
 import odms.user.User;
 
 import java.io.IOException;
@@ -20,8 +19,7 @@ import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+
 import odms.cli.CommandUtils;
 import javafx.scene.control.TextField;
 
@@ -81,10 +79,10 @@ public class ClinicianProfileEditController extends CommonController{
         boolean error = false;
         if (saveBool) {
             String action =
-                    "Clinician " + currentUser.getStaffId() + " updated details previous = " + currentUser
+                    "Clinician " + currentUser.getStaffID() + " updated details previous = " + currentUser
                             .getAttributesSummary() + " new = ";
             currentUser.setName(givenNamesField.getText());
-            currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
+            currentUser.setStaffID(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());
             currentUser.setRegion(regionField.getText());
 
@@ -108,7 +106,7 @@ public class ClinicianProfileEditController extends CommonController{
             Scene newScene = new Scene(parent);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(newScene);
-            showNotification("Clinician with ID " + currentUser.getStaffId(), event);
+            showNotification("Clinician with ID " + currentUser.getStaffID(), event);
             appStage.setTitle("Clinician");
             appStage.show();
         }
@@ -134,8 +132,8 @@ public class ClinicianProfileEditController extends CommonController{
             if (currentUser.getName() != null) {
                 givenNamesField.setText(currentUser.getName());
             }
-            if (currentUser.getStaffId() != null) {
-                staffIdField.setText(currentUser.getStaffId().toString());
+            if (currentUser.getStaffID() != null) {
+                staffIdField.setText(currentUser.getStaffID().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {

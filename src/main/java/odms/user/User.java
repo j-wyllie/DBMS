@@ -8,7 +8,7 @@ public class User {
 
     private UserType userType;
     private String name;
-    private Integer staffId;
+    private Integer staffID;
     private String workAddress;
     private String region;
     private LocalDateTime lastUpdated;
@@ -27,8 +27,10 @@ public class User {
         this.updateActions.add(output);
     }
 
-    public User(UserType userType){
+    public User(UserType userType, ArrayList<String> attrArray){
         this.userType = userType;
+        setExtraAttributes(attrArray);
+        timeOfCreation = LocalDateTime.now();
     }
 
     public User(UserType userType, String name, String region){
@@ -36,6 +38,7 @@ public class User {
         this.userType = userType;
         this.name = name;
         this.region = region;
+        timeOfCreation = LocalDateTime.now();
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
     }
 
@@ -55,15 +58,15 @@ public class User {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 
+        if (attrName.startsWith(" ")) {attrName = attrName.substring(1);}   //TODO why does this bug pop up
+
+        //TODO add in 'attribute' functionality like in profile/Profile
         switch (attrName) {
             case "name":
                 setName(value);
                 break;
             case "workAddress":
                 setWorkAddress(value);
-                break;
-            case "staffId":
-                setStaffId(Integer.parseInt(value));
                 break;
             case "region":
                 setRegion(value);
@@ -75,7 +78,7 @@ public class User {
 
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("staffId=" + staffId);
+        summary = summary +("staffID=" + staffID);
         summary = summary +"," +("name=" + name);
         summary = summary +"," +("workAddress=" + workAddress);
         summary = summary +"," +("region=" + region);
@@ -101,18 +104,18 @@ public class User {
 
     /**
      * Sets the staff id of the user
-     * @param staffId staff id to be set
+     * @param staffID staff id to be set
      */
-    public void setStaffId(Integer staffId){
-        this.staffId = staffId;
-        generateUpdateInfo(staffId.toString());
+    public void setStaffID(Integer staffID){
+        this.staffID = staffID;
+        generateUpdateInfo(staffID.toString());
     }
 
     /**
      * Gets the staff id of the user
      */
-    public Integer getStaffId(){
-        return this.staffId;
+    public Integer getStaffID(){
+        return this.staffID;
     }
 
     /**
@@ -152,5 +155,29 @@ public class User {
 
     public ArrayList<String> getUpdateActions() {
         return updateActions;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public LocalDateTime getTimeOfCreation() {
+        return timeOfCreation;
+    }
+
+    public void setTimeOfCreation(LocalDateTime timeOfCreation) {
+        this.timeOfCreation = timeOfCreation;
     }
 }

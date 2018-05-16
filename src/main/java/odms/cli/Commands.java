@@ -8,8 +8,10 @@ public enum Commands {
 
     // General Commands
     HELP,
-    PRINTALL,
+    PRINTALLPROFILES,
     PRINTDONORS,
+    PRINTCLINICIANS,
+    PRINTALLUSERS,
     UNDO,
     REDO,
 
@@ -25,7 +27,15 @@ public enum Commands {
     PROFILEUPDATE,
     PROFILEVIEW,
 
-    // Orgon Commands
+    // Clinician Commands
+    CLINICIANCREATE,
+    CLINICIANDATECREATED,
+    CLINICIANDELETE,
+    PCLINICIANDONATIONS,
+    CLINICIANUPDATE,
+    CLINICIANEVIEW,
+
+    // Organ Commands
     ORGANADD,
     ORGANREMOVE,
     ORGANDONATE;
@@ -33,14 +43,19 @@ public enum Commands {
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
             new StringsCompleter("help"),
-            new StringsCompleter("print all"),
+            new StringsCompleter("print all profiles"),
             new StringsCompleter("print donors"),
+            new StringsCompleter("print all users"),
+            new StringsCompleter("print clinicians"),
 
             new StringsCompleter("export"),
             new StringsCompleter("import"),
 
             new StringsCompleter("create-profile"),
-            new StringsCompleter("delete-profile")
+            new StringsCompleter("delete-profile"),
+
+            new StringsCompleter("create-clinician"),
+            new StringsCompleter("delete-clinician")
         );
     }
 }

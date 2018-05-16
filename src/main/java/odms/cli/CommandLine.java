@@ -4,11 +4,14 @@ import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import odms.cli.commands.Clinician;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -20,11 +23,13 @@ import org.jline.terminal.TerminalBuilder;
 public class CommandLine {
 
     private ProfileDatabase currentDatabase;
+    private UserDatabase currentDatabaseUsers;
     private LineReader reader;
     private Terminal terminal;
 
-    public CommandLine (ProfileDatabase currentDatabase) {
+    public CommandLine (ProfileDatabase currentDatabase, UserDatabase currentDatabaseUsers) {
         this.currentDatabase = currentDatabase;
+        this.currentDatabaseUsers = currentDatabaseUsers;
 
         try {
             terminal = TerminalBuilder.terminal();
@@ -81,7 +86,7 @@ public class CommandLine {
 
         switch (inputCommand) {
             case INVALID:
-                System.out.println("Please enter a valid command.");
+                System.out.println("Please enter a valid command...");
                 break;
 
             case HELP:
@@ -93,9 +98,19 @@ public class CommandLine {
                 }
                 break;
 
-            case PRINTALL:
+            case PRINTALLPROFILES:
                 // Print all profiles (print all).
-                Print.printAll(currentDatabase);
+                Print.printAllProfiles(currentDatabase);
+                break;
+
+            case PRINTCLINICIANS:
+                // Print all clincians (print all).
+                Print.printAllClinicians(currentDatabaseUsers);
+                break;
+
+            case PRINTALLUSERS:
+                // Print all clincians (print all).
+                Print.printAllUsers(currentDatabaseUsers);
                 break;
 
             case PRINTDONORS:
@@ -159,6 +174,40 @@ public class CommandLine {
                 System.out.println("Searching for profiles...");
                 Profile.viewAttrBySearch(currentDatabase, rawInput);
                 break;
+
+
+            case CLINICIANCREATE:
+                // Create a new clinician.
+                Clinician.createClinician(currentDatabaseUsers, rawInput);
+                break;
+
+            case CLINICIANDATECREATED:
+                // Search clinicians (clinician > date-created).
+                System.out.println("Searching for clinicians...");
+                Clinician.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput);
+                break;
+
+            case CLINICIANDELETE:
+                // Delete a clinician.
+                Clinician.deleteClinicianBySearch(currentDatabaseUsers, rawInput);
+                System.out.println("Clinician(s) successfully deleted.");
+                break;
+
+
+            case CLINICIANUPDATE:
+                // Search clinician.
+                Clinician.updateClinicianBySearch(currentDatabaseUsers, rawInput);
+                System.out.println("Clinician(s) successfully updated.");
+                break;
+
+            case CLINICIANEVIEW:
+                // Search clinician (clinician > view).
+                System.out.println("Searching for clinicians...");
+                Clinician.viewAttrBySearch(currentDatabaseUsers, rawInput);
+                break;
+
+
+
 
             case ORGANADD:
                 // Add organs to a printDonors profile.
