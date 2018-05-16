@@ -27,12 +27,23 @@ public class User {
         this.updateActions.add(output);
     }
 
+    /**
+     * user constructor
+     * @param userType type of user
+     * @param attrArray array containing users attributes
+     */
     public User(UserType userType, ArrayList<String> attrArray){
         this.userType = userType;
         setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
     }
 
+    /**
+     * user constructor
+     * @param userType type of user
+     * @param name user name
+     * @param region user region
+     */
     public User(UserType userType, String name, String region){
         this.timeOfCreation = LocalDateTime.now();
         this.userType = userType;
@@ -54,6 +65,11 @@ public class User {
         }
     }
 
+    /**
+     * sets a users specific given attribute
+     * @param parts a string containing the users new attribute to be set
+     * @throws IllegalArgumentException
+     */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
@@ -76,6 +92,10 @@ public class User {
         }
     }
 
+    /**
+     * gets a attribute summary of the user
+     * @return attribute summary of the user
+     */
     public String getAttributesSummary() {
         String summary = "";
         summary = summary +("staffID=" + staffID);
@@ -97,6 +117,7 @@ public class User {
 
     /**
      * Gets the name of the user
+     * @return name of the user
      */
     public String getName(){
         return this.name;
@@ -113,6 +134,7 @@ public class User {
 
     /**
      * Gets the staff id of the user
+     * @return staff id of the user
      */
     public Integer getStaffID(){
         return this.staffID;
@@ -129,6 +151,7 @@ public class User {
 
     /**
      * Gets the work address of the user
+     * @return work address of the user
      */
     public String getWorkAddress(){
         return this.workAddress;
@@ -145,38 +168,64 @@ public class User {
 
     /**
      * Gets the region of the user
+     * @return region of the user
      */
     public String getRegion(){
         return this.region;
     }
+
     /**
      * Returns the update history of the user
+     * @return update history of the user
      */
-
     public ArrayList<String> getUpdateActions() {
         return updateActions;
     }
 
+    /**
+     * Gets the user type of the user
+     * @return user type of the user
+     */
     public UserType getUserType() {
         return userType;
     }
 
+    /**
+     * Sets the user type of the user
+     * @param userType user type of the user
+     */
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
 
+    /**
+     * Gets the date when the user was last updated
+     * @return date when the user was last updated
+     */
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
+    /**
+     * Sets the date when the user was last updated
+     * @param lastUpdated date when the user was last updated
+     */
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
+    /**
+     * Gets the time of creation of the user
+     * @return time of creation of the user
+     */
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
     }
 
+    /**
+     * Sets the time of creation of the user
+     * @param timeOfCreation time of creation of the user
+     */
     public void setTimeOfCreation(LocalDateTime timeOfCreation) {
         this.timeOfCreation = timeOfCreation;
     }

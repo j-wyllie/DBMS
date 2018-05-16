@@ -21,16 +21,18 @@ public class UserDatabase {
      * @param id unique ID for requested clinician
      * @return User object
      */
-    public User getClinician(Integer id){
+    public User getUser(Integer id){
         return userDb.get(id);
     }
 
+
+
     /**
-     * Determine unique ID for profile and add the profile the the database
+     * Determine unique ID for user and add the user the the database
      *
      * @param user new user object
      */
-    public void addClinician(User user){
+    public void addUser(User user){
         lastID += 1;
         user.setStaffID(lastID);
 
@@ -48,11 +50,8 @@ public class UserDatabase {
 
 
     /**
-     * Generate a list of profiles ordered by last names.
-     * Parameter to specify whether or not the list contains every profile or only profiles that
-     * are currently donating organs.
-     *
-     * @return Array of profiles found that match
+     * Generate a list of clinicians
+     * @return Array of clinicians
      */
     public ArrayList<User> getClinicians() {
         ArrayList<User> clinicians = new ArrayList<>();
@@ -72,11 +71,8 @@ public class UserDatabase {
 
 
     /**
-     * Generate a list of profiles ordered by last names.
-     * Parameter to specify whether or not the list contains every profile or only profiles that
-     * are currently donating organs.
-     *
-     * @return Array of profiles found that match
+     * Generate a list of users
+     * @return Array of users
      */
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
@@ -93,11 +89,10 @@ public class UserDatabase {
 
 
 
-
     /**
-     * Fuzzy search that finds the top 30 donors that match the provided search string.
-     * @param searchString the string that the donor names will be searched against.
-     * @return list of donors that match the provided search string, with a max size of 30.
+     * Fuzzy search that finds the top 30 users that match the provided search string.
+     * @param searchString the string that the user names will be searched against.
+     * @return list of users that match the provided search string, with a max size of 30.
      */
     public ArrayList<User> searchUsers(String searchString) {
         ArrayList<String> users = new ArrayList<>();
@@ -126,10 +121,10 @@ public class UserDatabase {
 
 
     /**
-     * Remove profile from the database, adding their ID to the deletedID's set for
-     * logging of removed profiles.
+     * Remove user from the user database, adding their ID to the deletedID's set for
+     * logging of removed users.
      *
-     * @param staffID unique profile ID
+     * @param staffID unique user ID
      */
     public boolean deleteUser(Integer staffID) {
         try {
@@ -144,12 +139,11 @@ public class UserDatabase {
     }
 
 
-
     /**
-     * Search for profiles via their given names
+     * Search for users via their given names
      *
      * @param searchTerm string of the names
-     * @return Array of profiles found that match
+     * @return Array of users found that match
      */
     public ArrayList<User> searchNames(String searchTerm) {
         ArrayList<User> results = new ArrayList<>();
@@ -165,10 +159,10 @@ public class UserDatabase {
 
 
     /**
-     * Search for profiles via their IRD number
+     * Search for users via their staff ID number
      *
-     * @param searchTerm integer of the IRD number
-     * @return Array of profiles found that match
+     * @param searchTerm integer of the staff ID number
+     * @return Array of users found that match staff ID number
      */
     public ArrayList<User> searchStaffID(Integer searchTerm) {
         ArrayList<User> results = new ArrayList<>();

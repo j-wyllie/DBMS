@@ -8,11 +8,7 @@ import static odms.controller.GuiMain.getUserDatabase;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -48,7 +44,7 @@ public class LoginController extends CommonController {
                 int userId = Integer.valueOf(usernameField.getText());
 
                 if (userId == 0) {
-                    currentUser = userDatabase.getClinician(0);
+                    currentUser = userDatabase.getUser(0);
                     String scene = "/view/ClinicianProfile.fxml";
                     String title = "Clinician";
                     showScene(event, scene, title, true);

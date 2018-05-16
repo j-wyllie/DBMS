@@ -5,10 +5,10 @@ import static odms.cli.CommandUtils.validateCommandType;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import odms.cli.commands.Clinician;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
+import odms.cli.commands.User;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
@@ -109,7 +109,7 @@ public class CommandLine {
                 break;
 
             case PRINTALLUSERS:
-                // Print all clincians (print all).
+                // Print all users (print all).
                 Print.printAllUsers(currentDatabaseUsers);
                 break;
 
@@ -178,32 +178,32 @@ public class CommandLine {
 
             case CLINICIANCREATE:
                 // Create a new clinician.
-                Clinician.createClinician(currentDatabaseUsers, rawInput);
+                User.createClinician(currentDatabaseUsers, rawInput);
                 break;
 
             case CLINICIANDATECREATED:
                 // Search clinicians (clinician > date-created).
                 System.out.println("Searching for clinicians...");
-                Clinician.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput);
+                User.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput);
                 break;
 
             case CLINICIANDELETE:
                 // Delete a clinician.
-                Clinician.deleteClinicianBySearch(currentDatabaseUsers, rawInput);
+                User.deleteUserBySearch(currentDatabaseUsers, rawInput);
                 System.out.println("Clinician(s) successfully deleted.");
                 break;
 
 
             case CLINICIANUPDATE:
                 // Search clinician.
-                Clinician.updateClinicianBySearch(currentDatabaseUsers, rawInput);
+                User.updateUserBySearch(currentDatabaseUsers, rawInput);
                 System.out.println("Clinician(s) successfully updated.");
                 break;
 
             case CLINICIANEVIEW:
                 // Search clinician (clinician > view).
                 System.out.println("Searching for clinicians...");
-                Clinician.viewAttrBySearch(currentDatabaseUsers, rawInput);
+                User.viewAttrBySearch(currentDatabaseUsers, rawInput);
                 break;
 
 

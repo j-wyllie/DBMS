@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Clinician extends CommandUtils {
+public class User extends CommandUtils {
 
     /**
-     * Add history for profile
+     * Add history for clinician
      *
-     * @param Id profile ID
+     * @param Id clinician ID
      */
     protected static void addClinicianHistory(int Id) {
         if (currentSessionHistory.size() != 0) {
@@ -27,7 +27,7 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Create profile.
+     * Create clinician.
      *
      * @param currentDatabase Database reference
      * @param rawInput raw command input
@@ -39,7 +39,7 @@ public class Clinician extends CommandUtils {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             UserType userType = UserType.CLINICIAN;
             odms.user.User newUser = new odms.user.User(userType, attrArray);
-            currentDatabase.addClinician(newUser);
+            currentDatabase.addUser(newUser);
             addClinicianHistory(newUser.getStaffID());
             System.out.println("Clinician created.");
 
@@ -52,27 +52,29 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Delete profiles from the database.
+     * Delete user from the database by search.
      *
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void deleteClinicianBySearch(UserDatabase currentDatabase, String expression) {
+    public static void deleteUserBySearch(UserDatabase currentDatabase, String expression) {
+        //todo what other user types will use this function? the length to skip will need to change accordingly
+        int lengthToSkip = 10;   //for clinician
         ArrayList<odms.user.User> userList;
 
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
 
-            if (expression.substring(10, 10 + "name".length()).equals("name")) {
+            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
                userList = currentDatabase.searchNames(attr);
 
-                deleteClinicians(userList, currentDatabase);
-            } else if (expression.substring(10, 10 + "staffID".length()).equals("staffID")) {
+                deleteUsers(userList, currentDatabase);
+            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length()).equals("staffID")) {
                 userList = currentDatabase
                         .searchStaffID(Integer.valueOf(attr));
 
-                deleteClinicians(userList, currentDatabase);
+                deleteUsers(userList, currentDatabase);
             }
 
         } else {
@@ -81,13 +83,13 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Delete profiles.
+     * Delete users.
      *
      * @param userList list of users
      * @param currentDatabase Database reference
      */
-    private static void deleteClinicians(ArrayList<odms.user.User> userList,
-                                         UserDatabase currentDatabase) {
+    private static void deleteUsers(ArrayList<odms.user.User> userList,
+                                    UserDatabase currentDatabase) {
         boolean result;
         if (userList.size() > 0) {
             for (odms.user.User user : userList) {
@@ -113,12 +115,12 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Update profile attributes.
+     * Update user attributes.
      *
-     * @param userList List of profiles
+     * @param userList List of users
      * @param attrList Attributes to be updated and their values
      */
-    private static void updateClinicianAttr(ArrayList<odms.user.User> userList, String[] attrList) {
+    private static void updateUserAttr(ArrayList<odms.user.User> userList, String[] attrList) {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             String action;
@@ -143,12 +145,14 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Update profile attributes.
+     * Update user attributes by search.
      *
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void updateClinicianBySearch(UserDatabase currentDatabase, String expression) {
+    public static void updateUserBySearch(UserDatabase currentDatabase, String expression) {
+        //todo what other user types will use this function? the length to skip will need to change accordingly
+        int lengthToSkip = 10;   //for clinician
         ArrayList<odms.user.User> userList;
 
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
@@ -162,15 +166,15 @@ public class Clinician extends CommandUtils {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.indexOf(">") - 2);
 
-            if (expression.substring(10, 10 + "name".length()).equals("name")) {
+            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
                 userList = currentDatabase.searchNames(attr);
 
-                updateClinicianAttr(userList, attrList);
-            }  else if (expression.substring(10, 10 + "staffID".length()).equals("staffID")) {
+                updateUserAttr(userList, attrList);
+            }  else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length()).equals("staffID")) {
                 userList = currentDatabase
                         .searchStaffID(Integer.valueOf(attr));
 
-                updateClinicianAttr(userList, attrList);
+                updateUserAttr(userList, attrList);
             }
 
         } else {
@@ -179,20 +183,22 @@ public class Clinician extends CommandUtils {
     }
 
     /**
-     * Displays profiles attributes via the search methods
+     * Displays users attributes via the search methods
      *
      * @param currentDatabase Database reference
      * @param expression Search expression being used for searching
      */
     public static void viewAttrBySearch(UserDatabase currentDatabase, String expression) {
+        //todo what other user types will use this function? the length to skip will need to change accordingly
+        int lengthToSkip = 10;   //for clinician
 
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
 
-            if (expression.substring(10, 10 + "name".length()).equals("name")) {
+            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
                 Print.printUserSearchResults(currentDatabase.searchNames(attr));
-            } else if (expression.substring(10, 10 + "staffID".length()).equals("staffID")) {
+            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length()).equals("staffID")) {
                 Print.printUserSearchResults(currentDatabase.searchStaffID(Integer.valueOf(attr)));
             } else {
                 System.out.println(searchErrorText);
@@ -209,14 +215,15 @@ public class Clinician extends CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void viewDateTimeCreatedBySearch(UserDatabase currentDatabase,
-                                                   String expression) {
+    public static void viewDateTimeCreatedBySearch(UserDatabase currentDatabase, String expression) {
+        //todo what other user types will use this function? the length to skip will need to change accordingly
+        int lengthToSkip = 10;   //for clinician
         ArrayList<odms.user.User> userList;
 
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
 
-        if (expression.substring(10, 10 + "name".length()).equals("name")) {
+        if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 userList = currentDatabase.searchNames(attr);
 
@@ -224,7 +231,7 @@ public class Clinician extends CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(10, 10 + "staffID".length()).equals("staffID")) {
+        } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length()).equals("staffID")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 userList = currentDatabase
                         .searchStaffID(Integer.valueOf(attr));
@@ -238,10 +245,6 @@ public class Clinician extends CommandUtils {
             System.out.println(searchErrorText);
         }
     }
-
-
-
-
 
 
 }

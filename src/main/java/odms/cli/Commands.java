@@ -35,6 +35,10 @@ public enum Commands {
     CLINICIANUPDATE,
     CLINICIANEVIEW,
 
+    // User commands TODO need to replace most clinician stuff with user, works for now
+
+
+
     // Organ Commands
     ORGANADD,
     ORGANREMOVE,
