@@ -56,6 +56,9 @@ public class ClinicianProfileController extends CommonController {
     private TableColumn<Profile, String> fullNameColumn;
 
     @FXML
+    private TableColumn<Profile, String> donorReceiverColumn;
+
+    @FXML
     private TableColumn<Profile, Integer> ageColumn;
 
     @FXML
@@ -166,7 +169,8 @@ public class ClinicianProfileController extends CommonController {
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
+        donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
+        searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
