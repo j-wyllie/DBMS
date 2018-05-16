@@ -267,12 +267,18 @@ public class ProfileDatabase {
 
 
         if (!regionSearchString.equals("")) {
-            resultProfiles.removeIf(profile -> !profile.getRegion().toLowerCase().equals(regionSearchString.toLowerCase()));
+            resultProfiles.removeIf(profile -> {
+                if (profile.getRegion() == null) {return true;}
+                return !profile.getRegion().toLowerCase().equals(regionSearchString.toLowerCase());
+            });
         }
 
 
         if (!selectedGenders.isEmpty()) {
-            resultProfiles.removeIf(profile -> !selectedGenders.contains(profile.getGender()));
+            resultProfiles.removeIf(profile -> {
+                if (profile.getGender() == null) {return true;}
+                return !selectedGenders.contains(profile.getGender());
+            });
         }
 
 
