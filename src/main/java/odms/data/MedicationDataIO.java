@@ -15,11 +15,19 @@ import java.util.ArrayList;
 
 public class MedicationDataIO {
 
+    // Value used to identify if response was a internal server error.
+    private static final String SERVERERROR = "1";
+
+    // URL strings for the API endpoints
+    private static final String INTERACTIONURL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
+    private static final String INGREDIENTURL = "http://mapi-us.iterar.co/api/%s/substances.json";
+    private static final String SUGGESTIONURL = "http://mapi-us.iterar.co/api/autocomplete?query=%s";
+
     /**
      * Gets a list of suggestions for the clinician user based on a string or substring they
      * have entered into the field.
      * @param substring represents the value to send in the HTTP GET request to the API.
-     * @throws IOException
+     * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
     public static ArrayList<String> getSuggestionList(String substring) throws IOException {
         ArrayList<String> suggestionList = new ArrayList<>();
@@ -27,11 +35,14 @@ public class MedicationDataIO {
         if (!(substring == null || substring.equals(""))) {
             substring = replaceSpace(substring, false);
             String urlString = String
-                    .format("http://mapi-us.iterar.co/api/autocomplete?query=%s", substring);
-            URL url = new URL(urlString);
+                    .format(SUGGESTIONURL, substring);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
+
+            if (response == null || response.toString().equals(SERVERERROR)) {
+                return suggestionList;
+            }
 
             //Parsing the list of suggestions from the response.
             suggestionList = parseJSON(response, false);
@@ -43,6 +54,7 @@ public class MedicationDataIO {
      * Gets a list of active ingredients for the drug selected by the clinician user.
      *
      * @param drugName represents the value to send in the HTTP GET request to the API.
+     * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
     public static ArrayList<String> getActiveIngredients(String drugName) throws IOException {
         ArrayList<String> activeList = new ArrayList<>();
@@ -50,11 +62,14 @@ public class MedicationDataIO {
         if (!(drugName == null || drugName.equals(""))) {
             drugName = replaceSpace(drugName, false);
             String urlString = String
-                    .format("http://mapi-us.iterar.co/api/%s/substances.json", drugName);
-            URL url = new URL(urlString);
+                    .format(INGREDIENTURL, drugName);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
+
+            if (response == null || response.toString().equals(SERVERERROR)) {
+                return activeList;
+            }
 
             //Parsing the list of suggestions from the response.
             activeList = parseJSON(response, true);
@@ -80,10 +95,11 @@ public class MedicationDataIO {
 
     /**
      * Makes a HTTP GET request to the url passed as a parameter and then returns the response.
-     * @param url represents the address the HTTP GET request is made to.
-     * @throws IOException URL and HttpURLConnection may cause IOExceptions
+     * @param urlString represents the address the HTTP GET request is made to.
+     * @throws IOException URL and HttpURLConnection may cause IOExceptions.
      */
-    private static StringBuffer makeRequest(URL url) throws IOException {
+    private static StringBuffer makeRequest(String urlString) throws IOException {
+        URL url = new URL(urlString);
         StringBuffer responseContent;
         //Creating the connection to the API server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -93,10 +109,10 @@ public class MedicationDataIO {
         con.setReadTimeout(5000);
 
         if (con.getResponseCode() == 200) {
+            responseContent = new StringBuffer();
             BufferedReader response = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
 
-            responseContent = new StringBuffer();
             String line = response.readLine();
             while (line != null) {
                 responseContent.append(line);
@@ -104,6 +120,10 @@ public class MedicationDataIO {
             }
             response.close();
             con.disconnect();
+        } else if (con.getResponseCode() < 600 && con.getResponseCode() > 499){
+            // If response was an internal server error, return SERVERERROR
+            responseContent = new StringBuffer();
+            return responseContent.append(SERVERERROR);
         } else {
             return null;
         }
@@ -142,7 +162,7 @@ public class MedicationDataIO {
      * @param gender gender of profile request is made for.
      * @param age age of profile request is made for.
      * @return Map
-     * @throws IOException creation of URL may cause IOException
+     * @throws IOException creation of URL may cause IOException.
      */
     public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
         Map<String, String> interactions;
@@ -153,20 +173,23 @@ public class MedicationDataIO {
             drug1 = replaceSpace(drug1, true);
             drug2 = replaceSpace(drug2, true);
             String urlString = String
-                    .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug1, drug2);
-            URL url = new URL(urlString);
+                    .format(INTERACTIONURL, drug1, drug2);
 
             //Reading the response from the connection.
-            StringBuffer response = makeRequest(url);
+            StringBuffer response = makeRequest(urlString);
 
             if (response == null) {
+                return  interactions;
+            } else if (response.toString().equals(SERVERERROR)) {
                 // Server is fussy about what order the drugs are in the url, if request fails will try again with drugs
                 // in different order.
                 urlString = String
                         .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug2, drug1);
-                url = new URL(urlString);
-                response = makeRequest(url);
+                response = makeRequest(urlString);
                 if (response == null) {
+                    return interactions;
+                } else if (response.toString().equals(SERVERERROR)) {
+                    interactions.put("error", "error getting data");
                     return interactions;
                 }
             }
@@ -245,13 +268,13 @@ public class MedicationDataIO {
             ageGroup = entry.getKey();
             if (ageGroup.equals("nan")) {
                 return interactions;
-            } else if (ageGroup.equals("60+") && age > 60) {
+            } else if (ageGroup.equals("60+") && age >= 60) {
                 interactionArray = entry.getValue().getAsJsonArray();
                 for (JsonElement value : interactionArray) {
                     interactions.put(value.toString().replace("\"", ""), "");
                 }
                 return interactions;
-            } else {
+            } else if (!ageGroup.equals("60+")) {
                 ageGroupArray = ageGroup.split("-");
                 lowerBound = Integer.parseInt(ageGroupArray[0]);
                 upperBound = Integer.parseInt(ageGroupArray[1]);
