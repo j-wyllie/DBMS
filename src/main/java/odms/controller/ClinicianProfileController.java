@@ -15,12 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import odms.profile.Organ;
 import odms.profile.Profile;
@@ -74,16 +72,29 @@ public class ClinicianProfileController extends CommonController {
     private TableView transplantTable;
 
     @FXML
-    private Label resultCountLabel;
+    private Label labelResultCount;
 
     @FXML
-    private Pagination pagination;
+    private Label labelCurrentOnDisplay;
+
+    @FXML
+    private Button buttonShowAll;
+
+    @FXML
+    private Button buttonShowNext;
+
+    @FXML
+    private Button buttonShowPrevious;
 
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    private ArrayList<Profile> profileSearchResults;
+
+    private int startIndex;
 
     /**
      * Scene change to log in view.
@@ -125,34 +136,120 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
-     * Button handler to update donor table based on search results.
+     * Button handler to display all search results in the search table
+     * @param event clicking on the show all button.
+     */
+    @FXML
+    private void handleGetAllResults(ActionEvent event) {
+        if (buttonShowAll.getText().equals("Hide all")) {
+            buttonShowAll.setText("Show all");
+
+            if (startIndex == 0) {
+                buttonShowPrevious.setDisable(true);
+            } else {
+                buttonShowPrevious.setDisable(false);
+            }
+            if (profileSearchResults.size() < startIndex + 16) {
+                buttonShowNext.setDisable(true);
+            } else {
+                buttonShowNext.setDisable(false);
+            }
+            updateTable(false);
+            labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+        } else {
+            buttonShowAll.setText("Hide all");
+            buttonShowNext.setDisable(true);
+            buttonShowPrevious.setDisable(true);
+            updateTable(true);
+            labelCurrentOnDisplay.setText("1 to " + searchTable.getItems().size());
+        }
+
+    }
+
+    /**
+     * Button handler to display the next page of results in the search table
+     * @param event clicking on the show next button.
+     */
+    @FXML
+    private void handleShowNext(ActionEvent event) {
+        startIndex += 16;
+        buttonShowPrevious.setDisable(false);
+        if (profileSearchResults.size() < startIndex + 16) {
+            buttonShowNext.setDisable(true);
+        }
+        updateTable(false);
+        labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+    }
+
+    /**
+     * Button handler to display the previous page of results in the search table
+     * @param event clicking on the show previous button.
+     */
+    @FXML
+    private void handleShowPrevious(ActionEvent event) {
+        startIndex -= 16;
+        buttonShowNext.setDisable(false);
+        if (startIndex == 0) {
+            buttonShowPrevious.setDisable(true);
+        }
+        updateTable(false);
+        labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+    }
+
+    /**
+     * Button handler to update donor table based on search results. Makes call to get fuzzy search results of profiles.
      * @param event releasing a key on the keyboard.
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-            updateTable(0);
+        startIndex = 0;
+
+        String searchString = searchField.getText();
+        profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
+
+        buttonShowAll.setText("Show all");
+        buttonShowPrevious.setDisable(true);
+        if (profileSearchResults == null) {
+            buttonShowNext.setDisable(true);
+            buttonShowAll.setDisable(true);
+        } else if (profileSearchResults.size() > startIndex + 16) {
+            buttonShowNext.setDisable(false);
+            buttonShowAll.setDisable(false);
+        }
+        updateTable(false);
+        if (profileSearchResults == null) {
+            labelCurrentOnDisplay.setText("0 to 0");
+        } else {
+            labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+        }
     }
 
     /**
-     * Clears the searchTable and updates with search results of profiles from the fuzzy search.
+     * Clears the searchTable and updates with objects from the profileSearchResults arrayList. Results displayed
+     * depend on the parameter showAll and the class variable startIndex.
+     * @param showAll boolean, if true will display all objects in class variable profileSearchResults.
      */
-    private void updateTable(int start) {
-        String searchString = searchField.getText();
-
+    private void updateTable(boolean showAll) {
         searchTable.getItems().clear();
-        ArrayList<Profile> results = GuiMain.getCurrentDatabase().searchProfiles(searchString);
-        if (results != null) {
-            if (results.size() == 1) {
-                resultCountLabel.setText(results.size() + " result found");
+        if (profileSearchResults != null) {
+            if (profileSearchResults.size() == 1) {
+                labelResultCount.setText(profileSearchResults.size() + " result found");
             } else {
-                resultCountLabel.setText(results.size() + " results found");
+                labelResultCount.setText(profileSearchResults.size() + " results found");
             }
 
-            //donorObservableList.addAll(results.subList(start, start + 16));
-            donorObservableList.addAll(results);
+            if (showAll) {
+                donorObservableList.addAll(profileSearchResults);
+            } else if (profileSearchResults.subList(startIndex, profileSearchResults.size()).size() >= 16) {
+                donorObservableList.addAll(profileSearchResults.subList(startIndex, startIndex + 16));
+            } else if (profileSearchResults.subList(startIndex, profileSearchResults.size()).size() < 16) {
+                donorObservableList.addAll(profileSearchResults.subList(startIndex, profileSearchResults.size() ));
+            } else {
+                donorObservableList.addAll(profileSearchResults);
+            }
             searchTable.setItems(donorObservableList);
         } else {
-            resultCountLabel.setText(0 + " results found");
+            labelResultCount.setText(0 + " results found");
         }
     }
 
@@ -176,7 +273,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Profile> donors){
-        resultCountLabel.setText(0 + " results found");
+        labelResultCount.setText(0 + " results found");
         if (donors.size() > 30) {
             donors.clear();
             donors.addAll(donors.subList(0, 30));
@@ -320,11 +417,9 @@ public class ClinicianProfileController extends CommonController {
     private void initialize(){
         setClinicianDetails();
 
-        pagination.setPageFactory(this::createPage);
-
-        //makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
-        //searchTable.getItems().clear();
-        //searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+        makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        searchTable.getItems().clear();
+        searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
@@ -335,15 +430,5 @@ public class ClinicianProfileController extends CommonController {
         TableFilter filter = new TableFilter<>(transplantTable);
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 
-    }
-
-    private int rowsPerPage = 1;
-
-    private Node createPage(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage;
-        int toIndex = Math.min(fromIndex + rowsPerPage, GuiMain.getCurrentDatabase().searchProfiles("j").size());
-        searchTable.setItems(FXCollections.observableArrayList(GuiMain.getCurrentDatabase().searchProfiles("j").subList(fromIndex, toIndex)));
-
-        return new BorderPane(searchTable);
     }
 }

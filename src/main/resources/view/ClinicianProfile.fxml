@@ -184,7 +184,7 @@
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
-                                  <RowConstraints maxHeight="430.0" minHeight="10.0" prefHeight="430.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="430.0" minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="227.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
                                     <RowConstraints />
                                 </rowConstraints>
@@ -197,29 +197,28 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </TextField>
-                                    <Pagination fx:id="pagination" prefHeight="404.0" prefWidth="1184.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                        <fx:define>
-                                            <TableView fx:id="searchTable">
-                                                <columns>
-                                                    <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
-                                                    <TableColumn fx:id="donorReceiverColumn" prefWidth="209.0" text="Donor/Receiver" />
-                                                    <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="110.0" text="Age" />
-                                                    <TableColumn fx:id="genderColumn" prefWidth="148.0" text="Gender" />
-                                                    <TableColumn fx:id="regionColumn" prefWidth="179.0" text="Region" />
-                                                </columns>
-                                            </TableView>
-                                        </fx:define>
-                                    </Pagination>
-                                    <Label fx:id="resultCountLabel" prefHeight="36.0" prefWidth="633.0" text=" results found" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets left="10.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Hyperlink fx:id="nextResultsLink" alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="344.0" text="show all" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets right="10.0" />
-                                       </GridPane.margin>
-                                    </Hyperlink>
+                                    <TableView fx:id="searchTable" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                        <columns>
+                                            <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
+                                            <TableColumn fx:id="donorReceiverColumn" prefWidth="209.0" text="Donor/Receiver" />
+                                            <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="110.0" text="Age" />
+                                            <TableColumn fx:id="genderColumn" prefWidth="148.0" text="Gender" />
+                                            <TableColumn fx:id="regionColumn" prefWidth="179.0" text="Region" />
+                                        </columns>
+                                    </TableView>
+                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <children>
+                                          <Button fx:id="buttonShowNext" disable="true" mnemonicParsing="false" onAction="#handleShowNext" text="Show next 16" />
+                                          <Button fx:id="buttonShowPrevious" disable="true" mnemonicParsing="false" onAction="#handleShowPrevious" text="Show previous 16" />
+                                          <Button fx:id="buttonShowAll" disable="true" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all" />
+                                       </children>
+                                    </TilePane>
+                                    <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                       <children>
+                                          <Label fx:id="labelResultCount" prefHeight="36.0" prefWidth="149.0" text=" results found" />
+                                          <Label fx:id="labelCurrentOnDisplay" text="0 to 0" />
+                                       </children>
+                                    </TilePane>
                                  </children>
                               </GridPane>
                               </children>
