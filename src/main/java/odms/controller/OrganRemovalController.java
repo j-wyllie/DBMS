@@ -53,11 +53,6 @@ public class OrganRemovalController {
         }
         else if (selection.equals("No longer required")) {
             removeOrgan();
-            if (curedCheck.isSelected()) {
-
-            } else {
-
-            }
         }
         else if (selection.equals("Patient deceased")) {
             removeAllOrgans();
@@ -78,9 +73,7 @@ public class OrganRemovalController {
      * Removes all organs from the observable list of required organs displayed.
      */
     private void removeAllOrgans() {
-        for (String organ : organController.observableListOrgansRequired) {
-            organController.observableListOrgansAvailable.add(organ);
-        }
+        organController.observableListOrgansAvailable.addAll(organController.observableListOrgansRequired);
         organController.observableListOrgansRequired.clear();
     }
 
@@ -102,22 +95,27 @@ public class OrganRemovalController {
     private void handleReasonSelectionAction(ActionEvent event) {
         String reason = reasonSelector.getSelectionModel().getSelectedItem().toString();
 
-        if (reason == "No longer required") {
-            dynamicLabel.setText("Cured : ");
-            //create cured checkbox.
-            dodPicker.setVisible(false);
-            curedCheck.setVisible(true);
-        }
-        else if (reason == "Patient deceased") {
-            dynamicLabel.setText("Date of death : ");
-            //create date picker for dod.
-            dodPicker.setVisible(true);
-            curedCheck.setVisible(false);
-        }
-        else {
-            dynamicLabel.setText("");
-            dodPicker.setVisible(false);
-            curedCheck.setVisible(false);
+        switch (reason) {
+
+            case "No longer required":
+                dynamicLabel.setText("Cured : ");
+                //create cured checkbox.
+                dodPicker.setVisible(false);
+                curedCheck.setVisible(true);
+                break;
+
+            case "Patient deceased":
+                dynamicLabel.setText("Date of death : ");
+                //create date picker for dod.
+                dodPicker.setVisible(true);
+                curedCheck.setVisible(false);
+                break;
+
+            default:
+                dynamicLabel.setText("");
+                dodPicker.setVisible(false);
+                curedCheck.setVisible(false);
+                break;
         }
     }
 
@@ -134,7 +132,7 @@ public class OrganRemovalController {
         reasonSelector.getItems().addAll("Error", "No longer required", "Patient deceased");
         reasonSelector.setValue(reasonSelector.getItems().get(0));
         GridPane.setMargin(dodPicker, new Insets(0, 40, 0, 0));
-        windowGrid.add(dodPicker, 2,2, 2, 1);
+        windowGrid.add(dodPicker, 2, 2, 2, 1);
         dodPicker.setVisible(false);
         GridPane.setMargin(curedCheck, new Insets(5, 0, 0, 0));
         windowGrid.add(curedCheck, 2,2, 2, 1);
