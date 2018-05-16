@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -19,7 +25,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -178,7 +184,8 @@
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="430.0" minHeight="10.0" prefHeight="430.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="227.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
                                     <RowConstraints />
                                 </rowConstraints>
                                  <padding>
@@ -190,14 +197,25 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </TextField>
-                                        <TableView fx:id="searchTable" prefHeight="461.0" prefWidth="1178.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                        <TableView fx:id="searchTable" prefHeight="404.0" prefWidth="1184.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                             <columns>
                                                 <TableColumn fx:id="fullNameColumn" prefWidth="256.0" text="Full Name" />
-                                                <TableColumn fx:id="ageColumn" prefWidth="107.0" text="Age" />
-                                                <TableColumn fx:id="genderColumn" prefWidth="138.0" text="Gender" />
-                                                <TableColumn fx:id="regionColumn" prefWidth="226.0" text="Region" />
+                                          <TableColumn fx:id="donorReceiverColumn" prefWidth="209.0" text="Donor/Receiver" />
+                                                <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="110.0" text="Age" />
+                                                <TableColumn fx:id="genderColumn" prefWidth="148.0" text="Gender" />
+                                                <TableColumn fx:id="regionColumn" prefWidth="179.0" text="Region" />
                                             </columns>
                                         </TableView>
+                                    <Label fx:id="resultCountLabel" prefHeight="36.0" prefWidth="633.0" text=" results found" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets left="10.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Hyperlink fx:id="nextResultsLink" alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="344.0" text="show all" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets right="10.0" />
+                                       </GridPane.margin>
+                                    </Hyperlink>
                                  </children>
                               </GridPane>
                               </children>

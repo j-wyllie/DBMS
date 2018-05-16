@@ -6,6 +6,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,6 +57,9 @@ public class ClinicianProfileController extends CommonController {
     private TableColumn<Profile, String> fullNameColumn;
 
     @FXML
+    private TableColumn<Profile, String> donorReceiverColumn;
+
+    @FXML
     private TableColumn<Profile, Integer> ageColumn;
 
     @FXML
@@ -72,6 +76,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TableView transplantTable;
+
+    @FXML
+    private Label resultCountLabel;
 
     private ObservableList<Profile> donorObservableList;
 
@@ -161,6 +168,11 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Profile> donors){
+        resultCountLabel.setText(donors.size() + resultCountLabel.getText());
+        if (donors.size() > 30) {
+            donors.clear();
+            donors.addAll(donors.subList(0, 30));
+        }
         searchTable.getItems().clear();
 
         donorObservableList = FXCollections.observableArrayList(donors);
@@ -169,7 +181,8 @@ public class ClinicianProfileController extends CommonController {
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
+        donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
+        searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&

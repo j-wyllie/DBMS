@@ -9,6 +9,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javax.swing.DebugGraphics;
 import odms.cli.CommandUtils;
 import odms.controller.AlertController;
 import odms.medications.Drug;
@@ -777,6 +783,28 @@ public class Profile {
     public void removeCondition(Condition condition) {
         conditions.remove(condition);
     }
+
+    /**
+     * Returns the string value to populate the Donor/Receiver column in the clinician search table.
+     * @return a string depicting whether to profile is a donor, receiver, or both.
+     */
+    public SimpleStringProperty donorReceiverProperty() {
+        SimpleStringProperty result = new SimpleStringProperty();
+        if (!(donor == null) && donor) {
+            if (!(receiver == null) && receiver) {
+                result.setValue("Donor/Receiver");
+            }
+            else {
+                result.setValue("Donor");
+            }
+        }
+        else if (!(receiver == null) && receiver) {
+            result.setValue("Receiver");
+
+        }
+        return result;
+    }
+
     // -------
 
     public LocalDateTime getTimeOfCreation() {
@@ -978,5 +1006,6 @@ public class Profile {
     public void setAllConditions(ArrayList<Condition> conditions) {
         this.conditions = conditions;
     }
+
 
 }
