@@ -65,7 +65,7 @@ public class GuiMain extends Application {
         return userDb;
     }
 
-    public void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
+    public static void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
 
     public static void main(String[] args) {
         launch(args);

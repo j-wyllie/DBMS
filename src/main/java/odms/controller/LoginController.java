@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -45,6 +46,7 @@ public class LoginController extends CommonController {
     private void handleLoginButtonClicked(ActionEvent event) {
         String scene;
         String title;
+        Scene scene1;
 
         if (!usernameField.getText().equals("")) {
 
@@ -57,14 +59,14 @@ public class LoginController extends CommonController {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
-                        Scene scene = new Scene(fxmlLoader.load());
+                        scene1 = new Scene(fxmlLoader.load());
                         ClinicianProfileController controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
                         Stage stage = new Stage();
                         stage.setTitle("Admin");
-                        stage.setScene(scene);
+                        stage.setScene(scene1);
                         stage.show();
                         closeCurrentStage();
                     } catch (IOException e) {
@@ -77,19 +79,19 @@ public class LoginController extends CommonController {
                 try {
                     int userId = Integer.valueOf(usernameField.getText());
                     if (userId == 0) {
-                        currentUser = userDatabase.getClinician(0);
+                        currentUser = userDatabase.getUser(0);
 
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
-                        Scene scene = new Scene(fxmlLoader.load());
+                        scene1 = new Scene(fxmlLoader.load());
                         ClinicianProfileController controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
                         Stage stage = new Stage();
                         stage.setTitle("Clinician");
-                        stage.setScene(scene);
+                        stage.setScene(scene1);
                         stage.show();
                         closeCurrentStage();
                     } else {
@@ -99,14 +101,14 @@ public class LoginController extends CommonController {
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                            Scene scene = new Scene(fxmlLoader.load());
+                            scene1 = new Scene(fxmlLoader.load());
                             ProfileDisplayController controller = fxmlLoader.getController();
                             controller.setProfile(currentProfile);
                             controller.initialize();
 
                             Stage stage = new Stage();
                             stage.setTitle(currentProfile.getFullName() + "'s Profile");
-                            stage.setScene(scene);
+                            stage.setScene(scene1);
                             stage.show();
 
                             closeCurrentStage();
@@ -118,6 +120,8 @@ public class LoginController extends CommonController {
                     invalidUsername();
                 }
             }
+        }
+    }
 
     private void closeCurrentStage() {
         Stage currentStage = (Stage) usernameField.getScene().getWindow();
@@ -143,6 +147,6 @@ public class LoginController extends CommonController {
         handleLoginButtonClicked(event);
     }
 
-    public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+    public User getCurrentUser() { return currentUser; }
+    public void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }
