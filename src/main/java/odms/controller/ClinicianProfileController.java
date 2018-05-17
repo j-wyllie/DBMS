@@ -296,8 +296,8 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
-    public void handleTabDataManagementClicked(ActionEvent actionEvent) {
-        //dataManagementController.
+    public void handleTabDataManagementClicked() {
+
     }
 
     @FXML
