@@ -22,6 +22,8 @@ public class DataManagementController {
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
-        GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+        if (file != null) { // Check that the user actually selected a file
+            GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+        }
     }
 }

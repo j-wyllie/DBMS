@@ -81,6 +81,15 @@ public class ProfileDataIO extends CommonDataIO {
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
+
+        //if it's a new external file then this history file will not exist so maybe we should try to create it?
+        // This fixes the FileNotFoundError but not really sure, I'll hit you up about this Jack
+        try {
+            historyFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ProfileDatabase profileDb = new ProfileDatabase();
         profileDb.setPath(path);
 
