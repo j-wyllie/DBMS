@@ -94,7 +94,11 @@ public class ClinicianProfileController extends CommonController {
 
     private ArrayList<Profile> profileSearchResults;
 
-    private int startIndex;
+    // Constant that holds the number of search results displayed on a page at a time.
+    private static final int PAGESIZE = 50;
+
+    // Constant that holds the max number of search results that can be displayed.
+    private static final int MAXPAGESIZE = 200;
 
     /**
      * Scene change to log in view.
@@ -141,59 +145,16 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleGetAllResults(ActionEvent event) {
-        if (buttonShowAll.getText().equals("Hide all")) {
-            buttonShowAll.setText("Show all");
+        if (buttonShowAll.getText().equals("Show 20 results")) {
+            buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
 
-            if (startIndex == 0) {
-                buttonShowPrevious.setDisable(true);
-            } else {
-                buttonShowPrevious.setDisable(false);
-            }
-            if (profileSearchResults.size() < startIndex + 16) {
-                buttonShowNext.setDisable(true);
-            } else {
-                buttonShowNext.setDisable(false);
-            }
             updateTable(false);
-            labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+            labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
         } else {
-            buttonShowAll.setText("Hide all");
-            buttonShowNext.setDisable(true);
-            buttonShowPrevious.setDisable(true);
+            buttonShowAll.setText("Show 20 results");
             updateTable(true);
-            labelCurrentOnDisplay.setText("1 to " + searchTable.getItems().size());
+            labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
         }
-
-    }
-
-    /**
-     * Button handler to display the next page of results in the search table
-     * @param event clicking on the show next button.
-     */
-    @FXML
-    private void handleShowNext(ActionEvent event) {
-        startIndex += 16;
-        buttonShowPrevious.setDisable(false);
-        if (profileSearchResults.size() < startIndex + 16) {
-            buttonShowNext.setDisable(true);
-        }
-        updateTable(false);
-        labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
-    }
-
-    /**
-     * Button handler to display the previous page of results in the search table
-     * @param event clicking on the show previous button.
-     */
-    @FXML
-    private void handleShowPrevious(ActionEvent event) {
-        startIndex -= 16;
-        buttonShowNext.setDisable(false);
-        if (startIndex == 0) {
-            buttonShowPrevious.setDisable(true);
-        }
-        updateTable(false);
-        labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
     }
 
     /**
@@ -202,31 +163,36 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        startIndex = 0;
-
         String searchString = searchField.getText();
-        profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
 
-        buttonShowAll.setText("Show all");
-        buttonShowPrevious.setDisable(true);
-        if (profileSearchResults == null) {
-            buttonShowNext.setDisable(true);
-            buttonShowAll.setDisable(true);
-        } else if (profileSearchResults.size() > startIndex + 16) {
-            buttonShowNext.setDisable(false);
-            buttonShowAll.setDisable(false);
-        }
+        profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
         updateTable(false);
         if (profileSearchResults == null) {
-            labelCurrentOnDisplay.setText("0 to 0");
+            labelCurrentOnDisplay.setText("displaying 0 to 0");
+            buttonShowAll.setVisible(false);
         } else {
-            labelCurrentOnDisplay.setText((startIndex + 1) + " to " + (startIndex + searchTable.getItems().size()));
+            if (profileSearchResults.size() <= PAGESIZE) {
+                labelCurrentOnDisplay.setText("displaying 1 to " + profileSearchResults.size());
+                buttonShowAll.setVisible(false);
+            } else {
+                labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
+                if (profileSearchResults.size() > MAXPAGESIZE) {
+                    buttonShowAll.setVisible(false);
+                } else {
+                    buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
+                    buttonShowAll.setVisible(true);
+                }
+
+            }
+
         }
     }
 
     /**
      * Clears the searchTable and updates with objects from the profileSearchResults arrayList. Results displayed
-     * depend on the parameter showAll and the class variable startIndex.
+     * depend on the variable showAll, if this is false it will display only 50 or less (if profileSearchResults is
+     * smaller than 50) results. If it is true all results will be displayed, as long as profileSearchResults is under
+     * 200 objects in size.
      * @param showAll boolean, if true will display all objects in class variable profileSearchResults.
      */
     private void updateTable(boolean showAll) {
@@ -239,17 +205,17 @@ public class ClinicianProfileController extends CommonController {
             }
 
             if (showAll) {
-                donorObservableList.addAll(profileSearchResults);
-            } else if (profileSearchResults.subList(startIndex, profileSearchResults.size()).size() >= 16) {
-                donorObservableList.addAll(profileSearchResults.subList(startIndex, startIndex + 16));
-            } else if (profileSearchResults.subList(startIndex, profileSearchResults.size()).size() < 16) {
-                donorObservableList.addAll(profileSearchResults.subList(startIndex, profileSearchResults.size() ));
+                if (profileSearchResults.size() > 200) {
+                    labelResultCount.setText(0 + " results found");
+                } else {
+                    donorObservableList.addAll(profileSearchResults);
+                }
+            } else if (profileSearchResults.size() > PAGESIZE) {
+                donorObservableList.addAll(profileSearchResults.subList(0, PAGESIZE));
             } else {
                 donorObservableList.addAll(profileSearchResults);
             }
             searchTable.setItems(donorObservableList);
-        } else {
-            labelResultCount.setText(0 + " results found");
         }
     }
 
