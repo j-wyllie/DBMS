@@ -1,8 +1,12 @@
 package odms.profile;
 
+import java.util.HashSet;
+import odms.enums.OrganEnum;
+
 public class OrganConflictException extends Exception {
 
-    private Organ organ;
+    private OrganEnum organ;
+    private HashSet<OrganEnum> organs;
 
     public OrganConflictException() {
         super();
@@ -12,12 +16,21 @@ public class OrganConflictException extends Exception {
         super(message);
     }
 
-    public OrganConflictException(String message, Organ organ) {
+    public OrganConflictException(String message, HashSet<OrganEnum> organs) {
+        super(message);
+        this.organs = organs;
+    }
+
+    public OrganConflictException(String message, OrganEnum organ) {
         super(message);
         this.organ = organ;
     }
 
-    public Organ getOrgan() {
+    public OrganEnum getOrgan() {
         return organ;
+    }
+
+    public HashSet<OrganEnum> getOrgans() {
+        return organs;
     }
 }
