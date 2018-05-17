@@ -72,6 +72,9 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TableView transplantTable;
 
+    @FXML
+    private DataManagementController dataManagementController;
+
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
@@ -291,6 +294,10 @@ public class ClinicianProfileController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleTabDataManagementClicked(ActionEvent actionEvent) {
+        //dataManagementController.
     }
 
     @FXML
