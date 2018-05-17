@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,13 +8,18 @@ import java.util.List;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.enums.OrganSelectEnum;
@@ -22,13 +28,13 @@ import odms.profile.Profile;
 
 public class ProfileOrganEditController extends ProfileOrganCommonController {
 
-    private ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
+    protected ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> viewOrgansAvailable;
 
     @FXML
-    private ListView<String> viewOrgansRequired;
+    private ListView<String> viewOrgansSelected;
 
     @FXML
     private Button btnOrganSwitch;
@@ -37,12 +43,15 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     private Button btnSave;
 
     @FXML
-    private Label bannerLabel;
+    private Label lblBanner;
+
+    @FXML
+    private Label lblSelected;
 
     private static OrganSelectEnum windowType;
 
     public void initialize() {
-        bannerLabel.setText(windowType.toString());
+        lblBanner.setText(windowType.toString());
 
         if (currentProfile.get() != null) {
             // Order of execution for building these is required due to removing items from the
@@ -50,12 +59,12 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
             buildOrgansSelected();
             buildOrgansAvailable(observableListOrgansSelected);
             viewOrgansAvailable.setItems(observableListOrgansAvailable);
-            viewOrgansRequired.setItems(observableListOrgansSelected);
+            viewOrgansSelected.setItems(observableListOrgansSelected);
         }
 
-        btnOrganSwitch.setOnAction(event -> handleBtnOrganSwitchClicked());
+        btnOrganSwitch.setOnAction(this::handleBtnOrganSwitchClicked);
         viewOrgansAvailable.setOnMouseClicked(this::handleListOrgansAvailableClick);
-        viewOrgansRequired.setOnMouseClicked(this::handleListOrgansRequiredClick);
+        viewOrgansSelected.setOnMouseClicked(this::handleListOrgansRequiredClick);
     }
 
     /**
@@ -66,12 +75,15 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         switch (windowType) {
             case DONATED:
+                lblSelected.setText("Donated");
                 organs = currentProfile.get().getOrgansDonated();
                 break;
             case DONATING:
+                lblSelected.setText("Donating");
                 organs = currentProfile.get().getOrgansDonating();
                 break;
             case REQUIRED:
+                lblSelected.setText("Required");
                 organs = currentProfile.get().getOrgansRequired();
                 break;
         }
@@ -99,12 +111,12 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     /**
      * Button to perform moving the organ from one ListView to the other ListView
      */
-    private void handleBtnOrganSwitchClicked() {
-        switchOrgans();
+    private void handleBtnOrganSwitchClicked(Event event) {
+        switchOrgans(event);
     }
 
     private void handleListOrgansAvailableClick(MouseEvent event) {
-        handleOrgansClick(event, viewOrgansRequired.getSelectionModel());
+        handleOrgansClick(event, viewOrgansSelected.getSelectionModel());
     }
 
     private void handleListOrgansRequiredClick(MouseEvent event) {
@@ -125,7 +137,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
             if (event.getClickCount() == 2) {
                 model.clearSelection();
-                switchOrgans();
+                switchOrgans(event);
             }
         }
     }
@@ -210,7 +222,10 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Refresh the listViews
      */
     private void refreshListViews() {
-        viewOrgansRequired.refresh();
+        Collections.sort(observableListOrgansSelected);
+        Collections.sort(observableListOrgansAvailable);
+
+        viewOrgansSelected.refresh();
         viewOrgansAvailable.refresh();
     }
 
@@ -219,33 +234,56 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      *
      * @param profile the profile to operate against.
      */
-    public void setCurrentProfile(Profile profile) {
+    protected void setCurrentProfile(Profile profile) {
         this.currentProfile.set(profile);
     }
 
     /**
      * Take the selected organ from the ListView and move it to the other ListView.
      */
-    private void switchOrgans() {
+    private void switchOrgans(Event event) {
         if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
             String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
             observableListOrgansAvailable.remove(item);
             observableListOrgansSelected.add(item);
-        } else if (viewOrgansRequired.getSelectionModel().getSelectedIndex() != -1) {
-            String item = viewOrgansRequired.getSelectionModel().getSelectedItem();
-            observableListOrgansSelected.remove(item);
-            observableListOrgansAvailable.add(item);
+        } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
+            String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
+            giveReasonForRemoval(event, item);
         }
-
-        Collections.sort(observableListOrgansSelected);
-        Collections.sort(observableListOrgansAvailable);
         refreshListViews();
 
         viewOrgansAvailable.getSelectionModel().clearSelection();
-        viewOrgansRequired.getSelectionModel().clearSelection();
+        viewOrgansSelected.getSelectionModel().clearSelection();
     }
 
-    public static void setWindowType(OrganSelectEnum type) {
+    /**
+     * Launch pane to add reasoning for organ removal.
+     *
+     * @param organ the organ to specify reason for
+     */
+    private void giveReasonForRemoval(Event event, String organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganRemoval.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            ProfileOrganRemovalController controller = fxmlLoader.getController();
+            controller.initialize(organ, this.currentProfile.get(), this);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Organ Removal");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding((ob) -> refreshListViews());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected static void setWindowType(OrganSelectEnum type) {
         windowType = type;
     }
 

@@ -1,7 +1,7 @@
 package odms.controller;
 
-import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -16,9 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;

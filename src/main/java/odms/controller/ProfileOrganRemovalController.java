@@ -12,9 +12,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
-public class OrganRemovalController {
+public class ProfileOrganRemovalController {
 
     @FXML
     private Label dynamicLabel;
@@ -23,7 +24,7 @@ public class OrganRemovalController {
     private Label organLabel;
 
     @FXML
-    private ComboBox reasonSelector;
+    private ComboBox<String> reasonSelector;
 
     @FXML
     private GridPane windowGrid;
@@ -34,52 +35,61 @@ public class OrganRemovalController {
 
     private Profile currentProfile;
 
-    private OrganController organController;
+    private ProfileOrganEditController profileOrganEditController;
 
     private String currentOrgan;
 
     /**
      * Confirms the changes made to the organs required and stores the reason given for this
      * change.
-     * @param event
+     * @param event the ActionEvent
      */
     @FXML
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        String selection = reasonSelector.getSelectionModel().getSelectedItem();
+        switch (selection) {
+            case "Error":
+                removeOrgan();
+                break;
+
+            case "No longer required":
+                removeOrgan();
+                break;
+
+            case "Patient deceased":
+                removeAllOrgans();
+                currentProfile.setDateOfDeath(dodPicker.getValue());
+                HashSet<OrganEnum> organsRequired = new HashSet<>(
+                    currentProfile.getOrgansRequired()
+                );
+                currentProfile.removeOrgansRequired(organsRequired);
+                break;
+        }
         appStage.close();
-        String selection = reasonSelector.getSelectionModel().getSelectedItem().toString();
-        if (selection.equals("Error")) {
-            removeOrgan();
-        }
-        else if (selection.equals("No longer required")) {
-            removeOrgan();
-        }
-        else if (selection.equals("Patient deceased")) {
-            removeAllOrgans();
-            currentProfile.setDateOfDeath(dodPicker.getValue());
-            currentProfile.setOrgansRequired(new HashSet<>());
-        }
     }
 
     /**
      * Removes the selected organ from the observable list of required organs displayed.
      */
     private void removeOrgan() {
-        organController.observableListOrgansRequired.remove(currentOrgan);
-        organController.observableListOrgansAvailable.add(currentOrgan);
+        profileOrganEditController.observableListOrgansSelected.remove(currentOrgan);
+        profileOrganEditController.observableListOrgansAvailable.add(currentOrgan);
     }
 
     /**
      * Removes all organs from the observable list of required organs displayed.
      */
     private void removeAllOrgans() {
-        organController.observableListOrgansAvailable.addAll(organController.observableListOrgansRequired);
-        organController.observableListOrgansRequired.clear();
+        profileOrganEditController.observableListOrgansAvailable.addAll(
+            profileOrganEditController.observableListOrgansSelected
+        );
+        profileOrganEditController.observableListOrgansSelected.clear();
     }
 
     /**
      * Closes the window when the cancel button is clicked.
-     * @param event
+     * @param event the
      */
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
@@ -89,24 +99,23 @@ public class OrganRemovalController {
 
     /**
      * Dynamically displays a date picker or checkbox based on the reason selected by the user.
-     * @param event
      */
     @FXML
-    private void handleReasonSelectionAction(ActionEvent event) {
-        String reason = reasonSelector.getSelectionModel().getSelectedItem().toString();
+    private void handleReasonSelectionAction() {
+        String reason = reasonSelector.getSelectionModel().getSelectedItem();
 
         switch (reason) {
 
             case "No longer required":
                 dynamicLabel.setText("Cured : ");
-                //create cured checkbox.
+                // Create cured checkbox.
                 dodPicker.setVisible(false);
                 curedCheck.setVisible(true);
                 break;
 
             case "Patient deceased":
                 dynamicLabel.setText("Date of death : ");
-                //create date picker for dod.
+                // Create date picker for dod.
                 dodPicker.setVisible(true);
                 curedCheck.setVisible(false);
                 break;
@@ -124,12 +133,16 @@ public class OrganRemovalController {
      * of the window.
      */
     @FXML
-    public void initialize(String organ, Profile profile, OrganController controller) {
+    public void initialize(String organ, Profile profile, ProfileOrganEditController controller) {
         currentProfile = profile;
-        organController = controller;
+        profileOrganEditController = controller;
         currentOrgan = organ;
         organLabel.setText(organLabel.getText() + organ);
-        reasonSelector.getItems().addAll("Error", "No longer required", "Patient deceased");
+        reasonSelector.getItems().addAll(
+            "Error",
+            "No longer required",
+            "Patient deceased"
+        );
         reasonSelector.setValue(reasonSelector.getItems().get(0));
         GridPane.setMargin(dodPicker, new Insets(0, 40, 0, 0));
         windowGrid.add(dodPicker, 2, 2, 2, 1);
