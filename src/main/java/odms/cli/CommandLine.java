@@ -27,6 +27,12 @@ public class CommandLine implements Runnable {
         this.currentDatabase = currentDatabase;
 
         try {
+            /*  REPLACE with something like this
+              Terminal terminal = TerminalBuilder.builder()
+                          .system(false)
+                          .streams(input, output)
+                          .build();
+             */
             terminal = TerminalBuilder.terminal();
             reader = LineReaderBuilder.builder()
                 .terminal(terminal)
@@ -58,6 +64,7 @@ public class CommandLine implements Runnable {
         System.out.println("\nPlease enter your commands below:");
 
         while (!exit) {
+            // TODO change this so that it reads from my InputStream !!! Thought System.in.read was being called !!!
             input = reader.readLine("> ").trim();
 
             terminal.flush();
