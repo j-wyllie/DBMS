@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -896,6 +899,8 @@ public class ProfileDisplayController extends CommonController {
         stage.setTitle("Medication History");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
     }
 
@@ -1187,7 +1192,7 @@ public class ProfileDisplayController extends CommonController {
 
             logoutButton.setVisible(false);
         } else {
-            //User is a donor, limit functionality
+            // User is a standard profile, limit functionality
             curConditionsTable.setEditable(false);
             pastConditionsTable.setEditable(false);
             toggleChronicButton.setDisable(true);
@@ -1206,6 +1211,7 @@ public class ProfileDisplayController extends CommonController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
