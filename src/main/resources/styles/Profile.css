@@ -13,8 +13,9 @@
     -fx-text-fill: #fffbfb;
 }
 
-.tab-background {
-    -fx-background-color: #f4f4f4;
+.cell-highlighted {
+    -fx-background-color: #ae4446;
+    -fx-text-fill: #fffbfb;
 }
 
 .detail-background {
@@ -29,4 +30,8 @@
 .detail-text-header {
     -fx-font-size: 24px;
     -fx-text-fill: black;
+}
+
+.tab-background {
+    -fx-background-color: #f4f4f4;
 }

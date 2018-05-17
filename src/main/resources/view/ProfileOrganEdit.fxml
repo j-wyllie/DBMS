@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.OrganController">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileOrganEditController">
    <children>
       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -23,7 +23,7 @@
           <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <Label fx:id="bannerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Organs Required" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+            <Label fx:id="lblBanner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Organs" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                <styleClass>
                   <String fx:value="banner-default" />
                   <String fx:value="banner" />
@@ -44,9 +44,9 @@
                </opaqueInsets>
                <children>
                   <ListView fx:id="viewOrgansAvailable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                  <ListView fx:id="viewOrgansRequired" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ListView fx:id="viewOrgansSelected" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="Available" />
-                  <Label alignment="CENTER" text="Required" GridPane.columnIndex="2" />
+                  <Label fx:id="lblSelected" alignment="CENTER" text="Selected" GridPane.columnIndex="2" />
                   <Button fx:id="btnOrganSwitch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="&lt;-&gt;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets />
@@ -55,7 +55,7 @@
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></Button>
-                  <Button fx:id="btnCancel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin></Button>
