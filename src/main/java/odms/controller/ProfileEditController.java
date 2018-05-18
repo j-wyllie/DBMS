@@ -1,11 +1,9 @@
 package odms.controller;
 
-import static odms.controller.AlertController.donorCancelChanges;
-import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.OrganController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -16,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -93,25 +89,9 @@ public class ProfileEditController extends CommonController {
     private TextField diseaseField;
 
     @FXML
-    private TextField organField;
-
-    @FXML
-    private TextField donationsField;
-
-    @FXML
     private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
-
-
-    /**
-     * Scene change to log in view.
-     * @param event clicking on the logout button.
-     */
-    @FXML
-    private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        showLoginScene(event);
-    }
 
     /**
      * Button handler to undo last action.
@@ -134,25 +114,13 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/ProfileEdit.fxml";
-        String title = "Edit Profile";
-        showScene(event, scene, title, true);
-    }
-
-    /**
      * Button handler to save the changes made to the fields.
      *
      * @param event clicking on the save (tick) button.
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = donorSaveChanges();
+        boolean saveBool = profileSaveChanges();
         boolean error = false;
 
         if (saveBool) {
@@ -266,7 +234,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = donorCancelChanges();
+        boolean cancelBool = profileCancelChanges();
 
         if (cancelBool) {
             closeEditWindow(event);
@@ -284,9 +252,9 @@ public class ProfileEditController extends CommonController {
         Scene scene = new Scene(fxmlLoader.load());
         ProfileDisplayController controller = fxmlLoader.getController();
         if (isClinician) {
-            controller.setDonor(currentProfile);
+            controller.setProfileViaClinician(currentProfile);
         } else {
-            controller.setLoggedInProfile(currentProfile);
+            controller.setProfile(currentProfile);
         }
         controller.initialize();
 
@@ -297,48 +265,11 @@ public class ProfileEditController extends CommonController {
         appStage.show();
     }
 
-    @FXML
-    private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs to Donate");
-        stage.show();
-    }
-
-    @FXML
-    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs Required");
-        stage.show();
-    }
-
-    @FXML
-    private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Past Donations");
-        stage.show();
-    }
-
-    private Stage showOrgansSelectionWindow(String windowTitle) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/OrganEdit.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load());
-        OrganController controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile);
-        setWindowType(windowTitle);
-        controller.initialize();
-        Stage stage = new Stage();
-        stage.setTitle(windowTitle);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        return stage;
-    }
-
     /**
      * Sets the current profile attributes to the labels on start up.
      */
     @FXML
     public void initialize() {
-        if(currentProfile == null) {
-            currentProfile = getCurrentProfile();
-        }
 
         if (currentProfile != null) {
             try {
@@ -403,19 +334,13 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
-//            if (currentProfile.getBloodPressure() != null) {
-//                bloodPressureField.setText(currentProfile.getBloodPressure());
-//            }
-//            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-//                organField.setText(currentProfile.getOrgansAsCSV());
-//                donationsField.setText(currentProfile.getDonationsAsCSV());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void setDonor(Profile donor) {
+    public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
     }
 

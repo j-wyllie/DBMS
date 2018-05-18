@@ -28,6 +28,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(false);
         appStage.setTitle("ODMS");
+        appStage.centerOnScreen();
         appStage.show();
     }
 
@@ -58,6 +59,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(resizeable);
         appStage.setTitle(title);
+        appStage.centerOnScreen();
         appStage.show();
     }
 
@@ -105,6 +107,9 @@ class CommonController {
     @FXML
     protected void showNotification(String editedField, ActionEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if(currentStage.getTitle().contains("(*)")){
+            currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
+        }
 
         Notifications.create()
                 .title("Edit Successful")

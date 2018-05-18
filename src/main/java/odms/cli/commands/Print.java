@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class Print extends CommandUtils {
@@ -37,7 +37,7 @@ public class Print extends CommandUtils {
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
                 printProfileAttributes(profile);
-                System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
+                System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
                 System.out.println();
             }
         }
@@ -72,8 +72,8 @@ public class Print extends CommandUtils {
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Organs Donated:" + profile.getOrgansDonated());
-            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
-            System.out.println("Organs Required: " + Organ.organSetToString(profile.getOrgansRequired()));
+            System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
+            System.out.println("Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
             System.out.println();
         }
     }
@@ -140,15 +140,15 @@ public class Print extends CommandUtils {
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Donating: " + Organ.organSetToString(profile.getOrgansDonating()));
+            System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Donated: " + Organ.organSetToString(profile.getOrgansDonated()));
+            System.out.println("Organs Donated: " + OrganEnum.organSetToString(profile.getOrgansDonated()));
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Required: " + Organ.organSetToString(profile.getOrgansRequired()));
+            System.out.println("Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
         }
 
         System.out.println("Last updated at: " + profile.getLastUpdated().format(
