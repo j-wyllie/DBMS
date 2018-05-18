@@ -1,6 +1,7 @@
 package odms.controller;
 
 import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -14,8 +15,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import javafx.animation.PauseTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +43,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -1040,7 +1045,7 @@ public class ProfileDisplayController extends CommonController {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
             if (currentProfile.getSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
+                smokerLabel.setText(smokerLabel.getText() + currentProfile.getSmoker());
             }
 
             String history = ProfileDataIO.getHistory();

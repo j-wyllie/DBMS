@@ -1,9 +1,9 @@
 package odms.controller;
 
 import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.OrganController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -126,10 +127,9 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
         boolean error = false;
 
-        if (saveBool) {
+        if (profileSaveChanges()) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
                 guiPopup("Error. Required fields were left blank.");
@@ -247,9 +247,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = profileCancelChanges();
-
-        if (cancelBool) {
+        if (profileCancelChanges()) {
             closeEditWindow(event);
         }
     }
