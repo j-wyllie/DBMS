@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
+import odms.user.UserType;
 import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
@@ -73,6 +74,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TableView transplantTable;
+
+    @FXML
+    private Tab dataManagementTab;
 
     private ObservableList<Profile> donorObservableList;
 
@@ -162,7 +166,6 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void setClinicianDetails(){
-        System.out.println(givenNamesLabel.getText());
 
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
@@ -320,10 +323,19 @@ public class ClinicianProfileController extends CommonController {
         dataManagementController.setCurrentUser(currentUser);
     }
 
+    private void hideAdminItems() {
+        if (currentUser.getUserType() == UserType.CLINICIAN) {
+            dataManagementTab.setDisable(true);
+        } else {
+            dataManagementTab.setDisable(false);
+        }
+    }
+
     @FXML
     public void initialize(){
         if (currentUser != null) {
             setClinicianDetails();
+            hideAdminItems();
             makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
