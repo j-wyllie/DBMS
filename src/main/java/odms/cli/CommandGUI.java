@@ -22,7 +22,6 @@ public class CommandGUI {
     private final PrintStream out;
     private final InputStream in;
 
-
     public CommandGUI(TextArea textArea) {
         this.displayTextArea = textArea;
 
@@ -38,6 +37,26 @@ public class CommandGUI {
             throw new RuntimeException(e);
         }
         this.in = stream.getIn();
+    }
+
+    public void initHistory(CommandLine commandLine) {
+        displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            int textLen = 0;
+            switch (e.getCode()) {
+                case UP:
+                    textLen = displayTextArea.getText().length();
+                    displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                    commandLine.getHistory().previous();
+                    displayTextArea.appendText(commandLine.getHistory().current());
+                    break;
+                case DOWN:
+                    textLen = displayTextArea.getText().length();
+                    displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                    commandLine.getHistory().next();
+                    displayTextArea.appendText(commandLine.getHistory().current());
+                    break;
+            }
+        });
     }
 
     public void clear() {

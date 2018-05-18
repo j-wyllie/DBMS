@@ -11,6 +11,7 @@ import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
+import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -29,12 +30,6 @@ public class CommandLine implements Runnable {
         this.currentDatabase = currentDatabase;
 
         try {
-            /*  REPLACE with something like this
-              Terminal terminal = TerminalBuilder.builder()
-                          .system(false)
-                          .streams(input, output)
-                          .build();
-             */
             terminal = TerminalBuilder.terminal();
             reader = LineReaderBuilder.builder()
                 .terminal(terminal)
@@ -48,7 +43,6 @@ public class CommandLine implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public CommandLine (ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
@@ -106,6 +100,8 @@ public class CommandLine implements Runnable {
 
         }
     }
+
+    public History getHistory() { return reader.getHistory(); }
 
     /**
      * Take the input from the console commands and process them accordingly.

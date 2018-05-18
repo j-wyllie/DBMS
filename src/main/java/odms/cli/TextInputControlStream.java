@@ -26,8 +26,6 @@ class TextInputControlStream {
     private final TextInputControlInputStream in;
     private final TextInputControlOutputStream out;
     private final Charset charset;
-    protected int historyPointer = 0;
-    protected final List<String> history = new ArrayList<>();
 
     TextInputControlStream(final TextInputControl textInputControl, Charset charset) {
         this.charset = charset;
@@ -39,31 +37,6 @@ class TextInputControlStream {
             switch (e.getCode()) {
                 case ENTER:
                     getIn().enterKeyPressed();
-                    String text = textInputControl.getText();
-                    //textInputControl.appendText(text + System.lineSeparator());
-                    history.add(text);
-                    historyPointer++;
-                    //textInputControl.clear();
-                    break;
-                case UP:
-                    if (historyPointer == 0) {
-                        break;
-                    }
-                    historyPointer--;
-                    runSafe(() -> {
-                        textInputControl.appendText(history.get(historyPointer));
-                        textInputControl.selectAll();
-                    });
-                    break;
-                case DOWN:
-                    if (historyPointer == history.size() - 1) {
-                        break;
-                    }
-                    historyPointer++;
-                    runSafe(() -> {
-                        textInputControl.appendText(history.get(historyPointer));
-                        textInputControl.selectAll();
-                    });
                     break;
             }
             if (textInputControl.getCaretPosition() <= getIn().getLastLineBreakIndex()) {
@@ -138,7 +111,7 @@ class TextInputControlStream {
                     this.textInputControl.positionCaret(this.textInputControl.getLength());
 
                     final String lastLine = getLastLine();
-                    final ByteBuffer buf = getCharset().encode(lastLine + "\r\n"); //$NON-NLS-1$
+                    final ByteBuffer buf = getCharset().encode(lastLine + "\r\n");
                     this.inputTextTarget.write(buf.array(), 0, buf.remaining());
                     this.inputTextTarget.flush();
                     this.lastLineBreakIndex = this.textInputControl.getLength() + 1;

@@ -320,11 +320,12 @@ public class ClinicianProfileController extends CommonController {
         commandGUI = new CommandGUI(displayTextArea);
         System.setIn(commandGUI.getIn());
         System.setOut(commandGUI.getOut());
-        System.setErr(commandGUI.getOut());
+        //System.setErr(commandGUI.getOut());
 
 
         // Start the command line in an alternate thread
         CommandLine commandLine = new CommandLine(App.profileDb, commandGUI.getIn(), commandGUI.getOut());
+        commandGUI.initHistory(commandLine);
         Thread t = new Thread(commandLine);
         t.start();
     }
