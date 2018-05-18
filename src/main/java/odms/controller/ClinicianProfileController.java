@@ -99,6 +99,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        currentUser = null;
         showLoginScene(event);
     }
 
@@ -166,7 +167,6 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void setClinicianDetails(){
-
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
@@ -332,8 +332,9 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         if (currentUser != null) {
+
             setClinicianDetails();
             hideAdminItems();
             makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
