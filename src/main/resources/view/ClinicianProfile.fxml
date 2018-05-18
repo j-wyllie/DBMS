@@ -239,9 +239,9 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab fx:id="tabDataManagement" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management">
+                  <Tab onSelectionChanged="#handleTabDataManagementClicked" text="Data Management">
                     <content>
-                        <fx:include fx:id="profileOrganOverview" source="DataManagement.fxml" GridPane.halignment="CENTER"/>
+                        <fx:include fx:id="dataManagement" source="DataManagement.fxml" GridPane.halignment="CENTER"/>
                     </content>
                   </Tab>
               </tabs>

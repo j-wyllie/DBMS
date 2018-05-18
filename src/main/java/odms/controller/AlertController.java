@@ -171,4 +171,18 @@ public class AlertController {
             return false;
         }
     }
+
+    static boolean unsavedChangesImport() {
+        Alert cancelAlert = new Alert(
+                AlertType.CONFIRMATION,
+                "You have unsaved changes.\n" +
+                        "Do you want to continue without saving?",
+                ButtonType.CANCEL,
+                ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
+    }
 }

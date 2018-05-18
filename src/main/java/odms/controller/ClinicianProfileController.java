@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
@@ -72,14 +73,18 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TableView transplantTable;
 
-    @FXML
-    private DataManagementController dataManagementController;
-
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    @FXML
+    private AnchorPane dataManagement;
+
+    @FXML
+    private DataManagementController dataManagementController;
+
 
     /**
      * Scene change to log in view.
@@ -306,7 +311,7 @@ public class ClinicianProfileController extends CommonController {
     }
 
     public void handleTabDataManagementClicked() {
-
+        dataManagementController.setCurrentUser(currentUser);
     }
 
     @FXML
