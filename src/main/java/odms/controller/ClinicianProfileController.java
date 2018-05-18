@@ -323,21 +323,23 @@ public class ClinicianProfileController extends CommonController {
             }
 
 
-        TableFilter filter = new TableFilter<>(transplantTable);
-        //filter.getColumnFilters().setAll(transplantTable.getItems());}
-
-        // Initialize command line GUI
-        commandGUI = new CommandGUI(displayTextArea);
-        System.setIn(commandGUI.getIn());
-        System.setOut(commandGUI.getOut());
-        //System.setErr(commandGUI.getOut());
+            TableFilter filter = new TableFilter<>(transplantTable);
+            //filter.getColumnFilters().setAll(transplantTable.getItems());}
 
 
-        // Start the command line in an alternate thread
-        CommandLine commandLine = new CommandLine(App.profileDb, commandGUI.getIn(), commandGUI.getOut());
-        commandGUI.initHistory(commandLine);
-        Thread t = new Thread(commandLine);
-        t.start();
+            // Initialize command line GUI
+            commandGUI = new CommandGUI(displayTextArea);
+            System.setIn(commandGUI.getIn());
+            System.setOut(commandGUI.getOut());
+            //System.setErr(commandGUI.getOut());
+
+
+            // Start the command line in an alternate thread
+            CommandLine commandLine = new CommandLine(App.profileDb, commandGUI.getIn(), commandGUI.getOut());
+            commandGUI.initHistory(commandLine);
+            Thread t = new Thread(commandLine);
+            t.start();
+        }
     }
 
     public void setCurrentUser(User currentUser) {

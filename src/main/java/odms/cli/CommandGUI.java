@@ -40,21 +40,25 @@ public class CommandGUI {
     }
 
     public void initHistory(CommandLine commandLine) {
-        displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+        displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             int textLen = 0;
-            switch (e.getCode()) {
-                case UP:
-                    textLen = displayTextArea.getText().length();
-                    displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
-                    commandLine.getHistory().previous();
-                    displayTextArea.appendText(commandLine.getHistory().current());
-                    break;
-                case DOWN:
-                    textLen = displayTextArea.getText().length();
-                    displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
-                    commandLine.getHistory().next();
-                    displayTextArea.appendText(commandLine.getHistory().current());
-                    break;
+            try {
+                switch (event.getCode()) {
+                    case UP:
+                        textLen = displayTextArea.getText().length();
+                        displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                        commandLine.getHistory().previous();
+                        displayTextArea.appendText(commandLine.getHistory().current());
+                        break;
+                    case DOWN:
+                        textLen = displayTextArea.getText().length();
+                        displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                        commandLine.getHistory().next();
+                        displayTextArea.appendText(commandLine.getHistory().current());
+                        break;
+                }
+            } catch (IndexOutOfBoundsException exception) {
+                exception.printStackTrace();
             }
         });
     }

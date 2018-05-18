@@ -83,7 +83,6 @@ public class CommandLine implements Runnable {
         System.out.println("\nPlease enter your commands below:");
 
         while (!exit) {
-            // TODO change this so that it reads from my InputStream !!! Thought System.in.read was being called !!!
             input = reader.readLine("> ").trim();
 
             terminal.flush();
