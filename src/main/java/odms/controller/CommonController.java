@@ -4,10 +4,14 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 class CommonController {
 
@@ -24,6 +28,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(false);
         appStage.setTitle("ODMS");
+        appStage.centerOnScreen();
         appStage.show();
     }
 
@@ -54,6 +59,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(resizeable);
         appStage.setTitle(title);
+        appStage.centerOnScreen();
         appStage.show();
     }
 
@@ -62,9 +68,57 @@ class CommonController {
      * @param event Any key event within the text boxes.
      */
     @FXML
-    protected void editTrue(javafx.scene.input.KeyEvent event) throws IOException {
+    protected void editTrueKey(javafx.scene.input.KeyEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setTitle("Edit Profile (*)");
+        if(!currentStage.getTitle().contains("(*)")){
+            currentStage.setTitle(currentStage.getTitle() + " (*)");
+        }
+    }
+
+    /**
+     * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
+     * @param event Any action event within the text boxes.
+     */
+    @FXML
+    protected void editTrueAction(ActionEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if(!currentStage.getTitle().contains("(*)")){
+            currentStage.setTitle(currentStage.getTitle() + " (*)");
+        }
+    }
+
+    /**
+     * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
+     * @param event Any click event within the text boxes.
+     */
+    @FXML
+    protected void editTrueClick(MouseEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if(!currentStage.getTitle().contains("(*)")){
+            currentStage.setTitle(currentStage.getTitle() + " (*)");
+        }
+    }
+
+    /**
+     * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
+     * @param event The event which is wanted to trigger a notification
+     * @param editedField String of which is the thing edited.
+     */
+    @FXML
+    protected void showNotification(String editedField, ActionEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if(currentStage.getTitle().contains("(*)")){
+            currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
+        }
+
+        Notifications.create()
+                .title("Edit Successful")
+                .text("The " + editedField + " was edited successfully!")
+                .hideAfter(Duration.millis(2500))
+                .position(Pos.BOTTOM_LEFT)
+                .owner(currentStage)
+                .show();
+
     }
 
 }

@@ -24,7 +24,8 @@ public class Condition {
      * @param dateCured
      * @param isChronic
      */
-    public Condition(String name, String dateOfDiagnosis, String dateCured, boolean isChronic) throws IllegalArgumentException {
+    public Condition(String name, String dateOfDiagnosis, String dateCured, boolean isChronic)
+            throws IllegalArgumentException {
 
         this.name = name;
         dateOfDiagnosisString = dateOfDiagnosis;
@@ -34,7 +35,7 @@ public class Condition {
             this.dateOfDiagnosis = LocalDate
                     .of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
                             Integer.valueOf(dates[0]));
-            if (dateCured != null && isChronic == false) {
+            if (dateCured != null && !isChronic) {
                 this.isCured = true;
                 dates = dateCured.split("-");
                 this.dateCured = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
@@ -43,11 +44,10 @@ public class Condition {
                 this.isCured = false;
                 this.dateCured = null;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(e);
-        } catch (DateTimeException e) {
+        } catch (ArrayIndexOutOfBoundsException | DateTimeException e) {
             throw new IllegalArgumentException(e);
         }
+
         this.isChronic = isChronic;
         if (isChronic) {this.chronicText = "CHRONIC";}
     }
@@ -58,7 +58,8 @@ public class Condition {
      * @param dateOfDiagnosis
      * @param isChronic
      */
-    public Condition(String name, String dateOfDiagnosis, boolean isChronic) throws IllegalArgumentException {
+    public Condition(String name, String dateOfDiagnosis, boolean isChronic)
+            throws IllegalArgumentException {
         this(name, dateOfDiagnosis, null, isChronic);
     }
 
@@ -71,7 +72,6 @@ public class Condition {
     public boolean getCured() { return this.isCured; }
     public boolean getChronic() { return isChronic; }
     public String getChronicText() { return chronicText; }
-
 
 
     // setters

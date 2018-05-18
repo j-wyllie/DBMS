@@ -9,7 +9,6 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -21,9 +20,9 @@ import odms.user.User;
 public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
-    public static UserDatabase userDatabase = getUserDatabase();
-    private static Profile currentProfile = null;
-    private static User currentUser;
+    private static UserDatabase userDatabase = getUserDatabase();
+    private Profile currentProfile = null;
+    private User currentUser;
 
     /**
      * TextField to input username.
@@ -49,16 +48,38 @@ public class LoginController extends CommonController {
 
                 if (userId == 0) {
                     currentUser = userDatabase.getClinician(0);
-                    String scene = "/view/ClinicianProfile.fxml";
-                    String title = "Clinician";
-                    showScene(event, scene, title, true);
+
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+                    Scene scene = new Scene(fxmlLoader.load());
+                    ClinicianProfileController controller = fxmlLoader.getController();
+                    controller.setCurrentUser(currentUser);
+                    controller.initialize();
+
+                    Stage stage = new Stage();
+                    stage.setTitle("Clinician");
+                    stage.setScene(scene);
+                    stage.show();
+                    closeCurrentStage();
                 } else {
                     currentProfile = currentDatabase.getProfile(userId);
 
                     if (currentProfile != null) {
-                        String scene = "/view/ProfileDisplay.fxml";
-                        String title = "Profile";
-                        showScene(event, scene, title, true);
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
+
+                        Scene scene = new Scene(fxmlLoader.load());
+                        ProfileDisplayController controller = fxmlLoader.getController();
+                        controller.setProfile(currentProfile);
+                        controller.initialize();
+
+                        Stage stage = new Stage();
+                        stage.setTitle(currentProfile.getFullName() + "'s Profile");
+                        stage.setScene(scene);
+                        stage.show();
+
+                        closeCurrentStage();
                     } else {
                         invalidUsername();
                     }
@@ -75,6 +96,12 @@ public class LoginController extends CommonController {
         }
     }
 
+    private void closeCurrentStage() {
+        Stage currentStage = (Stage) usernameField.getScene().getWindow();
+        // do what you have to do
+        currentStage.close();
+    }
+
     /**
      * Scene change to create account view.
      * @param event clicking on the create new account link.
@@ -87,16 +114,8 @@ public class LoginController extends CommonController {
         showScene(event, scene, title, false);
     }
 
-    public static Profile getCurrentProfile() {
-        return currentProfile;
-    }
-
-
     @FXML
     private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
     }
-
-    public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }

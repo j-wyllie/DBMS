@@ -10,7 +10,7 @@ import java.util.Set;
 
 import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class CommandUtils {
@@ -166,16 +166,16 @@ public class CommandUtils {
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -245,7 +245,7 @@ public class CommandUtils {
      */
     private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            HashSet<Organ> organSet = Organ.stringListToOrganSet(Arrays.asList(organList));
+            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
@@ -281,7 +281,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organList)));
+                    profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -314,13 +314,13 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList list of organs to be removed
      */
-    private static void removeOrgans(ArrayList<Profile> profileList, String[] organList) {
+    private static void removeOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgans(organSet);
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
