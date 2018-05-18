@@ -1,14 +1,18 @@
 package odms.profile;
 
-import odms.cli.CommandUtils;
-import odms.controller.AlertController;
-import odms.medications.Drug;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import odms.cli.CommandUtils;
+import odms.controller.AlertController;
+import odms.enums.OrganEnum;
+import odms.medications.Drug;
 
 public class Profile {
 
@@ -38,10 +42,10 @@ public class Profile {
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private HashSet<Organ> organsDonating = new HashSet<>();
-    private HashSet<Organ> organsDonated = new HashSet<>();
-    private HashSet<Organ> organsRequired = new HashSet<>();
-    private HashSet<Organ> organsReceived = new HashSet<>();
+    private HashSet<OrganEnum> organsDonating = new HashSet<>();
+    private HashSet<OrganEnum> organsDonated = new HashSet<>();
+    private HashSet<OrganEnum> organsRequired = new HashSet<>();
+    private HashSet<OrganEnum> organsReceived = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -303,27 +307,12 @@ public class Profile {
     }
 
     /**
-     * Add a comma delimited organ string to the Organs Donating
-     * @param organString the Comma delimited organ string
-     * @throws OrganConflictException if there is a conflicting organ
-     */
-    public void addOrgansDonatingFromString(String organString) throws OrganConflictException {
-        String[] organStrings = organString.split("(,\\s+|,)");
-
-        for (String organ : organStrings) {
-            organsDonating.add(Organ.valueOf(organ));
-        }
-
-        addOrgansDonating(organsDonating);
-    }
-
-    /**
      * Adds a csv list to the list of donations
      * @param organString the organs to add as a csv
      */
     public void addDonationFromString(String organString) {
         String[] organStrings = organString.split("(,\\s+|,)");
-        this.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organStrings)));
+        this.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organStrings)));
     }
 
     /**
@@ -342,10 +331,11 @@ public class Profile {
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrgan(Organ organ) throws OrganConflictException {
-        if (this.organsRequired.contains(organ)) {
+    public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
+        if (this.organsReceived.contains(organ)) {
+            // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
-                    "Profile is currently receiver for " + organ,
+                    "Profile has previously received " + organ,
                     organ
             );
         }
@@ -355,50 +345,38 @@ public class Profile {
     /**
      * Add an organ to the organs required list.
      * @param organ the organ the profile requires
-     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrganRequired(Organ organ) throws OrganConflictException {
-        if (this.organsDonating.contains(organ)) {
-            throw new OrganConflictException(
-                    "Profile is currently donor for  " + organ,
-                    organ
-            );
-        }
+    public void addOrganRequired(OrganEnum organ) {
         this.organsRequired.add(organ);
     }
 
     /**
-     * Consume a set of organs that the profile wants to receive and updates the profile to use this
-     * new set.
+     * Add a set of organs that the profile requires to the required organs set.
      * @param organs the set of organs to be received
      */
-    public void setOrgansRequired(HashSet<Organ> organs) {
+    public void addOrgansRequired(HashSet<OrganEnum> organs) {
         generateUpdateInfo("organsRequired");
 
-        try {
-            this.organsRequired.clear();
-            for (Organ organ : organs) {
-                addOrganRequired(organ);
+        for (OrganEnum organ : organs) {
+            addOrganRequired(organ);
 
-                // TODO history refactor
-                String action = "Profile " +
-                        this.getId() +
-                        " required organ " +
-                        organ.getNamePlain() +
-                        " at " +
-                        LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
+            // TODO history refactor
+            String action = "Profile " +
+                    this.getId() +
+                    " required organ " +
+                    organ.getNamePlain() +
+                    " at " +
+                    LocalDateTime.now();
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
                 }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             }
-        } catch (OrganConflictException e) {
-            AlertController.invalidOrgan();
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
+
     }
 
     /**
@@ -407,23 +385,22 @@ public class Profile {
      * @throws IllegalArgumentException if a bad argument is used
      * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansDonating(Set<Organ> organs)
+    public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
-        // TODO shouldn't be checking for args here
         generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             if (this.organsDonating.contains(organ)) {
                 throw new IllegalArgumentException(
                         "Organ " + organ + " already exists in donating list"
                 );
             }
-            this.addOrgan(organ);
+            this.addOrganDonating(organ);
 
             String action = "Profile " +
                     this.getId() +
                     " added " +
-                    organ +
+                    organ.getNamePlain() +
                     " to donate at " +
                     LocalDateTime.now();
 
@@ -442,7 +419,7 @@ public class Profile {
         }
     }
 
-    public HashSet<Organ> getOrgansRequired() {
+    public HashSet<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
 
@@ -451,7 +428,7 @@ public class Profile {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    public void addOrganReceived(Organ organ) {
+    public void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -463,10 +440,10 @@ public class Profile {
      * Add a set of organs to the set of received organs.
      * @param organs set to be added
      */
-    public void addOrgansReceived(Set<Organ> organs) {
+    public void addOrgansReceived(Set<OrganEnum> organs) {
         generateUpdateInfo("organsReceived");
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             addOrganReceived(organ);
 
             // TODO history abstraction
@@ -488,7 +465,7 @@ public class Profile {
         }
     }
 
-    public HashSet<Organ> getOrgansReceived() {
+    public HashSet<OrganEnum> getOrgansReceived() {
         return organsReceived;
     }
 
@@ -497,7 +474,7 @@ public class Profile {
      * If the organ exists in the donating list, remove it from the donating list.
      * @param organ the organ to be added
      */
-    public void addOrganDonated(Organ organ) {
+    public void addOrganDonated(OrganEnum organ) {
         if (this.organsDonating.contains(organ)) {
             this.organsDonating.remove(organ);
         }
@@ -509,10 +486,10 @@ public class Profile {
      * Add a set of organsDonating to the list of organsDonating that the profile has donated
      * @param organs a set of organsDonating that the profile has donated
      */
-    public void addOrgansDonated(Set<Organ> organs) {
+    public void addOrgansDonated(Set<OrganEnum> organs) {
         generateUpdateInfo("pastDonations");
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
 
             // TODO history abstraction
@@ -538,12 +515,28 @@ public class Profile {
      * Remove a set of organs from the list of organs that the profile has donated
      * @param organs a set of organs to remove from the list
      */
-    public void removeDonations(Set<String> organs) {
+    public void removeOrgansDonated(Set<OrganEnum> organs) {
         generateUpdateInfo("organsDonated");
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
+
+        for (OrganEnum organ : organs) {
             this.organsDonated.remove(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs donated " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 
@@ -551,21 +544,57 @@ public class Profile {
      * Remove a set of organs from the list of organs that the use wants to donate
      * @param organs a set of organs to be removed
      */
-    public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
+    public void removeOrgansDonating(Set<OrganEnum> organs) {
         generateUpdateInfo("organsDonating");
 
-        HashSet<Organ> newOrgans = new HashSet<>();
+        for (OrganEnum organ : organs) {
+            this.organsDonating.remove(organ);
 
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs donating " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
+    }
 
-        if (!Collections.disjoint(newOrgans, this.organsDonating)) {
-            this.organsDonating.removeAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
+    /**
+     * Remove a set of organs from the list of organs required.
+     * @param organs a set of organs to be removed
+     */
+    public void removeOrgansRequired(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsReceiving");
+
+        for (OrganEnum organ : organs) {
+            this.organsRequired.remove(organ);
+
+            // TODO history abstraction
+            String action = "Profile " +
+                    this.getId() +
+                    " removed " +
+                    organ.getNamePlain() +
+                    " from organs required " +
+                    LocalDateTime.now();
+
+            if (CommandUtils.getHistory().size() != 0) {
+                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
+                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
+                            CommandUtils.getHistory().size() - 1).clear();
+                }
+            }
+            CommandUtils.currentSessionHistory.add(action);
+            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
         }
     }
 
@@ -707,14 +736,13 @@ public class Profile {
         return medicationTimestamps;
     }
 
-    public HashSet<Organ> getOrgansDonated() {
+    public HashSet<OrganEnum> getOrgansDonated() {
         return organsDonated;
     }
 
-    public HashSet<Organ> getOrgansDonating() {
+    public HashSet<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
-
 
     // Condition functions
 
@@ -722,7 +750,9 @@ public class Profile {
      * Gets all the current conditions of the user
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() { return conditions; }
+    public ArrayList<Condition> getAllConditions() {
+        return this.conditions;
+    }
 
     /**
      * Gets all the cured conditions of the user
@@ -730,15 +760,12 @@ public class Profile {
      */
     public ArrayList<Condition> getCuredConditions() {
         ArrayList<Condition> curedConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (condition.getCured()) {
-                    curedConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (condition.getCured()) {
+                curedConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
+
         return curedConditions;
     }
 
@@ -748,14 +775,10 @@ public class Profile {
      */
     public ArrayList<Condition> getCurrentConditions() {
         ArrayList<Condition> currentConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (!condition.getCured()) {
-                    currentConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (!condition.getCured()) {
+                currentConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
         return currentConditions;
     }
@@ -765,8 +788,7 @@ public class Profile {
      * @param condition to be added
      */
     public void addCondition(Condition condition) {
-        if (conditions == null) { conditions = new ArrayList<>(); }
-        conditions.add(condition);
+        this.conditions.add(condition);
     }
 
     /**
@@ -774,19 +796,20 @@ public class Profile {
      * @param condition to be removed
      */
     public void removeCondition(Condition condition) {
-        conditions.remove(condition);
+        this.conditions.remove(condition);
     }
-    // -------
 
     public LocalDateTime getTimeOfCreation() {
-        return timeOfCreation;
+        return this.timeOfCreation;
     }
 
     public String getGivenNames() {
-        return givenNames;
+        return this.givenNames;
     }
 
-    public String getFullName() { return givenNames + " " + lastNames; }
+    public String getFullName() {
+        return givenNames + " " + lastNames;
+    }
 
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
