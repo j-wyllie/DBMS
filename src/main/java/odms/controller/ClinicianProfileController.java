@@ -162,6 +162,8 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void setClinicianDetails(){
+        System.out.println(givenNamesLabel.getText());
+
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());

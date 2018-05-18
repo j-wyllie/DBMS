@@ -43,9 +43,9 @@ public class DataManagementController {
                 try {
                     Scene scene = new Scene(fxmlLoader.load());
 
-                    ClinicianProfileController controller = fxmlLoader.getController();
-                    controller.setCurrentUser(currentUser);
-                    controller.initialize();
+//                    ClinicianProfileController controller = fxmlLoader.getController();
+//                    controller.setCurrentUser(currentUser);
+//                    controller.initialize();
 
                     stage = new Stage();
                     stage.setTitle("Admin");
