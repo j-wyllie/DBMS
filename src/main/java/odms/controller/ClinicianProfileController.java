@@ -1,7 +1,7 @@
 package odms.controller;
 
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+import static odms.controller.RedoController.redo;
+import static odms.controller.UndoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;

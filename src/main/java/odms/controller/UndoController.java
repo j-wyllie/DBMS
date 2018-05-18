@@ -3,9 +3,9 @@ package odms.controller;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
+import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.profile.Condition;
-import odms.profile.Organ;
 import odms.profile.Profile;
 import odms.user.User;
 
@@ -169,7 +169,7 @@ public class UndoController {
 
     private static void updated(String action) {
         int id = Integer.parseInt(action.substring(0,action.indexOf("update")).replaceAll("[\\D]", ""));
-        User user = LoginController.userDatabase.getClinician(id);
+        User user = LoginController.getCurrentUser();
         String previous = action.substring(action.indexOf("(")+1,action.indexOf(")"));
         String[] previousValues = previous.split(",");
         user.setName(previousValues[1].replace("name=",""));
@@ -221,7 +221,7 @@ public class UndoController {
     public static void removed(ProfileDatabase currentDatabase, String action) throws Exception{
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                 action.substring(
                         action.indexOf("[") + 1,
                         action.indexOf("]")).split(",")
@@ -235,9 +235,9 @@ public class UndoController {
     public static void set(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        Set<String> organSet = new HashSet<>(Arrays.asList(
-                action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-        profile.removeOrgans(organSet);
+        String[] stringOrgans = action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",");
+        Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(stringOrgans));
+        profile.removeOrgansDonating(organSet);
         if (historyPosition > 0) {
             historyPosition -= 1;
         }
@@ -247,9 +247,9 @@ public class UndoController {
     public static void donate(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        Set<String> organSet = new HashSet<>(Arrays.asList(
-                action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-        profile.removeDonations(organSet);
+        String[] stringOrgans = action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",");
+        Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(stringOrgans));
+        profile.removeOrgansDonated(organSet);
         if (historyPosition > 0) {
             historyPosition -= 1;
         }
@@ -282,12 +282,12 @@ public class UndoController {
         String organs = action
                 .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
         List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-        ArrayList<Organ> organList = new ArrayList<>();
+        ArrayList<OrganEnum> organList = new ArrayList<>();
         System.out.println(organs);
         for (String organ : List) {
             System.out.println(organ);
             try {
-                organList.add(Organ.valueOf(organ.replace(" ", "")));
+                organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
             } catch (IllegalArgumentException e) {
                 System.out.println(e);
             }

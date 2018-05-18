@@ -525,15 +525,9 @@ public class ProfileDisplayController extends CommonController {
         conditions.addAll(convertConditionObservableToArray(
                 curConditionsTable.getSelectionModel().getSelectedItems())
         );
-
-
-
-        ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
-        conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
-
         for (Condition condition : conditions) {
             if (condition != null) {
-                currentProfile.removeCondition(conditions.get(i));
+                currentProfile.removeCondition(condition);
                 LocalDateTime currentTime = LocalDateTime.now();
                 String action = "Donor " + currentProfile.getId()  + " removed condition with values("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ") index of "+ currentProfile.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 HistoryController.updateHistory(action);
@@ -1048,7 +1042,7 @@ public class ProfileDisplayController extends CommonController {
             String[] histories = history.split("\"");
             String historyDisplay = "";
             for(String h : histories) {
-                if(!h.equals("") && h.contains("Donor "+searchedDonor.getId()+" ")) {
+                if(!h.equals("") && h.contains("Donor "+currentProfile.getId()+" ")) {
                     historyDisplay += h + "\n";
                 }
             }

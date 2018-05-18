@@ -1,9 +1,9 @@
 package odms.controller;
 
 import odms.data.ProfileDatabase;
+import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.profile.Condition;
-import odms.profile.Organ;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 import odms.user.User;
@@ -139,7 +139,7 @@ public class RedoController {
 
     private static void updated(String action, int end) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-        User user = LoginController.userDatabase.getClinician(id);
+        User user = LoginController.getCurrentUser();
         String newString = action.substring(action.indexOf("new = (")+7,end);
         String[] newValues = newString.split(",");
         user.setName(newValues[1].replace("name=",""));
@@ -174,14 +174,13 @@ public class RedoController {
     public static void removed(ProfileDatabase currentDatabase, String action) throws Exception{
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        Set<String> organSet = new HashSet<>(Arrays.asList(
-                action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-        profile.removeOrgans(organSet);
+        profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+                action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(","))));
     }
     public static void set(ProfileDatabase currentDatabase, String action) throws OrganConflictException {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                 action.substring(
                         action.indexOf("[") + 1,
                         action.indexOf("]")).split(",")
@@ -190,15 +189,7 @@ public class RedoController {
     public static void donate(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
-        profile.addOrgansDonated(
-                Organ.stringListToOrganSet(
-                        Arrays.asList(
-                                action.substring(
-                                        action.indexOf("[") + 1,
-                                        action.indexOf("]")).split(",")
-                        )
-                )
-        );
+        profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(action.substring(action.indexOf("[") + 1,action.indexOf("]")).split(","))));
     }
     public static void update(ProfileDatabase currentDatabase, String action){
         int id = Integer.parseInt(
@@ -214,12 +205,12 @@ public class RedoController {
         String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
         String[] previousValues = previous.split(",");
         String organs;
-        ArrayList<Organ> organList = new ArrayList<>();
+        ArrayList<OrganEnum> organList = new ArrayList<>();
         organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
         List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
         for(String organ : List){
             System.out.println(organ);
-            organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
+            organList.add(OrganEnum.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
         }
         profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
         profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));

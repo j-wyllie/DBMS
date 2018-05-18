@@ -21,8 +21,8 @@ public class LoginController extends CommonController {
 
     private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private static UserDatabase userDatabase = getUserDatabase();
-    private Profile currentProfile = null;
-    private User currentUser;
+    private static Profile currentProfile = null;
+    private static User currentUser;
 
     /**
      * TextField to input username.
@@ -113,6 +113,9 @@ public class LoginController extends CommonController {
         String title = "Create Profile";
         showScene(event, scene, title, false);
     }
+
+    public static Profile getCurrentProfile() {return currentProfile;}
+    public static User getCurrentUser() {return currentUser;}
 
     @FXML
     private void onEnter(ActionEvent event) {
