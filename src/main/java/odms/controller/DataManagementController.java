@@ -28,10 +28,13 @@ public class DataManagementController {
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
+
         if (file != null) { // Check that the user actually selected a file
 
             if (AlertController.unsavedChangesImport()) {
                 GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+
+                ClinicianProfileController.closeAllOpenProfiles();
                 stage.close();
 
                 FXMLLoader fxmlLoader = new FXMLLoader();

@@ -20,6 +20,7 @@ import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,6 +85,8 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private DataManagementController dataManagementController;
+
+    private static Collection<Stage> openProfileStages = new ArrayList<>();
 
 
     /**
@@ -238,6 +241,7 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
+            openProfileStages.add(stage);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -333,5 +337,14 @@ public class ClinicianProfileController extends CommonController {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    /**
+     * closes all open Profile windows that the user has opened.
+     */
+    public static void closeAllOpenProfiles() {
+        for (Stage stage : openProfileStages) {
+            stage.close();
+        }
     }
 }
