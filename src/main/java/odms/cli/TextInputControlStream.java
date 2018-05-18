@@ -15,24 +15,57 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import static odms.cli.GUIUtils.runSafe;
 
 class TextInputControlStream {
 
     private final TextInputControlInputStream in;
     private final TextInputControlOutputStream out;
     private final Charset charset;
+    protected int historyPointer = 0;
+    protected final List<String> history = new ArrayList<>();
 
     TextInputControlStream(final TextInputControl textInputControl, Charset charset) {
         this.charset = charset;
         this.in = new TextInputControlInputStream(textInputControl);
         this.out = new TextInputControlOutputStream(textInputControl);
 
-        textInputControl.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                getIn().enterKeyPressed();
-                return;
-            }
 
+        textInputControl.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            switch (e.getCode()) {
+                case ENTER:
+                    getIn().enterKeyPressed();
+                    String text = textInputControl.getText();
+                    //textInputControl.appendText(text + System.lineSeparator());
+                    history.add(text);
+                    historyPointer++;
+                    //textInputControl.clear();
+                    break;
+                case UP:
+                    if (historyPointer == 0) {
+                        break;
+                    }
+                    historyPointer--;
+                    runSafe(() -> {
+                        textInputControl.appendText(history.get(historyPointer));
+                        textInputControl.selectAll();
+                    });
+                    break;
+                case DOWN:
+                    if (historyPointer == history.size() - 1) {
+                        break;
+                    }
+                    historyPointer++;
+                    runSafe(() -> {
+                        textInputControl.appendText(history.get(historyPointer));
+                        textInputControl.selectAll();
+                    });
+                    break;
+            }
             if (textInputControl.getCaretPosition() <= getIn().getLastLineBreakIndex()) {
                 e.consume();
             }
@@ -69,6 +102,9 @@ class TextInputControlStream {
         return this.charset;
     }
 
+    /**
+     * Input Stream
+     */
     class TextInputControlInputStream extends InputStream {
 
         private final TextInputControl textInputControl;
@@ -84,6 +120,7 @@ class TextInputControlStream {
                 this.outputTextSource = new PipedInputStream(this.inputTextTarget);
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
+
             }
         }
 
@@ -167,6 +204,9 @@ class TextInputControlStream {
         }
     }
 
+    /**
+     * Output Stream
+     */
     final class TextInputControlOutputStream extends OutputStream {
 
         private final TextInputControl textInputControl;

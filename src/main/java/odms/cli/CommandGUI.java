@@ -18,20 +18,13 @@ import static odms.cli.GUIUtils.runSafe;
 public class CommandGUI {
     @FXML
     private TextArea displayTextArea;
-    @FXML
-    private TextField inputTextField;
 
     private final PrintStream out;
     private final InputStream in;
 
-    protected final List<String> history = new ArrayList<>();
-    protected int historyPointer = 0;
 
-    private Consumer<String> onMessageReceivedHandler;
-
-    public CommandGUI(TextArea textArea, TextField textField) {
+    public CommandGUI(TextArea textArea) {
         this.displayTextArea = textArea;
-        this.inputTextField = textField;
 
         //displayTextArea.setEditable(false);
         displayTextArea.setWrapText(true);
@@ -45,45 +38,6 @@ public class CommandGUI {
             throw new RuntimeException(e);
         }
         this.in = stream.getIn();
-
-        // handle special key presses
-        textField.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
-            switch (keyEvent.getCode()) {
-                case ENTER:
-                    String text = textField.getText();
-                    textArea.appendText(text + System.lineSeparator());
-                    history.add(text);
-                    historyPointer++;
-                    if (onMessageReceivedHandler != null) {
-                        onMessageReceivedHandler.accept(text);
-                    }
-                    textField.clear();
-                    break;
-                case UP:
-                    if (historyPointer == 0) {
-                        break;
-                    }
-                    historyPointer--;
-                    runSafe(() -> {
-                        textField.setText(history.get(historyPointer));
-                        textField.selectAll();
-                    });
-                    break;
-                case DOWN:
-                    if (historyPointer == history.size() - 1) {
-                        break;
-                    }
-                    historyPointer++;
-                    runSafe(() -> {
-                        textField.setText(history.get(historyPointer));
-                        textField.selectAll();
-                    });
-                    break;
-                default:
-                    break;
-            }
-        });
-        //setBottom(textField);
     }
 
     public void clear() {

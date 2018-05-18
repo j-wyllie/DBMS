@@ -3,6 +3,8 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
@@ -47,6 +49,29 @@ public class CommandLine implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    public CommandLine (ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
+        this.currentDatabase = currentDatabase;
+
+        try {
+            terminal = TerminalBuilder.builder()
+                    .system(false)
+                    .streams(input, output)
+                    .build();
+
+            reader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .appName("ODMS")
+                    .completer(Commands.commandAutoCompletion())
+                    // .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
+                    .history(new DefaultHistory())
+                    .parser(new DefaultParser())
+                    .build();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {

@@ -80,9 +80,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TextArea displayTextArea;
 
-    @FXML
-    private TextField inputTextField;
-
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
@@ -320,17 +317,14 @@ public class ClinicianProfileController extends CommonController {
         //filter.getColumnFilters().setAll(transplantTable.getItems());
 
         // Initialize command line GUI
-        commandGUI = new CommandGUI(displayTextArea, inputTextField);
-        System.setOut(commandGUI.getOut());
+        commandGUI = new CommandGUI(displayTextArea);
         System.setIn(commandGUI.getIn());
+        System.setOut(commandGUI.getOut());
         System.setErr(commandGUI.getOut());
 
 
-
-        System.out.println("testing the cli--------");
-        CommandLine commandLine = new CommandLine(App.profileDb);
-        //commandLine.initialiseConsole();
-
+        // Start the command line in an alternate thread
+        CommandLine commandLine = new CommandLine(App.profileDb, commandGUI.getIn(), commandGUI.getOut());
         Thread t = new Thread(commandLine);
         t.start();
     }
