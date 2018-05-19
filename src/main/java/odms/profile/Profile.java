@@ -547,6 +547,14 @@ public class Profile {
         this.organsRequired.add(organ);
     }
 
+    public void removeOrganDonated(OrganEnum organ) {
+        if (this.organsDonated.contains(organ)) {
+            this.organsDonated.remove(organ);
+        }
+
+        this.organsDonating.add(organ);
+    }
+
 
     public void setReceiver(boolean receiver) {
         this.receiver = receiver;

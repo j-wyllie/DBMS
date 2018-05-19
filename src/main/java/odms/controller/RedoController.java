@@ -64,6 +64,8 @@ public class RedoController {
                     removedCondition(currentDatabase,action);
                 }  else if (action.contains("received") &&action.contains("added")) {
                     addedReceived(currentDatabase, action);
+                }  else if (action.contains("donated") &&action.contains("added")) {
+                    addedDonated(currentDatabase, action);
                 }
                 HistoryController.setPosition(historyPosition);
                 System.out.println("Command redone");
@@ -74,6 +76,13 @@ public class RedoController {
             e.printStackTrace();
             System.out.println("No commands have been entered.");
         }
+    }
+
+    private static void addedDonated(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String organ = action.substring(action.indexOf("added ")+6, action.indexOf(" to"));
+        profile.addOrganDonated(OrganEnum.valueOf(organ));
     }
 
     private static void addedReceived(ProfileDatabase currentDatabase, String action) {
