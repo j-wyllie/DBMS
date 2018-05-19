@@ -30,11 +30,11 @@ public class UndoController {
                 end = action.indexOf(" at");
                 action = action.substring(0, action.indexOf(" at"));
             }
-            if (action.contains("added") && !action.contains("drug") && !action.contains("condition")) {
+            if (action.contains("added") && !action.contains("drug") && !action.contains("condition")&& !action.contains("received") && !action.contains("donated")) {
                 added(currentDatabase, action);
             } else if (action.contains("deleted")) {
                 deleted(currentDatabase, action);
-            } else if (action.contains("removed") && !action.contains("drug") && !action.contains("condition")) {
+            } else if (action.contains("removed") && !action.contains("drug") && !action.contains("condition")&& !action.contains("received") && !action.contains("donated")) {
                 removed(currentDatabase, action);
             } else if (action.contains("set")) {
                 set(currentDatabase, action);
@@ -58,6 +58,8 @@ public class UndoController {
                 addCondition(currentDatabase,action);
             } else if (action.contains("removed condition")) {
                 removedCondition(currentDatabase,action);
+            } else if (action.contains("received") &&action.contains("added")) {
+                addedReceived(currentDatabase, action);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,11 +67,17 @@ public class UndoController {
         }
     }
 
+    private static void addedReceived(ProfileDatabase currentDatabase, String action) {
+        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
+        Profile profile = currentDatabase.getProfile(id);
+        String organ = action.substring(action.indexOf("added ")+6, action.indexOf(" to"));
+        profile.removeOrganReceived(OrganEnum.valueOf(organ));
+    }
+
     private static void removedCondition(ProfileDatabase currentDatabase, String action) {
         int id = Integer.parseInt(action.substring(0,action.indexOf("removed")).replaceAll("[\\D]", ""));
         Profile profile = currentDatabase.getProfile(id);
         String s = action.substring(action.indexOf("(")+1,action.indexOf(")"));
-        System.out.println(s);
         String[] values = s.split(",");
         String diagDate = values[1].substring(8)+"-"+values[1].substring(5,7)+"-"+values[1].substring(0,4);
         String cureDate = null;

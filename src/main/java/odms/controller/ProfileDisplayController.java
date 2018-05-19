@@ -529,7 +529,7 @@ public class ProfileDisplayController extends CommonController {
             if (condition != null) {
                 currentProfile.removeCondition(condition);
                 LocalDateTime currentTime = LocalDateTime.now();
-                String action = "Donor " + currentProfile.getId()  + " removed condition with values("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ") index of "+ currentProfile.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                String action = "Profile " + currentProfile.getId()  + " removed condition with values("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ") index of "+ currentProfile.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 HistoryController.updateHistory(action);
             }
         }
@@ -1042,7 +1042,7 @@ public class ProfileDisplayController extends CommonController {
             String[] histories = history.split("\"");
             String historyDisplay = "";
             for(String h : histories) {
-                if(!h.equals("") && h.contains("Donor "+currentProfile.getId()+" ")) {
+                if(!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
                     historyDisplay += h + "\n";
                 }
             }

@@ -128,7 +128,7 @@ public class ProfileEditController extends CommonController {
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                String action = "Donor " +
+                String action = "Profile " +
                     currentProfile.getId() +
                     " update details previous = " +
                     currentProfile.getAttributesSummary() +

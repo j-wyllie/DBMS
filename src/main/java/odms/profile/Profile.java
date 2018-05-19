@@ -353,7 +353,7 @@ public class Profile {
             addOrganRequired(organ);
 
                 // TODO history refactor
-                String action = "Donor " +
+                String action = "Profile " +
                         this.getId() +
                         " required organ " +
                         organ.getNamePlain() +
@@ -361,11 +361,8 @@ public class Profile {
                         LocalDateTime.now();
                 HistoryController.updateHistory(action);
             }
-        } catch (OrganConflictException e) {
-            AlertController.invalidOrgan();
-        }
-
     }
+
 
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
@@ -385,7 +382,7 @@ public class Profile {
             }
             this.addOrganDonating(organ);
 
-            String action = "Donor " +
+            String action = "Profile " +
                     this.getId() +
                     " added " +
                     organ.getNamePlain() +
@@ -469,7 +466,7 @@ public class Profile {
                     this.getId() +
                     " added " +
                     organ.getNamePlain() +
-                    " to past donations " +
+                    " to organs donated " +
                     LocalDateTime.now();
 
             HistoryController.updateHistory(action);
@@ -487,7 +484,7 @@ public class Profile {
             this.organsDonated.remove(organ);
 
             // TODO history abstraction
-            String action = "Donor " +
+            String action = "Profile " +
                     this.getId() +
                     " removed " +
                     organ.getNamePlain() +
@@ -509,7 +506,7 @@ public class Profile {
             this.organsDonating.remove(organ);
 
             // TODO history abstraction
-            String action = "Donor " +
+            String action = "Profile " +
                     this.getId() +
                     " removed " +
                     organ.getNamePlain() +
@@ -531,7 +528,7 @@ public class Profile {
             this.organsRequired.remove(organ);
 
             // TODO history abstraction
-            String action = "Donor " +
+            String action = "Profile " +
                     this.getId() +
                     " removed " +
                     organ.getNamePlain() +
@@ -540,6 +537,14 @@ public class Profile {
 
             HistoryController.updateHistory(action);
         }
+    }
+
+    public void removeOrganReceived(OrganEnum organ) {
+        if (this.organsReceived.contains(organ)) {
+            this.organsReceived.remove(organ);
+        }
+
+        this.organsRequired.add(organ);
     }
 
 
@@ -601,7 +606,7 @@ public class Profile {
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data ="Donor " + this.getId() + " added drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Profile " + this.getId() + " added drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         medicationTimestamps.add(data);
         generateUpdateInfo(drug.getDrugName());
     }
@@ -616,7 +621,7 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Donor " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data = "Profile " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             medicationTimestamps.add(data);
@@ -624,7 +629,7 @@ public class Profile {
             HistoryController.updateHistory(data);
         } else if(historyOfMedication.contains(drug)){
             historyOfMedication.remove(drug);
-            data = "Donor " + this.getId() + " removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            data = "Profile " + this.getId() + " removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             medicationTimestamps.add(data);
         }
 
@@ -643,7 +648,7 @@ public class Profile {
         if(currentMedications.contains(drug)){
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
-            String data = "Donor " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+ historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String data = "Profile " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+ historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
@@ -665,7 +670,7 @@ public class Profile {
         if(historyOfMedication.contains(drug)){
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
-            String data = "Donor " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String data = "Profile " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+ currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
