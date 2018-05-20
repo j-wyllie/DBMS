@@ -16,7 +16,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -41,9 +41,9 @@ public class ProcedureAddController {
     private Button addButton;
 
     @FXML
-    private ListView<Organ> affectedOrgansListView;
+    private ListView<OrganEnum> affectedOrgansListView;
 
-    private ObservableList<Organ> donatedOrgans;
+    private ObservableList<OrganEnum> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
@@ -61,7 +61,7 @@ public class ProcedureAddController {
                 throw new IllegalArgumentException();
             }
 
-            LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
+            LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
             if (dob.isAfter(date3)) {
                 throw new IllegalArgumentException();
             }
@@ -106,10 +106,10 @@ public class ProcedureAddController {
     public void init(ProfileDisplayController controller) {
         warningLabel.setVisible(false);
         this.controller = controller;
-        searchedDonor = controller.getSearchedDonor();
+        searchedDonor = controller.getCurrentProfile();
 
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
+        donatedOrgans =  FXCollections.observableArrayList(controller.getCurrentProfile().getOrgansDonated());
         affectedOrgansListView.setItems(donatedOrgans);
     }
 

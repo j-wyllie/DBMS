@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class ProfileDatabase {
@@ -384,14 +384,14 @@ public class ProfileDatabase {
      *
      *  @return Collection of Profile and Organ that match
      */
-    public List<Entry<Profile, Organ>> getAllOrgansRequired() {
-        List<Entry<Profile, Organ>> receivers = new ArrayList<>();
+    public List<Entry<Profile, OrganEnum>> getAllOrgansRequired() {
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
         ArrayList<Profile> allReceivers = getReceivers(true);
 
         for (Profile profile : allReceivers) {
-            for (Organ organ : profile.getOrgansRequired()) {
-                Map.Entry<Profile, Organ> pair = new SimpleEntry<>(profile, organ);
+            for (OrganEnum organ : profile.getOrgansRequired()) {
+                Map.Entry<Profile, OrganEnum> pair = new SimpleEntry<>(profile, organ);
                 receivers.add(pair);
             }
         }

@@ -1,6 +1,5 @@
 package odms.controller;
 
-import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
@@ -15,12 +14,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import org.controlsfx.control.CheckComboBox;
@@ -83,7 +83,7 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TextField transplantSearchField;
-    
+
     @FXML
     private CheckBox ageRangeCheckbox;
 
@@ -93,7 +93,7 @@ public class ClinicianProfileController extends CommonController {
 
     private ObservableList<Profile> donorObservableList;
 
-    private ObservableList<Entry<Profile, Organ>> receiverObservableList;
+    private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
 
@@ -137,12 +137,21 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/ClinicianProfileEdit.fxml";
-        String title = "Edit Profile";
 
-        showScene(event, scene, title, true);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        ClinicianProfileEditController controller = fxmlLoader.getController();
+        controller.setCurrentUser(currentUser);
+        controller.initialize();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Edit Profile");
+        stage.setScene(scene);
+        stage.show();
     }
-    
+
     @FXML
     private void handleAgeRangeCheckboxChecked(ActionEvent event) {
         if (ageRangeCheckbox.isSelected()) {
@@ -244,7 +253,7 @@ public class ClinicianProfileController extends CommonController {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow((Profile) searchTable.getSelectionModel().getSelectedItem());
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem());
             }
         });
 
@@ -307,7 +316,7 @@ public class ClinicianProfileController extends CommonController {
 
             Scene scene = new Scene(fxmlLoader.load());
             ProfileDisplayController controller = fxmlLoader.getController();
-            controller.setDonor(selectedDonor);
+            controller.setProfileViaClinician(selectedDonor);
             controller.initialize();
 
             Stage stage = new Stage();
@@ -327,7 +336,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTransplantWaitingList(List<Entry<Profile, Organ>> receivers){
+    private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers){
         transplantTable.getColumns().clear();
 
         receiverObservableList = FXCollections.observableList(receivers);
@@ -337,20 +346,20 @@ public class ClinicianProfileController extends CommonController {
         //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
         //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantRegionCol  = new TableColumn<>("Region");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantRegionCol  = new TableColumn<>("Region");
         transplantRegionCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
 
-        TableColumn<Map.Entry<Profile, Organ>, String> transplantDateCol  = new TableColumn<>("Date");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol  = new TableColumn<>("Date");
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
 
@@ -365,7 +374,7 @@ public class ClinicianProfileController extends CommonController {
                 event.getClickCount() == 2 &&
                 transplantTable.getSelectionModel().getSelectedItem() != null) {
 
-                createNewDonorWindow(((Entry<Profile, Organ>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
+                createNewDonorWindow(((Entry<Profile, OrganEnum>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
             }
         });
 
@@ -403,17 +412,21 @@ public class ClinicianProfileController extends CommonController {
         typeStrings.add("donor");
         typeCombobox.getItems().setAll(typeStrings);
 
+        TableFilter filter = new TableFilter<>(transplantTable);
 
-        setClinicianDetails();
-        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
-        try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (currentUser != null) {
+            setClinicianDetails();
+            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            try {
+                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
 
-        TableFilter filter = new TableFilter<>(transplantTable);
-
     }
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
 }

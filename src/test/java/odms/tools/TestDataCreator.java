@@ -8,13 +8,13 @@ import java.util.Random;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
 import odms.profile.Condition;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public class TestDataCreator {
     private ProfileDatabase database;
-    private List<Organ> organs = Arrays.asList(Organ.values());
+    private List<OrganEnum> organs = Arrays.asList(OrganEnum.values());
 
     private List<String> names = Arrays.asList(
         "Ash Ketchup",
@@ -138,7 +138,7 @@ public class TestDataCreator {
      * @param profile the profile in which to add the organs
      */
     private void addOrganDonations(Profile profile) {
-        Integer numberDonations = randInRange(0, Organ.values().length);
+        Integer numberDonations = randInRange(0, OrganEnum.values().length);
 
         if (numberDonations > 0) {
             profile.setDonor(true);
@@ -164,13 +164,13 @@ public class TestDataCreator {
      * @param profile the profile in which to add the organs
      */
     private void addOrganDonors(Profile profile) {
-        Integer numberDonating = randInRange(0, Organ.values().length);
+        Integer numberDonating = randInRange(0, OrganEnum.values().length);
 
         if (numberDonating > 0) {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonating; i++) {
                 try {
-                    profile.addOrgan(organs.get(i));
+                    profile.addOrganDonating(organs.get(i));
                 } catch (OrganConflictException e) {
                     // As is test data, no action required.
                 }
@@ -184,16 +184,12 @@ public class TestDataCreator {
      * @param profile the profile in which to add the required organs
      */
     private void addOrgansRequired(Profile profile) {
-        Integer numberReceiving = randInRange(0, Organ.values().length);
+        Integer numberReceiving = randInRange(0, OrganEnum.values().length);
 
         if (numberReceiving > 0) {
             profile.setReceiver(true);
             for (Integer i = 0; i < numberReceiving; i++) {
-                try {
-                    profile.addOrganRequired(organs.get(i));
-                } catch (OrganConflictException e) {
-                    // As is test data, no action required.
-                }
+                profile.addOrganRequired(organs.get(i));
             }
         }
     }
