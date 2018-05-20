@@ -147,11 +147,14 @@ public class ClinicianProfileController extends CommonController {
     private void handleAgeRangeCheckboxChecked(ActionEvent event) {
         if (ageRangeCheckbox.isSelected()) {
             ageRangeField.setVisible(true);
-            ageField.setPromptText("Lower Age");
+            ageField.setPromptText("Age value");
+            ageRangeField.setPromptText("Age value");
+            ageRangeField.clear();
         } else {
             ageRangeField.setVisible(false);
             ageField.setPromptText("Age");
         }
+        updateSearchTable();
     }
 
 
@@ -193,7 +196,11 @@ public class ClinicianProfileController extends CommonController {
 
         int ageRangeSearchInt;
         try {
-            ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
+            if (ageRangeCheckbox.isSelected()) {
+                ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
+            } else {
+                ageRangeSearchInt = -999;
+            }
         } catch (NumberFormatException e) {
             ageRangeSearchInt = -999;
         }

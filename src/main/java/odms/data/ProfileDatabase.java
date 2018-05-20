@@ -268,15 +268,12 @@ public class ProfileDatabase {
             List<ExtractedResult> result;
             result = FuzzySearch.extractSorted(regionSearchString, profiles, 50);
 
-            System.out.println(result.size());
-
             //Use index values from fuzzywuzzy search to build list of profile object in same order returned from fuzzywuzzy.
             resultProfiles = new ArrayList<>();
             for (ExtractedResult er : result) {
                 resultProfiles.add(resultProfilesBefore.get(er.getIndex()));
             }
         }
-
 
 
 
