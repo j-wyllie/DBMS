@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import org.controlsfx.control.CheckComboBox;
 import org.junit.*;
@@ -135,9 +135,9 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         clickOn(scene.lookup("#organsCombobox"));
         firstDonor = (Profile) searchTable.getItems().get(0);
 
-        assertTrue(firstDonor.getOrgansDonating().contains(Organ.KIDNEY));
-        assertTrue(firstDonor.getOrgansDonating().contains(Organ.INTESTINE));
-        assertTrue(firstDonor.getOrgansDonating().contains(Organ.LIVER));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.KIDNEY));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.INTESTINE));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.LIVER));
 
 
 

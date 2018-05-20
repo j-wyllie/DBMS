@@ -302,10 +302,10 @@ public class ProfileDatabase {
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
 
-                HashSet<Organ> organsDonatingHash = profile.getOrgansDonating();
+                HashSet<OrganEnum> organsDonatingHash = profile.getOrgansDonating();
                 List<String> organsDonating = new ArrayList<String>();
 
-                for (Organ temp : organsDonatingHash) {
+                for (OrganEnum temp : organsDonatingHash) {
                     organsDonating.add(temp.getName());
                 }
 

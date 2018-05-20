@@ -28,7 +28,7 @@ import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
-    private static User currentUser = getCurrentUser();
+    private static User currentUser;
 
     @FXML
     private Label clinicianFullName;
@@ -106,6 +106,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Scene change to log in view.
+     *
      * @param event clicking on the logout button.
      */
     @FXML
@@ -115,6 +116,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Button handler to undo last action.
+     *
      * @param event clicking on the undo button.
      */
     @FXML
@@ -124,6 +126,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Button handler to redo last undo action.
+     *
      * @param event clicking on the redo button.
      */
     @FXML
@@ -133,6 +136,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Button handler to make fields editable.
+     *
      * @param event clicking on the edit button.
      */
     @FXML
@@ -169,6 +173,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Button handler to update search table based on search results.
+     *
      * @param event releasing a key on the keyboard.
      */
     @FXML
@@ -224,7 +229,7 @@ public class ClinicianProfileController extends CommonController {
      * Sets all the clinicians details in the GUI.
      */
     @FXML
-    private void setClinicianDetails(){
+    private void setClinicianDetails() {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
@@ -239,7 +244,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable(ArrayList<Profile> donors){
+    private void makeSearchTable(ArrayList<Profile> donors) {
         searchTable.getItems().clear();
 
         donorObservableList = FXCollections.observableArrayList(donors);
@@ -292,7 +297,7 @@ public class ClinicianProfileController extends CommonController {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
-                    if(donor.getOrgansDonated().size() > 0) {
+                    if (donor.getOrgansDonated().size() > 0) {
                         donations = ". Donor: " + donor.getOrgansDonated().toString();
                     }
                     row.setTooltip(new Tooltip(donor.getFullName() + donations));
@@ -305,6 +310,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Creates a new window when a row in the search table is double clicked.
      * The new window contains a donors profile.
+     *
      * @param donor The donor object that has been clicked on
      */
     @FXML
@@ -323,8 +329,7 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -336,7 +341,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers){
+    private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
 
         receiverObservableList = FXCollections.observableList(receivers);
@@ -346,20 +351,20 @@ public class ClinicianProfileController extends CommonController {
         //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
         //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol  = new TableColumn<>("Organs Required");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>("Organs Required");
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol  = new TableColumn<>("Name");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol = new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantRegionCol  = new TableColumn<>("Region");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantRegionCol = new TableColumn<>("Region");
         transplantRegionCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol  = new TableColumn<>("Date");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol = new TableColumn<>("Date");
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
 
@@ -371,8 +376,8 @@ public class ClinicianProfileController extends CommonController {
 
         transplantTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() &&
-                event.getClickCount() == 2 &&
-                transplantTable.getSelectionModel().getSelectedItem() != null) {
+                    event.getClickCount() == 2 &&
+                    transplantTable.getSelectionModel().getSelectedItem() != null) {
 
                 createNewDonorWindow(((Entry<Profile, OrganEnum>) transplantTable.getSelectionModel().getSelectedItem()).getKey());
             }
@@ -396,21 +401,28 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    private void initialize(){
+    public void initialize() {
 
         ageRangeField.setVisible(false);
 
-        genderStrings.add("male");
-        genderStrings.add("female");
-        genderStrings.add("other");
-        genderCombobox.getItems().setAll(genderStrings);
+        if (genderCombobox.getItems().size() == 0) {
+            genderStrings.add("male");
+            genderStrings.add("female");
+            genderStrings.add("other");
+            genderCombobox.getItems().setAll(genderStrings);
+        }
 
-        organsStrings.addAll(Organ.toArrayList());
-        organsCombobox.getItems().setAll(organsStrings);
+        if (organsCombobox.getItems().size() == 0) {
+            organsStrings.addAll(OrganEnum.toArrayList());
+            organsCombobox.getItems().setAll(organsStrings);
+        }
 
-        typeStrings.add("receiver");
-        typeStrings.add("donor");
-        typeCombobox.getItems().setAll(typeStrings);
+        if (typeCombobox.getItems().size() == 0) {
+            typeStrings.add("receiver");
+            typeStrings.add("donor");
+            typeCombobox.getItems().setAll(typeStrings);
+        }
+
 
         TableFilter filter = new TableFilter<>(transplantTable);
 
@@ -427,6 +439,8 @@ public class ClinicianProfileController extends CommonController {
 
 
     }
+
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
 }
