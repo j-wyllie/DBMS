@@ -43,6 +43,14 @@ public class Help {
         System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
             + "03-1998\" > remove-organ=\"liver, kidney\"");
 
+        System.out.println("\nAdd an organ to receive:");
+        System.out
+                .println("profile {attributes to search profiles by} > receive-organ=\" {list of organs "
+                        + "to donate} \"");
+        System.out
+                .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+                        + "-1998\" > receive-organ=\"liver, kidney\"");
+
         System.out.print("\nPrint all profiles: ");
         System.out.println("print all");
 

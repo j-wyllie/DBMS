@@ -53,6 +53,7 @@ public class CommandUtils {
      * If nothing is matched than an invalid command has been used.
      *
      * @param cmd the command being validated
+     * @param rawInput User entered CLI command.
      * @return the enum Commands appropriate value
      */
     static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
@@ -100,8 +101,12 @@ public class CommandUtils {
                         rawInput.lastIndexOf('=')).trim()) {
                         case "add-organ":
                             return Commands.ORGANADD;
+                        case "receive-organ":
+                            return Commands.RECEIVERADD;
                         case "remove-organ":
                             return Commands.ORGANREMOVE;
+                        case "removereceive-organ":
+                            return Commands.RECEIVEREMOVE;
                         case "donate":
                             return Commands.ORGANDONATE;
                     }
@@ -139,7 +144,48 @@ public class CommandUtils {
 
                 addOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                test(currentDatabase, expression, organList);
+                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+                        expression.indexOf(">") - 2);
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+
+                addOrgans(profileList, organList);
+            }
+
+        } else {
+            System.out.println(searchErrorText);
+        }
+    }
+
+    /**
+     * Add organs to a profile's received organs.
+     *
+     * @param currentDatabase Database reference
+     * @param expression Search expression
+     */
+    static void addReceiverOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+        String[] organList = expression.substring(
+                expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
+
+        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
+                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
+            String attr = expression.substring(expression.indexOf("\"") + 1,
+                    expression.indexOf(">") - 2);
+
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+
+                addReceiverOrgans(profileList, organList);
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
+
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+
+                addReceiverOrgans(profileList, organList);
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+                        expression.indexOf(">") - 2);
+                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+
+                addReceiverOrgans(profileList, organList);
             }
 
         } else {
@@ -178,6 +224,41 @@ public class CommandUtils {
                     .searchIRDNumber(Integer.valueOf(attr));
 
                 removeOrgansDonating(profileList, organList);
+            }
+        } else {
+            System.out.println(searchErrorText);
+        }
+    }
+
+    /**
+     * Remove organs available for donation to a profile profile.
+     *
+     * @param currentDatabase Database reference
+     * @param expression Search expression
+     */
+    static void removeReceiverOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+        String[] organList = expression.substring(expression.lastIndexOf("=") + 1).
+                replace("\"", "")
+                .split(",");
+
+        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
+                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
+            String attr = expression.substring(expression.indexOf("\"") + 1,
+                    expression.indexOf(">") - 2);
+
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
+                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+
+                removeReceiverOrgansDonating(profileList, organList);
+            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
+                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+
+                removeReceiverOrgansDonating(profileList, organList);
+            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+                ArrayList<Profile> profileList = currentDatabase
+                        .searchIRDNumber(Integer.valueOf(attr));
+
+                removeReceiverOrgansDonating(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -255,12 +336,48 @@ public class CommandUtils {
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
+                                    .subList(historyPosition, currentSessionHistory.size() - 1).clear();
                         }
                     }
                     currentSessionHistory.add(
-                        "Profile " + profile.getId() + " set organs " + organSet + " at "
-                            + LocalDateTime.now());
+                            "Profile " + profile.getId() + " set organs " + organSet + " at "
+                                    + LocalDateTime.now());
+                    historyPosition = currentSessionHistory.size() - 1;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("This organ already exists.");
+                } catch (Exception e) {
+                    System.out.println("A profile cannot be both a receiver and donor "
+                            + "for the same organ");
+                    System.out.println(e.getMessage());
+                }
+            }
+        } else {
+            System.out.println(searchNotFoundText);
+        }
+    }
+
+    /**
+     * Add organ donations.
+     *
+     * @param profileList list of profiles
+     * @param organList list of organs to be added
+     */
+    private static void addReceiverOrgans(ArrayList<Profile> profileList, String[] organList) {
+        if (profileList.size() > 0) {
+            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
+
+            for (Profile profile : profileList) {
+                try {
+                    profile.addOrgansRequired(organSet);
+                    if (currentSessionHistory.size() != 0) {
+                        if (historyPosition != currentSessionHistory.size() - 1) {
+                            currentSessionHistory
+                                    .subList(historyPosition, currentSessionHistory.size() - 1).clear();
+                        }
+                    }
+                    currentSessionHistory.add(
+                            "Profile " + profile.getId() + " set organs " + organSet + " at "
+                                    + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
@@ -284,6 +401,7 @@ public class CommandUtils {
             for (Profile profile : profileList) {
                 try {
                     profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
+                    profile.setDonor(true);
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -326,12 +444,44 @@ public class CommandUtils {
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
+                                    .subList(historyPosition, currentSessionHistory.size() - 1).clear();
                         }
                     }
                     currentSessionHistory.add(
-                        "Profile " + profile.getId() + " removed these organs " + organSet + " at "
-                            + LocalDateTime.now());
+                            "Profile " + profile.getId() + " removed these organs " + organSet + " at "
+                                    + LocalDateTime.now());
+                    historyPosition = currentSessionHistory.size() - 1;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("This organ doesn't exist.");
+                }
+            }
+        } else {
+            System.out.println(searchNotFoundText);
+        }
+    }
+
+    /**
+     * Remove organ from receiver list for profiles.
+     *
+     * @param profileList list of profile
+     * @param organList list of organs to be removed
+     */
+    private static void removeReceiverOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
+        if (profileList.size() > 0) {
+            Set<String> organSet = new HashSet<>(Arrays.asList(organList));
+
+            for (Profile profile : profileList) {
+                try {
+                    profile.removeOrgansRequired(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
+                    if (currentSessionHistory.size() != 0) {
+                        if (historyPosition != currentSessionHistory.size() - 1) {
+                            currentSessionHistory
+                                    .subList(historyPosition, currentSessionHistory.size() - 1).clear();
+                        }
+                    }
+                    currentSessionHistory.add(
+                            "Profile " + profile.getId() + " removed these organs " + organSet + " at "
+                                    + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");

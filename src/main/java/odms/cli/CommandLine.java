@@ -77,6 +77,7 @@ public class CommandLine {
      * @param input commands entered from console
      */
     private void processInput(ArrayList<String> input, String rawInput) {
+        System.out.println(rawInput);
         Commands inputCommand = validateCommandType(input, rawInput);
 
         switch (inputCommand) {
@@ -169,6 +170,18 @@ public class CommandLine {
             case ORGANREMOVE:
                 // Remove organs from a printDonors profile.
                 CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
+                System.out.println("Organ successfully removed from profile(s).");
+                break;
+
+            case RECEIVERADD:
+                // Add organs to a Receiver profile.
+                CommandUtils.addReceiverOrgansBySearch(currentDatabase, rawInput);
+                System.out.println("Organ successfully added to profile(s).");
+                break;
+
+            case RECEIVEREMOVE:
+                // Remove organs from a printDonors profile.
+                CommandUtils.removeReceiverOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 

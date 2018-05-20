@@ -25,9 +25,11 @@ public enum Commands {
     PROFILEUPDATE,
     PROFILEVIEW,
 
-    // Orgon Commands
+    // Organ Commands
     ORGANADD,
+    RECEIVERADD,
     ORGANREMOVE,
+    RECEIVEREMOVE,
     ORGANDONATE;
 
     public static ArgumentCompleter commandAutoCompletion() {
