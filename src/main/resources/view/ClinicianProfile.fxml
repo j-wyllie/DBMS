@@ -203,6 +203,7 @@
                                     <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                        <children>
                                           <Button fx:id="buttonShowAll" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all results" visible="false" />
+                                          <Button fx:id="buttonShowNext" mnemonicParsing="false" onAction="#handleGetXResults" text="Show next 25" visible="false" />
                                        </children>
                                     </TilePane>
                                     <TilePane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">

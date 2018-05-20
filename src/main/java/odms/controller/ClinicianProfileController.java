@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,9 +84,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private Button buttonShowNext;
 
-    @FXML
-    private Button buttonShowPrevious;
-
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
@@ -95,7 +93,7 @@ public class ClinicianProfileController extends CommonController {
     private ArrayList<Profile> profileSearchResults;
 
     // Constant that holds the number of search results displayed on a page at a time.
-    private static final int PAGESIZE = 50;
+    private static final int PAGESIZE = 25;
 
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
@@ -145,16 +143,22 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleGetAllResults(ActionEvent event) {
-        if (buttonShowAll.getText().equals("Show 20 results")) {
+        if (buttonShowAll.getText().equals("Show 25 results")) {
             buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
 
-            updateTable(false);
+            updateTable(false, false);
             labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
         } else {
-            buttonShowAll.setText("Show 20 results");
-            updateTable(true);
+            buttonShowAll.setText("Show 25 results");
+            updateTable(true, false);
             labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
         }
+    }
+
+    @FXML
+    private void handleGetXResults(ActionEvent event) {
+        updateTable(false, true);
+        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
     /**
@@ -166,25 +170,28 @@ public class ClinicianProfileController extends CommonController {
         String searchString = searchField.getText();
 
         profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
-        updateTable(false);
+        updateTable(false, false);
         if (profileSearchResults == null) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
+            labelResultCount.setText("0 results found");
             buttonShowAll.setVisible(false);
+            buttonShowNext.setVisible(false);
         } else {
             if (profileSearchResults.size() <= PAGESIZE) {
                 labelCurrentOnDisplay.setText("displaying 1 to " + profileSearchResults.size());
                 buttonShowAll.setVisible(false);
+                buttonShowNext.setVisible(false);
             } else {
                 labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
                 if (profileSearchResults.size() > MAXPAGESIZE) {
                     buttonShowAll.setVisible(false);
+                    buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
                     buttonShowAll.setVisible(true);
+                    buttonShowNext.setVisible(true);
                 }
-
             }
-
         }
     }
 
@@ -195,7 +202,8 @@ public class ClinicianProfileController extends CommonController {
      * 200 objects in size.
      * @param showAll boolean, if true will display all objects in class variable profileSearchResults.
      */
-    private void updateTable(boolean showAll) {
+    private void updateTable(boolean showAll, boolean showNext) {
+        int size = donorObservableList.size();
         searchTable.getItems().clear();
         if (profileSearchResults != null) {
             if (profileSearchResults.size() == 1) {
@@ -210,6 +218,15 @@ public class ClinicianProfileController extends CommonController {
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                 }
+            } else if (showNext) {
+                if (profileSearchResults.size() > (size + PAGESIZE)) {
+                    donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
+                } else {
+                    donorObservableList.addAll(profileSearchResults);
+                    buttonShowNext.setVisible(false);
+                    buttonShowAll.setVisible(false);
+                }
+
             } else if (profileSearchResults.size() > PAGESIZE) {
                 donorObservableList.addAll(profileSearchResults.subList(0, PAGESIZE));
             } else {
