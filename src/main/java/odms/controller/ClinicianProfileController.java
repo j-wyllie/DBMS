@@ -355,6 +355,19 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
+     * Checks if there are unsaved changes in any open window.
+     * @return true if there are unsaved changes.
+     */
+    public static boolean checkUnsavedChanges() {
+        for (Stage stage : openProfileStages) {
+            if (isEdited(stage)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * closes all open Profile windows that the user has opened.
      */
     public static void closeAllOpenProfiles() {

@@ -1,6 +1,5 @@
 package odms.controller;
 
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+
+import java.io.IOException;
 
 class CommonController {
 
@@ -100,6 +101,15 @@ class CommonController {
     }
 
     /**
+     * checks whether the window has been edited
+     * @param stage
+     * @return true if window has unsaved changes.
+     */
+    protected static boolean isEdited(Stage stage) {
+        return stage.getTitle().contains("(*)");
+    }
+
+    /**
      * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
      * @param event The event which is wanted to trigger a notification
      * @param editedField String of which is the thing edited.
@@ -118,7 +128,6 @@ class CommonController {
                 .position(Pos.BOTTOM_LEFT)
                 .owner(currentStage)
                 .show();
-
     }
 
 }

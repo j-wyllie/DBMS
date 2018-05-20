@@ -30,35 +30,39 @@ public class DataManagementController {
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) { // Check that the user actually selected a file
-
-            if (AlertController.unsavedChangesImport()) {
-                GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
-
-                ClinicianProfileController.closeAllOpenProfiles();
-                stage.close();
-
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-                try {
-                    Scene scene = new Scene(fxmlLoader.load());
-
-//                    ClinicianProfileController controller = fxmlLoader.getController();
-//                    controller.setCurrentUser(currentUser);
-//                    controller.initialize();
-
-                    stage = new Stage();
-                    stage.setTitle("Admin");
-                    stage.setScene(scene);
-                    stage.show();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (ClinicianProfileController.checkUnsavedChanges()) {
+                if (AlertController.unsavedChangesImport()) {
+                    importAndCloseWindows(stage, file);
                 }
+            } else {
+                importAndCloseWindows(stage, file);
             }
 
         }
     }
+
+    private void importAndCloseWindows(Stage stage, File file) {
+        GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+
+        ClinicianProfileController.closeAllOpenProfiles();
+        stage.close();
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+
+            stage = new Stage();
+            stage.setTitle("Admin");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
