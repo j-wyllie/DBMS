@@ -230,7 +230,7 @@ public class Profile {
 
     /**
      * Add a procedure to the current profile
-     * @param procedure
+     * @param procedure the procedure to add
      */
     public void addProcedure(Procedure procedure) {
         if (procedures == null) {
@@ -240,7 +240,7 @@ public class Profile {
 
     /**
      * Remove a procedure from the current profile
-     * @param procedure
+     * @param procedure the procedure to remove
      */
     public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
@@ -284,15 +284,11 @@ public class Profile {
 
     /**
      * Given a procedure, will return whether the procedure has past
-     * @param procedure
+     * @param procedure the procedure to check
      * @return whether the procedure has past
      */
     public boolean isPreviousProcedure(Procedure procedure) {
-        if (procedure.getDate().isBefore(LocalDate.now())) {
-            return true;
-        } else {
-            return false;
-        }
+        return procedure.getDate().isBefore(LocalDate.now());
     }
 
     // TODO abstract printing method to console tools
@@ -317,27 +313,6 @@ public class Profile {
         summary = summary +"," +("phone=" + phone);
         summary = summary +"," +("email=" + email);
         return summary;
-    }
-
-    /**
-     * Adds a csv list to the list of donations
-     * @param organString the organs to add as a csv
-     */
-    public void addDonationFromString(String organString) {
-        String[] organStrings = organString.split("(,\\s+|,)");
-        this.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organStrings)));
-    }
-
-    /**
-     * Adds a csv list of diseases to the list of donations
-     * @param diseases the list of donations to add
-     */
-    public void addChronicDiseases(String diseases) {
-        String[] allDiseases = diseases.split(",");
-        for (String dis : allDiseases) {
-            String newDis = dis.trim();
-            chronicDiseases.add(newDis);
-        }
     }
 
     /**
@@ -441,7 +416,7 @@ public class Profile {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    public void addOrganReceived(OrganEnum organ) {
+    private void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -990,6 +965,7 @@ public class Profile {
         return chronicDiseases;
     }
 
+    // TODO access to this array should be restricted, this basically makes it public and redundant.
     public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
