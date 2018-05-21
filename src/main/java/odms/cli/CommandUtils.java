@@ -127,7 +127,7 @@ public class CommandUtils {
      */
     static void addOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
         String[] organList = expression.substring(
-            expression.lastIndexOf("=") + 1).replace("\"", "").split(",");
+            expression.lastIndexOf("=") + 1).replace("\"", "").replace(" ", "").split(",");
 
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
             expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
