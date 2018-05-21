@@ -16,6 +16,8 @@ import java.io.IOException;
 
 class CommonController {
 
+    private static boolean isEdited = false;
+
     /**
      * Scene change to log in view.
      *
@@ -74,6 +76,7 @@ class CommonController {
         if(!currentStage.getTitle().contains("(*)")){
             currentStage.setTitle(currentStage.getTitle() + " (*)");
         }
+        setEdited(true);
     }
 
     /**
@@ -86,6 +89,7 @@ class CommonController {
         if(!currentStage.getTitle().contains("(*)")){
             currentStage.setTitle(currentStage.getTitle() + " (*)");
         }
+        setEdited(true);
     }
 
     /**
@@ -98,6 +102,7 @@ class CommonController {
         if(!currentStage.getTitle().contains("(*)")){
             currentStage.setTitle(currentStage.getTitle() + " (*)");
         }
+        setEdited(true);
     }
 
     /**
@@ -107,6 +112,10 @@ class CommonController {
      */
     protected static boolean isEdited(Stage stage) {
         return stage.getTitle().contains("(*)");
+//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
+//        CommonController controller = loader.getController();
+//        controller.toString();
+//        return controller.getEdited();
     }
 
     /**
@@ -130,4 +139,11 @@ class CommonController {
                 .show();
     }
 
+    public void setEdited(Boolean edited) {
+        isEdited = edited;
+    }
+
+    public Boolean getEdited() {
+        return isEdited;
+    }
 }

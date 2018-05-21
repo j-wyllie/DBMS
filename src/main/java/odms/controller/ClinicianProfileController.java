@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -246,6 +247,9 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                closeStage(stage);
+            });
             openProfileStages.add(stage);
         }
         catch (IOException e) {
@@ -360,11 +364,15 @@ public class ClinicianProfileController extends CommonController {
      */
     public static boolean checkUnsavedChanges() {
         for (Stage stage : openProfileStages) {
-            if (isEdited(stage)) {
+            if (isEdited(stage) && stage.isShowing()) {
                 return true;
             }
         }
         return false;
+    }
+
+    private void closeStage(Stage stage) {
+        openProfileStages.remove(stage);
     }
 
     /**
@@ -372,7 +380,9 @@ public class ClinicianProfileController extends CommonController {
      */
     public static void closeAllOpenProfiles() {
         for (Stage stage : openProfileStages) {
-            stage.close();
+            if (stage.isShowing()) {
+                stage.close();
+            }
         }
     }
 }
