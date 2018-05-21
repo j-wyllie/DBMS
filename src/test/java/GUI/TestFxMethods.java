@@ -35,12 +35,10 @@ import static org.junit.Assert.assertEquals;
  */
 abstract class TestFxMethods extends ApplicationTest {
 
-    public GuiMain guiMain;
+    private GuiMain guiMain;
 
     @After()
     public void tearDown() throws Exception {
-        FxToolkit.cleanupStages();
-        FxToolkit.cleanupApplication(guiMain);
         release(new KeyCode[]{});
         release(new MouseButton[]{});
         sleep(500);
@@ -131,7 +129,7 @@ abstract class TestFxMethods extends ApplicationTest {
      * gets current stage with all windows.
      * @return All of the current windows
      */
-    protected javafx.scene.Scene getTopScene() {
+    protected Scene getTopScene() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
         final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
