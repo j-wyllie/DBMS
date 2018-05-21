@@ -1,16 +1,11 @@
 package odms;
 
-import static java.lang.System.getProperty;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
+import odms.data.DatabaseConnection;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 
@@ -19,12 +14,9 @@ public class App {
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
 
     public static void main(String[] args) {
-        try {
-            Connection conn = createConnection();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        Connection connection = connectionInstance.getConnection();
+
         CommandUtils.currentSessionHistory.add("");
         try {
 
@@ -43,20 +35,5 @@ public class App {
             e.printStackTrace();
         }
 
-    }
-
-    private static Connection createConnection() throws IOException, ClassNotFoundException, SQLException {
-        Properties prop = new Properties();
-        prop.load(new FileInputStream(getProperty("user.dir") + "/config/db.config"));
-
-        String host = prop.getProperty("host");
-        String database = prop.getProperty("database");
-        String username = prop.getProperty("username");
-        String password = prop.getProperty("password");
-        String driver = prop.getProperty("driver");
-
-        Class.forName(driver);
-        Connection conn = DriverManager.getConnection(host + '/' + database, username, password);
-        return conn;
     }
 }
