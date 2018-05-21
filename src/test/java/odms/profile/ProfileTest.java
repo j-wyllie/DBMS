@@ -880,11 +880,8 @@ public class ProfileTest {
     /**
      * Test profiles required organ update shows in history.
      */
-    @Ignore
     @Test
     public void testRequiredOrganHistory() {
-        ArrayList<String> profileAttr = new ArrayList<>();
-
         Profile testProfile = new Profile(profileAttr);
 
         List<String> someOrgans = new ArrayList<>();
