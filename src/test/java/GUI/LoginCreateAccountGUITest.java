@@ -87,7 +87,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-        assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
+        assertEquals("Please enter Given Name(s)", dialogPane.getContentText());
         closeDialog(dialogPane);
 
         //tests invalid date format
