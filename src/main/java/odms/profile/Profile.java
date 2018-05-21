@@ -98,7 +98,10 @@ public class Profile {
         this.setReceiver(false); // TODO decide behaviour
         setExtraAttributes(attr);
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+        if (getGivenNames() == null ||
+                getLastNames() == null ||
+                getDateOfBirth() == null ||
+                getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
@@ -139,17 +142,33 @@ public class Profile {
             setLastNames(value);
         } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
             String[] dates = value.split("-");
-            LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+            LocalDate date = LocalDate.of(
+                    Integer.valueOf(dates[2]),
+                    Integer.valueOf(dates[1]),
+                    Integer.valueOf(dates[0])
+            );
+            if (date.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException(
+                        "Date of birth cannot be a future date"
+                );
+            }
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if(value.equals("null")){
-                setDateOfDeath(null);
-            } else {
+            if (!value.equals("null")) {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+                LocalDate date = LocalDate.of(
+                        Integer.valueOf(dates[2]),
+                        Integer.valueOf(dates[1]),
+                        Integer.valueOf(dates[0])
+                );
+                if (getDateOfBirth().isAfter(date)) {
+                    throw new IllegalArgumentException(
+                            "Date of death cannot be before date of birth"
+                    );
+                }
                 setDateOfDeath(date);
             }
-        } else if (attrName.equals(Attribute.GENDER.getText()) ){
+        } else if (attrName.equals(Attribute.GENDER.getText())) {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
@@ -158,7 +177,7 @@ public class Profile {
                 }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid height entered");
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
@@ -167,7 +186,7 @@ public class Profile {
                 }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid weight entered");
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
             if(value.equals("null") || value.equals("")) {
@@ -182,32 +201,29 @@ public class Profile {
             try {
                 setIrdNumber(Integer.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid IRD number entered");
             }
         } else if (attrName.equals("smoker")) {
-            try {
-                setSmoker(Boolean.valueOf(value));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
-            }
+            setSmoker(Boolean.valueOf(value));
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {setBloodPressureSystolic(null);}
-            else {
+            if (value.equals("null")) {
+                setBloodPressureSystolic(null);
+            } else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
-        }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {setBloodPressureDiastolic(null);}
-            else {
+        } else if (attrName.equals("bloodPressureDiastolic")) {
+            if (value.equals("null")) {
+                setBloodPressureDiastolic(null);
+            } else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
-        }else if (attrName.equals("phone")) {
+        } else if (attrName.equals("phone")) {
             setPhone(value);
-        }else if (attrName.equals("email")) {
+        } else if (attrName.equals("email")) {
             setEmail(value);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
     }
