@@ -79,6 +79,9 @@ public class ClinicianProfileController extends CommonController {
     private Label labelCurrentOnDisplay;
 
     @FXML
+    private Label labelToManyResults;
+
+    @FXML
     private Button buttonShowAll;
 
     @FXML
@@ -143,16 +146,10 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleGetAllResults(ActionEvent event) {
-        if (buttonShowAll.getText().equals("Show 25 results")) {
-            buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
-
-            updateTable(false, false);
-            labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
-        } else {
-            buttonShowAll.setText("Show 25 results");
-            updateTable(true, false);
-            labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
-        }
+        buttonShowAll.setVisible(false);
+        buttonShowNext.setVisible(false);
+        updateTable(true, false);
+        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
     @FXML
@@ -168,7 +165,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void handleSearchDonors(KeyEvent event) {
         String searchString = searchField.getText();
-
+        labelToManyResults.setVisible(false);
         profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
         updateTable(false, false);
         if (profileSearchResults == null) {
@@ -184,10 +181,12 @@ public class ClinicianProfileController extends CommonController {
             } else {
                 labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
                 if (profileSearchResults.size() > MAXPAGESIZE) {
+                    labelToManyResults.setVisible(true);
                     buttonShowAll.setVisible(false);
                     buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
+                    buttonShowNext.setText("Show next 25 results");
                     buttonShowAll.setVisible(true);
                     buttonShowNext.setVisible(true);
                 }
@@ -221,6 +220,9 @@ public class ClinicianProfileController extends CommonController {
             } else if (showNext) {
                 if (profileSearchResults.size() > (size + PAGESIZE)) {
                     donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
+                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() < PAGESIZE) {
+                        buttonShowNext.setText("Show next " + profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() + " results");
+                    }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                     buttonShowNext.setVisible(false);
