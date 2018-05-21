@@ -1009,7 +1009,7 @@ public class ProfileTest {
     }
 
     @Test
-    public  void TestMoveDrugToCurrent() {
+    public  void testMoveDrugToCurrent() {
         Drug drug1 = new Drug("acetaminophen");
         Drug drug2 = new Drug("paracetamol");
 
@@ -1138,6 +1138,48 @@ public class ProfileTest {
             assertTrue(testDonor.getCuredConditions().contains(condition1));
         } catch (IllegalArgumentException e) {
             // pass
+        }
+    }
+
+    /**
+     * Tests not being able to create a profile with a future DOB
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFutureDOB() throws IllegalArgumentException {
+        ArrayList<String> donorAttr = new ArrayList<>();
+
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2020\"");
+//        donorAttr.add("dod=\"01-01-2050\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        try {
+            new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Date of birth cannot be a future date", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Tests not being able to create a profile with a DOD prior to the DOB
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testDODBeforeDOB() throws IllegalArgumentException {
+        ArrayList<String> donorAttr = new ArrayList<>();
+
+        donorAttr.add("given-names=\"John\"");
+        donorAttr.add("last-names=\"Smithy Smith Face\"");
+        donorAttr.add("dob=\"01-01-2000\"");
+        donorAttr.add("dod=\"01-01-1950\"");
+        donorAttr.add("ird=\"123456879\"");
+
+        try {
+            new Profile(donorAttr);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Date of death cannot be before date of birth", e.getMessage());
+            throw e;
         }
     }
 
