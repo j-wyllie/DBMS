@@ -1,27 +1,20 @@
 package odms.controller;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.RedoController.redo;
-import static odms.controller.UndoController.undo;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import odms.History.History;
-import odms.cli.CommandUtils;
+import javafx.scene.control.*;
 import odms.data.ProfileDataIO;
 import odms.enums.OrganEnum;
+import odms.history.History;
 import odms.profile.Procedure;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProcedureEditController {
     @FXML
@@ -48,6 +41,8 @@ public class ProcedureEditController {
 
     private Procedure currentProcedure;
     private ProfileDisplayController controller;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     @FXML
     public void initialize(Procedure selectedProcedure, ProfileDisplayController selectedController) {
@@ -81,7 +76,7 @@ public class ProcedureEditController {
     }
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
-        undo(GuiMain.getCurrentDatabase());
+        undoController.undo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -90,7 +85,7 @@ public class ProcedureEditController {
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
-        redo(GuiMain.getCurrentDatabase());
+        redoController.redo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -119,14 +114,16 @@ public class ProcedureEditController {
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
-        History action = new History ("Profile ",controller.getCurrentProfile().getId(),"EDITED","",controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure),LocalDateTime.now());
-        String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
-        System.out.println(action);
+        History action = new History ("Profile ",controller.getCurrentProfile().getId(),"EDITED","",
+                controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure),LocalDateTime.now());
+        String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+
+                currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
         currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
-        String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
+        String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+
+                currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action.setHistoryData(oldValues+newValues);
         HistoryController.updateHistory(action);
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");

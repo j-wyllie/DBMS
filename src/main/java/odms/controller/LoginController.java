@@ -114,7 +114,6 @@ public class LoginController extends CommonController {
         showScene(event, scene, title, false);
     }
 
-    public static Profile getCurrentProfile() {return currentProfile;}
     public static User getCurrentUser() {return currentUser;}
 
     @FXML

@@ -1,14 +1,14 @@
 package odms.cli.commands;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.controller.HistoryController;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
+import odms.history.History;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Profile extends CommandUtils {
 
@@ -99,11 +99,9 @@ public class Profile extends CommandUtils {
                 result = currentDatabase.deleteProfile(profile.getId());
                 if (result) {
                     HistoryController.deletedProfiles.add(profile);
-                    HistoryController.updateHistory(new History("Profile",profile.getId(),"deleted","",-1,LocalDateTime.now()));
+                    HistoryController.updateHistory(new History("Profile",profile.getId(),
+                            "deleted","",-1,LocalDateTime.now()));
                 }
-
-
-
             }
         } else {
             System.out.println(searchNotFoundText);

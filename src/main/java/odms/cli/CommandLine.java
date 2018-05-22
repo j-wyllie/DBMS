@@ -1,9 +1,5 @@
 package odms.cli;
 
-import static odms.cli.CommandUtils.validateCommandType;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
@@ -18,6 +14,11 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import static odms.cli.CommandUtils.validateCommandType;
 
 public class CommandLine {
 
@@ -178,16 +179,6 @@ public class CommandLine {
                 // Add to donations made by a profile.
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, rawInput);
                 System.out.println("Donation successfully added to profile.");
-                break;
-
-            case UNDO:
-                // Undoes the previously done action
-                UndoController.undo(currentDatabase);
-                break;
-
-            case REDO:
-                //Redoes the previously undone action
-                RedoController.redo(currentDatabase);
                 break;
         }
     }

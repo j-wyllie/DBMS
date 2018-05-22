@@ -7,23 +7,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.History.History;
 import odms.data.UserDataIO;
+import odms.history.History;
 import odms.user.User;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.*;
 import static odms.controller.GuiMain.getUserDatabase;
-import static odms.controller.RedoController.redo;
-import static odms.controller.UndoController.undo;
-
-import odms.cli.CommandUtils;
-import javafx.scene.control.TextField;
 
 public class ClinicianProfileEditController extends CommonController{
     private static User currentUser;
@@ -70,7 +64,9 @@ public class ClinicianProfileEditController extends CommonController{
         boolean saveBool = profileSaveChanges();
         boolean error = false;
         if (saveBool) {
-            History action = new History("Clinician",currentUser.getStaffId(),"updated","previous "+currentUser.getAttributesSummary() + " new "+ currentUser.getAttributesSummary(),-1,LocalDateTime.now());
+            History action = new History("Clinician",currentUser.getStaffId(),"updated",
+                    "previous "+currentUser.getAttributesSummary() + " new "+
+                            currentUser.getAttributesSummary(),-1,LocalDateTime.now());
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());

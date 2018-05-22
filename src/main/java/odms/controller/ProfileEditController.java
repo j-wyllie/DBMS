@@ -1,19 +1,5 @@
 package odms.controller;
 
-import static odms.controller.AlertController.guiPopup;
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.RedoController.redo;
-import static odms.controller.UndoController.undo;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.HashSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,15 +9,29 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.History.History;
-import odms.cli.CommandUtils;
+import odms.controller.RedoController;
+import odms.controller.UndoController;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.profile.Profile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -101,7 +101,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo(GuiMain.getCurrentDatabase());
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -111,7 +111,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo(GuiMain.getCurrentDatabase());
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -129,7 +129,8 @@ public class ProfileEditController extends CommonController {
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                History action = new History("Profile" , currentProfile.getId() ,"update","previous "+currentProfile.getAttributesSummary(),-1,null);
+                History action = new History("Profile" , currentProfile.getId() ,"update",
+                        "previous "+currentProfile.getAttributesSummary(),-1,null);
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 

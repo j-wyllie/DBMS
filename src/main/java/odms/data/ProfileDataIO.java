@@ -1,13 +1,13 @@
 package odms.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import odms.controller.HistoryController;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.google.gson.GsonBuilder;
-import odms.cli.CommandUtils;
-import odms.controller.HistoryController;
 
 public class ProfileDataIO extends CommonDataIO {
 
@@ -35,7 +35,7 @@ public class ProfileDataIO extends CommonDataIO {
     public static void saveData(ProfileDatabase profileDb, String path) {
         profileDb.setPath(path);
         File file = new File(path);
-        File historyFile = new File(path.replace(".json","History.json"));
+        File historyFile = new File(path.replace(".json","history.json"));
 
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -47,7 +47,7 @@ public class ProfileDataIO extends CommonDataIO {
                 history = gson.toJson(HistoryController.getHistory());
             } else {
                 history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(HistoryController.getHistory()).substring(1);
+                history = history+","+gson.toJson(HistoryController.getHistory().get(HistoryController.getPosition()).toString());
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();
@@ -81,7 +81,7 @@ public class ProfileDataIO extends CommonDataIO {
      */
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
-        File historyFile = new File(path.replace(".json","History.json"));
+        File historyFile = new File(path.replace(".json","history.json"));
         ProfileDatabase profileDb = new ProfileDatabase();
         profileDb.setPath(path);
 

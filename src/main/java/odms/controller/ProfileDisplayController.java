@@ -1,23 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.RedoController.redo;
-import static odms.controller.UndoController.undo;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
-
-import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,17 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -51,14 +25,30 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import odms.History.History;
-import odms.cli.CommandUtils;
+import odms.controller.RedoController;
+import odms.controller.UndoController;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.profileSaveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
 
 public class ProfileDisplayController extends CommonController {
 
@@ -295,6 +285,8 @@ public class ProfileDisplayController extends CommonController {
     }
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     /**
      * initializes and refreshes the current and past conditions tables
@@ -530,7 +522,10 @@ public class ProfileDisplayController extends CommonController {
             if (condition != null) {
                 currentProfile.removeCondition(condition);
                 LocalDateTime currentTime = LocalDateTime.now();
-                History action = new History("Profile",currentProfile.getId()," removed condition","("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ")",currentProfile.getCurrentConditions().indexOf(condition),currentTime);
+                History action = new History("Profile",currentProfile.getId(),
+                        " removed condition","("  +condition.getName()+
+                        ","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+
+                        condition.getDateCuredString()+ ")",currentProfile.getCurrentConditions().indexOf(condition),currentTime);
                 HistoryController.updateHistory(action);
             }
         }
@@ -659,7 +654,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo(GuiMain.getCurrentDatabase());
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -668,7 +663,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo(GuiMain.getCurrentDatabase());
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -755,7 +750,8 @@ public class ProfileDisplayController extends CommonController {
 
             currentProfile.addDrug(new Drug(medicationName));
             String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
-            History history = new History("Profile",currentProfile.getId(), "added drug",medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+            History history = new History("Profile",currentProfile.getId(), "added drug",
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
             HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
@@ -824,8 +820,12 @@ public class ProfileDisplayController extends CommonController {
             } else {
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
                 tableViewDrugInteractions.setItems(interactions);
-                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
-                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getKey()));
+                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getValue()));
                 tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
             }
         } catch (IOException e) {
@@ -842,10 +842,14 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug: drugs) {
-            if (drugs != null) {
+            if (drug != null) {
                 currentProfile.moveDrugToHistory(drug);
-                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
-                History history = new History("Profile",currentProfile.getId(), "stopped",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                String data = currentProfile.getMedicationTimestamps().
+                        get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(),
+                        "stopped",drug.getDrugName(),
+                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
+                                data.indexOf(" at"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -864,10 +868,12 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug: drugs) {
-            if (drugs != null) {
+            if (drug != null) {
                 currentProfile.moveDrugToCurrent(drug);
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
-                History history = new History("Profile",currentProfile.getId(), "started",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                History history = new History("Profile",currentProfile.getId(),
+                        "started",drug.getDrugName(),Integer.parseInt(data.substring
+                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -885,14 +891,18 @@ public class ProfileDisplayController extends CommonController {
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
         for (Drug drug: drugs) {
-            if (drugs != null) {
+            if (drug != null) {
                 currentProfile.deleteDrug(drug);
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
                 History history;
                 if(data.contains("history")) {
-                    history = new History("Profile",currentProfile.getId(), "removed drug",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                    history = new History("Profile",currentProfile.getId(), "removed drug",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
                 } else {
-                    history = new History("Profile",currentProfile.getId(), "removed drug from history",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                    history = new History("Profile",currentProfile.getId(), "removed drug from history",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
                 }
                 HistoryController.updateHistory(history);
             }
@@ -916,7 +926,7 @@ public class ProfileDisplayController extends CommonController {
         controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();
-        stage.setTitle("Medication History");
+        stage.setTitle("Medication history");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
@@ -1060,12 +1070,12 @@ public class ProfileDisplayController extends CommonController {
             }
 
             String history = ProfileDataIO.getHistory();
-            history = history.replace(",","").replace("]","").replace("[","").replace("\\u003d","=");
-            System.out.println(history);
+            history = history.replace(",", "").replace("]", "").
+                    replace("[", "").replace("\\u003d", "=");
             String[] histories = history.split("\"");
             String historyDisplay = "";
-            for(String h : histories) {
-                if(!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
+            for (String h : histories) {
+                if (!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
                     historyDisplay += h + "\n";
                 }
             }
