@@ -190,38 +190,95 @@ public class ProfileDatabase {
     }
 
     /**
-     * Fuzzy search that finds the top 30 donors that match the provided search string.
+     * Compares each string in the names array to the searchString. Returns the weightedRatio value of the string that
+     * was the closest to the searchString.
+     * @param searchString the string that the donor names will be searched against.
+     * @param names String array of profile names.
+     * @return ratio value, represents how close of a match the closest name is to the searchString
+     */
+    private int stringMatcher(String searchString, String[] names) {
+        int searchLength = searchString.length();
+        int ratio = 0;
+
+        for (String name : names) {
+            int tempRatio;
+
+            if (name.length() < searchLength) {
+                tempRatio = FuzzySearch.weightedRatio(searchString, name);
+            } else {
+                tempRatio = FuzzySearch.weightedRatio(searchString, name.substring(0, searchLength));
+            }
+            if (tempRatio > ratio) {
+                ratio = tempRatio;
+            }
+        }
+        return ratio;
+    }
+
+    /**
+     * Fuzzy search that finds profiles with a name similar to the search string. Order of results goes as follows:
+     * Exact matches in last names ordered alphabetically,
+     * Exact matches in first names ordered alphabetically,
+     * Similar matches in last names ordered alphabetically,
+     * Similar matches in first names ordered alphabetically
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString) {
-        ArrayList<String> profiles = new ArrayList<>();
-        int searchLength = searchString.length();
+        // Need separate Lists to order results by relevance.
+        ArrayList<Profile> profilesSimilarFirst = new ArrayList<>();
+        ArrayList<Profile> profilesSimilarLast = new ArrayList<>();
+        ArrayList<Profile> profilesMatchesFirst = new ArrayList<>();
+        ArrayList<Profile> profilesMatchesLast = new ArrayList<>();
+        ArrayList<Profile> profiles = new ArrayList<>();
+
         if (searchString.equals("")) {
             return null;
         }
 
         for (Profile profile : getProfiles(false)) {
-            if (profile.getGivenNames().length() < searchLength) {
-                profiles.add(profile.getGivenNames());
-                //profiles.add(profile.getLastNames());
-            } else {
-                profiles.add(profile.getGivenNames().substring(0, searchLength));
-                //profiles.add(profile.getLastNames().substring(0, searchLength));
+            int ratio;
+            int tempRatio;
+            String nameCategory;
+            String[] namesFirst = profile.getGivenNames().split(" ");
+            String[] namesLast = profile.getLastNames().split(" ");
+
+            tempRatio = stringMatcher(searchString, namesFirst);
+            ratio = tempRatio;
+            nameCategory = "first";
+
+            tempRatio = stringMatcher(searchString, namesLast);
+            if (tempRatio >= ratio) {
+                ratio = tempRatio;
+                nameCategory = "last";
             }
 
+            // Ratio of 100 is a exact match, these need to be at top of results.
+            if (ratio == 100 && nameCategory.equals("last")) {
+                profilesMatchesLast.add(profile);
+            } else if (ratio == 100 && nameCategory.equals("first")) {
+                profilesMatchesFirst.add(profile);
+            // If ratio is below 60 don't include profile because it doesn't match close enough to searchString
+            } else if (ratio >= 60 && nameCategory.equals("last")) {
+                profilesSimilarLast.add(profile);
+            } else if (ratio >= 60 && nameCategory.equals("first")) {
+                profilesSimilarFirst.add(profile);
+            }
         }
 
-        //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
-        List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 60);
+        // Sorts each list by alphabetical order based on profile full name
+        Collections.sort(profilesMatchesLast);
+        Collections.sort(profilesMatchesFirst);
+        Collections.sort(profilesSimilarLast);
+        Collections.sort(profilesSimilarFirst);
 
-        //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
-        ArrayList<Profile> resultProfiles = new ArrayList<>();
-        for (ExtractedResult er : result) {
-            resultProfiles.add(getProfiles(false).get(er.getIndex()));
-        }
-        return resultProfiles;
+        // Added in this order to match relevance order of last name, first name. Complete matches are always at top.
+        profiles.addAll(profilesMatchesLast);
+        profiles.addAll(profilesMatchesFirst);
+        profiles.addAll(profilesSimilarLast);
+        profiles.addAll(profilesSimilarFirst);
+
+        return profiles;
     }
 
     /**

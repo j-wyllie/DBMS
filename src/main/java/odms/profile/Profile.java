@@ -4,22 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import javafx.beans.InvalidationListener;
+import java.util.*;
+
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javax.swing.DebugGraphics;
 import odms.cli.CommandUtils;
 import odms.controller.AlertController;
 import odms.medications.Drug;
 
-public class Profile {
+public class Profile implements Comparable<Profile> {
 
     private Boolean donor;
     private Boolean receiver;
@@ -108,6 +100,16 @@ public class Profile {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
+    }
+
+    /**
+     * Compares the profile object to another profile object. Result is determined by lexicographical order of profile
+     * full name.
+     * @param other another profile object to compare to.
+     * @return int value to show if object is equal, greater than ore less than the other profile object.
+     */
+    public int compareTo(Profile other) {
+        return getFullName().toLowerCase().compareTo(other.getFullName().toLowerCase());
     }
 
     /**
