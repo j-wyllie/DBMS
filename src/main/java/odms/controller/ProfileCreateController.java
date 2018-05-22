@@ -47,7 +47,7 @@ public class ProfileCreateController extends CommonController {
 
         }
         if (irdField.getText().trim().equals("")) {
-            return "Please an IRD number";
+            return "Please enter an IRD number";
         } else {
             return "";
         }
