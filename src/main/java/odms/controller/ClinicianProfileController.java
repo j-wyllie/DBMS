@@ -1,13 +1,5 @@
 package odms.controller;
 
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +15,7 @@ import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
+import odms.user.UserType;
 import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
@@ -31,13 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static odms.controller.LoginController.getCurrentUser;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController extends CommonController {
 
-    private User currentUser = getCurrentUser();
+    private User currentUser;
 
     @FXML
     private Label clinicianFullName;
@@ -327,10 +319,24 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    /**
+     * Hides certain nodes if the clinician does not have permission to view them
+     */
+    private void hideAdminItems() {
+        if (currentUser.getUserType() == UserType.CLINICIAN) {
+            viewUsersTab.setDisable(true);
+        } else {
+            viewUsersTab.setDisable(false);
+        }
+    }
+
+
     @FXML
-    public void initialize(){
+    public void initialize() {
         if (currentUser != null) {
+
             setClinicianDetails();
+            hideAdminItems();
             makeTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
