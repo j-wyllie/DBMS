@@ -8,7 +8,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 import odms.profile.Profile;
+import odms.user.User;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 
 public class CommandUtilsTest {
     private ProfileDatabase profileDb;
+    private UserDatabase userDb;
     private Profile profileOne;
     private Profile profileTwo;
 
@@ -38,6 +41,7 @@ public class CommandUtilsTest {
 
         // Database setup
         this.profileDb = new ProfileDatabase();
+        this.userDb = new UserDatabase();
 
         // TODO if test data is commonly created for test cases, consider abstraction to a
         // TODO centralised TestDataCreator class
@@ -91,11 +95,11 @@ public class CommandUtilsTest {
     public void testCommandValidation() {
         // Command Strings
         String createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"";
+        String createClinicianTestStr = "create-clinician name=\"Bob Ross\"";
         String viewDonorTestStr = "profile dob=\"03-03-1998\" > view";
         String viewDonationsTestStr = "profile dob=\"03-03-1998\" > donations";
         String viewDateCreatedTestStr = "profile dob=\"03-03-1998\" > date-created";
         String updateDonorTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
-        String createClinicianTestStr = "create-clinician name=\"Bob Ross\"";
         String viewClinicianTestStr = "clinician name=\"Bob Ross\" > view";
         String viewClinicianDateCreatedTestStr = "clinician dob=\"03-03-1998\" > date-created";
         String updateClinicianTestStr = "clinician name=\"Bob Ross\" region=\"Waikato\" > name=\"Johny Sinz\"";
@@ -189,6 +193,26 @@ public class CommandUtilsTest {
     }
 
     @Test
+    public void testCreateClinicianCommand() {
+        String name = "Jose";
+        String region = "Lopez";
+        String workAddress = "Christchurch";
+
+
+        String createClinicianStr = "create-clinician " +
+                "name=\"" + name + "\" " +
+                "region=\"" + region + "\" " +
+                "workAddress=\"" + workAddress + "\" ";
+
+        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+
+        assertEquals(user.getName(), name);
+        assertEquals(user.getRegion(), region);
+        assertEquals(user.getWorkAddress(), workAddress);
+    }
+
+
+    @Test
     public void testDeleteProfileCommand() {
         String irdNumber = "123456789";
         String deleteProfileStr = "profile " +
@@ -197,6 +221,28 @@ public class CommandUtilsTest {
         odms.cli.commands.Profile.deleteProfileBySearch(profileDb, deleteProfileStr);
 
         assertEquals(profileDb.searchIRDNumber(123456789).size(), 0);
+    }
+
+    @Test
+    public void testDeleteUserCommand() {
+        String name = "Bobby";
+        String region = "John";
+        String workAddress = "Christchurch";
+
+        String createClinicianStr = "create-clinician " +
+                "name=\"" + name + "\" " +
+                "region=\"" + region + "\" " +
+                "workAddress=\"" + workAddress + "\" ";
+
+        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+
+        int staffID = user.getStaffID();
+        String deleteProfileStr = "clinician " +
+                "staffID=\"" + staffID + "\" "
+                + "> delete";
+        odms.cli.commands.User.deleteUserBySearch(userDb, deleteProfileStr);
+
+        assertEquals(0, userDb.searchStaffID(staffID).size());
     }
 
     @Test
@@ -213,19 +259,73 @@ public class CommandUtilsTest {
         Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
+
+
+    @Test
+    public void testUpdateClinicianCommand() {
+        String name = "Bobby";
+        String region = "Canterbury";
+        String workAddress = "Christchurch";
+
+        String createClinicianStr = "create-clinician " +
+                "name=\"" + name + "\" " +
+                "region=\"" + region + "\" " +
+                "workAddress=\"" + workAddress + "\" ";
+
+        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+        int staffID = user.getStaffID();
+
+        String newName = "Billy";
+        String updateClinicianStr = "clinician " +
+                "staffID=\"" + staffID + "\" "
+                + "> "
+                + "name=\"" + newName + "\"";
+
+        odms.cli.commands.User.updateUserBySearch(userDb, updateClinicianStr);
+
+        User updatedUser = userDb.searchStaffID(staffID).get(0);
+        assertEquals(updatedUser.getName(), newName);
+    }
     
     @Test
     public void testProfileDateCreatedCommand() {
         String irdNumber = "123456789";
-        String deleteProfileStr = "profile " +
+        String viewProfileDateStr = "profile " +
             "ird=\"" + irdNumber + "\" "
             + "> date-created";
         Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
-        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, deleteProfileStr);
+        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, viewProfileDateStr);
 
         assertTrue(
             result.toString().trim().split("\\r?\\n")[3]
                 .contains(profile.getTimeOfCreation().toString())
+        );
+
+    }
+
+    @Test
+    public void testClinicianDateCreatedCommand() {
+        String name = "Bobby";
+        String region = "Canterbury";
+        String workAddress = "Christchurch";
+
+        String createClinicianStr = "create-clinician " +
+                "name=\"" + name + "\" " +
+                "region=\"" + region + "\" " +
+                "workAddress=\"" + workAddress + "\" ";
+
+        int staffID = odms.cli.commands.User.createClinician(userDb, createClinicianStr).getStaffID();
+
+        String viewClincianDateStr = "clinician " +
+                "staffID=\"" + staffID + "\" "
+                + "> date-created";
+
+        User user = userDb.searchStaffID(staffID).get(0);
+        odms.cli.commands.User.viewDateTimeCreatedBySearch(userDb, viewClincianDateStr);
+
+        assertTrue(
+                result.toString().trim().split("\\r?\\n")[4]
+                        .contains(user.getTimeOfCreation().toString())
         );
 
     }

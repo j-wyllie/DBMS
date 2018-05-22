@@ -31,8 +31,9 @@ public class User extends CommandUtils {
      *
      * @param currentDatabase Database reference
      * @param rawInput raw command input
+     * @return staffID the staff id of created clinician
      */
-    public static void createClinician(UserDatabase currentDatabase, String rawInput) {
+    public static odms.user.User createClinician(UserDatabase currentDatabase, String rawInput) {
 
         try {
             String[] attrList = rawInput.substring(16).split("\"\\s");
@@ -42,6 +43,7 @@ public class User extends CommandUtils {
             currentDatabase.addUser(newUser);
             addClinicianHistory(newUser.getStaffID());
             System.out.println("Clinician created.");
+            return newUser;
 
         } catch (IllegalArgumentException e) {
             System.out.println("Please enter the required attributes correctly.");
@@ -49,6 +51,7 @@ public class User extends CommandUtils {
         } catch (Exception e) {
             System.out.println("Please enter a valid command.");
         }
+        return null;
     }
 
     /**
