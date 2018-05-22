@@ -66,7 +66,7 @@ public class LoginController extends CommonController {
                         controller.initialize();
 
                         Stage stage = new Stage();
-                        stage.setTitle("Admin");
+                        stage.setTitle(currentUser.getUserType().getName());
                         stage.setScene(scene1);
                         stage.show();
                         closeCurrentStage();
@@ -91,7 +91,7 @@ public class LoginController extends CommonController {
                         controller.initialize();
 
                         Stage stage = new Stage();
-                        stage.setTitle("Clinician");
+                        stage.setTitle(currentUser.getUserType().getName());
                         stage.setScene(scene1);
                         stage.show();
                         closeCurrentStage();
