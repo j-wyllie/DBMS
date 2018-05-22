@@ -32,6 +32,7 @@ public class GuiMain extends Application {
         if (!userDb.isUser(0)) {
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
             userDb.addUser(user);
+            user.setDefault(true);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
 
@@ -39,6 +40,7 @@ public class GuiMain extends Application {
             User user = new User(UserType.ADMIN, "admin");
             user.setUsername("admin");
             user.setPassword("admin");
+            user.setDefault(true);
             userDb.addUser(user);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }

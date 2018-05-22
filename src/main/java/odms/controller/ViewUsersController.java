@@ -2,7 +2,6 @@ package odms.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -60,7 +59,12 @@ public class ViewUsersController {
         //sets the event handler for right clicking on a table item.
         viewUsersTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if (t.getButton() == MouseButton.SECONDARY) {
-                contextMenu.show(viewUsersTable, t.getScreenX(), t.getScreenY());
+                if (!viewUsersTable.getSelectionModel().getSelectedItem().getDefault()) {
+                    contextMenu.show(viewUsersTable, t.getScreenX(), t.getScreenY());
+                }
+            }
+            if(t.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
             }
         });
     }
@@ -74,12 +78,10 @@ public class ViewUsersController {
         MenuItem deleteMenuItem = new MenuItem("Delete");
         contextMenu.getItems().add(deleteMenuItem);
 
-        contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(AlertController.deleteUserConfirmation()){
-                    //TODO add in delete user method in the user database.
-                }
+        contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            if(AlertController.deleteUserConfirmation()){
+                User user = viewUsersTable.getSelectionModel().getSelectedItem();
+                GuiMain.getUserDatabase().deleteUser(user.getStaffId());
             }
         });
     }

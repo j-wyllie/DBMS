@@ -9,32 +9,33 @@
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 17
+          "day": 22
         },
         "time": {
-          "hour": 10,
-          "minute": 45,
-          "second": 8,
-          "nano": 170000000
+          "hour": 18,
+          "minute": 1,
+          "second": 47,
+          "nano": 680000000
         }
       },
       "updateActions": [
-        "Account for Doccreated at 2018-05-17T10:45:08.170",
-        "0 updated at 10:45 AM 17-05-2018"
+        "Account for Doccreated at 2018-05-22T18:01:47.680",
+        "0 updated at 06:01 PM 22-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 17
+          "day": 22
         },
         "time": {
-          "hour": 10,
-          "minute": 45,
-          "second": 8,
-          "nano": 170000000
+          "hour": 18,
+          "minute": 1,
+          "second": 47,
+          "nano": 680000000
         }
-      }
+      },
+      "isDefault": true
     },
     "1": {
       "userType": "ADMIN",
@@ -44,37 +45,39 @@
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 17
+          "day": 22
         },
         "time": {
-          "hour": 10,
-          "minute": 45,
-          "second": 8,
-          "nano": 196000000
+          "hour": 18,
+          "minute": 1,
+          "second": 47,
+          "nano": 722000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-05-17T10:45:08.196",
-        "admin updated at 10:45 AM 17-05-2018",
-        "1 updated at 10:45 AM 17-05-2018"
+        "ADMINaccount for admincreated at 2018-05-22T18:01:47.722",
+        "admin updated at 06:01 PM 22-05-2018",
+        "1 updated at 06:01 PM 22-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 17
+          "day": 22
         },
         "time": {
-          "hour": 10,
-          "minute": 45,
-          "second": 8,
-          "nano": 196000000
+          "hour": 18,
+          "minute": 1,
+          "second": 47,
+          "nano": 722000000
         }
       },
       "username": "admin",
-      "password": "admin"
+      "password": "admin",
+      "isDefault": true
     }
   },
+  "deletedUsers": [],
   "lastID": 1,
   "path": "example/users.json"
 }

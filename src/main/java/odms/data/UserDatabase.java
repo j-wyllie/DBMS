@@ -6,10 +6,13 @@ import odms.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class UserDatabase {
 
     private HashMap<Integer, User> userDb = new HashMap<>();
+    private HashSet<Integer> deletedUsers = new HashSet<>();
+
     private Integer lastID = -1;
     private String path;
 
@@ -82,12 +85,54 @@ public class UserDatabase {
         userDb.put(lastID, user);
     }
 
+    /**
+     * Returns all the users in the current database
+     * @return ArrayList of users
+     */
     public Collection<User> getUsers() {
         Collection<User> users = new ArrayList();
         for (User user : userDb.values()) {
             users.add(user);
         }
         return users;
+    }
+
+    /**
+     * Remove user from the database, adding their ID to the deletedID's set for
+     * logging of removed users.
+     *
+     * @param id unique profile ID
+     */
+    public boolean deleteUser(Integer id) {
+        try {
+            deletedUsers.add(id);
+            userDb.remove(id);
+            return true;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Restore a previously deleted user
+     *
+     * @param id ODMS ID of deleted profile
+     * @param user the profile to be restored
+     * @return current ProfileDatabase lastId
+     */
+    public int restoreProfile(Integer id, User user) {
+        try {
+            // Should deleted users simply be disabled for safety reasons?
+            lastID += 1;
+            user.setStaffId(lastID);
+            userDb.put(lastID, user);
+            deletedUsers.remove(id);
+            return lastID;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return lastID;
+        }
     }
 
     public String getPath() {
