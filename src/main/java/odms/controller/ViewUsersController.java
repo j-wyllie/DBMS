@@ -24,7 +24,7 @@ import java.io.IOException;
 import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class ViewUsersController {
+public class ViewUsersController extends CommonController{
 
     private UserDatabase userDatabase = GuiMain.getUserDatabase();
     private User currentUser;
@@ -126,8 +126,9 @@ public class ViewUsersController {
         stage.show();
     }
 
-    public void handleViewUsersSaveBtn(ActionEvent actionEvent) {
+    public void handleViewUsersSaveBtn(ActionEvent actionEvent) throws IOException{
         if (saveChanges()) {
+            showNotification("Users File", actionEvent);
             UserDataIO.saveUsers(getUserDatabase());
         }
     }
