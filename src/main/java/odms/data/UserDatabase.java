@@ -142,4 +142,18 @@ public class UserDatabase {
     public void setPath(String path) {
         this.path = path;
     }
+
+    /**
+     * Checks for a duplicate username in the user database.
+     * @param username
+     * @return boolean for whether a username is unique/
+     */
+    public boolean checkUniqueUsername(String username) {
+        for (User user : userDb.values()) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

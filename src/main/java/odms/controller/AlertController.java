@@ -124,6 +124,22 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup with a personalized message from the controller
+     */
+    static void uniqueUsername() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Please enter a unique username",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
