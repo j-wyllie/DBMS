@@ -25,6 +25,7 @@ public class ViewUsersController {
     public void setUpUsersTable() {
 
         fetchData();
+        viewUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         viewUsersTable.getColumns().clear();
         TableColumn nameCol = new TableColumn("Name");
         TableColumn usernameCol = new TableColumn("Username");
