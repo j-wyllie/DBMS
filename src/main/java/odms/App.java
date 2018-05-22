@@ -13,7 +13,7 @@ public class App {
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
 
     public static void main(String[] args) {
-        HistoryController.currentSessionHistory.add("");
+        HistoryController.currentSessionHistory.add(null);
         try {
 
             if (args == null || args.length == 0) {

@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import odms.History.History;
 import odms.data.UserDataIO;
 import odms.user.User;
 
@@ -69,15 +70,11 @@ public class ClinicianProfileEditController extends CommonController{
         boolean saveBool = profileSaveChanges();
         boolean error = false;
         if (saveBool) {
-            String action =
-                    "Clinician " + currentUser.getStaffId() + " updated details previous = (" + currentUser
-                            .getAttributesSummary() + ") new = (";
+            History action = new History("Clinician",currentUser.getStaffId(),"updated",currentUser.getAttributesSummary() + ") new = ("+ currentUser.getAttributesSummary() + ")",-1,LocalDateTime.now());
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());
             currentUser.setRegion(regionField.getText());
-
-            action = action + currentUser.getAttributesSummary() + ") at " + LocalDateTime.now();
             HistoryController.updateHistory(action);
 
             if(error == true) {

@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
@@ -128,11 +129,7 @@ public class ProfileEditController extends CommonController {
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                String action = "Profile " +
-                    currentProfile.getId() +
-                    " update details previous = " +
-                    currentProfile.getAttributesSummary() +
-                    " new = ";
+                History action = new History("Profile" , currentProfile.getId() ,"update",currentProfile.getAttributesSummary(),-1,null);
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
@@ -198,10 +195,8 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-                action = action +
-                    currentProfile.getAttributesSummary() +
-                    " at " +
-                    LocalDateTime.now();
+                action.setHistoryData(action.getHistoryData()+currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
                 if (diseaseField.getText().contains("/")) {

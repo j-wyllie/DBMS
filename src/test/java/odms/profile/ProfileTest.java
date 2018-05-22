@@ -176,7 +176,7 @@ public class ProfileTest {
 
         try {
             testProfile = new Profile(profileAttr);
-
+            testProfile.setId(9999);
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
             someOrgans.add("heart");
@@ -212,6 +212,7 @@ public class ProfileTest {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
+            testProfile.setId(9999);
 
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
@@ -245,6 +246,7 @@ public class ProfileTest {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
+            testProfile.setId(9999);
 
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
@@ -284,6 +286,7 @@ public class ProfileTest {
         Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+            testProfile.setId(9999);
 
             testProfile.setDonor(true);
             testProfile.addDonationFromString("Heart, Bone, Cornea");
@@ -353,6 +356,7 @@ public class ProfileTest {
         Profile testProfile;
         try {
             testProfile = new Profile(profileAttr);
+            testProfile.setId(9999);
 
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("bone");
@@ -393,6 +397,7 @@ public class ProfileTest {
             testProfile = new Profile(profileAttr);
 
             testProfile.setDonor(true);
+            testProfile.setId(9999);
 
             List<String> addOrgans = new ArrayList<>();
             addOrgans.add("bone");
@@ -430,6 +435,7 @@ public class ProfileTest {
 
         testProfile = new Profile(profileAttr);
         testProfile.setDonor(true);
+        testProfile.setId(9999);
 
         HashSet<OrganEnum> organs = new HashSet<>();
         organs.add(OrganEnum.BONE);
@@ -454,6 +460,7 @@ public class ProfileTest {
 
         try {
             testProfile = new Profile(profileAttr);
+            testProfile.setId(9999);
 
             testProfile.setDonor(true);
 
@@ -798,6 +805,7 @@ public class ProfileTest {
         Profile testProfile;
         try {
             testProfile = new Profile(donorAttr);
+            testProfile.setId(9999);
 
             testProfile.addProcedure(procedure);
 
@@ -871,6 +879,7 @@ public class ProfileTest {
             testProfile = new Profile(donorAttr);
 
             testProfile.addProcedure(procedure);
+            testProfile.setId(9999);
 
             // add heart and liver
             testProfile.addDonationFromString("heart, liver");
@@ -1147,15 +1156,16 @@ public class ProfileTest {
 
         Profile testProfile;
 
+
         try {
             testProfile = new Profile(profileAttr);
-
+            testProfile.setId(9999);
             List<String> someOrgans = new ArrayList<>();
             someOrgans.add("Heart");
             testProfile.addOrgansRequired(OrganEnum.stringListToOrganSet(someOrgans));
 
             assertTrue(HistoryController.currentSessionHistory
-                    .get(HistoryController.historyPosition)
+                    .get(HistoryController.historyPosition).getHistoryData()
                     .contains(OrganEnum.HEART.getNamePlain()
                     )
             );

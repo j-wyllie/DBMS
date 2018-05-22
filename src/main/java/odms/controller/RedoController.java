@@ -1,5 +1,6 @@
 package odms.controller;
 
+import odms.History.History;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
@@ -16,7 +17,7 @@ import java.util.*;
 public class RedoController {
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
     private static int historyPosition;
-    public static ArrayList<String> currentSessionHistory;
+    public static ArrayList<History> currentSessionHistory;
 
     public static void redo(ProfileDatabase currentDatabase) {
         try {
@@ -24,7 +25,7 @@ public class RedoController {
             historyPosition = HistoryController.getPosition();
             if (historyPosition != currentSessionHistory.size()-1) {
                 historyPosition += 1;
-                String action;
+                History action;
                 if (historyPosition == 0) {
                     historyPosition = 1;
                     action = currentSessionHistory.get(historyPosition);
@@ -32,39 +33,37 @@ public class RedoController {
                 } else {
                     action = currentSessionHistory.get(historyPosition);
                 }
-                int end = action.indexOf(" at");
-                action = action.substring(0, action.indexOf(" at"));
-                if (action.contains("added") && !action.contains("drug") && !action.contains("condition")&& !action.contains("received") && !action.contains("donated")) {
+                if (action.getHistoryAction().equals("added")) {
                     added(currentDatabase, action);
-                } else if (action.contains("deleted")) {
+                } else if (action.getHistoryAction().equals("deleted")) {
                     deleted(currentDatabase, action);
-                } else if (action.contains("removed") && !action.contains("drug") && !action.contains("condition")&& !action.contains("received") && !action.contains("donated")) {
+                } else if (action.getHistoryAction().equals("removed")) {
                     removed(currentDatabase, action);
-                } else if (action.contains("set")) {
+                } else if (action.getHistoryAction().equals("set")) {
                     set(currentDatabase, action);
-                } else if (action.contains("donate")) {
+                } else if (action.getHistoryAction().equals("donate")) {
                     donate(currentDatabase, action);
-                } else if (action.contains("update") && !action.contains("updated")) {
+                } else if (action.getHistoryAction().equals("update")) {
                     update(currentDatabase, action);
-                } else if (action.contains("EDITED")) {
+                } else if (action.getHistoryAction().equals("EDITED")) {
                     edited(currentDatabase, action);
-                }  else if (action.contains("updated")) {
-                    updated(action, end);
-                }  else if (action.contains("drug") && !(action.contains("removed"))) {
-                    addDrug(currentDatabase, action, end);
-                } else if (action.contains("removed drug")) {
-                    deleteDrug(currentDatabase, action, end);
-                } else if (action.contains("stopped")) {
+                } else if (action.getHistoryAction().equals("updated")) {
+                    updated(action);
+                } else if (action.getHistoryAction().equals("added drug")) {
+                    addDrug(currentDatabase, action);
+                } else if (action.getHistoryAction().equals("removed drug")) {
+                    deleteDrug(currentDatabase, action);
+                } else if (action.getHistoryAction().equals("stopped")) {
                     stopDrug(currentDatabase, action);
-                } else if (action.contains("started")) {
+                } else if (action.getHistoryAction().equals("started")) {
                     renewDrug(currentDatabase, action);
-                }  else if (action.contains("added condition")) {
-                    addCondition(currentDatabase,action,end);
-                }  else if (action.contains("removed condition")) {
+                } else if (action.getHistoryAction().equals("added condition")) {
+                    addCondition(currentDatabase,action);
+                } else if (action.getHistoryAction().equals("removed condition")) {
                     removedCondition(currentDatabase,action);
-                }  else if (action.contains("received") &&action.contains("added")) {
+                } else if (action.getHistoryAction().equals("received")) {
                     addedReceived(currentDatabase, action);
-                }  else if (action.contains("donated") &&action.contains("added")) {
+                } else if (action.getHistoryAction().equals("donated")) {
                     addedDonated(currentDatabase, action);
                 }
                 HistoryController.setPosition(historyPosition);
@@ -78,87 +77,80 @@ public class RedoController {
         }
     }
 
-    private static void addedDonated(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        String organ = action.substring(action.indexOf("added ")+6, action.indexOf(" to"));
+    private static void addedDonated(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        String organ = action.getHistoryData();
         profile.addOrganDonated(OrganEnum.valueOf(organ));
     }
 
-    private static void addedReceived(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        String organ = action.substring(action.indexOf("added ")+6, action.indexOf(" to"));
+    private static void addedReceived(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        String organ = action.getHistoryData();
         profile.addOrganReceived(OrganEnum.valueOf(organ));
     }
 
-    private static void removedCondition(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("removed")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        int c = Integer.parseInt(action.substring(action.indexOf("index of")).replaceAll("[\\D]", ""));
+    private static void removedCondition(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        int c = action.getHistoryDataIndex();
         Condition condition = profile.getCurrentConditions().get(c);
         profile.removeCondition(condition);
     }
 
-    private static void addCondition(ProfileDatabase currentDatabase, String action, int end) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("added")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        String s = action.substring(action.indexOf("(")+1,action.indexOf(")"));
+    private static void addCondition(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        String s = action.getHistoryData();
         String[] values = s.split(",");
         Condition condition = new Condition(values[0], values[1], null, Boolean.valueOf(values[2]));
         profile.addCondition(condition);
     }
 
-    private static void deleteDrug(ProfileDatabase currentDatabase, String action, int end) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        int d = Integer.parseInt(action.substring(action.indexOf("index of")).replaceAll("[\\D]", ""));
+    private static void deleteDrug(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         profile.deleteDrug(drugs.get(d));
     }
 
-    private static void stopDrug(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("stopped")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        int d = Integer.parseInt(action.substring(action.indexOf("stopped")).replaceAll("[\\D]", ""));
+    private static void stopDrug(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         Drug drug = drugs.get(d);
         profile.moveDrugToHistory(drug);
         LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Donor " + profile.getId()  + " stopped "  + drug.getDrugName() + " index of "+ profile.getHistoryOfMedication().indexOf(drug) + " at" +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        History data = new History("Donor" , profile.getId()  , "stopped"  , drug.getDrugName() , profile.getHistoryOfMedication().indexOf(drug) , currentTime);
         HistoryController.currentSessionHistory.set(historyPosition-1, data);
     }
 
-    private static void renewDrug(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("started")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        int d = Integer.parseInt(action.substring(action.indexOf("started")).replaceAll("[\\D]", ""));
+    private static void renewDrug(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getHistoryOfMedication();
         Drug drug = drugs.get(d);
         profile.moveDrugToCurrent(drug);
         LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Donor " + profile.getId()  + " started using "  + drug.getDrugName() + " index of "+ profile.getCurrentMedications().indexOf(drug) + "again at" +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        History data = new History("Donor" , profile.getId()  , "started"  , drug.getDrugName() , profile.getHistoryOfMedication().indexOf(drug) , currentTime);
         HistoryController.currentSessionHistory.set(historyPosition-1, data);
     }
 
-    private static void addDrug(ProfileDatabase currentDatabase, String action, int end) {
-        int id = Integer.parseInt(action.substring(0,action.indexOf("drug")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        if(action.contains("history")) {
-            String drug = action.substring(action.indexOf("tory")+5,action.indexOf(" index of"));
+    private static void addDrug(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        if(action.getHistoryAction().contains("history")) {
+            String drug = action.getHistoryData();
             Drug d = new Drug(drug);
             profile.addDrug(d);
             profile.moveDrugToHistory(d);
         } else {
-            String drug = action.substring(action.indexOf("drug") + 5,action.indexOf(" index of"));
+            String drug = action.getHistoryData();
             profile.addDrug(new Drug(drug));
         }
     }
 
-    private static void updated(String action, int end) {
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+    private static void updated(History action) {
+        //todo update
+        int id = action.getHistoryId();
         User user = LoginController.getCurrentUser();
-        String newString = action.substring(action.indexOf("new = (")+7,end);
+        String newString = action.getHistoryData();
         String[] newValues = newString.split(",");
         user.setName(newValues[1].replace("name=",""));
         user.setStaffId(Integer.valueOf(newValues[0].replace("staffId=","").replace(" ","")));
@@ -166,65 +158,51 @@ public class RedoController {
         user.setRegion(newValues[3].replace("region=",""));
     }
 
-    public static void added(ProfileDatabase currentDatabase, String action) {
-        int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+    public static void added(ProfileDatabase currentDatabase, History action) {
+        int oldid = action.getHistoryId();
         int id = currentDatabase
                 .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
         unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size() - 1));
         for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
-            if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
-                currentSessionHistory.set(i,
-                        ("Profile " + id + currentSessionHistory.get(i).substring(
-                                action.indexOf("Profile " + oldid) + 6 + Integer.toString(id)
-                                        .length())));
+            if (currentSessionHistory.get(i).getHistoryId() == oldid) {
+                currentSessionHistory.get(i).setHistoryId(id);
             }
         }
-        currentSessionHistory.set(historyPosition,
-                ("Profile " + id + " added at " + LocalDateTime.now()));
     }
-    public static void deleted(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        currentDatabase.deleteProfile(id);
+    public static void deleted(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        currentDatabase.deleteProfile(action.getHistoryId());
         HistoryController.deletedProfiles.add(profile);
     }
 
-    public static void removed(ProfileDatabase currentDatabase, String action) throws Exception{
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
-                action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(","))));
+    public static void removed(ProfileDatabase currentDatabase, History action) throws Exception{
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().split(","))));
     }
-    public static void set(ProfileDatabase currentDatabase, String action) throws OrganConflictException {
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
-                action.substring(
-                        action.indexOf("[") + 1,
-                        action.indexOf("]")).split(",")
+    public static void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().split(",")
         )));
     }
-    public static void donate(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(action.substring(action.indexOf("[") + 1,action.indexOf("]")).split(","))));
+    public static void donate(ProfileDatabase currentDatabase, History action) {
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().split(","))));
     }
-    public static void update(ProfileDatabase currentDatabase, String action){
-        int id = Integer.parseInt(
-                action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        String newInfo = action.substring(action.indexOf("ird"));
+    public static void update(ProfileDatabase currentDatabase, History action){
+        //todo
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        String newInfo = action.getHistoryData();
         profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
     }
-    public static void edited(ProfileDatabase currentDatabase, String action) {
-        int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
-        Profile profile = currentDatabase.getProfile(id);
-        int procedurePlace = Integer.parseInt(action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-        String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
+    public static void edited(ProfileDatabase currentDatabase, History action) {
+        //todo
+        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+        int procedurePlace = action.getHistoryDataIndex();
+        String previous = action.getHistoryData();
         String[] previousValues = previous.split(",");
         String organs;
         ArrayList<OrganEnum> organList = new ArrayList<>();
-        organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
+        organs = action.getHistoryData();
         List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
         for(String organ : List){
             System.out.println(organ);

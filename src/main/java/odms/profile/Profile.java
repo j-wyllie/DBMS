@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
@@ -351,15 +353,9 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
-
-                // TODO history refactor
-                String action = "Profile " +
-                        this.getId() +
-                        " required organ " +
-                        organ.getNamePlain() +
-                        " at " +
-                        LocalDateTime.now();
-                HistoryController.updateHistory(action);
+            LocalDateTime now = LocalDateTime.now();
+            History action = new History("Profile", this.getId(),"required organ", ""+organ.getNamePlain(),-1,now);
+            HistoryController.updateHistory(action);
             }
     }
 
@@ -382,15 +378,7 @@ public class Profile {
             }
             this.addOrganDonating(organ);
 
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to donate at " +
-                    LocalDateTime.now();
-
-            // TODO abstract history
-
+            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),-1,LocalDateTime.now());
             HistoryController.updateHistory(action);
         }
     }
@@ -423,12 +411,7 @@ public class Profile {
             addOrganReceived(organ);
 
             // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to received organs " +
-                    LocalDateTime.now();
+            History action = new History("Profile ", this.getId(),"received",organ.getNamePlain(),-1,LocalDateTime.now());
 
             HistoryController.updateHistory(action);
         }
@@ -462,12 +445,7 @@ public class Profile {
             this.organsDonated.add(organ);
 
             // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to organs donated " +
-                    LocalDateTime.now();
+            History action = new History("Profile ", this.getId(),"donated",organ.getNamePlain(),-1,LocalDateTime.now());
 
             HistoryController.updateHistory(action);
         }
@@ -484,12 +462,7 @@ public class Profile {
             this.organsDonated.remove(organ);
 
             // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs donated " +
-                    LocalDateTime.now();
+            History action = new History("Profile ", this.getId(),"removed donated",organ.getNamePlain(),-1,LocalDateTime.now());
 
             HistoryController.updateHistory(action);
         }
@@ -506,12 +479,7 @@ public class Profile {
             this.organsDonating.remove(organ);
 
             // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs donating " +
-                    LocalDateTime.now();
+            History action = new History("Profile ", this.getId(),"removed",organ.getNamePlain(),-1,LocalDateTime.now());
 
             HistoryController.updateHistory(action);
         }
@@ -528,12 +496,7 @@ public class Profile {
             this.organsRequired.remove(organ);
 
             // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs required " +
-                    LocalDateTime.now();
+            History action = new History("Profile ", this.getId(),"removed required",organ.getNamePlain(),-1,LocalDateTime.now());
 
             HistoryController.updateHistory(action);
         }
@@ -634,7 +597,6 @@ public class Profile {
             currentMedications.remove(drug);
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
-            HistoryController.updateHistory(data);
         } else if(historyOfMedication.contains(drug)){
             historyOfMedication.remove(drug);
             data = "Profile " + this.getId() + " removed drug from history"  + " index of "+ currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));

@@ -17,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.enums.OrganEnum;
@@ -118,7 +119,7 @@ public class ProcedureEditController {
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
-        String action = "Profile "+controller.getCurrentProfile().getId()+" PROCEDURE "+controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure)+" EDITED";
+        History action = new History ("Profile ",controller.getCurrentProfile().getId(),"EDITED","",controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure),LocalDateTime.now());
         String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
         System.out.println(action);
         currentProcedure.setLongDescription(descEntry.getText());
@@ -126,9 +127,7 @@ public class ProcedureEditController {
         currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
         currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
         String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
-        action += oldValues+newValues;
-        action = action +"END at " + LocalDateTime.now();
-        System.out.println(action);
+        action.setHistoryData(oldValues+newValues);
         HistoryController.updateHistory(action);
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         affectedOrgansListView.setDisable(true);

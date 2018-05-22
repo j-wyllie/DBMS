@@ -3,6 +3,8 @@ package odms.cli.commands;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.controller.HistoryController;
 import odms.data.IrdNumberConflictException;
@@ -16,7 +18,7 @@ public class Profile extends CommandUtils {
      * @param Id profile ID
      */
     protected static void addProfileHistory(int Id) {
-        String action = "Profile " + Id + " added at " + LocalDateTime.now();
+        History action = new History("Profile",Id,"added","",-1,LocalDateTime.now());
         HistoryController.updateHistory(action);
     }
 
@@ -97,7 +99,7 @@ public class Profile extends CommandUtils {
                 result = currentDatabase.deleteProfile(profile.getId());
                 if (result) {
                     HistoryController.deletedProfiles.add(profile);
-                    HistoryController.updateHistory("Profile " + profile.getId() + " deleted at " + LocalDateTime.now());
+                    HistoryController.updateHistory(new History("Profile",profile.getId(),"deleted","",-1,LocalDateTime.now()));
                 }
 
 
@@ -117,12 +119,11 @@ public class Profile extends CommandUtils {
     private static void updateProfileAttr(ArrayList<odms.profile.Profile> profileList, String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            String action;
             for (odms.profile.Profile profile : profileList) {
-                action = "Profile " + profile.getId() + " updated details previous = " + profile
-                    .getAttributesSummary() + " new = ";
+                History action = new History("Profile" , profile.getId() ,"update",profile.getAttributesSummary(),-1,null);
                 profile.setExtraAttributes(attrArray);
-                action = action + profile.getAttributesSummary() + " at " + LocalDateTime.now();
+                action.setHistoryData(action.getHistoryData()+profile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
             }

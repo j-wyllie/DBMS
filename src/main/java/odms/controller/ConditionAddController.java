@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.History.History;
 import odms.profile.Condition;
 import odms.profile.Profile;
 
@@ -75,7 +76,7 @@ public class ConditionAddController {
             }
             addCondition(condition);
             LocalDateTime currentTime = LocalDateTime.now();
-            String action = "Profile " + searchedDonor.getId()  + " added condition with values("  + name+","+dateDiagnosed+","+isChronic+ ") index of "+ searchedDonor.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            History action = new History("Profile",searchedDonor.getId(),"added condition","("  + name+","+dateDiagnosed+","+isChronic+ ")",searchedDonor.getCurrentConditions().indexOf(condition),currentTime);
             HistoryController.updateHistory(action);
         } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
             warningLabel.setVisible(true);

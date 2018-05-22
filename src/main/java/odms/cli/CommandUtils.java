@@ -19,7 +19,6 @@ public class CommandUtils {
         + "(given-names, last-names, ird).";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
     private static int historyPosition = HistoryController.getPosition();
-    private static ArrayList<String> currentSessionHistory  = HistoryController.getHistory();
 
     private static final String cmdRegexCreate =
         "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
@@ -250,16 +249,6 @@ public class CommandUtils {
             for (Profile profile : profileList) {
                 try {
                     profile.addOrgansDonating(organSet);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory.add(
-                        "Profile " + profile.getId() + " set organs " + organSet + " at "
-                            + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
                 } catch (Exception e) {
@@ -282,23 +271,6 @@ public class CommandUtils {
             for (Profile profile : profileList) {
                 try {
                     profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-
-                    // TODO abstract in command history refactor
-                    currentSessionHistory.add(
-                            "Profile " +
-                            profile.getId() +
-                            " decided to donate these organs " +
-                            Arrays.asList(organList) +
-                            " at " +
-                            LocalDateTime.now()
-                    );
-                    historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
                 }
@@ -321,16 +293,6 @@ public class CommandUtils {
             for (Profile profile : profileList) {
                 try {
                     profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory.add(
-                        "Profile " + profile.getId() + " removed these organs " + organSet + " at "
-                            + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
                 }

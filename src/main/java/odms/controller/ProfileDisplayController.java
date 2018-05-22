@@ -51,6 +51,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import odms.History.History;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
@@ -529,7 +530,7 @@ public class ProfileDisplayController extends CommonController {
             if (condition != null) {
                 currentProfile.removeCondition(condition);
                 LocalDateTime currentTime = LocalDateTime.now();
-                String action = "Profile " + currentProfile.getId()  + " removed condition with values("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ") index of "+ currentProfile.getCurrentConditions().indexOf(condition) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                History action = new History("Profile",currentProfile.getId()," removed condition","("  +condition.getName()+","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+condition.getDateCuredString()+ ")",currentProfile.getCurrentConditions().indexOf(condition),currentTime);
                 HistoryController.updateHistory(action);
             }
         }
@@ -753,7 +754,9 @@ public class ProfileDisplayController extends CommonController {
             String medicationName = textFieldMedicationSearch.getText();
 
             currentProfile.addDrug(new Drug(medicationName));
-            HistoryController.updateHistory(currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1));
+            String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+            History history = new History("Profile",currentProfile.getId(), "added drug",medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+            HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
         }
@@ -839,7 +842,12 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug: drugs) {
-            if (drugs != null) { currentProfile.moveDrugToHistory(drug);HistoryController.updateHistory(currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1));}
+            if (drugs != null) {
+                currentProfile.moveDrugToHistory(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(), "stopped",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
+            }
         }
 
 
@@ -856,7 +864,12 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug: drugs) {
-            if (drugs != null) { currentProfile.moveDrugToCurrent(drug);HistoryController.updateHistory(currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1));}
+            if (drugs != null) {
+                currentProfile.moveDrugToCurrent(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(), "started",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
+            }
         }
 
         refreshMedicationsTable();
@@ -872,7 +885,17 @@ public class ProfileDisplayController extends CommonController {
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
         for (Drug drug: drugs) {
-            if (drugs != null) { currentProfile.deleteDrug(drug);HistoryController.updateHistory(currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1));}
+            if (drugs != null) {
+                currentProfile.deleteDrug(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history;
+                if(data.contains("history")) {
+                    history = new History("Profile",currentProfile.getId(), "removed drug",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                } else {
+                    history = new History("Profile",currentProfile.getId(), "removed drug from history",drug.getDrugName(),Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                }
+                HistoryController.updateHistory(history);
+            }
         }
 
         refreshMedicationsTable();

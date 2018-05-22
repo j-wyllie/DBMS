@@ -56,4 +56,10 @@ public class History {
     public LocalDateTime getHistoryTimestamp() {
         return historyTimestamp;
     }
+
+    public void setHistoryId(int id) {historyId = id;}
+
+    public void setHistoryData(String s){historyData = s;}
+
+    public void setHistoryTimestamp(LocalDateTime t){historyTimestamp = t;}
 }
