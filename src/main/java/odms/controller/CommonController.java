@@ -1,6 +1,5 @@
 package odms.controller;
 
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+
+import java.io.IOException;
 
 class CommonController {
 
@@ -77,10 +78,10 @@ class CommonController {
 
     /**
      * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
-     * @param event Any action event within the text boxes.
+     * @param event Any click event within the text boxes.
      */
     @FXML
-    protected void editTrueAction(ActionEvent event) throws IOException {
+    protected void editTrueClick(MouseEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if(!currentStage.getTitle().contains("(*)")){
             currentStage.setTitle(currentStage.getTitle() + " (*)");
@@ -88,14 +89,22 @@ class CommonController {
     }
 
     /**
-     * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
+     * Changes the title of the parent window to include an astrix to indicate a value has been edited.
      * @param event Any click event within the text boxes.
      */
     @FXML
-    protected void editTrueClick(MouseEvent event) throws IOException {
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if(!currentStage.getTitle().contains("(*)")){
-            currentStage.setTitle(currentStage.getTitle() + " (*)");
+    protected void editTrueAction(ActionEvent event, boolean forOwner) {
+        if (forOwner) {
+            Stage currentStage = (Stage) ((Node) event.getTarget()).getParent().getScene().getWindow();
+            currentStage = (Stage) currentStage.getOwner();
+            if (!currentStage.getTitle().contains("(*)")) {
+                currentStage.setTitle(currentStage.getTitle() + " (*)");
+            }
+        } else {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            if (!currentStage.getTitle().contains("(*)")) {
+                currentStage.setTitle(currentStage.getTitle() + " (*)");
+            }
         }
     }
 

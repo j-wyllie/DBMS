@@ -1,5 +1,6 @@
 package odms.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 import odms.user.User;
 import odms.user.UserType;
 
-public class UserCreateController {
+public class UserCreateController extends CommonController {
 
     @FXML
     private TextField userUsernameField;
@@ -30,7 +31,7 @@ public class UserCreateController {
     private Button userCreateAccountButton;
 
     @FXML
-    public void handleUserCreateAccountButtonClicked() {
+    public void handleUserCreateAccountButtonClicked(ActionEvent event) {
         if (checkValidEntries()) {
             if (checkUniqueUsername()) {
                 User user = new User(userTypeBox.getValue(), userNameField.getText(), userUsernameField.getText());
@@ -39,6 +40,8 @@ public class UserCreateController {
                 GuiMain.getUserDatabase().addUser(user);
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
+
+                editTrueAction(event, true);
             } else {
                 AlertController.uniqueUsername();
             }

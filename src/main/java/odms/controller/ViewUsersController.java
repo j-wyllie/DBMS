@@ -94,6 +94,7 @@ public class ViewUsersController extends CommonController{
                 User user = viewUsersTable.getSelectionModel().getSelectedItem();
                 GuiMain.getUserDatabase().deleteUser(user.getStaffId());
                 refreshViewUsersTable();
+                editTrueClick(event);
             }
         });
     }
@@ -120,9 +121,7 @@ public class ViewUsersController extends CommonController{
         stage.initOwner(viewUsersTable.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding((ob) -> {
-            refreshViewUsersTable();
-        });
+        stage.setOnHiding((ob) -> refreshViewUsersTable());
         stage.show();
     }
 
