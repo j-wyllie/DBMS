@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
-import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.profile.Organ;
 import odms.profile.Profile;
 
@@ -215,6 +214,7 @@ public class ProfileDatabase {
         return ratio;
     }
 
+    //TODO add preferred name when that functionality is in dev
     /**
      * Fuzzy search that finds profiles with a name similar to the search string. Order of results goes as follows:
      * Exact matches in last names ordered alphabetically,
@@ -225,6 +225,9 @@ public class ProfileDatabase {
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString) {
+        // Constant that represents the cutoff at which profiles will not be added to search results
+        final Integer matchLimit = 60;
+
         // Need separate Lists to order results by relevance.
         ArrayList<Profile> profilesSimilarFirst = new ArrayList<>();
         ArrayList<Profile> profilesSimilarLast = new ArrayList<>();
@@ -259,9 +262,9 @@ public class ProfileDatabase {
             } else if (ratio == 100 && nameCategory.equals("first")) {
                 profilesMatchesFirst.add(profile);
             // If ratio is below 60 don't include profile because it doesn't match close enough to searchString
-            } else if (ratio >= 60 && nameCategory.equals("last")) {
+            } else if (ratio >= matchLimit && nameCategory.equals("last")) {
                 profilesSimilarLast.add(profile);
-            } else if (ratio >= 60 && nameCategory.equals("first")) {
+            } else if (ratio >= matchLimit && nameCategory.equals("first")) {
                 profilesSimilarFirst.add(profile);
             }
         }
