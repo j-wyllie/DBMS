@@ -22,12 +22,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
          <children>
-            <TableView prefHeight="273.0" prefWidth="381.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
+             <TableView fx:id="viewUsersTable" prefHeight="273.0" prefWidth="381.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2" />
          </children>
         </GridPane>
     </children>
