@@ -171,4 +171,21 @@ public class AlertController {
             return false;
         }
     }
+
+    /**
+     * Displays a popup prompting the user to confirm cancellation of changes made
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean deleteUserConfirmation() {
+        Alert cancelAlert = new Alert(
+                AlertType.CONFIRMATION,
+                "Are you sure you want to delete this user?",
+                ButtonType.NO,
+                ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
+    }
 }
