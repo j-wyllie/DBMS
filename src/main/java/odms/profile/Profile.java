@@ -161,11 +161,6 @@ public class Profile {
                         Integer.valueOf(dates[1]),
                         Integer.valueOf(dates[0])
                 );
-                if (getDateOfBirth().isAfter(date)) {
-                    throw new IllegalArgumentException(
-                            "Date of death cannot be before date of birth"
-                    );
-                }
                 setDateOfDeath(date);
             }
         } else if (attrName.equals(Attribute.GENDER.getText())) {
@@ -827,6 +822,11 @@ public class Profile {
     }
 
     public void setDateOfDeath(LocalDate dateOfDeath) {
+        if (getDateOfBirth().isAfter(dateOfDeath)) {
+            throw new IllegalArgumentException(
+                "Date of death cannot be before date of birth"
+            );
+        }
         generateUpdateInfo("dod");
         this.dateOfDeath = dateOfDeath;
     }

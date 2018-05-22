@@ -142,30 +142,24 @@ public class ProfileEditController extends CommonController {
 
                 try {
                     currentProfile.setDateOfBirth(
-                        LocalDate.parse(dobField.getText(),
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        LocalDate.parse(
+                            dobField.getText(),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        )
                     );
                     if (!dodField.getText().isEmpty()) {
-                        if(!(
-                            LocalDate.parse(dodField.getText(),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            LocalDate.parse((dodField.getText()),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isAfter(LocalDate.now()))) {
-
-                            currentProfile.setDateOfDeath(LocalDate.parse(
-                                    dodField.getText(),
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ));
-
-                        } else {
-                            error = true;
-                        }
+                        currentProfile.setDateOfDeath(LocalDate.parse(
+                            dodField.getText(),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        ));
                     }
                 } catch (DateTimeParseException e) {
-                    error = true;
+                    AlertController.invalidEntry(
+                        "Date of Death date entered incorrectly\n"
+                        + "Please try again"
+                    );
+                } catch (IllegalArgumentException e) {
+                    AlertController.invalidEntry(e.getMessage()); // TODO does not prevent fallthrough in logic
                 }
                 if (!genderField.getText().isEmpty()) {
                     currentProfile.setGender(genderField.getText());
