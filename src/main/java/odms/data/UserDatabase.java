@@ -3,6 +3,8 @@ package odms.data;
 import odms.controller.UserNotFoundException;
 import odms.user.User;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class UserDatabase {
@@ -78,6 +80,14 @@ public class UserDatabase {
         user.setStaffId(lastID);
 
         userDb.put(lastID, user);
+    }
+
+    public Collection<User> getUsers() {
+        Collection<User> users = new ArrayList();
+        for (User user : userDb.values()) {
+            users.add(user);
+        }
+        return users;
     }
 
     public String getPath() {

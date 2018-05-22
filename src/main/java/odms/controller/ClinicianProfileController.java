@@ -72,6 +72,13 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TableView transplantTable;
 
+    @FXML
+    private Tab viewUsersTab;
+
+    @FXML
+    ViewUsersController viewUsersController;
+
+
     private ObservableList<Profile> donorObservableList;
 
     private ObservableList<Entry<Profile, Organ>> receiverObservableList;
@@ -279,6 +286,15 @@ public class ClinicianProfileController extends CommonController {
         addTooltipToRow();
 
     }
+
+    /**
+     * Initializes the controller for the view users Tab
+     */
+    public void handleViewUsersTabClicked() {
+        viewUsersController.setCurrentUser(currentUser);
+        viewUsersController.setUpUsersTable();
+    }
+
 
     /**
      * Refresh the search and transplant medication tables with the most up to date data
