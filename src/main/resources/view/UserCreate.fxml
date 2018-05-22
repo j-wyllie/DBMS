@@ -5,10 +5,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -51,17 +53,22 @@
                         <Insets />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="userNameField" prefHeight="55.0" prefWidth="400.0" promptText="Name" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                <PasswordField fx:id="userPasswordField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Password" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" >
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </PasswordField>
+                <TextField fx:id="userNameField" prefHeight="55.0" prefWidth="400.0" promptText="Name" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="userRegionField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="Region" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                <TextField fx:id="userRegionField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="Region" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
                 </TextField>
-                <Button fx:id="userCreateAccountButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleUserCreateAccountButtonClicked" styleClass="button-create-account" stylesheets="@../styles/ProfileCreate.css" text="CREATE ACCOUNT" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                <Button fx:id="userCreateAccountButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleUserCreateAccountButtonClicked" styleClass="button-create-account" stylesheets="@../styles/ProfileCreate.css" text="CREATE ACCOUNT" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
@@ -69,7 +76,7 @@
                         <Font name="System Bold" size="20.0" />
                     </font>
                 </Button>
-            <ChoiceBox fx:id="userTypeBox" prefHeight="65.0" prefWidth="484.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <ChoiceBox fx:id="userTypeBox" prefHeight="65.0" prefWidth="484.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             </children>
         </GridPane>
     </children>

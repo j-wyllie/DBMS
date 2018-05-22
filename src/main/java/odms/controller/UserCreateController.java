@@ -3,6 +3,7 @@ package odms.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.user.User;
@@ -20,6 +21,9 @@ public class UserCreateController {
     private TextField userRegionField;
 
     @FXML
+    private PasswordField userPasswordField;
+
+    @FXML
     private ChoiceBox<UserType> userTypeBox;
 
     @FXML
@@ -31,6 +35,7 @@ public class UserCreateController {
             if (checkUniqueUsername()) {
                 User user = new User(userTypeBox.getValue(), userNameField.getText(), userUsernameField.getText());
                 user.setUsername(userUsernameField.getText());
+                user.setPassword(userPasswordField.getText());
                 GuiMain.getUserDatabase().addUser(user);
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
@@ -56,7 +61,7 @@ public class UserCreateController {
      */
     private boolean checkValidEntries() {
         if (userNameField.getText().equals("") || userUsernameField.getText().equals("") ||
-                userRegionField.getText().equals("")) {
+                userRegionField.getText().equals("") || userPasswordField.getText().equals("")) {
             return false;
         } else {
             return true;

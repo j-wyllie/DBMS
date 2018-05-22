@@ -77,11 +77,51 @@
       "username": "admin",
       "password": "admin",
       "isDefault": true
+    },
+    "3": {
+      "userType": "ADMIN",
+      "name": "Jack",
+      "staffId": 3,
+      "region": "Jack",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 22
+        },
+        "time": {
+          "hour": 20,
+          "minute": 28,
+          "second": 40,
+          "nano": 573000000
+        }
+      },
+      "updateActions": [
+        "Account for Jackcreated at 2018-05-22T20:28:40.558",
+        "Jack updated at 08:28 PM 22-05-2018",
+        "3 updated at 08:28 PM 22-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 22
+        },
+        "time": {
+          "hour": 20,
+          "minute": 28,
+          "second": 40,
+          "nano": 558000000
+        }
+      },
+      "username": "Jack",
+      "password": "Jack",
+      "isDefault": false
     }
   },
   "deletedUsers": [
     2
   ],
-  "lastID": 2,
+  "lastID": 3,
   "path": "example/users.json"
 }
