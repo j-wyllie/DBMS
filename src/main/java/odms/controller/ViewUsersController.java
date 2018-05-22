@@ -1,15 +1,13 @@
 package odms.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -70,13 +68,19 @@ public class ViewUsersController extends CommonController{
         //sets the event handler for right clicking on a table item.
         viewUsersTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if (t.getButton() == MouseButton.SECONDARY) {
-                if (!viewUsersTable.getSelectionModel().getSelectedItem().getDefault()) {
-                    contextMenu.show(viewUsersTable, t.getScreenX(), t.getScreenY());
+                if (viewUsersTable.getSelectionModel().getSelectedItem().getDefault()) {
+                    contextMenu.hide();
                 }
             }
-            if(t.getButton() == MouseButton.PRIMARY) {
-                contextMenu.hide();
-            }
+        });
+
+        viewUsersTable.setRowFactory(tableView -> {
+            final TableRow<User> row = new TableRow<>();
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty())
+                    .then((ContextMenu)null)
+                    .otherwise(contextMenu));
+            return row;
         });
     }
 
@@ -94,7 +98,6 @@ public class ViewUsersController extends CommonController{
                 User user = viewUsersTable.getSelectionModel().getSelectedItem();
                 GuiMain.getUserDatabase().deleteUser(user.getStaffId());
                 refreshViewUsersTable();
-                editTrueClick(event);
             }
         });
     }
