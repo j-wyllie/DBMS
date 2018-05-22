@@ -3,6 +3,7 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import odms.enums.OrganEnum;
 
 public class AlertController {
 
@@ -25,10 +26,12 @@ public class AlertController {
     /**
      * Creates a popup when the details were entered incorrectly
      */
-    public static void invalidOrgan() {
+    public static void invalidOrgan(OrganEnum organ) {
+        String error = "Cannot donate organ received from another donor.\n" +
+                String.format("Organ '%s' received previously.", organ.getNamePlain());
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
-            "A user cannot require and donate the same organ.",
+            error,
             ButtonType.CLOSE
         );
 
@@ -124,7 +127,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorSaveChanges() {
+    static boolean profileSaveChanges() {
         Alert saveAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to save your changes?",
@@ -141,7 +144,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorCancelChanges() {
+    static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to cancel your changes?",
