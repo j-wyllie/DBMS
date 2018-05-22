@@ -28,6 +28,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(false);
         appStage.setTitle("ODMS");
+        appStage.centerOnScreen();
         appStage.show();
     }
 
@@ -58,6 +59,7 @@ class CommonController {
         appStage.setScene(newScene);
         appStage.setResizable(resizeable);
         appStage.setTitle(title);
+        appStage.centerOnScreen();
         appStage.show();
     }
 

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import odms.data.ProfileDatabase;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 
@@ -199,16 +199,16 @@ public class CommandUtils {
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -278,7 +278,7 @@ public class CommandUtils {
      */
     private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            HashSet<Organ> organSet = Organ.stringListToOrganSet(Arrays.asList(organList));
+            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
@@ -314,7 +314,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonated(Organ.stringListToOrganSet(Arrays.asList(organList)));
+                    profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -347,13 +347,13 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList list of organs to be removed
      */
-    private static void removeOrgans(ArrayList<Profile> profileList, String[] organList) {
+    private static void removeOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgans(organSet);
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                     if (currentSessionHistory.size() != 0) {
                         if (historyPosition != currentSessionHistory.size() - 1) {
                             currentSessionHistory
@@ -419,7 +419,7 @@ public class CommandUtils {
             } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+                profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                         action.substring(
                                 action.indexOf("[") + 1,
                                 action.indexOf("]")).split(",")
@@ -430,18 +430,25 @@ public class CommandUtils {
             } else if (action.contains("set")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeOrgans(organSet);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
             } else if (action.contains("donate")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeDonations(organSet);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                // TODO bug here for removing organs from wrong list based on command
+                profile.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -468,12 +475,12 @@ public class CommandUtils {
                 String organs = action
                         .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
                 List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-                ArrayList<Organ> organList = new ArrayList<>();
+                ArrayList<OrganEnum> organList = new ArrayList<>();
                 System.out.println(organs);
                 for (String organ : List) {
                     System.out.println(organ);
                     try {
-                        organList.add(Organ.valueOf(organ.replace(" ", "")));
+                        organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
                     } catch (IllegalArgumentException e) {
                         System.out.println(e);
                     }
@@ -543,13 +550,13 @@ public class CommandUtils {
                 } else if (action.contains("removed")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
+                    List<String> organSet = new ArrayList<>(Arrays.asList(
                         action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.removeOrgans(organSet);
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    profile.addOrgansDonating(Organ.stringListToOrganSet(Arrays.asList(
+                    profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                         action.substring(
                                 action.indexOf("[") + 1,
                                 action.indexOf("]")).split(",")
@@ -558,7 +565,7 @@ public class CommandUtils {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
                     profile.addOrgansDonated(
-                            Organ.stringListToOrganSet(
+                            OrganEnum.stringListToOrganSet(
                                     Arrays.asList(
                                             action.substring(
                                                     action.indexOf("[") + 1,
@@ -579,12 +586,15 @@ public class CommandUtils {
                     String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
                     String[] previousValues = previous.split(",");
                     String organs;
-                    ArrayList<Organ> organList = new ArrayList<>();
+                    ArrayList<OrganEnum> organList = new ArrayList<>();
                     organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
                     List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
                     for(String organ : List){
                         System.out.println(organ);
-                        organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
+                        organList.add(OrganEnum.valueOf(organ
+                                .replace(" ","")
+                                .replace("NEWORGANS[",""))
+                        );
                     }
                     profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
                     profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
