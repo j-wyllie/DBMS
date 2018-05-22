@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
+import static odms.controller.AlertController.saveChanges;
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.GuiMain.getUserDatabase;
 
@@ -64,7 +64,7 @@ public class ClinicianProfileEditController extends CommonController{
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
+        boolean saveBool = saveChanges();
         boolean error = false;
         if (saveBool) {
             String action =

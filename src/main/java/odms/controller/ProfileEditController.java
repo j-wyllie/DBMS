@@ -1,19 +1,5 @@
 package odms.controller;
 
-import static odms.controller.AlertController.guiPopup;
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.HashSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +12,19 @@ import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
 import odms.profile.Profile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 public class ProfileEditController extends CommonController {
 
@@ -120,7 +119,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
+        boolean saveBool = saveChanges();
         boolean error = false;
 
         if (saveBool) {

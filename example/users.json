@@ -79,7 +79,9 @@
       "isDefault": true
     }
   },
-  "deletedUsers": [],
-  "lastID": 1,
+  "deletedUsers": [
+    2
+  ],
+  "lastID": 2,
   "path": "example/users.json"
 }

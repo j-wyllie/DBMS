@@ -15,10 +15,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import odms.user.User;
 
 import java.io.IOException;
+
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getUserDatabase;
 
 public class ViewUsersController {
 
@@ -123,5 +127,8 @@ public class ViewUsersController {
     }
 
     public void handleViewUsersSaveBtn(ActionEvent actionEvent) {
+        if (saveChanges()) {
+            UserDataIO.saveUsers(getUserDatabase());
+        }
     }
 }
