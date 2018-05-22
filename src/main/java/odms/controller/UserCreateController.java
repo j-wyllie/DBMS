@@ -1,8 +1,10 @@
 package odms.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import odms.user.User;
 import odms.user.UserType;
 
@@ -21,11 +23,17 @@ public class UserCreateController {
     private ChoiceBox<UserType> userTypeBox;
 
     @FXML
+    private Button userCreateAccountButton;
+
+    @FXML
     public void handleUserCreateAccountButtonClicked() {
-        if (!checkValidEntries()) {
+        if (checkValidEntries()) {
             if (checkUniqueUsername()) {
                 User user = new User(userTypeBox.getValue(), userNameField.getText(), userUsernameField.getText());
                 user.setUsername(userUsernameField.getText());
+                GuiMain.getUserDatabase().addUser(user);
+                Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
+                stage.close();
             } else {
                 AlertController.uniqueUsername();
             }
@@ -53,5 +61,19 @@ public class UserCreateController {
         } else {
             return true;
         }
+    }
+
+    /**
+     * adds the UserTypes to the choice box
+     */
+    private void populateUserTypeBox() {
+        userTypeBox.getItems().clear();
+        userTypeBox.getItems().addAll(UserType.CLINICIAN, UserType.ADMIN);
+        userTypeBox.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    public void initialize() {
+        populateUserTypeBox();
     }
 }

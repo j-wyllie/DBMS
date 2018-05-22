@@ -148,12 +148,12 @@ public class UserDatabase {
      * @param username
      * @return boolean for whether a username is unique/
      */
-    public boolean checkUniqueUsername(String username) {
+    public boolean checkUniqueUsername(String username) { //TODO Make the addUser function call this and throw a UserNotUniqueException
         for (User user : userDb.values()) {
             if (user.getUsername().equals(username)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
