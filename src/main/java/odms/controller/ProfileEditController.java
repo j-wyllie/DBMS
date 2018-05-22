@@ -129,7 +129,7 @@ public class ProfileEditController extends CommonController {
                     irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                History action = new History("Profile" , currentProfile.getId() ,"update",currentProfile.getAttributesSummary(),-1,null);
+                History action = new History("Profile" , currentProfile.getId() ,"update","previous "+currentProfile.getAttributesSummary(),-1,null);
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
@@ -195,7 +195,7 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-                action.setHistoryData(action.getHistoryData()+currentProfile.getAttributesSummary());
+                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 

@@ -70,7 +70,7 @@ public class ClinicianProfileEditController extends CommonController{
         boolean saveBool = profileSaveChanges();
         boolean error = false;
         if (saveBool) {
-            History action = new History("Clinician",currentUser.getStaffId(),"updated",currentUser.getAttributesSummary() + ") new = ("+ currentUser.getAttributesSummary() + ")",-1,LocalDateTime.now());
+            History action = new History("Clinician",currentUser.getStaffId(),"updated","previous "+currentUser.getAttributesSummary() + " new "+ currentUser.getAttributesSummary(),-1,LocalDateTime.now());
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());

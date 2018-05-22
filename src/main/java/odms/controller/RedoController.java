@@ -147,10 +147,9 @@ public class RedoController {
     }
 
     private static void updated(History action) {
-        //todo update
         int id = action.getHistoryId();
         User user = LoginController.getCurrentUser();
-        String newString = action.getHistoryData();
+        String newString = action.getHistoryData().substring(action.getHistoryData().indexOf("new ")+4);
         String[] newValues = newString.split(",");
         user.setName(newValues[1].replace("name=",""));
         user.setStaffId(Integer.valueOf(newValues[0].replace("staffId=","").replace(" ","")));
@@ -189,16 +188,14 @@ public class RedoController {
         profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().split(","))));
     }
     public static void update(ProfileDatabase currentDatabase, History action){
-        //todo
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        String newInfo = action.getHistoryData();
+        String newInfo = action.getHistoryData().substring(action.getHistoryData().indexOf("new ")+4);
         profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
     }
     public static void edited(ProfileDatabase currentDatabase, History action) {
-        //todo
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int procedurePlace = action.getHistoryDataIndex();
-        String previous = action.getHistoryData();
+        String previous = action.getHistoryData().substring(action.getHistoryData().indexOf("CURRENT(")+8);
         String[] previousValues = previous.split(",");
         String organs;
         ArrayList<OrganEnum> organList = new ArrayList<>();

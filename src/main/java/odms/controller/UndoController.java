@@ -177,9 +177,8 @@ public class UndoController {
     }
 
     private static void updated(History action) {
-        //todo update
         User user = LoginController.getCurrentUser();
-        String previous = action.getHistoryData();
+        String previous =  action.getHistoryData().substring(action.getHistoryData().indexOf("previous ")+9,action.getHistoryData().indexOf("new "));
         String[] previousValues = previous.split(",");
         user.setName(previousValues[1].replace("name=",""));
         user.setStaffId(Integer.valueOf(previousValues[0].replace("staffId=","").replace(" ","")));
@@ -252,7 +251,7 @@ public class UndoController {
     public static void update(ProfileDatabase currentDatabase, History action){
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         System.out.println(action);
-        String old = action.getHistoryData();
+        String old =  action.getHistoryData().substring(action.getHistoryData().indexOf("previous ")+9,action.getHistoryData().indexOf(" new "));
         profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
         if (historyPosition > 0) {
             historyPosition -= 1;
@@ -261,10 +260,9 @@ public class UndoController {
         HistoryController.setPosition(historyPosition);
     }
     public static void edited(ProfileDatabase currentDatabase, History action) {
-        //todo update
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int procedurePlace = action.getHistoryDataIndex();
-        String previous = action.getHistoryData();
+        String previous = action.getHistoryData().substring(action.getHistoryData().indexOf("PREVIOUS(")+9,action.getHistoryData().indexOf("CURRENT("));
         String[] previousValues = previous.split(",");
         String organs = action.getHistoryData();
         List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
