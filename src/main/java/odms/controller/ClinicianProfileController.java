@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -308,6 +309,32 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
+     * Limits the characters entered in textfield to only digits and maxLength
+     * @param maxLength that can be entered in the textfield
+     * @return
+     */
+    public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+        return new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                TextField txt_TextField = (TextField) e.getSource();
+                if (txt_TextField.getText().length() >= maxLength) {
+                    e.consume();
+                }
+                if(e.getCharacter().matches("[0-9.]")){
+                    if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
+                        e.consume();
+                    }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
+                        e.consume();
+                    }
+                }else{
+                    e.consume();
+                }
+            }
+        };
+    }
+
+    /**
      * Creates a new window when a row in the search table is double clicked.
      * The new window contains a donors profile.
      *
@@ -404,25 +431,24 @@ public class ClinicianProfileController extends CommonController {
     public void initialize() {
 
         ageRangeField.setVisible(false);
+        ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
 
-        if (genderCombobox.getItems().size() == 0) {
-            genderStrings.add("male");
-            genderStrings.add("female");
-            genderStrings.add("other");
-            genderCombobox.getItems().setAll(genderStrings);
-        }
+        genderCombobox.getItems().clear();
+        typeCombobox.getItems().clear();
+        organsCombobox.getItems().clear();
 
-        if (organsCombobox.getItems().size() == 0) {
-            organsStrings.addAll(OrganEnum.toArrayList());
-            organsCombobox.getItems().setAll(organsStrings);
-        }
+        genderStrings.add("male");
+        genderStrings.add("female");
+        genderStrings.add("other");
+        genderCombobox.getItems().setAll(genderStrings);
 
-        if (typeCombobox.getItems().size() == 0) {
-            typeStrings.add("receiver");
-            typeStrings.add("donor");
-            typeCombobox.getItems().setAll(typeStrings);
-        }
+        organsStrings.addAll(OrganEnum.toArrayList());
+        organsCombobox.getItems().setAll(organsStrings);
 
+        typeStrings.add("receiver");
+        typeStrings.add("donor");
+        typeCombobox.getItems().setAll(typeStrings);
 
         TableFilter filter = new TableFilter<>(transplantTable);
 

@@ -193,6 +193,43 @@ public class ProfileDatabase {
     }
 
     /**
+     * Searches a given list of profiles with a given search string using fuzzy search
+     * @param profilesGiven list of profiles to search through
+     * @param searchString string to match profiles against
+     * @param type type of attribute to filter against
+     * @return the filtered list of profiles
+     */
+    public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString, String type) {
+
+        ArrayList<Profile> resultProfiles = new ArrayList<>();
+        ArrayList<String> profiles = new ArrayList<>();
+
+        if (type.equals("name")) {
+            for (Profile profile : profilesGiven) {
+                profiles.add(profile.getFullName());
+            }
+        } else if (type.equals("region")) {
+            for (Profile profile : profilesGiven) {
+                //TODO work out why fuzzy search can only search through strings with two parts, throws null pointer when just one word
+                profiles.add(profile.getRegion() + " " + profile.getRegion());
+            }
+        } else {
+            return profilesGiven;
+        }
+
+        //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
+        List<ExtractedResult> result;
+        result = FuzzySearch.extractSorted(searchString, profiles, 50);
+
+        //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
+        for (ExtractedResult er : result) {
+            resultProfiles.add(profilesGiven.get(er.getIndex()));
+        }
+
+        return resultProfiles;
+    }
+
+    /**
      * Fuzzy search that finds the top 30 donors that match the provided search string.
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
@@ -202,79 +239,26 @@ public class ProfileDatabase {
         ArrayList<Profile> allProfiles = getProfiles(false);
         ArrayList<Profile> resultProfiles = null;
 
-
         //parsing out organs as strings for later use
-        List<String> selectedOrgansStrings = new ArrayList<>();
-        if (selectedOrgans != null) {
-            for (int i = 0; i< selectedOrgans.size(); i++) {
-                //todo need some consistency in how we are naming organs that have two words in them.
-                if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
-                    selectedOrgansStrings.add("connective-tissue");
-                }
-                if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
-                    selectedOrgansStrings.add("bone-marrow");
-                }
-                selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
-            }
-        }
-
-
-
-        //need some data for testing-----------------------------------------------
-        //TODO need profiles to be automatically set as donor or receiver etc
-        //resultProfiles.get(0).setReceiver(true);
-        //resultProfiles.get(0).setDonor(false);
-        // ------------------------------------------------------------------------
-
+        List<String> selectedOrgansStrings = getOrgansAsStrings(selectedOrgans);
 
 
         if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()){
             return allProfiles;
         }
 
+
         if (!searchString.equals("")) {
-
-            for (Profile profile : allProfiles) {
-                profiles.add(profile.getFullName());
-            }
-
-
-            //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
-            List<ExtractedResult> result;
-            result = FuzzySearch.extractSorted(searchString, profiles, 50);
-
-            //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
-            resultProfiles = new ArrayList<>();
-            for (ExtractedResult er : result) {
-                resultProfiles.add(allProfiles.get(er.getIndex()));
-            }
-            //resetting for re use
-            profiles = new ArrayList<>();
+            resultProfiles = fuzzySearch(allProfiles, searchString, "name");
         } else {
             resultProfiles = allProfiles;
         }
 
 
-
         if (!regionSearchString.equals("")) {
             ArrayList<Profile> resultProfilesBefore = resultProfiles;
-
-            //TODO wort out why fuzzy search can only search through strings with two parts, throws null pointer when just one word
-            for (Profile profile : resultProfilesBefore) {
-                profiles.add(profile.getRegion() + " " + profile.getRegion());
-            }
-
-            //Fuzzywuzzy, fuzzy search algorithm. Returns list of profile names sorted by closest match to the search string.
-            List<ExtractedResult> result;
-            result = FuzzySearch.extractSorted(regionSearchString, profiles, 50);
-
-            //Use index values from fuzzywuzzy search to build list of profile object in same order returned from fuzzywuzzy.
-            resultProfiles = new ArrayList<>();
-            for (ExtractedResult er : result) {
-                resultProfiles.add(resultProfilesBefore.get(er.getIndex()));
-            }
+            resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
         }
-
 
 
         //definitely need a better way than just a magic number lol
@@ -340,7 +324,6 @@ public class ProfileDatabase {
                     return true;
                 }
 
-
                 profileTypes.retainAll(selectedTypes);
                 return (profileTypes.size() == 0);
             });
@@ -348,6 +331,23 @@ public class ProfileDatabase {
 
 
         return resultProfiles;
+    }
+
+    private List<String> getOrgansAsStrings(List selectedOrgans) {
+        List<String> selectedOrgansStrings = new ArrayList<>();
+        if (selectedOrgans != null) {
+            for (int i = 0; i< selectedOrgans.size(); i++) {
+                //todo need some consistency in how we are naming organs that have two words in them.
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
+                    selectedOrgansStrings.add("connective-tissue");
+                }
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
+                    selectedOrgansStrings.add("bone-marrow");
+                }
+                selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
+            }
+        }
+        return selectedOrgansStrings;
     }
 
     /**

@@ -93,8 +93,6 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         TableView searchTable = getTableView("#searchTable");
         Scene scene = getTopModalStage();
 
-
-
         clickOn("#ageField").write("10");
         clickOn("#ageRangeField").write("30");
 
@@ -138,10 +136,6 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.KIDNEY));
         assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.INTESTINE));
         assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.LIVER));
-
-
-
-
 
     }
 
