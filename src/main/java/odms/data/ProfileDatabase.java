@@ -306,26 +306,16 @@ public class ProfileDatabase {
             resultProfiles.removeIf(profile -> {
                 ArrayList<String> profileTypes = new ArrayList();
 
-                if (profile.isReceiver()) {profileTypes.add("receiver");}
-                try {
-                    if (profile.getDonor()) {profileTypes.add("donor");}
-                } catch (NullPointerException e) {
-                    //profile.getDonor() throws null pointer, is this not initialized for all?
-                    return true;
+                if (selectedTypes.size() == 2) {
+                    return !profile.isReceiver() || !profile.getDonor();
+                } else {
+                    if (selectedTypes.get(0).equals("donor")) {
+                        return !profile.getDonor();
+                    } else {
+                        return !profile.isReceiver();
+                    }
                 }
 
-                if (profileTypes.size() == 0) {
-                    return true;
-                }
-
-                //edge case, if they only ask for donors, and a profile is a donor and receiver, it would display.
-                //since they can specify if they want BOTH receivers and donors
-                if (profileTypes.size() == 2 && selectedTypes.size() == 1) {
-                    return true;
-                }
-
-                profileTypes.retainAll(selectedTypes);
-                return (profileTypes.size() == 0);
             });
         }
 
