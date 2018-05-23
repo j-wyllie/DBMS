@@ -145,7 +145,7 @@ public class ProfileEditController extends CommonController {
                             DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     );
                     if (!dodField.getText().isEmpty()) {
-                        if(!(
+                        if (!(
                             LocalDate.parse(dodField.getText(),
                                 DateTimeFormatter.ofPattern("dd-MM-yyyy")
                             ).isBefore(currentProfile.getDateOfBirth())

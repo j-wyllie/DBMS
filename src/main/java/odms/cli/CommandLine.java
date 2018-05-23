@@ -86,7 +86,7 @@ public class CommandLine {
 
             case HELP:
                 // Show available commands (help).
-                if(rawInput.equals("help")) {
+                if (rawInput.equals("help")) {
                     Help.help();
                 } else {
                     Help.helpSpecific(rawInput.substring(5));

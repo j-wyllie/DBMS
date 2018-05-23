@@ -76,7 +76,7 @@ public class ClinicianProfileEditController extends CommonController{
             CommandUtils.currentSessionHistory.add(action);
             CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
 
-            if(error) {
+            if (error) {
                 guiPopup("Error. Not all fields were updated.");
             }
 

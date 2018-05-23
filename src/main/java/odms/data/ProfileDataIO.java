@@ -42,7 +42,7 @@ public class ProfileDataIO extends CommonDataIO {
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
                 history = history.substring(0, history.length()-1);

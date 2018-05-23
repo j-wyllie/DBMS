@@ -41,7 +41,7 @@ public class ProfileCreateController extends CommonController {
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-        if(givenNamesField.getText().trim().equals("") || surnamesField.getText().trim().equals("") ||
+        if (givenNamesField.getText().trim().equals("") || surnamesField.getText().trim().equals("") ||
                 dobField.getText().trim().equals("") || irdField.getText().trim().equals("")) {
             invalidEntry();
         } else {

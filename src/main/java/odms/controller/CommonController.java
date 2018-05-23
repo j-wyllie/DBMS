@@ -73,7 +73,7 @@ class CommonController {
     @FXML
     protected void editTrueKey(javafx.scene.input.KeyEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if(!currentStage.getTitle().contains("(*)")){
+        if (!currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle() + " (*)");
         }
         setEdited(true);
@@ -86,7 +86,7 @@ class CommonController {
     @FXML
     protected void editTrueClick(MouseEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if(!currentStage.getTitle().contains("(*)")){
+        if (!currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle() + " (*)");
         }
         setEdited(true);
@@ -117,7 +117,7 @@ class CommonController {
      * @param stage the stage to be edited.
      */
     public void editTrueStage(Stage stage) {
-        if(!stage.getTitle().contains("(*)")){
+        if (!stage.getTitle().contains("(*)")) {
             stage.setTitle(stage.getTitle() + " (*)");
         }
         setEdited(true);
@@ -144,7 +144,7 @@ class CommonController {
     @FXML
     protected void showNotification(String editedField, ActionEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if(currentStage.getTitle().contains("(*)")){
+        if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
         }
 
