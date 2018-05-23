@@ -21,9 +21,7 @@ public class App {
         try {
 
             if (args == null || args.length == 0) {
-                //Application.launch(GuiMain.class);
-                CommandLine commandLine = new CommandLine(profileDb, userDb);
-                commandLine.initialiseConsole();
+                Application.launch(GuiMain.class);
 
             } else {
                 switch (args[0].toLowerCase()) {
