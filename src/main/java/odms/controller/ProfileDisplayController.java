@@ -1070,7 +1070,7 @@ public class ProfileDisplayController extends CommonController {
             }
 
             String history = ProfileDataIO.getHistory();
-            history = history.replace(",", "").replace("]", "").
+            history = history.replace(",", " ").replace("]", "").
                     replace("[", "").replace("\\u003d", "=");
             String[] histories = history.split("\"");
             String historyDisplay = "";
