@@ -114,7 +114,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        if (saveChanges()) {
+        if (AlertController.saveChanges()) {
             try {
                 // Required General Fields
                 saveDateOfBirth();
