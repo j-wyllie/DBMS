@@ -62,7 +62,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14-11-1997");
-        clickOn("#irdField").write("88888888");
+        clickOn("#irdNumberField").write("88888888");
         clickOn("#createAccountButton");
 
         Scene newScene= getTopScene();
@@ -94,7 +94,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14.11.1997");
-        clickOn("#irdField").write("100132122");
+        clickOn("#irdNumberField").write("100132122");
         clickOn("#createAccountButton");
 
         actualAlertDialog = getAlertDialogue();
