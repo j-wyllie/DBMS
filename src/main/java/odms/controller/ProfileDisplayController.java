@@ -1,8 +1,6 @@
 package odms.controller;
 
-import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,8 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import odms.controller.RedoController;
-import odms.controller.UndoController;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.history.History;
@@ -47,26 +43,10 @@ import java.util.List;
 import java.util.Map;
 
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.profileSaveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
-
 import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
 
 
 public class ProfileDisplayController extends CommonController {

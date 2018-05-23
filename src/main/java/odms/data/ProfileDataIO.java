@@ -47,7 +47,7 @@ public class ProfileDataIO extends CommonDataIO {
                 history = gson.toJson(HistoryController.getHistory());
             } else {
                 history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(HistoryController.getHistory().get(HistoryController.getPosition()).toString());
+                history = history+","+gson.toJson(HistoryController.getHistory().get(HistoryController.getPosition()-1).toString());
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();
