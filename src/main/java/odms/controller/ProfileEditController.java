@@ -229,7 +229,7 @@ public class ProfileEditController extends CommonController {
                         currentProfile.setPreferredGender(comboGender.getValue().toString());
                     }
                 } else {
-                    currentProfile.setPreferredGender(comboGenderPref.getValue().toString());
+                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
                 }
 
                 if (error) {
