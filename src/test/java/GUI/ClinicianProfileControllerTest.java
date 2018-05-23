@@ -75,7 +75,7 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
 
         clickOn("#searchTab");
         TableView searchTable = getTableView("#searchTable");
-        Scene scene = getTopModalStage();
+        Scene scene = getTopScene();
 
         clickOn("#ageField").write("10");
         clickOn("#ageRangeField").write("30");
@@ -90,29 +90,21 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
 
         CheckComboBox genderCombobox = (CheckComboBox) scene.lookup("#genderCombobox");
         //to overcome 'not on FX' thread exception
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                genderCombobox.getCheckModel().check(0);
-            }
-        });
+        Platform.runLater(() -> genderCombobox.getCheckModel().check(0));
         clickOn(scene.lookup("#genderCombobox"));
         firstDonor = (Profile) searchTable.getItems().get(0);
 
-        assertTrue(firstDonor.getGender().equals("male"));
+        assertEquals("male", firstDonor.getGender());
 
 
         CheckComboBox organsCombobox = (CheckComboBox) scene.lookup("#organsCombobox");
         //to overcome 'not on FX' thread exception
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                organsCombobox.getCheckModel().check(6); //kidney
-                organsCombobox.getCheckModel().check(7); //liver
-                organsCombobox.getCheckModel().check(8); //intestine
+        Platform.runLater(() -> {
+            organsCombobox.getCheckModel().check(6); //kidney
+            organsCombobox.getCheckModel().check(7); //liver
+            organsCombobox.getCheckModel().check(8); //intestine
 
 
-            }
         });
         clickOn(scene.lookup("#organsCombobox"));
         firstDonor = (Profile) searchTable.getItems().get(0);
@@ -219,6 +211,6 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
         Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
-        assertTrue(userId == 1);
+        assertEquals(1, (int) userId);
     }
 }
