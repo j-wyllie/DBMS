@@ -65,10 +65,13 @@ public class CommandUtils {
             case "print":
                 switch (cmd.get(1).toLowerCase()) {
                     case "all":
+                        if (cmd.size() == 2) { return Commands.INVALID; }
                         if (cmd.get(2).toLowerCase().equals("profiles")) {
                             return Commands.PRINTALLPROFILES;
                         } else if (cmd.get(2).toLowerCase().equals("users")) {
                             return Commands.PRINTALLUSERS;
+                        } else {
+                            return Commands.INVALID;
                         }
                     case "donors":
                         return Commands.PRINTDONORS;
@@ -126,7 +129,6 @@ public class CommandUtils {
                     return Commands.PROFILEUPDATE;
                 }
             case "clinician":
-                System.out.println(rawInput.matches(cmdRegexProfileView));                   ///////
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
                         case "view":
