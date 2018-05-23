@@ -61,10 +61,10 @@ public class ProfileCreateController extends CommonController {
                 ProfileDataIO.saveData(currentDatabase);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+
                 Scene scene = new Scene(fxmlLoader.load());
                 ProfileDisplayController controller = fxmlLoader.getController();
-
-                controller.setLoggedInProfile(currentDatabase.getProfile(newProfile.getId()));
+                controller.setProfile(currentDatabase.getProfile(newProfile.getId()));
                 controller.initialize();
 
                 Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

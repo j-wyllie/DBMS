@@ -3,6 +3,7 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import odms.enums.OrganEnum;
 
 public class AlertController {
 
@@ -25,10 +26,12 @@ public class AlertController {
     /**
      * Creates a popup when the details were entered incorrectly
      */
-    public static void invalidOrgan() {
+    public static void invalidOrgan(OrganEnum organ) {
+        String error = "Cannot donate organ received from another donor.\n" +
+                String.format("Organ '%s' received previously.", organ.getNamePlain());
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
-            "A user cannot require and donate the same organ.",
+            error,
             ButtonType.CLOSE
         );
 
@@ -46,6 +49,22 @@ public class AlertController {
             AlertType.ERROR,
             "Please enter a valid username.",
             ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
+     * Creates a popup when the username or password entered was invalid.
+     */
+    static void invalidUsernameOrPassword() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Incorrect username or password.",
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -105,10 +124,26 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup with a personalized message from the controller
+     */
+    static void uniqueUsername() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Please enter a unique username",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorSaveChanges() {
+    static boolean saveChanges() {
         Alert saveAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to save your changes?",
@@ -125,7 +160,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean donorCancelChanges() {
+    static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to cancel your changes?",
@@ -151,5 +186,22 @@ public class AlertController {
             System.out.println(false);
             return false;
         }
+    }
+
+    /**
+     * Displays a popup prompting the user to confirm cancellation of changes made
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean deleteUserConfirmation() {
+        Alert cancelAlert = new Alert(
+                AlertType.CONFIRMATION,
+                "Are you sure you want to delete this user?",
+                ButtonType.NO,
+                ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
     }
 }

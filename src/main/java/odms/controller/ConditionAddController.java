@@ -9,12 +9,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.Action;
 import odms.profile.Condition;
 import odms.profile.Profile;
 
-import java.sql.Connection;
 import java.time.LocalDate;
 
 public class ConditionAddController {
@@ -53,7 +55,7 @@ public class ConditionAddController {
         Condition condition;
 
         try {
-            LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
+            LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
             if (dob.isAfter(dateDiagnosed) || dateDiagnosed.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException();
             }
@@ -107,7 +109,7 @@ public class ConditionAddController {
 
     public void init(ProfileDisplayController controller) {
         this.controller = controller;
-        searchedDonor = controller.searchedDonor;
+        searchedDonor = controller.currentProfile;
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

@@ -2,6 +2,7 @@ package odms.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import odms.enums.OrganEnum;
 
 /**
  * A specific procedure for use in medical history
@@ -12,7 +13,7 @@ public class Procedure {
     private String summary;
     private LocalDate date;
     private String longDescription;
-    private ArrayList<Organ> organsAffected = new ArrayList<>();
+    private ArrayList<OrganEnum> organsAffected = new ArrayList<>();
     private String affectsOrgansText = "Affects Donations";
 
     public Procedure(String summary, String date, String longDescription) {
@@ -47,15 +48,13 @@ public class Procedure {
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }
-    public ArrayList<Organ> getOrgansAffected() { return organsAffected; }
+    public ArrayList<OrganEnum> getOrgansAffected() { return organsAffected; }
     public String getAffectsOrgansText() { return affectsOrgansText; }
 
     public void setSummary(String summary) { this.summary = summary; }
     public void setDate(LocalDate date) { this.date = date; }
     public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
-    public void setOrgansAffected(ArrayList<Organ> organs) { this.organsAffected = organs; }
-
-    // organ methods
+    public void setOrgansAffected(ArrayList<OrganEnum> organs) { this.organsAffected = organs; }
 
     /**
      * Adds an organ to the list of affected organs for this procedure
@@ -63,14 +62,15 @@ public class Procedure {
      * @param organ
      * @throws IllegalArgumentException if the organ is not a donated organ
      */
-    public void addAffectedOrgan(Profile profile, Organ organ) throws IllegalArgumentException {
+    public void addAffectedOrgan(Profile profile, OrganEnum organ) throws IllegalArgumentException {
         if (profile.getOrgansDonating().contains(organ)) {
             organsAffected.add(organ);
         } else {
             throw new IllegalArgumentException("Not an organ with donor status on this profile");
         }
     }
-    public void removeAffectedOrgan(Organ organ) {
+
+    public void removeAffectedOrgan(OrganEnum organ) {
         organsAffected.remove(organ);
     }
 }
