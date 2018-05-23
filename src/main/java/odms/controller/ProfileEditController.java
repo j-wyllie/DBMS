@@ -144,7 +144,7 @@ public class ProfileEditController extends CommonController {
                     LocalDate dob = dobDatePicker.getValue();
                     LocalDate dod = dodDatePicker.getValue();
                     if (!(dob == null)) {
-                        if(!(dob.isAfter(LocalDate.now()))) {
+                        if (!(dob.isAfter(LocalDate.now()))) {
                             currentProfile.setDateOfBirth(dob);
                         } else {
                             throw new InvalidDataException();
@@ -153,7 +153,7 @@ public class ProfileEditController extends CommonController {
                         throw new InvalidDataException();
                     }
                     if (!(dod == null)) {
-                        if(!(dod.isBefore(currentProfile.getDateOfBirth())
+                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
                             ||
                             dod.isAfter(LocalDate.now()))) {
                             currentProfile.setDateOfDeath(dod);
