@@ -20,8 +20,8 @@ import odms.user.User;
 
 public class LoginController extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
-    private static UserDatabase userDatabase = getUserDatabase();
+    private ProfileDatabase currentDatabase = getCurrentDatabase();
+    private UserDatabase userDatabase = getUserDatabase();
     private Profile currentProfile = null;
     private User currentUser;
 
@@ -148,4 +148,7 @@ public class LoginController extends CommonController {
     private void onEnter(ActionEvent event) {
         handleLoginButtonClicked(event);
     }
+
+    public User getCurrentUser() { return currentUser; }
+    public void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }

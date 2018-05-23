@@ -10,15 +10,16 @@ import static odms.controller.UndoRedoController.undo;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import com.sun.media.sound.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -48,10 +49,10 @@ public class ProfileEditController extends CommonController {
     private TextField irdField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
-    private TextField dodField;
+    private DatePicker dodDatePicker;
 
     @FXML
     private TextField heightField;
@@ -131,7 +132,7 @@ public class ProfileEditController extends CommonController {
 
         if (saveChanges()) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
-                    irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
+                    irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
                 String action = "Profile " +
@@ -149,30 +150,27 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
-                    currentProfile.setDateOfBirth(
-                        LocalDate.parse(dobField.getText(),
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
-                    if (!dodField.getText().isEmpty()) {
-                        if(!(
-                            LocalDate.parse(dodField.getText(),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            LocalDate.parse((dodField.getText()),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isAfter(LocalDate.now()))) {
-
-                            currentProfile.setDateOfDeath(LocalDate.parse(
-                                    dodField.getText(),
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ));
-
+                    LocalDate dob = dobDatePicker.getValue();
+                    LocalDate dod = dodDatePicker.getValue();
+                    if (!(dob == null)) {
+                        if (!(dob.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfBirth(dob);
                         } else {
-                            error = true;
+                            throw new InvalidDataException();
+                        }
+                    } else {
+                        throw new InvalidDataException();
+                    }
+                    if (!(dod == null)) {
+                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
+                            ||
+                            dod.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfDeath(dod);
+                        } else {
+                            throw new InvalidDataException();
                         }
                     }
-                } catch (DateTimeParseException e) {
+                } catch (InvalidDataException e) {
                     error = true;
                 }
 
@@ -308,14 +306,10 @@ public class ProfileEditController extends CommonController {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getHeight() != null){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));

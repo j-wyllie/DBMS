@@ -548,7 +548,7 @@ public class CommandUtils {
                     Profile profile = currentDatabase.getProfile(id);
                     String newInfo = action.substring(action.indexOf("ird"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
-                }  else if(action.contains("EDITED")){
+                } else if (action.contains("EDITED")) {
                     int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
                     int procedurePlace = Integer.parseInt(action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));

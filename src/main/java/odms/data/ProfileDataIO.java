@@ -42,7 +42,7 @@ public class ProfileDataIO extends CommonDataIO {
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(CommandUtils.getHistory());
             } else {
                 history = history.substring(0, history.length()-1);
@@ -81,6 +81,15 @@ public class ProfileDataIO extends CommonDataIO {
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
+
+        //if it's a new external file then this history file will not exist so maybe we should try to create it?
+        // This fixes the FileNotFoundError but not really sure, I'll hit you up about this Jack
+        try {
+            historyFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ProfileDatabase profileDb = new ProfileDatabase();
         profileDb.setPath(path);
 
