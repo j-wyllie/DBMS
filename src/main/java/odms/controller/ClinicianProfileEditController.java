@@ -68,9 +68,12 @@ public class ClinicianProfileEditController extends CommonController{
         boolean saveBool = profileSaveChanges();
         boolean error = false;
         if (saveBool) {
-            String action =
-                    "Clinician " + currentUser.getStaffID() + " updated details previous = " + currentUser
-                            .getAttributesSummary() + " new = ";
+            String action = "Clinician " +
+                    currentUser.getStaffID() +
+                    " updated details previous = " +
+                    currentUser.getAttributesSummary() +
+                    " new = ";
+
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffID(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());

@@ -94,7 +94,6 @@ public class CommandUtils {
                     return Commands.PROFILECREATE;
                 }
             case "create-clinician":
-                System.out.println(rawInput.matches(cmdRegexCreate));                   ////////
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.CLINICIANCREATE;
                 }

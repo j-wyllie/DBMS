@@ -97,10 +97,10 @@ public class User {
      */
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("staffID=" + staffID);
-        summary = summary +"," +("name=" + name);
-        summary = summary +"," +("workAddress=" + workAddress);
-        summary = summary +"," +("region=" + region);
+        summary = summary + ("staffID=" + staffID);
+        summary = summary + "," + ("name=" + name);
+        summary = summary + "," + ("workAddress=" + workAddress);
+        summary = summary + "," + ("region=" + region);
         return summary;
     }
 

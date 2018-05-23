@@ -118,10 +118,9 @@ public class Help {
         if (Arrays.asList(cmdArray).contains(cmd)) {
             int position = Arrays.asList(cmdArray).indexOf(cmd);
             System.out.println(definitionArray[position]);
-            if (position < 15) {
-                System.out.println("The command is entered in this format:");
-                System.out.println(exampleArray[position]);
-            }
+            System.out.println("The command is entered in this format:");
+            System.out.println(exampleArray[position]);
+
         } else {
             System.out.println("Invalid command");
         }

@@ -183,25 +183,25 @@ public class CommandLine {
             case CLINICIANDATECREATED:
                 // Search clinicians (clinician > date-created).
                 System.out.println("Searching for clinicians...");
-                User.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput);
+                User.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput, "clinician");
                 break;
 
             case CLINICIANDELETE:
                 // Delete a clinician.
-                User.deleteUserBySearch(currentDatabaseUsers, rawInput);
+                User.deleteUserBySearch(currentDatabaseUsers, rawInput, "clinician");
                 System.out.println("Clinician(s) successfully deleted.");
                 break;
 
             case CLINICIANUPDATE:
                 // Search clinician.
-                User.updateUserBySearch(currentDatabaseUsers, rawInput);
+                User.updateUserBySearch(currentDatabaseUsers, rawInput, "clinician");
                 System.out.println("Clinician(s) successfully updated.");
                 break;
 
             case CLINICIANEVIEW:
                 // Search clinician (clinician > view).
                 System.out.println("Searching for clinicians...");
-                User.viewAttrBySearch(currentDatabaseUsers, rawInput);
+                User.viewAttrBySearch(currentDatabaseUsers, rawInput, "clinician");
                 break;
 
             case ORGANADD:

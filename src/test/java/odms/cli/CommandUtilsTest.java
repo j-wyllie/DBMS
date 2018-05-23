@@ -141,10 +141,6 @@ public class CommandUtilsTest {
         assertEquals(Commands.PROFILEDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
         assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
 
-
-        System.out.println(createClinicianTestStr);
-        System.out.println(createClinicianTest);
-
         assertEquals(Commands.CLINICIANCREATE, validateCommandType(createClinicianTest, createClinicianTestStr));
         assertEquals(Commands.CLINICIANEVIEW, validateCommandType(viewClinicianTest, viewClinicianTestStr));
         assertEquals(Commands.CLINICIANDATECREATED, validateCommandType(viewClinicianDateCreatedTest, viewClinicianDateCreatedTestStr));
@@ -196,7 +192,6 @@ public class CommandUtilsTest {
         String region = "Lopez";
         String workAddress = "Christchurch";
 
-
         String createClinicianStr = "create-clinician " +
                 "name=\"" + name + "\" " +
                 "region=\"" + region + "\" " +
@@ -238,7 +233,7 @@ public class CommandUtilsTest {
         String deleteProfileStr = "clinician " +
                 "staffID=\"" + staffID + "\" "
                 + "> delete";
-        odms.cli.commands.User.deleteUserBySearch(userDb, deleteProfileStr);
+        odms.cli.commands.User.deleteUserBySearch(userDb, deleteProfileStr, "clinician");
 
         assertEquals(0, userDb.searchStaffID(staffID).size());
     }
@@ -257,7 +252,6 @@ public class CommandUtilsTest {
         Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
-
 
     @Test
     public void testUpdateClinicianCommand() {
@@ -279,7 +273,7 @@ public class CommandUtilsTest {
                 + "> "
                 + "name=\"" + newName + "\"";
 
-        odms.cli.commands.User.updateUserBySearch(userDb, updateClinicianStr);
+        odms.cli.commands.User.updateUserBySearch(userDb, updateClinicianStr, "clinician");
 
         User updatedUser = userDb.searchStaffID(staffID).get(0);
         assertEquals(updatedUser.getName(), newName);
@@ -319,7 +313,7 @@ public class CommandUtilsTest {
                 + "> date-created";
 
         User user = userDb.searchStaffID(staffID).get(0);
-        odms.cli.commands.User.viewDateTimeCreatedBySearch(userDb, viewClincianDateStr);
+        odms.cli.commands.User.viewDateTimeCreatedBySearch(userDb, viewClincianDateStr, "clinician");
 
         assertTrue(
                 result.toString().trim().split("\\r?\\n")[4]

@@ -60,9 +60,12 @@ public class User extends CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void deleteUserBySearch(UserDatabase currentDatabase, String expression) {
-        //todo what other user types will use this function? the length to skip will need to change accordingly
-        int lengthToSkip = 10;   //for clinician
+    public static void deleteUserBySearch(UserDatabase currentDatabase, String expression, String type) {
+        // Depending what type of user, the length to skip will change accordingly
+        Integer lengthToSkip = 10;   //for clinician
+        if (type.equals("clinician")) {
+            lengthToSkip = 10;
+        }
         ArrayList<odms.user.User> userList;
 
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
@@ -109,8 +112,6 @@ public class User extends CommandUtils {
                             .add("User " + user.getStaffID() + " deleted at " + LocalDateTime.now());
                     historyPosition = currentSessionHistory.size() - 1;
                 }
-
-
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -153,9 +154,12 @@ public class User extends CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void updateUserBySearch(UserDatabase currentDatabase, String expression) {
-        //todo what other user types will use this function? the length to skip will need to change accordingly
-        int lengthToSkip = 10;   //for clinician
+    public static void updateUserBySearch(UserDatabase currentDatabase, String expression, String type) {
+        // Depending what type of user, the length to skip will change accordingly
+        Integer lengthToSkip = 10;   //for clinician
+        if (type.equals("clinician")) {
+            lengthToSkip = 10;
+        }
         ArrayList<odms.user.User> userList;
 
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
@@ -191,9 +195,12 @@ public class User extends CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression being used for searching
      */
-    public static void viewAttrBySearch(UserDatabase currentDatabase, String expression) {
-        //todo what other user types will use this function? the length to skip will need to change accordingly
-        int lengthToSkip = 10;   //for clinician
+    public static void viewAttrBySearch(UserDatabase currentDatabase, String expression, String type) {
+        // Depending what type of user, the length to skip will change accordingly
+        Integer lengthToSkip = 10;   //for clinician
+        if (type.equals("clinician")) {
+            lengthToSkip = 10;
+        }
 
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
@@ -218,9 +225,12 @@ public class User extends CommandUtils {
      * @param currentDatabase Database reference
      * @param expression Search expression
      */
-    public static void viewDateTimeCreatedBySearch(UserDatabase currentDatabase, String expression) {
-        //todo what other user types will use this function? the length to skip will need to change accordingly
-        int lengthToSkip = 10;   //for clinician
+    public static void viewDateTimeCreatedBySearch(UserDatabase currentDatabase, String expression, String type) {
+        // Depending what type of user, the length to skip will change accordingly
+        Integer lengthToSkip = 10;   //for clinician
+        if (type.equals("clinician")) {
+            lengthToSkip = 10;
+        }
         ArrayList<odms.user.User> userList;
 
         String attr = expression.substring(expression.indexOf("\"") + 1,
@@ -236,8 +246,7 @@ public class User extends CommandUtils {
             }
         } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length()).equals("staffID")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                userList = currentDatabase
-                        .searchStaffID(Integer.valueOf(attr));
+                userList = currentDatabase.searchStaffID(Integer.valueOf(attr));
 
                 Print.printUserList(userList);
             } else {
@@ -248,6 +257,4 @@ public class User extends CommandUtils {
             System.out.println(searchErrorText);
         }
     }
-
-
 }

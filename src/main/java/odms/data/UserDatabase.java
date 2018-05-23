@@ -1,7 +1,9 @@
 package odms.data;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.user.User;
@@ -25,8 +27,6 @@ public class UserDatabase {
         return userDb.get(id);
     }
 
-
-
     /**
      * Determine unique ID for user and add the user the the database
      *
@@ -47,8 +47,6 @@ public class UserDatabase {
         this.path = path;
     }
 
-
-
     /**
      * Generate a list of clinicians
      * @return Array of clinicians
@@ -64,11 +62,8 @@ public class UserDatabase {
 
         });
 
-        //profiles.sort(Comparator.comparing(Profile::getLastNames));   todo
-
         return clinicians;
     }
-
 
     /**
      * Generate a list of users
@@ -82,12 +77,8 @@ public class UserDatabase {
 
         });
 
-        //profiles.sort(Comparator.comparing(Profile::getLastNames));        todo
-
         return users;
     }
-
-
 
     /**
      * Fuzzy search that finds the top 30 users that match the provided search string.
@@ -105,20 +96,17 @@ public class UserDatabase {
             users.add(user.getName());
         }
 
-        //Fuzzywuzzy, fuzzy search algorithm. Returns list of names sorted by closest match to the searchString.
+        // Fuzzywuzzy, fuzzy search algorithm. Returns list of names sorted by closest match to the searchString.
         List<ExtractedResult> result;
         result = FuzzySearch.extractSorted(searchString, users, 50);
 
-        //Use index values from fuzzywuzzy search to build list of user object in same order returned from fuzzywuzzy.
+        // Use index values from fuzzywuzzy search to build list of user object in same order returned from fuzzywuzzy.
         ArrayList<User> resultUsers = new ArrayList<>();
         for (ExtractedResult er : result) {
             resultUsers.add(getUsers().get(er.getIndex()));
         }
         return resultUsers;
     }
-
-
-
 
     /**
      * Remove user from the user database, adding their ID to the deletedID's set for
@@ -138,7 +126,6 @@ public class UserDatabase {
         }
     }
 
-
     /**
      * Search for users via their given names
      *
@@ -157,7 +144,6 @@ public class UserDatabase {
         return results;
     }
 
-
     /**
      * Search for users via their staff ID number
      *
@@ -175,8 +161,5 @@ public class UserDatabase {
 
         return results;
     }
-
-
-
 
 }
