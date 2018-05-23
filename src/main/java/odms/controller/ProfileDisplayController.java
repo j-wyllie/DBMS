@@ -1,6 +1,8 @@
 package odms.controller;
 
+import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -49,6 +51,23 @@ import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
+
+import static odms.controller.AlertController.saveChanges;
+
 
 public class ProfileDisplayController extends CommonController {
 
@@ -486,6 +505,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
         try {
+            Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
@@ -495,6 +515,9 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Condition");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -692,7 +715,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
-        if (profileSaveChanges()) {
+        if (saveChanges()) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }

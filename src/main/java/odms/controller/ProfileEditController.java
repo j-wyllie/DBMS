@@ -1,10 +1,24 @@
 package odms.controller;
 
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+
+import com.sun.media.sound.InvalidDataException;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -48,10 +62,10 @@ public class ProfileEditController extends CommonController {
     private TextField irdField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
-    private TextField dodField;
+    private DatePicker dodDatePicker;
 
     @FXML
     private TextField genderField;
@@ -121,12 +135,12 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
+        boolean saveBool = saveChanges();
         boolean error = false;
 
         if (saveBool) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
-                    irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
+                    irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
                 History action = new History("Profile" , currentProfile.getId() ,"update",
@@ -139,30 +153,27 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
-                    currentProfile.setDateOfBirth(
-                        LocalDate.parse(dobField.getText(),
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
-                    if (!dodField.getText().isEmpty()) {
-                        if(!(
-                            LocalDate.parse(dodField.getText(),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            LocalDate.parse((dodField.getText()),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isAfter(LocalDate.now()))) {
-
-                            currentProfile.setDateOfDeath(LocalDate.parse(
-                                    dodField.getText(),
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ));
-
+                    LocalDate dob = dobDatePicker.getValue();
+                    LocalDate dod = dodDatePicker.getValue();
+                    if (!(dob == null)) {
+                        if (!(dob.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfBirth(dob);
                         } else {
-                            error = true;
+                            throw new InvalidDataException();
+                        }
+                    } else {
+                        throw new InvalidDataException();
+                    }
+                    if (!(dod == null)) {
+                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
+                            ||
+                            dod.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfDeath(dod);
+                        } else {
+                            throw new InvalidDataException();
                         }
                     }
-                } catch (DateTimeParseException e) {
+                } catch (InvalidDataException e) {
                     error = true;
                 }
                 if (!genderField.getText().isEmpty()) {
@@ -280,14 +291,10 @@ public class ProfileEditController extends CommonController {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());

@@ -4,11 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.cli.CommandUtils;
 import odms.data.UserDataIO;
 import odms.history.History;
 import odms.user.User;
@@ -47,11 +47,7 @@ public class ClinicianProfileEditController extends CommonController{
         boolean cancelBool = profileCancelChanges();
 
         if (cancelBool) {
-            Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
-            Scene newScene = new Scene(parent);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(newScene);
-            appStage.show();
+            openClinicianWindow(event);
         }
     }
 
@@ -61,9 +57,8 @@ public class ClinicianProfileEditController extends CommonController{
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
         boolean error = false;
-        if (saveBool) {
+        if (saveChanges()) {
             History action = new History("Clinician",currentUser.getStaffId(),"updated",
                     "previous "+currentUser.getAttributesSummary() + " new "+
                             currentUser.getAttributesSummary(),-1,LocalDateTime.now());
@@ -73,40 +68,29 @@ public class ClinicianProfileEditController extends CommonController{
             currentUser.setRegion(regionField.getText());
             HistoryController.updateHistory(action);
 
-            if(error == true) {
+            if (error) {
                 guiPopup("Error. Not all fields were updated.");
             }
 
             UserDataIO.saveUsers(getUserDatabase(), "example/users.json");
 
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-            Scene scene = new Scene(fxmlLoader.load());
-            ClinicianProfileController controller = fxmlLoader.getController();
-            controller.setCurrentUser(currentUser);
-            controller.initialize();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Clinician");
-            stage.setScene(scene);
-            stage.show();
+            openClinicianWindow(event);
         }
-        else {
+    }
 
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+    public void openClinicianWindow(ActionEvent event) throws IOException{
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
-            Scene scene = new Scene(fxmlLoader.load());
-            ClinicianProfileController controller = fxmlLoader.getController();
-            controller.setCurrentUser(currentUser);
-            controller.initialize();
+        Scene scene = new Scene(fxmlLoader.load());
+        ClinicianProfileController controller = fxmlLoader.getController();
+        controller.setCurrentUser(currentUser);
+        controller.initialize();
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Clinician");
-            stage.setScene(scene);
-            stage.show();
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Clinician");
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**

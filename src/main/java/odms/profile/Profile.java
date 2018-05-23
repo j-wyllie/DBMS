@@ -16,8 +16,8 @@ import java.util.Set;
 
 public class Profile {
 
-    private Boolean donor;
-    private Boolean receiver;
+    private Boolean donor = false;
+    private Boolean receiver = false;
 
     private String givenNames;
     private String lastNames;
@@ -60,6 +60,7 @@ public class Profile {
     private ArrayList<Drug> historyOfMedication = new ArrayList<>();
     private ArrayList<String> medicationTimestamps = new ArrayList<>();
 
+
     /**
      * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
@@ -99,6 +100,10 @@ public class Profile {
         timeOfCreation = LocalDateTime.now();
     }
 
+    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+        this(givenNames, lastNames, dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), irdNumber);
+    }
+
     /**
      * Sets the attributes that are passed into the constructor
      * @param attributes the attributes given in the constructor
@@ -107,7 +112,7 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            if(parts.length==1) {
+            if (parts.length==1) {
                 String[] newParts = {parts[0], ""};
                 setGivenAttribute(newParts);
             } else {
@@ -124,7 +129,7 @@ public class Profile {
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = null;
-        if(!parts[1].equals(null)) {
+        if (!parts[1].equals(null)) {
             value = parts[1].replace("\"", ""); // get rid of the speech marks;
         }
 
@@ -137,7 +142,7 @@ public class Profile {
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if(value.equals("null")){
+            if (value.equals("null")) {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
@@ -165,7 +170,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null") || value.equals("")) {
+            if (value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -188,12 +193,12 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            if (value.equals("null")) {setBloodPressureSystolic(null);}
             else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            if (value.equals("null")) {setBloodPressureDiastolic(null);}
             else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
@@ -280,7 +285,7 @@ public class Profile {
         summary = summary +"," +("given-names=" + givenNames);
         summary = summary +"," +("last-names=" + lastNames);
         summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        if(dateOfDeath==null){summary = summary +"," +("dod=" + null);}
+        if (dateOfDeath==null) { summary = summary +"," +("dod=" + null); }
         else{summary = summary +"," +("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));}
         summary = summary +"," +("gender=" + gender);
         summary = summary +"," +("height=" + height);
@@ -585,11 +590,11 @@ public class Profile {
         LocalDateTime currentTime = LocalDateTime.now();
         String data = "Profile " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+
                 currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        if(currentMedications.contains(drug)){
+        if(currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
-        } else if(historyOfMedication.contains(drug)){
+        } else if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
             data = "Profile " + this.getId() + " removed drug from history"  + " index of "+
                     currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -608,7 +613,7 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(currentMedications.contains(drug)){
+        if (currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
             String data = "Profile " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+
@@ -631,7 +636,7 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(historyOfMedication.contains(drug)){
+        if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
             String data = "Profile " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+
@@ -699,6 +704,24 @@ public class Profile {
             }
         }
         return currentConditions;
+    }
+
+    /**
+     * Checks if a profile is donating a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsDonating.containsAll(organs);
+    }
+
+    /**
+     * Checks if a profile is receiving a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsRequired.containsAll(organs);
     }
 
     /**
@@ -793,7 +816,7 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        if(bloodType != null) {
+        if (bloodType != null) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         }

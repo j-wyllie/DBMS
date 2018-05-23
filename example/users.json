@@ -9,32 +9,33 @@
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 18
+          "day": 24
         },
         "time": {
-          "hour": 17,
-          "minute": 35,
-          "second": 27,
-          "nano": 977000000
+          "hour": 11,
+          "minute": 6,
+          "second": 23,
+          "nano": 8000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-05-18T17:35:27.977",
-        "0 updated at 05:35 PM 18-05-2018"
+        "Account for John Smithcreated at 2018-05-24T11:06:23.008",
+        "0 updated at 11:06 AM 24-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 18
+          "day": 24
         },
         "time": {
-          "hour": 17,
-          "minute": 35,
-          "second": 27,
-          "nano": 977000000
+          "hour": 11,
+          "minute": 6,
+          "second": 23,
+          "nano": 8000000
         }
-      }
+      },
+      "isDefault": false
     },
     "1": {
       "userType": "CLINICIAN",
@@ -45,34 +46,36 @@
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 18
+          "day": 24
         },
         "time": {
-          "hour": 17,
-          "minute": 35,
-          "second": 27,
-          "nano": 977000000
+          "hour": 11,
+          "minute": 6,
+          "second": 23,
+          "nano": 8000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-05-18T17:35:27.977",
-        "1 updated at 05:35 PM 18-05-2018"
+        "Account for Matt Smithcreated at 2018-05-24T11:06:23.008",
+        "1 updated at 11:06 AM 24-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 18
+          "day": 24
         },
         "time": {
-          "hour": 17,
-          "minute": 35,
-          "second": 27,
-          "nano": 977000000
+          "hour": 11,
+          "minute": 6,
+          "second": 23,
+          "nano": 8000000
         }
-      }
+      },
+      "isDefault": false
     }
   },
+  "deletedUsers": [],
   "lastID": 1,
   "path": "example/users.json"
 }
