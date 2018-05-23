@@ -210,13 +210,13 @@ public class CommandLine {
 
 
             case ORGANADD:
-                // Add organs to a printDonors profile.
+                // Add organs to a profile.
                 CommandUtils.addOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case ORGANREMOVE:
-                // Remove organs from a printDonors profile.
+                // Remove organs from a profile.
                 CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
