@@ -36,7 +36,7 @@ public class Print extends CommandUtils {
      * @param currentDatabase Database reference
      */
     public static void printAllClinicians(UserDatabase currentDatabase) {
-        ArrayList<User> allUsers = currentDatabase.getUsers();
+        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
         if (allUsers.size() > 0) {
             for (User user : allUsers) {
                 if (user.getUserType() == UserType.CLINICIAN) {
@@ -56,7 +56,7 @@ public class Print extends CommandUtils {
      * @param currentDatabase Database reference
      */
     public static void printAllUsers(UserDatabase currentDatabase) {
-        ArrayList<User> allUsers = currentDatabase.getUsers();
+        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
         if (allUsers.size() > 0) {
             for (User user : allUsers) {
                 printUserAttributesAttributes(user);

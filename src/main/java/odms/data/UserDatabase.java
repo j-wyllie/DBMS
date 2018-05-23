@@ -107,6 +107,22 @@ public class UserDatabase {
     }
 
     /**
+     * Returns all the users in the current database
+     * @return ArrayList of users
+     */
+    public ArrayList<User> getUsersAsArrayList() {
+        ArrayList<User> users = new ArrayList<>();
+
+        userDb.forEach((id, user) -> {
+            users.add(user);
+
+        });
+
+        return users;
+
+    }
+
+    /**
      * Restore a previously deleted user
      *
      * @param id ODMS ID of deleted profile
@@ -190,7 +206,7 @@ public class UserDatabase {
         // Use index values from fuzzywuzzy search to build list of user object in same order returned from fuzzywuzzy.
         ArrayList<User> resultUsers = new ArrayList<>();
         for (ExtractedResult er : result) {
-            resultUsers.add(getUsers().get(er.getIndex()));
+            resultUsers.add(getUsersAsArrayList().get(er.getIndex()));
         }
         return resultUsers;
     }

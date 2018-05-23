@@ -98,7 +98,7 @@ public class ViewUsersController extends CommonController{
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if(AlertController.deleteUserConfirmation()){
                 User user = viewUsersTable.getSelectionModel().getSelectedItem();
-                GuiMain.getUserDatabase().deleteUser(user.getStaffId());
+                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
                 refreshViewUsersTable();
                 editTrueStage((Stage) viewUsersTable.getScene().getWindow());
             }
