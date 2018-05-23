@@ -875,7 +875,7 @@ public class ProfileTest {
             testProfile.getAllProcedures().get(0).addAffectedOrgan(testProfile, OrganEnum.LIVER);
 
             // remove the heart
-            testProfile.getAllProcedures().get(0).removeAffectedOrgen(OrganEnum.HEART);
+            testProfile.getAllProcedures().get(0).removeAffectedOrgan(OrganEnum.HEART);
 
             // test that heart has been removed
             assertEquals(testProfile.getAllProcedures().get(0).getOrgansAffected().contains(

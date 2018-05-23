@@ -27,6 +27,16 @@ public class Procedure {
         this(summary, date, "");
     }
 
+    public Procedure(String summary, LocalDate date, String longDescription) {
+        this.summary = summary;
+        this.date = date;
+        this.longDescription = longDescription;
+    }
+
+    public Procedure(String summary, LocalDate date) {
+        this(summary, date, "");
+    }
+
     public void update() {
         if (organsAffected.size() == 0) {
             this.affectsOrgansText = "";
@@ -60,7 +70,7 @@ public class Procedure {
         }
     }
 
-    public void removeAffectedOrgen(OrganEnum organ) {
+    public void removeAffectedOrgan(OrganEnum organ) {
         organsAffected.remove(organ);
     }
 }

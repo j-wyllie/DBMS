@@ -40,7 +40,6 @@
                <children>
                     <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonClicked" prefWidth="127.0" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
                     <TextField fx:id="summaryField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Summary of procedure" />
-                    <TextField fx:id="dateOfProcedureField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Date of Procedure (dd-mm-yyyy)" GridPane.rowIndex="1" />
                     <TextField fx:id="descriptionField" onAction="#onEnter" prefHeight="29.0" prefWidth="339.0" promptText="Procedure description (optional)" GridPane.rowIndex="2" />
                   <ListView fx:id="affectedOrgansListView" prefHeight="119.0" prefWidth="339.0" GridPane.rowIndex="4" />
                   <Label fx:id="ProcedureDetailsLabel1" text="Affected Organs" GridPane.rowIndex="3" GridPane.valignment="CENTER">
@@ -53,6 +52,7 @@
                         <Insets right="20.0" />
                      </GridPane.margin>
                   </Label>
+                  <DatePicker fx:id="dateOfProcedureDatePicker" prefHeight="26.0" prefWidth="335.0" promptText="Date of procedure" GridPane.rowIndex="1" />
                </children>
             </GridPane>
               <Label fx:id="ProcedureDetailsLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Procedure Details" GridPane.halignment="CENTER">
