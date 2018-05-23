@@ -32,7 +32,7 @@ public class ProfileCreateController extends CommonController {
     private TextField dobField;
 
     @FXML
-    private TextField irdField;
+    private TextField irdNumberField;
 
     private String checkDetailsEntered() {
         if (givenNamesField.getText().trim().equals("")) {
@@ -46,7 +46,7 @@ public class ProfileCreateController extends CommonController {
             return "Please enter a Date of Birth";
 
         }
-        if (irdField.getText().trim().equals("")) {
+        if (irdNumberField.getText().trim().equals("")) {
             return "Please enter an IRD number";
         } else {
             return "";
@@ -54,9 +54,9 @@ public class ProfileCreateController extends CommonController {
     }
 
     public void initialize() {
-        irdField.textProperty().addListener((observable, oldValue, newValue) -> {
+        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                irdField.setText(newValue.replaceAll("[^\\d]", ""));
+                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
     }
@@ -77,7 +77,7 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = givenNamesField.getText();
                 String surnames = surnamesField.getText();
                 String dob = dobField.getText();
-                Integer ird = Integer.valueOf(irdField.getText());
+                Integer ird = Integer.valueOf(irdNumberField.getText());
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, ird);
 
@@ -98,7 +98,7 @@ public class ProfileCreateController extends CommonController {
                 appStage.setScene(scene);
                 appStage.show();
             } catch (NumberFormatException e) {
-                if (irdField.getText().length() > 9) {
+                if (irdNumberField.getText().length() > 9) {
                     invalidEntry("Entered IRD number is too long.\nPlease enter up to 9 digits");
                 } else {
                     invalidEntry("Invalid IRD number entered");

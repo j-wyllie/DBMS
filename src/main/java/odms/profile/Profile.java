@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import odms.cli.CommandUtils;
@@ -29,7 +27,7 @@ public class Profile {
     private String address;
     private String region;
 
-    private Boolean smoker;
+    private Boolean isSmoker;
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
@@ -198,8 +196,8 @@ public class Profile {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid IRD number entered");
             }
-        } else if (attrName.equals("smoker")) {
-            setSmoker(Boolean.valueOf(value));
+        } else if (attrName.equals("isSmoker")) {
+            setIsSmoker(Boolean.valueOf(value));
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
@@ -301,7 +299,7 @@ public class Profile {
         summary = summary +"," +("blood-type=" + bloodType);
         summary = summary +"," +("address=" + address);
         summary = summary +"," +("region=" + region);
-        summary = summary +"," +("smoker=" + smoker);
+        summary = summary +"," +("isSmoker=" + isSmoker);
         summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
         summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
         summary = summary +"," +("bloodPressureDiastolic=" + bloodPressureDiastolic);
@@ -946,12 +944,12 @@ public class Profile {
         return lastUpdated;
     }
 
-    public Boolean getSmoker() {
-        return smoker;
+    public Boolean getIsSmoker() {
+        return isSmoker;
     }
 
-    public void setSmoker(Boolean smoker) {
-        this.smoker = smoker;
+    public void setIsSmoker(Boolean smoker) {
+        this.isSmoker = smoker;
     }
 
     public String getAlcoholConsumption() {

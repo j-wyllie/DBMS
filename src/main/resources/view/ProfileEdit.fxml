@@ -258,7 +258,7 @@
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                                <TextField fx:id="irdNumberField" layoutX="210.0" layoutY="115.0" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                                     <GridPane.margin>
                                                                         <Insets left="80.0" right="100.0" />
                                                                     </GridPane.margin>

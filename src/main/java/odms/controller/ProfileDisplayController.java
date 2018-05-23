@@ -1032,8 +1032,8 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
-            if (currentProfile.getSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentProfile.getSmoker());
+            if (currentProfile.getIsSmoker() != null) {
+                smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
             }
 
             String history = ProfileDataIO.getHistory();

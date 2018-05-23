@@ -61,7 +61,7 @@
                   <Insets />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="irdField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="IRD Number" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+            <TextField fx:id="irdNumberField" layoutX="110.0" layoutY="186.0" prefHeight="55.0" prefWidth="400.0" promptText="IRD Number" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
