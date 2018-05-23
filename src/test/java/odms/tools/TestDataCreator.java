@@ -110,12 +110,8 @@ public class TestDataCreator {
             } else {
                 profile.setGender("female");
             }
-            if (Math.random() < 0.1) {
-                profile.setGender("other");
-            }
 
             profile.setRegion(regions.get(randInRange(0, 15)));
-
 
             // Give this Galil Ar some diseases
             if (profile.getFullName().equals("Galil AR")) {

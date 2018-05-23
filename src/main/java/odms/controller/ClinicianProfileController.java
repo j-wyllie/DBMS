@@ -5,10 +5,13 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
@@ -77,10 +81,10 @@ public class ClinicianProfileController extends CommonController {
     private CheckComboBox genderCombobox;
 
     @FXML
-    private CheckComboBox typeCombobox;
+    private ComboBox typeCombobox;
 
     @FXML
-    private CheckComboBox organsCombobox;
+    private CheckComboBox<OrganEnum> organsCombobox;
 
     @FXML
     private TextField transplantSearchField;
@@ -92,7 +96,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private TableView transplantTable;
 
-    private ObservableList<Profile> donorObservableList;
+    private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
@@ -182,6 +186,16 @@ public class ClinicianProfileController extends CommonController {
         updateSearchTable();
     }
 
+    /**
+     * Mouse handler to update search table based on search results.
+     *
+     * @param event clicking the mouse
+     */
+    @FXML
+    private void handleSearchDonors(MouseEvent event) {
+        updateSearchTable();
+    }
+
 
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
@@ -191,13 +205,15 @@ public class ClinicianProfileController extends CommonController {
         //System.out.println("update search table");
 
         List selectedGenders;
-        List selectedTypes;
+        String selectedType = null;
         ObservableList selectedOrgans;
 
         selectedGenders = genderCombobox.getCheckModel().getCheckedItems();
-        selectedTypes = typeCombobox.getCheckModel().getCheckedItems();
         selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
 
+        if (!typeCombobox.getSelectionModel().isEmpty()) {
+            selectedType = typeCombobox.getValue().toString();
+        }
 
         String searchString = searchField.getText();
         String regionSearchString = regionField.getText();
@@ -222,7 +238,9 @@ public class ClinicianProfileController extends CommonController {
 
 
         searchTable.getItems().clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGenders, selectedTypes, selectedOrgans));
+        donorObservableList.clear();
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGenders, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
+
         searchTable.setItems(donorObservableList);
     }
 
@@ -272,16 +290,6 @@ public class ClinicianProfileController extends CommonController {
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
             updateSearchTable();
         });
-        organsCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateSearchTable();
-        });
-        typeCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateSearchTable();
-        });
-        typeCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateSearchTable();
-        });
-
 
         addTooltipToRow();
     }
@@ -437,17 +445,25 @@ public class ClinicianProfileController extends CommonController {
         genderStrings.clear();
         genderStrings.add("male");
         genderStrings.add("female");
-        genderStrings.add("other");
         genderCombobox.getItems().setAll(genderStrings);
 
         organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
-        organsCombobox.getItems().setAll(organsStrings);
+        organsCombobox.getItems().setAll(OrganEnum.values());
 
         typeStrings.clear();
-        typeStrings.add("receiver");
+        typeCombobox.getItems().clear();
+        typeStrings.add("any");
         typeStrings.add("donor");
-        typeCombobox.getItems().setAll(typeStrings);
+        typeStrings.add("receiver");
+        typeCombobox.getItems().addAll(typeStrings);
+        typeCombobox.getSelectionModel().selectFirst();
+
+        typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateSearchTable();
+            }
+        });
 
 
 

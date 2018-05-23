@@ -193,6 +193,34 @@ public class ProfileDatabase {
     }
 
     /**
+     * Generate a list of profiles ordered by last names.
+     * Parameter to specify whether or not the list contains every profile or only profiles that
+     * are currently donating organs.
+     *
+     * @param donating specify donating organs or not
+     * @return Array of profiles found that match
+     */
+    public ArrayList<Profile> getDonors(boolean donating) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+            if (profile.getDonor()) {
+                if (donating) {
+                    if (profile.getOrgansDonating().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+
+        return profiles;
+    }
+
+    /**
      * Searches a given list of profiles with a given search string using fuzzy search
      * @param profilesGiven list of profiles to search through
      * @param searchString string to match profiles against
@@ -234,26 +262,34 @@ public class ProfileDatabase {
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, List selectedGenders, List selectedTypes, List selectedOrgans) {
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, List selectedGenders,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
-        ArrayList<Profile> allProfiles = getProfiles(false);
-        ArrayList<Profile> resultProfiles = null;
+        ArrayList<Profile> resultProfiles;
+
+        switch (selectedType) {
+            case "any":
+                resultProfiles = getProfiles(false);
+                break;
+            case "donor":
+                resultProfiles = getDonors(false);
+                break;
+            default:
+                resultProfiles = getReceivers(true);
+                break;
+        }
+
+        //ArrayList<Profile> resultProfiles = allProfiles;
 
         //parsing out organs as strings for later use
-        List<String> selectedOrgansStrings = getOrgansAsStrings(selectedOrgans);
 
-
-        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedTypes.isEmpty() && selectedOrgans.isEmpty()){
-            return allProfiles;
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedType == null && selectedOrgans.isEmpty()){
+            return resultProfiles;
         }
 
 
         if (!searchString.equals("")) {
-            resultProfiles = fuzzySearch(allProfiles, searchString, "name");
-        } else {
-            resultProfiles = allProfiles;
+            resultProfiles = fuzzySearch(resultProfiles, searchString, "name");
         }
-
 
         if (!regionSearchString.equals("")) {
             ArrayList<Profile> resultProfilesBefore = resultProfiles;
@@ -286,7 +322,7 @@ public class ProfileDatabase {
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
 
-                HashSet<OrganEnum> organsDonatingHash = profile.getOrgansDonating();
+                HashSet<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
                 List<String> organsDonating = new ArrayList<String>();
 
                 for (OrganEnum temp : organsDonatingHash) {
@@ -296,29 +332,23 @@ public class ProfileDatabase {
                 if (organsDonating == null || organsDonating.size() == 0) {
                     return true;
                 }
-                organsDonating.retainAll(selectedOrgansStrings);         //intersection
+                organsDonatingHash.retainAll(selectedOrgans);         //intersection
                 return organsDonating.size() == 0;
             });
 
         }
 
-        if (!selectedTypes.isEmpty()) {
+        if (!(selectedType == null)) {
             resultProfiles.removeIf(profile -> {
-                ArrayList<String> profileTypes = new ArrayList();
-
-                if (selectedTypes.size() == 2) {
-                    return !profile.isReceiver() || !profile.getDonor();
+                if (selectedType.equals("donor")) {
+                    return !profile.isDonatingCertainOrgans(selectedOrgans);
+                } else if (selectedType.equals("receiver")){
+                    return !profile.isReceivingCertainOrgans(selectedOrgans);
                 } else {
-                    if (selectedTypes.get(0).equals("donor")) {
-                        return !profile.getDonor();
-                    } else {
-                        return !profile.isReceiver();
-                    }
+                    return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile.isDonatingCertainOrgans(selectedOrgans));
                 }
-
             });
         }
-
 
         return resultProfiles;
     }
@@ -329,10 +359,10 @@ public class ProfileDatabase {
             for (int i = 0; i< selectedOrgans.size(); i++) {
                 //todo need some consistency in how we are naming organs that have two words in them.
                 if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
-                    selectedOrgansStrings.add("connective-tissue");
+                    selectedOrgansStrings.add("connective_tissue");
                 }
                 if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
-                    selectedOrgansStrings.add("bone-marrow");
+                    selectedOrgansStrings.add("bone_marrow");
                 }
                 selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
             }

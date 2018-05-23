@@ -781,6 +781,24 @@ public class Profile {
     }
 
     /**
+     * Checks if a profile is donating a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsDonating.containsAll(organs);
+    }
+
+    /**
+     * Checks if a profile is receiving a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsRequired.containsAll(organs);
+    }
+
+    /**
      * adds a condition from the user
      * @param condition to be added
      */
