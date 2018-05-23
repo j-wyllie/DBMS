@@ -125,7 +125,7 @@ public class ProcedureEditController {
 
         // date validation
         LocalDate dateOfProcedure = dateOfProcedureDatePicker.getValue();
-        LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
+        LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
         if (dob.isAfter(dateOfProcedure)){
             warningLabel.setVisible(true);
             return;
