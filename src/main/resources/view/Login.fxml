@@ -37,7 +37,7 @@
             <Insets />
           </GridPane.margin>
         </TextField>
-        <PasswordField fx:id="passwordField" editable="false" onAction="#onEnter" prefHeight="55.0" prefWidth="400.0" promptText="Enter your password here" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <PasswordField fx:id="passwordField" onAction="#onEnter" prefHeight="55.0" prefWidth="400.0" promptText="Enter your password here" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER">
           <GridPane.margin>
             <Insets />
           </GridPane.margin>
