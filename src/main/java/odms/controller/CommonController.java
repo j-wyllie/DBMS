@@ -108,6 +108,10 @@ class CommonController {
         }
     }
 
+    /**
+     * Changes the title of the stage to include an astrix to indicate a value has been edited.
+     * @param stage the stage to be edited.
+     */
     public void editTrueStage(Stage stage) {
         if(!stage.getTitle().contains("(*)")){
             stage.setTitle(stage.getTitle() + " (*)");

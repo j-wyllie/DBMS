@@ -31,7 +31,6 @@ public class UserDatabase {
         return user;
     }
 
-    // TODO REMOVE THE EXCEPTION() AND MAKE IT PROPER
     /**
      * find user by username
      *
@@ -48,6 +47,7 @@ public class UserDatabase {
         }
         throw new UserNotFoundException("User not found with username " + username, username);
     }
+
     /**
      * Checks whether a user exists in the database with a certain username
      * @param username Username to be searched for
@@ -148,7 +148,7 @@ public class UserDatabase {
      * @param username
      * @return boolean for whether a username is unique/
      */
-    public boolean checkUniqueUsername(String username) { //TODO Make the addUser function call this and throw a UserNotUniqueException
+    public boolean checkUniqueUsername(String username) {
         for (User user : userDb.values()) {
             if (user.getUsername().equals(username)) {
                 return false;

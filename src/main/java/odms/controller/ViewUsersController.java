@@ -4,7 +4,6 @@ import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
@@ -65,35 +63,33 @@ public class ViewUsersController extends CommonController{
         );
 
         viewUsersTable.setItems(usersObservableList);
-
         createContextMenu();
 
-
-
-        viewUsersTable.setRowFactory(tableView -> {
-            final TableRow<User> row = new TableRow<>();
-            row.contextMenuProperty().bind(
-                    Bindings.when(row.emptyProperty())
-                    .then((ContextMenu)null)
-                    .otherwise(contextMenu));
-            return row;
-        });
-
         //sets the event handler for right clicking on a table item.
-        viewUsersTable.addEventHandler(MouseEvent.MOUSE_RELEASED, t -> {
+        viewUsersTable.addEventHandler(MouseEvent.ANY, t -> {
             if (t.getButton() == MouseButton.SECONDARY) {
                 if (viewUsersTable.getSelectionModel().getSelectedItem() != null &&
-                    viewUsersTable.getSelectionModel().getSelectedItem().getDefault()) {
+                    !viewUsersTable.getSelectionModel().getSelectedItem().getDefault()) {
+                    contextMenu.show(viewUsersTable, t.getScreenX(), t.getScreenY());
+                } else {
                     contextMenu.hide();
                 }
+            } else if (t.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
             }
         });
     }
 
+    /**
+     * Gets an observable list of users.
+     */
     private void fetchData() {
         usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
     }
 
+    /**
+     * creates and populate the context menu for the table.
+     */
     private void createContextMenu() {
         contextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");

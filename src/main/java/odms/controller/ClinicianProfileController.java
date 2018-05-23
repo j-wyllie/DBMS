@@ -438,7 +438,6 @@ public class ClinicianProfileController extends CommonController {
         });
 
         addTooltipToRow();
-
     }
 
     /**
@@ -448,7 +447,6 @@ public class ClinicianProfileController extends CommonController {
         viewUsersController.setCurrentUser(currentUser);
         viewUsersController.setUpUsersTable();
     }
-
 
     /**
      * Refresh the search and transplant medication tables with the most up to date data
@@ -473,7 +471,6 @@ public class ClinicianProfileController extends CommonController {
             viewUsersTab.setDisable(false);
         }
     }
-
 
     @FXML
     public void initialize() {
