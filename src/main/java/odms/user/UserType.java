@@ -1,6 +1,7 @@
 package odms.user;
 
 public enum UserType {
+    ADMIN("administrator"),
     CLINICIAN("clinician"),
     DONOR("profile"),
     PROFILE("profile");
