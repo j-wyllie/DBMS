@@ -233,7 +233,7 @@ public class ClinicianProfileController extends CommonController {
     private void setClinicianDetails() {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
-        staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
+        //staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());   TODO null pointer
         addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
@@ -434,21 +434,22 @@ public class ClinicianProfileController extends CommonController {
         ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
         ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
 
-        genderCombobox.getItems().clear();
-        typeCombobox.getItems().clear();
-        organsCombobox.getItems().clear();
-
+        genderStrings.clear();
         genderStrings.add("male");
         genderStrings.add("female");
         genderStrings.add("other");
         genderCombobox.getItems().setAll(genderStrings);
 
+        organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
         organsCombobox.getItems().setAll(organsStrings);
 
+        typeStrings.clear();
         typeStrings.add("receiver");
         typeStrings.add("donor");
         typeCombobox.getItems().setAll(typeStrings);
+
+
 
         TableFilter filter = new TableFilter<>(transplantTable);
 
