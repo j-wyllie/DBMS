@@ -5,6 +5,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,31 +26,24 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import odms.App;
+import odms.cli.CommandGUI;
+import odms.cli.CommandLine;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
-import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -119,10 +113,16 @@ public class ClinicianProfileController extends CommonController {
     private Tab viewUsersTab;
 
     @FXML
+    private Tab consoleTab;
+
+    @FXML
     ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
+
+    @FXML
+    private TextArea displayTextArea;
 
     @FXML
     private Tab dataManagementTab;
@@ -138,6 +138,8 @@ public class ClinicianProfileController extends CommonController {
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    private CommandGUI commandGUI;
 
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
 
@@ -494,15 +496,31 @@ public class ClinicianProfileController extends CommonController {
         dataManagementController.setCurrentUser(currentUser);
     }
 
-    private void hideAdminItems() {
+    /**
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
+     */
+    private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
             dataManagementTab.setDisable(true);
             viewUsersTab.setDisable(true);
-
+            consoleTab.setDisable(true);
         } else {
             dataManagementTab.setDisable(false);
             viewUsersTab.setDisable(false);
+            consoleTab.setDisable(false);
 
+            // Initialize command line GUI
+            commandGUI = new CommandGUI(displayTextArea);
+            System.setIn(commandGUI.getIn());
+            System.setOut(commandGUI.getOut());
+            //System.setErr(commandGUI.getOut());
+
+
+            // Start the command line in an alternate thread
+            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            commandGUI.initHistory(commandLine);
+            Thread t = new Thread(commandLine);
+            t.start();
         }
     }
 
@@ -547,7 +565,7 @@ public class ClinicianProfileController extends CommonController {
             TableFilter filter = new TableFilter<>(transplantTable);
 
             setClinicianDetails();
-            hideAdminItems();
+            setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
@@ -565,13 +583,14 @@ public class ClinicianProfileController extends CommonController {
      * Checks if there are unsaved changes in any open window.
      * @return true if there are unsaved changes.
      */
-    public static boolean checkUnsavedChanges() {
+    public static boolean checkUnsavedChanges(Stage currentStage) {
         for (Stage stage : openProfileStages) {
             if (isEdited(stage) && stage.isShowing()) {
                 return true;
             }
         }
-        return false;
+
+        return isEdited(currentStage);
     }
 
     private void closeStage(Stage stage) {

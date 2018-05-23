@@ -2,126 +2,119 @@
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "Doc",
+      "name": "John Smith",
       "staffId": 0,
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 23
         },
         "time": {
-          "hour": 19,
-          "minute": 27,
-          "second": 14,
-          "nano": 281000000
+          "hour": 23,
+          "minute": 52,
+          "second": 19,
+          "nano": 332000000
         }
       },
       "updateActions": [
-        "Account for Doccreated at 2018-05-22T19:27:14.267",
-        "Clinician updated at 07:27 PM 22-05-2018",
-        "0 updated at 07:27 PM 22-05-2018"
+        "Account for John Smithcreated at 2018-05-23T23:52:19.332",
+        "0 updated at 11:52 PM 23-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 23
         },
         "time": {
-          "hour": 19,
-          "minute": 27,
-          "second": 14,
-          "nano": 267000000
+          "hour": 23,
+          "minute": 52,
+          "second": 19,
+          "nano": 332000000
         }
       },
-      "username": "Clinician",
-      "isDefault": true
+      "isDefault": false
     },
     "1": {
-      "userType": "ADMIN",
-      "name": "admin",
+      "userType": "CLINICIAN",
+      "name": "Matt Smith",
       "staffId": 1,
+      "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 23
         },
         "time": {
-          "hour": 19,
-          "minute": 27,
-          "second": 14,
-          "nano": 373000000
+          "hour": 23,
+          "minute": 52,
+          "second": 19,
+          "nano": 332000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-05-22T19:27:14.372",
-        "admin updated at 07:27 PM 22-05-2018",
-        "1 updated at 07:27 PM 22-05-2018"
+        "Account for Matt Smithcreated at 2018-05-23T23:52:19.332",
+        "1 updated at 11:52 PM 23-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 23
         },
         "time": {
-          "hour": 19,
-          "minute": 27,
-          "second": 14,
-          "nano": 372000000
+          "hour": 23,
+          "minute": 52,
+          "second": 19,
+          "nano": 332000000
+        }
+      },
+      "isDefault": false
+    },
+    "2": {
+      "userType": "ADMIN",
+      "name": "admin",
+      "staffId": 2,
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 24
+        },
+        "time": {
+          "hour": 1,
+          "minute": 12,
+          "second": 56,
+          "nano": 242000000
+        }
+      },
+      "updateActions": [
+        "ADMINaccount for admincreated at 2018-05-24T01:12:56.230",
+        "admin updated at 01:12 AM 24-05-2018",
+        "2 updated at 01:12 AM 24-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 24
+        },
+        "time": {
+          "hour": 1,
+          "minute": 12,
+          "second": 56,
+          "nano": 230000000
         }
       },
       "username": "admin",
       "password": "admin",
       "isDefault": true
-    },
-    "3": {
-      "userType": "ADMIN",
-      "name": "Jack",
-      "staffId": 3,
-      "region": "Jack",
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 5,
-          "day": 22
-        },
-        "time": {
-          "hour": 20,
-          "minute": 28,
-          "second": 40,
-          "nano": 573000000
-        }
-      },
-      "updateActions": [
-        "Account for Jackcreated at 2018-05-22T20:28:40.558",
-        "Jack updated at 08:28 PM 22-05-2018",
-        "3 updated at 08:28 PM 22-05-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 5,
-          "day": 22
-        },
-        "time": {
-          "hour": 20,
-          "minute": 28,
-          "second": 40,
-          "nano": 558000000
-        }
-      },
-      "username": "Jack",
-      "password": "Jack",
-      "isDefault": false
     }
   },
-  "deletedUsers": [
-    2
-  ],
-  "lastID": 3,
+  "deletedUsers": [],
+  "lastID": 2,
   "path": "example/users.json"
 }
