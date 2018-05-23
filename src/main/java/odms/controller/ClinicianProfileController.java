@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,7 +18,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -28,18 +34,9 @@ import javafx.stage.Stage;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
-import org.controlsfx.control.CheckComboBox;
 import odms.user.UserType;
+import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -210,7 +207,7 @@ public class ClinicianProfileController extends CommonController {
      * @param event clicking the mouse
      */
     @FXML
-    private void handleSearchDonors(MouseEvent event) {
+    private void handleSearchDonorsMouse(MouseEvent event) {
         updateSearchTable();
     }
 
@@ -269,7 +266,7 @@ public class ClinicianProfileController extends CommonController {
      * Sets all the clinicians details in the GUI.
      */
     @FXML
-    private void setClinicianDetails(){
+    private void setClinicianDetails() {
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
