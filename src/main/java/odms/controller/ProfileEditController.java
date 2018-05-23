@@ -1,7 +1,6 @@
 package odms.controller;
 
 import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
@@ -115,7 +114,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        if (profileSaveChanges()) {
+        if (saveChanges()) {
             try {
                 // Required General Fields
                 saveDateOfBirth();

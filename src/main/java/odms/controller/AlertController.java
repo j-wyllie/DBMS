@@ -66,6 +66,22 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup when the username or password entered was invalid.
+     */
+    static void invalidUsernameOrPassword() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Incorrect username or password.",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Creates a popup when the IRD number entered was invalid
      */
     static void invalidIrd() {
@@ -116,10 +132,26 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup with a personalized message from the controller
+     */
+    static void uniqueUsername() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Please enter a unique username",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean profileSaveChanges() {
+    static boolean saveChanges() {
         Alert saveAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to save your changes?",
@@ -162,5 +194,22 @@ public class AlertController {
             System.out.println(false);
             return false;
         }
+    }
+
+    /**
+     * Displays a popup prompting the user to confirm cancellation of changes made
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean deleteUserConfirmation() {
+        Alert cancelAlert = new Alert(
+                AlertType.CONFIRMATION,
+                "Are you sure you want to delete this user?",
+                ButtonType.NO,
+                ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
     }
 }
