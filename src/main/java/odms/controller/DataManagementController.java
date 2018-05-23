@@ -34,7 +34,7 @@ public class DataManagementController {
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileController.checkUnsavedChanges()) {
+            if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
                 if (AlertController.unsavedChangesImport()) {
                     importAndCloseWindows(stage, file);
                 }

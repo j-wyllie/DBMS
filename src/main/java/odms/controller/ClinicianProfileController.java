@@ -5,6 +5,7 @@ import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,27 +30,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
-import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -565,13 +555,14 @@ public class ClinicianProfileController extends CommonController {
      * Checks if there are unsaved changes in any open window.
      * @return true if there are unsaved changes.
      */
-    public static boolean checkUnsavedChanges() {
+    public static boolean checkUnsavedChanges(Stage currentStage) {
         for (Stage stage : openProfileStages) {
             if (isEdited(stage) && stage.isShowing()) {
                 return true;
             }
         }
-        return false;
+
+        return isEdited(currentStage);
     }
 
     private void closeStage(Stage stage) {
