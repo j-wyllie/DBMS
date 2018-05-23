@@ -100,7 +100,7 @@ public class Help {
             "\nUpdate a profiles attributes",
             "\nAdd an organ to donate", "\nRemove an organ to donate", "\nPrint all profiles ", "\nPrint all users ",
             "\nPrint all donors ", "\nPrint all clinicians ", "\nClose the app ",
-            "The possible attriubtes are : given-names, last-names, dob, dod, gender, height, "
+            "The possible attributes are : given-names, last-names, dob, dod, gender, height, "
                 + "weight, blood-type, address, region, ird",
             "The possible organs are : Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, "
                 + "Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue"};

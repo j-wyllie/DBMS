@@ -43,8 +43,6 @@ public class CommandUtilsTest {
         this.profileDb = new ProfileDatabase();
         this.userDb = new UserDatabase();
 
-        // TODO if test data is commonly created for test cases, consider abstraction to a
-        // TODO centralised TestDataCreator class
         // Create some test profiles
         ArrayList<String> donorOneAttr = new ArrayList<>();
         donorOneAttr.add("given-names=\"John\"");
