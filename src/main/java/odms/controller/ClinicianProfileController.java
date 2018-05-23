@@ -26,6 +26,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -34,6 +35,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import odms.App;
+import odms.cli.CommandGUI;
+import odms.cli.CommandLine;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -109,10 +113,16 @@ public class ClinicianProfileController extends CommonController {
     private Tab viewUsersTab;
 
     @FXML
+    private Tab consoleTab;
+
+    @FXML
     ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
+
+    @FXML
+    private TextArea displayTextArea;
 
     @FXML
     private Tab dataManagementTab;
@@ -128,6 +138,8 @@ public class ClinicianProfileController extends CommonController {
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
+
+    private CommandGUI commandGUI;
 
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
 
@@ -484,15 +496,31 @@ public class ClinicianProfileController extends CommonController {
         dataManagementController.setCurrentUser(currentUser);
     }
 
-    private void hideAdminItems() {
+    /**
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
+     */
+    private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
             dataManagementTab.setDisable(true);
             viewUsersTab.setDisable(true);
-
+            consoleTab.setDisable(true);
         } else {
             dataManagementTab.setDisable(false);
             viewUsersTab.setDisable(false);
+            consoleTab.setDisable(false);
 
+            // Initialize command line GUI
+            commandGUI = new CommandGUI(displayTextArea);
+            System.setIn(commandGUI.getIn());
+            System.setOut(commandGUI.getOut());
+            //System.setErr(commandGUI.getOut());
+
+
+            // Start the command line in an alternate thread
+            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            commandGUI.initHistory(commandLine);
+            Thread t = new Thread(commandLine);
+            t.start();
         }
     }
 
@@ -537,7 +565,7 @@ public class ClinicianProfileController extends CommonController {
             TableFilter filter = new TableFilter<>(transplantTable);
 
             setClinicianDetails();
-            hideAdminItems();
+            setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());

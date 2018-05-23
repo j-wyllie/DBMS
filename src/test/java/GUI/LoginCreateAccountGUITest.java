@@ -93,13 +93,13 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         //tests invalid date format
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
-        clickOn("#dobField").write("14.11.1997");
+            //clickOn("#dobField").write("14.11.1997");
         clickOn("#irdField").write("100132122");
         clickOn("#createAccountButton");
 
         actualAlertDialog = getAlertDialogue();
         dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-        assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
+        assertEquals("Please enter your details correctly.", dialogPane.getContentText());
         closeDialog(dialogPane);
 
         //tests duplicate IRD number.
