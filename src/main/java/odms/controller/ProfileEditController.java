@@ -221,10 +221,13 @@ public class ProfileEditController extends CommonController {
                     HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
-
-                currentProfile.setGender(comboGender.getEditor().getText());
+                if (comboGender.getValue() != null) {
+                    currentProfile.setGender(comboGender.getValue().toString());
+                }
                 if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
-                    currentProfile.setPreferredGender(comboGender.getEditor().getText());
+                    if (comboGender.getValue() != null) {
+                        currentProfile.setPreferredGender(comboGender.getEditor().getText());
+                    }
                 } else {
                     currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
                 }
@@ -346,8 +349,17 @@ public class ProfileEditController extends CommonController {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
 
-                comboGender.setEditable(true);
-                comboGender.getItems().addAll("Male", "Female", "Non binary");
+                comboGender.setEditable(false);
+                comboGender.getItems().addAll("Male", "Female");
+                if (currentProfile.getGender() != null) {
+                    if (currentProfile.getGender().toLowerCase().equals("male")) {
+                        comboGender.getSelectionModel().selectFirst();
+                    } else if (currentProfile.getGender().toLowerCase().equals("female")) {
+                        comboGender.getSelectionModel().select(1);
+                    } else {
+                        comboGender.setValue("");
+                    }
+                }
 
                 if (currentProfile.getGender() != null) {
                     comboGender.getEditor().setText(currentProfile.getGender());
