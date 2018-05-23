@@ -158,8 +158,10 @@ public class ProfileEditController extends CommonController {
                         "Date of Death date entered incorrectly\n"
                         + "Please try again"
                     );
+                    throw e;
                 } catch (IllegalArgumentException e) {
-                    AlertController.invalidEntry(e.getMessage()); // TODO does not prevent fallthrough in logic
+                    AlertController.invalidEntry(e.getMessage());
+                    throw e;
                 }
                 if (!genderField.getText().isEmpty()) {
                     currentProfile.setGender(genderField.getText());
