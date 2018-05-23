@@ -483,11 +483,11 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void forceConditionSortOrder() {
-        //curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().clear();
         curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
         curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
 
-        //pastConditionsTable.getSortOrder().clear();
+        pastConditionsTable.getSortOrder().clear();
         pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
         pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
     }
