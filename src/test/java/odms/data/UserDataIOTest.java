@@ -1,11 +1,11 @@
 package odms.data;
 
-import static org.junit.Assert.assertEquals;
-
 import odms.user.User;
 import odms.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class UserDataIOTest {
 
@@ -19,15 +19,15 @@ public class UserDataIOTest {
 
         user1 = new User(UserType.CLINICIAN, "John Smith","Christchurch");
         user2 = new User(UserType.CLINICIAN, "Matt Smith", "Auckland");
-        userDb.addClinician(user1);
-        userDb.addClinician(user2);
+        userDb.addUser(user1);
+        userDb.addUser(user2);
     }
 
     @Test
-    public void testSaveAndLoad() {
+    public void testSaveAndLoad() throws Exception{
         UserDatabase loadedDb;
         UserDataIO.saveUsers(userDb, "example/users.json");
         loadedDb = UserDataIO.loadData("example/users.json");
-        assertEquals("John Smith", userDb.getClinician(0).getName());
+        assertEquals("John Smith", userDb.getUser(0).getName());
     }
 }

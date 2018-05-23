@@ -1,42 +1,42 @@
 package GUI;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
+
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import odms.controller.ClinicianProfileController;
 import odms.controller.GuiMain;
 import odms.controller.LoginController;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
+import org.controlsfx.control.CheckComboBox;
 import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.testfx.api.FxToolkit;
-
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import org.testfx.framework.junit.ApplicationTest;
-import org.testfx.matcher.control.TableViewMatchers;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
-import static org.testfx.api.FxToolkit.setupScene;
-import static org.testfx.api.FxToolkit.showStage;
 
 @Ignore
 public class ClinicianProfileControllerTest extends TestFxMethods {
@@ -81,6 +81,64 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         clickOn("#usernameField").write("0");
         clickOn("#loginButton");
     }
+
+
+    /**
+     * Checks that the correct Profiles are displayed when using search tables filters
+     */
+    @Test
+    public void filterSearchTableTest() {
+
+        clickOn("#searchTab");
+        TableView searchTable = getTableView("#searchTable");
+        Scene scene = getTopModalStage();
+
+        clickOn("#ageField").write("10");
+        clickOn("#ageRangeField").write("30");
+
+        Profile firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getAge() > 10 && firstDonor.getAge() < 30);
+
+        //resetting
+        clickOn("#ageField").write("0");
+        clickOn("#ageRangeField").write("120");
+
+        CheckComboBox genderCombobox = (CheckComboBox) scene.lookup("#genderCombobox");
+        //to overcome 'not on FX' thread exception
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                genderCombobox.getCheckModel().check(0);
+            }
+        });
+        clickOn(scene.lookup("#genderCombobox"));
+        firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getGender().equals("male"));
+
+
+        CheckComboBox organsCombobox = (CheckComboBox) scene.lookup("#organsCombobox");
+        //to overcome 'not on FX' thread exception
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                organsCombobox.getCheckModel().check(6); //kidney
+                organsCombobox.getCheckModel().check(7); //liver
+                organsCombobox.getCheckModel().check(8); //intestine
+
+
+            }
+        });
+        clickOn(scene.lookup("#organsCombobox"));
+        firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.KIDNEY));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.INTESTINE));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.LIVER));
+
+    }
+
 
     /**
      * Checks that the correct donor's profile is opened from the search table.
@@ -163,6 +221,20 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         DialogPane dialogPane3 = (DialogPane) stage2.getScene().getRoot();
         yesButton = (Button) dialogPane3.lookupButton(ButtonType.YES);
         clickOn(yesButton);
+    }
+
+    @Test
+    public void searchProfileNameTest() {
+        // Search for profiles with name Jack Smith
+        clickOn("#searchTab");
+        clickOn("#searchField").write("Jack Smith");
+
+        doubleClickOn(row("#searchTable", 0));
+        Scene scene = getTopModalStage();
+
+        Label userIdLabel = (Label) scene.lookup("#userIdLabel");
+        Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
+        assertTrue(userId == 1);
     }
 
     /**

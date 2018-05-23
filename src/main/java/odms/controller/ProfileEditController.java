@@ -1,34 +1,30 @@
 package odms.controller;
 
-import static odms.controller.AlertController.donorCancelChanges;
-import static odms.controller.AlertController.donorSaveChanges;
 import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.OrganController.setWindowType;
 import static odms.controller.UndoRedoController.redo;
 import static odms.controller.UndoRedoController.undo;
 
+import com.sun.media.sound.InvalidDataException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
@@ -51,10 +47,10 @@ public class ProfileEditController extends CommonController {
     private TextField irdField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
-    private TextField dodField;
+    private DatePicker dodDatePicker;
 
     @FXML
     private TextField genderField;
@@ -93,25 +89,9 @@ public class ProfileEditController extends CommonController {
     private TextField diseaseField;
 
     @FXML
-    private TextField organField;
-
-    @FXML
-    private TextField donationsField;
-
-    @FXML
     private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
-
-
-    /**
-     * Scene change to log in view.
-     * @param event clicking on the logout button.
-     */
-    @FXML
-    private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        showLoginScene(event);
-    }
 
     /**
      * Button handler to undo last action.
@@ -134,30 +114,18 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        String scene = "/view/ProfileEdit.fxml";
-        String title = "Edit Profile";
-        showScene(event, scene, title, true);
-    }
-
-    /**
      * Button handler to save the changes made to the fields.
      *
      * @param event clicking on the save (tick) button.
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = donorSaveChanges();
+        boolean saveBool = saveChanges();
         boolean error = false;
 
         if (saveBool) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
-                    irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
+                    irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
                 String action = "Profile " +
@@ -173,30 +141,27 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
-                    currentProfile.setDateOfBirth(
-                        LocalDate.parse(dobField.getText(),
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
-                    if (!dodField.getText().isEmpty()) {
-                        if(!(
-                            LocalDate.parse(dodField.getText(),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            LocalDate.parse((dodField.getText()),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isAfter(LocalDate.now()))) {
-
-                            currentProfile.setDateOfDeath(LocalDate.parse(
-                                    dodField.getText(),
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ));
-
+                    LocalDate dob = dobDatePicker.getValue();
+                    LocalDate dod = dodDatePicker.getValue();
+                    if (!(dob == null)) {
+                        if (!(dob.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfBirth(dob);
                         } else {
-                            error = true;
+                            throw new InvalidDataException();
+                        }
+                    } else {
+                        throw new InvalidDataException();
+                    }
+                    if (!(dod == null)) {
+                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
+                            ||
+                            dod.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfDeath(dod);
+                        } else {
+                            throw new InvalidDataException();
                         }
                     }
-                } catch (DateTimeParseException e) {
+                } catch (InvalidDataException e) {
                     error = true;
                 }
                 if (!genderField.getText().isEmpty()) {
@@ -252,6 +217,7 @@ public class ProfileEditController extends CommonController {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
                     ProfileDataIO.saveData(getCurrentDatabase());
+                    showNotification("Profile", event);
                     closeEditWindow(event);
                 }
             }
@@ -265,7 +231,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = donorCancelChanges();
+        boolean cancelBool = profileCancelChanges();
 
         if (cancelBool) {
             closeEditWindow(event);
@@ -283,50 +249,17 @@ public class ProfileEditController extends CommonController {
         Scene scene = new Scene(fxmlLoader.load());
         ProfileDisplayController controller = fxmlLoader.getController();
         if (isClinician) {
-            controller.setDonor(currentProfile);
+            controller.setProfileViaClinician(currentProfile);
         } else {
-            controller.setLoggedInProfile(currentProfile);
+            controller.setProfile(currentProfile);
         }
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
+        appStage.setTitle("Profile");
         appStage.show();
-    }
-
-    @FXML
-    private void handleBtnOrgansDonateClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs to Donate");
-        stage.show();
-    }
-
-    @FXML
-    private void handleBtnOrgansRequiredClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Organs Required");
-        stage.show();
-    }
-
-    @FXML
-    private void handleBtnOrgansDonationsClicked(ActionEvent event) throws IOException {
-        Stage stage = showOrgansSelectionWindow("Past Donations");
-        stage.show();
-    }
-
-    private Stage showOrgansSelectionWindow(String windowTitle) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/OrganEdit.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load());
-        OrganController controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile);
-        setWindowType(windowTitle);
-        controller.initialize();
-        Stage stage = new Stage();
-        stage.setTitle(windowTitle);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        return stage;
     }
 
     /**
@@ -334,9 +267,6 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     public void initialize() {
-        if(currentProfile == null) {
-            currentProfile = getCurrentProfile();
-        }
 
         if (currentProfile != null) {
             try {
@@ -358,14 +288,10 @@ public class ProfileEditController extends CommonController {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());
@@ -401,19 +327,13 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
-//            if (currentProfile.getBloodPressure() != null) {
-//                bloodPressureField.setText(currentProfile.getBloodPressure());
-//            }
-//            diseaseField.setText(currentProfile.getChronicDiseasesAsCSV());
-//                organField.setText(currentProfile.getOrgansAsCSV());
-//                donationsField.setText(currentProfile.getDonationsAsCSV());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void setDonor(Profile donor) {
+    public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
     }
 

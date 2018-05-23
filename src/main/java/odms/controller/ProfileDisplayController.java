@@ -1,23 +1,11 @@
 package odms.controller;
 
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.LoginController.getCurrentProfile;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
-
 import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import javafx.animation.PauseTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -43,24 +30,57 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.medications.Drug;
 import odms.profile.Condition;
-import odms.profile.Organ;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-import org.controlsfx.control.table.TableFilter;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
+
+import static odms.controller.AlertController.saveChanges;
+
 
 public class ProfileDisplayController extends CommonController {
 
-    protected Profile searchedDonor;
+    private Boolean isOpenedByClinician = false;
+    protected Profile currentProfile;
+    private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
+    private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
+    private ObservableList<Map.Entry<String, String>> interactions;
+    private ContextMenu suggestionMenu = new ContextMenu();
+    private ObservableList<Condition> curConditionsObservableList;
+    private ObservableList<Condition> pastConditionsObservableList;
+
+    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
+
+    // Displays in IntelliJ as unused but is a false positive
+    // The FXML includes operate this way and allow access to the instantiated controller.
+    @FXML
+    private AnchorPane profileOrganOverview;
+    @FXML
+    private ProfileOrganOverviewController profileOrganOverviewController;
 
     @FXML
     private Label donorFullNameLabel;
@@ -120,12 +140,6 @@ public class ProfileDisplayController extends CommonController {
     private Label chronicConditionsLabel;
 
     @FXML
-    private Label organsLabel;
-
-    @FXML
-    private Label donationsLabel;
-
-    @FXML
     private TextArea historyView;
 
     @FXML
@@ -139,8 +153,6 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Button logoutButton;
-
-    private Boolean isClinician = false;
 
     @FXML
     private TableView curConditionsTable;
@@ -191,6 +203,9 @@ public class ProfileDisplayController extends CommonController {
     private Button buttonMedicationHistoricToCurrent;
 
     @FXML
+    private Button buttonSaveMedications;
+
+    @FXML
     private TextField textFieldMedicationSearch;
 
     @FXML
@@ -204,9 +219,6 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private TableColumn<Drug, String> tableColumnMedicationNameHistoric;
-
-    @FXML
-    private Label organsRequiredLabel;
 
     @FXML
     private TableView<String> tableViewDrugInteractionsNames;
@@ -229,30 +241,20 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private TableColumn<String, String> tableColumnActiveIngredients;
 
-    private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
-
-    private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
-
-    private ObservableList<Map.Entry<String, String>> interactions;
-
-    private ContextMenu suggestionMenu = new ContextMenu();
-
     @FXML
     private Button buttonShowDrugInteractions;
 
     @FXML
     private Button buttonViewActiveIngredients;
 
+    @FXML
+    private Button buttonViewMedicationHistory;
+
     /**
      * Text for showing recent edits.
      */
     @FXML
     public Text editedText;
-
-
-    private ObservableList<Condition> curConditionsObservableList;
-    private ObservableList<Condition> pastConditionsObservableList;
-
 
     @FXML
     private Button addNewProcedureButton;
@@ -352,13 +354,6 @@ public class ProfileDisplayController extends CommonController {
 
         Callback<TableColumn, TableCell> cellFactoryDate = p -> new EditDateCell();
 
-//
-//        try {
-//            if (curConditionsTable.getItems() != null) { curConditionsTable.getItems().clear(); }
-//            if (pastConditionsTable.getItems() != null) { pastConditionsTable.getItems().clear(); }
-//        } catch (NullPointerException|UnsupportedOperationException e) {
-//            System.out.println();
-//        }
         if (curConditionsObservableList != null) {
             curConditionsObservableList = FXCollections.observableArrayList();
         }
@@ -366,8 +361,8 @@ public class ProfileDisplayController extends CommonController {
             pastConditionsObservableList = FXCollections.observableArrayList();
         }
 
-        if (searchedDonor.getCurrentConditions() != null) {curConditionsObservableList.addAll(searchedDonor.getCurrentConditions());}
-        if (searchedDonor.getCuredConditions() != null) {pastConditionsObservableList.addAll(searchedDonor.getCuredConditions());}
+        if (currentProfile.getCurrentConditions() != null) {curConditionsObservableList.addAll(currentProfile.getCurrentConditions());}
+        if (currentProfile.getCuredConditions() != null) {pastConditionsObservableList.addAll(currentProfile.getCuredConditions());}
 
         curConditionsTable.setItems(curConditionsObservableList);
 
@@ -375,11 +370,11 @@ public class ProfileDisplayController extends CommonController {
         curDescriptionColumn.setCellFactory(cellFactory);
         curDescriptionColumn.setOnEditCommit(
                 (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> {
-                    searchedDonor.removeCondition(t.getTableView().getItems().get(
+                    currentProfile.removeCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()));
                     (t.getTableView().getItems().get(
                             t.getTablePosition().getRow())).setName(t.getNewValue());
-                    searchedDonor.addCondition(t.getTableView().getItems().get(
+                    currentProfile.addCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()));
                 });
 
@@ -404,15 +399,16 @@ public class ProfileDisplayController extends CommonController {
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
 
-        curDateOfDiagnosisColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-            if(!t.getNewValue().isAfter(LocalDate.now())) {
-                searchedDonor.removeCondition(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()));
-                (t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                searchedDonor.addCondition(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()));
-            }
+        curDateOfDiagnosisColumn.setOnEditCommit(
+                (EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+                    if (!t.getNewValue().isAfter(LocalDate.now())) {
+                        currentProfile.removeCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
+                        currentProfile.addCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                    }
 
             refreshConditionTable();
         });
@@ -429,44 +425,44 @@ public class ProfileDisplayController extends CommonController {
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastDateCuredColumn.setCellFactory(cellFactoryDate);
 
-        pastDateCuredColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-            if(t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
-                    || t.getNewValue().isAfter(LocalDate.now())) {
-            } else {
-                searchedDonor.removeCondition(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()));
-                (t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())).setDateCured(t.getNewValue());
-                searchedDonor.addCondition(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()));
-            }
-            refreshConditionTable();
-        });
+        pastDateCuredColumn.setOnEditCommit(
+                (EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
+                    if (t.getNewValue().isBefore(
+                            t.getTableView().getItems().get(t.getTablePosition().getRow())
+                                    .getDateOfDiagnosis())
+                            || t.getNewValue().isAfter(LocalDate.now())) {
+                    } else {
+                        currentProfile.removeCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setDateCured(t.getNewValue());
+                        currentProfile.addCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                    }
+                    refreshConditionTable();
+                });
 
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
         pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
 
         pastDateOfDiagnosisColumn.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-            if(t.getNewValue().isAfter(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateCured())
-                    || t.getNewValue().isAfter(LocalDate.now())) {
-            } else {
-                searchedDonor.removeCondition(t.getTableView().getItems().get(
+            if (!(t.getNewValue().isAfter(
+                    t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateCured())
+                    || t.getNewValue().isAfter(LocalDate.now()))) {
+                currentProfile.removeCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
                 (t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                searchedDonor.addCondition(t.getTableView().getItems().get(
+                currentProfile.addCondition(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
             }
             refreshConditionTable();
         });
         pastConditionsTable.getColumns().setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
-        curConditionsTable.sortPolicyProperty().set(new Callback<TableView<Condition>, Boolean>() {
-            @Override
-            public Boolean call(TableView<Condition> param) {
-                Comparator<Condition> comparator = new Comparator<Condition>() {
-                    @Override
-                    public int compare(Condition o1, Condition o2) {
+        curConditionsTable.sortPolicyProperty().set(
+                (Callback<TableView<Condition>, Boolean>) param -> {
+                    Comparator<Condition> comparator = (o1, o2) -> {
                         if (o1.getChronic() && o2.getChronic()) {
                             if (param.getComparator() == null) { // if no comparator is set then return 0 (nothing changes)
                                 return 0;
@@ -482,12 +478,10 @@ public class ProfileDisplayController extends CommonController {
                         } else { // otherwise just compare them as usual
                             return param.getComparator().compare(o1,o2);
                         }
-                    }
-                };
-                FXCollections.sort(curConditionsTable.getItems(), comparator);
-                return true;
-            }
-        });
+                    };
+                    FXCollections.sort(curConditionsTable.getItems(), comparator);
+                    return true;
+                });
 
         refreshPageElements();
 
@@ -545,20 +539,17 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-//        Profile currentDonor;
-//        if (searchedDonor != null) {
-//            currentDonor = searchedDonor;
-//        } else {
-//            currentDonor = getCurrentProfile();
-//        }
+        ArrayList<Condition> conditions = convertConditionObservableToArray(
+                pastConditionsTable.getSelectionModel().getSelectedItems()
+        );
+        conditions.addAll(convertConditionObservableToArray(
+                curConditionsTable.getSelectionModel().getSelectedItems())
+        );
 
-
-
-        ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
-        conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
-
-        for (int i = 0; i<conditions.size(); i++) {
-            if (conditions.get(i) != null) { searchedDonor.removeCondition(conditions.get(i));}
+        for (Condition condition : conditions) {
+            if (condition != null) {
+                currentProfile.removeCondition(condition);
+            }
         }
 
         refreshConditionTable();
@@ -567,6 +558,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         try {
+            Node source = (Node) actionEvent.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureAdd.fxml"));
 
@@ -576,7 +568,10 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Procedure");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -591,19 +586,17 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
 
         Procedure procedure = (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
-        if (procedure == null) { procedure = (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem(); }
-        if (procedure == null) { return; }
+        if (procedure == null) {
+            procedure = (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem();
+        }
 
-        currentDonor.removeProcedure(procedure);
+        if (procedure == null) {
+            return;
+        }
 
+        currentProfile.removeProcedure(procedure);
         refreshProcedureTable();
 
     }
@@ -614,20 +607,19 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleToggleChronicButtonClicked(ActionEvent event) {
-
-
         ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
 
-        for (int i = 0; i<conditions.size(); i++) {
-            if (conditions.get(i) != null) {
+        for (Condition condition : conditions) {
+            if (condition != null) {
 
-                conditions.get(i).setIsChronic(!conditions.get(i).getChronic());
-                if (conditions.get(i).getChronic()) {
-                    conditions.get(i).setChronicText("CHRONIC");
-                    conditions.get(i).setIsCured(false);
+                condition.setIsChronic(!condition.getChronic());
+                if (condition.getChronic()) {
+                    condition.setChronicText("CHRONIC");
+                    condition.setIsCured(false);
+                } else {
+                    condition.setChronicText("");
                 }
-                else {conditions.get(i).setChronicText("");}
 
             }
         }
@@ -646,19 +638,19 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
 
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i) != null) {
+        for (Condition condition : conditions) {
+            if (condition != null) {
 
-                if (!conditions.get(i).getChronic()) {
-                    conditions.get(i).setIsCured(!conditions.get(i).getCured());
+                if (!condition.getChronic()) {
+                    condition.setIsCured(!condition.getCured());
                 } else {
                     System.out.println("Condition must be unmarked as Chronic before being Cured!");
                 }
 
-                if (conditions.get(i).getCured()) {
-                    conditions.get(i).setDateCured(LocalDate.now());
+                if (condition.getCured()) {
+                    condition.setDateCured(LocalDate.now());
                 } else {
-                    conditions.get(i).setDateCured(null);
+                    condition.setDateCured(null);
                 }
 
             }
@@ -670,12 +662,11 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * Scene change to log in view.
+     *
      * @param event clicking on the logout button.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        LoginController.setCurrentDonor(null); //clears current donor
-
         showLoginScene(event);
     }
 
@@ -703,24 +694,30 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-//        Profile currentDonor;
-//        if (searchedDonor != null) {
-//            currentDonor = searchedDonor;
-//        } else {
-//            currentDonor = getCurrentProfile();
-//        }
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
-        controller.setDonor(searchedDonor);
-        controller.setIsClinician(isClinician);
+        controller.setCurrentProfile(currentProfile);
+        controller.setIsClinician(isOpenedByClinician);
         controller.initialize();
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
         appStage.show();
+    }
+
+    /**
+     * Button handler to save changes made on medications tab. If a save is made else where in the program changes to
+     * the medications will also be saved.
+     * @param event clicking on the save button
+     */
+    @FXML
+    private void handleSaveMedications(ActionEvent event) throws IOException {
+        if (saveChanges()) {
+            showNotification("Medications Tab", event);
+            ProfileDataIO.saveData(getCurrentDatabase());
+        }
     }
 
     /**
@@ -731,8 +728,13 @@ public class ProfileDisplayController extends CommonController {
     private  void handleViewActiveIngredients(ActionEvent event) {
 
         Drug drug = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-        if (drug == null) { drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem(); }
-        if (drug == null) { return; }
+        if (drug == null) {
+            drug = tableViewCurrentMedications.getSelectionModel().getSelectedItem();
+        }
+
+        if (drug == null) {
+            return;
+        }
 
         ArrayList<String> activeIngredients = null;
         try {
@@ -755,6 +757,7 @@ public class ProfileDisplayController extends CommonController {
             tableColumnActiveIngredients.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
             tableViewActiveIngredients.getColumns().setAll(tableColumnActiveIngredients);
         }
+
     }
 
     /**
@@ -767,7 +770,7 @@ public class ProfileDisplayController extends CommonController {
         if (!textFieldMedicationSearch.getText().isEmpty()) {
             String medicationName = textFieldMedicationSearch.getText();
 
-            searchedDonor.addDrug(new Drug(medicationName));
+            currentProfile.addDrug(new Drug(medicationName));
 
             refreshMedicationsTable();
         }
@@ -778,10 +781,12 @@ public class ProfileDisplayController extends CommonController {
      * @param drugs ObservableList of drugs.
      * @return ArrayList of drugs.
      */
-    public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
+    private ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
         ArrayList<Drug> toReturn = new ArrayList<>();
-        for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { toReturn.add(drugs.get(i)); }
+        for (Drug drug : drugs) {
+            if (drug != null) {
+                toReturn.add(drug);
+            }
         }
         return toReturn;
     }
@@ -793,54 +798,50 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleShowInteractions(ActionEvent event) {
-        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        ArrayList<Drug> drugs;
 
         Map<String, String> interactionsRaw;
 
-        if (drugs.size() != 2) {
-            if (drugs.size() == 1) {
-                Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-                if (toAdd == null) {
-                    tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                    return;
-                }
-                drugs.add(toAdd);
-            }
-            else if (drugs.size() == 0) {
+        if (convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()).size() == 2) {
+            drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+        } else {
+            if (tableViewHistoricMedications.getSelectionModel().getSelectedItems().size() == 2) {
                 drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
+            } else {
+                drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
+                drugs.add(tableViewHistoricMedications.getSelectionModel().getSelectedItem());
             }
-
-            if (drugs.size() != 2) {
-                tableViewDrugInteractionsNames.setPlaceholder(new Label("Please select two drugs"));
-                return; }
         }
 
         try {
-            interactionsRaw = MedicationDataIO
-                    .getDrugInteractions(drugs.get(0).getDrugName(), drugs.get(1).getDrugName(), searchedDonor.getGender(), searchedDonor.getAge());
+            interactionsRaw = MedicationDataIO.getDrugInteractions(
+                    drugs.get(0).getDrugName(),
+                    drugs.get(1).getDrugName(),
+                    currentProfile.getGender(),
+                    currentProfile.getAge()
+            );
 
-            if (interactionsRaw.isEmpty()) {
-                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
-            }
-
+            tableViewDrugInteractionsNames.getItems().clear();
+            tableViewDrugInteractions.getItems().clear();
             ObservableList<String> drugsList = FXCollections.observableArrayList();
             drugsList.add("Interactions between:");
             drugsList.add(drugs.get(0).getDrugName());
             drugsList.add(drugs.get(1).getDrugName());
-
-            interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-
-            tableViewDrugInteractionsNames.getItems().clear();
-            tableViewDrugInteractions.getItems().clear();
-
             tableViewDrugInteractionsNames.setItems(drugsList);
             tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
             tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
 
-            tableViewDrugInteractions.setItems(interactions);
-            tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
-            tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
-            tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+            if (interactionsRaw.isEmpty()) {
+                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
+            } else if (interactionsRaw.containsKey("error")) {
+                tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+            } else {
+                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+                tableViewDrugInteractions.setItems(interactions);
+                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
+                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+            }
         } catch (IOException e) {
             tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
         }
@@ -852,13 +853,13 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleMoveMedicationToHistoric(ActionEvent event)  {
-
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
-        for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.moveDrugToHistory(drugs.get(i));}
+        for (Drug drug : drugs) {
+            if (drug != null) {
+                currentProfile.moveDrugToHistory(drug);
+            }
         }
-
 
         refreshMedicationsTable();
     }
@@ -869,11 +870,12 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleMoveMedicationToCurrent(ActionEvent event)   {
-
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
-        for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.moveDrugToCurrent(drugs.get(i));}
+        for (Drug drug : drugs) {
+            if (drug != null) {
+                currentProfile.moveDrugToCurrent(drug);
+            }
         }
 
         refreshMedicationsTable();
@@ -884,43 +886,41 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the delete button.
      */
     @FXML
-    private void handleDelete(ActionEvent event)  {
-
+    private void handleDeleteMedication(ActionEvent event)  {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
-        for (int i = 0; i<drugs.size(); i++) {
-            if (drugs.get(i) != null) { searchedDonor.deleteDrug(drugs.get(i));}
+        for (Drug drug : drugs) {
+            if (drug != null) {
+                currentProfile.deleteDrug(drug);
+            }
         }
 
         refreshMedicationsTable();
     }
 
+    /**
+     * Button handler to open medicationHistory scene
+     * @param event clicking on delete button.
+     * @throws IOException If MedicationHistory fxml is not found.
+     */
+    @FXML
+    private void handleViewMedicationHistory(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/MedicationHistory.fxml"));
 
-    private void delayedRequest(String substring) {
-        new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            ArrayList<String> suggestions = getSuggestionList(substring);
-                            ArrayList<MenuItem> menuItems = new ArrayList<>();
-                            for (String drug : suggestions) {
-                                menuItems.add(new Menu(drug));
-                            }
-                            final ContextMenu suggestionMenu = new ContextMenu();
-                            suggestionMenu.getItems().setAll(menuItems);
-                            textFieldMedicationSearch.setContextMenu(suggestionMenu);
-                            suggestionMenu.show(textFieldMedicationSearch,
-                                    Side.BOTTOM, 0, 0);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 1000
-        );
+        Scene scene = new Scene(fxmlLoader.load());
+        MedicationHistory controller = fxmlLoader.getController();
+        controller.setProfile(currentProfile);
+        controller.initialize();
+        Stage stage = new Stage();
+        stage.setTitle("Medication History");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
     }
-
 
     /**
      * Set the listener for the change of value in the medication search field. Also binds the
@@ -929,16 +929,16 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void setMedicationSearchFieldListener() {
-        textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) ->  {
-            if (!oldValue.equals(newValue)) {
-//                delayedRequest(newValue);
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
+        textFieldMedicationSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
                 try {
                     ArrayList<String> suggestions = getSuggestionList(newValue);
                     ArrayList<MenuItem> menuItems = new ArrayList<>();
                     for (String drug : suggestions) {
                         MenuItem temp = new MenuItem(drug);
                         temp.setOnAction(event -> {
-                            MenuItem eventItem = (MenuItem)event.getTarget();
+                            MenuItem eventItem = (MenuItem) event.getTarget();
                             textFieldMedicationSearch.setText(eventItem.getText());
                             suggestionMenu.hide();
                         });
@@ -951,15 +951,17 @@ public class ProfileDisplayController extends CommonController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+            });
+            pauseTransition.playFromStart();
         });
+
         textFieldMedicationSearch.setOnKeyPressed(event -> {
 
             if (event.getCode() == KeyCode.ENTER) {
 
                 String medicationName = textFieldMedicationSearch.getText();
                 if (!medicationName.equals("")) {
-                    searchedDonor.addDrug(new Drug(medicationName));
+                    currentProfile.addDrug(new Drug(medicationName));
                 }
                 textFieldMedicationSearch.clear();
             }
@@ -974,13 +976,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void setPage(Profile currentDonor){
-        /*
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
-        */
         makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
 
         refreshProcedureTable();
@@ -989,11 +984,9 @@ public class ProfileDisplayController extends CommonController {
         refreshConditionTable();
 
         try {
-            donorFullNameLabel
-                    .setText(currentDonor.getFullName());
+            donorFullNameLabel.setText(currentDonor.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
-            organsRequiredLabel.setText("");
 
             if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
                 if (currentDonor.getOrgansDonated().size() > 0) {
@@ -1009,7 +1002,6 @@ public class ProfileDisplayController extends CommonController {
 
             if (currentDonor.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
-                organsRequiredLabel.setText("Organs Required : " + Organ.organSetToString(currentDonor.getOrgansRequired()));
             }
             if (currentDonor.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
@@ -1027,8 +1019,6 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getDateOfDeath() != null) {
                 dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
                         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            } else {
-                dodLabel.setText(dodLabel.getText() + "NULL");
             }
             if (currentDonor.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
@@ -1045,7 +1035,6 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getEmail() != null) {
                 emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
             }
-
             if (currentDonor.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
             }
@@ -1064,23 +1053,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentDonor.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
             }
-
-            organsLabel.setText(organsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonating()));
-
-            donationsLabel.setText(donationsLabel.getText() + Organ.organSetToString(currentDonor.getOrgansDonated()));
-
             if (currentDonor.getSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
             }
-            /*if (currentDonor.getAlcoholConsumption() != null) {
-                alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentDonor.getAlcoholConsumption());
-            }*/
-            /*if (currentDonor.getBloodPressure() != null) {
-                bloodPressureLabel.setText(bloodPressureLabel.getText() + currentDonor.getBloodPressure());
-            }*/
-            //chronic diseases.
-            //organs to donate.
-            //past donations.
+
             String history = ProfileDataIO.getHistory();
             Gson gson = new Gson();
 
@@ -1121,9 +1097,13 @@ public class ProfileDisplayController extends CommonController {
     private void refreshMedicationsTable() {
 
         tableViewCurrentMedications.getItems().clear();
-        if (searchedDonor.getCurrentMedications() != null) {currentMedication.addAll(searchedDonor.getCurrentMedications());}
+        if (currentProfile.getCurrentMedications() != null) {
+            currentMedication.addAll(currentProfile.getCurrentMedications());
+        }
         tableViewHistoricMedications.getItems().clear();
-        if (searchedDonor.getHistoryOfMedication() != null) {historicMedication.addAll(searchedDonor.getHistoryOfMedication());}
+        if (currentProfile.getHistoryOfMedication() != null) {
+            historicMedication.addAll(currentProfile.getHistoryOfMedication());
+        }
 
         tableViewCurrentMedications.setItems(currentMedication);
         tableColumnMedicationNameCurrent.setCellValueFactory(new PropertyValueFactory("drugName"));
@@ -1133,41 +1113,37 @@ public class ProfileDisplayController extends CommonController {
         tableColumnMedicationNameHistoric.setCellValueFactory(new PropertyValueFactory("drugName"));
         tableViewHistoricMedications.getColumns().setAll(tableColumnMedicationNameHistoric);
 
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         refreshPageElements();
-
     }
-
 
     /**
      * Enables the relevant buttons on medications tab for how many drugs are selected
      */
     @FXML
     private void refreshPageElements() {
+        ArrayList<Drug> drugs = convertObservableToArray(
+                tableViewCurrentMedications.getSelectionModel().getSelectedItems()
+        );
+        ArrayList<Drug> allDrugs = convertObservableToArray(
+                tableViewCurrentMedications.getSelectionModel().getSelectedItems()
+        );
+        allDrugs.addAll(convertObservableToArray(
+                tableViewCurrentMedications.getSelectionModel().getSelectedItems())
+        );
 
-        ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
-        ArrayList<Drug> allDrugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
-        allDrugs.addAll(convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems()));
+        disableButtonsIfNoItems(allDrugs);
 
-        if (allDrugs.size() == 0) {
-            buttonMedicationHistoricToCurrent.setDisable(true);
-            buttonMedicationCurrentToHistoric.setDisable(true);
-            buttonDeleteMedication.setDisable(true);
-        } else {
-            buttonMedicationHistoricToCurrent.setDisable(false);
-            buttonMedicationCurrentToHistoric.setDisable(false);
-            buttonDeleteMedication.setDisable(false);
-        }
         buttonMedicationHistoricToCurrent.setDisable(false);
         buttonMedicationCurrentToHistoric.setDisable(false);
         buttonDeleteMedication.setDisable(false);
         buttonShowDrugInteractions.setDisable(false);
 
-
         if (drugs.size() != 2) {
             if (drugs.size() == 1) {
                 Drug toAdd = tableViewHistoricMedications.getSelectionModel().getSelectedItem();
-                if (toAdd != null) { drugs.add(toAdd); }
+                if (toAdd != null) {
+                    drugs.add(toAdd);
+                }
             } else if (drugs.size() == 0) {
                 drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
             }
@@ -1180,12 +1156,19 @@ public class ProfileDisplayController extends CommonController {
             buttonShowDrugInteractions.setDisable(false);
         }
 
+        ArrayList<Condition> allConditions = convertConditionObservableToArray(
+                curConditionsTable.getSelectionModel().getSelectedItems());
+        allConditions.addAll(convertConditionObservableToArray(
+                pastConditionsTable.getSelectionModel().getSelectedItems()));
+        disableButtonsIfNoItems(allConditions);
+    }
 
-
-        ArrayList<Condition> allConditions = convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems());
-        allConditions.addAll(convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems()));
-
-        if (allConditions.size() == 0) {
+    /**
+     * Support function to disable medications buttons if no items present
+     * @param items to check
+     */
+    private void disableButtonsIfNoItems(List<?> items) {
+        if (items.size() == 0) {
             deleteConditionButton.setDisable(true);
             toggleCuredButton.setDisable(true);
             toggleChronicButton.setDisable(true);
@@ -1194,9 +1177,6 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setDisable(false);
             toggleChronicButton.setDisable(false);
         }
-
-
-
     }
 
     /**
@@ -1204,7 +1184,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void hideItems() {
-        if(isClinician){
+        if (isOpenedByClinician) {
             //User is a clinician looking at donors profile, maximise functionality
             curConditionsTable.setEditable(true);
             pastConditionsTable.setEditable(true);
@@ -1214,10 +1194,24 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(true);
             addNewConditionButton.setVisible(true);
             deleteConditionButton.setVisible(true);
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setVisible(true);
+            buttonSaveMedications.setVisible(true);
+            buttonDeleteMedication.setVisible(true);
+            buttonShowDrugInteractions.setVisible(true);
+            buttonViewActiveIngredients.setVisible(true);
+            buttonAddMedication.setVisible(true);
+            buttonMedicationCurrentToHistoric.setVisible(true);
+            buttonMedicationHistoricToCurrent.setVisible(true);
+            textFieldMedicationSearch.setVisible(true);
+            tableViewActiveIngredients.setVisible(true);
+            tableViewDrugInteractionsNames.setVisible(true);
+            tableViewDrugInteractions.setVisible(true);
+            buttonViewMedicationHistory.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
-            //User is a donor, limit functionality
+            // User is a standard profile, limit functionality
             curConditionsTable.setEditable(false);
             pastConditionsTable.setEditable(false);
             toggleChronicButton.setDisable(true);
@@ -1226,8 +1220,22 @@ public class ProfileDisplayController extends CommonController {
             toggleCuredButton.setVisible(false);
             addNewConditionButton.setVisible(false);
             deleteConditionButton.setVisible(false);
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setVisible(false);
+            buttonSaveMedications.setVisible(false);
+            buttonDeleteMedication.setVisible(false);
+            buttonShowDrugInteractions.setVisible(false);
+            buttonViewActiveIngredients.setVisible(false);
+            buttonAddMedication.setVisible(false);
+            buttonMedicationCurrentToHistoric.setVisible(false);
+            buttonMedicationHistoricToCurrent.setVisible(false);
+            textFieldMedicationSearch.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
+            tableViewActiveIngredients.setVisible(false);
+            tableViewDrugInteractionsNames.setVisible(false);
+            tableViewDrugInteractions.setVisible(false);
+            buttonViewMedicationHistory.setVisible(false);
         }
-
     }
 
     /**
@@ -1235,14 +1243,6 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void makeProcedureTable(ArrayList<Procedure> previousProcedures, ArrayList<Procedure> pendingProcedures) {
-        //curDiseasesTable.getSortOrder().add(curChronicColumn);
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
-
         pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
 
         if (previousProcedures != null) {
@@ -1277,7 +1277,6 @@ public class ProfileDisplayController extends CommonController {
                 }
             }
         });
-
     }
 
     /**
@@ -1301,21 +1300,12 @@ public class ProfileDisplayController extends CommonController {
         }
     }
 
-
-
     /**
      * Refreshes the procedure table, updating it with the current values
      * pendingProcedureTable;
      */
     @FXML
     public void refreshProcedureTable() {
-        Profile currentDonor;
-        if (searchedDonor != null) {
-            currentDonor = searchedDonor;
-        } else {
-            currentDonor = getCurrentProfile();
-        }
-
         if (previousProceduresObservableList == null) {
             previousProceduresObservableList = FXCollections.observableArrayList();
         }
@@ -1324,18 +1314,18 @@ public class ProfileDisplayController extends CommonController {
         }
 
         // update all procedures
-        if (currentDonor.getAllProcedures() != null) {
-            for (Procedure procedure : currentDonor.getAllProcedures()) {
+        if (currentProfile.getAllProcedures() != null) {
+            for (Procedure procedure : currentProfile.getAllProcedures()) {
                 procedure.update();
             }
         }
 
         pendingProcedureTable.getItems().clear();
         previousProcedureTable.getItems().clear();
-        if (currentDonor.getPendingProcedures() != null) {
-            pendingProceduresObservableList.addAll(currentDonor.getPendingProcedures());}
-        if (currentDonor.getPreviousProcedures() != null) {
-            previousProceduresObservableList.addAll(currentDonor.getPreviousProcedures());
+        if (currentProfile.getPendingProcedures() != null) {
+            pendingProceduresObservableList.addAll(currentProfile.getPendingProcedures());}
+        if (currentProfile.getPreviousProcedures() != null) {
+            previousProceduresObservableList.addAll(currentProfile.getPreviousProcedures());
         } else {
             return;
         }
@@ -1363,47 +1353,58 @@ public class ProfileDisplayController extends CommonController {
         previousProcedureTable.getSortOrder().clear();
         previousProcedureTable.getSortOrder().add(previousDateColumn);
     }
-    public Profile getSearchedDonor() { return searchedDonor; }
+
+    public Profile getCurrentProfile() {
+        return currentProfile;
+    }
+
+    @FXML
+    private void onTabOrgansSelected() {
+        profileOrganOverviewController.currentProfile.bind(currentProfileBound);
+        profileOrganOverviewController.populateOrganLists();
+    }
 
     /**
      * Sets the current donor attributes to the labels on start up.
      */
     @FXML
     public void initialize() {
-        curConditionsTable.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-        pastConditionsTable.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
 
-        tableViewCurrentMedications.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
-        tableViewHistoricMedications.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
+        if (currentProfile != null) {
+            currentProfileBound.set(currentProfile);
+
+            setPage(currentProfile);
+
+            refreshMedicationsTable();
+            makeProcedureTable(
+                    currentProfile.getPreviousProcedures(),
+                    currentProfile.getPendingProcedures()
+            );
+        }
+
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         curChronicColumn.setSortable(false);
 
 
-        if(searchedDonor != null) {
-            setPage(searchedDonor);
+        if(currentProfile != null) {
+            setPage(currentProfile);
             hideItems();
         }
 
-        if (searchedDonor != null) {
+        if (currentProfile != null) {
             refreshMedicationsTable();
-            makeProcedureTable(searchedDonor.getPreviousProcedures(), searchedDonor.getPendingProcedures());
+            makeProcedureTable(currentProfile.getPreviousProcedures(), searchedDonor.getPendingProcedures());
 
         }
 
         refreshPageElements();
 
         disableTableHeaderReorder();
-        @SuppressWarnings("deprecation") TableFilter tableFilter = new TableFilter(curConditionsTable);
-        @SuppressWarnings("deprecation") TableFilter tableFilter2 = new TableFilter(pastConditionsTable);
-
         try { // Can't refresh the condition table on the initial initialize
             refreshConditionTable();
             forceConditionSortOrder();
@@ -1411,24 +1412,22 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * sets the donor if it is being opened by a clinician
-     * @param donor
+     * sets the profile if it is being opened by a clinician
+     * If opened by clinician, set appropriate boolean and profile
+     * @param profile to be used
      */
-    public void setDonor(Profile donor) {
-        isClinician = true;
-        searchedDonor = donor;
-        //hideItems();
-        //setPage(searchedDonor);
+    public void setProfileViaClinician(Profile profile) {
+        isOpenedByClinician = true;
+        currentProfile = profile;
     }
 
     /**
      * sets the donor if it was logged in by a user
-     * @param profile
+     * If logged in normally, sets profile
+     * @param profile to be used
      */
-    public void setLoggedInProfile(Profile profile) {
-        isClinician = false;
-        searchedDonor = profile;
-        //setPage(searchedDonor);
+    public void setProfile(Profile profile) {
+        currentProfile = profile;
     }
 
 }

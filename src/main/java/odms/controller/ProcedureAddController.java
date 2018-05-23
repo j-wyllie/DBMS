@@ -9,14 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
-import odms.profile.Organ;
+import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
@@ -29,7 +25,7 @@ public class ProcedureAddController {
     private TextField summaryField;
 
     @FXML
-    private TextField dateOfProcedureField;
+    private DatePicker dateOfProcedureDatePicker;
 
     @FXML
     private TextField descriptionField;
@@ -41,28 +37,21 @@ public class ProcedureAddController {
     private Button addButton;
 
     @FXML
-    private ListView<Organ> affectedOrgansListView;
+    private ListView<OrganEnum> affectedOrgansListView;
 
-    private ObservableList<Organ> donatedOrgans;
+    private ObservableList<OrganEnum> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         String summary = summaryField.getText();
-        String dateOfProcedure = dateOfProcedureField.getText();
+        LocalDate dateOfProcedure = dateOfProcedureDatePicker.getValue();
         String longDescription = descriptionField.getText();
 
         Procedure procedure;
 
         try {
-            String[] date2 = dateOfProcedure.split("-");
-            LocalDate date3 = LocalDate.of(Integer.valueOf(date2[2]), Integer.valueOf(date2[1]), Integer.valueOf(date2[0]));
-
-            if (summary.equals("")) {
-                throw new IllegalArgumentException();
-            }
-
-            LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
-            if (dob.isAfter(date3)){
+            LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
+            if (dob.isAfter(dateOfProcedure)){
                 throw new IllegalArgumentException();
             }
 
@@ -77,7 +66,7 @@ public class ProcedureAddController {
 
             addProcedure(procedure);
 
-        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException |DateTimeException e) {
+        } catch (Exception e) {
             warningLabel.setVisible(true);
         }
     }
@@ -104,11 +93,12 @@ public class ProcedureAddController {
      * @param controller
      */
     public void init(ProfileDisplayController controller) {
+        warningLabel.setVisible(false);
         this.controller = controller;
-        searchedDonor = controller.getSearchedDonor();
+        searchedDonor = controller.getCurrentProfile();
 
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        donatedOrgans =  FXCollections.observableArrayList(controller.getSearchedDonor().getOrgansDonated());
+        donatedOrgans =  FXCollections.observableArrayList(controller.getCurrentProfile().getOrgansDonated());
         affectedOrgansListView.setItems(donatedOrgans);
     }
 

@@ -1,4 +1,4 @@
-package odms.profile;
+package odms.enums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 
-public enum Organ {
+public enum OrganEnum {
     BONE("bone"),
     BONE_MARROW("bone-marrow"),
     CONNECTIVE_TISSUE("connective-tissue"),
@@ -51,7 +51,7 @@ public enum Organ {
     public static ArrayList<String> toArrayList() {
         ArrayList<String> organs = new ArrayList<>();
 
-        for (Organ organ : new ArrayList<>(EnumSet.allOf(Organ.class))) {
+        for (OrganEnum organ : new ArrayList<>(EnumSet.allOf(OrganEnum.class))) {
             organs.add(organ.getNamePlain());
         }
 
@@ -66,8 +66,8 @@ public enum Organ {
      * @param organStrings List of Organ Strings
      * @return HashSet of Organs
      */
-    public static HashSet<Organ> stringListToOrganSet(List<String> organStrings) {
-        HashSet<Organ> organs = new HashSet<>();
+    public static HashSet<OrganEnum> stringListToOrganSet(List<String> organStrings) {
+        HashSet<OrganEnum> organs = new HashSet<>();
 
         for (String organ : organStrings) {
             organs.add(valueOf(organ.toUpperCase()));
@@ -81,10 +81,10 @@ public enum Organ {
      * @param organs Organ HashSet to be converted
      * @return comma delimited string
      */
-    public static String organSetToString(HashSet<Organ> organs) {
+    public static String organSetToString(HashSet<OrganEnum> organs) {
         List<String> organsList = new ArrayList<>();
 
-        for (Organ organ : organs) {
+        for (OrganEnum organ : organs) {
             organsList.add(organ.getNamePlain());
         }
 
@@ -93,7 +93,7 @@ public enum Organ {
         return String.join(", ", organsList);
     }
 
-    Organ(String name) {
+    OrganEnum(String name) {
         this.name = name;
     }
 

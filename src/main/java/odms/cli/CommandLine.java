@@ -3,12 +3,15 @@ package odms.cli;
 import static odms.cli.CommandUtils.validateCommandType;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
+import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -17,13 +20,18 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-public class CommandLine {
+public class CommandLine implements Runnable {
 
     private ProfileDatabase currentDatabase;
     private LineReader reader;
     private Terminal terminal;
 
-    public CommandLine (ProfileDatabase currentDatabase) {
+    /**
+     * Create a standard input/output terminal
+     *
+     * @param currentDatabase
+     */
+    public CommandLine(ProfileDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
 
         try {
@@ -32,7 +40,6 @@ public class CommandLine {
                 .terminal(terminal)
                 .appName("ODMS")
                 .completer(Commands.commandAutoCompletion())
-                // .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
                 .history(new DefaultHistory())
                 .parser(new DefaultParser())
                 .build();
@@ -40,7 +47,42 @@ public class CommandLine {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Create a virtual terminal command line
+     *
+     * @param currentDatabase
+     * @param input
+     * @param output
+     */
+    public CommandLine(ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
+        this.currentDatabase = currentDatabase;
+
+        try {
+            terminal = TerminalBuilder.builder()
+                    .system(false)
+                    .streams(input, output)
+                    .build();
+
+            reader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .appName("ODMS")
+                    .completer(Commands.commandAutoCompletion())
+                    .history(new DefaultHistory())
+                    .parser(new DefaultParser())
+                    .build();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Run implementation so command line can be run in an alternate thread
+     */
+    public void run() {
+        initialiseConsole();
     }
 
     /**
@@ -71,6 +113,8 @@ public class CommandLine {
         }
     }
 
+    public History getHistory() { return reader.getHistory(); }
+
     /**
      * Take the input from the console commands and process them accordingly.
      *
@@ -86,7 +130,7 @@ public class CommandLine {
 
             case HELP:
                 // Show available commands (help).
-                if(rawInput.equals("help")) {
+                if (rawInput.equals("help")) {
                     Help.help();
                 } else {
                     Help.helpSpecific(rawInput.substring(5));

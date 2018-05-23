@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -122,22 +122,22 @@
                                                       <Font size="22.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="givenNamesField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                <TextField fx:id="givenNamesField" onKeyTyped="#editTrueKey" prefHeight="40.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" onKeyTyped="#editTrueKey" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="addressField" layoutX="166.0" layoutY="123.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                <TextField fx:id="addressField" layoutX="166.0" layoutY="123.0" onKeyTyped="#editTrueKey" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="regionField" layoutX="166.0" layoutY="175.0" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                <TextField fx:id="regionField" layoutX="166.0" layoutY="175.0" onKeyTyped="#editTrueKey" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
@@ -212,11 +212,6 @@
                         <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Profile.css" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
