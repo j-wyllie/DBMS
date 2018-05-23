@@ -106,7 +106,7 @@ public class ClinicianProfileController extends CommonController {
     private Tab viewUsersTab;
 
     @FXML
-    ViewUsersController viewUsersController;
+    private ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
@@ -216,12 +216,9 @@ public class ClinicianProfileController extends CommonController {
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
     private void updateSearchTable() {
-
-        //System.out.println("update search table");
-
         String selectedGender = null;
         String selectedType = null;
-        ObservableList selectedOrgans;
+        ObservableList<OrganEnum> selectedOrgans;
 
         selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
 
@@ -254,10 +251,17 @@ public class ClinicianProfileController extends CommonController {
             ageRangeSearchInt = -999;
         }
 
-
         searchTable.getItems().clear();
         donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGender, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
+                searchString,
+                ageSearchInt,
+                ageRangeSearchInt,
+                regionSearchString,
+                selectedGender,
+                selectedType,
+                new HashSet<>(selectedOrgans)
+        ));
 
         searchTable.setItems(donorObservableList);
     }
@@ -271,8 +275,14 @@ public class ClinicianProfileController extends CommonController {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         //staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());   TODO null pointer
-        addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
-        regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
+        addressLabel.setText(
+                addressLabel.getText() +
+                        (currentUser.getWorkAddress() != null ? currentUser.getWorkAddress() : "")
+        );
+        regionLabel.setText(
+                regionLabel.getText() +
+                        (currentUser.getRegion() != null ? currentUser.getRegion() : "")
+        );
     }
 
     /**
