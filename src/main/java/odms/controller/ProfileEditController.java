@@ -226,10 +226,10 @@ public class ProfileEditController extends CommonController {
                 }
                 if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
                     if (comboGender.getValue() != null) {
-                        currentProfile.setPreferredGender(comboGender.getEditor().getText());
+                        currentProfile.setPreferredGender(comboGender.getValue().toString());
                     }
                 } else {
-                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+                    currentProfile.setPreferredGender(comboGenderPref.getValue().toString());
                 }
 
                 if (error) {
