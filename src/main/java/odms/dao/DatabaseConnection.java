@@ -1,4 +1,4 @@
-package odms.data;
+package odms.dao;
 
 import static java.lang.System.getProperty;
 
