@@ -44,6 +44,25 @@ public class TestDataCreator {
         "Xavier Harkonnen"
     );
 
+    private List<String> regions = Arrays.asList(
+            "Bay of Plenty",
+            "Gisborne",
+            "Hawke's Bay",
+            "Taranaki",
+            "Wellington",
+            "Tasman",
+            "Nelson",
+            "Marlborough",
+            "West Coast",
+            "Canterbury",
+            "Otago",
+            "Southland",
+            "Northland",
+            "Auckland",
+            "Wanganui",
+            "Waikato"
+            );
+
     public TestDataCreator() {
         database = new ProfileDatabase();
 
@@ -85,6 +104,14 @@ public class TestDataCreator {
             addOrganDonations(profile);
             addOrganDonors(profile);
             addOrgansRequired(profile);
+
+            if (Math.random() < 0.5) {
+                profile.setGender("male");
+            } else {
+                profile.setGender("female");
+            }
+
+            profile.setRegion(regions.get(randInRange(0, 15)));
 
             // Give this Galil Ar some diseases
             if (profile.getFullName().equals("Galil AR")) {

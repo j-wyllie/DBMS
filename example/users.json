@@ -1,75 +1,74 @@
 {
-  "deletedUsers": [],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
       "name": "John Smith",
-      "staffID": 0,
+      "staffId": 0,
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 20
         },
         "time": {
           "hour": 15,
-          "minute": 43,
-          "second": 29,
-          "nano": 275000000
+          "minute": 59,
+          "second": 32,
+          "nano": 243000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-05-22T15:43:29.275",
-        "0 updated at 03:43 PM 22-05-2018"
+        "Account for John Smithcreated at 2018-05-20T15:59:32.243",
+        "0 updated at 03:59 PM 20-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 20
         },
         "time": {
           "hour": 15,
-          "minute": 43,
-          "second": 29,
-          "nano": 275000000
+          "minute": 59,
+          "second": 32,
+          "nano": 243000000
         }
       }
     },
     "1": {
       "userType": "CLINICIAN",
       "name": "Matt Smith",
-      "staffID": 1,
+      "staffId": 1,
       "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 20
         },
         "time": {
           "hour": 15,
-          "minute": 43,
-          "second": 29,
-          "nano": 275000000
+          "minute": 59,
+          "second": 32,
+          "nano": 243000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-05-22T15:43:29.275",
-        "1 updated at 03:43 PM 22-05-2018"
+        "Account for Matt Smithcreated at 2018-05-20T15:59:32.243",
+        "1 updated at 03:59 PM 20-05-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 5,
-          "day": 22
+          "day": 20
         },
         "time": {
           "hour": 15,
-          "minute": 43,
-          "second": 29,
-          "nano": 275000000
+          "minute": 59,
+          "second": 32,
+          "nano": 243000000
         }
       }
     }
