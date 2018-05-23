@@ -1,18 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.guiPopup;
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
 import com.sun.media.sound.InvalidDataException;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,14 +11,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.profile.Profile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -100,7 +99,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -110,7 +109,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -128,11 +127,8 @@ public class ProfileEditController extends CommonController {
                     irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                String action = "Profile " +
-                    currentProfile.getId() +
-                    " updated details previous = " +
-                    currentProfile.getAttributesSummary() +
-                    " new = ";
+                History action = new History("Profile" , currentProfile.getId() ,"update",
+                        "previous "+currentProfile.getAttributesSummary(),-1,null);
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
@@ -195,18 +191,9 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-                action = action +
-                    currentProfile.getAttributesSummary() +
-                    " at " +
-                    LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
-                }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                HistoryController.updateHistory(action);
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");

@@ -1,7 +1,5 @@
 package odms.controller;
 
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +16,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -44,6 +44,12 @@ import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -138,6 +144,8 @@ public class ClinicianProfileController extends CommonController {
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     private CommandGUI commandGUI;
 
@@ -168,7 +176,12 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -178,7 +191,12 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**

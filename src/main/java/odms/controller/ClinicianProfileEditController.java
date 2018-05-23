@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.UserDataIO;
+import odms.history.History;
 import odms.user.User;
 
 import java.io.IOException;
@@ -58,23 +59,14 @@ public class ClinicianProfileEditController extends CommonController{
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean error = false;
         if (saveChanges()) {
-            String action =
-                    "Clinician " + currentUser.getStaffId() + " updated details previous = " + currentUser
-                            .getAttributesSummary() + " new = ";
+            History action = new History("Clinician",currentUser.getStaffId(),"updated",
+                    "previous "+currentUser.getAttributesSummary() + " new "+
+                            currentUser.getAttributesSummary(),-1,LocalDateTime.now());
             currentUser.setName(givenNamesField.getText());
             currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());
             currentUser.setRegion(regionField.getText());
-
-            action = action + currentUser.getAttributesSummary() + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
 
             if (error) {
                 guiPopup("Error. Not all fields were updated.");

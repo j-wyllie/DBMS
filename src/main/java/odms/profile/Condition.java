@@ -13,6 +13,8 @@ public class Condition {
     private String name;
     private LocalDate dateOfDiagnosis;
     private LocalDate dateCured = null;
+    private String dateOfDiagnosisString;
+    private String dateCuredString;
     private boolean isCured = false;
     private boolean isChronic = false;
     private String chronicText = "";
@@ -28,6 +30,8 @@ public class Condition {
             throws IllegalArgumentException {
 
         this.name = name;
+        dateOfDiagnosisString = dateOfDiagnosis;
+        dateCuredString = dateCured;
         String[] dates = dateOfDiagnosis.split("-");
         try {
             this.dateOfDiagnosis = LocalDate
@@ -70,53 +74,23 @@ public class Condition {
     }
 
     // getters
-    public String getName() {
-        return this.name;
-    }
+    public String getName() { return this.name; }
+    public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
+    public LocalDate getDateCured() { return dateCured; }
+    public String getDateOfDiagnosisString() { return dateOfDiagnosisString; }
+    public String getDateCuredString() { return dateCuredString; }
+    public boolean getCured() { return this.isCured; }
+    public boolean getChronic() { return isChronic; }
+    public String getChronicText() { return chronicText; }
 
-    public LocalDate getDateOfDiagnosis() {
-        return dateOfDiagnosis;
-    }
-
-    public LocalDate getDateCured() {
-        return dateCured;
-    }
-
-    public boolean getCured() {
-        return this.isCured;
-    }
-
-    public boolean getChronic() {
-        return isChronic;
-    }
-
-    public String getChronicText() {
-        return chronicText;
-    }
 
     // setters
-    public void setIsCured(boolean isCured) {
-        this.isCured = isCured;
-    }
+    public void setIsCured(boolean isCured) { this.isCured = isCured; }
+    public void setIsChronic(boolean isChronic) { this.isChronic = isChronic; }
+    public void setChronicText(String chronicText) { this.chronicText = chronicText; }
+    public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) { this.dateOfDiagnosis = dateOfDiagnosis; }
+    public void setDateCured(LocalDate dateCured) { this.dateCured = dateCured; }
+    public void setName(String name) { this.name = name; }
 
-    public void setIsChronic(boolean isChronic) {
-        this.isChronic = isChronic;
-    }
-
-    public void setChronicText(String chronicText) {
-        this.chronicText = chronicText;
-    }
-
-    public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) {
-        this.dateOfDiagnosis = dateOfDiagnosis;
-    }
-
-    public void setDateCured(LocalDate dateCured) {
-        this.dateCured = dateCured;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

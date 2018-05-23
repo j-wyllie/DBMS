@@ -4,6 +4,7 @@ import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
+import odms.controller.HistoryController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
@@ -18,7 +19,7 @@ public class App {
     private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     public static void main(String[] args) {
-        CommandUtils.currentSessionHistory.add("");
+        HistoryController.currentSessionHistory.add(null);
         try {
 
             File userDbFile = new File(USER_DATABASE);
