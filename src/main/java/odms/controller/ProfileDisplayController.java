@@ -484,6 +484,7 @@ public class ProfileDisplayController extends CommonController {
                 });
 
         refreshPageElements();
+        forceConditionSortOrder();
 
     }
 
@@ -1131,8 +1132,6 @@ public class ProfileDisplayController extends CommonController {
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems())
         );
 
-        disableButtonsIfNoItems(allDrugs);
-
         buttonMedicationHistoricToCurrent.setDisable(false);
         buttonMedicationCurrentToHistoric.setDisable(false);
         buttonDeleteMedication.setDisable(false);
@@ -1157,9 +1156,9 @@ public class ProfileDisplayController extends CommonController {
         }
 
         ArrayList<Condition> allConditions = convertConditionObservableToArray(
-                curConditionsTable.getSelectionModel().getSelectedItems());
-        allConditions.addAll(convertConditionObservableToArray(
-                pastConditionsTable.getSelectionModel().getSelectedItems()));
+            curConditionsTable.getSelectionModel().getSelectedItems());
+            allConditions.addAll(convertConditionObservableToArray(
+            pastConditionsTable.getSelectionModel().getSelectedItems()));
         disableButtonsIfNoItems(allConditions);
     }
 
@@ -1380,6 +1379,12 @@ public class ProfileDisplayController extends CommonController {
                     currentProfile.getPreviousProcedures(),
                     currentProfile.getPendingProcedures()
             );
+
+            hideItems();
+            refreshMedicationsTable();
+
+            refreshConditionTable();
+            forceConditionSortOrder();
         }
 
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -1390,24 +1395,12 @@ public class ProfileDisplayController extends CommonController {
 
         curChronicColumn.setSortable(false);
 
-
-        if(currentProfile != null) {
-            setPage(currentProfile);
-            hideItems();
-        }
-
-        if (currentProfile != null) {
-            refreshMedicationsTable();
-            makeProcedureTable(currentProfile.getPreviousProcedures(), searchedDonor.getPendingProcedures());
-
-        }
-
         refreshPageElements();
 
         disableTableHeaderReorder();
+
         try { // Can't refresh the condition table on the initial initialize
-            refreshConditionTable();
-            forceConditionSortOrder();
+
         } catch (NullPointerException e) { }
     }
 
