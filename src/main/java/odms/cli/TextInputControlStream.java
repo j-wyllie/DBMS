@@ -111,7 +111,7 @@ class TextInputControlStream {
                     this.textInputControl.positionCaret(this.textInputControl.getLength());
 
                     final String lastLine = getLastLine();
-                    final ByteBuffer buf = getCharset().encode(lastLine + "\r\n");
+                    final ByteBuffer buf = getCharset().encode(lastLine + "\r");
                     this.inputTextTarget.write(buf.array(), 0, buf.remaining());
                     this.inputTextTarget.flush();
                     this.lastLineBreakIndex = this.textInputControl.getLength() + 1;

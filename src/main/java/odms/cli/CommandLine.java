@@ -26,7 +26,7 @@ public class CommandLine implements Runnable {
     private LineReader reader;
     private Terminal terminal;
 
-    public CommandLine (ProfileDatabase currentDatabase) {
+    public CommandLine(ProfileDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
 
         try {
@@ -35,7 +35,6 @@ public class CommandLine implements Runnable {
                 .terminal(terminal)
                 .appName("ODMS")
                 .completer(Commands.commandAutoCompletion())
-                // .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
                 .history(new DefaultHistory())
                 .parser(new DefaultParser())
                 .build();
@@ -45,7 +44,7 @@ public class CommandLine implements Runnable {
         }
     }
 
-    public CommandLine (ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
+    public CommandLine(ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
         this.currentDatabase = currentDatabase;
 
         try {
@@ -58,7 +57,6 @@ public class CommandLine implements Runnable {
                     .terminal(terminal)
                     .appName("ODMS")
                     .completer(Commands.commandAutoCompletion())
-                    // .highlighter(new DefaultHighlighter()) TODO investigate syntax highlighting further
                     .history(new DefaultHistory())
                     .parser(new DefaultParser())
                     .build();
