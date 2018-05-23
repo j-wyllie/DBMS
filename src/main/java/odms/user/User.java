@@ -74,9 +74,9 @@ public class User {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
 
-        if (attrName.startsWith(" ")) {attrName = attrName.substring(1);}   //TODO why does this bug pop up
+        if (attrName.startsWith(" ")) {attrName = attrName.substring(1);}
 
-        //TODO add in 'attribute' functionality like in profile/Profile
+        //TODO add in 'attribute' functionality like in profile/Profile eventually
         switch (attrName) {
             case "name":
                 setName(value);

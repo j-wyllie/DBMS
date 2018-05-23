@@ -254,7 +254,7 @@ public class ClinicianProfileController extends CommonController {
     private void setClinicianDetails() {
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
-        staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());
+        staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffID());
         addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
