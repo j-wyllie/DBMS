@@ -994,10 +994,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
             }
-            if (currentProfile.getHeight() != null && currentProfile.getHeight() != 0.0) {
-                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "m");
+            if (currentProfile.getHeight() != 0.0) {
+                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
             }
-            if (currentProfile.getWeight() != null && currentProfile.getWeight() != 0.0) {
+            if (currentProfile.getWeight() != 0.0) {
                 weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
             if (currentProfile.getPhone() != null) {
@@ -1012,10 +1012,16 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getRegion() != null) {
                 regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
             }
+            if (currentProfile.getAlcoholConsumption() != null) {
+                alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentProfile.getAlcoholConsumption());
+            }
+            if (currentProfile.getBloodPressure() != null) {
+                bloodPressureLabel.setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
+            }
             if (currentProfile.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
             }
-            if (currentProfile.getHeight() != null && currentProfile.getWeight() != null) {
+            if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
                 bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
             }
             if (currentProfile.getDateOfBirth() != null) {

@@ -80,9 +80,6 @@ public class ProfileEditController extends CommonController {
     private TextField bloodPressureField;
 
     @FXML
-    private TextField diseaseField;
-
-    @FXML
     private RadioButton isSmokerRadioButton;
 
     private Boolean isClinician;
@@ -136,7 +133,6 @@ public class ProfileEditController extends CommonController {
                 saveAlcoholConsumption();
                 saveBloodPressure();
                 saveBloodType();
-                saveDiseases();
                 saveIsSmoker();
 
                 ProfileDataIO.saveData(getCurrentDatabase());
@@ -334,17 +330,6 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Save Diseases field to profile.
-     */
-    private void saveDiseases() {
-        if (!diseaseField.getText().isEmpty() && diseaseField.getText().contains("/")) {
-            String[] diseases = diseaseField.getText().split(", ");
-            HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-            currentProfile.setChronicDiseases(diseasesSet);
-        }
-    }
-
-    /**
      * Save Smoker Status to profile.
      */
     private void saveIsSmoker() {
@@ -447,11 +432,10 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());
                 }
-                if (currentProfile.getHeight() != null){
+                if (currentProfile.getHeight() != 0.0){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
-
                 }
-                if (currentProfile.getWeight() != null) {
+                if (currentProfile.getWeight() != 0.0) {
                     weightField.setText(String.valueOf(currentProfile.getWeight()));
                 }
                 if (currentProfile.getPhone() != null) {

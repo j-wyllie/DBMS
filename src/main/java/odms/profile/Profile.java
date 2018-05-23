@@ -21,8 +21,8 @@ public class Profile {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
-    private Double height;
-    private Double weight;
+    private Double height = 0.0;
+    private Double weight = 0.0;
     private String bloodType;
     private String address;
     private String region;
@@ -974,7 +974,10 @@ public class Profile {
      * @return blood pressure string
      */
     public String getBloodPressure() {
-        return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
+        if (bloodPressureDiastolic != null && bloodPressureSystolic != null) {
+            return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic.toString();
+        }
+        return null;
     }
 
     public HashSet<String> getChronicDiseases() {

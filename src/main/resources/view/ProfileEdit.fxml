@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -176,7 +176,7 @@
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
                                                                 </ImageView>
-                                                                <Label fx:id="dobLabel" prefHeight="66.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of birth : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                <Label fx:id="dobLabel" prefHeight="66.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of Birth : " GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" />
                                                                     </GridPane.margin>
@@ -240,7 +240,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="dodLabel" layoutX="30.0" layoutY="158.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of death : " GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                <Label fx:id="dodLabel" layoutX="30.0" layoutY="158.0" prefHeight="61.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of Death : " GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                     <font>
                                                                         <Font size="22.0" />
                                                                     </font>
@@ -396,14 +396,6 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="chronicDiseasesLabel" layoutX="30.0" layoutY="158.0" prefHeight="48.0" prefWidth="1178.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Chronic Diseases: " GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                    <font>
-                                                                        <Font size="22.0" />
-                                                                    </font>
-                                                                    <GridPane.margin>
-                                                                        <Insets left="20.0" />
-                                                                    </GridPane.margin>
-                                                                </Label>
                                                                 <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                                                                     <items>
                                                                         <Button fx:id="undoMedicalButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
@@ -426,11 +418,6 @@
                                                                     </GridPane.margin>
                                                                 </TextField>
                                                                 <TextField fx:id="bloodPressureField" layoutX="278.0" layoutY="163.0" onKeyTyped="#editTrueKey" promptText="systolic/diastolic" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="diseaseField" layoutX="278.0" layoutY="211.0" onKeyTyped="#editTrueKey" promptText="disease1, disease2, disease3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                                     <GridPane.margin>
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
