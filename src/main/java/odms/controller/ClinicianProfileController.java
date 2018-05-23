@@ -12,8 +12,6 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +20,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -37,12 +43,13 @@ import odms.data.UserDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
+import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
 
-    private static User currentUser;
+    private User currentUser;
 
     @FXML
     private Label clinicianFullName;
@@ -99,8 +106,16 @@ public class ClinicianProfileController extends CommonController {
     private TextField transplantSearchField;
 
     @FXML
+    private Label donorStatusLabel;
+
+    @FXML
     private CheckBox ageRangeCheckbox;
 
+    @FXML
+    private Tab viewUsersTab;
+
+    @FXML
+    ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
@@ -206,7 +221,7 @@ public class ClinicianProfileController extends CommonController {
      * @param event clicking the mouse
      */
     @FXML
-    private void handleSearchDonors(MouseEvent event) {
+    private void handleSearchDonorsMouse(MouseEvent event) {
         updateSearchTable();
     }
 
@@ -266,6 +281,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void setClinicianDetails() {
+        donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
         //staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());   TODO null pointer
@@ -436,7 +452,14 @@ public class ClinicianProfileController extends CommonController {
         });
 
         addTooltipToRow();
+    }
 
+    /**
+     * Initializes the controller for the view users Tab
+     */
+    public void handleViewUsersTabClicked() {
+        viewUsersController.setCurrentUser(currentUser);
+        viewUsersController.setUpUsersTable();
     }
 
     /**
@@ -452,49 +475,59 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    /**
+     * Hides certain nodes if the clinician does not have permission to view them
+     */
+    private void hideAdminItems() {
+        if (currentUser.getUserType() == UserType.CLINICIAN) {
+            viewUsersTab.setDisable(true);
+        } else {
+            viewUsersTab.setDisable(false);
+        }
+    }
+
     @FXML
     public void initialize() {
-
-        ageRangeField.setVisible(false);
-        ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-
-        genderStrings.clear();
-        genderStrings.add("any");
-        genderStrings.add("male");
-        genderStrings.add("female");
-        genderCombobox.getItems().setAll(genderStrings);
-        genderCombobox.getSelectionModel().selectFirst();
-
-
-        organsStrings.clear();
-        organsStrings.addAll(OrganEnum.toArrayList());
-        organsCombobox.getItems().setAll(OrganEnum.values());
-
-        typeStrings.clear();
-        typeCombobox.getItems().clear();
-        typeStrings.add("any");
-        typeStrings.add("donor");
-        typeStrings.add("receiver");
-        typeCombobox.getItems().addAll(typeStrings);
-        typeCombobox.getSelectionModel().selectFirst();
-
-        typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                updateSearchTable();
-            }
-        });
-
-        genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                updateSearchTable();
-            }
-        });
-
-        TableFilter filter = new TableFilter<>(transplantTable);
-
         if (currentUser != null) {
+            ageRangeField.setVisible(false);
+            ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+
+            genderStrings.clear();
+            genderStrings.add("any");
+            genderStrings.add("male");
+            genderStrings.add("female");
+            genderCombobox.getItems().setAll(genderStrings);
+            genderCombobox.getSelectionModel().selectFirst();
+
+            organsStrings.clear();
+            organsStrings.addAll(OrganEnum.toArrayList());
+            organsCombobox.getItems().setAll(OrganEnum.values());
+
+            typeStrings.clear();
+            typeCombobox.getItems().clear();
+            typeStrings.add("any");
+            typeStrings.add("donor");
+            typeStrings.add("receiver");
+            typeCombobox.getItems().addAll(typeStrings);
+            typeCombobox.getSelectionModel().selectFirst();
+
+            typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    updateSearchTable();
+                }
+            });
+
+            genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    updateSearchTable();
+                }
+            });
+
+            TableFilter filter = new TableFilter<>(transplantTable);
+
             setClinicianDetails();
+            hideAdminItems();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
@@ -510,7 +543,7 @@ public class ClinicianProfileController extends CommonController {
 
 
             // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.profileDb, commandGUI.getIn(), commandGUI.getOut());
+            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
             t.start();

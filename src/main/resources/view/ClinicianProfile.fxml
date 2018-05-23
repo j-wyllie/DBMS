@@ -215,7 +215,7 @@
                                         </TableView>
                                         <TextField fx:id="searchField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="249.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <TextField fx:id="regionField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="140.0" promptText="Region" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                    <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                                    <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonorsMouse" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
                                     <TextField fx:id="ageField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="66.0" promptText="Age" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" text="Age range" GridPane.columnIndex="3" GridPane.columnSpan="3" />
                                     <TextField fx:id="ageRangeField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="104.0" promptText="Upper age" GridPane.columnIndex="5" GridPane.rowIndex="1" />
@@ -279,6 +279,11 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="viewUsersTab" text="View Users" onSelectionChanged="#handleViewUsersTabClicked">
+                    <content>
+                        <fx:include fx:id="viewUsers" source="ViewUsers.fxml" GridPane.halignment="CENTER" />
                     </content>
                   </Tab>
               </tabs>
