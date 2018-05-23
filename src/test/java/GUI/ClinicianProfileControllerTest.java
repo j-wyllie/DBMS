@@ -3,6 +3,7 @@ package GUI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -14,7 +15,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
+import org.controlsfx.control.CheckComboBox;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -62,6 +65,64 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         clickOn("#usernameField").write("0");
         clickOn("#loginButton");
     }
+
+
+    /**
+     * Checks that the correct Profiles are displayed when using search tables filters
+     */
+    @Test
+    public void filterSearchTableTest() {
+
+        clickOn("#searchTab");
+        TableView searchTable = getTableView("#searchTable");
+        Scene scene = getTopModalStage();
+
+        clickOn("#ageField").write("10");
+        clickOn("#ageRangeField").write("30");
+
+        Profile firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getAge() > 10 && firstDonor.getAge() < 30);
+
+        //resetting
+        clickOn("#ageField").write("0");
+        clickOn("#ageRangeField").write("120");
+
+        CheckComboBox genderCombobox = (CheckComboBox) scene.lookup("#genderCombobox");
+        //to overcome 'not on FX' thread exception
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                genderCombobox.getCheckModel().check(0);
+            }
+        });
+        clickOn(scene.lookup("#genderCombobox"));
+        firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getGender().equals("male"));
+
+
+        CheckComboBox organsCombobox = (CheckComboBox) scene.lookup("#organsCombobox");
+        //to overcome 'not on FX' thread exception
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                organsCombobox.getCheckModel().check(6); //kidney
+                organsCombobox.getCheckModel().check(7); //liver
+                organsCombobox.getCheckModel().check(8); //intestine
+
+
+            }
+        });
+        clickOn(scene.lookup("#organsCombobox"));
+        firstDonor = (Profile) searchTable.getItems().get(0);
+
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.KIDNEY));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.INTESTINE));
+        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.LIVER));
+
+    }
+
 
     /**
      * Checks that the correct donor's profile is opened from the search table.

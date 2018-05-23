@@ -15,8 +15,8 @@ import odms.medications.Drug;
 
 public class Profile {
 
-    private Boolean donor;
-    private Boolean receiver;
+    private Boolean donor = false;
+    private Boolean receiver = false;
 
     private String givenNames;
     private String lastNames;
@@ -764,6 +764,24 @@ public class Profile {
             }
         }
         return currentConditions;
+    }
+
+    /**
+     * Checks if a profile is donating a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsDonating.containsAll(organs);
+    }
+
+    /**
+     * Checks if a profile is receiving a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsRequired.containsAll(organs);
     }
 
     /**
