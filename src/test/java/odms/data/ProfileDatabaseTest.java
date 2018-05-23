@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import org.junit.Before;
 import org.junit.Rule;
@@ -164,11 +167,11 @@ public class ProfileDatabaseTest {
         Profile profileThree = new Profile(profileThreeAttr);
         Profile profileFour = new Profile(profileFourAttr);
         Profile profileFive = new Profile(profileFiveAttr);
-
+        HashSet<OrganEnum> emptySet = new HashSet<>();
 
         try {
             // No profiles in db, so no results
-            testResults = profileDb.searchProfiles("Sam Slavko",  -999, -999, null, null, null, null);
+            testResults = profileDb.searchProfiles("Sam Slavko",  -999, -999, "", "any", "any", emptySet);
             assertTrue(testResults.size() == 0);
 
             profileDb.addProfile(profileOne);
@@ -179,14 +182,14 @@ public class ProfileDatabaseTest {
 
             // Top result should be profile Sam Slavko, next result Sam Sick. No other results because other profile's
             // names not at all similar.
-            testResults = profileDb.searchProfiles("Sam Slavko", -999, -999, null, null, null, null);
+            testResults = profileDb.searchProfiles("Sam Slavko", -999, -999, "", "any", "any", emptySet);
             assertTrue(testResults.size() == 2);
             assertEquals(profileThree, testResults.get(0));
             assertEquals(profileTwo, testResults.get(1));
 
             // Should not contain profile Zu Tiu because this name has no a or nearby letter to a. Should contain
             // all other profiles.
-            testResults = profileDb.searchProfiles("a", -999, -999, null, null, null, null);
+            testResults = profileDb.searchProfiles("a", -999, -999, "", "any", "any", emptySet);
             assertTrue(testResults.size() == 4);
             assertTrue(!testResults.contains(profileFive));
         } catch (Exception e) {

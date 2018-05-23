@@ -259,7 +259,7 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab text="Console" >
+                  <Tab fx:id="consoleTab" text="Console" >
                     <content>
                       <AnchorPane stylesheets="@../styles/ClinicianProfile.css" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>

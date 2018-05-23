@@ -1,16 +1,5 @@
 package odms.controller;
 
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,15 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -36,16 +17,22 @@ import javafx.stage.Stage;
 import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
-import odms.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
-import odms.data.UserDataIO;
-import odms.data.UserDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static odms.controller.UndoRedoController.redo;
+import static odms.controller.UndoRedoController.undo;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -113,6 +100,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private Tab viewUsersTab;
+
+    @FXML
+    private Tab consoleTab;
 
     @FXML
     ViewUsersController viewUsersController;
@@ -476,13 +466,28 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
-     * Hides certain nodes if the clinician does not have permission to view them
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
      */
-    private void hideAdminItems() {
+    private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
             viewUsersTab.setDisable(true);
+            consoleTab.setDisable(true);
         } else {
             viewUsersTab.setDisable(false);
+            consoleTab.setDisable(false);
+
+            // Initialize command line GUI
+            commandGUI = new CommandGUI(displayTextArea);
+            System.setIn(commandGUI.getIn());
+            System.setOut(commandGUI.getOut());
+            //System.setErr(commandGUI.getOut());
+
+
+            // Start the command line in an alternate thread
+            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            commandGUI.initHistory(commandLine);
+            Thread t = new Thread(commandLine);
+            t.start();
         }
     }
 
@@ -527,26 +532,13 @@ public class ClinicianProfileController extends CommonController {
             TableFilter filter = new TableFilter<>(transplantTable);
 
             setClinicianDetails();
-            hideAdminItems();
+            setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // Initialize command line GUI
-            commandGUI = new CommandGUI(displayTextArea);
-            System.setIn(commandGUI.getIn());
-            System.setOut(commandGUI.getOut());
-            //System.setErr(commandGUI.getOut());
-
-
-            // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
-            commandGUI.initHistory(commandLine);
-            Thread t = new Thread(commandLine);
-            t.start();
         }
     }
 
