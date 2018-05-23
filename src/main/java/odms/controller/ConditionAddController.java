@@ -60,9 +60,7 @@ public class ConditionAddController {
                 throw new IllegalArgumentException();
             }
             if (curedCheckBox.isSelected()) {
-                String[] cureDates = dateCured.split("-");
-                LocalDate dateCures = LocalDate.of(Integer.valueOf(cureDates[2]), Integer.valueOf(cureDates[1]), Integer.valueOf(cureDates[0]));
-                if (dateCures.isAfter(LocalDate.now()) || dob.isAfter(dateCures) || dateDiagnoses.isAfter(dateCures)) {
+                if(dateCured.isAfter(LocalDate.now()) || dob.isAfter(dateCured) || dateDiagnosed.isAfter(dateCured)){
                     throw new IllegalArgumentException();
                 } else {
                     condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
