@@ -10,6 +10,7 @@ import odms.controller.LoginController;
 import odms.data.ProfileDataIO;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -56,6 +57,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     /**
      * creates a valid user and adds it to the database.
      */
+    @Ignore
     @Test
     public void createValidUser(){
         clickOn("#createAccountLink");
