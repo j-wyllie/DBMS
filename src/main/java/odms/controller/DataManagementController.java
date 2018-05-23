@@ -20,6 +20,10 @@ public class DataManagementController {
     @FXML
     private AnchorPane dataManagementAp;
 
+    /**
+     * Opens a file chooser and imports the selected files.
+     * @param actionEvent
+     */
     public void handleImportSavedDataClicked(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -37,10 +41,15 @@ public class DataManagementController {
             } else {
                 importAndCloseWindows(stage, file);
             }
-
         }
     }
 
+    /**
+     * Imports new json file.
+     * Closes all open windows and re-initializes the admin view.
+     * @param stage Stage to be close
+     * @param file file to be set as database
+     */
     private void importAndCloseWindows(Stage stage, File file) {
         GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
 
@@ -53,11 +62,14 @@ public class DataManagementController {
         try {
             Scene scene = new Scene(fxmlLoader.load());
 
+            ClinicianProfileController controller = fxmlLoader.getController();
+            controller.setCurrentUser(currentUser);
+            controller.initialize();
+
             stage = new Stage();
             stage.setTitle("Admin");
             stage.setScene(scene);
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
