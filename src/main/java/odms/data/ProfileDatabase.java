@@ -262,7 +262,7 @@ public class ProfileDatabase {
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, List selectedGenders,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
@@ -282,7 +282,7 @@ public class ProfileDatabase {
 
         //parsing out organs as strings for later use
 
-        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGenders.isEmpty() && selectedType == null && selectedOrgans.isEmpty()){
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()){
             return resultProfiles;
         }
 
@@ -311,11 +311,15 @@ public class ProfileDatabase {
         }
 
 
-        if (!selectedGenders.isEmpty()) {
-            resultProfiles.removeIf(profile -> {
-                if (profile.getGender() == null) {return true;}
-                return !selectedGenders.contains(profile.getGender());
-            });
+        if (!selectedGender.equals("")) {
+            if (!selectedGender.equals("any")) {
+                resultProfiles.removeIf(profile -> {
+                    if (profile.getGender() == null) {
+                        return true;
+                    }
+                    return !selectedGender.equals(profile.getGender());
+                });
+            }
         }
 
 

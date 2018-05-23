@@ -208,7 +208,6 @@
                                             </columns>
                                         </TableView>
                                         <TextField fx:id="searchField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="249.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <CheckComboBox fx:id="genderCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="140.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                     <TextField fx:id="regionField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="140.0" promptText="Region" GridPane.columnIndex="8" GridPane.rowIndex="1" />
                                     <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonors" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
                                     <TextField fx:id="ageField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" prefHeight="25.0" prefWidth="66.0" promptText="Age" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -217,7 +216,8 @@
                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="84.0" text="Gender filter" GridPane.columnIndex="7" />
                                     <Label alignment="CENTER" contentDisplay="CENTER" text="Donating organs filter" GridPane.columnIndex="10" />
                                     <Label alignment="CENTER" contentDisplay="CENTER" text="Type filter" GridPane.columnIndex="11" />
-                                    <ComboBox fx:id="typeCombobox"  prefWidth="150.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="typeCombobox" prefWidth="150.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="genderCombobox" prefWidth="150.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                               </children>

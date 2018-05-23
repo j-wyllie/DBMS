@@ -78,7 +78,7 @@ public class ClinicianProfileController extends CommonController {
     private TextField regionField;
 
     @FXML
-    private CheckComboBox genderCombobox;
+    private ComboBox genderCombobox;
 
     @FXML
     private ComboBox typeCombobox;
@@ -204,15 +204,18 @@ public class ClinicianProfileController extends CommonController {
 
         //System.out.println("update search table");
 
-        List selectedGenders;
+        String selectedGender = null;
         String selectedType = null;
         ObservableList selectedOrgans;
 
-        selectedGenders = genderCombobox.getCheckModel().getCheckedItems();
         selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
 
         if (!typeCombobox.getSelectionModel().isEmpty()) {
             selectedType = typeCombobox.getValue().toString();
+        }
+
+        if (!genderCombobox.getSelectionModel().isEmpty()) {
+            selectedGender = genderCombobox.getValue().toString();
         }
 
         String searchString = searchField.getText();
@@ -239,7 +242,7 @@ public class ClinicianProfileController extends CommonController {
 
         searchTable.getItems().clear();
         donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGenders, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGender, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
 
         searchTable.setItems(donorObservableList);
     }
@@ -443,9 +446,12 @@ public class ClinicianProfileController extends CommonController {
         ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
 
         genderStrings.clear();
+        genderStrings.add("any");
         genderStrings.add("male");
         genderStrings.add("female");
         genderCombobox.getItems().setAll(genderStrings);
+        genderCombobox.getSelectionModel().selectFirst();
+
 
         organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
@@ -465,6 +471,12 @@ public class ClinicianProfileController extends CommonController {
             }
         });
 
+        genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateSearchTable();
+            }
+        });
+
 
 
         TableFilter filter = new TableFilter<>(transplantTable);
@@ -479,8 +491,6 @@ public class ClinicianProfileController extends CommonController {
             }
 
         }
-
-
     }
 
     public void setCurrentUser(User currentUser) {
