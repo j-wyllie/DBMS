@@ -16,6 +16,7 @@ public class User {
     private LocalDateTime timeOfCreation;
     private String username;
     private String password; //not being used yet, but will be in the future.
+    private boolean isDefault = false;
 
     /**
      * Logs which property was updated and the time it was updated
@@ -155,5 +156,13 @@ public class User {
 
     public UserType getUserType() {
         return userType;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public boolean getDefault() {
+        return isDefault;
     }
 }

@@ -1,5 +1,12 @@
 package odms.controller;
 
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsernameOrPassword;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.GuiMain.getUserDatabase;
+
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,17 +18,10 @@ import odms.data.UserDatabase;
 import odms.profile.Profile;
 import odms.user.User;
 
-import java.io.IOException;
-
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.invalidUsernameOrPassword;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.GuiMain.getUserDatabase;
-
 public class LoginController extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
-    private static UserDatabase userDatabase = getUserDatabase();
+    private ProfileDatabase currentDatabase = getCurrentDatabase();
+    private UserDatabase userDatabase = getUserDatabase();
     private Profile currentProfile = null;
     private User currentUser;
 
@@ -44,9 +44,7 @@ public class LoginController extends CommonController {
      */
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
-        String scene;
-        String title;
-        Scene scene1;
+        Scene scene;
 
         if (!usernameField.getText().equals("")) {
 
@@ -59,14 +57,14 @@ public class LoginController extends CommonController {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
-                        scene1 = new Scene(fxmlLoader.load());
+                        scene = new Scene(fxmlLoader.load());
                         ClinicianProfileController controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
                         Stage stage = new Stage();
-                        stage.setTitle("Admin");
-                        stage.setScene(scene1);
+                        stage.setTitle(currentUser.getUserType().getName());
+                        stage.setScene(scene);
                         stage.show();
                         closeCurrentStage();
                     } catch (IOException e) {
@@ -84,14 +82,14 @@ public class LoginController extends CommonController {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
-                        scene1 = new Scene(fxmlLoader.load());
+                        scene = new Scene(fxmlLoader.load());
                         ClinicianProfileController controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
                         Stage stage = new Stage();
-                        stage.setTitle("Clinician");
-                        stage.setScene(scene1);
+                        stage.setTitle(currentUser.getUserType().getName());
+                        stage.setScene(scene);
                         stage.show();
                         closeCurrentStage();
                     } else {
@@ -101,14 +99,14 @@ public class LoginController extends CommonController {
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                            scene1 = new Scene(fxmlLoader.load());
+                            scene = new Scene(fxmlLoader.load());
                             ProfileDisplayController controller = fxmlLoader.getController();
                             controller.setProfile(currentProfile);
                             controller.initialize();
 
                             Stage stage = new Stage();
                             stage.setTitle(currentProfile.getFullName() + "'s Profile");
-                            stage.setScene(scene1);
+                            stage.setScene(scene);
                             stage.show();
 
                             closeCurrentStage();
@@ -116,7 +114,11 @@ public class LoginController extends CommonController {
                             invalidUsername();
                         }
                     }
-                } catch (UserNotFoundException | IOException | NumberFormatException e) {
+                } catch (NumberFormatException e) {
+                    invalidEntry();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     invalidUsername();
                 }
             }

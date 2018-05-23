@@ -124,10 +124,26 @@ public class AlertController {
     }
 
     /**
+     * Creates a popup with a personalized message from the controller
+     */
+    static void uniqueUsername() {
+        Alert invalidAlert = new Alert(
+                AlertType.ERROR,
+                "Please enter a unique username",
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Displays a popup prompting the user to confirm the changes they have made.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean profileSaveChanges() {
+    static boolean saveChanges() {
         Alert saveAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to save your changes?",
@@ -172,13 +188,34 @@ public class AlertController {
         }
     }
 
-    static boolean unsavedChangesImport() {
+    /**
+     * Displays a popup prompting the user to confirm cancellation of changes made
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean deleteUserConfirmation() {
         Alert cancelAlert = new Alert(
                 AlertType.CONFIRMATION,
-                "You have unsaved changes.\n" +
-                        "Do you want to continue without saving?",
-                ButtonType.CANCEL,
+                "Are you sure you want to delete this user?",
+                ButtonType.NO,
                 ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
+    }
+
+    /**
+     * Displays a popup prompting the user to that they have unsaved changes somewhere in the program
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean unsavedChangesImport() {
+        Alert cancelAlert = new Alert(
+            AlertType.CONFIRMATION,
+            "You have unsaved changes.\n" +
+                "Do you want to continue without saving?",
+            ButtonType.CANCEL,
+            ButtonType.YES
         );
 
         cancelAlert.showAndWait();

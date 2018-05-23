@@ -31,7 +31,9 @@ public class GuiMain extends Application {
     public void start(Stage primaryStage) throws IOException {
         if (!userDb.isUser(0)) {
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
+            user.setUsername("Clinician");
             userDb.addUser(user);
+            user.setDefault(true);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
 
@@ -39,6 +41,7 @@ public class GuiMain extends Application {
             User user = new User(UserType.ADMIN, "admin");
             user.setUsername("admin");
             user.setPassword("admin");
+            user.setDefault(true);
             userDb.addUser(user);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
