@@ -84,10 +84,7 @@ public class CommandUtils {
             case "import":
                 return Commands.IMPORT;
             case "export":
-                if (cmd.size() > 1) {
-                    return Commands.EXPORT;
-                }
-                break;
+                return Commands.EXPORT;
             case "undo":
                 return Commands.UNDO;
             case "redo":

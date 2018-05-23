@@ -11,6 +11,7 @@ import odms.cli.commands.Profile;
 import odms.cli.commands.User;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
+import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -120,12 +121,14 @@ public class CommandLine {
 
             case EXPORT:
                 // Export profile database to file
+                if (input.size() == 1) {
+                    ProfileDataIO.saveData(currentDatabase);
+                    UserDataIO.saveUsers(currentDatabaseUsers);
+                }
                 if (input.size() == 2) {
                     String filepath = input.get(1);
                     ProfileDataIO.saveData(currentDatabase, filepath);
-                } else {
-                    System.out.println("Error: Invalid arguments. Expected: 1, "
-                            + "Found: " + (input.size() - 1));
+                    UserDataIO.saveUsers(currentDatabaseUsers, filepath);
                 }
                 break;
 
