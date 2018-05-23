@@ -41,7 +41,7 @@ public class UserDatabase {
     public User getUser(String username) throws UserNotFoundException {
         for(User value : userDb.values()) {
             if (value.getUsername() != null) {
-                if (value.getUsername().equals(username)) {
+                if (value.getUsername().toLowerCase().equals(username)) {
                     return value;
                 }
             }
