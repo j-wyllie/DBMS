@@ -27,6 +27,12 @@ class TextInputControlStream {
     private final TextInputControlOutputStream out;
     private final Charset charset;
 
+    /**
+     * Creates an input and output stream for the given text area and charset
+     *
+     * @param textInputControl
+     * @param charset
+     */
     TextInputControlStream(final TextInputControl textInputControl, Charset charset) {
         this.charset = charset;
         this.in = new TextInputControlInputStream(textInputControl);
@@ -76,7 +82,7 @@ class TextInputControlStream {
     }
 
     /**
-     * Input Stream
+     * Input Stream implemented for the given text area
      */
     class TextInputControlInputStream extends InputStream {
 
@@ -84,7 +90,6 @@ class TextInputControlStream {
         private final PipedInputStream outputTextSource;
         private final PipedOutputStream inputTextTarget;
         private int lastLineBreakIndex = 0;
-
 
         public TextInputControlInputStream(TextInputControl textInputControl) {
             this.textInputControl = textInputControl;
@@ -105,6 +110,9 @@ class TextInputControlStream {
             this.lastLineBreakIndex = this.textInputControl.getLength();
         }
 
+        /**
+         * Puts caret to end of line, write and flushes line to given text area
+         */
         void enterKeyPressed() {
             synchronized (this) {
                 try {
@@ -178,7 +186,7 @@ class TextInputControlStream {
     }
 
     /**
-     * Output Stream
+     * Output Stream implemented for the given text area
      */
     final class TextInputControlOutputStream extends OutputStream {
 

@@ -42,13 +42,6 @@ public class GuiMain extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("ODMS"); // TODO Remove magic string
         primaryStage.show();
-
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent we) {
-//                ProfileDataIO.saveData(donorDb, DONOR_DATABASE);
-//                UserDataIO.saveUsers(userDb, USER_DATABASE);
-//            }
-//        });
     }
 
     public static ProfileDatabase getCurrentDatabase() {

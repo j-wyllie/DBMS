@@ -22,6 +22,11 @@ public class CommandGUI {
     private final PrintStream out;
     private final InputStream in;
 
+    /**
+     * Create a command line with the give text area as input/output
+     *
+     * @param textArea
+     */
     public CommandGUI(TextArea textArea) {
         this.displayTextArea = textArea;
 
@@ -39,6 +44,11 @@ public class CommandGUI {
         this.in = stream.getIn();
     }
 
+    /**
+     * Sets key listeners for command line history
+     *
+     * @param commandLine
+     */
     public void initHistory(CommandLine commandLine) {
         displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             int textLen = 0;

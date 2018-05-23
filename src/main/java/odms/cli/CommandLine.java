@@ -26,6 +26,11 @@ public class CommandLine implements Runnable {
     private LineReader reader;
     private Terminal terminal;
 
+    /**
+     * Create a standard input/output terminal
+     *
+     * @param currentDatabase
+     */
     public CommandLine(ProfileDatabase currentDatabase) {
         this.currentDatabase = currentDatabase;
 
@@ -44,6 +49,13 @@ public class CommandLine implements Runnable {
         }
     }
 
+    /**
+     * Create a virtual terminal command line
+     *
+     * @param currentDatabase
+     * @param input
+     * @param output
+     */
     public CommandLine(ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
         this.currentDatabase = currentDatabase;
 
@@ -66,6 +78,9 @@ public class CommandLine implements Runnable {
         }
     }
 
+    /**
+     * Run implementation so command line can be run in an alternate thread
+     */
     public void run() {
         initialiseConsole();
     }
