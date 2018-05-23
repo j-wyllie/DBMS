@@ -108,6 +108,12 @@ class CommonController {
         }
     }
 
+    public void editTrueStage(Stage stage) {
+        if(!stage.getTitle().contains("(*)")){
+            stage.setTitle(stage.getTitle() + " (*)");
+        }
+    }
+
     /**
      * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
      * @param event The event which is wanted to trigger a notification
