@@ -1,11 +1,5 @@
 package odms.cli;
 
-import static odms.cli.CommandUtils.validateCommandType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import odms.data.IrdNumberConflictException;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
@@ -16,11 +10,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static odms.cli.CommandUtils.validateCommandType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CommandUtilsTest {
     private ProfileDatabase profileDb;
