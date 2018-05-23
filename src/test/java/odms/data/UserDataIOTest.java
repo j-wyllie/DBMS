@@ -1,11 +1,11 @@
 package odms.data;
 
-import static org.junit.Assert.assertEquals;
-
 import odms.user.User;
 import odms.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class UserDataIOTest {
 
@@ -24,7 +24,7 @@ public class UserDataIOTest {
     }
 
     @Test
-    public void testSaveAndLoad() {
+    public void testSaveAndLoad() throws Exception{
         UserDatabase loadedDb;
         UserDataIO.saveUsers(userDb, "example/users.json");
         loadedDb = UserDataIO.loadData("example/users.json");

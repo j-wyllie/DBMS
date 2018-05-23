@@ -14,6 +14,9 @@ public class User {
     private LocalDateTime lastUpdated;
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
+    private String username;
+    private String password; //not being used yet, but will be in the future.
+    private boolean isDefault = false;
 
     /**
      * Logs which property was updated and the time it was updated
@@ -51,6 +54,18 @@ public class User {
         this.region = region;
         timeOfCreation = LocalDateTime.now();
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
+    }
+
+    /**
+     * Creates an administrator account
+     * @param userType the user type to be set
+     * @param name the users name.
+     */
+    public User(UserType userType, String name) {
+        this.timeOfCreation = LocalDateTime.now();
+        this.userType = userType;
+        this.name = name;
+        this.updateActions.add(userType + "account for " + name + "created at " + LocalDateTime.now());
     }
 
     /**
@@ -104,128 +119,96 @@ public class User {
         return summary;
     }
 
-    /**
-     * Sets the name of the user
-     * @param name name to be set
-     */
     public void setName(String name){
         this.name = name;
         generateUpdateInfo(name);
-
     }
 
-    /**
-     * Gets the name of the user
-     * @return name of the user
-     */
+
     public String getName(){
         return this.name;
     }
 
-    /**
-     * Sets the staff id of the user
-     * @param staffID staff id to be set
-     */
+
     public void setStaffID(Integer staffID){
         this.staffID = staffID;
         generateUpdateInfo(staffID.toString());
     }
 
-    /**
-     * Gets the staff id of the user
-     * @return staff id of the user
-     */
-    public Integer getStaffID(){
+
+    public Integer getStaffID() {
         return this.staffID;
     }
 
-    /**
-     * Sets the work address of the user
-     * @param address address to be set
-     */
+
     public void setWorkAddress(String address){
         this.workAddress = address;
         generateUpdateInfo(workAddress);
     }
 
-    /**
-     * Gets the work address of the user
-     * @return work address of the user
-     */
     public String getWorkAddress(){
         return this.workAddress;
     }
 
-    /**
-     * Sets the region of the user
-     * @param region The region to be set
-     */
     public void setRegion(String region){
         this.region = region;
         generateUpdateInfo(region);
     }
 
-    /**
-     * Gets the region of the user
-     * @return region of the user
-     */
     public String getRegion(){
         return this.region;
     }
 
-    /**
-     * Returns the update history of the user
-     * @return update history of the user
-     */
+    public void setUsername(String username) {
+        this.username = username;
+        generateUpdateInfo(this.username);
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
     public ArrayList<String> getUpdateActions() {
         return updateActions;
     }
 
-    /**
-     * Gets the user type of the user
-     * @return user type of the user
-     */
     public UserType getUserType() {
         return userType;
     }
 
-    /**
-     * Sets the user type of the user
-     * @param userType user type of the user
-     */
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
 
-    /**
-     * Gets the date when the user was last updated
-     * @return date when the user was last updated
-     */
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    /**
-     * Sets the date when the user was last updated
-     * @param lastUpdated date when the user was last updated
-     */
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
-    /**
-     * Gets the time of creation of the user
-     * @return time of creation of the user
-     */
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
     }
 
-    /**
-     * Sets the time of creation of the user
-     * @param timeOfCreation time of creation of the user
-     */
     public void setTimeOfCreation(LocalDateTime timeOfCreation) {
         this.timeOfCreation = timeOfCreation;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public boolean getDefault() {
+        return isDefault;
     }
 }

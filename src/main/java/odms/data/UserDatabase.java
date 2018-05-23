@@ -6,8 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
+import odms.controller.UserNotFoundException;
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 import odms.user.UserType;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class UserDatabase {
 
@@ -20,15 +27,63 @@ public class UserDatabase {
     /**
      * Find clinician by ID
      *
-     * @param id unique ID for requested clinician
+     * @param id unique ID for requested User
      * @return User object
      */
-    public User getUser(Integer id){
-        return userDb.get(id);
+    public User getUser(Integer id) throws UserNotFoundException {
+
+        User user = userDb.get(id);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with id " + id, id);
+        }
+        return user;
     }
 
     /**
-     * Determine unique ID for user and add the user the the database
+     * Determine unique ID for user and add the user to the database
+     * find user by username
+     *
+     * @param username username requested
+     * @return the user object.
+     */
+    public User getUser(String username) throws UserNotFoundException {
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null) {
+                if (value.getUsername().toLowerCase().equals(username)) {
+                    return value;
+                }
+            }
+        }
+        throw new UserNotFoundException("User not found with username " + username, username);
+    }
+
+    /**
+     * Checks whether a user exists in the database with a certain username
+     * @param username Username to be searched for
+     * @return Boolean based on whether the user exists or not.
+     */
+    public Boolean isUser(String username) {
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null) {
+                if (value.getUsername().equals(username)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether a user exists in the database with a certain user id
+     * @param userId Id to be searched for
+     * @return Boolean based on whether the user exists or not.
+     */
+    public Boolean isUser(Integer userId) {
+        return userDb.containsKey(userId);
+    }
+
+    /**
+     * Determine unique ID for the user and add the user to the database
      *
      * @param user new user object
      */
@@ -39,12 +94,59 @@ public class UserDatabase {
         userDb.put(lastID, user);
     }
 
+    /**
+     * Returns all the users in the current database
+     * @return ArrayList of users
+     */
+    public Collection<User> getUsers() {
+        Collection<User> users = new ArrayList();
+        for (User user : userDb.values()) {
+            users.add(user);
+        }
+        return users;
+    }
+
+    /**
+     * Restore a previously deleted user
+     *
+     * @param id ODMS ID of deleted profile
+     * @param user the profile to be restored
+     * @return current ProfileDatabase lastId
+     */
+    public int restoreProfile(Integer id, User user) {
+        try {
+            // Should deleted users simply be disabled for safety reasons?
+            lastID += 1;
+            user.setStaffID(lastID);
+            userDb.put(lastID, user);
+            deletedUsers.remove(id);
+            return lastID;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return lastID;
+        }
+    }
+
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    /**
+     * Checks for a duplicate username in the user database.
+     * @param username
+     * @return boolean for whether a username is unique/
+     */
+    public boolean checkUniqueUsername(String username) {
+        for (User user : userDb.values()) {
+            if (user.getUsername().equals(username)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -66,21 +168,6 @@ public class UserDatabase {
     }
 
     /**
-     * Generate a list of users
-     * @return Array of users
-     */
-    public ArrayList<User> getUsers() {
-        ArrayList<User> users = new ArrayList<>();
-
-        userDb.forEach((id, user) -> {
-            users.add(user);
-
-        });
-
-        return users;
-    }
-
-    /**
      * Fuzzy search that finds the top 30 users that match the provided search string.
      * @param searchString the string that the user names will be searched against.
      * @return list of users that match the provided search string, with a max size of 30.
@@ -89,7 +176,7 @@ public class UserDatabase {
         ArrayList<String> users = new ArrayList<>();
 
         if (searchString == null || searchString.equals("")) {
-            return getUsers();
+            return (ArrayList) getUsers();
         }
 
         for (User user : getUsers()) {
@@ -125,6 +212,8 @@ public class UserDatabase {
             return false;
         }
     }
+
+
 
     /**
      * Search for users via their given names

@@ -1,11 +1,11 @@
 package odms.data;
 
-import static org.junit.Assert.assertEquals;
-
 import odms.user.User;
 import odms.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class UserDatabaseTest {
 
