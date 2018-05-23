@@ -36,8 +36,6 @@ public class Print extends CommandUtils {
      * @param currentDatabase Database reference
      */
     public static void printAllClinicians(UserDatabase currentDatabase) {
-        System.out.println(currentDatabase);
-        //System.out.println(currentDatabase.getUsers() == null);
         ArrayList<User> allUsers = currentDatabase.getUsers();
         if (allUsers.size() > 0) {
             for (User user : allUsers) {
@@ -51,7 +49,6 @@ public class Print extends CommandUtils {
             System.out.println("There are no clinicians to show.");
         }
     }
-
 
     /**
      * Print all profiles in the Database
@@ -104,7 +101,6 @@ public class Print extends CommandUtils {
             System.out.println();
         }
     }
-
 
     /**
      * Display and print profile details in a list.
@@ -253,8 +249,6 @@ public class Print extends CommandUtils {
         if (user.getWorkAddress() != null) {
             System.out.println("Work address: " + user.getWorkAddress());
         }
-
-
 
         System.out.println("Last updated at: " + user.getLastUpdated().format(
                 DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"))

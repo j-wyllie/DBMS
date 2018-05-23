@@ -23,8 +23,9 @@ public class CommandUtils {
     protected static ArrayList<User> deletedUsers = new ArrayList<>();
     private static ArrayList<User> unaddedUsers = new ArrayList<>();
 
-    protected static String searchErrorText = "Please enter only one search criteria "
-        + "(Profiles: given-names, last-names, ird. Users: name, staffID)";
+    protected static String searchErrorText = "Please enter only one search criteria\n "
+                                            + "Profiles: given-names, last-names, ird\n"
+                                            + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
 
     private static final String cmdRegexCreate =
@@ -125,7 +126,6 @@ public class CommandUtils {
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
-
             case "clinician":
                 System.out.println(rawInput.matches(cmdRegexProfileView));                   ///////
                 if (rawInput.matches(cmdRegexProfileView)) {

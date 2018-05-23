@@ -104,7 +104,7 @@ public class CommandLine {
                 break;
 
             case PRINTCLINICIANS:
-                // Print all clincians (print all).
+                // Print all clinicians (print all).
                 Print.printAllClinicians(currentDatabaseUsers);
                 break;
 
@@ -175,7 +175,6 @@ public class CommandLine {
                 Profile.viewAttrBySearch(currentDatabase, rawInput);
                 break;
 
-
             case CLINICIANCREATE:
                 // Create a new clinician.
                 User.createClinician(currentDatabaseUsers, rawInput);
@@ -193,7 +192,6 @@ public class CommandLine {
                 System.out.println("Clinician(s) successfully deleted.");
                 break;
 
-
             case CLINICIANUPDATE:
                 // Search clinician.
                 User.updateUserBySearch(currentDatabaseUsers, rawInput);
@@ -205,9 +203,6 @@ public class CommandLine {
                 System.out.println("Searching for clinicians...");
                 User.viewAttrBySearch(currentDatabaseUsers, rawInput);
                 break;
-
-
-
 
             case ORGANADD:
                 // Add organs to a profile.

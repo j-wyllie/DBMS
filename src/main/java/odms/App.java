@@ -16,7 +16,6 @@ public class App {
     private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
     private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
-
     public static void main(String[] args) {
         CommandUtils.currentSessionHistory.add("");
         try {
@@ -35,6 +34,5 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

@@ -76,7 +76,6 @@ public class User {
 
         if (attrName.startsWith(" ")) {attrName = attrName.substring(1);}
 
-        //TODO add in 'attribute' functionality like in profile/Profile eventually
         switch (attrName) {
             case "name":
                 setName(value);
