@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,12 +46,6 @@ import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 public class ClinicianProfileController extends CommonController {
 
     private User currentUser;
@@ -75,6 +70,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TableColumn<Profile, String> fullNameColumn;
+
+    @FXML
+    private TableColumn<Profile, String> donorReceiverColumn;
 
     @FXML
     private TableColumn<Profile, Integer> ageColumn;
@@ -139,6 +137,21 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private DataManagementController dataManagementController;
 
+    @FXML
+    private Label labelResultCount;
+
+    @FXML
+    private Label labelCurrentOnDisplay;
+
+    @FXML
+    private Label labelToManyResults;
+
+    @FXML
+    private Button buttonShowAll;
+
+    @FXML
+    private Button buttonShowNext;
+
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
@@ -157,6 +170,14 @@ public class ClinicianProfileController extends CommonController {
 
     private static Collection<Stage> openProfileStages = new ArrayList<>();
 
+
+    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+
+    // Constant that holds the number of search results displayed on a page at a time.
+    private static final int PAGESIZE = 25;
+
+    // Constant that holds the max number of search results that can be displayed.
+    private static final int MAXPAGESIZE = 200;
 
     /**
      * Scene change to log in view.
@@ -232,18 +253,30 @@ public class ClinicianProfileController extends CommonController {
             ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
-        updateSearchTable();
+        updateLabels();
     }
 
 
     /**
-     * Button handler to update search table based on search results.
-     *
-     * @param event releasing a key on the keyboard.
+     * Button handler to display all search results in the search table
+     * @param event clicking on the show all button.
      */
     @FXML
-    private void handleSearchDonors(KeyEvent event) {
-        updateSearchTable();
+    private void handleGetAllResults(ActionEvent event) {
+        buttonShowAll.setVisible(false);
+        buttonShowNext.setVisible(false);
+        updateTable(true, false);
+        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
+    }
+
+    /**
+     * Button handler to display next 25 search results in the search table
+     * @param event clicking on the show all button.
+     */
+    @FXML
+    private void handleGetXResults(ActionEvent event) {
+        updateTable(false, true);
+        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
     /**
@@ -253,9 +286,51 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonorsMouse(MouseEvent event) {
-        updateSearchTable();
+        updateLabels();
     }
 
+    /**
+     * Button handler to update donor table based on search results. Makes call to get fuzzy search results of profiles.
+     * @param event releasing a key on the keyboard.
+     */
+    @FXML
+    private void handleSearchDonors(KeyEvent event) {
+        updateLabels();
+    }
+
+    /**
+     * updates the display labels and button status in the search tab.
+     */
+    private void updateLabels() {
+        labelToManyResults.setVisible(false);
+
+        updateSearchTable();
+
+        if (profileSearchResults == null || profileSearchResults.size() == 0) {
+            labelCurrentOnDisplay.setText("displaying 0 to 0");
+            labelResultCount.setText("0 results found");
+            buttonShowAll.setVisible(false);
+            buttonShowNext.setVisible(false);
+        } else {
+            if (profileSearchResults.size() <= PAGESIZE) {
+                labelCurrentOnDisplay.setText("displaying 1 to " + profileSearchResults.size());
+                buttonShowAll.setVisible(false);
+                buttonShowNext.setVisible(false);
+            } else {
+                labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
+                if (profileSearchResults.size() > MAXPAGESIZE) {
+                    labelToManyResults.setVisible(true);
+                    buttonShowAll.setVisible(false);
+                    buttonShowNext.setVisible(false);
+                } else {
+                    buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
+                    buttonShowNext.setText("Show next 25 results");
+                    buttonShowAll.setVisible(true);
+                    buttonShowNext.setVisible(true);
+                }
+            }
+        }
+    }
 
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
@@ -307,8 +382,53 @@ public class ClinicianProfileController extends CommonController {
                 selectedType,
                 new HashSet<>(selectedOrgans)
         ));
+        updateTable(false, false);
+    }
 
-        searchTable.setItems(donorObservableList);
+    /**
+     * Clears the searchTable and updates with objects from the profileSearchResults arrayList. Results displayed
+     * depend on the variable showAll, if this is false it will display only 50 or less (if profileSearchResults is
+     * smaller than 50) results. If it is true all results will be displayed, as long as profileSearchResults is under
+     * 200 objects in size.
+     * @param showAll boolean, if true will display all objects in class variable profileSearchResults.
+     * @param showNext boolean, if true will display next 25 results.
+     */
+    private void updateTable(boolean showAll, boolean showNext) {
+        int size = donorObservableList.size();
+        searchTable.getItems().clear();
+        if (profileSearchResults != null) {
+            if (profileSearchResults.size() == 1) {
+                labelResultCount.setText(profileSearchResults.size() + " result found");
+            } else {
+                labelResultCount.setText(profileSearchResults.size() + " results found");
+            }
+
+            if (showAll) {
+                if (profileSearchResults.size() > 200) {
+                    labelResultCount.setText(0 + " results found");
+                } else {
+                    donorObservableList.addAll(profileSearchResults);
+                }
+            } else if (showNext) {
+                if (profileSearchResults.size() > (size + PAGESIZE)) {
+                    donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
+                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() < PAGESIZE) {
+                        buttonShowNext.setText("Show next " + profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() + " results");
+                    }
+                } else {
+                    donorObservableList.addAll(profileSearchResults);
+                    buttonShowNext.setVisible(false);
+                    buttonShowAll.setVisible(false);
+                }
+
+            } else if (profileSearchResults.size() > PAGESIZE) {
+                donorObservableList.addAll(profileSearchResults.subList(0, PAGESIZE));
+            } else {
+                donorObservableList.addAll(profileSearchResults);
+            }
+
+            searchTable.setItems(donorObservableList);
+        }
     }
 
     /**
@@ -342,6 +462,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void makeSearchTable(ArrayList<Profile> donors) {
+        labelResultCount.setText(0 + " results found");
         searchTable.getItems().clear();
 
         donorObservableList = FXCollections.observableArrayList(donors);
@@ -350,7 +471,8 @@ public class ClinicianProfileController extends CommonController {
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        searchTable.getColumns().setAll(fullNameColumn, ageColumn, genderColumn, regionColumn);
+        donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
+        searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
@@ -360,13 +482,13 @@ public class ClinicianProfileController extends CommonController {
         });
 
         genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
         genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
 
         addTooltipToRow();
@@ -597,6 +719,8 @@ public class ClinicianProfileController extends CommonController {
             setClinicianDetails();
             setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            searchTable.getItems().clear();
+            searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {

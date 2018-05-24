@@ -1,9 +1,16 @@
 package odms.profile;
 
+import javafx.beans.property.SimpleStringProperty;
+import odms.controller.HistoryController;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +19,7 @@ import odms.enums.OrganEnum;
 import odms.history.History;
 import odms.medications.Drug;
 
-public class Profile {
+public class Profile implements Comparable<Profile> {
 
     private Boolean donor = false;
     private Boolean receiver = false;
@@ -109,6 +116,16 @@ public class Profile {
                 dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 irdNumber
         );
+    }
+
+    /**
+     * Compares the profile object to another profile object. Result is determined by lexicographical order of profile
+     * full name.
+     * @param other another profile object to compare to.
+     * @return int value to show if object is equal, greater than ore less than the other profile object.
+     */
+    public int compareTo(Profile other) {
+        return getFullName().toLowerCase().compareTo(other.getFullName().toLowerCase());
     }
 
     /**
@@ -788,6 +805,28 @@ public class Profile {
     public void removeCondition(Condition condition) {
         this.conditions.remove(condition);
     }
+
+    /**
+     * Returns the string value to populate the Donor/Receiver column in the clinician search table.
+     * @return a string depicting whether to profile is a donor, receiver, or both.
+     */
+    public SimpleStringProperty donorReceiverProperty() {
+        SimpleStringProperty result = new SimpleStringProperty();
+        if (!(donor == null) && donor) {
+            if (!(receiver == null) && receiver) {
+                result.setValue("Donor/Receiver");
+            }
+            else {
+                result.setValue("Donor");
+            }
+        }
+        else if (!(receiver == null) && receiver) {
+            result.setValue("Receiver");
+
+        }
+        return result;
+    }
+
 
     public LocalDateTime getTimeOfCreation() {
         return this.timeOfCreation;

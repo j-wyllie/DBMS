@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
@@ -916,5 +918,44 @@ public class ProfileTest {
                 .get(HistoryController.historyPosition).getHistoryData()
                 .contains(OrganEnum.HEART.getNamePlain())
         );
+    }
+
+    @Test
+    public void testDonorReceiverProperty() {
+        ArrayList<String> profileAttr = new ArrayList<>();
+
+        profileAttr.add("given-names=\"John\"");
+        profileAttr.add("last-names=\"Smithy Smith Face\"");
+        profileAttr.add("dob=\"01-01-2000\"");
+        profileAttr.add("dod=\"01-01-2050\"");
+        profileAttr.add("ird=\"123456879\"");
+
+        Profile testProfile = null;
+        SimpleStringProperty expected = new SimpleStringProperty();
+        try {
+            testProfile = new Profile(profileAttr);
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
+
+        testProfile.setDonor(true);
+        testProfile.setReceiver(true);
+        expected.setValue("Donor/Receiver");
+        assertEquals(expected.toString(), testProfile.donorReceiverProperty().toString());
+
+        testProfile.setDonor(true);
+        testProfile.setReceiver(false);
+        expected.setValue("Donor");
+        assertEquals(expected.toString(), testProfile.donorReceiverProperty().toString());
+
+        testProfile.setDonor(false);
+        testProfile.setReceiver(true);
+        expected.setValue("Receiver");
+        assertEquals(expected.toString(), testProfile.donorReceiverProperty().toString());
+
+        testProfile.setDonor(false);
+        testProfile.setReceiver(false);
+        expected.setValue(null);
+        assertEquals(expected.toString(), testProfile.donorReceiverProperty().toString());
     }
 }
