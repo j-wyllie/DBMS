@@ -391,6 +391,7 @@ public class ProfileEditController extends CommonController {
     @FXML
     public void initialize() {
         // Restrict entry on these fields to numbers only.
+        // Regex: \\d* matches only with digits 0 or more times.
         // TODO investigate abstracting copy paste listeners to common function.
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -419,7 +420,6 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
-
                 if (currentProfile.getGivenNames() != null) {
                     givenNamesField.setText(currentProfile.getGivenNames());
                 }
@@ -450,12 +450,14 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getEmail() != null) {
                     emailField.setText(currentProfile.getEmail());
                 }
-
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
                 }
                 if (currentProfile.getRegion() != null) {
                     regionField.setText(currentProfile.getRegion());
+                }
+                if (currentProfile.getBloodPressure() != null) {
+                    bloodPressureField.setText(currentProfile.getBloodPressure());
                 }
                 if (currentProfile.getBloodType() != null) {
                     bloodTypeField.setText(currentProfile.getBloodType());

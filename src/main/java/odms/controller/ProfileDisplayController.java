@@ -1088,7 +1088,10 @@ public class ProfileDisplayController extends CommonController {
                 regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
             }
             if (currentProfile.getAlcoholConsumption() != null) {
-                alcoholConsumptionLabel.setText(alcoholConsumptionLabel.getText() + currentProfile.getAlcoholConsumption());
+                alcoholConsumptionLabel.setText(
+                        alcoholConsumptionLabel.getText() +
+                        currentProfile.getAlcoholConsumption()
+                );
             }
             if (currentProfile.getBloodPressure() != null) {
                 bloodPressureLabel.setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
