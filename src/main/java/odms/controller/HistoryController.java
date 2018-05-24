@@ -4,11 +4,14 @@ import odms.history.History;
 import odms.profile.Profile;
 
 import java.util.ArrayList;
+import odms.user.User;
 
 public class HistoryController {
     public static ArrayList<History> currentSessionHistory = new ArrayList<>();
     public static int historyPosition = 0;
     public static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+    public static ArrayList<User> deletedUsers = new ArrayList<odms.user.User>();
+
 
     /**
      * Adds a new history to current session history and removed undone ones
