@@ -390,46 +390,6 @@ public class Profile {
         }
     }
 
-    /**
-     * Add a set of organs to the list of organs that the profile wants to donate
-     * @param organs the set of organs to donate
-     * @throws IllegalArgumentException if a bad argument is used
-     * @throws OrganConflictException if there is a conflicting organ
-     */
-    public void addReceiverOrgansDonating(Set<OrganEnum> organs)
-            throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("organsReceived"); // TODO should this be Organs Donating
-
-        for (OrganEnum organ : organs) {
-            if (this.organsDonating.contains(organ)) {
-                throw new IllegalArgumentException(
-                        "Organ " + organ + " already exists in donating list"
-                );
-            }
-            this.addOrganDonating(organ);
-
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to donate at " +
-                    LocalDateTime.now();
-
-            // TODO abstract history
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition()
-                        != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory
-                            .subList(CommandUtils.getPosition(),
-                                    CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-        }
-    }
-
     public HashSet<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
