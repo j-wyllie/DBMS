@@ -38,6 +38,9 @@ public class ProfileCreateController extends CommonController {
     @FXML
     private TextField irdField;
 
+    @FXML
+    private TextField preferredNameField;
+
     /**
      * Scene change to profile profile view if all required fields are filled in.
      * @param event clicking on the create new account button.
@@ -54,8 +57,10 @@ public class ProfileCreateController extends CommonController {
                 String surnames = surnamesField.getText();
                 LocalDate dob = dobDatePicker.getValue();
                 String ird = irdField.getText();
+                String prefName = preferredNameField.getText();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
+                newProfile.setPreferredName(prefName);
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
