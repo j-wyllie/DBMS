@@ -16,20 +16,10 @@ import odms.user.User;
 
 public class CommandUtils {
 
-    public static ArrayList<String> currentSessionHistory = new ArrayList<>();
-
-    public static int historyPosition = 0;
-    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
-    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
-
-    protected static ArrayList<User> deletedUsers = new ArrayList<>();
-    private static ArrayList<User> unaddedUsers = new ArrayList<>();
-
     protected static String searchErrorText = "Please enter only one search criteria\n "
                                             + "Profiles: given-names, last-names, ird\n"
                                             + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
-    private static int historyPosition = HistoryController.getPosition();
 
     private static final String cmdRegexCreate =
         "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"

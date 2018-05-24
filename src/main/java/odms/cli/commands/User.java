@@ -1,7 +1,9 @@
 package odms.cli.commands;
 
 import odms.cli.CommandUtils;
+import odms.controller.HistoryController;
 import odms.data.UserDatabase;
+import odms.history.History;
 import odms.user.UserType;
 
 import java.time.LocalDateTime;
@@ -10,20 +12,15 @@ import java.util.Arrays;
 
 public class User extends CommandUtils {
 
+
     /**
-     * Add history for clinician
+     * Add history for profile
      *
-     * @param Id clinician ID
+     * @param Id profile ID
      */
     protected static void addClinicianHistory(int Id) {
-        if (currentSessionHistory.size() != 0) {
-            if (historyPosition != currentSessionHistory.size() - 1) {
-                currentSessionHistory.subList(historyPosition, currentSessionHistory.size() - 1)
-                        .clear();
-            }
-        }
-        currentSessionHistory.add("Clinician " + Id + " added at " + LocalDateTime.now());
-        historyPosition = currentSessionHistory.size() - 1;
+        History action = new History("User",Id,"added","",-1,LocalDateTime.now());
+        HistoryController.updateHistory(action);
     }
 
     /**
@@ -101,16 +98,9 @@ public class User extends CommandUtils {
             for (odms.user.User user : userList) {
                 result = currentDatabase.deleteUser(user.getStaffID());
                 if (result) {
-                    deletedUsers.add(user);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                    .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory
-                            .add("User " + user.getStaffID() + " deleted at " + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
+                    HistoryController.deletedUsers.add(user);
+                    HistoryController.updateHistory(new History("Profile",user.getStaffID(),
+                            "deleted","",-1,LocalDateTime.now()));
                 }
             }
         } else {
@@ -127,21 +117,12 @@ public class User extends CommandUtils {
     private static void updateUserAttr(ArrayList<odms.user.User> userList, String[] attrList) {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            String action;
             for (odms.user.User user : userList) {
-                action = "User " + user.getStaffID() + " updated details previous = " + user
-                        .getAttributesSummary() + " new = ";
+                History action = new History("User" , user.getStaffID() ,"update",user.getAttributesSummary(),-1,null);
                 user.setExtraAttributes(attrArray);
-                action = action + user.getAttributesSummary() + " at " + LocalDateTime.now();
-                if (currentSessionHistory.size() != 0) {
-                    if (historyPosition != currentSessionHistory.size() - 1) {
-                        currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                    }
-                }
-                currentSessionHistory.add(action);
-                historyPosition = currentSessionHistory.size() - 1;
-
+                action.setHistoryData(action.getHistoryData()+user.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                HistoryController.updateHistory(action);
             }
         } else {
             System.out.println(searchNotFoundText);
