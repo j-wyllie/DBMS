@@ -31,7 +31,7 @@ public class MySqlDAO implements ReadOnlyDAO {
                 connection.close();
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Please enter a valid read-only query.");
             }
         }
     }
