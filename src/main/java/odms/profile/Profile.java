@@ -1,18 +1,16 @@
 package odms.profile;
 
-import odms.controller.HistoryController;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import odms.controller.HistoryController;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
 
 public class Profile {
 
@@ -84,7 +82,7 @@ public class Profile {
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
 
-        // Build an arraylist so I can reuse the
+        // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
         attr.add("last-names=\"" + lastNames + "\"");
@@ -756,7 +754,7 @@ public class Profile {
 
     /**
      * Checks if a profile is donating a certain selection of organs
-     * @param organs
+     * @param organs organs to be checked
      * @return true if they are
      */
     public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
@@ -765,7 +763,7 @@ public class Profile {
 
     /**
      * Checks if a profile is receiving a certain selection of organs
-     * @param organs
+     * @param organs organs to be checked
      * @return true if they are
      */
     public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
@@ -828,7 +826,7 @@ public class Profile {
     }
 
     public void setDateOfDeath(LocalDate dateOfDeath) {
-        if (getDateOfBirth().isAfter(dateOfDeath)) {
+        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath)) {
             throw new IllegalArgumentException(
                 "Date of death cannot be before date of birth"
             );

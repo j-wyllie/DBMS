@@ -7,8 +7,6 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,21 +37,20 @@ public class ProfileCreateController extends CommonController {
     private TextField irdNumberField;
 
     private String checkDetailsEntered() {
-        if (givenNamesField.getText().trim().equals("")) {
+        if (givenNamesField.getText().isEmpty()) {
             return "Please enter Given Name(s)";
         }
-        if (surnamesField.getText().trim().equals("")) {
+        if (surnamesField.getText().isEmpty()) {
             return "Please enter Surname(s)";
 
         }
-        if (dobField.getText().trim().equals("")) {
+        if (dobDatePicker.getEditor().getText().isEmpty()) {
             return "Please enter a Date of Birth";
-
         }
-        if (irdNumberField.getText().trim().equals("")) {
+        if (irdNumberField.getText().isEmpty()) {
             return "Please enter an IRD number";
         } else {
-            return "";
+            return "Required field not filled";
         }
     }
 

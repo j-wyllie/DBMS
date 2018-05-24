@@ -2,16 +2,9 @@ package odms.controller;
 
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import com.sun.media.sound.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,15 +18,6 @@ import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileEditController extends CommonController {
 
@@ -175,13 +159,10 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveDateOfBirth() throws IllegalArgumentException {
-        if (dobField.getText().isEmpty()) {
+        if (dobDatePicker.getEditor().getText().isEmpty()) {
             throw new IllegalArgumentException("Date of Birth field cannot be blank");
         }
-        currentProfile.setDateOfBirth(LocalDate.parse(
-                dobField.getText(),
-                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        ));
+        currentProfile.setDateOfBirth(dobDatePicker.getValue());
     }
 
     /**
@@ -231,11 +212,8 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if date is prior to birth date
      */
     private void saveDateOfDeath() throws IllegalArgumentException {
-        if (!dodField.getText().isEmpty()) {
-            currentProfile.setDateOfDeath(LocalDate.parse(
-                    dodField.getText(),
-                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-            ));
+        if (!dodDatePicker.getEditor().getText().isEmpty()) {
+            currentProfile.setDateOfDeath(dodDatePicker.getValue());
         }
     }
 
