@@ -2099,7 +2099,20 @@
         "KIDNEY"
       ],
       "organsReceived": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "name": "asd",
+          "dateOfDiagnosis": {
+            "year": 2018,
+            "month": 5,
+            "day": 24
+          },
+          "dateOfDiagnosisString": "24-05-2018",
+          "isCured": false,
+          "isChronic": false,
+          "chronicText": ""
+        }
+      ],
       "phone": "",
       "email": "",
       "irdNumber": 151199672,

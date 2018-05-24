@@ -1,20 +1,15 @@
 package odms.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.UserNotFoundException;
-import odms.controller.UserNotFoundException;
 import odms.user.User;
 import odms.user.UserType;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class UserDatabase {
 
@@ -49,7 +44,7 @@ public class UserDatabase {
     public User getUser(String username) throws UserNotFoundException {
         for(User value : userDb.values()) {
             if (value.getUsername() != null) {
-                if (value.getUsername().toLowerCase().equals(username)) {
+                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
                     return value;
                 }
             }
@@ -65,7 +60,7 @@ public class UserDatabase {
     public Boolean isUser(String username) {
         for(User value : userDb.values()) {
             if (value.getUsername() != null) {
-                if (value.getUsername().equals(username)) {
+                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
                     return true;
                 }
             }
