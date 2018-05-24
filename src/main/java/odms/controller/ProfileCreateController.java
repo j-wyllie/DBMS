@@ -7,8 +7,6 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +47,7 @@ public class ProfileCreateController extends CommonController {
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
         if(givenNamesField.getText().trim().equals("") || surnamesField.getText().trim().equals("") ||
-                dobDatePicker.getValue().equals(null) || irdField.getText().trim().equals("")) {
+                dobDatePicker.getValue() == null|| irdField.getText().trim().equals("")) {
             invalidEntry();
         } else {
             try {
