@@ -1,18 +1,5 @@
 package odms.controller;
 
-import static odms.controller.AlertController.guiPopup;
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import com.sun.media.sound.InvalidDataException;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -23,8 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -176,19 +163,6 @@ public class ProfileEditController extends CommonController {
         }
     }
 
-//                    if (comboGender.getValue() != null) {
-//        currentProfile.setGender(comboGender.getValue().toString());
-//    }
-//                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
-//        if (comboGender.getValue() != null) {
-//            currentProfile.setPreferredGender(comboGender.getValue().toString());
-//        }
-//    } else {
-//        currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
-//    }
-
-    //                 currentProfile.setPreferredName(preferredNameField.getText());
-
     /**
      * Save Date of Birth field to profile.
      * @throws IllegalArgumentException if the field is empty
@@ -265,8 +239,8 @@ public class ProfileEditController extends CommonController {
      * Save Gender field to profile.
      */
     private void saveGender() {
-        if (!genderField.getText().isEmpty()) {
-            currentProfile.setGender(genderField.getText());
+        if (comboGender.getValue() != null) {
+            currentProfile.setGender(comboGender.getValue().toString());
         }
     }
 
@@ -288,6 +262,27 @@ public class ProfileEditController extends CommonController {
         if (!phoneField.getText().isEmpty()) {
             currentProfile.setPhone(phoneField.getText());
         }
+    }
+
+    /**
+     * Save Preferred Gender value to profile.
+     */
+    private void savePreferredGender() {
+        // If there is no preferred gender just set it to the gender
+        if (comboGenderPref.getEditor().getText().equals("")) {
+            if (comboGender.getValue() != null) {
+                currentProfile.setPreferredGender(comboGender.getValue().toString());
+            }
+        } else {
+            currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+        }
+    }
+
+    /**
+     * Save Preferred Name field to profile.
+     */
+    private void savePreferredName() {
+        currentProfile.setPreferredName(preferredNameField.getText());
     }
 
     /**
