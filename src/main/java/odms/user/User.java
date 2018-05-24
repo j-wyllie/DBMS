@@ -8,7 +8,7 @@ public class User {
 
     private UserType userType;
     private String name;
-    private Integer staffId;
+    private Integer staffID;
     private String workAddress;
     private String region;
     private LocalDateTime lastUpdated;
@@ -30,15 +30,29 @@ public class User {
         this.updateActions.add(output);
     }
 
-    public User(UserType userType){
+    /**
+     * user constructor
+     * @param userType type of user
+     * @param attrArray array containing users attributes
+     */
+    public User(UserType userType, ArrayList<String> attrArray){
         this.userType = userType;
+        setExtraAttributes(attrArray);
+        timeOfCreation = LocalDateTime.now();
     }
 
-    public User(UserType userType, String name, String region) {
+    /**
+     * user constructor
+     * @param userType type of user
+     * @param name user name
+     * @param region user region
+     */
+    public User(UserType userType, String name, String region){
         this.timeOfCreation = LocalDateTime.now();
         this.userType = userType;
         this.name = name;
         this.region = region;
+        timeOfCreation = LocalDateTime.now();
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
     }
 
@@ -66,9 +80,16 @@ public class User {
         }
     }
 
+    /**
+     * sets a users specific given attribute
+     * @param parts a string containing the users new attribute to be set
+     * @throws IllegalArgumentException
+     */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+
+        if (attrName.startsWith(" ")) {attrName = attrName.substring(1);}
 
         switch (attrName) {
             case "name":
@@ -76,9 +97,6 @@ public class User {
                 break;
             case "workAddress":
                 setWorkAddress(value);
-                break;
-            case "staffId":
-                setStaffId(Integer.parseInt(value));
                 break;
             case "region":
                 setRegion(value);
@@ -88,12 +106,16 @@ public class User {
         }
     }
 
+    /**
+     * gets a attribute summary of the user
+     * @return attribute summary of the user
+     */
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("staffId=" + staffId);
-        summary = summary +"," +("name=" + name);
-        summary = summary +"," +("workAddress=" + workAddress);
-        summary = summary +"," +("region=" + region);
+        summary = summary + ("staffID=" + staffID);
+        summary = summary + "," + ("name=" + name);
+        summary = summary + "," + ("workAddress=" + workAddress);
+        summary = summary + "," + ("region=" + region);
         return summary;
     }
 
@@ -102,18 +124,22 @@ public class User {
         generateUpdateInfo(name);
     }
 
+
     public String getName(){
         return this.name;
     }
 
-    public void setStaffId(Integer staffId){
-        this.staffId = staffId;
-        generateUpdateInfo(staffId.toString());
+
+    public void setStaffID(Integer staffID){
+        this.staffID = staffID;
+        generateUpdateInfo(staffID.toString());
     }
 
-    public Integer getStaffId(){
-        return this.staffId;
+
+    public Integer getStaffID() {
+        return this.staffID;
     }
+
 
     public void setWorkAddress(String address){
         this.workAddress = address;
@@ -146,16 +172,36 @@ public class User {
         return updateActions;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public LocalDateTime getTimeOfCreation() {
+        return timeOfCreation;
+    }
+
+    public void setTimeOfCreation(LocalDateTime timeOfCreation) {
+        this.timeOfCreation = timeOfCreation;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public UserType getUserType() {
-        return userType;
     }
 
     public void setDefault(boolean aDefault) {

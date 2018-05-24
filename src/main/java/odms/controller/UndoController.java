@@ -110,20 +110,25 @@ public class UndoController extends UndoRedoController{
      * @param currentDatabase
      * @param action
      */
-    public void stopDrug(ProfileDatabase currentDatabase, History action) {
-        Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getHistoryOfMedication();
-        Drug drug = drugs.get(d);
-        profile.moveDrugToCurrent(drug);
-        LocalDateTime currentTime = LocalDateTime.now();
-        History newAction = new History("Donor ",profile.getId(), "stopped", drug.getDrugName(),
-                profile.getCurrentMedications().indexOf(drug) ,currentTime);
-        HistoryController.currentSessionHistory.set(historyPosition, newAction);
-        if (historyPosition > 0) {
-            historyPosition -= 1;
+    public void stopDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
+        try {
+            Profile profile = currentDatabase.getProfile(action.getHistoryId());
+            int d = action.getHistoryDataIndex();
+            ArrayList<Drug> drugs = profile.getHistoryOfMedication();
+            Drug drug = drugs.get(d);
+            profile.moveDrugToCurrent(drug);
+            LocalDateTime currentTime = LocalDateTime.now();
+            History newAction = new History("Profile", profile.getId(), "stopped",
+                drug.getDrugName(),
+                profile.getCurrentMedications().indexOf(drug), currentTime);
+            HistoryController.currentSessionHistory.set(historyPosition, newAction);
+            if (historyPosition > 0) {
+                historyPosition -= 1;
+            }
+            HistoryController.setPosition(historyPosition);
+        } catch (IndexOutOfBoundsException e) {
+
         }
-        HistoryController.setPosition(historyPosition);
     }
 
     /**
@@ -131,20 +136,24 @@ public class UndoController extends UndoRedoController{
      * @param currentDatabase
      * @param action
      */
-    public void renewDrug(ProfileDatabase currentDatabase, History action) {
+    public void renewDrug(ProfileDatabase currentDatabase, History action){
+        try{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         Drug drug = drugs.get(d);
         profile.moveDrugToHistory(drug);
         LocalDateTime currentTime = LocalDateTime.now();
-        History newAction = new History("Donor ",profile.getId(), "started", drug.getDrugName(),
-                profile.getCurrentMedications().indexOf(drug) ,currentTime);
+        History newAction = new History("Profile",profile.getId(), "started", drug.getDrugName(),
+                profile.getHistoryOfMedication().indexOf(drug) ,currentTime);
         HistoryController.currentSessionHistory.set(historyPosition, newAction);
         if (historyPosition > 0) {
             historyPosition -= 1;
         }
         HistoryController.setPosition(historyPosition);
+    } catch (IndexOutOfBoundsException e) {
+
+    }
     }
 
     /**
@@ -152,7 +161,8 @@ public class UndoController extends UndoRedoController{
      * @param currentDatabase
      * @param action
      */
-    public void addDrug(ProfileDatabase currentDatabase, History action) {
+    public void addDrug(ProfileDatabase currentDatabase, History action){
+        try{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
@@ -161,6 +171,9 @@ public class UndoController extends UndoRedoController{
             historyPosition -= 1;
         }
         HistoryController.setPosition(historyPosition);
+        } catch (IndexOutOfBoundsException e) {
+
+        }
     }
 
     /**
@@ -168,7 +181,8 @@ public class UndoController extends UndoRedoController{
      * @param currentDatabase
      * @param action
      */
-    public void deleteDrug(ProfileDatabase currentDatabase, History action) {
+    public void deleteDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
+        try{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         if(action.getHistoryAction().contains("history")) {
             String drug = action.getHistoryData();
@@ -183,6 +197,9 @@ public class UndoController extends UndoRedoController{
             historyPosition -= 1;
         }
         HistoryController.setPosition(historyPosition);
+    } catch (IndexOutOfBoundsException e) {
+
+    }
     }
 
     /**
@@ -195,7 +212,7 @@ public class UndoController extends UndoRedoController{
                 action.getHistoryData().indexOf("new "));
         String[] previousValues = previous.split(",");
         user.setName(previousValues[1].replace("name=",""));
-        user.setStaffId(Integer.valueOf(previousValues[0].replace("staffId=","").
+        user.setStaffID(Integer.valueOf(previousValues[0].replace("staffId=","").
                 replace(" ","")));
         user.setWorkAddress(previousValues[2].replace("workAddress=",""));
         user.setRegion(previousValues[3].replace("region=",""));
@@ -248,8 +265,9 @@ public class UndoController extends UndoRedoController{
      * @throws Exception
      */
     public void removed(ProfileDatabase currentDatabase, History action) throws Exception{
+        //todo overhaul organ donating stuff
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData())));
+        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().replace(' ','_').split(","))));
         if (historyPosition > 0) {
             historyPosition -= 1;
         }
@@ -263,7 +281,8 @@ public class UndoController extends UndoRedoController{
      */
     public void set(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        String[] stringOrgans = action.getHistoryData().split(",");
+        String[] stringOrgans = action.getHistoryData().replace(' ','_').split(",");
+        System.out.println(stringOrgans);
         Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(stringOrgans));
         profile.removeOrgansDonating(organSet);
         if (historyPosition > 0) {
@@ -280,7 +299,7 @@ public class UndoController extends UndoRedoController{
      */
     public void donate(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        String[] stringOrgans = action.getHistoryData().split(",");
+        String[] stringOrgans = action.getHistoryData().replace(' ','_').split(",");
         Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(stringOrgans));
         profile.removeOrgansDonated(organSet);
         if (historyPosition > 0) {
