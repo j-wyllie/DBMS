@@ -8,13 +8,21 @@ import odms.enums.OrganEnum;
 public class AlertController {
 
     /**
-     * Creates a popup when the details were entered incorrectly
+     * Creates a generic popup when details are entered incorrectly.
      */
     static void invalidEntry() {
+        invalidEntry("Please enter your details correctly.");
+    }
+
+    /**
+     * Creates a message based popup when the details are entered incorrectly.
+     * @param message the message to be displayed
+     */
+    static void invalidEntry(String message) {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Please enter your details correctly.",
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                message,
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -30,9 +38,9 @@ public class AlertController {
         String error = "Cannot donate organ received from another donor.\n" +
                 String.format("Organ '%s' received previously.", organ.getNamePlain());
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            error,
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                error,
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();

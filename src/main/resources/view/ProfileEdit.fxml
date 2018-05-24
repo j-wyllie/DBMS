@@ -235,7 +235,7 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <TextField fx:id="irdField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                <TextField fx:id="irdNumberField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets right="20.0" />
                                                                     </GridPane.margin>
@@ -426,14 +426,6 @@
                                                                         <Font size="22.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <Label fx:id="chronicDiseasesLabel" layoutX="30.0" layoutY="158.0" prefHeight="48.0" prefWidth="1178.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Chronic Diseases: " GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                    <font>
-                                                                        <Font size="22.0" />
-                                                                    </font>
-                                                                    <GridPane.margin>
-                                                                        <Insets left="20.0" />
-                                                                    </GridPane.margin>
-                                                                </Label>
                                                                 <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                                                                     <items>
                                                                         <Button fx:id="undoMedicalButton" mnemonicParsing="false" onAction="#handleUndoButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/undo.png); -fx-background-size: stretch;" />
@@ -455,12 +447,7 @@
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="bloodPressureField" layoutX="278.0" layoutY="163.0" promptText="systolic/diastolic" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="120.0" right="100.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="diseaseField" layoutX="278.0" layoutY="211.0" promptText="disease1, disease2, disease3, ..." GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                <TextField fx:id="bloodPressureField" layoutX="278.0" layoutY="163.0" onKeyTyped="#editTrueKey" promptText="systolic/diastolic" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets left="120.0" right="100.0" />
                                                                     </GridPane.margin>
