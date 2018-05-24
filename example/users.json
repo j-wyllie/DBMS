@@ -1,9 +1,9 @@
 {
+  "deletedUsers": [],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
       "name": "Doc",
-      "staffId": 0,
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
@@ -42,7 +42,6 @@
     "1": {
       "userType": "ADMIN",
       "name": "admin",
-      "staffId": 1,
       "lastUpdated": {
         "date": {
           "year": 2018,
@@ -77,9 +76,48 @@
       "username": "admin",
       "password": "admin",
       "isDefault": true
+    },
+    "2": {
+      "userType": "CLINICIAN",
+      "name": "Jack",
+      "staffID": 2,
+      "region": "Jack",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 24
+        },
+        "time": {
+          "hour": 15,
+          "minute": 32,
+          "second": 28,
+          "nano": 544000000
+        }
+      },
+      "updateActions": [
+        "Account for Jackcreated at 2018-05-24T15:32:28.521",
+        "Jack updated at 03:32 PM 24-05-2018",
+        "2 updated at 03:32 PM 24-05-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 5,
+          "day": 24
+        },
+        "time": {
+          "hour": 15,
+          "minute": 32,
+          "second": 28,
+          "nano": 521000000
+        }
+      },
+      "username": "Jack",
+      "password": "Jack",
+      "isDefault": false
     }
   },
-  "deletedUsers": [],
-  "lastID": 1,
+  "lastID": 2,
   "path": "example/users.json"
 }
