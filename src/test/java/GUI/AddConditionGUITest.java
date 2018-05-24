@@ -1,34 +1,30 @@
 package GUI;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeoutException;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.time.LocalDateTime;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @Ignore
 public class AddConditionGUITest extends TestFxMethods {
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
-    public static void headless() throws TimeoutException {
+    public static void headless() {
          GUITestSetup.headless();
     }
 
-    @Test
     /**
      * Test that a diagnosis can be added to a profile by a clinician
      */
+    @Test
     public void testAddingCondition() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -55,10 +51,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(currentConditions.getItems().size(), initialSize + 1);
     }
 
-    @Test
     /**
      * Test adding a cured condition to the past conditions table
      */
+    @Test
     public void testAddCuredCondition() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -79,10 +75,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertEquals(pastConditions.getItems().size(), pastInitialSize + 1);
     }
 
-    @Test
     /**
      * Test adding a condition with no name
      */
+    @Test
     public void testAddNoName() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -95,10 +91,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
     /**
      * Test adding a cured condition without a cured date
      */
+    @Test
     public void testAddCuredNoDate() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -113,10 +109,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
     /**
      * Test trying to add a cured condition with a diagnosis date after the cured date
      */
+    @Test
     public void testCuredDatesOutOfOrder() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -139,10 +135,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
     /**
      * Test trying to add a cured condition with the cured date after the current date
      */
+    @Test
     public void testCuredDateAfterToday() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -166,10 +162,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
     /**
      * Test adding a condition with invalid diagnosis date
      */
+    @Test
     public void testInvalidDiagnosisDate() {
         loginAsClinician();
         openSearchedProfile("Galil AR");
@@ -187,10 +183,10 @@ public class AddConditionGUITest extends TestFxMethods {
         assertTrue(date.isVisible());
     }
 
-    @Test
     /**
      * Test adding a condition with an invalid cured date
      */
+    @Test
     public void testInvalidCuredDate() {
         loginAsClinician();
         openSearchedProfile("Galil AR");

@@ -1,12 +1,20 @@
 package GUI;
 
 import com.sun.javafx.robot.impl.FXRobotHelper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javafx.collections.ObservableList;
-import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -14,20 +22,9 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
 import odms.data.ProfileDataIO;
-import odms.profile.Profile;
 import odms.tools.TestDataCreator;
 import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * regularly used methods in testfx.
@@ -35,12 +32,10 @@ import static org.junit.Assert.assertEquals;
  */
 abstract class TestFxMethods extends ApplicationTest {
 
-    public GuiMain guiMain;
+    protected GuiMain guiMain;
 
     @After()
     public void tearDown() throws Exception {
-        FxToolkit.cleanupStages();
-        FxToolkit.cleanupApplication(guiMain);
         release(new KeyCode[]{});
         release(new MouseButton[]{});
         sleep(500);
@@ -131,7 +126,7 @@ abstract class TestFxMethods extends ApplicationTest {
      * gets current stage with all windows.
      * @return All of the current windows
      */
-    protected javafx.scene.Scene getTopScene() {
+    protected Scene getTopScene() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
         final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());

@@ -1,5 +1,11 @@
 package odms.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.history.History;
@@ -8,12 +14,6 @@ import odms.profile.Condition;
 import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 import odms.user.User;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class RedoController extends UndoRedoController{
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
@@ -69,7 +69,7 @@ public class RedoController extends UndoRedoController{
     public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
-        profile.addOrganReceived(OrganEnum.valueOf(organ));
+        profile.addOrgansReceived(new HashSet<>(Arrays.asList(OrganEnum.valueOf(organ))));
     }
 
     /**

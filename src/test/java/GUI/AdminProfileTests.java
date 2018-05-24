@@ -1,5 +1,7 @@
 package GUI;
 
+import static org.junit.Assert.assertEquals;
+
 import javafx.scene.Scene;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -9,11 +11,13 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
 import odms.profile.Profile;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for checking that the correct file was imported by the admin.
@@ -21,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  * Run these tests manually before you push.
  */
 @Ignore
-public class AdminProfileTests extends TestFxMethods{
+public class AdminProfileTests extends TestFxMethods {
 
     @BeforeClass
     public static void headless() {
