@@ -18,6 +18,12 @@ import odms.user.User;
 
 public class CommandUtils {
 
+    public static ArrayList<String> currentSessionHistory = new ArrayList<>();
+
+    public static int historyPosition = 0;
+    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
+
     protected static String searchErrorText = "Please enter only one search criteria\n "
                                             + "Profiles: given-names, last-names, ird\n"
                                             + "Users: name, staffID";
