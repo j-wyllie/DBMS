@@ -230,6 +230,7 @@ public class CommandLine implements Runnable{
                 break;
 
             case SQLREADONLY:
+                // Execute read-only query.
                 CommandUtils.executeDatabaseRead(rawInput);
                 break;
 

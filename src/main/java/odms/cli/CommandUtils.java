@@ -551,6 +551,10 @@ public class CommandUtils {
 
     }
 
+    /**
+     * Supplys the read-only query to the database connection DAO.
+     * @param input query to be executed.
+     */
     public static void executeDatabaseRead(String input) {
         String query = input.substring(input.indexOf(' '));
 

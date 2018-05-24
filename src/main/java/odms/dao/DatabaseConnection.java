@@ -1,7 +1,6 @@
 package odms.dao;
 
 import static java.lang.System.getProperty;
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -14,6 +13,10 @@ public class DatabaseConnection {
     private static DataSource connectionSource;
     private ComboPooledDataSource source;
 
+    /**
+     * Constructor to create the singleton database connection
+     * class.
+     */
     private DatabaseConnection() {
         try {
             source = new ComboPooledDataSource();
@@ -50,14 +53,27 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Helper to hold the instance of the singleton database
+     * connection class.
+     */
     private static class DatabaseConnectionHelper {
         private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 
+    /**
+     * Supplys the instance of the singleton database connection class.
+     * @return the instance of the class.
+     */
     public static DatabaseConnection getInstance() {
         return DatabaseConnectionHelper.INSTANCE;
     }
 
+    /**
+     * Returns a connection from the database connection pool.
+     * @return a connection.
+     * @throws SQLException
+     */
     public static Connection getConnection() throws SQLException {
         return connectionSource.getConnection();
     }
