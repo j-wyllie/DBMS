@@ -19,9 +19,11 @@ public class Profile {
 
     private String givenNames;
     private String lastNames;
+    private String preferredName;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
+    private String preferredGender;
     private Double height = 0.0;
     private Double weight = 0.0;
     private String bloodType;
@@ -361,7 +363,7 @@ public class Profile {
      */
     public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("organsDonated");
+        generateUpdateInfo("organsDonating");
 
         for (OrganEnum organ : organs) {
             if (this.organsDonating.contains(organ)) {
@@ -995,5 +997,21 @@ public class Profile {
 
     public void setAllConditions(ArrayList<Condition> conditions) {
         this.conditions = conditions;
+    }
+
+    public void setPreferredGender(String preferredGender) {
+        this.preferredGender = preferredGender;
+    }
+
+    public String getPreferredGender() {
+        return this.preferredGender;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
     }
 }

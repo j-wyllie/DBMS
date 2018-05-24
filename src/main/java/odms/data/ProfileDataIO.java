@@ -13,6 +13,7 @@ public class ProfileDataIO extends CommonDataIO {
 
     private static final String defaultPath = "example/example.json";
     private static String history = "";
+    private static int lastPosition = 1;
 
     /**
      * Export full Profile Database object to the previously used path.
@@ -45,9 +46,13 @@ public class ProfileDataIO extends CommonDataIO {
             writeFile.close();
             if(history.equals("")) {
                 history = gson.toJson(HistoryController.getHistory());
-            } else {
+            } else if (HistoryController.getHistory().get(HistoryController.getPosition()) != null){
                 history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(HistoryController.getHistory().get(HistoryController.getPosition()).toString());
+
+                for (int i = lastPosition; i < HistoryController.getPosition(); i++) {
+                    history = history+"," + gson.toJson(HistoryController.getHistory().get(i).toString());
+                }
+                lastPosition = HistoryController.getPosition();
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();

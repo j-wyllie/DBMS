@@ -1,5 +1,18 @@
 package odms.controller;
 
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import com.sun.media.sound.InvalidDataException;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -11,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -47,9 +61,6 @@ public class ProfileEditController extends CommonController {
     private DatePicker dodDatePicker;
 
     @FXML
-    private TextField genderField;
-
-    @FXML
     private TextField heightField;
 
     @FXML
@@ -79,7 +90,16 @@ public class ProfileEditController extends CommonController {
     @FXML
     private RadioButton isSmokerRadioButton;
 
+    @FXML
+    private TextField preferredNameField;
+
     private Boolean isClinician;
+
+    @FXML
+    private ComboBox comboGenderPref;
+
+    @FXML
+    private ComboBox comboGender;
 
     /**
      * Button handler to undo last action.
@@ -127,6 +147,8 @@ public class ProfileEditController extends CommonController {
                 saveGender();
                 saveHeight();
                 savePhone();
+                savePreferredGender();
+                savePreferredName();
                 saveRegion();
                 saveWeight();
 
@@ -153,6 +175,19 @@ public class ProfileEditController extends CommonController {
             }
         }
     }
+
+//                    if (comboGender.getValue() != null) {
+//        currentProfile.setGender(comboGender.getValue().toString());
+//    }
+//                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
+//        if (comboGender.getValue() != null) {
+//            currentProfile.setPreferredGender(comboGender.getValue().toString());
+//        }
+//    } else {
+//        currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+//    }
+
+    //                 currentProfile.setPreferredName(preferredNameField.getText());
 
     /**
      * Save Date of Birth field to profile.
@@ -326,9 +361,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = profileCancelChanges();
-
-        if (cancelBool) {
+        if (profileCancelChanges()) {
             closeEditWindow(event);
         }
     }
@@ -398,6 +431,9 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getLastNames() != null) {
                     lastNamesField.setText(currentProfile.getLastNames());
                 }
+                if (currentProfile.getPreferredName() != null) {
+                    preferredNameField.setText(currentProfile.getPreferredName());
+                }
                 if (currentProfile.getIrdNumber() != null) {
                     irdNumberField.setText(currentProfile.getIrdNumber().toString());
                 }
@@ -406,9 +442,6 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getDateOfDeath() != null) {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
-                }
-                if (currentProfile.getGender() != null) {
-                    genderField.setText(currentProfile.getGender());
                 }
                 if (currentProfile.getHeight() != 0.0){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
@@ -439,6 +472,29 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+
+                comboGender.setEditable(false);
+                comboGender.getItems().addAll("Male", "Female");
+                if (currentProfile.getGender() != null) {
+                    if (currentProfile.getGender().toLowerCase().equals("male")) {
+                        comboGender.getSelectionModel().selectFirst();
+                    } else if (currentProfile.getGender().toLowerCase().equals("female")) {
+                        comboGender.getSelectionModel().select(1);
+                    } else {
+                        comboGender.setValue("");
+                    }
+                }
+
+                if (currentProfile.getGender() != null) {
+                    comboGender.getEditor().setText(currentProfile.getGender());
+                }
+
+                comboGenderPref.setEditable(true);
+                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
+
+                if (currentProfile.getPreferredGender() != null) {
+                    comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

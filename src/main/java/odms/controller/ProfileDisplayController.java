@@ -283,6 +283,12 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Label receiverStatusLabel;
 
+    @FXML
+    private Label labelGenderPreferred;
+
+    @FXML
+    private Label labelPreferredName;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -299,7 +305,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
-        //TODO need a function to get all current conditions, rather than just all
+        // TODO need a function to get all current conditions, rather than just all
 
         curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
 
@@ -757,7 +763,7 @@ public class ProfileDisplayController extends CommonController {
 
             String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
             History history = new History("Profile",currentProfile.getId(), "added drug",
-                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+9,data.indexOf(" at"))),LocalDateTime.now());
             HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
@@ -854,8 +860,8 @@ public class ProfileDisplayController extends CommonController {
                         get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "stopped",drug.getDrugName(),
-                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
-                                data.indexOf(" at"))),LocalDateTime.now());
+                        Integer.parseInt(data.substring(data.indexOf("index of") + 9,
+                                data.indexOf(" at"))), LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -877,7 +883,8 @@ public class ProfileDisplayController extends CommonController {
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "started",drug.getDrugName(),Integer.parseInt(data.substring
-                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                        (data.indexOf("index of") + 9,
+                                data.indexOf(" again"))), LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -1022,6 +1029,9 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.getGivenNames());
             }
+            if (currentProfile.getPreferredName() != null) {
+                labelPreferredName.setText(labelPreferredName.getText() + currentProfile.getPreferredName());
+            }
             if (currentProfile.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
@@ -1038,6 +1048,9 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentProfile.getGender() != null) {
                 genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
+            }
+            if (currentProfile.getPreferredGender() != null) {
+                labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
             if (currentProfile.getHeight() != 0.0) {
                 heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
@@ -1080,12 +1093,14 @@ public class ProfileDisplayController extends CommonController {
             }
 
             String history = ProfileDataIO.getHistory();
-            history = history.replace(",", " ").replace("]", "").
-                    replace("[", "").replace("\\u003d", "=");
+             history= history.replace(",", " ").replace("]", "").
+                replace("[", "").replace("\\u003d", "=");
             String[] histories = history.split("\"");
+
             String historyDisplay = "";
+
             for (String h : histories) {
-                if (!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
+                if (!h.equals("") && h.contains("Profile " + currentProfile.getId()+" ")) {
                     historyDisplay += h + "\n";
                 }
             }
@@ -1242,7 +1257,6 @@ public class ProfileDisplayController extends CommonController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
-            tableViewActiveIngredients.setVisible(false);
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);

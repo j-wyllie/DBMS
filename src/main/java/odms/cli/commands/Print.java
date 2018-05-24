@@ -4,8 +4,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import odms.cli.CommandUtils;
 import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
+import odms.user.User;
+import odms.user.UserType;
 
 public class Print extends CommandUtils {
 
@@ -14,7 +17,7 @@ public class Print extends CommandUtils {
      *
      * @param currentDatabase Database reference
      */
-    public static void printAll(ProfileDatabase currentDatabase) {
+    public static void printAllProfiles(ProfileDatabase currentDatabase) {
         ArrayList<Profile> allProfiles = currentDatabase.getProfiles(false);
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
@@ -24,6 +27,44 @@ public class Print extends CommandUtils {
         }
         else {
             System.out.println("There are no profiles to show.");
+        }
+    }
+
+    /**
+     * Print all profiles in the Database
+     *
+     * @param currentDatabase Database reference
+     */
+    public static void printAllClinicians(UserDatabase currentDatabase) {
+        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
+        if (allUsers.size() > 0) {
+            for (User user : allUsers) {
+                if (user.getUserType() == UserType.CLINICIAN) {
+                    printUserAttributesAttributes(user);
+                    System.out.println();
+                }
+            }
+        }
+        else {
+            System.out.println("There are no clinicians to show.");
+        }
+    }
+
+    /**
+     * Print all profiles in the Database
+     *
+     * @param currentDatabase Database reference
+     */
+    public static void printAllUsers(UserDatabase currentDatabase) {
+        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
+        if (allUsers.size() > 0) {
+            for (User user : allUsers) {
+                printUserAttributesAttributes(user);
+                System.out.println();
+            }
+        }
+        else {
+            System.out.println("There are no users to show.");
         }
     }
 
@@ -62,6 +103,21 @@ public class Print extends CommandUtils {
     }
 
     /**
+     * Display and print profile details in a list.
+     *
+     * @param userlist List of profiles
+     */
+    public static void printUserList(ArrayList<User> userlist) {
+        for (User user : userlist) {
+            System.out.println("Staff ID: " + user.getStaffID());
+            System.out.println("Name: " + user.getName());
+            System.out.println("User type: " + user.getUserType());
+            System.out.println("Date/Time Created: " + user.getTimeOfCreation());
+            System.out.println();
+        }
+    }
+
+    /**
      * Display and print profile donations.
      *
      * @param profileList list of profiles
@@ -79,15 +135,32 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Display and print printAll search results from Profile array. If array empty, no search results
+     * Display and print printAllProfiles search results from Profile array. If array empty, no search results
      * have been found.
      *
      * @param profileList Results from searching
      */
-    public static void printSearchResults(ArrayList<Profile> profileList) {
+    public static void printProfileSearchResults(ArrayList<Profile> profileList) {
         if (profileList.size() > 0) {
             for (Profile profile : profileList) {
                 printProfileAttributes(profile);
+                System.out.println();
+            }
+        } else {
+            System.out.println(searchNotFoundText);
+        }
+    }
+
+    /**
+     * Display and print printAllProfiles search results from Profile array. If array empty, no search results
+     * have been found.
+     *
+     * @param userlist Results from searching
+     */
+    public static void printUserSearchResults(ArrayList<User> userlist) {
+        if (userlist.size() > 0) {
+            for (User user : userlist) {
+                printUserAttributesAttributes(user);
                 System.out.println();
             }
         } else {
@@ -152,6 +225,32 @@ public class Print extends CommandUtils {
         }
 
         System.out.println("Last updated at: " + profile.getLastUpdated().format(
+                DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"))
+        );
+    }
+
+    /**
+     * Display and print the attributes of a profile
+     *
+     * @param user to be displayed
+     */
+    private static void printUserAttributesAttributes(User user) {
+        System.out.println("User type: " + user.getUserType());
+        System.out.println("ODMS Staff ID: " + user.getStaffID());
+
+        if (user.getName() != null) {
+            System.out.println("Name: " + user.getName());
+        }
+
+        if (user.getRegion() != null) {
+            System.out.println("Region: " + user.getRegion());
+        }
+
+        if (user.getWorkAddress() != null) {
+            System.out.println("Work address: " + user.getWorkAddress());
+        }
+
+        System.out.println("Last updated at: " + user.getLastUpdated().format(
                 DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"))
         );
     }

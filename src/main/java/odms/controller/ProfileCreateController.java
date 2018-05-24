@@ -36,6 +36,9 @@ public class ProfileCreateController extends CommonController {
     @FXML
     private TextField irdNumberField;
 
+    @FXML
+    private TextField preferredNameField;
+
     private String checkDetailsEntered() {
         if (givenNamesField.getText().isEmpty()) {
             return "Please enter Given Name(s)";
@@ -79,8 +82,10 @@ public class ProfileCreateController extends CommonController {
                 String surnames = surnamesField.getText();
                 LocalDate dob = dobDatePicker.getValue();
                 Integer ird = Integer.valueOf(irdNumberField.getText());
+                String prefName = preferredNameField.getText();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, ird);
+                newProfile.setPreferredName(prefName);
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
