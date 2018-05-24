@@ -166,7 +166,6 @@ public class User extends CommandUtils {
                 .trim()
                 .split("\"\\s");
 
-        System.out.println(attrList);
 
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
                 expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {

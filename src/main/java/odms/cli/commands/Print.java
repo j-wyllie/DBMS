@@ -235,7 +235,7 @@ public class Print extends CommandUtils {
      * @param user to be displayed
      */
     private static void printUserAttributesAttributes(User user) {
-        System.out.println("USER TYPE: " + user.getUserType());
+        System.out.println("User type: " + user.getUserType());
         System.out.println("ODMS Staff ID: " + user.getStaffID());
 
         if (user.getName() != null) {
