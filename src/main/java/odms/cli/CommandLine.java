@@ -6,19 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
-import odms.controller.RedoController;
-import odms.controller.UndoController;
+import odms.controller.GuiMain;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import org.jline.reader.History;
-import odms.data.UserDatabase;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -26,11 +23,6 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static odms.cli.CommandUtils.validateCommandType;
 
 public class CommandLine implements Runnable{
 
@@ -105,6 +97,7 @@ public class CommandLine implements Runnable{
     public void initialiseConsole() {
         Boolean exit = false;
         String input;
+        currentDatabaseUsers = GuiMain.getUserDatabase();
 
         System.out.println("Organ Profile Management System");
         System.out.println("\nPlease enter your commands below:");
