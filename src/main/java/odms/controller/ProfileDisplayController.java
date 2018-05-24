@@ -768,7 +768,7 @@ public class ProfileDisplayController extends CommonController {
             currentProfile.addDrug(new Drug(medicationName));
             String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
             History history = new History("Profile",currentProfile.getId(), "added drug",
-                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+9,data.indexOf(" at"))),LocalDateTime.now());
             HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
@@ -865,7 +865,7 @@ public class ProfileDisplayController extends CommonController {
                         get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "stopped",drug.getDrugName(),
-                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
+                        Integer.parseInt(data.substring(data.indexOf("index of")+9,
                                 data.indexOf(" at"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
@@ -890,7 +890,7 @@ public class ProfileDisplayController extends CommonController {
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "started",drug.getDrugName(),Integer.parseInt(data.substring
-                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                        (data.indexOf("index of")+9,data.indexOf(" again"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
