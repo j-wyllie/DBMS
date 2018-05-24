@@ -17,6 +17,9 @@ import odms.profile.Profile;
 
 public class CommandUtils {
 
+    public static ArrayList<String>  currentSessionHistory = new ArrayList<>();
+    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
     protected static String searchErrorText = "Please enter only one search criteria "
         + "(given-names, last-names, ird).";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
