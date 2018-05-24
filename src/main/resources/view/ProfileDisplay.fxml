@@ -642,9 +642,9 @@
                                     </Text>
                                     <TableView fx:id="curConditionsTable" onMouseReleased="#refreshPageElements" prefHeight="458.0" prefWidth="414.0" GridPane.rowIndex="1">
                                       <columns>
-                                        <TableColumn fx:id="curDescriptionColumn" prefWidth="205.0" text="Description" />
-                                        <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="58.0" />
-                                          <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="150.0" text="Date of diagnosis" />
+                                        <TableColumn fx:id="curDescriptionColumn" prefWidth="170.0" text="Description" />
+                                        <TableColumn fx:id="curChronicColumn" minWidth="0.0" text="Chronic" prefWidth="80.0" />
+                                          <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="200.0" text="Date of diagnosis" />
                                       </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -652,9 +652,9 @@
                                     </TableView>
                                     <TableView fx:id="pastConditionsTable" onMouseReleased="#refreshPageElements" prefHeight="453.0" prefWidth="423.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                       <columns>
-                                        <TableColumn fx:id="pastDescriptionColumn" prefWidth="200.0" text="Description" />
-                                        <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="109.0" text="Date of diagnosis" />
-                                          <TableColumn fx:id="pastDateCuredColumn" prefWidth="113.0" text="Date cured" />
+                                        <TableColumn fx:id="pastDescriptionColumn" prefWidth="170.0" text="Description" />
+                                        <TableColumn fx:id="pastDateOfDiagnosisColumn" prefWidth="160.0" text="Date of diagnosis" />
+                                          <TableColumn fx:id="pastDateCuredColumn" prefWidth="160.0" text="Date cured" />
                                       </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -722,7 +722,6 @@
                                         <TableView fx:id="pendingProcedureTable" prefHeight="458.0" prefWidth="455.0" GridPane.rowIndex="1">
                                             <columns>
                                                 <TableColumn fx:id="pendingSummaryColumn" prefWidth="138.0" text="Summary" />
-                                                <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="0.0" />
                                                 <TableColumn fx:id="pendingDateColumn" prefWidth="140.0" text="Date of Procedure" />
                                           <TableColumn fx:id="pendingAffectsColumn" prefWidth="176.0" text="Affects" />
                                             </columns>

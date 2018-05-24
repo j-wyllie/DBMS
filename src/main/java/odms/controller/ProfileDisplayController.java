@@ -25,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -305,17 +306,17 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
-        // TODO need a function to get all current conditions, rather than just all
-
-        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-
-        if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
-        else {curConditionsObservableList = FXCollections.observableArrayList(); }
-        if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
-        else {pastConditionsObservableList = FXCollections.observableArrayList(); }
-
+        if (curConditions != null) {
+            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        } else {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditions != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+        } else {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
         refreshConditionTable();
-
     }
 
     /**
@@ -465,18 +466,18 @@ public class ProfileDisplayController extends CommonController {
                 (Callback<TableView<Condition>, Boolean>) param -> {
                     Comparator<Condition> comparator = (o1, o2) -> {
                         if (o1.getChronic() && o2.getChronic()) {
-                            if (param.getComparator() == null) {
+                            if (param.getComparator() == null) { // if no comparator is set then return 0 (nothing changes)
                                 return 0;
-                            } else {
+                            } else { // otherwise sort the two conditions
                                 return param.getComparator().compare(o1,o2);
                             }
-                        } else if (o1.getChronic()) {
+                        } else if (o1.getChronic()) { // o1 is chronic and o2 isn't so return -1 (o1 comes first)
                             return -1;
-                        } else if (o2.getChronic()) {
+                        } else if (o2.getChronic()) { // o2 is chronic and o1 isn't so return 1 (o2 comes first)
                             return 1;
-                        } else if (param.getComparator() == null) {
+                        } else if (param.getComparator() == null) { // there is no comparator so return 0 (nothing changes)
                             return 0;
-                        } else {
+                        } else { // otherwise just compare them as usual
                             return param.getComparator().compare(o1,o2);
                         }
                     };
@@ -485,8 +486,24 @@ public class ProfileDisplayController extends CommonController {
                 });
 
         refreshPageElements();
+        forceConditionSortOrder();
 
     }
+
+    /**
+     * forces the sort order of the conditions tables to default to the diagnoses date in Descending order
+     */
+    @FXML
+    private void forceConditionSortOrder() {
+        curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
+        curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+
+        pastConditionsTable.getSortOrder().clear();
+        pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
+        pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+    }
+
 
     /**
      * Button handler to add condition to the current conditions for the current profile.
@@ -1114,7 +1131,7 @@ public class ProfileDisplayController extends CommonController {
             e.printStackTrace();
             invalidUsername();
         }
-
+        refreshConditionTable();
     }
 
     /**
@@ -1148,6 +1165,13 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void refreshPageElements() {
+        ArrayList<Condition> allConditions = convertConditionObservableToArray(
+                curConditionsTable.getSelectionModel().getSelectedItems());
+        allConditions.addAll(convertConditionObservableToArray(
+                pastConditionsTable.getSelectionModel().getSelectedItems()));
+
+        disableButtonsIfNoItems(allConditions);
+
         ArrayList<Drug> drugs = convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems()
         );
@@ -1157,8 +1181,6 @@ public class ProfileDisplayController extends CommonController {
         allDrugs.addAll(convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems())
         );
-
-        disableButtonsIfNoItems(allDrugs);
 
         buttonMedicationHistoricToCurrent.setDisable(false);
         buttonMedicationCurrentToHistoric.setDisable(false);
@@ -1182,12 +1204,6 @@ public class ProfileDisplayController extends CommonController {
         } else {
             buttonShowDrugInteractions.setDisable(false);
         }
-
-        ArrayList<Condition> allConditions = convertConditionObservableToArray(
-                curConditionsTable.getSelectionModel().getSelectedItems());
-        allConditions.addAll(convertConditionObservableToArray(
-                pastConditionsTable.getSelectionModel().getSelectedItems()));
-        disableButtonsIfNoItems(allConditions);
     }
 
     /**
@@ -1398,14 +1414,8 @@ public class ProfileDisplayController extends CommonController {
 
         if (currentProfile != null) {
             currentProfileBound.set(currentProfile);
-
             setPage(currentProfile);
-
             refreshMedicationsTable();
-            makeProcedureTable(
-                    currentProfile.getPreviousProcedures(),
-                    currentProfile.getPendingProcedures()
-            );
         }
 
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -1416,8 +1426,8 @@ public class ProfileDisplayController extends CommonController {
 
         curChronicColumn.setSortable(false);
 
-        hideItems();
         refreshPageElements();
+
         disableTableHeaderReorder();
     }
 

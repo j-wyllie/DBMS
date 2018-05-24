@@ -34,7 +34,7 @@ public class UserCreateController extends CommonController {
     public void handleUserCreateAccountButtonClicked(ActionEvent event) {
         if (checkValidEntries()) {
             if (checkUniqueUsername()) {
-                User user = new User(userTypeBox.getValue(), userNameField.getText(), userUsernameField.getText());
+                User user = new User(userTypeBox.getValue(), userNameField.getText(), userRegionField.getText());
                 user.setUsername(userUsernameField.getText());
                 user.setPassword(userPasswordField.getText());
                 GuiMain.getUserDatabase().addUser(user);
