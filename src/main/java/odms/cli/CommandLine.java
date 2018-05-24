@@ -6,19 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
-import odms.controller.RedoController;
-import odms.controller.UndoController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import org.jline.reader.History;
-import odms.data.UserDatabase;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -26,12 +22,7 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static odms.cli.CommandUtils.validateCommandType;
-
+import odms.controller.GuiMain;
 public class CommandLine implements Runnable{
 
     private ProfileDatabase currentDatabase;
@@ -105,6 +96,7 @@ public class CommandLine implements Runnable{
     public void initialiseConsole() {
         Boolean exit = false;
         String input;
+        currentDatabaseUsers = GuiMain.getUserDatabase();
 
         System.out.println("Organ Profile Management System");
         System.out.println("\nPlease enter your commands below:");
@@ -268,6 +260,18 @@ public class CommandLine implements Runnable{
             case ORGANREMOVE:
                 // Remove organs from a profile.
                 CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
+                System.out.println("Organ successfully removed from profile(s).");
+                break;
+
+            case RECEIVERADD:
+                // Add organs to a Receiver profile.
+                CommandUtils.addReceiverOrgansBySearch(currentDatabase, rawInput);
+                System.out.println("Organ successfully added to profile(s).");
+                break;
+
+            case RECEIVEREMOVE:
+                // Remove organs from a printDonors profile.
+                CommandUtils.removeReceiverOrgansBySearch(currentDatabase, rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 
