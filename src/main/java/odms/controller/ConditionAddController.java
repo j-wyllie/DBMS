@@ -115,10 +115,9 @@ public class ConditionAddController {
     public void init(ProfileDisplayController controller) {
         this.controller = controller;
         searchedDonor = controller.currentProfile;
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dateCuredDatePicker.setValue(LocalDate.now());
+        LocalDate now = LocalDate.now();
+        dateDiagnosedDatePicker.setValue(now);
+        dateCuredDatePicker.setValue(now);
         dateCuredDatePicker.setDisable(true);
     }
 }

@@ -292,16 +292,17 @@ public class ProfileDisplayController extends CommonController {
      * initializes and refreshes the current and past conditions tables
      */
     @FXML
-    private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
-        //curDiseasesTable.getSortOrder().add(curChronicColumn);}
-
-        //curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
-
-        if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
-        else {curConditionsObservableList = FXCollections.observableArrayList(); }
-        if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
-        else {pastConditionsObservableList = FXCollections.observableArrayList(); }
+    private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
+        if (curConditions != null) {
+            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        } else {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditions != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+        } else {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
         refreshConditionTable();
     }
 
@@ -1108,7 +1109,6 @@ public class ProfileDisplayController extends CommonController {
             invalidUsername();
         }
         refreshConditionTable();
-
     }
 
     /**
