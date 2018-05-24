@@ -177,14 +177,14 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    private void handleAgeRangeCheckboxChecked(ActionEvent event) {
+    private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
-            ageRangeField.setVisible(true);
-            ageField.setPromptText("Age value");
-            ageRangeField.setPromptText("Age value");
+            ageRangeField.setDisable(false);
+            ageField.setPromptText("Lower Age");
+            ageRangeField.setPromptText("Upper Age");
             ageRangeField.clear();
         } else {
-            ageRangeField.setVisible(false);
+            ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
         updateSearchTable();
@@ -485,7 +485,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     public void initialize() {
         if (currentUser != null) {
-            ageRangeField.setVisible(false);
+            ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
 
