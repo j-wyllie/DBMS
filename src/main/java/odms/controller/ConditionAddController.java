@@ -78,7 +78,7 @@ public class ConditionAddController {
                     "added condition","("  + name+","+dateDiagnosed+","+isChronic+ ")",
                     searchedDonor.getCurrentConditions().indexOf(condition),currentTime);
             HistoryController.updateHistory(action);
-        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException | DateTimeException e) {
             warningLabel.setVisible(true);
         }
     }

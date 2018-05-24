@@ -1142,6 +1142,13 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void refreshPageElements() {
+        ArrayList<Condition> allConditions = convertConditionObservableToArray(
+                curConditionsTable.getSelectionModel().getSelectedItems());
+        allConditions.addAll(convertConditionObservableToArray(
+                pastConditionsTable.getSelectionModel().getSelectedItems()));
+
+        disableButtonsIfNoItems(allConditions);
+
         ArrayList<Drug> drugs = convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems()
         );
@@ -1174,12 +1181,6 @@ public class ProfileDisplayController extends CommonController {
         } else {
             buttonShowDrugInteractions.setDisable(false);
         }
-
-        ArrayList<Condition> allConditions = convertConditionObservableToArray(
-            curConditionsTable.getSelectionModel().getSelectedItems());
-            allConditions.addAll(convertConditionObservableToArray(
-            pastConditionsTable.getSelectionModel().getSelectedItems()));
-        disableButtonsIfNoItems(allConditions);
     }
 
     /**
@@ -1418,10 +1419,6 @@ public class ProfileDisplayController extends CommonController {
         refreshPageElements();
 
         disableTableHeaderReorder();
-
-        try { // Can't refresh the condition table on the initial initialize
-
-        } catch (NullPointerException e) { }
     }
 
     /**
