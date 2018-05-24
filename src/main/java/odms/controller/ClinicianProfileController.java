@@ -456,10 +456,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void makeSearchTable(ArrayList<Profile> donors) {
         labelResultCount.setText(0 + " results found");
-        if (donors.size() > 30) {
-            donors.clear();
-            donors.addAll(donors.subList(0, 30));
-        }
         searchTable.getItems().clear();
 
         donorObservableList = FXCollections.observableArrayList(donors);
