@@ -10,7 +10,6 @@ import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
-import odms.controller.GuiMain;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
@@ -23,7 +22,7 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-
+import odms.controller.GuiMain;
 public class CommandLine implements Runnable{
 
     private ProfileDatabase currentDatabase;
@@ -128,7 +127,6 @@ public class CommandLine implements Runnable{
      * @param input commands entered from console
      */
     private void processInput(ArrayList<String> input, String rawInput) {
-        System.out.println(rawInput);
         Commands inputCommand = validateCommandType(input, rawInput);
 
         switch (inputCommand) {
