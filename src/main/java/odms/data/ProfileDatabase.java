@@ -1,9 +1,15 @@
 package odms.data;
 
+import java.lang.reflect.Array;
 import java.util.*;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public class ProfileDatabase {
@@ -173,7 +179,7 @@ public class ProfileDatabase {
 
         profileDb.forEach((id, profile) -> {
             if (donating) {
-                if (profile.getOrgans().size() > 0) {
+                if (profile.getOrgansDonating().size() > 0) {
                     profiles.add(profile);
                 }
             } else {
@@ -187,31 +193,233 @@ public class ProfileDatabase {
     }
 
     /**
-     * Fuzzy search that finds the top 30 donors that match the provided search string.
-     * @param searchString the string that the donor names will be searched against.
-     * @return list of donors that match the provided search string, with a max size of 30.
+     * Generate a list of profiles ordered by last names.
+     * Parameter to specify whether or not the list contains every profile or only profiles that
+     * are currently donating organs.
+     *
+     * @param donating specify donating organs or not
+     * @return Array of profiles found that match
      */
-    public ArrayList<Profile> searchProfiles(String searchString) {
+    public ArrayList<Profile> getDonors(boolean donating) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+            if (profile.getDonor()) {
+                if (donating) {
+                    if (profile.getOrgansDonating().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+
+        return profiles;
+    }
+
+    /**
+     * Searches a given list of profiles with a given search string using fuzzy search
+     * @param profilesGiven list of profiles to search through
+     * @param searchString string to match profiles against
+     * @param type type of attribute to filter against
+     * @return the filtered list of profiles
+     */
+    public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString, String type) {
+
+        ArrayList<Profile> resultProfiles = new ArrayList<>();
         ArrayList<String> profiles = new ArrayList<>();
 
-        if (searchString == null || searchString.equals("")) {
-            return getProfiles(false);
-        }
-
-        for (Profile profile : getProfiles(false)) {
-            profiles.add(profile.getFullName());
+        if (type.equals("name")) {
+            for (Profile profile : profilesGiven) {
+                profiles.add(profile.getFullName());
+            }
+        } else if (type.equals("region")) {
+            for (Profile profile : profilesGiven) {
+                //TODO work out why fuzzy search can only search through strings with two parts, throws null pointer when just one word
+                profiles.add(profile.getRegion() + " " + profile.getRegion());
+            }
+        } else {
+            return profilesGiven;
         }
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
         List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 30);
+        result = FuzzySearch.extractSorted(searchString, profiles, 50);
 
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
-        ArrayList<Profile> resultProfiles = new ArrayList<>();
         for (ExtractedResult er : result) {
-            resultProfiles.add(getProfiles(false).get(er.getIndex()));
+            resultProfiles.add(profilesGiven.get(er.getIndex()));
         }
+
         return resultProfiles;
+    }
+
+    /**
+     * Fuzzy search that finds the top 30 donors that match the provided search string.
+     * @param searchString the string that the donor names will be searched against.
+     * @return list of donors that match the provided search string, with a max size of 30.
+     */
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
+        ArrayList<String> profiles = new ArrayList<>();
+        ArrayList<Profile> resultProfiles;
+
+        switch (selectedType) {
+            case "any":
+                resultProfiles = getProfiles(false);
+                break;
+            case "donor":
+                resultProfiles = getDonors(false);
+                break;
+            default:
+                resultProfiles = getReceivers(true);
+                break;
+        }
+
+        //ArrayList<Profile> resultProfiles = allProfiles;
+
+        //parsing out organs as strings for later use
+
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()){
+            return resultProfiles;
+        }
+
+
+        if (!searchString.equals("")) {
+            resultProfiles = fuzzySearch(resultProfiles, searchString, "name");
+        }
+
+        if (!regionSearchString.equals("")) {
+            ArrayList<Profile> resultProfilesBefore = resultProfiles;
+            resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
+        }
+
+
+        //definitely need a better way than just a magic number lol
+        if (ageSearchInt != -999) {
+            if (ageRangeSearchInt != -999) {
+                //use a range
+                if (ageRangeSearchInt > ageSearchInt ) {resultProfiles.removeIf(profile -> ((profile.getAge() > ageRangeSearchInt) || (profile.getAge() < ageSearchInt))); }
+                else { resultProfiles.removeIf(profile -> ((profile.getAge() < ageRangeSearchInt) || (profile.getAge() > ageSearchInt))); }
+
+            } else {
+                //just the age specified
+                resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
+            }
+        }
+
+
+        if (!selectedGender.equals("")) {
+            if (!selectedGender.equals("any")) {
+                resultProfiles.removeIf(profile -> {
+                    if (profile.getGender() == null) {
+                        return true;
+                    }
+                    return !selectedGender.equals(profile.getGender());
+                });
+            }
+        }
+
+
+        if (!selectedOrgans.isEmpty()) {
+            resultProfiles.removeIf(profile -> {
+
+                HashSet<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
+                List<String> organsDonating = new ArrayList<String>();
+
+                for (OrganEnum temp : organsDonatingHash) {
+                    organsDonating.add(temp.getName());
+                }
+
+                if (organsDonating == null || organsDonating.size() == 0) {
+                    return true;
+                }
+                organsDonatingHash.retainAll(selectedOrgans);         //intersection
+                return organsDonating.size() == 0;
+            });
+
+        }
+
+        if (!(selectedType == null)) {
+            resultProfiles.removeIf(profile -> {
+                if (selectedType.equals("donor")) {
+                    return !profile.isDonatingCertainOrgans(selectedOrgans);
+                } else if (selectedType.equals("receiver")){
+                    return !profile.isReceivingCertainOrgans(selectedOrgans);
+                } else {
+                    return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile.isDonatingCertainOrgans(selectedOrgans));
+                }
+            });
+        }
+
+        return resultProfiles;
+    }
+
+    private List<String> getOrgansAsStrings(List selectedOrgans) {
+        List<String> selectedOrgansStrings = new ArrayList<>();
+        if (selectedOrgans != null) {
+            for (int i = 0; i< selectedOrgans.size(); i++) {
+                //todo need some consistency in how we are naming organs that have two words in them.
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
+                    selectedOrgansStrings.add("connective_tissue");
+                }
+                if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
+                    selectedOrgansStrings.add("bone_marrow");
+                }
+                selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
+            }
+        }
+        return selectedOrgansStrings;
+    }
+
+    /**
+     * Generates a list of profiles receiving organs ordered by last names.
+     * Parameter to specify whether or not the list contains every receiver or only receivers that
+     * are currently receiving organs.
+     *
+     * @param receiving specify currently receiving organs or not
+     * @return Array of profiles found that match
+     */
+    public ArrayList<Profile> getReceivers(Boolean receiving) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        profileDb.forEach((id, profile) -> {
+
+            if (profile.isReceiver()) {
+                if (receiving) {
+                    if (profile.getOrgansRequired().size() > 0) {
+                        profiles.add(profile);
+                    }
+                } else {
+                    profiles.add(profile);
+                }
+            }
+        });
+
+        profiles.sort(Comparator.comparing(Profile::getLastNames));
+        return profiles;
+    }
+
+
+    /**
+     * Generates a collection of a profile and organ for each organ that a receiver requires
+     *
+     *  @return Collection of Profile and Organ that match
+     */
+    public List<Entry<Profile, OrganEnum>> getAllOrgansRequired() {
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
+
+        ArrayList<Profile> allReceivers = getReceivers(true);
+
+        for (Profile profile : allReceivers) {
+            for (OrganEnum organ : profile.getOrgansRequired()) {
+                Map.Entry<Profile, OrganEnum> pair = new SimpleEntry<>(profile, organ);
+                receivers.add(pair);
+            }
+        }
+        return receivers;
     }
 
 }

@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="270.0" prefWidth="369.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.AddConditionController">
+<AnchorPane focusTraversable="true" prefHeight="270.0" prefWidth="369.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ConditionAddController">
    <children>
+      <Label fx:id="conditionDetailsLabel" layoutX="14.0" layoutY="14.0" text="Condition Details:" />
       <TextField fx:id="nameField" layoutX="12.0" layoutY="41.0" prefHeight="29.0" prefWidth="339.0" promptText="Name" />
-      <Button fx:id="addButton" layoutX="224.0" layoutY="214.0" mnemonicParsing="false" onAction="#handleAddButtonClicked" prefHeight="42.0" prefWidth="127.0" text="Add" />
-      <TextField fx:id="dateDiagnosedField" layoutX="12.0" layoutY="82.0" prefHeight="29.0" prefWidth="339.0" promptText="Date Diagnosed (dd-mm-yy)" />
+      <DatePicker fx:id="dateDiagnosedDatePicker" layoutX="14.0" layoutY="83.0" prefHeight="25.0" prefWidth="339.0" promptText="Date Diagnosed" />
       <CheckBox fx:id="chronicCheckBox" layoutX="14.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleChronicChecked" text="Chronic" />
       <CheckBox fx:id="curedCheckBox" layoutX="130.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleCuredChecked" text="Cured" />
-      <TextField fx:id="dateCuredField" layoutX="15.0" layoutY="149.0" prefHeight="29.0" prefWidth="339.0" promptText="Date Cured (dd-mm-yy)" />
-      <Label fx:id="conditionDetailsLabel" layoutX="14.0" layoutY="14.0" text="Condition Details:" />
+      <DatePicker fx:id="dateCuredDatePicker" layoutX="12.0" layoutY="155.0" prefHeight="25.0" prefWidth="339.0" promptText="Date Cured" />
+      <Button fx:id="addButton" layoutX="224.0" layoutY="214.0" mnemonicParsing="false" onAction="#handleAddButtonClicked" prefHeight="42.0" prefWidth="127.0" text="Add" />
       <Label fx:id="warningLabel" alignment="CENTER" layoutX="14.0" layoutY="188.0" prefHeight="15.0" prefWidth="339.0" text="Invalid Details" textAlignment="CENTER" textFill="RED" visible="false" />
    </children>
 </AnchorPane>

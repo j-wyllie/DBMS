@@ -1,11 +1,12 @@
 package odms.data;
 
-import static org.junit.Assert.assertEquals;
-
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 import odms.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class UserDatabaseTest {
 
@@ -22,13 +23,10 @@ public class UserDatabaseTest {
     }
 
     @Test
-    public void testAddUser() {
-        try {
-            userDb.addClinician(user1);
-            assertEquals("John Smith", userDb.getClinician(0).getName());
-            assertEquals("Christchurch", userDb.getClinician(0).getRegion());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+    public void testAddUser() throws UserNotFoundException {
+            userDb.addUser(user1);
+            assertEquals("John Smith", userDb.getUser(0).getName());
+            assertEquals("Christchurch", userDb.getUser(0).getRegion());
+
     }
 }

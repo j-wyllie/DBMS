@@ -1,30 +1,31 @@
 package odms.profile;
 
-import odms.cli.CommandUtils;
-
-
+import odms.controller.HistoryController;
+import odms.enums.OrganEnum;
+import odms.history.History;
 import odms.medications.Drug;
-
-import java.time.Period;
-import java.util.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Profile {
 
-    private Boolean registered;
-    private Boolean receiver;
+    private Boolean donor = false;
+    private Boolean receiver = false;
 
     private String givenNames;
     private String lastNames;
+    private String preferredName;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
+    private String preferredGender;
     private Double height;
     private Double weight;
     private String bloodType;
@@ -35,15 +36,16 @@ public class Profile {
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private Set<String> chronicDiseases = new HashSet<>();
+    private HashSet<String> chronicDiseases = new HashSet<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private Set<Organ> organs = new HashSet<>();
-    private Set<Organ> donatedOrgans = new HashSet<>();
-    private Set<Organ> organsRequired = new HashSet<>();
+    private HashSet<OrganEnum> organsDonating = new HashSet<>();
+    private HashSet<OrganEnum> organsDonated = new HashSet<>();
+    private HashSet<OrganEnum> organsRequired = new HashSet<>();
+    private HashSet<OrganEnum> organsReceived = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -56,9 +58,10 @@ public class Profile {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications;
-    private ArrayList<Drug> historyOfMedication;
-    private ArrayList<String> medicationTimestamps;
+    private ArrayList<Drug> currentMedications = new ArrayList<>();
+    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
+    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+
 
     /**
      * Instantiates the Profile class with data from the CLI
@@ -67,9 +70,6 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
         procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -86,9 +86,6 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
 
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
@@ -96,13 +93,17 @@ public class Profile {
         attr.add("last-names=\"" + lastNames + "\"");
         attr.add("ird=\"" + irdNumber + "\"");
         attr.add("dob=\"" + dob + "\"");
-
+        this.setReceiver(false);
         setExtraAttributes(attr);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
+    }
+
+    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+        this(givenNames, lastNames, dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), irdNumber);
     }
 
     /**
@@ -113,7 +114,7 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            if(parts.length==1) {
+            if (parts.length==1) {
                 String[] newParts = {parts[0], ""};
                 setGivenAttribute(newParts);
             } else {
@@ -130,7 +131,7 @@ public class Profile {
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = null;
-        if(!parts[1].equals(null)) {
+        if (!parts[1].equals(null)) {
             value = parts[1].replace("\"", ""); // get rid of the speech marks;
         }
 
@@ -143,7 +144,7 @@ public class Profile {
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if(value.equals("null")){
+            if (value.equals("null")) {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
@@ -171,7 +172,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null") || value.equals("")) {
+            if (value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -194,12 +195,12 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            if (value.equals("null")) {setBloodPressureSystolic(null);}
             else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            if (value.equals("null")) {setBloodPressureDiastolic(null);}
             else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
@@ -212,7 +213,6 @@ public class Profile {
             throw new IllegalArgumentException();
         }
     }
-
 
     /**
      * Add a procedure to the current profile
@@ -281,96 +281,13 @@ public class Profile {
         }
     }
 
-    /**
-     * Outputs the profile's organs that they want to donate
-     */
-    public void viewOrgans() {
-        String output = "Organs to donate: ";
-
-        for (Organ org : organs) {
-            output += org.getName() + ", ";
-        }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
-    }
-
-    /**
-     * View the list of donations that the profile has made
-     */
-    public void viewDonations() {
-        String output = "Organs donated:  ";
-
-        for (Organ org : donatedOrgans) {
-            output += org.getName() + ", ";
-        }
-        // Did this to make the output look nicer with commas
-        System.out.println(output.substring(0, output.length() - 2));
-    }
-
-    /**
-     * Outputs the profile's attributes
-     */
-    public void viewAttributes() {
-        if (irdNumber != null) {
-            System.out.println("IRD: " + irdNumber);
-        }
-
-        System.out.println("ODMS ID: " + id);
-
-        if (givenNames != null) {
-            System.out.println("Given Names: " + givenNames);
-        }
-
-        if (lastNames != null) {
-            System.out.println("Last Names: " + lastNames);
-        }
-
-        System.out.println("Date Of Birth: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        if (dateOfDeath != null) {
-            System.out.println("Date Of Death: " + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }
-
-        if (gender != null) {
-            System.out.println("Gender: " + gender);
-        }
-
-        if (height != 0.0) {
-            System.out.println("Height: " + height + "cm");
-        }
-
-        if (weight != 0.0) {
-            System.out.println("Weight: " + weight);
-        }
-
-        if (bloodType != null) {
-            System.out.println("Blood Type: " + bloodType);
-        }
-
-        if (address != null) {
-            System.out.println("Address: " + address);
-        }
-
-        if (region != null) {
-            System.out.println("Region: " + region);
-        }
-
-        if (organs.size() > 0) {
-            viewOrgans();
-        }
-
-        System.out.println("IRD: " + irdNumber);
-
-        System.out.println("Last updated at: " + lastUpdated.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")));
-    }
-
     public String getAttributesSummary() {
         String summary = "";
         summary = summary +("ird=" + irdNumber);
         summary = summary +"," +("given-names=" + givenNames);
         summary = summary +"," +("last-names=" + lastNames);
         summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        if(dateOfDeath==null){summary = summary +"," +("dod=" + null);}
+        if (dateOfDeath==null) { summary = summary +"," +("dod=" + null); }
         else{summary = summary +"," +("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));}
         summary = summary +"," +("gender=" + gender);
         summary = summary +"," +("height=" + height);
@@ -388,22 +305,12 @@ public class Profile {
     }
 
     /**
-     * This will add a csv list to the list of organs
-     * @param organs the organs to add as a csv
-     * @throws OrganConflictException if there is a conflicting organ
-     */
-    public void addOrgansFromString(String organs) throws OrganConflictException {
-        String[] org = organs.split(",");
-        addOrgansDonate(new HashSet<>(Arrays.asList(org)));
-    }
-
-    /**
      * Adds a csv list to the list of donations
-     * @param organs the organs to add as a csv
+     * @param organString the organs to add as a csv
      */
-    public void addDonationFromString(String organs) {
-        String[] org = organs.split(",");
-        addDonations(new HashSet<>(Arrays.asList(org)));
+    public void addDonationFromString(String organString) {
+        String[] organStrings = organString.split("(,\\s+|,)");
+        this.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organStrings)));
     }
 
     /**
@@ -419,121 +326,44 @@ public class Profile {
     }
 
     /**
-     * Returns the organs as a csv string
-     * @return string of the organs
-     */
-    public String getOrgansAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = organs.size();
-
-        for (Organ org : organs) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
-            }
-        }
-        return out;
-    }
-
-    /**
-     * returns the chronic diseases as a csv string
-     * @return list of chronic dieseases
-     */
-    public String getChronicDiseasesAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = chronicDiseases.size();
-
-        for (String disease : chronicDiseases) {
-            count++;
-            if (count == len) {
-                out += disease;
-            } else {
-                out += disease + ", ";
-            }
-        }
-        return out;
-    }
-
-    /**
-     * returns the donations as a csv
-     * @return String of donations as csv
-     */
-    public String getDonationsAsCSV() {
-        String out = "";
-        int count = 0;
-        int len = donatedOrgans.size();
-
-        for (Organ org : donatedOrgans) {
-            count++;
-            if (count == len) {
-                out += org.getName();
-            } else {
-                out += org.getName() + ", ";
-            }
-        }
-        return out;
-    }
-
-    /**
      * Add an organ to the organs donate list.
      * @param organ the organ the profile wishes to donate
      */
-    public void addOrgan(Organ organ) throws OrganConflictException {
-        if (this.organsRequired.contains(organ)) {
+    public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
+        if (this.organsReceived.contains(organ)) {
+            // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
-                    "Profile is currently receiver for " + organ,
+                    "Profile has previously received " + organ,
                     organ
             );
         }
-        this.organs.add(organ);
+        this.organsDonating.add(organ);
     }
 
     /**
      * Add an organ to the organs required list.
      * @param organ the organ the profile requires
-     * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrganRequired(Organ organ) throws OrganConflictException {
-        if (this.organs.contains(organ)) {
-            throw new OrganConflictException(
-                    "Profile is currently donor for  " + organ,
-                    organ
-            );
-        }
+    public void addOrganRequired(OrganEnum organ) {
         this.organsRequired.add(organ);
     }
 
     /**
-     * Consume a set of organs that the profile wants to receive and updates the profile to use this
-     * new set.
+     * Add a set of organs that the profile requires to the required organs set.
      * @param organs the set of organs to be received
      */
-    public void setOrgansRequired(Set<String> organs) {
+    public void addOrgansRequired(HashSet<OrganEnum> organs) {
         generateUpdateInfo("organsRequired");
 
-        Set<Organ> newOrgans = new HashSet<>();
-
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase().replace(" ", "_");
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-            String action = "Profile " + this.getId() + " required organ " + organ + " at " + LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
+        for (OrganEnum organ : organs) {
+            addOrganRequired(organ);
+            LocalDateTime now = LocalDateTime.now();
+            History action = new History("Profile", this.getId(),"required organ",
+                    ""+organ.getNamePlain(),-1,now);
+            HistoryController.updateHistory(action);
             }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-        }
-
-        this.organsRequired = newOrgans;
     }
+
 
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
@@ -541,49 +371,84 @@ public class Profile {
      * @throws IllegalArgumentException if a bad argument is used
      * @throws OrganConflictException if there is a conflicting organ
      */
-    public void addOrgansDonate(Set<String> organs)
+    public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("donatedOrgans");
+        generateUpdateInfo("organsDonating");
 
-        Set<Organ> newOrgans = new HashSet<>();
-
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-        }
-
-        if (Collections.disjoint(newOrgans, this.organs) && registered) {
-            for (String organ : organs) {
-                this.addOrgan(Organ.valueOf(organ));
+        for (OrganEnum organ : organs) {
+            if (this.organsDonating.contains(organ)) {
+                throw new IllegalArgumentException(
+                        "Organ " + organ + " already exists in donating list"
+                );
             }
-        } else {
-            throw new IllegalArgumentException();
+            this.addOrganDonating(organ);
+
+            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),
+                    -1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
-    public Set<Organ> getOrgansRequired() {
+    public HashSet<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
 
     /**
-     * Add an organ to the list of donated organs.
-     * @param organ the organ to be added
+     * Add an organ to the set of received organs.
+     * If the organ exists in the receiving set, remove it.
+     * @param organ to be added
      */
-    public void addDonation(Organ organ) {
-        this.donatedOrgans.add(organ);
+    public void addOrganReceived(OrganEnum organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
+
+        this.organsReceived.add(organ);
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile has donated
-     * @param organs a set of organs that the profile has donated
+     * Add a set of organs to the set of received organs.
+     * @param organs set to be added
      */
-    public void addDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            this.addDonation(organ);
+    public void addOrgansReceived(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsReceived");
+
+        for (OrganEnum organ : organs) {
+            addOrganReceived(organ);History action = new History("Profile ", this.getId(),
+                    "received",organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
+        }
+    }
+
+    public HashSet<OrganEnum> getOrgansReceived() {
+        return organsReceived;
+    }
+
+    /**
+     * Add an organ to the list of donated organsDonating.
+     * If the organ exists in the donating list, remove it from the donating list.
+     * @param organ the organ to be added
+     */
+    public void addOrganDonated(OrganEnum organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
+
+        this.organsDonated.add(organ);
+    }
+
+    /**
+     * Add a set of organsDonating to the list of organsDonating that the profile has donated
+     * @param organs a set of organsDonating that the profile has donated
+     */
+    public void addOrgansDonated(Set<OrganEnum> organs) {
+        generateUpdateInfo("pastDonations");
+
+        for (OrganEnum organ : organs) {
+            this.organsDonated.add(organ);
+            History action = new History("Profile ", this.getId(),"donated",organ.getNamePlain(),
+                    -1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -591,12 +456,14 @@ public class Profile {
      * Remove a set of organs from the list of organs that the profile has donated
      * @param organs a set of organs to remove from the list
      */
-    public void removeDonations(Set<String> organs) {
-        generateUpdateInfo("donatedOrgans");
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            this.donatedOrgans.remove(organ);
+    public void removeOrgansDonated(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsDonated");
+
+        for (OrganEnum organ : organs) {
+            this.organsDonated.remove(organ);
+            History action = new History("Profile ", this.getId(),"removed donated",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -604,32 +471,49 @@ public class Profile {
      * Remove a set of organs from the list of organs that the use wants to donate
      * @param organs a set of organs to be removed
      */
-    public void removeOrgans(Set<String> organs) throws IllegalArgumentException {
-        generateUpdateInfo("organs");
+    public void removeOrgansDonating(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsDonating");
 
-        Set<Organ> newOrgans = new HashSet<>();
-
-        for (String org : organs) {
-            String newOrgan = org.trim().toUpperCase();
-            Organ organ = Organ.valueOf(newOrgan);
-            newOrgans.add(organ);
-        }
-
-        if (!Collections.disjoint(newOrgans, this.organs)) {
-            this.organs.removeAll(newOrgans);
-        } else {
-            throw new IllegalArgumentException();
+        for (OrganEnum organ : organs) {
+            this.organsDonating.remove(organ);
+            History action = new History("Profile ", this.getId(),"removed",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
+    /**
+     * Remove a set of organs from the list of organs required.
+     * @param organs a set of organs to be removed
+     */
+    public void removeOrgansRequired(Set<OrganEnum> organs) {
+        generateUpdateInfo("organsReceiving");
+
+        for (OrganEnum organ : organs) {
+            this.organsRequired.remove(organ);
+            History action = new History("Profile ", this.getId(),"removed required",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
+
+
+            HistoryController.updateHistory(action);
+        }
     }
 
-    public Boolean getRegistered() {
-        return registered;
+    public void removeOrganReceived(OrganEnum organ) {
+        if (this.organsReceived.contains(organ)) {
+            this.organsReceived.remove(organ);
+        }
+
+        this.organsRequired.add(organ);
     }
 
+    public void removeOrganDonated(OrganEnum organ) {
+        if (this.organsDonated.contains(organ)) {
+            this.organsDonated.remove(organ);
+        }
+
+        this.organsDonating.add(organ);
+    }
 
 
     public void setReceiver(boolean receiver) {
@@ -690,7 +574,8 @@ public class Profile {
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Profile " + this.getId() + " added drug " +drug.getDrugName() + " index of "+
+                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         medicationTimestamps.add(data);
         generateUpdateInfo(drug.getDrugName());
     }
@@ -705,14 +590,17 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(currentMedications.contains(drug)){
+        String data = "Profile " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+
+                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if(currentMedications.contains(drug)) {
             currentMedications.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
-        } else if(historyOfMedication.contains(drug)){
+        } else if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            generateUpdateInfo(drug.getDrugName());
+            data = "Profile " + this.getId() + " removed drug from history"  + " index of "+
+                    currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
         }
 
     }
@@ -727,12 +615,15 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(currentMedications.contains(drug)){
+        if (currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Profile " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+
+                    historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
+
 
 
     }
@@ -747,10 +638,12 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(historyOfMedication.contains(drug)){
+        if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Profile " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+
+                    currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
 
@@ -768,14 +661,13 @@ public class Profile {
         return medicationTimestamps;
     }
 
-    public Set<Organ> getDonatedOrgans() {
-        return donatedOrgans;
+    public HashSet<OrganEnum> getOrgansDonated() {
+        return organsDonated;
     }
 
-    public Set<Organ> getOrgans() {
-        return organs;
+    public HashSet<OrganEnum> getOrgansDonating() {
+        return organsDonating;
     }
-
 
     // Condition functions
 
@@ -783,7 +675,9 @@ public class Profile {
      * Gets all the current conditions of the user
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() { return conditions; }
+    public ArrayList<Condition> getAllConditions() {
+        return this.conditions;
+    }
 
     /**
      * Gets all the cured conditions of the user
@@ -791,15 +685,12 @@ public class Profile {
      */
     public ArrayList<Condition> getCuredConditions() {
         ArrayList<Condition> curedConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (condition.getCured()) {
-                    curedConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (condition.getCured()) {
+                curedConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
+
         return curedConditions;
     }
 
@@ -809,16 +700,30 @@ public class Profile {
      */
     public ArrayList<Condition> getCurrentConditions() {
         ArrayList<Condition> currentConditions = new ArrayList<>();
-        try {
-            for (Condition condition : conditions) {
-                if (!condition.getCured()) {
-                    currentConditions.add(condition);
-                }
+        for (Condition condition : this.conditions) {
+            if (!condition.getCured()) {
+                currentConditions.add(condition);
             }
-        } catch (NullPointerException e) {
-            return null;
         }
         return currentConditions;
+    }
+
+    /**
+     * Checks if a profile is donating a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsDonating.containsAll(organs);
+    }
+
+    /**
+     * Checks if a profile is receiving a certain selection of organs
+     * @param organs
+     * @return true if they are
+     */
+    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+        return organsRequired.containsAll(organs);
     }
 
     /**
@@ -826,8 +731,7 @@ public class Profile {
      * @param condition to be added
      */
     public void addCondition(Condition condition) {
-        if (conditions == null) { conditions = new ArrayList<>(); }
-        conditions.add(condition);
+        this.conditions.add(condition);
     }
 
     /**
@@ -835,19 +739,20 @@ public class Profile {
      * @param condition to be removed
      */
     public void removeCondition(Condition condition) {
-        conditions.remove(condition);
+        this.conditions.remove(condition);
     }
-    // -------
 
     public LocalDateTime getTimeOfCreation() {
-        return timeOfCreation;
+        return this.timeOfCreation;
     }
 
     public String getGivenNames() {
-        return givenNames;
+        return this.givenNames;
     }
 
-    public String getFullName() { return givenNames + " " + lastNames; }
+    public String getFullName() {
+        return givenNames + " " + lastNames;
+    }
 
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
@@ -913,7 +818,7 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        if(bloodType != null) {
+        if (bloodType != null) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         }
@@ -944,6 +849,22 @@ public class Profile {
     public void setIrdNumber(Integer irdNumber) {
         generateUpdateInfo("ird");
         this.irdNumber = irdNumber;
+    }
+
+    public Boolean getDonor() {
+        return donor;
+    }
+
+    public void setDonor(Boolean donor) {
+        this.donor = donor;
+    }
+
+    public Boolean getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Boolean receiver) {
+        this.receiver = receiver;
     }
 
     public Integer getId() {
@@ -986,16 +907,20 @@ public class Profile {
         this.bloodPressureDiastolic = bloodPressureDiastolic;
     }
 
+    /**
+     * Returns a string formatted Systolic / Diastolic.
+     *
+     * @return blood pressure string
+     */
     public String getBloodPressure() {
         return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
     }
 
-    public Set<String> getChronicDiseases() {
+    public HashSet<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
-
-    public void setChronicDiseases(Set<String> chronicDiseases) {
+    public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
 
@@ -1015,7 +940,23 @@ public class Profile {
         this.email = email;
     }
 
-    public void setAllConditions(ArrayList<Condition> conditions) { this.conditions = conditions; }
+    public void setAllConditions(ArrayList<Condition> conditions) {
+        this.conditions = conditions;
+    }
 
+    public void setPreferredGender(String preferredGender) {
+        this.preferredGender = preferredGender;
+    }
 
+    public String getPreferredGender() {
+        return this.preferredGender;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
+    }
 }

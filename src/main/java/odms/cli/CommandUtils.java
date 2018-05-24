@@ -2,23 +2,23 @@ package odms.cli;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
-import odms.profile.Organ;
-import odms.profile.OrganConflictException;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
+import odms.user.User;
 
 public class CommandUtils {
 
-    public static ArrayList<String> currentSessionHistory = new ArrayList<>();
-
-    public static int historyPosition = 0;
-    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
-    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
-
-    protected static String searchErrorText = "Please enter only one search criteria "
-        + "(given-names, last-names, ird).";
+    protected static String searchErrorText = "Please enter only one search criteria\n "
+                                            + "Profiles: given-names, last-names, ird\n"
+                                            + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
 
     private static final String cmdRegexCreate =
@@ -58,9 +58,18 @@ public class CommandUtils {
             case "print":
                 switch (cmd.get(1).toLowerCase()) {
                     case "all":
-                        return Commands.PRINTALL;
+                        if (cmd.size() == 2) { return Commands.INVALID; }
+                        if (cmd.get(2).toLowerCase().equals("profiles")) {
+                            return Commands.PRINTALLPROFILES;
+                        } else if (cmd.get(2).toLowerCase().equals("users")) {
+                            return Commands.PRINTALLUSERS;
+                        } else {
+                            return Commands.INVALID;
+                        }
                     case "donors":
                         return Commands.PRINTDONORS;
+                    case "clinicians":
+                        return Commands.PRINTCLINICIANS;
                 }
                 break;
             case "help":
@@ -68,10 +77,7 @@ public class CommandUtils {
             case "import":
                 return Commands.IMPORT;
             case "export":
-                if (cmd.size() > 1) {
-                    return Commands.EXPORT;
-                }
-                break;
+                return Commands.EXPORT;
             case "undo":
                 return Commands.UNDO;
             case "redo":
@@ -80,6 +86,10 @@ public class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
+            case "create-clinician":
+                if (rawInput.matches(cmdRegexCreate)) {
+                    return Commands.CLINICIANCREATE;
+                }
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -87,7 +97,7 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations":
+                        case "donations": // TODO is this meant to be donating or donated
                             return Commands.PROFILEDONATIONS;
                         case "delete":
                             return Commands.PROFILEDELETE;
@@ -107,6 +117,20 @@ public class CommandUtils {
                 } else if (rawInput.matches(cmdRegexProfileUpdate)
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
+                }
+            case "clinician":
+                if (rawInput.matches(cmdRegexProfileView)) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
+                        case "view":
+                            return Commands.CLINICIANEVIEW;
+                        case "date-created":
+                            return Commands.CLINICIANDATECREATED;
+                        case "delete":
+                            return Commands.CLINICIANDELETE;
+                    }
+                } else if (rawInput.matches(cmdRegexProfileUpdate)
+                        && cmd.get(0).equals("clinician")) {
+                    return Commands.CLINICIANUPDATE;
                 }
         }
         return Commands.INVALID;
@@ -157,7 +181,7 @@ public class CommandUtils {
             .split(",");
 
         // TODO should we be able to remove organs using search by names, as this means it will
-        // TODO remove for printAll john smiths etc
+        // TODO remove for printAllProfiles john smiths etc
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
             expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
@@ -166,16 +190,16 @@ public class CommandUtils {
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 ArrayList<Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
-                removeOrgans(profileList, organList);
+                removeOrgansDonating(profileList, organList);
             }
         } else {
             System.out.println(searchErrorText);
@@ -245,24 +269,14 @@ public class CommandUtils {
      */
     private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            Set<String> organSet = new HashSet<>(Arrays.asList(organList));
+            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonate(organSet);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory.add(
-                        "Profile " + profile.getId() + " set organs " + organSet + " at "
-                            + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
+                    profile.addOrgansDonating(organSet);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
-                } catch (OrganConflictException e) {
+                } catch (Exception e) {
                     System.out.println("A profile cannot be both a receiver and donor "
                             + "for the same organ");
                     System.out.println(e.getMessage());
@@ -278,21 +292,10 @@ public class CommandUtils {
      */
     private static void addDonation(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addDonations(organSet);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory.add(
-                        "Profile " + profile.getId() + " decided to donate these organs " + organSet
-                            + " at " + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
+                    profile.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
                 }
@@ -308,23 +311,13 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList list of organs to be removed
      */
-    private static void removeOrgans(ArrayList<Profile> profileList, String[] organList) {
+    private static void removeOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgans(organSet);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory.add(
-                        "Profile " + profile.getId() + " removed these organs " + organSet + " at "
-                            + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
                 }
@@ -334,221 +327,4 @@ public class CommandUtils {
         }
     }
 
-    public static ArrayList<String> getHistory() {
-        return currentSessionHistory;
-    }
-
-    /**
-     * Undo the previous action.
-     *
-     * @param currentDatabase Database reference
-     */
-    public static void undo(ProfileDatabase currentDatabase) {
-        try {
-            String action = currentSessionHistory.get(historyPosition);
-            action = action.substring(0, action.indexOf(" at"));
-            if (action.contains("added")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                currentDatabase.deleteProfile(id);
-                unaddedProfiles.add(profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                } else {
-                    historyPosition = 1;
-                }
-            } else if (action.contains("deleted")) {
-                int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                int id = currentDatabase
-                    .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
-                deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size() - 1));
-                for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
-                    if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
-                        currentSessionHistory.set(i,
-                            ("Profile " + id + " " + currentSessionHistory.get(i).substring(
-                                action.indexOf("Profile " + oldid) + 6 + Integer.toString(id)
-                                    .length())));
-                    }
-                }
-                currentSessionHistory
-                    .set(historyPosition, ("Profile " + id + " deleted at " + LocalDateTime.now()));
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("removed")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.addOrgansDonate(organSet);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("set")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeOrgans(organSet);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("donate")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                Set<String> organSet = new HashSet<>(Arrays.asList(
-                    action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                profile.removeDonations(organSet);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("update")) {
-                int id = Integer.parseInt(
-                    action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                System.out.println(action);
-                String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
-                profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("EDITED")) {
-                int id = Integer.parseInt(
-                        action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                int procedurePlace = Integer.parseInt(
-                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-                String previous = action.substring(action.indexOf("PREVIOUS(")+9, action.indexOf(") OLD"));
-                String[] previousValues = previous.split(",");
-                String organs = action.substring(action.indexOf("[")+1, action.indexOf("] CURRENT"));
-                List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-                ArrayList<Organ> organList = new ArrayList<>();
-                System.out.println(organs);
-                for(String organ : List) {
-                    System.out.println(organ);
-                    try {
-                        organList.add(Organ.valueOf(organ.replace(" ", "")));
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e);
-                    }
-                }
-                profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
-                profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                if(previousValues.length==3) {
-                    profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
-                }
-                profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("No commands have been entered");
-        }
-    }
-
-    /**
-     * Redo previously undone action.
-     *
-     * @param currentDatabase Database reference
-     */
-    public static void redo(ProfileDatabase currentDatabase) {
-        try {
-            System.out.println(historyPosition);
-            System.out.println(currentSessionHistory.size());
-
-            if (historyPosition != currentSessionHistory.size()) {
-                historyPosition += 1;
-                String action;
-                if (historyPosition == 0) {
-                    historyPosition = 1;
-                    action = currentSessionHistory.get(historyPosition);
-                    historyPosition = 0;
-                } else {
-                    System.out.println(historyPosition);
-                    System.out.println(currentSessionHistory);
-                    action = currentSessionHistory.get(historyPosition);
-                }
-                System.out.println(action);
-                action = action.substring(0, action.indexOf(" at"));
-                if (action.contains("added")) {
-                    int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    int id = currentDatabase
-                        .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
-                    unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size() - 1));
-                    for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
-                        if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
-                            currentSessionHistory.set(i,
-                                ("Profile " + id + currentSessionHistory.get(i).substring(
-                                    action.indexOf("Profile " + oldid) + 6 + Integer.toString(id)
-                                        .length())));
-                        }
-                    }
-                    currentSessionHistory.set(historyPosition,
-                        ("Profile " + id + " added at " + LocalDateTime.now()));
-                } else if (action.contains("deleted")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    currentDatabase.deleteProfile(id);
-                    deletedProfiles.add(profile);
-                } else if (action.contains("removed")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.removeOrgans(organSet);
-                } else if (action.contains("set")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.addOrgansDonate(organSet);
-                } else if (action.contains("donate")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    Set<String> organSet = new HashSet<>(Arrays.asList(
-                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
-                    profile.addDonations(organSet);
-                } else if (action.contains("update")) {
-                    int id = Integer.parseInt(
-                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    String newInfo = action.substring(action.indexOf("ird"));
-                    profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
-                }  else if(action.contains("EDITED")){
-                    int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    int procedurePlace = Integer.parseInt(action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
-                    String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
-                    String[] previousValues = previous.split(",");
-                    String organs;
-                    ArrayList<Organ> organList = new ArrayList<>();
-                    organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
-                    List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-                    for(String organ : List){
-                        System.out.println(organ);
-                        organList.add(Organ.valueOf(organ.replace(" ","").replace("NEWORGANS[","")));
-                    }
-                    profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
-                    profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
-                    if(previousValues.length==3) {
-                        profile.getAllProcedures().get(procedurePlace).setLongDescription(previousValues[2]);
-                    }
-                    profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
-                }
-                System.out.println("Command redone");
-            } else {
-                System.out.println("There are no commands to redo");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("No commands have been entered.");
-        }
-
-    }
-
-    public static int getPosition() {
-        return historyPosition;
-    }
 }

@@ -1,17 +1,19 @@
 package odms.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import odms.controller.HistoryController;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.google.gson.GsonBuilder;
-import odms.cli.CommandUtils;
 
 public class ProfileDataIO extends CommonDataIO {
 
     private static final String defaultPath = "example/example.json";
     private static String history = "";
+    private static int lastPosition = 1;
 
     /**
      * Export full Profile Database object to the previously used path.
@@ -34,7 +36,7 @@ public class ProfileDataIO extends CommonDataIO {
     public static void saveData(ProfileDatabase profileDb, String path) {
         profileDb.setPath(path);
         File file = new File(path);
-        File historyFile = new File(path.replace(".json","History.json"));
+        File historyFile = new File(path.replace(".json","history.json"));
 
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -43,10 +45,14 @@ public class ProfileDataIO extends CommonDataIO {
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
             if(history.equals("")) {
-                history = gson.toJson(CommandUtils.getHistory());
-            } else {
+                history = gson.toJson(HistoryController.getHistory());
+            } else if (HistoryController.getHistory().get(HistoryController.getPosition()) != null){
                 history = history.substring(0, history.length()-1);
-                history = history+","+gson.toJson(CommandUtils.getHistory()).substring(1);
+
+                for (int i = lastPosition; i < HistoryController.getPosition(); i++) {
+                    history = history+"," + gson.toJson(HistoryController.getHistory().get(i).toString());
+                }
+                lastPosition = HistoryController.getPosition();
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();
@@ -81,6 +87,15 @@ public class ProfileDataIO extends CommonDataIO {
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
+
+        //if it's a new external file then this history file will not exist so maybe we should try to create it?
+        // This fixes the FileNotFoundError but not really sure, I'll hit you up about this Jack
+        try {
+            historyFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ProfileDatabase profileDb = new ProfileDatabase();
         profileDb.setPath(path);
 

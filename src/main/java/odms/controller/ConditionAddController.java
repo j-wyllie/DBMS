@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.rmi.registry.LocateRegistry;
 import java.sql.Date;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -7,19 +8,19 @@ import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.Action;
+import odms.history.History;
 import odms.profile.Condition;
 import odms.profile.Profile;
 
-import java.sql.Connection;
 import java.time.LocalDate;
 
-public class AddConditionController {
+public class ConditionAddController {
 
     private Profile searchedDonor;
     private ProfileDisplayController controller;
@@ -28,10 +29,10 @@ public class AddConditionController {
     private javafx.scene.control.TextField nameField;
 
     @FXML
-    private javafx.scene.control.TextField dateDiagnosedField;
+    private DatePicker dateDiagnosedDatePicker;
 
     @FXML
-    private TextField dateCuredField;
+    private DatePicker dateCuredDatePicker;
 
     @FXML
     private CheckBox chronicCheckBox;
@@ -48,28 +49,19 @@ public class AddConditionController {
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         String name = nameField.getText();
-        String dateDiagnosed = dateDiagnosedField.getText();
+        LocalDate dateDiagnosed = dateDiagnosedDatePicker.getValue();
         Boolean isChronic = chronicCheckBox.isSelected();
-        String dateCured = dateCuredField.getText();
+        LocalDate dateCured = dateCuredDatePicker.getValue();
 
         Condition condition;
 
         try {
-            String[] diagDates = dateDiagnosed.split("-");
-            LocalDate dateDiagnoses = LocalDate.of(Integer.valueOf(diagDates[2]), Integer.valueOf(diagDates[1]), Integer.valueOf(diagDates[0]));
-
-            if (name.equals("")) {
-                throw new IllegalArgumentException();
-            }
-
-            LocalDate dob = controller.getSearchedDonor().getDateOfBirth();
-            if (dob.isAfter(dateDiagnoses) || dateDiagnoses.isAfter(LocalDate.now())){
+            LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
+            if (dob.isAfter(dateDiagnosed) || dateDiagnosed.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException();
             }
             if (curedCheckBox.isSelected()) {
-                String[] cureDates = dateCured.split("-");
-                LocalDate dateCures = LocalDate.of(Integer.valueOf(cureDates[2]), Integer.valueOf(cureDates[1]), Integer.valueOf(cureDates[0]));
-                if(dateCures.isAfter(LocalDate.now()) || dob.isAfter(dateCures) || dateDiagnoses.isAfter(dateCures)){
+                if(dateCured.isAfter(LocalDate.now()) || dob.isAfter(dateCured) || dateDiagnosed.isAfter(dateCured)){
                     throw new IllegalArgumentException();
                 } else {
                     condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
@@ -77,59 +69,55 @@ public class AddConditionController {
             } else {
                 condition = new Condition(name, dateDiagnosed, isChronic);
             }
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException();
+            }
             addCondition(condition);
-
-        } catch (IllegalArgumentException e) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            History action = new History("Profile",searchedDonor.getId(),
+                    "added condition","("  + name+","+dateDiagnosed+","+isChronic+ ")",
+                    searchedDonor.getCurrentConditions().indexOf(condition),currentTime);
+            HistoryController.updateHistory(action);
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException | DateTimeException e) {
             warningLabel.setVisible(true);
-        } catch (DateTimeException e) {
-            warningLabel.setVisible(true);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            warningLabel.setVisible(true);
-
         }
     }
 
     /**
      * Adds a new condition to the current profile
-     * @param condition
+     * @param condition to be added
      */
     public void addCondition(Condition condition) {
         searchedDonor.addCondition(condition);
         controller.refreshConditionTable();
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        fxmlLoader.setLocation(getClass().getResource("/view/DonorProfile.fxml"));
-//        DonorProfileController controller = fxmlLoader.<DonorProfileController>getController();
-//        controller.refreshTable();
     }
 
     @FXML
     public void handleCuredChecked(ActionEvent actionEvent) {
         if (curedCheckBox.isSelected()) {
-            dateCuredField.setDisable(false);
+            dateCuredDatePicker.setDisable(false);
             chronicCheckBox.setSelected(false);
         } else {
-            dateCuredField.setDisable(true);
+            dateCuredDatePicker.setDisable(true);
         }
     }
 
     @FXML
     public void handleChronicChecked(ActionEvent actionEvent) {
         if (chronicCheckBox.isSelected()) {
-            dateCuredField.setDisable(true);
+            dateCuredDatePicker.setDisable(true);
             curedCheckBox.setSelected(false);
         }
     }
 
     public void init(ProfileDisplayController controller) {
         this.controller = controller;
-        searchedDonor = controller.searchedDonor;
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dateDiagnosedField.setText(now.format(formatter));
-        dateCuredField.setDisable(true);
+        searchedDonor = controller.currentProfile;
+        LocalDate now = LocalDate.now();
+        dateDiagnosedDatePicker.setValue(now);
+        dateCuredDatePicker.setValue(now);
+        dateCuredDatePicker.setDisable(true);
     }
-
 }

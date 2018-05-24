@@ -1,10 +1,13 @@
-package odms.profile;
+package odms.enums;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
 
-public enum Organ {
+public enum OrganEnum {
     BONE("bone"),
     BONE_MARROW("bone-marrow"),
     CONNECTIVE_TISSUE("connective-tissue"),
@@ -19,10 +22,13 @@ public enum Organ {
     SKIN("skin");
 
     private String name;
+    private LocalDate date = LocalDate.now();
 
     public String getName() {
         return name;
     }
+
+    public LocalDate getDate() { return date; }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.
@@ -39,12 +45,13 @@ public enum Organ {
 
     /**
      * Generate an ArrayList of Strings with organs capitalised appropriately.
+     *
      * @return ArrayList of Organ name Strings
      */
     public static ArrayList<String> toArrayList() {
         ArrayList<String> organs = new ArrayList<>();
 
-        for (Organ organ : new ArrayList<>(EnumSet.allOf(Organ.class))) {
+        for (OrganEnum organ : new ArrayList<>(EnumSet.allOf(OrganEnum.class))) {
             organs.add(organ.getNamePlain());
         }
 
@@ -53,7 +60,41 @@ public enum Organ {
         return organs;
     }
 
-    Organ(String name) {
+    /**
+     * Generate a HashSet of Organs from a List of Organ Strings
+     *
+     * @param organStrings List of Organ Strings
+     * @return HashSet of Organs
+     */
+    public static HashSet<OrganEnum> stringListToOrganSet(List<String> organStrings) {
+        HashSet<OrganEnum> organs = new HashSet<>();
+
+        for (String organ : organStrings) {
+            organs.add(valueOf(organ.toUpperCase()));
+        }
+
+        return organs;
+    }
+
+    /**
+     * Take a HashSet of Organ objects and return a sorted comma delimited string
+     * @param organs Organ HashSet to be converted
+     * @return comma delimited string
+     */
+    public static String organSetToString(HashSet<OrganEnum> organs) {
+        List<String> organsList = new ArrayList<>();
+
+        for (OrganEnum organ : organs) {
+            organsList.add(organ.getNamePlain());
+        }
+
+        Collections.sort(organsList);
+
+        return String.join(", ", organsList);
+    }
+
+    OrganEnum(String name) {
         this.name = name;
     }
+
 }
