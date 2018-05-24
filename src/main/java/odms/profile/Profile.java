@@ -1,5 +1,6 @@
 package odms.profile;
 
+import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
 import odms.history.History;
@@ -746,6 +747,28 @@ public class Profile implements Comparable<Profile> {
     public void removeCondition(Condition condition) {
         this.conditions.remove(condition);
     }
+
+    /**
+     * Returns the string value to populate the Donor/Receiver column in the clinician search table.
+     * @return a string depicting whether to profile is a donor, receiver, or both.
+     */
+    public SimpleStringProperty donorReceiverProperty() {
+        SimpleStringProperty result = new SimpleStringProperty();
+        if (!(donor == null) && donor) {
+            if (!(receiver == null) && receiver) {
+                result.setValue("Donor/Receiver");
+            }
+            else {
+                result.setValue("Donor");
+            }
+        }
+        else if (!(receiver == null) && receiver) {
+            result.setValue("Receiver");
+
+        }
+        return result;
+    }
+
 
     public LocalDateTime getTimeOfCreation() {
         return this.timeOfCreation;

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
 import odms.medications.Drug;
 import odms.cli.CommandUtils;

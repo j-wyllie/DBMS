@@ -187,7 +187,7 @@ public class ProfileDatabaseTest {
 
         try {
             // No profiles in db, so no results
-            testResults = profileDb.searchProfiles("Sam Sick");
+            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,7 +208,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Top result should be profile Sam Sick, next result Sam Vladko. No other results.
-            testResults = profileDb.searchProfiles("Sam Sick");
+            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
             assertTrue(testResults.size() == 2);
             assertEquals(profileTwo, testResults.get(0));
             assertEquals(profileThree, testResults.get(1));
@@ -231,7 +231,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain no results because no names start with 'a'
-            testResults = profileDb.searchProfiles("a");
+            testResults = profileDb.searchProfiles("a",-999, -999,"","","",null);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,7 +252,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("s");
+            testResults = profileDb.searchProfiles("s",-999, -999,"","","",null);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileFour);
             assertEquals(testResults.get(1), profileTwo);
@@ -276,7 +276,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain Zu Tiu, but no other profiles.
-            testResults = profileDb.searchProfiles("Tiu");
+            testResults = profileDb.searchProfiles("Tiu",-999, -999,"","","",null);
             assertTrue(testResults.size() == 1);
             assertEquals(testResults.get(0), profileFive);
         } catch (Exception e) {
@@ -298,7 +298,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("sam");
+            testResults = profileDb.searchProfiles("sam",-999, -999,"","","",null);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileTwo);
             assertEquals(testResults.get(1), profileThree);

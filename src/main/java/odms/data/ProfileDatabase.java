@@ -1,11 +1,9 @@
 package odms.data;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
@@ -193,34 +191,6 @@ public class ProfileDatabase {
     }
 
     /**
-     * Generate a list of profiles ordered by last names.
-     * Parameter to specify whether or not the list contains every profile or only profiles that
-     * are currently donating organs.
-     *
-     * @param donating specify donating organs or not
-     * @return Array of profiles found that match
-     */
-    public ArrayList<Profile> getDonors(boolean donating) {
-        ArrayList<Profile> profiles = new ArrayList<>();
-
-        profileDb.forEach((id, profile) -> {
-            if (profile.getDonor()) {
-                if (donating) {
-                    if (profile.getOrgansDonating().size() > 0) {
-                        profiles.add(profile);
-                    }
-                } else {
-                    profiles.add(profile);
-                }
-            }
-        });
-
-        profiles.sort(Comparator.comparing(Profile::getLastNames));
-
-        return profiles;
-    }
-
-    /**
      * Searches a given list of profiles with a given search string using fuzzy search
      * @param profilesGiven list of profiles to search through
      * @param searchString string to match profiles against
@@ -228,18 +198,32 @@ public class ProfileDatabase {
      * @return the filtered list of profiles
      */
     public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString, String type) {
-
+        //System.out.println(profilesGiven.toString());
         ArrayList<Profile> resultProfiles = new ArrayList<>();
         ArrayList<String> profiles = new ArrayList<>();
+        ArrayList<Profile> temp = new ArrayList<>();
+
+        for (Profile profile : profilesGiven) {
+            if (profile.getRegion() == null || profile.getRegion().equals("")) {
+                temp.add(profile);
+            }
+        }
+        for (Profile profile : temp) {
+            profilesGiven.remove(profile);
+        }
 
         if (type.equals("name")) {
-            for (Profile profile : profilesGiven) {
-                profiles.add(profile.getFullName());
-            }
+            return searchProfilesName(profilesGiven, searchString);
         } else if (type.equals("region")) {
+//            for (Profile profile : profilesGiven) {
+//                System.out.println(profile.getGivenNames());
+//            }
             for (Profile profile : profilesGiven) {
-                //TODO work out why fuzzy search can only search through strings with two parts, throws null pointer when just one word
-                profiles.add(profile.getRegion() + " " + profile.getRegion());
+                if (profile.getRegion() == null || profile.getRegion().equals("")) {
+                    continue;
+                } else {
+                    profiles.add(profile.getRegion());
+                }
             }
         } else {
             return profilesGiven;
@@ -247,9 +231,10 @@ public class ProfileDatabase {
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
         List<ExtractedResult> result;
-        result = FuzzySearch.extractSorted(searchString, profiles, 50);
+        result = FuzzySearch.extractSorted(searchString, profiles, 60);
 
         //Use index values from fuzzywuzzy search to build list of donor object in same order returned from fuzzywuzzy.
+        resultProfiles.clear();
         for (ExtractedResult er : result) {
             resultProfiles.add(profilesGiven.get(er.getIndex()));
         }
@@ -293,7 +278,7 @@ public class ProfileDatabase {
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfilesMatt(String searchString) {
+    public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList, String searchString) {
         // Constant that represents the cutoff at which profiles will not be added to search results
         final Integer matchLimit = 60;
 
@@ -308,7 +293,7 @@ public class ProfileDatabase {
             return null;
         }
 
-        for (Profile profile : getProfiles(false)) {
+        for (Profile profile : profilesList) {
             int ratio;
             int tempRatio;
             String nameCategory;
@@ -362,17 +347,19 @@ public class ProfileDatabase {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
+
         switch (selectedType) {
             case "any":
                 resultProfiles = getProfiles(false);
                 break;
             case "donor":
-                resultProfiles = getDonors(false);
+                resultProfiles = getProfiles(false);
                 break;
             default:
                 resultProfiles = getReceivers(true);
                 break;
         }
+
 
         //ArrayList<Profile> resultProfiles = allProfiles;
 
@@ -391,7 +378,6 @@ public class ProfileDatabase {
             ArrayList<Profile> resultProfilesBefore = resultProfiles;
             resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
         }
-
 
         //definitely need a better way than just a magic number lol
         if (ageSearchInt != -999) {
@@ -413,11 +399,10 @@ public class ProfileDatabase {
                     if (profile.getGender() == null) {
                         return true;
                     }
-                    return !selectedGender.equals(profile.getGender());
+                    return !selectedGender.equals(profile.getGender().toLowerCase());
                 });
             }
         }
-
 
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
@@ -450,8 +435,10 @@ public class ProfileDatabase {
             });
         }
 
+
         return resultProfiles;
     }
+
 
     private List<String> getOrgansAsStrings(List selectedOrgans) {
         List<String> selectedOrgansStrings = new ArrayList<>();

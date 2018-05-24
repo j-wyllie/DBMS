@@ -159,8 +159,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private Button buttonShowNext;
 
-    private ObservableList<Profile> donorObservableList;
-
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
@@ -180,7 +178,7 @@ public class ClinicianProfileController extends CommonController {
     private static Collection<Stage> openProfileStages = new ArrayList<>();
 
 
-    private ArrayList<Profile> profileSearchResults;
+    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
 
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;
@@ -262,7 +260,7 @@ public class ClinicianProfileController extends CommonController {
             ageRangeField.setVisible(false);
             ageField.setPromptText("Age");
         }
-        updateSearchTable();
+        updateLabels();
     }
 
 
@@ -278,19 +276,14 @@ public class ClinicianProfileController extends CommonController {
         labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
+    /**
+     * Button handler to display next 25 search results in the search table
+     * @param event clicking on the show all button.
+     */
     @FXML
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
         labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
-    }
-
-    /**
-     * Button handler to update donor table based on search results. Makes call to get fuzzy search results of profiles.
-     * @param event releasing a key on the keyboard.
-     */
-    @FXML
-    private void handleSearchDonors(KeyEvent event) {
-        updateSearchTable();
     }
 
     /**
@@ -300,7 +293,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonorsMouse(MouseEvent event) {
-        updateSearchTable();
+        updateLabels();
     }
 
     /**
@@ -309,11 +302,18 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        String searchString = searchField.getText();
+        updateLabels();
+    }
+
+    /**
+     * updates the display labels and button status in the search tab.
+     */
+    private void updateLabels() {
         labelToManyResults.setVisible(false);
-        profileSearchResults = GuiMain.getCurrentDatabase().searchProfiles(searchString);
-        updateTable(false, false);
-        if (profileSearchResults == null) {
+
+        updateSearchTable();
+
+        if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
             labelResultCount.setText("0 results found");
             buttonShowAll.setVisible(false);
@@ -343,8 +343,6 @@ public class ClinicianProfileController extends CommonController {
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
     private void updateSearchTable() {
-
-        //System.out.println("update search table");
 
         String selectedGender = null;
         String selectedType = null;
@@ -380,6 +378,15 @@ public class ClinicianProfileController extends CommonController {
         } catch (NumberFormatException e) {
             ageRangeSearchInt = -999;
         }
+
+//        searchTable.getItems().clear();
+        donorObservableList.clear();
+        profileSearchResults.clear();
+        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGender, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
+        updateTable(false, false);
+
+    }
+
 
 
     /**
@@ -422,6 +429,7 @@ public class ClinicianProfileController extends CommonController {
             } else {
                 donorObservableList.addAll(profileSearchResults);
             }
+
             searchTable.setItems(donorObservableList);
         }
     }
@@ -471,13 +479,13 @@ public class ClinicianProfileController extends CommonController {
         });
 
         genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
         genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateSearchTable();
+            updateLabels();
         });
 
         addTooltipToRow();
