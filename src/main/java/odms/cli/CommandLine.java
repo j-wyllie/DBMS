@@ -280,6 +280,21 @@ public class CommandLine implements Runnable{
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, rawInput);
                 System.out.println("Donation successfully added to profile.");
                 break;
+
+            case SQLREADONLY:
+                // Execute read-only query.
+                CommandUtils.executeDatabaseRead(rawInput);
+                break;
+
+            case UNDO:
+                // Undoes the previously done action
+                CommandUtils.undo(currentDatabase);
+                break;
+
+            case REDO:
+                //Redoes the previously undone action
+                CommandUtils.redo(currentDatabase);
+                break;
         }
     }
 }

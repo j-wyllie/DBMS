@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.dao.DAOFactory;
+import odms.dao.ReadOnlyDAO;
 
 import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
@@ -15,6 +17,12 @@ import odms.profile.Profile;
 import odms.user.User;
 
 public class CommandUtils {
+
+    public static ArrayList<String> currentSessionHistory = new ArrayList<>();
+
+    public static int historyPosition = 0;
+    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     protected static String searchErrorText = "Please enter only one search criteria\n "
                                             + "Profiles: given-names, last-names, ird\n"
@@ -137,6 +145,8 @@ public class CommandUtils {
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
+            case "db-read":
+                return Commands.SQLREADONLY;
         }
         return Commands.INVALID;
     }
@@ -457,4 +467,260 @@ public class CommandUtils {
         }
     }
 
+    public static ArrayList<String> getHistory() {
+        return currentSessionHistory;
+    }
+
+    /**
+     * Undo the previous action.
+     *
+     * @param currentDatabase Database reference
+     */
+    public static void undo(ProfileDatabase currentDatabase) {
+        try {
+            String action = currentSessionHistory.get(historyPosition);
+            action = action.substring(0, action.indexOf(" at"));
+            if (action.contains("added")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                currentDatabase.deleteProfile(id);
+                unaddedProfiles.add(profile);
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                } else {
+                    historyPosition = 1;
+                }
+            } else if (action.contains("deleted")) {
+                int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                int id = currentDatabase
+                        .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
+                deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size() - 1));
+                for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
+                    if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
+                        currentSessionHistory.set(i,
+                                ("Profile " + id + " " + currentSessionHistory.get(i).substring(
+                                        action.indexOf("Profile " + oldid) + 6 + Integer
+                                                .toString(id)
+                                                .length())));
+                    }
+                }
+                currentSessionHistory
+                        .set(historyPosition,
+                                ("Profile " + id + " deleted at " + LocalDateTime.now()));
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            } else if (action.contains("removed")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(",")
+                )));
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            } else if (action.contains("set")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            } else if (action.contains("donate")) {
+                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(","))
+                );
+                // TODO bug here for removing organs from wrong list based on command
+                profile.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet));
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            } else if (action.contains("update")) {
+                int id = Integer.parseInt(
+                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                System.out.println(action);
+                String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
+                profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            } else if (action.contains("EDITED")) {
+                int id = Integer.parseInt(
+                        action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
+                Profile profile = currentDatabase.getProfile(id);
+                int procedurePlace = Integer.parseInt(
+                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
+                                .replaceAll("[\\D]", ""));
+                String previous = action
+                        .substring(action.indexOf("PREVIOUS(") + 9, action.indexOf(") OLD"));
+                String[] previousValues = previous.split(",");
+                String organs = action
+                        .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
+                List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
+                ArrayList<OrganEnum> organList = new ArrayList<>();
+                System.out.println(organs);
+                for (String organ : List) {
+                    System.out.println(organ);
+                    try {
+                        organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e);
+                    }
+                }
+                profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
+                profile.getAllProcedures().get(procedurePlace)
+                        .setDate(LocalDate.parse(previousValues[1]));
+                if (previousValues.length == 3) {
+                    profile.getAllProcedures().get(procedurePlace)
+                            .setLongDescription(previousValues[2]);
+                }
+                profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
+                if (historyPosition != 0) {
+                    historyPosition -= 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("No commands have been entered");
+        }
+    }
+
+    /**
+     * Redo previously undone action.
+     *
+     * @param currentDatabase Database reference
+     */
+    public static void redo(ProfileDatabase currentDatabase) {
+        try {
+            System.out.println(historyPosition);
+            System.out.println(currentSessionHistory.size());
+
+            if (historyPosition != currentSessionHistory.size()) {
+                historyPosition += 1;
+                String action;
+                if (historyPosition == 0) {
+                    historyPosition = 1;
+                    action = currentSessionHistory.get(historyPosition);
+                    historyPosition = 0;
+                } else {
+                    System.out.println(historyPosition);
+                    System.out.println(currentSessionHistory);
+                    action = currentSessionHistory.get(historyPosition);
+                }
+                System.out.println(action);
+                action = action.substring(0, action.indexOf(" at"));
+                if (action.contains("added")) {
+                    int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    int id = currentDatabase
+                        .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
+                    unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size() - 1));
+                    for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
+                        if (currentSessionHistory.get(i).contains("Profile " + oldid)) {
+                            currentSessionHistory.set(i,
+                                ("Profile " + id + currentSessionHistory.get(i).substring(
+                                    action.indexOf("Profile " + oldid) + 6 + Integer.toString(id)
+                                        .length())));
+                        }
+                    }
+                    currentSessionHistory.set(historyPosition,
+                        ("Profile " + id + " added at " + LocalDateTime.now()));
+                } else if (action.contains("deleted")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    currentDatabase.deleteProfile(id);
+                    deletedProfiles.add(profile);
+                } else if (action.contains("removed")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    List<String> organSet = new ArrayList<>(Arrays.asList(
+                        action.substring(action.indexOf("[") + 1, action.indexOf("]")).split(",")));
+                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
+                } else if (action.contains("set")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+                        action.substring(
+                                action.indexOf("[") + 1,
+                                action.indexOf("]")).split(",")
+                    )));
+                } else if (action.contains("donate")) {
+                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    profile.addOrgansDonated(
+                            OrganEnum.stringListToOrganSet(
+                                    Arrays.asList(
+                                            action.substring(
+                                                    action.indexOf("[") + 1,
+                                                    action.indexOf("]")).split(",")
+                                    )
+                            )
+                    );
+                } else if (action.contains("update")) {
+                    int id = Integer.parseInt(
+                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    String newInfo = action.substring(action.indexOf("ird"));
+                    profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+                }  else if(action.contains("EDITED")){
+                    int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
+                    Profile profile = currentDatabase.getProfile(id);
+                    int procedurePlace = Integer.parseInt(action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED")).replaceAll("[\\D]", ""));
+                    String previous = action.substring(action.indexOf("CURRENT(")+8, action.indexOf(") NEW"));
+                    String[] previousValues = previous.split(",");
+                    String organs;
+                    ArrayList<OrganEnum> organList = new ArrayList<>();
+                    organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
+                    List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
+                    for(String organ : List){
+                        System.out.println(organ);
+                        organList.add(OrganEnum.valueOf(organ
+                                .replace(" ","")
+                                .replace("NEWORGANS[",""))
+                        );
+                    }
+                    profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
+                    profile.getAllProcedures().get(procedurePlace).setDate(LocalDate.parse(previousValues[1]));
+                    if (previousValues.length == 3) {
+                        profile.getAllProcedures().get(procedurePlace)
+                                .setLongDescription(previousValues[2]);
+                    }
+                    profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
+                }
+                System.out.println("Command redone");
+            } else {
+                System.out.println("There are no commands to redo");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("No commands have been entered.");
+        }
+
+    }
+
+    /**
+     * Supplys the read-only query to the database connection DAO.
+     * @param input query to be executed.
+     */
+    public static void executeDatabaseRead(String input) {
+        String query = input.substring(input.indexOf(' '));
+
+        ReadOnlyDAO accessObject = DAOFactory.getReadOnlyDao();
+        accessObject.queryDatabase(query);
+    }
+
+    public static int getPosition() {
+        return historyPosition;
+    }
 }
