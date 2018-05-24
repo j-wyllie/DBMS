@@ -315,7 +315,7 @@ public class ClinicianProfileController extends CommonController {
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
         givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
-        //staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffId().toString());   TODO null pointer
+        staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffID());
         addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
         regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
     }
