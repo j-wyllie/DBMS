@@ -1,5 +1,12 @@
 package odms.controller;
 
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsernameOrPassword;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.GuiMain.getUserDatabase;
+
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,12 +17,6 @@ import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
 import odms.user.User;
-
-import java.io.IOException;
-
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.GuiMain.getUserDatabase;
 
 public class LoginController extends CommonController {
 
@@ -50,7 +51,7 @@ public class LoginController extends CommonController {
             String username = usernameField.getText();
             try {
                 currentUser = userDatabase.getUser(username);
-
+                System.out.println(currentUser.getUsername());
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
