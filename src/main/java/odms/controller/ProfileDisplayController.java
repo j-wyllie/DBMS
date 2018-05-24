@@ -1,17 +1,15 @@
 package odms.controller;
 
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.profileSaveChanges;
+import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
-import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,13 +48,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
+
 
 public class ProfileDisplayController extends CommonController {
 
@@ -285,6 +284,12 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Label receiverStatusLabel;
 
+    @FXML
+    private Label labelGenderPreferred;
+
+    @FXML
+    private Label labelPreferredName;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -293,6 +298,8 @@ public class ProfileDisplayController extends CommonController {
     }
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     /**
      * initializes and refreshes the current and past conditions tables
@@ -492,6 +499,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
         try {
+            Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
@@ -501,6 +509,9 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Condition");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -524,10 +535,15 @@ public class ProfileDisplayController extends CommonController {
         conditions.addAll(convertConditionObservableToArray(
                 curConditionsTable.getSelectionModel().getSelectedItems())
         );
-
         for (Condition condition : conditions) {
             if (condition != null) {
                 currentProfile.removeCondition(condition);
+                LocalDateTime currentTime = LocalDateTime.now();
+                History action = new History("Profile",currentProfile.getId(),
+                        " removed condition","("  +condition.getName()+
+                        ","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+
+                        condition.getDateCuredString()+ ")",currentProfile.getCurrentConditions().indexOf(condition),currentTime);
+                HistoryController.updateHistory(action);
             }
         }
 
@@ -655,7 +671,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -664,7 +680,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -693,7 +709,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
-        if (profileSaveChanges()) {
+        if (saveChanges()) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }
@@ -750,6 +766,10 @@ public class ProfileDisplayController extends CommonController {
             String medicationName = textFieldMedicationSearch.getText();
 
             currentProfile.addDrug(new Drug(medicationName));
+            String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+            History history = new History("Profile",currentProfile.getId(), "added drug",
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+            HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
         }
@@ -817,8 +837,12 @@ public class ProfileDisplayController extends CommonController {
             } else {
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
                 tableViewDrugInteractions.setItems(interactions);
-                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
-                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getKey()));
+                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getValue()));
                 tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
             }
         } catch (IOException e) {
@@ -834,11 +858,20 @@ public class ProfileDisplayController extends CommonController {
     private void handleMoveMedicationToHistoric(ActionEvent event)  {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
-        for (Drug drug : drugs) {
+        for (Drug drug: drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToHistory(drug);
+                String data = currentProfile.getMedicationTimestamps().
+                        get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(),
+                        "stopped",drug.getDrugName(),
+                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
+                                data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
             }
         }
+
+
 
         refreshMedicationsTable();
     }
@@ -851,9 +884,14 @@ public class ProfileDisplayController extends CommonController {
     private void handleMoveMedicationToCurrent(ActionEvent event)   {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
-        for (Drug drug : drugs) {
+        for (Drug drug: drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToCurrent(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(),
+                        "started",drug.getDrugName(),Integer.parseInt(data.substring
+                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
             }
         }
 
@@ -869,9 +907,21 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
-        for (Drug drug : drugs) {
+        for (Drug drug: drugs) {
             if (drug != null) {
                 currentProfile.deleteDrug(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history;
+                if(data.contains("history")) {
+                    history = new History("Profile",currentProfile.getId(), "removed drug",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                } else {
+                    history = new History("Profile",currentProfile.getId(), "removed drug from history",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                }
+                HistoryController.updateHistory(history);
             }
         }
 
@@ -893,7 +943,7 @@ public class ProfileDisplayController extends CommonController {
         controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();
-        stage.setTitle("Medication History");
+        stage.setTitle("Medication history");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
@@ -951,112 +1001,111 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * sets all of the items in the fxml to their respective values
-     * @param currentDonor donors profile
+     * @param currentProfile donors profile
      */
     @FXML
-    private void setPage(Profile currentDonor){
-        makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
+    private void setPage(Profile currentProfile){
+        makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
 
         refreshProcedureTable();
 
-        makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());
+        makeTable(currentProfile.getCurrentConditions(), currentProfile.getCuredConditions());
         refreshConditionTable();
 
         try {
-            donorFullNameLabel.setText(currentDonor.getFullName());
+            donorFullNameLabel.setText(currentProfile.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
-                if (currentDonor.getOrgansDonated().size() > 0) {
+            if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+                if (currentProfile.getOrgansDonated().size() > 0) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
             }
 
-            if (currentDonor.getOrgansRequired().size() < 1) {
-                currentDonor.setReceiver(false);
+            if (currentProfile.getOrgansRequired().size() < 1) {
+                currentProfile.setReceiver(false);
             } else {
-                currentDonor.setReceiver(true);
+                currentProfile.setReceiver(true);
             }
 
-            if (currentDonor.isReceiver()) {
+            if (currentProfile.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
-            if (currentDonor.getGivenNames() != null) {
-                givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
+            if (currentProfile.getGivenNames() != null) {
+                givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.getGivenNames());
             }
-            if (currentDonor.getLastNames() != null) {
-                lastNamesLabel.setText(lastNamesLabel.getText() + currentDonor.getLastNames());
+            if (currentProfile.getLastNames() != null) {
+                lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
-            if (currentDonor.getIrdNumber() != null) {
-                irdLabel.setText(irdLabel.getText() + currentDonor.getIrdNumber());
+            if (currentProfile.getIrdNumber() != null) {
+                irdLabel.setText(irdLabel.getText() + currentProfile.getIrdNumber());
             }
-            if (currentDonor.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth()
+            if (currentProfile.getDateOfBirth() != null) {
+                dobLabel.setText(dobLabel.getText() + currentProfile.getDateOfBirth()
                         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
-            if (currentDonor.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
+            if (currentProfile.getDateOfDeath() != null) {
+                dodLabel.setText(dodLabel.getText() + currentProfile.getDateOfDeath()
                         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
-            if (currentDonor.getGender() != null) {
-                genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
+            if (currentProfile.getGender() != null) {
+                genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
             }
-            if (currentDonor.getHeight() != null) {
-                heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
+            if (currentProfile.getPreferredGender() != null) {
+                labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
-            if (currentDonor.getWeight() != null) {
-                weightLabel.setText(weightLabel.getText() + currentDonor.getWeight() + "kg");
+            if (currentProfile.getPreferredName() != null) {
+                labelPreferredName.setText(labelPreferredName.getText() + currentProfile.getPreferredName());
             }
-            if (currentDonor.getPhone() != null) {
-                phoneLabel.setText(phoneLabel.getText() + currentDonor.getPhone());
+            if (currentProfile.getHeight() != null) {
+                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "m");
             }
-            if (currentDonor.getEmail() != null) {
-                emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
+            if (currentProfile.getWeight() != null) {
+                weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
-            if (currentDonor.getAddress() != null) {
-                addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
+            if (currentProfile.getPhone() != null) {
+                phoneLabel.setText(phoneLabel.getText() + currentProfile.getPhone());
             }
-            if (currentDonor.getRegion() != null) {
-                regionLabel.setText(regionLabel.getText() + currentDonor.getRegion());
+            if (currentProfile.getEmail() != null) {
+                emailLabel.setText(emailLabel.getText() + currentProfile.getEmail());
             }
-            if (currentDonor.getBloodType() != null) {
-                bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
+            if (currentProfile.getAddress() != null) {
+                addressLabel.setText(addressLabel.getText() + currentProfile.getAddress());
             }
-            if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
-                bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
+            if (currentProfile.getRegion() != null) {
+                regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
             }
-            if (currentDonor.getDateOfBirth() != null) {
-                ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
+            if (currentProfile.getBloodType() != null) {
+                bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
             }
-            if (currentDonor.getId() != null) {
-                userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
+            if (currentProfile.getHeight() != null && currentProfile.getWeight() != null) {
+                bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
             }
-            if (currentDonor.getSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
+            if (currentProfile.getDateOfBirth() != null) {
+                ageLabel.setText(ageLabel.getText() + Integer.toString(currentProfile.calculateAge()));
+            }
+            if (currentProfile.getId() != null) {
+                userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
+            }
+            if (currentProfile.getSmoker() != null) {
+                smokerLabel.setText(smokerLabel.getText() + currentProfile.getSmoker());
             }
 
             String history = ProfileDataIO.getHistory();
-            Gson gson = new Gson();
+             history= history.replace(",", " ").replace("]", "").
+                replace("[", "").replace("\\u003d", "=");
+            String[] histories = history.split("\"");
 
-            if (history.equals("")) {
-                history = gson.toJson(CommandUtils.getHistory());
-            } else {
-                history = history.substring(0, history.length() - 1);
-                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
-            }
-            history = history.substring(1, history.length() - 1);
-            String[] actionHistory = history.split(",");
+            String historyDisplay = "";
 
-            ArrayList<String> userHistory = new ArrayList<>();
-
-            for (String str : actionHistory) {
-                if (str.contains("Donor " + currentDonor.getId())) {
-                    userHistory.add(str);
+            for (String h : histories) {
+                if (!h.equals("") && h.contains("Profile " + currentProfile.getId()+" ")) {
+                    historyDisplay += h + "\n";
                 }
             }
 
-            historyView.setText(userHistory.toString());
+            historyView.setText(historyDisplay);
             setMedicationSearchFieldListener();
 
             refreshConditionTable();
@@ -1208,7 +1257,6 @@ public class ProfileDisplayController extends CommonController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
-            tableViewActiveIngredients.setVisible(false);
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);

@@ -2,35 +2,39 @@ package odms.controller;
 
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.profileSaveChanges;
+import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
+
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import com.sun.media.sound.InvalidDataException;
+import com.sun.media.sound.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -47,13 +51,10 @@ public class ProfileEditController extends CommonController {
     private TextField irdField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
-    private TextField dodField;
-
-    @FXML
-    private TextField genderField;
+    private DatePicker dodDatePicker;
 
     @FXML
     private TextField heightField;
@@ -91,7 +92,16 @@ public class ProfileEditController extends CommonController {
     @FXML
     private RadioButton isSmokerRadioButton;
 
+    @FXML
+    private TextField preferredNameField;
+
     private Boolean isClinician;
+
+    @FXML
+    private ComboBox comboGenderPref;
+
+    @FXML
+    private ComboBox comboGender;
 
     /**
      * Button handler to undo last action.
@@ -100,7 +110,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -110,7 +120,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -120,55 +130,47 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = profileSaveChanges();
         boolean error = false;
 
-        if (saveBool) {
+        if (saveChanges()) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
-                    irdField.getText().isEmpty() || dobField.getText().isEmpty()) {
+                    irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
             } else {
-                String action = "Profile " +
-                    currentProfile.getId() +
-                    " updated details previous = " +
-                    currentProfile.getAttributesSummary() +
-                    " new = ";
+                History action = new History("Profile" , currentProfile.getId() ,"update",
+                        "previous "+currentProfile.getAttributesSummary(),-1,null);
 
                 currentProfile.setGivenNames(givenNamesField.getText());
 
                 currentProfile.setLastNames(lastNamesField.getText());
 
+                currentProfile.setPreferredName(preferredNameField.getText());
+
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
                 try {
-                    currentProfile.setDateOfBirth(
-                        LocalDate.parse(dobField.getText(),
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
-                    if (!dodField.getText().isEmpty()) {
-                        if(!(
-                            LocalDate.parse(dodField.getText(),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            LocalDate.parse((dodField.getText()),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ).isAfter(LocalDate.now()))) {
-
-                            currentProfile.setDateOfDeath(LocalDate.parse(
-                                    dodField.getText(),
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ));
-
+                    LocalDate dob = dobDatePicker.getValue();
+                    LocalDate dod = dodDatePicker.getValue();
+                    if (!(dob == null)) {
+                        if (!(dob.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfBirth(dob);
                         } else {
-                            error = true;
+                            throw new InvalidDataException();
+                        }
+                    } else {
+                        throw new InvalidDataException();
+                    }
+                    if (!(dod == null)) {
+                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
+                            ||
+                            dod.isAfter(LocalDate.now()))) {
+                            currentProfile.setDateOfDeath(dod);
+                        } else {
+                            throw new InvalidDataException();
                         }
                     }
-                } catch (DateTimeParseException e) {
+                } catch (InvalidDataException e) {
                     error = true;
-                }
-                if (!genderField.getText().isEmpty()) {
-                    currentProfile.setGender(genderField.getText());
                 }
 
                 try {
@@ -198,24 +200,26 @@ public class ProfileEditController extends CommonController {
 
                 currentProfile.setSmoker(isSmokerRadioButton.isSelected());
                 currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
-                action = action +
-                    currentProfile.getAttributesSummary() +
-                    " at " +
-                    LocalDateTime.now();
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
-                }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                HistoryController.updateHistory(action);
 
                 if (diseaseField.getText().contains("/")) {
                     String[] diseases = diseaseField.getText().split(", ");
                     HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
+                if (comboGender.getValue() != null) {
+                    currentProfile.setGender(comboGender.getValue().toString());
+                }
+                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
+                    if (comboGender.getValue() != null) {
+                        currentProfile.setPreferredGender(comboGender.getValue().toString());
+                    }
+                } else {
+                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+                }
+
                 if (error) {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
@@ -234,9 +238,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = profileCancelChanges();
-
-        if (cancelBool) {
+        if (profileCancelChanges()) {
             closeEditWindow(event);
         }
     }
@@ -287,21 +289,17 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getLastNames() != null) {
                     lastNamesField.setText(currentProfile.getLastNames());
                 }
+                if (currentProfile.getPreferredName() != null) {
+                    preferredNameField.setText(currentProfile.getPreferredName());
+                }
                 if (currentProfile.getIrdNumber() != null) {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
-                }
-                if (currentProfile.getGender() != null) {
-                    genderField.setText(currentProfile.getGender());
+                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getHeight() != null){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
@@ -333,6 +331,29 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+
+                comboGender.setEditable(false);
+                comboGender.getItems().addAll("Male", "Female");
+                if (currentProfile.getGender() != null) {
+                    if (currentProfile.getGender().toLowerCase().equals("male")) {
+                        comboGender.getSelectionModel().selectFirst();
+                    } else if (currentProfile.getGender().toLowerCase().equals("female")) {
+                        comboGender.getSelectionModel().select(1);
+                    } else {
+                        comboGender.setValue("");
+                    }
+                }
+
+                if (currentProfile.getGender() != null) {
+                    comboGender.getEditor().setText(currentProfile.getGender());
+                }
+
+                comboGenderPref.setEditable(true);
+                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
+
+                if (currentProfile.getPreferredGender() != null) {
+                    comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
