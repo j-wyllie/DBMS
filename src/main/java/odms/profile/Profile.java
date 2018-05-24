@@ -1,18 +1,16 @@
 package odms.profile;
 
-import odms.controller.HistoryController;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import odms.controller.HistoryController;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
 
 public class Profile {
 
@@ -26,13 +24,13 @@ public class Profile {
     private LocalDate dateOfDeath;
     private String gender;
     private String preferredGender;
-    private Double height;
-    private Double weight;
+    private Double height = 0.0;
+    private Double weight = 0.0;
     private String bloodType;
     private String address;
     private String region;
 
-    private Boolean smoker;
+    private Boolean isSmoker;
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
@@ -62,7 +60,6 @@ public class Profile {
     private ArrayList<Drug> historyOfMedication = new ArrayList<>();
     private ArrayList<String> medicationTimestamps = new ArrayList<>();
 
-
     /**
      * Instantiates the Profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
@@ -87,7 +84,7 @@ public class Profile {
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
 
-        // Build an arraylist so I can reuse the
+        // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
         attr.add("last-names=\"" + lastNames + "\"");
@@ -96,14 +93,22 @@ public class Profile {
         this.setReceiver(false);
         setExtraAttributes(attr);
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+        if (getGivenNames() == null ||
+                getLastNames() == null ||
+                getDateOfBirth() == null ||
+                getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
     }
 
     public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
-        this(givenNames, lastNames, dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), irdNumber);
+        this(
+                givenNames,
+                lastNames,
+                dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                irdNumber
+        );
     }
 
     /**
@@ -141,17 +146,30 @@ public class Profile {
             setLastNames(value);
         } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
             String[] dates = value.split("-");
-            LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+            LocalDate date = LocalDate.of(
+                    Integer.valueOf(dates[2]),
+                    Integer.valueOf(dates[1]),
+                    Integer.valueOf(dates[0])
+            );
+            if (date.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException(
+                        "Date of birth cannot be a future date"
+                );
+            }
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
             if (value.equals("null")) {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+                LocalDate date = LocalDate.of(
+                        Integer.valueOf(dates[2]),
+                        Integer.valueOf(dates[1]),
+                        Integer.valueOf(dates[0])
+                );
                 setDateOfDeath(date);
             }
-        } else if (attrName.equals(Attribute.GENDER.getText()) ){
+        } else if (attrName.equals(Attribute.GENDER.getText())) {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
@@ -160,7 +178,7 @@ public class Profile {
                 }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid height entered");
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
@@ -169,7 +187,7 @@ public class Profile {
                 }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid weight entered");
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
             if (value.equals("null") || value.equals("")) {
@@ -184,39 +202,36 @@ public class Profile {
             try {
                 setIrdNumber(Integer.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid IRD number entered");
             }
-        } else if (attrName.equals("smoker")) {
-            try {
-                setSmoker(Boolean.valueOf(value));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
-            }
+        } else if (attrName.equals("isSmoker")) {
+            setIsSmoker(Boolean.valueOf(value));
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if (value.equals("null")) {setBloodPressureSystolic(null);}
-            else {
+            if (value.equals("null")) {
+                setBloodPressureSystolic(null);
+            } else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
-        }else if (attrName.equals("bloodPressureDiastolic")) {
-            if (value.equals("null")) {setBloodPressureDiastolic(null);}
-            else {
+        } else if (attrName.equals("bloodPressureDiastolic")) {
+            if (value.equals("null")) {
+                setBloodPressureDiastolic(null);
+            } else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
-        }else if (attrName.equals("phone")) {
+        } else if (attrName.equals("phone")) {
             setPhone(value);
-        }else if (attrName.equals("email")) {
+        } else if (attrName.equals("email")) {
             setEmail(value);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
     }
 
     /**
      * Add a procedure to the current profile
-     * @param procedure
+     * @param procedure the procedure to add
      */
     public void addProcedure(Procedure procedure) {
         if (procedures == null) {
@@ -226,7 +241,7 @@ public class Profile {
 
     /**
      * Remove a procedure from the current profile
-     * @param procedure
+     * @param procedure the procedure to remove
      */
     public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
@@ -270,17 +285,14 @@ public class Profile {
 
     /**
      * Given a procedure, will return whether the procedure has past
-     * @param procedure
+     * @param procedure the procedure to check
      * @return whether the procedure has past
      */
     public boolean isPreviousProcedure(Procedure procedure) {
-        if (procedure.getDate().isBefore(LocalDate.now())) {
-            return true;
-        } else {
-            return false;
-        }
+        return procedure.getDate().isBefore(LocalDate.now());
     }
 
+    // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
         summary = summary +("ird=" + irdNumber);
@@ -295,34 +307,13 @@ public class Profile {
         summary = summary +"," +("blood-type=" + bloodType);
         summary = summary +"," +("address=" + address);
         summary = summary +"," +("region=" + region);
-        summary = summary +"," +("smoker=" + smoker);
+        summary = summary +"," +("isSmoker=" + isSmoker);
         summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
         summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
         summary = summary +"," +("bloodPressureDiastolic=" + bloodPressureDiastolic);
         summary = summary +"," +("phone=" + phone);
         summary = summary +"," +("email=" + email);
         return summary;
-    }
-
-    /**
-     * Adds a csv list to the list of donations
-     * @param organString the organs to add as a csv
-     */
-    public void addDonationFromString(String organString) {
-        String[] organStrings = organString.split("(,\\s+|,)");
-        this.addOrgansDonated(OrganEnum.stringListToOrganSet(Arrays.asList(organStrings)));
-    }
-
-    /**
-     * Adds a csv list of diseases to the list of donations
-     * @param diseases the list of donations to add
-     */
-    public void addChronicDiseases(String diseases) {
-        String[] allDiseases = diseases.split(",");
-        for (String dis : allDiseases) {
-            String newDis = dis.trim();
-            chronicDiseases.add(newDis);
-        }
     }
 
     /**
@@ -365,7 +356,6 @@ public class Profile {
             }
     }
 
-
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
      * @param organs the set of organs to donate
@@ -399,7 +389,7 @@ public class Profile {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    public void addOrganReceived(OrganEnum organ) {
+    private void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -447,8 +437,14 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
-            History action = new History("Profile ", this.getId(),"donated",organ.getNamePlain(),
-                    -1,LocalDateTime.now());
+            History action = new History(
+                    "Profile ",
+                    this.getId(),
+                    "donated",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
             HistoryController.updateHistory(action);
         }
     }
@@ -462,8 +458,14 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.remove(organ);
-            History action = new History("Profile ", this.getId(),"removed donated",
-                    organ.getNamePlain(),-1,LocalDateTime.now());
+            History action = new History(
+                    "Profile ",
+                    this.getId(),
+                    "removed donated",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
             HistoryController.updateHistory(action);
         }
     }
@@ -477,8 +479,14 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonating.remove(organ);
-            History action = new History("Profile ", this.getId(),"removed",
-                    organ.getNamePlain(),-1,LocalDateTime.now());
+            History action = new History(
+                    "Profile ",
+                    this.getId(),
+                    "removed",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
             HistoryController.updateHistory(action);
         }
     }
@@ -492,9 +500,14 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsRequired.remove(organ);
-            History action = new History("Profile ", this.getId(),"removed required",
-                    organ.getNamePlain(),-1,LocalDateTime.now());
-
+            History action = new History(
+                    "Profile ",
+                    this.getId(),
+                    "removed required",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
 
             HistoryController.updateHistory(action);
         }
@@ -575,8 +588,15 @@ public class Profile {
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data ="Profile " + this.getId() + " added drug " +drug.getDrugName() + " index of "+
-                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Profile " +
+                this.getId() +
+                " added drug " +
+                drug.getDrugName() +
+                " index of " +
+                currentMedications.indexOf(drug) +
+                " at " +
+                currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
         medicationTimestamps.add(data);
         generateUpdateInfo(drug.getDrugName());
     }
@@ -591,19 +611,31 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Profile " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+
-                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        if(currentMedications.contains(drug)) {
+        String data = "Profile " +
+                this.getId() +
+                " removed drug " +
+                drug.getDrugName() +
+                " index of "+
+                currentMedications.indexOf(drug) +
+                " at " +
+                currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        if (currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         } else if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
-            data = "Profile " + this.getId() + " removed drug from history"  + " index of "+
-                    currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            data = "Profile " +
+                    this.getId() +
+                    " removed drug from history"  +
+                    " index of " +
+                    currentMedications.indexOf(drug) +
+                    " at " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
             medicationTimestamps.add(data);
         }
-
     }
 
     /**
@@ -619,8 +651,15 @@ public class Profile {
         if (currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
-            String data = "Profile " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+
-                    historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String data = "Profile " +
+                    this.getId() +
+                    " stopped " +
+                    drug.getDrugName() +
+                    " index of "+
+                    historyOfMedication.indexOf(drug) +
+                    " at " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
@@ -642,8 +681,15 @@ public class Profile {
         if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
-            String data = "Profile " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+
-                    currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String data = "Profile " +
+                    this.getId()  +
+                    " started using " +
+                    drug.getDrugName() +
+                    " index of " +
+                    currentMedications.indexOf(drug) +
+                    " again at " +
+                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
@@ -711,7 +757,7 @@ public class Profile {
 
     /**
      * Checks if a profile is donating a certain selection of organs
-     * @param organs
+     * @param organs organs to be checked
      * @return true if they are
      */
     public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
@@ -720,7 +766,7 @@ public class Profile {
 
     /**
      * Checks if a profile is receiving a certain selection of organs
-     * @param organs
+     * @param organs organs to be checked
      * @return true if they are
      */
     public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
@@ -783,6 +829,11 @@ public class Profile {
     }
 
     public void setDateOfDeath(LocalDate dateOfDeath) {
+        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath)) {
+            throw new IllegalArgumentException(
+                "Date of death cannot be before date of birth"
+            );
+        }
         generateUpdateInfo("dod");
         this.dateOfDeath = dateOfDeath;
     }
@@ -884,12 +935,12 @@ public class Profile {
         return lastUpdated;
     }
 
-    public Boolean getSmoker() {
-        return smoker;
+    public Boolean getIsSmoker() {
+        return isSmoker;
     }
 
-    public void setSmoker(Boolean smoker) {
-        this.smoker = smoker;
+    public void setIsSmoker(Boolean smoker) {
+        this.isSmoker = smoker;
     }
 
     public String getAlcoholConsumption() {
@@ -914,13 +965,17 @@ public class Profile {
      * @return blood pressure string
      */
     public String getBloodPressure() {
-        return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic;
+        if (bloodPressureDiastolic != null && bloodPressureSystolic != null) {
+            return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic.toString();
+        }
+        return null;
     }
 
     public HashSet<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
+    // TODO access to this array should be restricted, this makes it public and redundant.
     public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }

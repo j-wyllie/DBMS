@@ -57,7 +57,6 @@ import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
 
-
 public class ProfileDisplayController extends CommonController {
 
     private Boolean isOpenedByClinician = false;
@@ -339,8 +338,6 @@ public class ProfileDisplayController extends CommonController {
         });
     }
 
-
-
     public ArrayList<Condition> convertConditionObservableToArray(ObservableList<Condition> conditions) {
         ArrayList<Condition> toReturn = new ArrayList<>();
         for (int i = 0; i<conditions.size(); i++) {
@@ -527,8 +524,8 @@ public class ProfileDisplayController extends CommonController {
             stage.setTitle("Add a Condition");
             stage.initOwner(source.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
             stage.setResizable(false);
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -683,19 +680,17 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * Button handler to undo last action.
-     * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
+    private void handleUndoButtonClicked() {
         undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
      * Button handler to redo last undo action.
-     * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
+    private void handleRedoButtonClicked() {
         redoController.redo(GuiMain.getCurrentDatabase());
     }
 
@@ -707,7 +702,7 @@ public class ProfileDisplayController extends CommonController {
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
+        ProfileEditController controller = fxmlLoader.getController();
         controller.setCurrentProfile(currentProfile);
         controller.setIsClinician(isOpenedByClinician);
         controller.initialize();
@@ -782,6 +777,7 @@ public class ProfileDisplayController extends CommonController {
             String medicationName = textFieldMedicationSearch.getText();
 
             currentProfile.addDrug(new Drug(medicationName));
+
             String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
             History history = new History("Profile",currentProfile.getId(), "added drug",
                     medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+9,data.indexOf(" at"))),LocalDateTime.now());
@@ -874,20 +870,18 @@ public class ProfileDisplayController extends CommonController {
     private void handleMoveMedicationToHistoric(ActionEvent event)  {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
 
-        for (Drug drug: drugs) {
+        for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToHistory(drug);
                 String data = currentProfile.getMedicationTimestamps().
                         get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "stopped",drug.getDrugName(),
-                        Integer.parseInt(data.substring(data.indexOf("index of")+9,
-                                data.indexOf(" at"))),LocalDateTime.now());
+                        Integer.parseInt(data.substring(data.indexOf("index of") + 9,
+                                data.indexOf(" at"))), LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
-
-
 
         refreshMedicationsTable();
     }
@@ -900,13 +894,14 @@ public class ProfileDisplayController extends CommonController {
     private void handleMoveMedicationToCurrent(ActionEvent event)   {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
-        for (Drug drug: drugs) {
+        for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToCurrent(drug);
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "started",drug.getDrugName(),Integer.parseInt(data.substring
-                        (data.indexOf("index of")+9,data.indexOf(" again"))),LocalDateTime.now());
+                        (data.indexOf("index of") + 9,
+                                data.indexOf(" again"))), LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -923,7 +918,7 @@ public class ProfileDisplayController extends CommonController {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
-        for (Drug drug: drugs) {
+        for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.deleteDrug(drug);
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
@@ -959,7 +954,7 @@ public class ProfileDisplayController extends CommonController {
         controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();
-        stage.setTitle("Medication history");
+        stage.setTitle("Medication History");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
@@ -1051,6 +1046,9 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getGivenNames() != null) {
                 givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.getGivenNames());
             }
+            if (currentProfile.getPreferredName() != null) {
+                labelPreferredName.setText(labelPreferredName.getText() + currentProfile.getPreferredName());
+            }
             if (currentProfile.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
@@ -1071,13 +1069,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getPreferredGender() != null) {
                 labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
-            if (currentProfile.getPreferredName() != null) {
-                labelPreferredName.setText(labelPreferredName.getText() + currentProfile.getPreferredName());
+            if (currentProfile.getHeight() != 0.0) {
+                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
             }
-            if (currentProfile.getHeight() != null) {
-                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "m");
-            }
-            if (currentProfile.getWeight() != null) {
+            if (currentProfile.getWeight() != 0.0) {
                 weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
             if (currentProfile.getPhone() != null) {
@@ -1092,10 +1087,19 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getRegion() != null) {
                 regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
             }
+            if (currentProfile.getAlcoholConsumption() != null) {
+                alcoholConsumptionLabel.setText(
+                        alcoholConsumptionLabel.getText() +
+                        currentProfile.getAlcoholConsumption()
+                );
+            }
+            if (currentProfile.getBloodPressure() != null) {
+                bloodPressureLabel.setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
+            }
             if (currentProfile.getBloodType() != null) {
                 bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
             }
-            if (currentProfile.getHeight() != null && currentProfile.getWeight() != null) {
+            if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
                 bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
             }
             if (currentProfile.getDateOfBirth() != null) {
@@ -1104,8 +1108,8 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getId() != null) {
                 userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
-            if (currentProfile.getSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentProfile.getSmoker());
+            if (currentProfile.getIsSmoker() != null) {
+                smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
             }
 
             String history = ProfileDataIO.getHistory();
