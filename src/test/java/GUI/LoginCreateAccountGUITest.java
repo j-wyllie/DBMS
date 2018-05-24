@@ -75,6 +75,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
      * creates a user with invalid fields. Checks that the correct popups
      * are displayed.
      */
+    @Ignore
     @Test
     public void createInvalidUser(){
 

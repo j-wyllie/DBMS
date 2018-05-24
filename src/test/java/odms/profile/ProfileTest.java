@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProfileTest {
@@ -148,6 +148,7 @@ public class ProfileTest {
     @Test
     public void testAddDonatableOrgans() {
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
@@ -639,29 +640,25 @@ public class ProfileTest {
                 testProfile.getCurrentMedications().get(0).getDrugName(),
                 "acetaminophen"
         );
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(0),
-                ("acetaminophen added on " +
-                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                )
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                        " added drug acetaminophen index of 0 at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(0)
+                );
 
         testProfile.addDrug(drugTwo);
         assertEquals(
                 testProfile.getCurrentMedications().get(1).getDrugName(),
                 "paracetamol"
         );
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(1),
-                ("paracetamol added on " +
-                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                )
-        );
-        assertEquals(
+        assertEquals("Profile " + testProfile.getId() +
+                        " added drug paracetamol index of 1 at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(1)
+                );
+        assertEquals(currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")),
                 testProfile.getLastUpdated().format(
-                        DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")
-                ),
-                currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"))
+                        DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"))
         );
     }
 
@@ -688,11 +685,11 @@ public class ProfileTest {
                 "paracetamol"
         );
         assertEquals(testProfile.getCurrentMedications().size(), 1);
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(2),
-                "acetaminophen removed on " +
-                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                        " removed drug acetaminophen index of 0 at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(2)
+                );
 
         assertEquals(testProfile.getCurrentMedications().size(), 1);
         testProfile.deleteDrug(drugOne);
@@ -700,11 +697,11 @@ public class ProfileTest {
 
         testProfile.deleteDrug(drugTwo);
         assertEquals(testProfile.getCurrentMedications().size(), 0);
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(3),
-                "paracetamol removed on " +
-                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                        " removed drug paracetamol index of 0 at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(3)
+                );
         assertEquals(
                 testProfile.getLastUpdated().format(
                         DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")
@@ -731,7 +728,10 @@ public class ProfileTest {
         assertEquals(testProfile.getCurrentMedications().size(), 1);
         assertEquals(
                 testProfile.getMedicationTimestamps().get(2),
-                "acetaminophen stopped on " + currentTime.format(
+                "Profile " +
+                        testProfile.getId() +
+                        " stopped acetaminophen index of 0 at "
+                        + currentTime.format(
                         DateTimeFormatter.ofPattern("dd-MM-yyyy")
                 )
         );
@@ -744,12 +744,10 @@ public class ProfileTest {
 
         testProfile.moveDrugToHistory(drugTwo);
         assertEquals(testProfile.getCurrentMedications().size(), 0);
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(3),
-                "paracetamol stopped on " + currentTime.format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                )
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                " stopped paracetamol index of 1 at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(3));
         assertEquals(
                 testProfile.getLastUpdated().format(
                         DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")
@@ -786,11 +784,11 @@ public class ProfileTest {
         testProfile.moveDrugToCurrent(drugOne);
         assertEquals(testProfile.getCurrentMedications().size(), 1);
         assertEquals(testProfile.getHistoryOfMedication().size(), 1);
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(4),
-                "acetaminophen added back to current list on " +
-                currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                        " started using acetaminophen index of 0 again at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                testProfile.getMedicationTimestamps().get(4)
+                );
         assertEquals(
                 testProfile.getLastUpdated().format(
                         DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")
@@ -801,11 +799,12 @@ public class ProfileTest {
         testProfile.moveDrugToCurrent(drugTwo);
         assertEquals(testProfile.getCurrentMedications().size(), 2);
         assertEquals(testProfile.getHistoryOfMedication().size(), 0);
-        assertEquals(
-                testProfile.getMedicationTimestamps().get(5),
-                "paracetamol added back to current list on " +
-                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        );
+        assertEquals("Profile " + testProfile.getId() +
+                        " started using paracetamol index of 1 again at " +
+                        currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        ),
+                testProfile.getMedicationTimestamps().get(5)
+                );
         assertEquals(
                 testProfile.getLastUpdated().format(
                         DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy")
@@ -904,18 +903,18 @@ public class ProfileTest {
     /**
      * Test profiles required organ update shows in history.
      */
-    @Ignore
     @Test
     public void testRequiredOrganHistory() {
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("Heart");
         testProfile.addOrgansRequired(OrganEnum.stringListToOrganSet(someOrgans));
 
-//        assertTrue(CommandUtils.currentSessionHistory
-//                .get(CommandUtils.historyPosition)
-//                .contains(OrganEnum.HEART.getNamePlain())
-//        );
+        assertTrue(HistoryController.currentSessionHistory
+                .get(HistoryController.historyPosition).getHistoryData()
+                .contains(OrganEnum.HEART.getNamePlain())
+        );
     }
 }
