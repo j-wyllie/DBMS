@@ -78,7 +78,7 @@ public class ConditionAddController {
                     "added condition","("  + name+","+dateDiagnosed+","+isChronic+ ")",
                     searchedDonor.getCurrentConditions().indexOf(condition),currentTime);
             HistoryController.updateHistory(action);
-        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | DateTimeException e) {
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException | DateTimeException e) {
             warningLabel.setVisible(true);
         }
     }
@@ -115,11 +115,9 @@ public class ConditionAddController {
     public void init(ProfileDisplayController controller) {
         this.controller = controller;
         searchedDonor = controller.currentProfile;
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dateCuredDatePicker.setValue(LocalDate.now());
+        LocalDate now = LocalDate.now();
+        dateDiagnosedDatePicker.setValue(now);
+        dateCuredDatePicker.setValue(now);
         dateCuredDatePicker.setDisable(true);
     }
-
 }

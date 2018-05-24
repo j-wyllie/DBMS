@@ -57,13 +57,13 @@ public abstract class UndoRedoController{
 
     public abstract void updated(History action);
 
-    public abstract void addDrug(ProfileDatabase currentDatabase, History action);
+    public abstract void addDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException;
 
-    public abstract void deleteDrug(ProfileDatabase currentDatabase, History action);
+    public abstract void deleteDrug(ProfileDatabase currentDatabase, History action)throws IndexOutOfBoundsException;
 
-    public abstract void stopDrug(ProfileDatabase currentDatabase, History action);
+    public abstract void stopDrug(ProfileDatabase currentDatabase, History action)throws IndexOutOfBoundsException;
 
-    public abstract void renewDrug(ProfileDatabase currentDatabase, History action);
+    public abstract void renewDrug(ProfileDatabase currentDatabase, History action)throws IndexOutOfBoundsException;
 
     public abstract void addCondition(ProfileDatabase currentDatabase, History action);
 

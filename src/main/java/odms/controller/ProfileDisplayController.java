@@ -1,6 +1,20 @@
 package odms.controller;
 
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.data.MedicationDataIO.getActiveIngredients;
+import static odms.data.MedicationDataIO.getSuggestionList;
+
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,11 +25,21 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -32,21 +56,6 @@ import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.data.MedicationDataIO.getActiveIngredients;
-import static odms.data.MedicationDataIO.getSuggestionList;
 
 
 public class ProfileDisplayController extends CommonController {
@@ -276,6 +285,12 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private Label receiverStatusLabel;
 
+    @FXML
+    private Label labelGenderPreferred;
+
+    @FXML
+    private Label labelPreferredName;
+
     /**
      * Called when there has been an edit to the current profile.
      */
@@ -291,19 +306,18 @@ public class ProfileDisplayController extends CommonController {
      * initializes and refreshes the current and past conditions tables
      */
     @FXML
-    private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){                      //TODO need a function to get all current conditions, rather than just all
-        //curDiseasesTable.getSortOrder().add(curChronicColumn);}
-
-        curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-        //currentDonor.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
-
-        if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
-        else {curConditionsObservableList = FXCollections.observableArrayList(); }
-        if (pastConditions != null) {pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);}
-        else {pastConditionsObservableList = FXCollections.observableArrayList(); }
-
+    private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
+        if (curConditions != null) {
+            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        } else {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditions != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+        } else {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
         refreshConditionTable();
-
     }
 
     /**
@@ -455,18 +469,18 @@ public class ProfileDisplayController extends CommonController {
                 (Callback<TableView<Condition>, Boolean>) param -> {
                     Comparator<Condition> comparator = (o1, o2) -> {
                         if (o1.getChronic() && o2.getChronic()) {
-                            if (param.getComparator() == null) {
+                            if (param.getComparator() == null) { // if no comparator is set then return 0 (nothing changes)
                                 return 0;
-                            } else {
+                            } else { // otherwise sort the two conditions
                                 return param.getComparator().compare(o1,o2);
                             }
-                        } else if (o1.getChronic()) {
+                        } else if (o1.getChronic()) { // o1 is chronic and o2 isn't so return -1 (o1 comes first)
                             return -1;
-                        } else if (o2.getChronic()) {
+                        } else if (o2.getChronic()) { // o2 is chronic and o1 isn't so return 1 (o2 comes first)
                             return 1;
-                        } else if (param.getComparator() == null) {
+                        } else if (param.getComparator() == null) { // there is no comparator so return 0 (nothing changes)
                             return 0;
-                        } else {
+                        } else { // otherwise just compare them as usual
                             return param.getComparator().compare(o1,o2);
                         }
                     };
@@ -475,8 +489,24 @@ public class ProfileDisplayController extends CommonController {
                 });
 
         refreshPageElements();
+        forceConditionSortOrder();
 
     }
+
+    /**
+     * forces the sort order of the conditions tables to default to the diagnoses date in Descending order
+     */
+    @FXML
+    private void forceConditionSortOrder() {
+        curConditionsTable.getSortOrder().clear();
+        curConditionsTable.getSortOrder().add(curDateOfDiagnosisColumn);
+        curDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+
+        pastConditionsTable.getSortOrder().clear();
+        pastConditionsTable.getSortOrder().add(pastDateOfDiagnosisColumn);
+        pastDateOfDiagnosisColumn.setSortType(TableColumn.SortType.DESCENDING);
+    }
+
 
     /**
      * Button handler to add condition to the current conditions for the current profile.
@@ -497,8 +527,8 @@ public class ProfileDisplayController extends CommonController {
             stage.setTitle("Add a Condition");
             stage.initOwner(source.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.setResizable(false);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -754,7 +784,7 @@ public class ProfileDisplayController extends CommonController {
             currentProfile.addDrug(new Drug(medicationName));
             String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
             History history = new History("Profile",currentProfile.getId(), "added drug",
-                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+9,data.indexOf(" at"))),LocalDateTime.now());
             HistoryController.updateHistory(history);
 
             refreshMedicationsTable();
@@ -851,7 +881,7 @@ public class ProfileDisplayController extends CommonController {
                         get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "stopped",drug.getDrugName(),
-                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
+                        Integer.parseInt(data.substring(data.indexOf("index of")+9,
                                 data.indexOf(" at"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
@@ -876,7 +906,7 @@ public class ProfileDisplayController extends CommonController {
                 String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
                 History history = new History("Profile",currentProfile.getId(),
                         "started",drug.getDrugName(),Integer.parseInt(data.substring
-                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                        (data.indexOf("index of")+9,data.indexOf(" again"))),LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }
         }
@@ -987,98 +1017,106 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * sets all of the items in the fxml to their respective values
-     * @param currentDonor donors profile
+     * @param currentProfile donors profile
      */
     @FXML
-    private void setPage(Profile currentDonor){
-        makeProcedureTable(currentDonor.getPreviousProcedures(), currentDonor.getPendingProcedures());
+    private void setPage(Profile currentProfile){
+        makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
 
         refreshProcedureTable();
 
-        makeTable(currentDonor.getCurrentConditions(), currentDonor.getCuredConditions());
+        makeTable(currentProfile.getCurrentConditions(), currentProfile.getCuredConditions());
         refreshConditionTable();
 
         try {
-            donorFullNameLabel.setText(currentDonor.getFullName());
+            donorFullNameLabel.setText(currentProfile.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
-            if (currentDonor.getDonor() != null && currentDonor.getDonor()) {
-                if (currentDonor.getOrgansDonated().size() > 0) {
+            if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+                if (currentProfile.getOrgansDonated().size() > 0) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
             }
 
-            if (currentDonor.getOrgansRequired().size() < 1) {
-                currentDonor.setReceiver(false);
+            if (currentProfile.getOrgansRequired().size() < 1) {
+                currentProfile.setReceiver(false);
             } else {
-                currentDonor.setReceiver(true);
+                currentProfile.setReceiver(true);
             }
 
-            if (currentDonor.isReceiver()) {
+            if (currentProfile.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
-            if (currentDonor.getGivenNames() != null) {
-                givenNamesLabel.setText(givenNamesLabel.getText() + currentDonor.getGivenNames());
+            if (currentProfile.getGivenNames() != null) {
+                givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.getGivenNames());
             }
-            if (currentDonor.getLastNames() != null) {
-                lastNamesLabel.setText(lastNamesLabel.getText() + currentDonor.getLastNames());
+            if (currentProfile.getLastNames() != null) {
+                lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
-            if (currentDonor.getIrdNumber() != null) {
-                irdLabel.setText(irdLabel.getText() + currentDonor.getIrdNumber());
+            if (currentProfile.getIrdNumber() != null) {
+                irdLabel.setText(irdLabel.getText() + currentProfile.getIrdNumber());
             }
-            if (currentDonor.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentDonor.getDateOfBirth()
+            if (currentProfile.getDateOfBirth() != null) {
+                dobLabel.setText(dobLabel.getText() + currentProfile.getDateOfBirth()
                         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
-            if (currentDonor.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentDonor.getDateOfDeath()
+            if (currentProfile.getDateOfDeath() != null) {
+                dodLabel.setText(dodLabel.getText() + currentProfile.getDateOfDeath()
                         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             }
-            if (currentDonor.getGender() != null) {
-                genderLabel.setText(genderLabel.getText() + currentDonor.getGender());
+            if (currentProfile.getGender() != null) {
+                genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
             }
-            if (currentDonor.getHeight() != null) {
-                heightLabel.setText(heightLabel.getText() + currentDonor.getHeight() + "m");
+            if (currentProfile.getPreferredGender() != null) {
+                labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
-            if (currentDonor.getWeight() != null) {
-                weightLabel.setText(weightLabel.getText() + currentDonor.getWeight() + "kg");
+            if (currentProfile.getPreferredName() != null) {
+                labelPreferredName.setText(labelPreferredName.getText() + currentProfile.getPreferredName());
             }
-            if (currentDonor.getPhone() != null) {
-                phoneLabel.setText(phoneLabel.getText() + currentDonor.getPhone());
+            if (currentProfile.getHeight() != null) {
+                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "m");
             }
-            if (currentDonor.getEmail() != null) {
-                emailLabel.setText(emailLabel.getText() + currentDonor.getEmail());
+            if (currentProfile.getWeight() != null) {
+                weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
-            if (currentDonor.getAddress() != null) {
-                addressLabel.setText(addressLabel.getText() + currentDonor.getAddress());
+            if (currentProfile.getPhone() != null) {
+                phoneLabel.setText(phoneLabel.getText() + currentProfile.getPhone());
             }
-            if (currentDonor.getRegion() != null) {
-                regionLabel.setText(regionLabel.getText() + currentDonor.getRegion());
+            if (currentProfile.getEmail() != null) {
+                emailLabel.setText(emailLabel.getText() + currentProfile.getEmail());
             }
-            if (currentDonor.getBloodType() != null) {
-                bloodTypeLabel.setText(bloodTypeLabel.getText() + currentDonor.getBloodType());
+            if (currentProfile.getAddress() != null) {
+                addressLabel.setText(addressLabel.getText() + currentProfile.getAddress());
             }
-            if (currentDonor.getHeight() != null && currentDonor.getWeight() != null) {
-                bmiLabel.setText(bmiLabel.getText() + currentDonor.calculateBMI());
+            if (currentProfile.getRegion() != null) {
+                regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
             }
-            if (currentDonor.getDateOfBirth() != null) {
-                ageLabel.setText(ageLabel.getText() + Integer.toString(currentDonor.calculateAge()));
+            if (currentProfile.getBloodType() != null) {
+                bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
             }
-            if (currentDonor.getId() != null) {
-                userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentDonor.getId()));
+            if (currentProfile.getHeight() != null && currentProfile.getWeight() != null) {
+                bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
             }
-            if (currentDonor.getSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentDonor.getSmoker());
+            if (currentProfile.getDateOfBirth() != null) {
+                ageLabel.setText(ageLabel.getText() + Integer.toString(currentProfile.calculateAge()));
+            }
+            if (currentProfile.getId() != null) {
+                userIdLabel.setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
+            }
+            if (currentProfile.getSmoker() != null) {
+                smokerLabel.setText(smokerLabel.getText() + currentProfile.getSmoker());
             }
 
             String history = ProfileDataIO.getHistory();
-            history = history.replace(",", " ").replace("]", "").
-                    replace("[", "").replace("\\u003d", "=");
+             history= history.replace(",", " ").replace("]", "").
+                replace("[", "").replace("\\u003d", "=");
             String[] histories = history.split("\"");
+
             String historyDisplay = "";
+
             for (String h : histories) {
-                if (!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
+                if (!h.equals("") && h.contains("Profile " + currentProfile.getId()+" ")) {
                     historyDisplay += h + "\n";
                 }
             }
@@ -1092,7 +1130,7 @@ public class ProfileDisplayController extends CommonController {
             e.printStackTrace();
             invalidUsername();
         }
-
+        refreshConditionTable();
     }
 
     /**
@@ -1126,6 +1164,13 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void refreshPageElements() {
+        ArrayList<Condition> allConditions = convertConditionObservableToArray(
+                curConditionsTable.getSelectionModel().getSelectedItems());
+        allConditions.addAll(convertConditionObservableToArray(
+                pastConditionsTable.getSelectionModel().getSelectedItems()));
+
+        disableButtonsIfNoItems(allConditions);
+
         ArrayList<Drug> drugs = convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems()
         );
@@ -1135,8 +1180,6 @@ public class ProfileDisplayController extends CommonController {
         allDrugs.addAll(convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems())
         );
-
-        disableButtonsIfNoItems(allDrugs);
 
         buttonMedicationHistoricToCurrent.setDisable(false);
         buttonMedicationCurrentToHistoric.setDisable(false);
@@ -1160,12 +1203,6 @@ public class ProfileDisplayController extends CommonController {
         } else {
             buttonShowDrugInteractions.setDisable(false);
         }
-
-        ArrayList<Condition> allConditions = convertConditionObservableToArray(
-                curConditionsTable.getSelectionModel().getSelectedItems());
-        allConditions.addAll(convertConditionObservableToArray(
-                pastConditionsTable.getSelectionModel().getSelectedItems()));
-        disableButtonsIfNoItems(allConditions);
     }
 
     /**
@@ -1235,7 +1272,6 @@ public class ProfileDisplayController extends CommonController {
             buttonMedicationCurrentToHistoric.setVisible(false);
             buttonMedicationHistoricToCurrent.setVisible(false);
             textFieldMedicationSearch.setVisible(false);
-            tableViewActiveIngredients.setVisible(false);
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
@@ -1377,14 +1413,8 @@ public class ProfileDisplayController extends CommonController {
 
         if (currentProfile != null) {
             currentProfileBound.set(currentProfile);
-
             setPage(currentProfile);
-
             refreshMedicationsTable();
-            makeProcedureTable(
-                    currentProfile.getPreviousProcedures(),
-                    currentProfile.getPendingProcedures()
-            );
         }
 
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -1395,8 +1425,8 @@ public class ProfileDisplayController extends CommonController {
 
         curChronicColumn.setSortable(false);
 
-        hideItems();
         refreshPageElements();
+
         disableTableHeaderReorder();
     }
 

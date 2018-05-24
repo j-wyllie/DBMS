@@ -2,7 +2,7 @@
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "John Smith",
+      "name": "Doc",
       "staffId": 0,
       "region": "Christchurch",
       "lastUpdated": {
@@ -12,15 +12,16 @@
           "day": 24
         },
         "time": {
-          "hour": 15,
-          "minute": 22,
-          "second": 52,
-          "nano": 373000000
+          "hour": 14,
+          "minute": 37,
+          "second": 42,
+          "nano": 732000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-05-24T15:22:52.373",
-        "0 updated at 03:22 PM 24-05-2018"
+        "Account for Doccreated at 2018-05-24T14:37:42.716",
+        "Clinician updated at 02:37 PM 24-05-2018",
+        "0 updated at 02:37 PM 24-05-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -29,19 +30,19 @@
           "day": 24
         },
         "time": {
-          "hour": 15,
-          "minute": 22,
-          "second": 52,
-          "nano": 373000000
+          "hour": 14,
+          "minute": 37,
+          "second": 42,
+          "nano": 716000000
         }
       },
-      "isDefault": false
+      "username": "Clinician",
+      "isDefault": true
     },
     "1": {
-      "userType": "CLINICIAN",
-      "name": "Matt Smith",
+      "userType": "ADMIN",
+      "name": "admin",
       "staffId": 1,
-      "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
@@ -49,15 +50,16 @@
           "day": 24
         },
         "time": {
-          "hour": 15,
-          "minute": 22,
-          "second": 52,
-          "nano": 373000000
+          "hour": 14,
+          "minute": 37,
+          "second": 42,
+          "nano": 766000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-05-24T15:22:52.373",
-        "1 updated at 03:22 PM 24-05-2018"
+        "ADMINaccount for admincreated at 2018-05-24T14:37:42.766",
+        "admin updated at 02:37 PM 24-05-2018",
+        "1 updated at 02:37 PM 24-05-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -66,13 +68,15 @@
           "day": 24
         },
         "time": {
-          "hour": 15,
-          "minute": 22,
-          "second": 52,
-          "nano": 373000000
+          "hour": 14,
+          "minute": 37,
+          "second": 42,
+          "nano": 766000000
         }
       },
-      "isDefault": false
+      "username": "admin",
+      "password": "admin",
+      "isDefault": true
     }
   },
   "deletedUsers": [],

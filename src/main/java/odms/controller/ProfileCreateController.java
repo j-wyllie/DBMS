@@ -7,8 +7,6 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +36,9 @@ public class ProfileCreateController extends CommonController {
     @FXML
     private TextField irdField;
 
+    @FXML
+    private TextField preferredNameField;
+
     /**
      * Scene change to profile profile view if all required fields are filled in.
      * @param event clicking on the create new account button.
@@ -46,7 +47,7 @@ public class ProfileCreateController extends CommonController {
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
         if(givenNamesField.getText().trim().equals("") || surnamesField.getText().trim().equals("") ||
-                dobDatePicker.getValue().equals(null) || irdField.getText().trim().equals("")) {
+                dobDatePicker.getValue() == null|| irdField.getText().trim().equals("")) {
             invalidEntry();
         } else {
             try {
@@ -54,8 +55,10 @@ public class ProfileCreateController extends CommonController {
                 String surnames = surnamesField.getText();
                 LocalDate dob = dobDatePicker.getValue();
                 String ird = irdField.getText();
+                String prefName = preferredNameField.getText();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, Integer.valueOf(ird));
+                newProfile.setPreferredName(prefName);
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
