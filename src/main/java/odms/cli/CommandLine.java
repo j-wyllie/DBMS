@@ -178,6 +178,10 @@ public class CommandLine {
                 System.out.println("Donation successfully added to profile.");
                 break;
 
+            case SQLREADONLY:
+                CommandUtils.executeDatabaseRead(rawInput);
+                break;
+
             case UNDO:
                 // Undoes the previously done action
                 CommandUtils.undo(currentDatabase);

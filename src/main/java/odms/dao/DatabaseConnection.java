@@ -2,19 +2,23 @@ package odms.dao;
 
 import static java.lang.System.getProperty;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.FileInputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
+import javax.sql.DataSource;
 
 public class DatabaseConnection {
 
-    private static Connection connection;
+    private static DataSource connectionSource;
 
     private DatabaseConnection() {
         try {
             Properties prop = new Properties();
             prop.load(new FileInputStream(getProperty("user.dir") + "/config/db.config"));
+
+            ComboPooledDataSource source = new ComboPooledDataSource();
 
             String host = prop.getProperty("host");
             String database = prop.getProperty("database");
@@ -22,8 +26,21 @@ public class DatabaseConnection {
             String password = prop.getProperty("password");
             String driver = prop.getProperty("driver");
 
-            Class.forName(driver);
-            connection = DriverManager.getConnection(host + '/' + database, username, password);
+            try {
+                source.setDriverClass(driver);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            source.setJdbcUrl(host + '/' + database);
+            source.setUser(username);
+            source.setPassword(password);
+            source.setMinPoolSize(5);
+            source.setAcquireIncrement(5);
+            source.setMaxPoolSize(50);
+
+            connectionSource = source;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -38,7 +55,7 @@ public class DatabaseConnection {
         return DatabaseConnectionHelper.INSTANCE;
     }
 
-    public static Connection getConnection() {
-        return connection;
+    public static Connection getConnection() throws SQLException {
+        return connectionSource.getConnection();
     }
 }

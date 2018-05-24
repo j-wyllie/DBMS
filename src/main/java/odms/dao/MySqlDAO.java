@@ -14,10 +14,11 @@ public class MySqlDAO implements ReadOnlyDAO {
     @Override
     public void queryDatabase(String query) {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection connection = connectionInstance.getConnection();
 
         if (isReadOnlyQuery(query)) {
             try {
+                Connection connection = connectionInstance.getConnection();
+
                 Statement stmt = connection.createStatement();
                 ResultSet result = stmt.executeQuery(query);
 
@@ -47,15 +48,19 @@ public class MySqlDAO implements ReadOnlyDAO {
         String headers = "|";
         String leftAlignFormat = "|";
 
+        System.out.println(result.getFetchSize());
         for (int i = 0; i < data.getColumnCount(); i++) {
-            border += StringUtils.repeat("-", data.getColumnDisplaySize(i)) + "+";
+            int multiple = data.getColumnDisplaySize(i) + 6;
+            if (data.getColumnDisplaySize(i) < data.getColumnName(i).length()) {
+                multiple = data.getColumnName(i).length() + 5;
+            }
+            border += StringUtils.repeat("-", multiple) + "+";
 
 
-            headers += String.format("| %s", data.getColumnName(i));
-            headers += StringUtils.repeat(" ", data.getColumnDisplaySize(i)
-                    - data.getColumnName(i).length()) + "|";
+            headers += String.format(" %s", data.getColumnName(i));
+            headers += StringUtils.repeat(" ", multiple - data.getColumnName(i).length() - 1) + "|";
 
-            leftAlignFormat += "%-" + data.getColumnDisplaySize(i) + "s |";
+            leftAlignFormat += "%-" + multiple + "s |";
         }
 
         System.out.println(border);
@@ -67,9 +72,12 @@ public class MySqlDAO implements ReadOnlyDAO {
             for (int i = 0; i < data.getColumnCount(); i++) {
                 rowData.add(result.getString(i));
             }
-            System.out.format(leftAlignFormat, rowData);
+            if (rowData.size() > 0) {
+                System.out.format(leftAlignFormat, rowData);
+                System.out.println(border);
+            }
         }
-        System.out.println(border);
 
+        System.out.println();
     }
 }

@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.dao.DAOFactory;
+import odms.dao.ReadOnlyDAO;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
@@ -110,6 +112,8 @@ public class CommandUtils {
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
+            case "db-read":
+                return Commands.SQLREADONLY;
         }
         return Commands.INVALID;
     }
@@ -582,6 +586,13 @@ public class CommandUtils {
             System.out.println("No commands have been entered.");
         }
 
+    }
+
+    public static void executeDatabaseRead(String input) {
+        String query = input.substring(input.indexOf(' '));
+
+        ReadOnlyDAO accessObject = DAOFactory.getReadOnlyDao();
+        accessObject.queryDatabase(query);
     }
 
     public static int getPosition() {

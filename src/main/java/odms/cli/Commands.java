@@ -25,10 +25,14 @@ public enum Commands {
     PROFILEUPDATE,
     PROFILEVIEW,
 
-    // Orgon Commands
+    // Organ Commands
     ORGANADD,
     ORGANREMOVE,
-    ORGANDONATE;
+    ORGANDONATE,
+
+    // Sql Commands
+    SQLREADONLY;
+
 
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
@@ -40,7 +44,9 @@ public enum Commands {
             new StringsCompleter("import"),
 
             new StringsCompleter("create-profile"),
-            new StringsCompleter("delete-profile")
+            new StringsCompleter("delete-profile"),
+
+            new StringsCompleter("db-read")
         );
     }
 }

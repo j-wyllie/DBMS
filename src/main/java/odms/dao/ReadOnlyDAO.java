@@ -1,6 +1,6 @@
 package odms.dao;
 
-interface ReadOnlyDAO {
+public interface ReadOnlyDAO {
 
     public void queryDatabase(String query);
 
