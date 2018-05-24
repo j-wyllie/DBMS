@@ -50,7 +50,7 @@ public class LoginController extends CommonController {
             String username = usernameField.getText();
             try {
                 currentUser = userDatabase.getUser(username);
-
+                System.out.println(currentUser.getUsername());
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
