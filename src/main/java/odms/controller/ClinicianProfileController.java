@@ -30,7 +30,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -46,12 +45,6 @@ import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class ClinicianProfileController extends CommonController {
 
