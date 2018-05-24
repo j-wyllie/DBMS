@@ -198,26 +198,21 @@ public class ProfileDatabase {
      * @return the filtered list of profiles
      */
     public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString, String type) {
-        //System.out.println(profilesGiven.toString());
         ArrayList<Profile> resultProfiles = new ArrayList<>();
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> temp = new ArrayList<>();
 
-        for (Profile profile : profilesGiven) {
-            if (profile.getRegion() == null || profile.getRegion().equals("")) {
-                temp.add(profile);
-            }
-        }
-        for (Profile profile : temp) {
-            profilesGiven.remove(profile);
-        }
-
         if (type.equals("name")) {
             return searchProfilesName(profilesGiven, searchString);
         } else if (type.equals("region")) {
-//            for (Profile profile : profilesGiven) {
-//                System.out.println(profile.getGivenNames());
-//            }
+            for (Profile profile : profilesGiven) {
+                if (profile.getRegion() == null || profile.getRegion().equals("")) {
+                    temp.add(profile);
+                }
+            }
+            for (Profile profile : temp) {
+                profilesGiven.remove(profile);
+            }
             for (Profile profile : profilesGiven) {
                 if (profile.getRegion() == null || profile.getRegion().equals("")) {
                     continue;
