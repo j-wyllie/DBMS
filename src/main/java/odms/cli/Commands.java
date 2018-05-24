@@ -42,7 +42,11 @@ public enum Commands {
     RECEIVERADD,
     ORGANREMOVE,
     RECEIVEREMOVE,
-    ORGANDONATE;
+    ORGANDONATE,
+
+    // Sql Commands
+    SQLREADONLY;
+
 
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
@@ -63,7 +67,9 @@ public enum Commands {
             new StringsCompleter("print all profiles"),
             new StringsCompleter("print donors"),
             new StringsCompleter("print all users"),
-            new StringsCompleter("print clinicians")
+            new StringsCompleter("print clinicians"),
+
+            new StringsCompleter("db-read")
         );
     }
 }
