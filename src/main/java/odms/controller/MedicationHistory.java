@@ -34,7 +34,7 @@ public class MedicationHistory {
             observableListMedHistory.addAll(profile.getMedicationTimestamps());
             viewMedicationHistory.setItems(observableListMedHistory);
         } else {
-            viewMedicationHistory.setPlaceholder(new Label("There is no medication History"));
+            viewMedicationHistory.setPlaceholder(new Label("There is no medication history"));
         }
     }
 

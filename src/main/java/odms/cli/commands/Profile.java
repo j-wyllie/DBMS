@@ -1,11 +1,14 @@
 package odms.cli.commands;
 
+import odms.cli.CommandUtils;
+import odms.controller.HistoryController;
+import odms.data.IrdNumberConflictException;
+import odms.data.ProfileDatabase;
+import odms.history.History;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import odms.cli.CommandUtils;
-import odms.data.IrdNumberConflictException;
-import odms.data.ProfileDatabase;
 
 public class Profile extends CommandUtils {
 
@@ -15,14 +18,8 @@ public class Profile extends CommandUtils {
      * @param Id profile ID
      */
     protected static void addProfileHistory(int Id) {
-        if (currentSessionHistory.size() != 0) {
-            if (historyPosition != currentSessionHistory.size() - 1) {
-                currentSessionHistory.subList(historyPosition, currentSessionHistory.size() - 1)
-                    .clear();
-            }
-        }
-        currentSessionHistory.add("Profile " + Id + " added at " + LocalDateTime.now());
-        historyPosition = currentSessionHistory.size() - 1;
+        History action = new History("Profile",Id,"added","",-1,LocalDateTime.now());
+        HistoryController.updateHistory(action);
     }
 
     /**
@@ -101,19 +98,10 @@ public class Profile extends CommandUtils {
             for (odms.profile.Profile profile : profileList) {
                 result = currentDatabase.deleteProfile(profile.getId());
                 if (result) {
-                    deletedProfiles.add(profile);
-                    if (currentSessionHistory.size() != 0) {
-                        if (historyPosition != currentSessionHistory.size() - 1) {
-                            currentSessionHistory
-                                .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                        }
-                    }
-                    currentSessionHistory
-                        .add("Profile " + profile.getId() + " deleted at " + LocalDateTime.now());
-                    historyPosition = currentSessionHistory.size() - 1;
+                    HistoryController.deletedProfiles.add(profile);
+                    HistoryController.updateHistory(new History("Profile",profile.getId(),
+                            "deleted","",-1,LocalDateTime.now()));
                 }
-
-
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -129,20 +117,12 @@ public class Profile extends CommandUtils {
     private static void updateProfileAttr(ArrayList<odms.profile.Profile> profileList, String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            String action;
             for (odms.profile.Profile profile : profileList) {
-                action = "Profile " + profile.getId() + " updated details previous = " + profile
-                    .getAttributesSummary() + " new = ";
+                History action = new History("Profile" , profile.getId() ,"update",profile.getAttributesSummary(),-1,null);
                 profile.setExtraAttributes(attrArray);
-                action = action + profile.getAttributesSummary() + " at " + LocalDateTime.now();
-                if (currentSessionHistory.size() != 0) {
-                    if (historyPosition != currentSessionHistory.size() - 1) {
-                        currentSessionHistory
-                            .subList(historyPosition, currentSessionHistory.size() - 1).clear();
-                    }
-                }
-                currentSessionHistory.add(action);
-                historyPosition = currentSessionHistory.size() - 1;
+                action.setHistoryData(action.getHistoryData()+profile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                HistoryController.updateHistory(action);
 
             }
         } else {
