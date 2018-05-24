@@ -39,7 +39,9 @@ public enum Commands {
 
     // Organ Commands
     ORGANADD,
+    RECEIVERADD,
     ORGANREMOVE,
+    RECEIVEREMOVE,
     ORGANDONATE;
 
     public static ArgumentCompleter commandAutoCompletion() {
@@ -52,6 +54,8 @@ public enum Commands {
             new StringsCompleter("delete-profile"),
 
             new StringsCompleter("help"),
+            new StringsCompleter("print all"),
+            new StringsCompleter("print donors"),
 
             new StringsCompleter("export"),
             new StringsCompleter("import"),

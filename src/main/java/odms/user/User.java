@@ -101,6 +101,12 @@ public class User {
             case "region":
                 setRegion(value);
                 break;
+            case "password":
+                setPassword(value);
+                break;
+            case "username":
+                setUsername(value);
+                break;
             default:
                 throw new IllegalArgumentException();
         }

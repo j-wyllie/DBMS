@@ -15,7 +15,7 @@ public class Help {
             + "dob=\"03-03-1998\" ird=\"123456789\"");
 
         System.out.println("\nCreate a new clinician:");
-        System.out.println("create-clinician {attribute (name is required)}");
+        System.out.println("create-clinician {attributes (name, username and password is required)}");
         System.out.println("e.g. create-clinician name=\"Bob Ross\"");
 
         System.out.println("\nView a clinician:");
@@ -57,19 +57,33 @@ public class Help {
         System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
             + "03-1998\" > remove-organ=\"liver, kidney\"");
 
-        System.out.print("\nPrint all profiles: ");
+        System.out.println("\nAdd an organ to receive:");
+        System.out
+                .println("profile {attributes to search profiles by} > receive-organ=\" {list of organs "
+                        + "to donate} \"");
+        System.out
+                .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+                        + "-1998\" > receive-organ=\"liver, kidney\"");
+
+        System.out.println("\nRemove an organ to receive:");
+        System.out.println("profile {attributes to search profiles by} > removereceive-organ=\" {list of "
+                + "organs to remove} \"");
+        System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
+                + "03-1998\" > removereceive-organ=\"liver, kidney\"");
+
+        System.out.println("\nPrint all profiles: ");
         System.out.println("print all profiles");
 
-        System.out.print("\nPrint all donors: ");
+        System.out.println("\nPrint all donors: ");
         System.out.println("print donors");
 
-        System.out.print("\nPrint all users: ");
+        System.out.println("\nPrint all users: ");
         System.out.println("print all users");
 
-        System.out.print("\nPrint all clinicians: ");
+        System.out.println("\nPrint all clinicians: ");
         System.out.println("print clinicians");
 
-        System.out.print("\nClose the app: ");
+        System.out.println("\nClose the app: ");
         System.out.println("quit");
 
         System.out.println("\nProfile attributes:");
@@ -77,7 +91,7 @@ public class Help {
             + " address, region, ird");
 
         System.out.println("\nUser attributes:");
-        System.out.println("name, workAddress, staffID, region");
+        System.out.println("name, password, username, workAddress, staffID, region");
 
         System.out.println("\nOrgans:");
         System.out.println(
@@ -106,7 +120,7 @@ public class Help {
                 + "Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue"};
         String[] exampleArray = {
             "create-profile {attributes (given-names, last-names, dob and ird is required)}",
-            "create-clinician {attribute (name, is required)}",
+            "create-clinician {attribute (name, username and password is required)}",
             "profile/clinician {attributes to search profiles/clinicians by} > view",
             "profile/clinician {attributes to search profiles/clinicians by} > date-created",
             "profile {attributes to search profiles by} > donations",

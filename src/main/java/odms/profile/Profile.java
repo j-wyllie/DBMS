@@ -352,7 +352,8 @@ public class Profile implements Comparable<Profile> {
      * Add an organ to the organs required list.
      * @param organ the organ the profile requires
      */
-    public void addOrganRequired(OrganEnum organ) {
+    public void addOrganRequired(OrganEnum organ) {//TODO Error Check
+        this.setReceiver(true);
         this.organsRequired.add(organ);
     }
 
