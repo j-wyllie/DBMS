@@ -80,10 +80,12 @@ class EditDateCell extends TableCell<Condition, LocalDate> {
         textField.setOnKeyPressed((ke) -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 try {
+                    textField.focusedProperty().removeListener(changeListener);
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
 
                 }
+                textField.focusedProperty().addListener(changeListener);
             }
             if (ke.getCode().equals(KeyCode.ESCAPE)) {
                 textField.focusedProperty().removeListener(changeListener);
