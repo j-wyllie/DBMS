@@ -1,15 +1,8 @@
 package odms.controller;
 
-import static odms.controller.AlertController.invalidEntry;
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.GuiMain.getUserDatabase;
-
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -18,11 +11,17 @@ import odms.data.UserDatabase;
 import odms.profile.Profile;
 import odms.user.User;
 
+import java.io.IOException;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.GuiMain.getUserDatabase;
+
 public class LoginController extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
-    private static UserDatabase userDatabase = getUserDatabase();
-    private static Profile currentProfile = null;
+    private ProfileDatabase currentDatabase = getCurrentDatabase();
+    private UserDatabase userDatabase = getUserDatabase();
+    private Profile currentProfile = null;
     private static User currentUser;
 
     /**
@@ -39,44 +38,101 @@ public class LoginController extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     *
      * @param event clicking on the login button.
      */
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
-        try {
-            if (!usernameField.getText().equals("")) {
-                int userId = Integer.valueOf(usernameField.getText());
+        Scene scene;
 
-                if (userId == 0) {
-                    currentUser = userDatabase.getClinician(0);
-                    String scene = "/view/ClinicianProfile.fxml";
-                    String title = "Clinician";
-                    showScene(event, scene, title, true);
-                } else {
-                    currentProfile = currentDatabase.getProfile(userId);
+        if (!usernameField.getText().equals("")) {
 
-                    if (currentProfile != null) {
-                        String scene = "/view/ProfileDisplay.fxml";
-                        String title = "Profile";
-                        showScene(event, scene, title, true);
-                    } else {
+            String username = usernameField.getText();
+            try {
+                currentUser = userDatabase.getUser(username);
+
+                if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+                        scene = new Scene(fxmlLoader.load());
+                        ClinicianProfileController controller = fxmlLoader.getController();
+                        controller.setCurrentUser(currentUser);
+                        controller.initialize();
+
+                        Stage stage = new Stage();
+                        stage.setTitle(currentUser.getUserType().getName());
+                        stage.setScene(scene);
+                        stage.show();
+                        closeCurrentStage();
+                    } catch (IOException e) {
                         invalidUsername();
                     }
+                } else {
+                    invalidUsernameOrPassword();
+                }
+            } catch (UserNotFoundException u) {
+                try {
+                    int userId = Integer.valueOf(usernameField.getText());
+                    if (userId == 0) {
+                        currentUser = userDatabase.getUser(0);
+
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+                        scene = new Scene(fxmlLoader.load());
+                        ClinicianProfileController controller = fxmlLoader.getController();
+                        controller.setCurrentUser(currentUser);
+                        controller.initialize();
+
+                        Stage stage = new Stage();
+                        stage.setTitle(currentUser.getUserType().getName());
+                        stage.setScene(scene);
+                        stage.show();
+                        closeCurrentStage();
+                    } else {
+                        currentProfile = currentDatabase.getProfile(userId);
+
+                        if (currentProfile != null) {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
+
+                            scene = new Scene(fxmlLoader.load());
+                            ProfileDisplayController controller = fxmlLoader.getController();
+                            controller.setProfile(currentProfile);
+                            controller.initialize();
+
+                            Stage stage = new Stage();
+                            stage.setTitle(currentProfile.getFullName() + "'s Profile");
+                            stage.setScene(scene);
+                            stage.show();
+
+                            closeCurrentStage();
+                        } else {
+                            invalidUsername();
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    invalidEntry();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    invalidUsername();
                 }
             }
-        } catch (NumberFormatException e) {
-
-            invalidEntry();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            invalidUsername();
         }
+    }
+
+    private void closeCurrentStage() {
+        Stage currentStage = (Stage) usernameField.getScene().getWindow();
+        // do what you have to do
+        currentStage.close();
     }
 
     /**
      * Scene change to create account view.
+     *
      * @param event clicking on the create new account link.
      * @throws IOException
      */
@@ -87,10 +143,6 @@ public class LoginController extends CommonController {
         showScene(event, scene, title, false);
     }
 
-    public static Profile getCurrentProfile() {
-        return currentProfile;
-    }
-
 
     @FXML
     private void onEnter(ActionEvent event) {
@@ -98,5 +150,5 @@ public class LoginController extends CommonController {
     }
 
     public static User getCurrentUser() { return currentUser; }
-    public static void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
+    public void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }
