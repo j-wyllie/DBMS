@@ -11,6 +11,8 @@ import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
+import odms.controller.RedoController;
+import odms.controller.UndoController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
@@ -25,7 +27,12 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-public class CommandLine implements Runnable {
+import java.io.IOException;
+import java.util.ArrayList;
+
+import static odms.cli.CommandUtils.validateCommandType;
+
+public class CommandLine implements Runnable{
 
     private ProfileDatabase currentDatabase;
     private UserDatabase currentDatabaseUsers;
@@ -137,7 +144,7 @@ public class CommandLine implements Runnable {
 
             case HELP:
                 // Show available commands (help).
-                if(rawInput.equals("help")) {
+                if (rawInput.equals("help")) {
                     Help.help();
                 } else {
                     Help.helpSpecific(rawInput.substring(5));
@@ -268,16 +275,6 @@ public class CommandLine implements Runnable {
                 // Add to donations made by a profile.
                 CommandUtils.addDonationsMadeBySearch(currentDatabase, rawInput);
                 System.out.println("Donation successfully added to profile.");
-                break;
-
-            case UNDO:
-                // Undoes the previously done action
-                CommandUtils.undo(currentDatabase);
-                break;
-
-            case REDO:
-                //Redoes the previously undone action
-                CommandUtils.redo(currentDatabase);
                 break;
         }
     }

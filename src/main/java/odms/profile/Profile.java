@@ -1,17 +1,18 @@
 package odms.profile;
 
+import odms.controller.HistoryController;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import odms.cli.CommandUtils;
-import odms.enums.OrganEnum;
-import odms.medications.Drug;
 
 public class Profile {
 
@@ -20,9 +21,11 @@ public class Profile {
 
     private String givenNames;
     private String lastNames;
+    private String preferredName;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String gender;
+    private String preferredGender;
     private Double height;
     private Double weight;
     private String bloodType;
@@ -55,9 +58,10 @@ public class Profile {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications;
-    private ArrayList<Drug> historyOfMedication;
-    private ArrayList<String> medicationTimestamps;
+    private ArrayList<Drug> currentMedications = new ArrayList<>();
+    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
+    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+
 
     /**
      * Instantiates the Profile class with data from the CLI
@@ -66,9 +70,6 @@ public class Profile {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
         procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
@@ -85,9 +86,6 @@ public class Profile {
      * @param irdNumber Profile's IRD number as Integer
      */
     public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
-        currentMedications = new ArrayList<>();
-        historyOfMedication = new ArrayList<>();
-        medicationTimestamps = new ArrayList<>();
 
         // Build an arraylist so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
@@ -95,13 +93,17 @@ public class Profile {
         attr.add("last-names=\"" + lastNames + "\"");
         attr.add("ird=\"" + irdNumber + "\"");
         attr.add("dob=\"" + dob + "\"");
-        this.setReceiver(false); // TODO decide behaviour
+        this.setReceiver(false);
         setExtraAttributes(attr);
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
+    }
+
+    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+        this(givenNames, lastNames, dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), irdNumber);
     }
 
     /**
@@ -112,7 +114,7 @@ public class Profile {
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            if(parts.length==1) {
+            if (parts.length==1) {
                 String[] newParts = {parts[0], ""};
                 setGivenAttribute(newParts);
             } else {
@@ -129,7 +131,7 @@ public class Profile {
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = null;
-        if(!parts[1].equals(null)) {
+        if (!parts[1].equals(null)) {
             value = parts[1].replace("\"", ""); // get rid of the speech marks;
         }
 
@@ -142,7 +144,7 @@ public class Profile {
             LocalDate date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if(value.equals("null")){
+            if (value.equals("null")) {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
@@ -170,7 +172,7 @@ public class Profile {
                 throw new IllegalArgumentException();
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if(value.equals("null") || value.equals("")) {
+            if (value.equals("null") || value.equals("")) {
                 value = null;
             }
             setBloodType(value);
@@ -193,12 +195,12 @@ public class Profile {
         } else if (attrName.equals("alcoholConsumption")) {
             setAlcoholConsumption(value);
         } else if (attrName.equals("bloodPressureSystolic")) {
-            if(value.equals("null")) {setBloodPressureSystolic(null);}
+            if (value.equals("null")) {setBloodPressureSystolic(null);}
             else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
         }else if (attrName.equals("bloodPressureDiastolic")) {
-            if(value.equals("null")) {setBloodPressureDiastolic(null);}
+            if (value.equals("null")) {setBloodPressureDiastolic(null);}
             else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
@@ -279,14 +281,13 @@ public class Profile {
         }
     }
 
-    // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
         summary = summary +("ird=" + irdNumber);
         summary = summary +"," +("given-names=" + givenNames);
         summary = summary +"," +("last-names=" + lastNames);
         summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        if(dateOfDeath==null){summary = summary +"," +("dod=" + null);}
+        if (dateOfDeath==null) { summary = summary +"," +("dod=" + null); }
         else{summary = summary +"," +("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));}
         summary = summary +"," +("gender=" + gender);
         summary = summary +"," +("height=" + height);
@@ -356,25 +357,13 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
-
-            // TODO history refactor
-            String action = "Profile " +
-                    this.getId() +
-                    " required organ " +
-                    organ.getNamePlain() +
-                    " at " +
-                    LocalDateTime.now();
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
+            LocalDateTime now = LocalDateTime.now();
+            History action = new History("Profile", this.getId(),"required organ",
+                    ""+organ.getNamePlain(),-1,now);
+            HistoryController.updateHistory(action);
             }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
-        }
-
     }
+
 
     /**
      * Add a set of organs to the list of organs that the profile wants to donate
@@ -384,7 +373,7 @@ public class Profile {
      */
     public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("organsDonated"); // TODO should this be Organs Donating
+        generateUpdateInfo("organsDonated");
 
         for (OrganEnum organ : organs) {
             if (this.organsDonating.contains(organ)) {
@@ -394,25 +383,9 @@ public class Profile {
             }
             this.addOrganDonating(organ);
 
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to donate at " +
-                    LocalDateTime.now();
-
-            // TODO abstract history
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition()
-                        != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory
-                            .subList(CommandUtils.getPosition(),
-                                    CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),
+                    -1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -441,24 +414,9 @@ public class Profile {
         generateUpdateInfo("organsReceived");
 
         for (OrganEnum organ : organs) {
-            addOrganReceived(organ);
-
-            // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to received organs " +
-                    LocalDateTime.now();
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            addOrganReceived(organ);History action = new History("Profile ", this.getId(),
+                    "received",organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -488,23 +446,9 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
-
-            // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " added " +
-                    organ.getNamePlain() +
-                    " to past donations " +
-                    LocalDateTime.now();
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            History action = new History("Profile ", this.getId(),"donated",organ.getNamePlain(),
+                    -1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -517,23 +461,9 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.remove(organ);
-
-            // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs donated " +
-                    LocalDateTime.now();
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            History action = new History("Profile ", this.getId(),"removed donated",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -546,23 +476,9 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsDonating.remove(organ);
-
-            // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs donating " +
-                    LocalDateTime.now();
-
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            History action = new History("Profile ", this.getId(),"removed",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
+            HistoryController.updateHistory(action);
         }
     }
 
@@ -575,24 +491,28 @@ public class Profile {
 
         for (OrganEnum organ : organs) {
             this.organsRequired.remove(organ);
+            History action = new History("Profile ", this.getId(),"removed required",
+                    organ.getNamePlain(),-1,LocalDateTime.now());
 
-            // TODO history abstraction
-            String action = "Profile " +
-                    this.getId() +
-                    " removed " +
-                    organ.getNamePlain() +
-                    " from organs required " +
-                    LocalDateTime.now();
 
-            if (CommandUtils.getHistory().size() != 0) {
-                if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                    CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                            CommandUtils.getHistory().size() - 1).clear();
-                }
-            }
-            CommandUtils.currentSessionHistory.add(action);
-            CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+            HistoryController.updateHistory(action);
         }
+    }
+
+    public void removeOrganReceived(OrganEnum organ) {
+        if (this.organsReceived.contains(organ)) {
+            this.organsReceived.remove(organ);
+        }
+
+        this.organsRequired.add(organ);
+    }
+
+    public void removeOrganDonated(OrganEnum organ) {
+        if (this.organsDonated.contains(organ)) {
+            this.organsDonated.remove(organ);
+        }
+
+        this.organsDonating.add(organ);
     }
 
 
@@ -654,7 +574,8 @@ public class Profile {
 
         LocalDateTime currentTime = LocalDateTime.now();
         currentMedications.add(drug);
-        String data = drug.getDrugName() + " added on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String data ="Profile " + this.getId() + " added drug " +drug.getDrugName() + " index of "+
+                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         medicationTimestamps.add(data);
         generateUpdateInfo(drug.getDrugName());
     }
@@ -669,14 +590,17 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(currentMedications.contains(drug)){
+        String data = "Profile " + this.getId() + " removed drug " +drug.getDrugName() + " index of "+
+                currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if(currentMedications.contains(drug)) {
             currentMedications.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
-        } else if(historyOfMedication.contains(drug)){
+        } else if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
-            medicationTimestamps.add(drug.getDrugName() + " removed on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            generateUpdateInfo(drug.getDrugName());
+            data = "Profile " + this.getId() + " removed drug from history"  + " index of "+
+                    currentMedications.indexOf(drug) +" at " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
         }
 
     }
@@ -691,10 +615,12 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(currentMedications.contains(drug)){
+        if (currentMedications.contains(drug)) {
             currentMedications.remove(drug);
             historyOfMedication.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " stopped on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Profile " + this.getId()  + " stopped "  + drug.getDrugName() + " index of "+
+                    historyOfMedication.indexOf(drug) + " at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
 
@@ -712,10 +638,12 @@ public class Profile {
         if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
 
         LocalDateTime currentTime = LocalDateTime.now();
-        if(historyOfMedication.contains(drug)){
+        if (historyOfMedication.contains(drug)) {
             historyOfMedication.remove(drug);
             currentMedications.add(drug);
-            medicationTimestamps.add(drug.getDrugName() + " added back to current list on " + currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            String data = "Profile " + this.getId()  + " started using "  + drug.getDrugName() + " index of "+
+                    currentMedications.indexOf(drug) + " again at " +currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
 
@@ -890,7 +818,7 @@ public class Profile {
     }
 
     public void setBloodType(String bloodType) {
-        if(bloodType != null) {
+        if (bloodType != null) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         }
@@ -1016,4 +944,19 @@ public class Profile {
         this.conditions = conditions;
     }
 
+    public void setPreferredGender(String preferredGender) {
+        this.preferredGender = preferredGender;
+    }
+
+    public String getPreferredGender() {
+        return this.preferredGender;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
+    }
 }
