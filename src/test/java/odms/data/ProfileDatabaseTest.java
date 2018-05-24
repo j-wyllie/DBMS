@@ -308,4 +308,27 @@ public class ProfileDatabaseTest {
         }
     }
 
+    @Test
+    public void TestSearchProfiles_preferredName() {
+        // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
+        // string. So tests will be based on strings that definitely should or shouldn't be matched.
+        ArrayList<Profile> testResults;
+
+        try {
+            profileFive.setPreferredName("dragon");
+            profileDb.addProfile(profileOne);
+            profileDb.addProfile(profileTwo);
+            profileDb.addProfile(profileThree);
+            profileDb.addProfile(profileFour);
+            profileDb.addProfile(profileFive);
+
+            // Should contain Zu Tiu only, because the preferred name will be matched.
+            testResults = profileDb.searchProfiles("dragon",-999, -999,"","","",null);
+            assertTrue(testResults.size() == 1);
+            assertEquals(testResults.get(0), profileFive);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

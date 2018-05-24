@@ -282,6 +282,8 @@ public class ProfileDatabase {
         ArrayList<Profile> profilesSimilarLast = new ArrayList<>();
         ArrayList<Profile> profilesMatchesFirst = new ArrayList<>();
         ArrayList<Profile> profilesMatchesLast = new ArrayList<>();
+        ArrayList<Profile> profilesMatchesPreferred = new ArrayList<>();
+        ArrayList<Profile> profilesSimilarPreferred = new ArrayList<>();
         ArrayList<Profile> profiles = new ArrayList<>();
 
         if (searchString.equals("")) {
@@ -293,11 +295,21 @@ public class ProfileDatabase {
             int tempRatio;
             String nameCategory;
             String[] namesFirst = profile.getGivenNames().split(" ");
+            String[] namesPreferred = new String[0];
+            if (profile.getPreferredName() != null) {
+                namesPreferred = profile.getPreferredName().split(" ");
+            }
             String[] namesLast = profile.getLastNames().split(" ");
 
             tempRatio = stringMatcher(searchString, namesFirst);
             ratio = tempRatio;
             nameCategory = "first";
+
+            tempRatio = stringMatcher(searchString, namesPreferred);
+            if (tempRatio >= ratio) {
+                ratio = tempRatio;
+                nameCategory = "preferred";
+            }
 
             tempRatio = stringMatcher(searchString, namesLast);
             if (tempRatio >= ratio) {
@@ -308,26 +320,34 @@ public class ProfileDatabase {
             // Ratio of 100 is a exact match, these need to be at top of results.
             if (ratio == 100 && nameCategory.equals("last")) {
                 profilesMatchesLast.add(profile);
-            } else if (ratio == 100 && nameCategory.equals("first")) {
+            } else if (ratio == 100 && nameCategory.equals("preferred")) {
+                profilesMatchesPreferred.add(profile);
+            }else if (ratio == 100 && nameCategory.equals("first")) {
                 profilesMatchesFirst.add(profile);
-                // If ratio is below 60 don't include profile because it doesn't match close enough to searchString
+            // If ratio is below 60 don't include profile because it doesn't match close enough to searchString
             } else if (ratio >= matchLimit && nameCategory.equals("last")) {
                 profilesSimilarLast.add(profile);
-            } else if (ratio >= matchLimit && nameCategory.equals("first")) {
+            } else if (ratio >= matchLimit && nameCategory.equals("preferred")) {
+                profilesSimilarPreferred.add(profile);
+            }else if (ratio >= matchLimit && nameCategory.equals("first")) {
                 profilesSimilarFirst.add(profile);
             }
         }
 
         // Sorts each list by alphabetical order based on profile full name
         Collections.sort(profilesMatchesLast);
+        Collections.sort(profilesMatchesPreferred);
         Collections.sort(profilesMatchesFirst);
         Collections.sort(profilesSimilarLast);
+        Collections.sort(profilesSimilarPreferred);
         Collections.sort(profilesSimilarFirst);
 
         // Added in this order to match relevance order of last name, first name. Complete matches are always at top.
         profiles.addAll(profilesMatchesLast);
+        profiles.addAll(profilesMatchesPreferred);
         profiles.addAll(profilesMatchesFirst);
         profiles.addAll(profilesSimilarLast);
+        profiles.addAll(profilesSimilarPreferred);
         profiles.addAll(profilesSimilarFirst);
 
         return profiles;
