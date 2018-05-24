@@ -372,7 +372,6 @@ public class ClinicianProfileController extends CommonController {
             ageRangeSearchInt = -999;
         }
 
-//        searchTable.getItems().clear();
         donorObservableList.clear();
         profileSearchResults.clear();
         profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGender, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
