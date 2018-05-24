@@ -373,7 +373,7 @@ public class Profile {
      */
     public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("organsDonated");
+        generateUpdateInfo("organsDonating");
 
         for (OrganEnum organ : organs) {
             if (this.organsDonating.contains(organ)) {

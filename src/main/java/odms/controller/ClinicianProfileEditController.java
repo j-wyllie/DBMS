@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import odms.cli.CommandUtils;
 import odms.data.UserDataIO;
 import odms.history.History;
+import odms.profile.Profile;
+import odms.history.History;
 import odms.user.User;
 
 import java.io.IOException;
@@ -58,12 +60,13 @@ public class ClinicianProfileEditController extends CommonController{
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean error = false;
+
         if (saveChanges()) {
-            History action = new History("Clinician",currentUser.getStaffId(),"updated",
-                    "previous "+currentUser.getAttributesSummary() + " new "+
-                            currentUser.getAttributesSummary(),-1,LocalDateTime.now());
+            History action = new History("Clinician",currentUser.getStaffID(),"updated",
+                                    "previous "+ currentUser.getAttributesSummary() + " new "+
+                                            currentUser.getAttributesSummary(),-1,LocalDateTime.now());
             currentUser.setName(givenNamesField.getText());
-            currentUser.setStaffId(Integer.valueOf(staffIdField.getText()));
+            currentUser.setStaffID(Integer.valueOf(staffIdField.getText()));
             currentUser.setWorkAddress(addressField.getText());
             currentUser.setRegion(regionField.getText());
             HistoryController.updateHistory(action);
@@ -104,8 +107,8 @@ public class ClinicianProfileEditController extends CommonController{
             if (currentUser.getName() != null) {
                 givenNamesField.setText(currentUser.getName());
             }
-            if (currentUser.getStaffId() != null) {
-                staffIdField.setText(currentUser.getStaffId().toString());
+            if (currentUser.getStaffID() != null) {
+                staffIdField.setText(currentUser.getStaffID().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {

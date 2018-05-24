@@ -14,16 +14,14 @@ import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
+import odms.user.User;
 
 public class CommandUtils {
 
-    public static ArrayList<String>  currentSessionHistory = new ArrayList<>();
-    protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
-    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
-    protected static String searchErrorText = "Please enter only one search criteria "
-        + "(given-names, last-names, ird).";
+    protected static String searchErrorText = "Please enter only one search criteria\n "
+                                            + "Profiles: given-names, last-names, ird\n"
+                                            + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
-    private static int historyPosition = HistoryController.getPosition();
 
     private static final String cmdRegexCreate =
         "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
@@ -62,9 +60,18 @@ public class CommandUtils {
             case "print":
                 switch (cmd.get(1).toLowerCase()) {
                     case "all":
-                        return Commands.PRINTALL;
+                        if (cmd.size() == 2) { return Commands.INVALID; }
+                        if (cmd.get(2).toLowerCase().equals("profiles")) {
+                            return Commands.PRINTALLPROFILES;
+                        } else if (cmd.get(2).toLowerCase().equals("users")) {
+                            return Commands.PRINTALLUSERS;
+                        } else {
+                            return Commands.INVALID;
+                        }
                     case "donors":
                         return Commands.PRINTDONORS;
+                    case "clinicians":
+                        return Commands.PRINTCLINICIANS;
                 }
                 break;
             case "help":
@@ -72,10 +79,7 @@ public class CommandUtils {
             case "import":
                 return Commands.IMPORT;
             case "export":
-                if (cmd.size() > 1) {
-                    return Commands.EXPORT;
-                }
-                break;
+                return Commands.EXPORT;
             case "undo":
                 return Commands.UNDO;
             case "redo":
@@ -83,6 +87,10 @@ public class CommandUtils {
             case "create-profile":
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
+                }
+            case "create-clinician":
+                if (rawInput.matches(cmdRegexCreate)) {
+                    return Commands.CLINICIANCREATE;
                 }
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
@@ -111,6 +119,20 @@ public class CommandUtils {
                 } else if (rawInput.matches(cmdRegexProfileUpdate)
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
+                }
+            case "clinician":
+                if (rawInput.matches(cmdRegexProfileView)) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
+                        case "view":
+                            return Commands.CLINICIANEVIEW;
+                        case "date-created":
+                            return Commands.CLINICIANDATECREATED;
+                        case "delete":
+                            return Commands.CLINICIANDELETE;
+                    }
+                } else if (rawInput.matches(cmdRegexProfileUpdate)
+                        && cmd.get(0).equals("clinician")) {
+                    return Commands.CLINICIANUPDATE;
                 }
             case "db-read":
                 return Commands.SQLREADONLY;
@@ -163,7 +185,7 @@ public class CommandUtils {
             .split(",");
 
         // TODO should we be able to remove organs using search by names, as this means it will
-        // TODO remove for printAll john smiths etc
+        // TODO remove for printAllProfiles john smiths etc
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
             expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,

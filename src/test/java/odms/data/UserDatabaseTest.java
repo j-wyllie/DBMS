@@ -1,5 +1,6 @@
 package odms.data;
 
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 import odms.user.UserType;
 import org.junit.Before;
@@ -22,13 +23,10 @@ public class UserDatabaseTest {
     }
 
     @Test
-    public void testAddUser() {
-        try {
+    public void testAddUser() throws UserNotFoundException {
             userDb.addUser(user1);
             assertEquals("John Smith", userDb.getUser(0).getName());
             assertEquals("Christchurch", userDb.getUser(0).getRegion());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 }
