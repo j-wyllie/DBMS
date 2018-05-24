@@ -387,6 +387,7 @@ public class ClinicianProfileController extends CommonController {
      * smaller than 50) results. If it is true all results will be displayed, as long as profileSearchResults is under
      * 200 objects in size.
      * @param showAll boolean, if true will display all objects in class variable profileSearchResults.
+     * @param showNext boolean, if true will display next 25 results.
      */
     private void updateTable(boolean showAll, boolean showNext) {
         int size = donorObservableList.size();
