@@ -1169,6 +1169,7 @@ public class ProfileDisplayController extends CommonController {
         allConditions.addAll(convertConditionObservableToArray(
                 pastConditionsTable.getSelectionModel().getSelectedItems()));
 
+        hideItems();
         disableButtonsIfNoItems(allConditions);
 
         ArrayList<Drug> drugs = convertObservableToArray(
