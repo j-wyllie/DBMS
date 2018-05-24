@@ -1,26 +1,22 @@
 package odms.controller;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import odms.cli.CommandUtils;
+import javafx.scene.control.*;
 import odms.data.ProfileDataIO;
 import odms.enums.OrganEnum;
+import odms.history.History;
 import odms.profile.Procedure;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProcedureEditController {
     @FXML
@@ -34,22 +30,27 @@ public class ProcedureEditController {
     @FXML
     private TextArea descEntry;
     @FXML
-    private TextField dateEntry;
+    private DatePicker dateOfProcedureDatePicker;
     @FXML
     private Button saveButton;
     @FXML
     private TextField summaryEntry;
     @FXML
     private Button editButton;
+    @FXML
+    private Label warningLabel;
 
     @FXML
     private ListView<OrganEnum> affectedOrgansListView;
 
     private Procedure currentProcedure;
     private ProfileDisplayController controller;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     @FXML
     public void initialize(Procedure selectedProcedure, ProfileDisplayController selectedController) {
+        warningLabel.setVisible(false);
         controller = selectedController;
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());
@@ -60,8 +61,8 @@ public class ProcedureEditController {
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
-        dateEntry.setDisable(true);
-        dateEntry.setVisible(false);
+        dateOfProcedureDatePicker.setDisable(true);
+        dateOfProcedureDatePicker.setVisible(false);
         summaryEntry.setDisable(true);
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
@@ -80,7 +81,7 @@ public class ProcedureEditController {
     }
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -89,7 +90,7 @@ public class ProcedureEditController {
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
@@ -98,18 +99,19 @@ public class ProcedureEditController {
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
+        warningLabel.setVisible(false);
         affectedOrgansListView.setDisable(false);
         affectedOrgansListView.setVisible(true);
         descEntry.setDisable(false);
         descEntry.setVisible(true);
-        dateEntry.setDisable(false);
-        dateEntry.setVisible(true);
+        dateOfProcedureDatePicker.setDisable(false);
+        dateOfProcedureDatePicker.setVisible(true);
         saveButton.setDisable(false);
         saveButton.setVisible(true);
         summaryEntry.setDisable(false);
         summaryEntry.setVisible(true);
         descEntry.setText(currentProcedure.getLongDescription());
-        dateEntry.setText(currentProcedure.getDate().toString());
+        dateOfProcedureDatePicker.setValue(currentProcedure.getDate());
         summaryEntry.setText(currentProcedure.getSummary());
         procedureSummaryLabel.setText("");
         procedureDateLabel.setText("Date:");
@@ -118,32 +120,36 @@ public class ProcedureEditController {
     }
 
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
-        String action = "Donor "+controller.getCurrentProfile().getId()+" PROCEDURE "+controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure)+" EDITED";
-        String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
-        System.out.println(action);
+        History action = new History ("Profile ",controller.getCurrentProfile().getId(),"EDITED","",
+                controller.getCurrentProfile().getAllProcedures().indexOf(currentProcedure),LocalDateTime.now());
+        String oldValues = " PREVIOUS("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+
+                currentProcedure.getLongDescription()+")"+" OLDORGANS"+currentProcedure.getOrgansAffected();
         currentProcedure.setLongDescription(descEntry.getText());
         currentProcedure.setSummary(summaryEntry.getText());
-        currentProcedure.setDate(LocalDate.parse(dateEntry.getText()));
-        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
-        String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
-        action += oldValues+newValues;
-        action = action +"END at " + LocalDateTime.now();
-        System.out.println(action);
-        if (CommandUtils.getHistory().size() != 0) {
-            if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                        CommandUtils.getHistory().size() - 1).clear();
-            }
+
+        // date validation
+        LocalDate dateOfProcedure = dateOfProcedureDatePicker.getValue();
+        LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
+        if (dob.isAfter(dateOfProcedure)){
+            warningLabel.setVisible(true);
+            return;
+        } else {
+            currentProcedure.setDate(dateOfProcedure);
+            warningLabel.setVisible(false);
         }
-        CommandUtils.currentSessionHistory.add(action);
-        CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
+
+        currentProcedure.setOrgansAffected(new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems()));
+        String newValues = " CURRENT("+currentProcedure.getSummary()+","+currentProcedure.getDate()+","+
+                currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
+        action.setHistoryData(oldValues+newValues);
+        HistoryController.updateHistory(action);
         ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
         descEntry.setVisible(false);
-        dateEntry.setDisable(true);
-        dateEntry.setVisible(false);
+        dateOfProcedureDatePicker.setDisable(true);
+        dateOfProcedureDatePicker.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
         summaryEntry.setDisable(true);

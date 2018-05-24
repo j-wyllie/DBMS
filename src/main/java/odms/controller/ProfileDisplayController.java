@@ -1,6 +1,5 @@
 package odms.controller;
 
-import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
@@ -26,9 +25,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import odms.cli.CommandUtils;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
@@ -36,6 +35,7 @@ import odms.profile.Profile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,10 +45,9 @@ import java.util.Map;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
+
 
 public class ProfileDisplayController extends CommonController {
 
@@ -285,6 +284,8 @@ public class ProfileDisplayController extends CommonController {
     }
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
 
     /**
      * initializes and refreshes the current and past conditions tables
@@ -294,7 +295,6 @@ public class ProfileDisplayController extends CommonController {
         //curDiseasesTable.getSortOrder().add(curChronicColumn);}
 
         curChronicColumn.setComparator(curChronicColumn.getComparator().reversed());
-        //currentProfile.setAllConditions(new ArrayList<>());                                  //remove this eventually, just to keep list small with placeholder data
 
         if (curConditions != null) {curConditionsObservableList = FXCollections.observableArrayList(curConditions);}
         else {curConditionsObservableList = FXCollections.observableArrayList(); }
@@ -323,8 +323,6 @@ public class ProfileDisplayController extends CommonController {
                     (observable, oldValue, newValue) -> header.setReordering(false));
         });
     }
-
-
 
     public ArrayList<Condition> convertConditionObservableToArray(ObservableList<Condition> conditions) {
         ArrayList<Condition> toReturn = new ArrayList<>();
@@ -484,6 +482,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
         try {
+            Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
@@ -493,6 +492,9 @@ public class ProfileDisplayController extends CommonController {
 
             Stage stage = new Stage();
             stage.setTitle("Add a Condition");
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -516,10 +518,15 @@ public class ProfileDisplayController extends CommonController {
         conditions.addAll(convertConditionObservableToArray(
                 curConditionsTable.getSelectionModel().getSelectedItems())
         );
-
         for (Condition condition : conditions) {
             if (condition != null) {
                 currentProfile.removeCondition(condition);
+                LocalDateTime currentTime = LocalDateTime.now();
+                History action = new History("Profile",currentProfile.getId(),
+                        " removed condition","("  +condition.getName()+
+                        ","+condition.getDateOfDiagnosis()+","+condition.getChronic()+","+
+                        condition.getDateCuredString()+ ")",currentProfile.getCurrentConditions().indexOf(condition),currentTime);
+                HistoryController.updateHistory(action);
             }
         }
 
@@ -643,20 +650,18 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * Button handler to undo last action.
-     * @param event clicking on the undo button.
      */
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+    private void handleUndoButtonClicked() {
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
      * Button handler to redo last undo action.
-     * @param event clicking on the redo button.
      */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+    private void handleRedoButtonClicked() {
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -667,7 +672,7 @@ public class ProfileDisplayController extends CommonController {
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        ProfileEditController controller = fxmlLoader.<ProfileEditController>getController();
+        ProfileEditController controller = fxmlLoader.getController();
         controller.setCurrentProfile(currentProfile);
         controller.setIsClinician(isOpenedByClinician);
         controller.initialize();
@@ -743,6 +748,11 @@ public class ProfileDisplayController extends CommonController {
 
             currentProfile.addDrug(new Drug(medicationName));
 
+            String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+            History history = new History("Profile",currentProfile.getId(), "added drug",
+                    medicationName,Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+            HistoryController.updateHistory(history);
+
             refreshMedicationsTable();
         }
     }
@@ -809,8 +819,12 @@ public class ProfileDisplayController extends CommonController {
             } else {
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
                 tableViewDrugInteractions.setItems(interactions);
-                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getKey()));
-                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures<Map.Entry<String, String>, String> param) -> new SimpleStringProperty(param.getValue().getValue()));
+                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getKey()));
+                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+                                                                 <Map.Entry<String, String>, String> param) ->
+                        new SimpleStringProperty(param.getValue().getValue()));
                 tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
             }
         } catch (IOException e) {
@@ -829,6 +843,13 @@ public class ProfileDisplayController extends CommonController {
         for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToHistory(drug);
+                String data = currentProfile.getMedicationTimestamps().
+                        get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(),
+                        "stopped",drug.getDrugName(),
+                        Integer.parseInt(data.substring(data.indexOf("index of")+8,
+                                data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
             }
         }
 
@@ -846,6 +867,11 @@ public class ProfileDisplayController extends CommonController {
         for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.moveDrugToCurrent(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history = new History("Profile",currentProfile.getId(),
+                        "started",drug.getDrugName(),Integer.parseInt(data.substring
+                        (data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                HistoryController.updateHistory(history);
             }
         }
 
@@ -864,6 +890,18 @@ public class ProfileDisplayController extends CommonController {
         for (Drug drug : drugs) {
             if (drug != null) {
                 currentProfile.deleteDrug(drug);
+                String data = currentProfile.getMedicationTimestamps().get(currentProfile.getMedicationTimestamps().size()-1);
+                History history;
+                if(data.contains("history")) {
+                    history = new History("Profile",currentProfile.getId(), "removed drug",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                } else {
+                    history = new History("Profile",currentProfile.getId(), "removed drug from history",
+                            drug.getDrugName(),
+                            Integer.parseInt(data.substring(data.indexOf("index of")+8,data.indexOf(" at"))),LocalDateTime.now());
+                }
+                HistoryController.updateHistory(history);
             }
         }
 
@@ -1035,26 +1073,17 @@ public class ProfileDisplayController extends CommonController {
             }
 
             String history = ProfileDataIO.getHistory();
-            Gson gson = new Gson();
-
-            if (history.equals("")) {
-                history = gson.toJson(CommandUtils.getHistory());
-            } else {
-                history = history.substring(0, history.length() - 1);
-                history = history + "," + gson.toJson(CommandUtils.getHistory()).substring(1);
-            }
-            history = history.substring(1, history.length() - 1);
-            String[] actionHistory = history.split(",");
-
-            ArrayList<String> userHistory = new ArrayList<>();
-
-            for (String str : actionHistory) {
-                if (str.contains("Profile " + currentProfile.getId())) {
-                    userHistory.add(str);
+            history = history.replace(",", " ").replace("]", "").
+                    replace("[", "").replace("\\u003d", "=");
+            String[] histories = history.split("\"");
+            String historyDisplay = "";
+            for (String h : histories) {
+                if (!h.equals("") && h.contains("Profile "+currentProfile.getId()+" ")) {
+                    historyDisplay += h + "\n";
                 }
             }
 
-            historyView.setText(userHistory.toString());
+            historyView.setText(historyDisplay);
             setMedicationSearchFieldListener();
 
             refreshConditionTable();

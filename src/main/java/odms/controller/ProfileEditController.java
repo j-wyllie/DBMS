@@ -11,23 +11,36 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
+import com.sun.media.sound.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.data.ProfileDataIO;
+import odms.history.History;
 import odms.profile.Profile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static odms.controller.AlertController.*;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -44,10 +57,10 @@ public class ProfileEditController extends CommonController {
     private TextField irdNumberField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
-    private TextField dodField;
+    private DatePicker dodDatePicker;
 
     @FXML
     private TextField genderField;
@@ -91,7 +104,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -101,7 +114,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -113,6 +126,10 @@ public class ProfileEditController extends CommonController {
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         if (AlertController.saveChanges()) {
             try {
+                // History Generation
+                History action = new History("Profile" , currentProfile.getId() ,"update",
+                        "previous "+currentProfile.getAttributesSummary(),-1,null);
+
                 // Required General Fields
                 saveDateOfBirth();
                 saveGivenNames();
@@ -139,24 +156,11 @@ public class ProfileEditController extends CommonController {
                 showNotification("Profile", event);
                 closeEditWindow(event);
 
-                // History Item
-                String action = "Profile " +
-                        currentProfile.getId() +
-                        " updated details previous = " +
-                        currentProfile.getAttributesSummary() +
-                        " new = " +
-                        currentProfile.getAttributesSummary() +
-                        " at " +
-                        LocalDateTime.now();
+                // History Changes
+                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                HistoryController.updateHistory(action);
 
-                if (CommandUtils.getHistory().size() != 0) {
-                    if (CommandUtils.getPosition() != CommandUtils.getHistory().size() - 1) {
-                        CommandUtils.currentSessionHistory.subList(CommandUtils.getPosition(),
-                                CommandUtils.getHistory().size() - 1).clear();
-                    }
-                }
-                CommandUtils.currentSessionHistory.add(action);
-                CommandUtils.historyPosition = CommandUtils.currentSessionHistory.size() - 1;
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
@@ -420,14 +424,10 @@ public class ProfileEditController extends CommonController {
                     irdNumberField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
-                    dobField.setText(currentProfile.getDateOfBirth().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
                 }
                 if (currentProfile.getDateOfDeath() != null) {
-                    dodField.setText(currentProfile.getDateOfDeath().format(
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    );
+                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getGender() != null) {
                     genderField.setText(currentProfile.getGender());

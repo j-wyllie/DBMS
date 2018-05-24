@@ -1,10 +1,9 @@
 package odms.controller;
 
-import static odms.controller.UndoRedoController.redo;
-import static odms.controller.UndoRedoController.undo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -25,18 +26,30 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import odms.App;
+import odms.cli.CommandGUI;
+import odms.cli.CommandLine;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ClinicianProfileController extends CommonController {
 
@@ -106,22 +119,43 @@ public class ClinicianProfileController extends CommonController {
     private Tab viewUsersTab;
 
     @FXML
+    private Tab consoleTab;
+
+    @FXML
     private ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
+
+    @FXML
+    private TextArea displayTextArea;
+
+    @FXML
+    private Tab dataManagementTab;
+
+    @FXML
+    private AnchorPane dataManagement;
+
+    @FXML
+    private DataManagementController dataManagementController;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
+    private RedoController redoController= new RedoController();
+    private UndoController undoController= new UndoController();
+
+    private CommandGUI commandGUI;
 
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
 
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
 
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
+
+    private static Collection<Stage> openProfileStages = new ArrayList<>();
 
 
     /**
@@ -131,6 +165,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        currentUser = null;
         showLoginScene(event);
     }
 
@@ -141,7 +176,12 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undo();
+        undoController.undo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -151,7 +191,12 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redo();
+        redoController.redo(GuiMain.getCurrentDatabase());
+        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
+        Scene newScene = new Scene(parent);
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(newScene);
+        appStage.show();
     }
 
     /**
@@ -358,13 +403,13 @@ public class ClinicianProfileController extends CommonController {
                 if (txt_TextField.getText().length() >= maxLength) {
                     e.consume();
                 }
-                if(e.getCharacter().matches("[0-9.]")){
-                    if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
+                if (e.getCharacter().matches("[0-9.]")){
+                    if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
                         e.consume();
-                    }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
+                    } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
                         e.consume();
                     }
-                }else{
+                } else {
                     e.consume();
                 }
             }
@@ -393,6 +438,10 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                closeStage(stage);
+            });
+            openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -471,14 +520,33 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    public void handleTabDataManagementClicked() {
+        dataManagementController.setCurrentUser(currentUser);
+    }
+
     /**
-     * Hides certain nodes if the clinician does not have permission to view them
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
      */
-    private void hideAdminItems() {
+    private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
+            dataManagementTab.setDisable(true);
             viewUsersTab.setDisable(true);
+            consoleTab.setDisable(true);
         } else {
+            dataManagementTab.setDisable(false);
             viewUsersTab.setDisable(false);
+            consoleTab.setDisable(false);
+
+            // Initialize command line GUI
+            commandGUI = new CommandGUI(displayTextArea);
+            System.setIn(commandGUI.getIn());
+            System.setOut(commandGUI.getOut());
+
+            // Start the command line in an alternate thread
+            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            commandGUI.initHistory(commandLine);
+            Thread t = new Thread(commandLine);
+            t.start();
         }
     }
 
@@ -523,7 +591,7 @@ public class ClinicianProfileController extends CommonController {
             TableFilter filter = new TableFilter<>(transplantTable);
 
             setClinicianDetails();
-            hideAdminItems();
+            setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
@@ -535,5 +603,34 @@ public class ClinicianProfileController extends CommonController {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    /**
+     * Checks if there are unsaved changes in any open window.
+     * @return true if there are unsaved changes.
+     */
+    public static boolean checkUnsavedChanges(Stage currentStage) {
+        for (Stage stage : openProfileStages) {
+            if (isEdited(stage) && stage.isShowing()) {
+                return true;
+            }
+        }
+
+        return isEdited(currentStage);
+    }
+
+    private void closeStage(Stage stage) {
+        openProfileStages.remove(stage);
+    }
+
+    /**
+     * closes all open Profile windows that the user has opened.
+     */
+    public static void closeAllOpenProfiles() {
+        for (Stage stage : openProfileStages) {
+            if (stage.isShowing()) {
+                stage.close();
+            }
+        }
     }
 }

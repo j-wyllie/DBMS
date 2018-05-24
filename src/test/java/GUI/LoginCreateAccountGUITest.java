@@ -1,20 +1,16 @@
 package GUI;
 
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import odms.controller.GuiMain;
-import odms.controller.LoginController;
-import odms.data.ProfileDataIO;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeoutException;
+import javafx.scene.Scene;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import odms.controller.GuiMain;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class LoginCreateAccountGUITest extends TestFxMethods {
 
@@ -56,12 +52,13 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     /**
      * creates a valid user and adds it to the database.
      */
+    @Ignore
     @Test
     public void createValidUser(){
         clickOn("#createAccountLink");
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
-        clickOn("#dobField").write("14-11-1997");
+        clickOn("#dobDatePicker").write("14/11/1997");
         clickOn("#irdNumberField").write("88888888");
         clickOn("#createAccountButton");
 
@@ -103,7 +100,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         closeDialog(dialogPane);
 
         //tests duplicate IRD number.
-        clickOn("#dobField").eraseText(10).write("14-11-1997");
+        clickOn("#dobDatePicker").eraseText(10).write("14-11-1997");
         clickOn("#createAccountButton");
 
 //        actualAlertDialog = getTopModalStage();

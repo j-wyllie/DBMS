@@ -212,4 +212,22 @@ public class AlertController {
 
         return handleAlert(cancelAlert);
     }
+
+    /**
+     * Displays a popup prompting the user to that they have unsaved changes somewhere in the program
+     * @return true or false on whether the changes were confirmed
+     */
+    static boolean unsavedChangesImport() {
+        Alert cancelAlert = new Alert(
+            AlertType.CONFIRMATION,
+            "You have unsaved changes.\n" +
+                "Do you want to continue without saving?",
+            ButtonType.CANCEL,
+            ButtonType.YES
+        );
+
+        cancelAlert.showAndWait();
+
+        return handleAlert(cancelAlert);
+    }
 }

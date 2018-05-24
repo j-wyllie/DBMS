@@ -6,11 +6,15 @@ import static odms.controller.AlertController.invalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.IrdNumberConflictException;
@@ -29,7 +33,7 @@ public class ProfileCreateController extends CommonController {
     private TextField surnamesField;
 
     @FXML
-    private TextField dobField;
+    private DatePicker dobDatePicker;
 
     @FXML
     private TextField irdNumberField;
@@ -76,7 +80,7 @@ public class ProfileCreateController extends CommonController {
             try {
                 String givenNames = givenNamesField.getText();
                 String surnames = surnamesField.getText();
-                String dob = dobField.getText();
+                LocalDate dob = dobDatePicker.getValue();
                 Integer ird = Integer.valueOf(irdNumberField.getText());
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, ird);
@@ -104,11 +108,8 @@ public class ProfileCreateController extends CommonController {
                     invalidEntry("Invalid IRD number entered");
                 }
             } catch (IllegalArgumentException e) {
-                if (!e.getMessage().equals("")) {
-                    invalidEntry(e.getMessage());
-                } else {
-                    invalidEntry();
-                }
+                //show error window.
+                invalidEntry();
             } catch (IrdNumberConflictException e) {
                 invalidIrd();
             } catch (ArrayIndexOutOfBoundsException e) {

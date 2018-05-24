@@ -51,13 +51,6 @@ public class GuiMain extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("ODMS"); // TODO Remove magic string
         primaryStage.show();
-
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent we) {
-//                ProfileDataIO.saveData(donorDb, DONOR_DATABASE);
-//                UserDataIO.saveUsers(userDb, USER_DATABASE);
-//            }
-//        });
     }
 
     public static ProfileDatabase getCurrentDatabase() {
@@ -68,7 +61,7 @@ public class GuiMain extends Application {
         return userDb;
     }
 
-    public void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
+    public static void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
 
     public static void main(String[] args) {
         launch(args);

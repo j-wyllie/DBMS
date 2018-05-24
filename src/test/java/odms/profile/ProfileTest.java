@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import odms.controller.HistoryController;
+import odms.medications.Drug;
 import odms.cli.CommandUtils;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
@@ -155,6 +158,7 @@ public class ProfileTest {
         someOrgans.add("heart");
         someOrgans.add("cornea");
         testProfile.addOrgansDonated(OrganEnum.stringListToOrganSet(someOrgans));
+        testProfile.setId(9999);
 
         Set<OrganEnum> expected = new HashSet<>();
         expected.add(OrganEnum.BONE);
@@ -173,6 +177,7 @@ public class ProfileTest {
         Profile testProfile = new Profile(profileAttr);
 
         testProfile.setDonor(true);
+        testProfile.setId(9999);
 
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
@@ -197,6 +202,7 @@ public class ProfileTest {
         Profile testProfile = new Profile(profileAttr);
 
         testProfile.setDonor(true);
+        testProfile.setId(9999);
 
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
@@ -227,6 +233,7 @@ public class ProfileTest {
     @Test
     public void testAddDiseases() {
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.setDonor(true);
         testProfile.setChronicDiseases(
@@ -256,6 +263,7 @@ public class ProfileTest {
     @Test
     public void testRemoveOrgansDonating() throws OrganConflictException {
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         List<String> someOrgans = new ArrayList<>();
         someOrgans.add("bone");
@@ -283,6 +291,7 @@ public class ProfileTest {
         Profile testProfile = new Profile(profileAttr);
 
         testProfile.setDonor(true);
+        testProfile.setId(9999);
 
         List<String> addOrgans = new ArrayList<>();
         addOrgans.add("bone");
@@ -311,6 +320,7 @@ public class ProfileTest {
 
         testProfile = new Profile(profileAttr);
         testProfile.setDonor(true);
+        testProfile.setId(9999);
 
         HashSet<OrganEnum> organs = new HashSet<>();
         organs.add(OrganEnum.BONE);
@@ -329,6 +339,7 @@ public class ProfileTest {
     public void testAddExistingOrgan() throws IllegalArgumentException, OrganConflictException {
         Profile testProfile = new Profile(profileAttr);
 
+        testProfile.setId(9999);
         testProfile.setDonor(true);
 
         List<String> someOrgans = new ArrayList<>();
@@ -344,6 +355,7 @@ public class ProfileTest {
     @Test
     public void testPropertyChangeEvent() {
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         assertEquals(testProfile.getUpdateActions().size(), 4);
     }
@@ -359,6 +371,7 @@ public class ProfileTest {
         profileAttr.add("height=\"1.75\"");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         double bmi = testProfile.calculateBMI();
         assertEquals("23.51", df.format(bmi));
@@ -374,6 +387,7 @@ public class ProfileTest {
     public void testCalculateAgeAlive() {
         Integer birthYear = 1998;
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         Integer age = testProfile.calculateAge();
         Integer year = LocalDate.now().getYear() - birthYear;
@@ -388,6 +402,7 @@ public class ProfileTest {
     public void testCalculateAgeDead() {
         profileAttr.add("dod=\"01-01-2050\"");
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         int age = testProfile.calculateAge();
         assertEquals(age, 51);
@@ -406,6 +421,7 @@ public class ProfileTest {
         profileAttr.add("ird=\"123456879\"");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         int age = testProfile.calculateAge();
         assertEquals(age, 50);
@@ -472,6 +488,7 @@ public class ProfileTest {
         Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addProcedure(procedure0);
         testProfile.addProcedure(procedure1);
@@ -491,6 +508,7 @@ public class ProfileTest {
         Procedure procedure2 = new Procedure("Photorefractive keratectomy", "4-9-2018", "Will correct the patients vision");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addProcedure(procedure0);
         testProfile.addProcedure(procedure1);
@@ -510,6 +528,7 @@ public class ProfileTest {
         Procedure procedure1 = new Procedure("Photorefractive keratectomy", "4-9-2012", "Will correct the patients vision");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addProcedure(procedure0);
         testProfile.addProcedure(procedure1);
@@ -528,6 +547,7 @@ public class ProfileTest {
         Procedure procedure = new Procedure("Appendix Removal", "2-11-2018", "Will remove the appendix via key hole surgery");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addProcedure(procedure);
 
@@ -556,6 +576,7 @@ public class ProfileTest {
 
         try {
             Profile testProfile = new Profile(profileAttr);
+            testProfile.setId(9999);
 
             testProfile.addProcedure(procedure);
 
@@ -581,6 +602,7 @@ public class ProfileTest {
         );
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addProcedure(procedure);
 
@@ -614,6 +636,7 @@ public class ProfileTest {
 
         LocalDateTime currentTime = LocalDateTime.now();
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         testProfile.addDrug(drugOne);
         assertEquals(
@@ -655,6 +678,7 @@ public class ProfileTest {
         Drug drugTwo = new Drug("paracetamol");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -699,6 +723,7 @@ public class ProfileTest {
         Drug drugTwo = new Drug("paracetamol");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -749,6 +774,7 @@ public class ProfileTest {
         Drug drugTwo = new Drug("paracetamol");
 
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -802,6 +828,8 @@ public class ProfileTest {
     public void testAddConditionAndGetAllConditions() {
         Condition condition = new Condition("aids", "18-7-1997", "15-09-2014", false);
         Profile testProfile = new Profile(profileAttr);
+        testProfile.setId(9999);
+
         testProfile.addCondition(condition);
 
         assertTrue(testProfile.getAllConditions().contains(condition));
