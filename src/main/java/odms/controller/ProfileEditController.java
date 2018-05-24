@@ -1,19 +1,10 @@
 package odms.controller;
 
-import com.sun.media.sound.InvalidDataException;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import odms.data.ProfileDataIO;
-import odms.history.History;
-import odms.profile.Profile;
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,8 +12,22 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getCurrentDatabase;
+import com.sun.media.sound.InvalidDataException;
+import com.sun.media.sound.InvalidDataException;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import odms.data.ProfileDataIO;
+import odms.history.History;
+import odms.profile.Profile;
 
 public class ProfileEditController extends CommonController {
 
@@ -50,9 +55,6 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private DatePicker dodDatePicker;
-
-    @FXML
-    private TextField genderField;
 
     @FXML
     private TextField heightField;
@@ -90,7 +92,16 @@ public class ProfileEditController extends CommonController {
     @FXML
     private RadioButton isSmokerRadioButton;
 
+    @FXML
+    private TextField preferredNameField;
+
     private Boolean isClinician;
+
+    @FXML
+    private ComboBox comboGenderPref;
+
+    @FXML
+    private ComboBox comboGender;
 
     /**
      * Button handler to undo last action.
@@ -119,10 +130,9 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean saveBool = saveChanges();
         boolean error = false;
 
-        if (saveBool) {
+        if (saveChanges()) {
             if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
                     irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
                 guiPopup("Error. Required fields were left blank.");
@@ -133,6 +143,8 @@ public class ProfileEditController extends CommonController {
                 currentProfile.setGivenNames(givenNamesField.getText());
 
                 currentProfile.setLastNames(lastNamesField.getText());
+
+                currentProfile.setPreferredName(preferredNameField.getText());
 
                 currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
 
@@ -159,9 +171,6 @@ public class ProfileEditController extends CommonController {
                     }
                 } catch (InvalidDataException e) {
                     error = true;
-                }
-                if (!genderField.getText().isEmpty()) {
-                    currentProfile.setGender(genderField.getText());
                 }
 
                 try {
@@ -200,6 +209,17 @@ public class ProfileEditController extends CommonController {
                     HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
                     currentProfile.setChronicDiseases(diseasesSet);
                 }
+                if (comboGender.getValue() != null) {
+                    currentProfile.setGender(comboGender.getValue().toString());
+                }
+                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
+                    if (comboGender.getValue() != null) {
+                        currentProfile.setPreferredGender(comboGender.getValue().toString());
+                    }
+                } else {
+                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+                }
+
                 if (error) {
                     guiPopup("Error. Not all fields were updated.");
                 } else {
@@ -218,9 +238,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        boolean cancelBool = profileCancelChanges();
-
-        if (cancelBool) {
+        if (profileCancelChanges()) {
             closeEditWindow(event);
         }
     }
@@ -271,6 +289,9 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getLastNames() != null) {
                     lastNamesField.setText(currentProfile.getLastNames());
                 }
+                if (currentProfile.getPreferredName() != null) {
+                    preferredNameField.setText(currentProfile.getPreferredName());
+                }
                 if (currentProfile.getIrdNumber() != null) {
                     irdField.setText(currentProfile.getIrdNumber().toString());
                 }
@@ -279,9 +300,6 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getDateOfDeath() != null) {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
-                }
-                if (currentProfile.getGender() != null) {
-                    genderField.setText(currentProfile.getGender());
                 }
                 if (currentProfile.getHeight() != null){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
@@ -313,6 +331,29 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+
+                comboGender.setEditable(false);
+                comboGender.getItems().addAll("Male", "Female");
+                if (currentProfile.getGender() != null) {
+                    if (currentProfile.getGender().toLowerCase().equals("male")) {
+                        comboGender.getSelectionModel().selectFirst();
+                    } else if (currentProfile.getGender().toLowerCase().equals("female")) {
+                        comboGender.getSelectionModel().select(1);
+                    } else {
+                        comboGender.setValue("");
+                    }
+                }
+
+                if (currentProfile.getGender() != null) {
+                    comboGender.getEditor().setText(currentProfile.getGender());
+                }
+
+                comboGenderPref.setEditable(true);
+                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
+
+                if (currentProfile.getPreferredGender() != null) {
+                    comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
