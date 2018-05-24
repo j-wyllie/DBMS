@@ -242,6 +242,11 @@ public class Print extends CommandUtils {
             System.out.println("Name: " + user.getName());
         }
 
+        if (user.getUsername() != null) {
+            System.out.println("Username: " + user.getUsername());
+        }
+
+
         if (user.getRegion() != null) {
             System.out.println("Region: " + user.getRegion());
         }
