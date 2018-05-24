@@ -212,7 +212,7 @@ public class UndoController extends UndoRedoController{
                 action.getHistoryData().indexOf("new "));
         String[] previousValues = previous.split(",");
         user.setName(previousValues[1].replace("name=",""));
-        user.setStaffId(Integer.valueOf(previousValues[0].replace("staffId=","").
+        user.setStaffID(Integer.valueOf(previousValues[0].replace("staffId=","").
                 replace(" ","")));
         user.setWorkAddress(previousValues[2].replace("workAddress=",""));
         user.setRegion(previousValues[3].replace("region=",""));
