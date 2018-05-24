@@ -1413,18 +1413,10 @@ public class ProfileDisplayController extends CommonController {
 
         if (currentProfile != null) {
             currentProfileBound.set(currentProfile);
-
             setPage(currentProfile);
-
-            refreshMedicationsTable();
-            makeProcedureTable(
-                    currentProfile.getPreviousProcedures(),
-                    currentProfile.getPendingProcedures()
-            );
-
             hideItems();
             refreshMedicationsTable();
-
+            refreshMedicationsTable();
             refreshConditionTable();
             forceConditionSortOrder();
         }
