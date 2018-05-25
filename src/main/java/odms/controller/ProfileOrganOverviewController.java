@@ -87,6 +87,8 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the
      * check list for conflicting organs.
+     *
+     * Populates the checklist with donating organs for highlighting.
      */
     public void populateOrganLists() {
         populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
@@ -106,6 +108,8 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
      * Refresh the ListViews to reflect changes made from the edit pane.
      */
     private void refreshListViews() {
+        populateOrganLists();
+
         listViewDonated.refresh();
         listViewDonating.refresh();
         listViewReceiving.refresh();
