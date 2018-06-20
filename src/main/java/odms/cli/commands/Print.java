@@ -192,11 +192,11 @@ public class Print extends CommandUtils {
             System.out.println("Gender: " + profile.getGender());
         }
 
-        if (profile.getHeight() != 0.0) {
+        if (profile.getHeight() != null) {
             System.out.println("Height: " + profile.getHeight() + "cm");
         }
 
-        if (profile.getWeight() != 0.0) {
+        if (profile.getWeight() != null) {
             System.out.println("Weight: " + profile.getWeight());
         }
 

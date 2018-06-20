@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import odms.App;
 import odms.data.ProfileDataIO;
 import odms.user.User;
 
@@ -51,7 +52,7 @@ public class DataManagementController {
      * @param file file to be set as database
      */
     private void importAndCloseWindows(Stage stage, File file) {
-        GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+        App.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
 
         ClinicianProfileController.closeAllOpenProfiles();
         stage.close();
