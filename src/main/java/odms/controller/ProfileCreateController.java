@@ -1,9 +1,9 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidIrd;
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ import odms.profile.Profile;
 
 public class ProfileCreateController extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getProfileDb();
 
     @FXML
     private TextField givenNamesField;
