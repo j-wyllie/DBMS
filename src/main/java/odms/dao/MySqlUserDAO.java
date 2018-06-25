@@ -38,8 +38,8 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void addUser(User user) {
-        String query = "insert into user (UserId, Name, UserType, Address,"
-                + " Region, Created, LastUpdated) values (?, ?, ?, ?, ?, ?, ?);";
+        String query = "insert into user (UserId, Username, Password, Name, UserType, Address,"
+                + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -47,12 +47,15 @@ public class MySqlUserDAO implements UserDAO {
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, user.getStaffID());
-            stmt.setString(2, user.getName());
-            stmt.setString(3, user.getUserType().toString());
-            stmt.setString(4, user.getWorkAddress());
-            stmt.setString(5, user.getRegion());
-            stmt.setString(6, user.getTimeOfCreation().toString());
-            stmt.setString(7, user.getLastUpdated().toString());
+            stmt.setString(2, user.getUsername());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getName());
+            stmt.setString(5, user.getUserType().toString());
+            stmt.setString(6, user.getWorkAddress());
+            stmt.setString(7, user.getRegion());
+            stmt.setString(8, user.getTimeOfCreation().toString());
+            stmt.setString(9, user.getLastUpdated().toString());
+            stmt.setBoolean(10, user.getDefault());
 
             stmt.executeUpdate();
             conn.close();
@@ -91,8 +94,8 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void updateUser(User user) {
-        String query = "update user set Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ? where"
+        String query = "update user set Username = ?, Password = ?, Name = ?, UserType = ?, "
+                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where"
                 + "UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -100,12 +103,15 @@ public class MySqlUserDAO implements UserDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getUserType().toString());
-            stmt.setString(3, user.getWorkAddress());
-            stmt.setString(4, user.getRegion());
-            stmt.setString(5, user.getLastUpdated().toString());
-            stmt.setInt(6, user.getStaffID());
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getUserType().toString());
+            stmt.setString(5, user.getWorkAddress());
+            stmt.setString(6, user.getRegion());
+            stmt.setString(7, user.getLastUpdated().toString());
+            stmt.setInt(8, user.getStaffID());
+            stmt.setBoolean(9, user.getDefault());
 
             stmt.executeUpdate();
             conn.close();
