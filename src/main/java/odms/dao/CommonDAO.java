@@ -1,6 +1,6 @@
 package odms.dao;
 
-public interface ReadOnlyDAO {
+public interface CommonDAO {
 
     /**
      * Interface for the querying of databases across
@@ -8,5 +8,4 @@ public interface ReadOnlyDAO {
      * @param query
      */
     public void queryDatabase(String query);
-
 }

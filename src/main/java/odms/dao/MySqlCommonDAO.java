@@ -8,8 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 
-
-public class MySqlDAO implements ReadOnlyDAO {
+public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Establishes a connection with the database and executes the supplied query,
