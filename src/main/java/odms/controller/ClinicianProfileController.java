@@ -372,8 +372,8 @@ public class ClinicianProfileController extends CommonController {
         }
 
         searchTable.getItems().clear();
-        donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
+        profileSearchResults.clear();
+        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(
                 searchString,
                 ageSearchInt,
                 ageRangeSearchInt,

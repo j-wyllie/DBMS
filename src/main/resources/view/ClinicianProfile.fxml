@@ -7,9 +7,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -197,6 +197,11 @@
                                     <ColumnConstraints hgrow="ALWAYS" maxWidth="296.0" minWidth="10.0" prefWidth="154.0" />
                                     <ColumnConstraints hgrow="ALWAYS" maxWidth="254.0" minWidth="10.0" prefWidth="141.0" />
                                     <ColumnConstraints hgrow="ALWAYS" maxWidth="245.0" minWidth="10.0" prefWidth="193.0" />
+                                    <ColumnConstraints />
+                                    <ColumnConstraints />
+                                    <ColumnConstraints />
+                                    <ColumnConstraints />
+                                    <ColumnConstraints />
                                 </columnConstraints>
                                 <rowConstraints>
                                     <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="31.0" valignment="CENTER" vgrow="NEVER" />
@@ -221,31 +226,27 @@
                                           <Insets />
                                        </GridPane.margin>
                                         </TableView>
-                                     <TilePane alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="1111.0" GridPane.columnIndex="1" GridPane.columnSpan="11" GridPane.rowIndex="4">
-                                         <children>
-                                             <GridPane maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="1166.0">
-                                                 <columnConstraints>
-                                                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="143.0" />
-                                                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="160.0" />
-                                                     <ColumnConstraints hgrow="ALWAYS" maxWidth="735.0" minWidth="10.0" prefWidth="560.0" />
-                                                     <ColumnConstraints hgrow="NEVER" maxWidth="560.0" minWidth="10.0" prefWidth="178.0" />
-                                                     <ColumnConstraints hgrow="NEVER" maxWidth="382.0" minWidth="10.0" prefWidth="163.0" />
-                                                 </columnConstraints>
-                                                 <rowConstraints>
-                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                                                 </rowConstraints>
-                                                 <children>
-                                                     <Label fx:id="labelToManyResults" prefHeight="36.0" prefWidth="294.0" text="Please refine the search to view all results" textFill="#ff001eb3" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                     <Label fx:id="labelCurrentOnDisplay" prefHeight="36.0" prefWidth="149.0" text="displaying 0 to 0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                     <Label fx:id="labelResultCount" prefHeight="36.0" prefWidth="149.0" text=" results found" GridPane.rowIndex="1" />
-                                                     <Button fx:id="buttonShowNext" mnemonicParsing="false" onAction="#handleGetXResults" text="Show next 25 results" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                     <Button fx:id="buttonShowAll" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all results" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                 </children>
-                                             </GridPane>
-                                         </children>
-                                     </TilePane>
+                                       <GridPane maxWidth="1.7976931348623157E308" prefHeight="39.0" prefWidth="1182.0" GridPane.columnSpan="10" GridPane.rowIndex="4">
+                                           <columnConstraints>
+                                               <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="143.0" />
+                                               <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="160.0" />
+                                               <ColumnConstraints hgrow="ALWAYS" maxWidth="735.0" minWidth="10.0" prefWidth="560.0" />
+                                               <ColumnConstraints hgrow="NEVER" maxWidth="560.0" minWidth="10.0" prefWidth="178.0" />
+                                               <ColumnConstraints hgrow="NEVER" maxWidth="382.0" minWidth="10.0" prefWidth="163.0" />
+                                           </columnConstraints>
+                                           <rowConstraints>
+                                               <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                               <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                               <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                           </rowConstraints>
+                                           <children>
+                                               <Label fx:id="labelToManyResults" prefHeight="36.0" prefWidth="294.0" text="Please refine the search to view all results" textFill="#ff001eb3" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                               <Label fx:id="labelCurrentOnDisplay" prefHeight="36.0" prefWidth="149.0" text="displaying 0 to 0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                               <Label fx:id="labelResultCount" prefHeight="36.0" prefWidth="149.0" text=" results found" GridPane.rowIndex="1" />
+                                               <Button fx:id="buttonShowNext" mnemonicParsing="false" onAction="#handleGetXResults" text="Show next 25 results" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                               <Button fx:id="buttonShowAll" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all results" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                           </children>
+                                       </GridPane>
                                      <TextField fx:id="searchField" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" promptText="Name" GridPane.rowIndex="1">
                                      <GridPane.margin>
                                          <Insets left="10.0" right="10.0" />
@@ -254,7 +255,7 @@
                                       <GridPane.margin>
                                           <Insets right="10.0" />
                                       </GridPane.margin></TextField>
-                                  <CheckComboBox fx:id="organsCombobox" onMouseClicked="#handleSearchDonorsMouse" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                  <CheckComboBox fx:id="organsCombobox" maxWidth="1.7976931348623157E308" onMouseClicked="#handleSearchDonorsMouse" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                   <TextField fx:id="ageField" maxWidth="1.7976931348623157E308" onKeyPressed="#handleSearchDonors" onKeyReleased="#handleSearchDonors" promptText="Age" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                       <GridPane.margin>
                                           <Insets right="10.0" />

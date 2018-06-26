@@ -362,7 +362,6 @@ public class ProfileDatabase {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
-
         switch (selectedType) {
             case "any":
                 resultProfiles = getProfiles(false);
@@ -449,8 +448,7 @@ public class ProfileDatabase {
                 }
             });
         }
-
-
+        System.out.println(resultProfiles.size());
         return resultProfiles;
     }
 
