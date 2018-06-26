@@ -38,7 +38,7 @@ public class UserLoginTest extends TestFxMethods {
      */
     @Override
     public void start(Stage stage) throws Exception{
-        guiMain = new GuiMain();
+        GuiMain guiMain = new GuiMain();
         guiMain.start(stage);
     }
 

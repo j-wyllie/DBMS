@@ -1,26 +1,17 @@
 package odms.controller;
 
-import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
-
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import com.sun.media.sound.InvalidDataException;
-import com.sun.media.sound.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -48,7 +39,7 @@ public class ProfileEditController extends CommonController {
     private TextField lastNamesField;
 
     @FXML
-    private TextField irdField;
+    private TextField irdNumberField;
 
     @FXML
     private DatePicker dobDatePicker;
@@ -78,16 +69,10 @@ public class ProfileEditController extends CommonController {
     private TextField bloodTypeField;
 
     @FXML
-    private TextField smokerField;
-
-    @FXML
     private TextField alcoholConsumptionField;
 
     @FXML
     private TextField bloodPressureField;
-
-    @FXML
-    private TextField diseaseField;
 
     @FXML
     private RadioButton isSmokerRadioButton;
@@ -130,105 +115,238 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean error = false;
-
-        if (saveChanges()) {
-            if (givenNamesField.getText().isEmpty() || lastNamesField.getText().isEmpty() ||
-                    irdField.getText().isEmpty() || dobDatePicker.getValue().equals(null)) {
-                guiPopup("Error. Required fields were left blank.");
-            } else {
+        if (AlertController.saveChanges()) {
+            try {
+                // History Generation
                 History action = new History("Profile" , currentProfile.getId() ,"update",
                         "previous "+currentProfile.getAttributesSummary(),-1,null);
 
-                currentProfile.setGivenNames(givenNamesField.getText());
+                // Required General Fields
+                saveDateOfBirth();
+                saveGivenNames();
+                saveIrdNumber();
+                saveLastNames();
 
-                currentProfile.setLastNames(lastNamesField.getText());
+                // Optional General Fields
+                saveAddress();
+                saveDateOfDeath();
+                saveEmail();
+                saveGender();
+                saveHeight();
+                savePhone();
+                savePreferredGender();
+                savePreferredName();
+                saveRegion();
+                saveWeight();
 
-                currentProfile.setPreferredName(preferredNameField.getText());
+                // Medical Fields
+                saveAlcoholConsumption();
+                saveBloodPressure();
+                saveBloodType();
+                saveIsSmoker();
 
-                currentProfile.setIrdNumber(Integer.valueOf(irdField.getText()));
+                ProfileDataIO.saveData(getCurrentDatabase());
+                showNotification("Profile", event);
+                closeEditWindow(event);
 
-                try {
-                    LocalDate dob = dobDatePicker.getValue();
-                    LocalDate dod = dodDatePicker.getValue();
-                    if (!(dob == null)) {
-                        if (!(dob.isAfter(LocalDate.now()))) {
-                            currentProfile.setDateOfBirth(dob);
-                        } else {
-                            throw new InvalidDataException();
-                        }
-                    } else {
-                        throw new InvalidDataException();
-                    }
-                    if (!(dod == null)) {
-                        if (!(dod.isBefore(currentProfile.getDateOfBirth())
-                            ||
-                            dod.isAfter(LocalDate.now()))) {
-                            currentProfile.setDateOfDeath(dod);
-                        } else {
-                            throw new InvalidDataException();
-                        }
-                    }
-                } catch (InvalidDataException e) {
-                    error = true;
-                }
-
-                try {
-                    if (!weightField.getText().isEmpty()) {
-                        currentProfile.setWeight(Double.valueOf(weightField.getText()));
-                    }
-                    if (!heightField.getText().isEmpty()) {
-                        currentProfile.setHeight(Double.valueOf(heightField.getText()));
-                    }
-                } catch(NumberFormatException e) {
-                    error = true;
-                }
-                currentProfile.setPhone(phoneField.getText());
-                currentProfile.setEmail(emailField.getText());
-                currentProfile.setAddress(addressField.getText());
-                currentProfile.setRegion(regionField.getText());
-                currentProfile.setBloodType(bloodTypeField.getText());
-
-                if (bloodPressureField.getText().contains("/")) {
-                    String systolic = bloodPressureField.getText().substring(
-                        0, bloodPressureField.getText().indexOf("/")).trim();
-                    currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
-                    String diastolic = bloodPressureField.getText().substring(
-                        bloodPressureField.getText().lastIndexOf('/') + 1).trim();
-                    currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
-                }
-
-                currentProfile.setSmoker(isSmokerRadioButton.isSelected());
-                currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
+                // History Changes
                 action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
-                if (diseaseField.getText().contains("/")) {
-                    String[] diseases = diseaseField.getText().split(", ");
-                    HashSet<String> diseasesSet = new HashSet<>(Arrays.asList(diseases));
-                    currentProfile.setChronicDiseases(diseasesSet);
-                }
-                if (comboGender.getValue() != null) {
-                    currentProfile.setGender(comboGender.getValue().toString());
-                }
-                if (comboGenderPref.getEditor().getText().equals("")) { // If there is no preferred gender just set it to the gender
-                    if (comboGender.getValue() != null) {
-                        currentProfile.setPreferredGender(comboGender.getValue().toString());
-                    }
-                } else {
-                    currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
-                }
-
-                if (error) {
-                    guiPopup("Error. Not all fields were updated.");
-                } else {
-                    ProfileDataIO.saveData(getCurrentDatabase());
-                    showNotification("Profile", event);
-                    closeEditWindow(event);
-                }
+            } catch (IllegalArgumentException e) {
+                AlertController.invalidEntry(
+                        e.getMessage() + "\n" +
+                        "Changes not saved."
+                );
             }
         }
+    }
+
+    /**
+     * Save Date of Birth field to profile.
+     * @throws IllegalArgumentException if the field is empty
+     */
+    private void saveDateOfBirth() throws IllegalArgumentException {
+        if (dobDatePicker.getEditor().getText().isEmpty()) {
+            throw new IllegalArgumentException("Date of Birth field cannot be blank");
+        }
+        currentProfile.setDateOfBirth(dobDatePicker.getValue());
+    }
+
+    /**
+     * Save Given Names field to profile.
+     * @throws IllegalArgumentException if the field is empty
+     */
+    private void saveGivenNames() throws IllegalArgumentException {
+        if (givenNamesField.getText().isEmpty()) {
+            throw new IllegalArgumentException("Given Names field cannot be blank");
+        }
+        currentProfile.setGivenNames(givenNamesField.getText());
+    }
+
+    /**
+     * Save IRD Number field to profile.
+     * @throws IllegalArgumentException if the field is empty
+     */
+    private void saveIrdNumber() throws IllegalArgumentException {
+        if (irdNumberField.getText().isEmpty()) {
+            throw new IllegalArgumentException("IRD Number field cannot be blank");
+        }
+        currentProfile.setIrdNumber(Integer.valueOf(irdNumberField.getText()));
+    }
+
+    /**
+     * Save Last Names field to profile.
+     * @throws IllegalArgumentException if the field is empty
+     */
+    private void saveLastNames() throws IllegalArgumentException {
+        if (lastNamesField.getText().isEmpty()) {
+            throw new IllegalArgumentException("Last Names field cannot be blank");
+        }
+        currentProfile.setLastNames(lastNamesField.getText());
+    }
+
+    /**
+     * Save Address field to profile.
+     */
+    private void saveAddress() {
+        if (!addressField.getText().isEmpty()) {
+            currentProfile.setAddress(addressField.getText());
+        }
+    }
+
+    /**
+     * Save Date of Death field to profile.
+     * @throws IllegalArgumentException if date is prior to birth date
+     */
+    private void saveDateOfDeath() throws IllegalArgumentException {
+        if (!dodDatePicker.getEditor().getText().isEmpty()) {
+            currentProfile.setDateOfDeath(dodDatePicker.getValue());
+        }
+    }
+
+    /**
+     * Save Email field to profile.
+     */
+    private void saveEmail() {
+        if (!emailField.getText().isEmpty()) {
+            currentProfile.setEmail(emailField.getText());
+        }
+    }
+
+    /**
+     * Save Gender field to profile.
+     */
+    private void saveGender() {
+        if (comboGender.getValue() != null) {
+            currentProfile.setGender(comboGender.getValue().toString());
+        }
+    }
+
+    /**
+     * Save Height field to profile.
+     */
+    private void saveHeight() {
+        if (!heightField.getText().isEmpty()) {
+            currentProfile.setHeight(Double.valueOf(heightField.getText()));
+        } else {
+            currentProfile.setHeight(0.0);
+        }
+    }
+
+    /**
+     * Save Phone field to profile.
+     */
+    private void savePhone() {
+        if (!phoneField.getText().isEmpty()) {
+            currentProfile.setPhone(phoneField.getText());
+        }
+    }
+
+    /**
+     * Save Preferred Gender value to profile.
+     */
+    private void savePreferredGender() {
+        // If there is no preferred gender just set it to the gender
+        if (comboGenderPref.getEditor().getText().equals("")) {
+            if (comboGender.getValue() != null) {
+                currentProfile.setPreferredGender(comboGender.getValue().toString());
+            }
+        } else {
+            currentProfile.setPreferredGender(comboGenderPref.getEditor().getText());
+        }
+    }
+
+    /**
+     * Save Preferred Name field to profile.
+     */
+    private void savePreferredName() {
+        currentProfile.setPreferredName(preferredNameField.getText());
+    }
+
+    /**
+     * Save Region field to profile.
+     */
+    private void saveRegion() {
+        if (!regionField.getText().isEmpty()) {
+            currentProfile.setRegion(regionField.getText());
+        }
+    }
+
+    /**
+     * Save Weight field to profile.
+     */
+    private void saveWeight() {
+        if (!weightField.getText().isEmpty()) {
+            currentProfile.setWeight(Double.valueOf(weightField.getText()));
+        } else {
+            currentProfile.setWeight(0.0);
+        }
+    }
+
+    /**
+     * Save Alcohol Consumption field to profile.
+     */
+    private void saveAlcoholConsumption() {
+        if (!alcoholConsumptionField.getText().isEmpty()) {
+            currentProfile.setAlcoholConsumption(alcoholConsumptionField.getText());
+        }
+    }
+
+    /**
+     * Save Blood Pressure field to profile.
+     * Must be in format of Systolic/Diastolic.
+     */
+    private void saveBloodPressure() {
+        if (!bloodPressureField.getText().isEmpty() && bloodPressureField.getText().contains("/")) {
+            String systolic = bloodPressureField.getText().substring(
+                    0, bloodPressureField.getText().indexOf("/")
+            ).trim();
+            currentProfile.setBloodPressureSystolic(Integer.valueOf(systolic));
+
+            String diastolic = bloodPressureField.getText().substring(
+                    bloodPressureField.getText().lastIndexOf('/') + 1
+            ).trim();
+            currentProfile.setBloodPressureDiastolic(Integer.valueOf(diastolic));
+        }
+    }
+
+    /**
+     * Save Blood Type field to profile.
+     */
+    private void saveBloodType() {
+        if (!bloodTypeField.getText().isEmpty()) {
+            currentProfile.setBloodType(bloodTypeField.getText());
+        }
+    }
+
+    /**
+     * Save Smoker Status to profile.
+     */
+    private void saveIsSmoker() {
+        // TODO this should be a checkbox and not a radio button.
+        currentProfile.setIsSmoker(isSmokerRadioButton.isSelected());
     }
 
     /**
@@ -272,6 +390,26 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     public void initialize() {
+        // Restrict entry on these fields to numbers only.
+        // Regex: \\d* matches only with digits 0 or more times.
+        // TODO investigate abstracting copy paste listeners to common function.
+        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                heightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                weightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
 
         if (currentProfile != null) {
             try {
@@ -282,7 +420,6 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
-
                 if (currentProfile.getGivenNames() != null) {
                     givenNamesField.setText(currentProfile.getGivenNames());
                 }
@@ -293,7 +430,7 @@ public class ProfileEditController extends CommonController {
                     preferredNameField.setText(currentProfile.getPreferredName());
                 }
                 if (currentProfile.getIrdNumber() != null) {
-                    irdField.setText(currentProfile.getIrdNumber().toString());
+                    irdNumberField.setText(currentProfile.getIrdNumber().toString());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
                     dobDatePicker.setValue(currentProfile.getDateOfBirth());
@@ -301,11 +438,10 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getDateOfDeath() != null) {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
-                if (currentProfile.getHeight() != null){
+                if (currentProfile.getHeight() != 0.0){
                     heightField.setText(String.valueOf(currentProfile.getHeight()));
-
                 }
-                if (currentProfile.getWeight() != null) {
+                if (currentProfile.getWeight() != 0.0) {
                     weightField.setText(String.valueOf(currentProfile.getWeight()));
                 }
                 if (currentProfile.getPhone() != null) {
@@ -314,17 +450,19 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getEmail() != null) {
                     emailField.setText(currentProfile.getEmail());
                 }
-
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
                 }
                 if (currentProfile.getRegion() != null) {
                     regionField.setText(currentProfile.getRegion());
                 }
+                if (currentProfile.getBloodPressure() != null) {
+                    bloodPressureField.setText(currentProfile.getBloodPressure());
+                }
                 if (currentProfile.getBloodType() != null) {
                     bloodTypeField.setText(currentProfile.getBloodType());
                 }
-                if (currentProfile.getSmoker() == null || !currentProfile.getSmoker()) {
+                if (currentProfile.getIsSmoker() == null || !currentProfile.getIsSmoker()) {
                     isSmokerRadioButton.setSelected(false);
                 } else {
                     isSmokerRadioButton.setSelected(true);

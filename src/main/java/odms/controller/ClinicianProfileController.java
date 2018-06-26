@@ -120,7 +120,7 @@ public class ClinicianProfileController extends CommonController {
     private Tab consoleTab;
 
     @FXML
-    ViewUsersController viewUsersController;
+    private ViewUsersController viewUsersController;
 
     @FXML
     private TableView transplantTable;
@@ -243,14 +243,14 @@ public class ClinicianProfileController extends CommonController {
     }
 
     @FXML
-    private void handleAgeRangeCheckboxChecked(ActionEvent event) {
+    private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
-            ageRangeField.setVisible(true);
-            ageField.setPromptText("Age value");
-            ageRangeField.setPromptText("Age value");
+            ageRangeField.setDisable(false);
+            ageField.setPromptText("Lower Age");
+            ageRangeField.setPromptText("Upper Age");
             ageRangeField.clear();
         } else {
-            ageRangeField.setVisible(false);
+            ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
         updateLabels();
@@ -336,10 +336,9 @@ public class ClinicianProfileController extends CommonController {
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
     private void updateSearchTable() {
-
         String selectedGender = null;
         String selectedType = null;
-        ObservableList selectedOrgans;
+        ObservableList<OrganEnum> selectedOrgans;
 
         selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
 
@@ -372,14 +371,19 @@ public class ClinicianProfileController extends CommonController {
             ageRangeSearchInt = -999;
         }
 
+        searchTable.getItems().clear();
         donorObservableList.clear();
-        profileSearchResults.clear();
-        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(searchString, ageSearchInt, ageRangeSearchInt, regionSearchString, selectedGender, selectedType, new HashSet<OrganEnum>(selectedOrgans)));
+        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
+                searchString,
+                ageSearchInt,
+                ageRangeSearchInt,
+                regionSearchString,
+                selectedGender,
+                selectedType,
+                new HashSet<>(selectedOrgans)
+        ));
         updateTable(false, false);
-
     }
-
-
 
     /**
      * Clears the searchTable and updates with objects from the profileSearchResults arrayList. Results displayed
@@ -434,10 +438,20 @@ public class ClinicianProfileController extends CommonController {
     private void setClinicianDetails() {
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
-        givenNamesLabel.setText(givenNamesLabel.getText() + currentUser.getName());
-        staffIdLabel.setText(staffIdLabel.getText() + currentUser.getStaffID());
-        addressLabel.setText(addressLabel.getText() + currentUser.getWorkAddress());
-        regionLabel.setText(regionLabel.getText() + currentUser.getRegion());
+        givenNamesLabel.setText(
+                givenNamesLabel.getText() + (
+                        currentUser.getName() != null ? currentUser.getName() : ""));
+        staffIdLabel.setText(
+                staffIdLabel.getText() + (
+                        currentUser.getStaffID() != null ? currentUser.getStaffID() : ""));
+        addressLabel.setText(
+                addressLabel.getText() +
+                        (currentUser.getWorkAddress() != null ? currentUser.getWorkAddress() : "")
+        );
+        regionLabel.setText(
+                regionLabel.getText() +
+                        (currentUser.getRegion() != null ? currentUser.getRegion() : "")
+        );
     }
 
     /**
@@ -521,7 +535,7 @@ public class ClinicianProfileController extends CommonController {
                     } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
                         e.consume();
                     }
-                }else{
+                } else {
                     e.consume();
                 }
             }
@@ -653,8 +667,6 @@ public class ClinicianProfileController extends CommonController {
             commandGUI = new CommandGUI(displayTextArea);
             System.setIn(commandGUI.getIn());
             System.setOut(commandGUI.getOut());
-            //System.setErr(commandGUI.getOut());
-
 
             // Start the command line in an alternate thread
             CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
@@ -667,7 +679,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     public void initialize() {
         if (currentUser != null) {
-            ageRangeField.setVisible(false);
+            ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
 

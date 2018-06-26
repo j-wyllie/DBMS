@@ -39,8 +39,14 @@ public enum Commands {
 
     // Organ Commands
     ORGANADD,
+    RECEIVERADD,
     ORGANREMOVE,
-    ORGANDONATE;
+    RECEIVEREMOVE,
+    ORGANDONATE,
+
+    // Sql Commands
+    SQLREADONLY;
+
 
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
@@ -52,6 +58,8 @@ public enum Commands {
             new StringsCompleter("delete-profile"),
 
             new StringsCompleter("help"),
+            new StringsCompleter("print all"),
+            new StringsCompleter("print donors"),
 
             new StringsCompleter("export"),
             new StringsCompleter("import"),
@@ -59,7 +67,9 @@ public enum Commands {
             new StringsCompleter("print all profiles"),
             new StringsCompleter("print donors"),
             new StringsCompleter("print all users"),
-            new StringsCompleter("print clinicians")
+            new StringsCompleter("print clinicians"),
+
+            new StringsCompleter("db-read")
         );
     }
 }

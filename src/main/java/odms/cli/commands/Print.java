@@ -192,11 +192,11 @@ public class Print extends CommandUtils {
             System.out.println("Gender: " + profile.getGender());
         }
 
-        if (profile.getHeight() != null && profile.getHeight() != 0.0) {
+        if (profile.getHeight() != 0.0) {
             System.out.println("Height: " + profile.getHeight() + "cm");
         }
 
-        if (profile.getWeight() != null && profile.getWeight() != 0.0) {
+        if (profile.getWeight() != 0.0) {
             System.out.println("Weight: " + profile.getWeight());
         }
 
@@ -241,6 +241,11 @@ public class Print extends CommandUtils {
         if (user.getName() != null) {
             System.out.println("Name: " + user.getName());
         }
+
+        if (user.getUsername() != null) {
+            System.out.println("Username: " + user.getUsername());
+        }
+
 
         if (user.getRegion() != null) {
             System.out.println("Region: " + user.getRegion());

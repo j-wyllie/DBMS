@@ -1,21 +1,16 @@
 package GUI;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.concurrent.TimeoutException;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import odms.controller.GuiMain;
-import odms.controller.LoginController;
-import odms.data.ProfileDataIO;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeoutException;
 
 public class LoginCreateAccountGUITest extends TestFxMethods {
 
@@ -64,7 +59,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobDatePicker").write("14/11/1997");
-        clickOn("#irdField").write("88888888");
+        clickOn("#irdNumberField").write("88888888");
         clickOn("#createAccountButton");
 
         Scene newScene= getTopScene();
@@ -80,6 +75,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
      * creates a user with invalid fields. Checks that the correct popups
      * are displayed.
      */
+    @Ignore
     @Test
     public void createInvalidUser(){
 
@@ -89,7 +85,19 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 
         javafx.stage.Stage actualAlertDialog = getAlertDialogue();
         DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-        assertEquals(dialogPane.getContentText(), "Please enter your details correctly.");
+        assertEquals("Please enter Given Name(s)", dialogPane.getContentText());
+        closeDialog(dialogPane);
+
+        //tests invalid date format
+        clickOn("#givenNamesField").write("Jack Travis");
+        clickOn("#surnamesField").write("Hay");
+        clickOn("#dobField").write("14.11.1997");
+        clickOn("#irdNumberField").write("100132122");
+        clickOn("#createAccountButton");
+
+        actualAlertDialog = getAlertDialogue();
+        dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
+        assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
         closeDialog(dialogPane);
 
         //tests duplicate IRD number.

@@ -22,7 +22,6 @@ public class LoginController extends CommonController {
 
     private ProfileDatabase currentDatabase = getCurrentDatabase();
     private UserDatabase userDatabase = getUserDatabase();
-    private Profile currentProfile = null;
     private static User currentUser;
 
     /**
@@ -93,7 +92,7 @@ public class LoginController extends CommonController {
                         stage.show();
                         closeCurrentStage();
                     } else {
-                        currentProfile = currentDatabase.getProfile(userId);
+                        Profile currentProfile = currentDatabase.getProfile(userId);
 
                         if (currentProfile != null) {
                             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -127,7 +126,6 @@ public class LoginController extends CommonController {
 
     private void closeCurrentStage() {
         Stage currentStage = (Stage) usernameField.getScene().getWindow();
-        // do what you have to do
         currentStage.close();
     }
 
@@ -151,5 +149,4 @@ public class LoginController extends CommonController {
     }
 
     public static User getCurrentUser() { return currentUser; }
-    public void setCurrentDonor(Integer id) {currentProfile = currentDatabase.getProfile(id);}
 }
