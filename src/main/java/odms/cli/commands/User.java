@@ -1,10 +1,10 @@
 package odms.cli.commands;
 
 import odms.cli.CommandUtils;
-import odms.controller.HistoryController;
-import odms.data.UserDatabase;
-import odms.history.History;
-import odms.user.UserType;
+import odms.controller.History.HistoryController;
+import odms.Model.Data.UserDatabase;
+import odms.Model.history.History;
+import odms.Model.user.UserType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,13 +30,13 @@ public class User extends CommandUtils {
      * @param rawInput raw command input
      * @return staffID the staff id of created clinician
      */
-    public static odms.user.User createClinician(UserDatabase currentDatabase, String rawInput) {
+    public static odms.Model.user.User createClinician(UserDatabase currentDatabase, String rawInput) {
 
         try {
             String[] attrList = rawInput.substring(16).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             UserType userType = UserType.CLINICIAN;
-            odms.user.User newUser = new odms.user.User(userType, attrArray);
+            odms.Model.user.User newUser = new odms.Model.user.User(userType, attrArray);
             currentDatabase.addUser(newUser);
             addClinicianHistory(newUser.getStaffID());
             System.out.println("Clinician created.");
@@ -63,7 +63,7 @@ public class User extends CommandUtils {
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
-        ArrayList<odms.user.User> userList;
+        ArrayList<odms.Model.user.User> userList;
 
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
@@ -91,11 +91,11 @@ public class User extends CommandUtils {
      * @param userList list of users
      * @param currentDatabase Database reference
      */
-    private static void deleteUsers(ArrayList<odms.user.User> userList,
+    private static void deleteUsers(ArrayList<odms.Model.user.User> userList,
                                     UserDatabase currentDatabase) {
         boolean result;
         if (userList.size() > 0) {
-            for (odms.user.User user : userList) {
+            for (odms.Model.user.User user : userList) {
                 result = currentDatabase.deleteUser(user.getStaffID());
                 if (result) {
                     HistoryController.deletedUsers.add(user);
@@ -114,10 +114,10 @@ public class User extends CommandUtils {
      * @param userList List of users
      * @param attrList Attributes to be updated and their values
      */
-    private static void updateUserAttr(ArrayList<odms.user.User> userList, String[] attrList) {
+    private static void updateUserAttr(ArrayList<odms.Model.user.User> userList, String[] attrList) {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            for (odms.user.User user : userList) {
+            for (odms.Model.user.User user : userList) {
                 History action = new History("User" , user.getStaffID() ,"update",user.getAttributesSummary(),-1,null);
                 user.setExtraAttributes(attrArray);
                 action.setHistoryData(action.getHistoryData()+user.getAttributesSummary());
@@ -141,7 +141,7 @@ public class User extends CommandUtils {
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
-        ArrayList<odms.user.User> userList;
+        ArrayList<odms.Model.user.User> userList;
 
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
                 .trim()
@@ -211,7 +211,7 @@ public class User extends CommandUtils {
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
-        ArrayList<odms.user.User> userList;
+        ArrayList<odms.Model.user.User> userList;
 
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));

@@ -7,14 +7,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import odms.dao.DAOFactory;
-import odms.dao.ReadOnlyDAO;
+import odms.controller.dao.DAOFactory;
+import odms.controller.dao.ReadOnlyDAO;
 
-import odms.controller.HistoryController;
-import odms.data.ProfileDatabase;
-import odms.enums.OrganEnum;
-import odms.profile.Profile;
-import odms.user.User;
+import odms.Model.Data.ProfileDatabase;
+import odms.Model.enums.OrganEnum;
+import odms.Model.profile.Profile;
 
 public class CommandUtils {
 

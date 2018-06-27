@@ -14,7 +14,7 @@ import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 
-class CommonController {
+public class CommonController {
 
     private static boolean isEdited = false;
 

@@ -3,12 +3,12 @@ package odms.cli.commands;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import odms.cli.CommandUtils;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
-import odms.enums.OrganEnum;
-import odms.profile.Profile;
-import odms.user.User;
-import odms.user.UserType;
+import odms.Model.Data.ProfileDatabase;
+import odms.Model.Data.UserDatabase;
+import odms.Model.enums.OrganEnum;
+import odms.Model.profile.Profile;
+import odms.Model.user.User;
+import odms.Model.user.UserType;
 
 public class Print extends CommandUtils {
 

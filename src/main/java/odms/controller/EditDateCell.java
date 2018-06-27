@@ -4,14 +4,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import odms.profile.Condition;
+import odms.Model.profile.Condition;
 
-class EditDateCell extends TableCell<Condition, LocalDate> {
+public class EditDateCell extends TableCell<Condition, LocalDate> {
 
     private TextField textField;
 

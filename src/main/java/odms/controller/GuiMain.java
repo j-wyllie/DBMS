@@ -6,11 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.App;
-import odms.data.ProfileDatabase;
-import odms.data.UserDataIO;
-import odms.data.UserDatabase;
-import odms.user.User;
-import odms.user.UserType;
+import odms.Model.Data.ProfileDatabase;
+import odms.controller.data.UserDataIO;
+import odms.Model.Data.UserDatabase;
+import odms.Model.user.User;
+import odms.Model.user.UserType;
 
 import java.io.IOException;
 

@@ -2,14 +2,11 @@ package odms.controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import odms.profile.Condition;
+import odms.Model.profile.Condition;
 
-class EditingConditionsCell extends TableCell<Condition, String> {
+public class EditingConditionsCell extends TableCell<Condition, String> {
 
     private TextField textField;
 

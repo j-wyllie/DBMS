@@ -1,8 +1,6 @@
 package GUI;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
 
@@ -11,10 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 import javafx.scene.input.KeyCode;
-import odms.controller.GuiMain;
-import odms.profile.Condition;
+import odms.Model.profile.Condition;
 
-import odms.profile.Profile;
+import odms.Model.profile.Profile;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

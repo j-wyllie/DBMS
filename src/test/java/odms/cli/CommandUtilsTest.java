@@ -1,10 +1,10 @@
 package odms.cli;
 
-import odms.data.IrdNumberConflictException;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
-import odms.profile.Profile;
-import odms.user.User;
+import odms.controller.data.IrdNumberConflictException;
+import odms.Model.Data.ProfileDatabase;
+import odms.Model.Data.UserDatabase;
+import odms.Model.profile.Profile;
+import odms.Model.user.User;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.After;
 import org.junit.Before;

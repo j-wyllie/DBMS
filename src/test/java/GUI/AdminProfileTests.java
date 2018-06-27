@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
-import odms.profile.Profile;
+import odms.Model.profile.Profile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

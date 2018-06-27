@@ -1,18 +1,11 @@
 package GUI;
 
-import java.util.concurrent.TimeoutException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import odms.medications.Drug;
-import odms.profile.Profile;
+import odms.Model.medications.Drug;
+import odms.Model.profile.Profile;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeoutException;
 
 @Ignore
 public class DonorProfileControllerTest extends TestFxMethods {

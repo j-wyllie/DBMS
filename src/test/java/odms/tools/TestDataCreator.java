@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
-import odms.data.IrdNumberConflictException;
-import odms.data.ProfileDatabase;
-import odms.profile.Condition;
-import odms.enums.OrganEnum;
-import odms.profile.OrganConflictException;
-import odms.profile.Profile;
+import odms.controller.data.IrdNumberConflictException;
+import odms.Model.Data.ProfileDatabase;
+import odms.Model.profile.Condition;
+import odms.Model.enums.OrganEnum;
+import odms.Model.profile.OrganConflictException;
+import odms.Model.profile.Profile;
 
 public class TestDataCreator {
     private ProfileDatabase database;

@@ -1,10 +1,10 @@
 package odms.cli.commands;
 
 import odms.cli.CommandUtils;
-import odms.controller.HistoryController;
-import odms.data.IrdNumberConflictException;
-import odms.data.ProfileDatabase;
-import odms.history.History;
+import odms.controller.History.HistoryController;
+import odms.controller.data.IrdNumberConflictException;
+import odms.Model.Data.ProfileDatabase;
+import odms.Model.history.History;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class Profile extends CommandUtils {
         try {
             String[] attrList = rawInput.substring(15).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            odms.profile.Profile newProfile = new odms.profile.Profile(attrArray);
+            odms.Model.profile.Profile newProfile = new odms.Model.profile.Profile(attrArray);
             currentDatabase.addProfile(newProfile);
             addProfileHistory(newProfile.getId());
             System.out.println("Profile created.");
@@ -42,7 +42,7 @@ public class Profile extends CommandUtils {
 
         } catch (IrdNumberConflictException e) {
             Integer errorIrdNumber = e.getIrdNumber();
-            odms.profile.Profile errorProfile = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
+            odms.Model.profile.Profile errorProfile = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
 
             System.out.println("Error: IRD Number " + errorIrdNumber +
                 " already in use by profile " +
@@ -66,15 +66,15 @@ public class Profile extends CommandUtils {
                 expression.lastIndexOf("\""));
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
                 deleteProfiles(profileList, currentDatabase);
@@ -91,11 +91,11 @@ public class Profile extends CommandUtils {
      * @param profileList list of profiles
      * @param currentDatabase Database reference
      */
-    private static void deleteProfiles(ArrayList<odms.profile.Profile> profileList,
+    private static void deleteProfiles(ArrayList<odms.Model.profile.Profile> profileList,
         ProfileDatabase currentDatabase) {
         boolean result;
         if (profileList.size() > 0) {
-            for (odms.profile.Profile profile : profileList) {
+            for (odms.Model.profile.Profile profile : profileList) {
                 result = currentDatabase.deleteProfile(profile.getId());
                 if (result) {
                     HistoryController.deletedProfiles.add(profile);
@@ -114,10 +114,10 @@ public class Profile extends CommandUtils {
      * @param profileList List of profiles
      * @param attrList Attributes to be updated and their values
      */
-    private static void updateProfileAttr(ArrayList<odms.profile.Profile> profileList, String[] attrList) {
+    private static void updateProfileAttr(ArrayList<odms.Model.profile.Profile> profileList, String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            for (odms.profile.Profile profile : profileList) {
+            for (odms.Model.profile.Profile profile : profileList) {
                 History action = new History("Profile" , profile.getId() ,"update",profile.getAttributesSummary(),-1,null);
                 profile.setExtraAttributes(attrArray);
                 action.setHistoryData(action.getHistoryData()+profile.getAttributesSummary());
@@ -147,15 +147,15 @@ public class Profile extends CommandUtils {
                 expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 updateProfileAttr(profileList, attrList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 updateProfileAttr(profileList, attrList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
                 updateProfileAttr(profileList, attrList);
@@ -205,7 +205,7 @@ public class Profile extends CommandUtils {
 
         if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 Print.printProfileList(profileList);
             } else {
@@ -213,7 +213,7 @@ public class Profile extends CommandUtils {
             }
         } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 Print.printProfileList(profileList);
             } else {
@@ -221,7 +221,7 @@ public class Profile extends CommandUtils {
             }
         } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                ArrayList<odms.profile.Profile> profileList = currentDatabase
+                ArrayList<odms.Model.profile.Profile> profileList = currentDatabase
                     .searchIRDNumber(Integer.valueOf(attr));
 
                 Print.printProfileList(profileList);
@@ -243,7 +243,7 @@ public class Profile extends CommandUtils {
     public static void viewDonationsBySearch(ProfileDatabase currentDatabase, String expression) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.lastIndexOf("\""));
-        ArrayList<odms.profile.Profile> profileList = null;
+        ArrayList<odms.Model.profile.Profile> profileList = null;
 
         if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
 

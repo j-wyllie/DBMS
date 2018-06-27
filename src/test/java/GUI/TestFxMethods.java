@@ -21,7 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import odms.controller.GuiMain;
-import odms.data.ProfileDataIO;
+import odms.controller.data.ProfileDataIO;
 import odms.tools.TestDataCreator;
 import org.junit.After;
 import org.testfx.framework.junit.ApplicationTest;
