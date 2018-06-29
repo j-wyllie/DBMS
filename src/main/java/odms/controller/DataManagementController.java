@@ -45,30 +45,6 @@ public class DataManagementController {
     }
 
     /**
-     * Opens a file chooser and imports the selected files.
-     * @param actionEvent
-     */
-    public void handleImportExistingDataClicked(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV file(*.csv)",
-                "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-        Stage stage = (Stage) dataManagementAp.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
-                if (AlertController.unsavedChangesImport()) {
-                    importAndCloseWindows(stage, file);
-                }
-            } else {
-                importAndCloseWindows(stage, file);
-            }
-        }
-    }
-
-    /**
      * Imports new json file.
      * Closes all open windows and re-initializes the admin view.
      * @param stage Stage to be close
