@@ -14,7 +14,7 @@ public class MySqlUserDAO implements UserDAO {
      * Gets all users from the database.
      */
     @Override
-    public void getAllUsers() {
+    public void getAll() {
         String query = "select * from users;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
 
@@ -37,7 +37,7 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to add.
      */
     @Override
-    public void addUser(User user) {
+    public void add(User user) {
         String query = "insert into user (UserId, Username, Password, Name, UserType, Address,"
                 + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -70,7 +70,7 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to remove.
      */
     @Override
-    public void removeUser(User user) {
+    public void remove(User user) {
         String query = "delete from user where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -93,7 +93,7 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to update.
      */
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         String query = "update user set Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where"
                 + "UserId = ?;";

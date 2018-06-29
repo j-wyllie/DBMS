@@ -7,24 +7,24 @@ public interface UserDAO {
     /**
      * Gets all users from the database.
      */
-    void getAllUsers();
+    void getAll();
 
     /**
      * Adds a new user to the database.
      * @param user to add.
      */
-    void addUser(User user);
+    void add(User user);
 
     /**
      * Removes a user from the database.
      * @param user to remove.
      */
-    void removeUser(User user);
+    void remove(User user);
 
     /**
      * Updates a users information in the database.
      * @param user to update.
      */
-    void updateUser(User user);
+    void update(User user);
 
 }
