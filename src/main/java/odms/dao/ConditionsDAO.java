@@ -7,8 +7,10 @@ public interface ConditionsDAO {
 
     /**
      * Get all conditions for the profile.
+     * @param profile to get the conditions for.
+     * @param current conditions or false for past conditions.
      */
-    void getAll();
+    void getAll(Profile profile, Boolean current);
 
     /**
      * Add a new condition to a profile.

@@ -9,6 +9,103 @@ import odms.profile.Profile;
 public class MySqlOrganDAO implements OrganDAO {
 
     /**
+     * Gets all organs that a profile has donated in the past.
+     * @param profile to get the organs for.
+     */
+    @Override
+    public void getDonations(Profile profile) {
+        String query = "select Organ from organs where ProfileId = ? and Donated = ?";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile.getId());
+            stmt.setBoolean(2, true);
+
+            stmt.executeUpdate();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Gets all organs that a profile has registered to donate.
+     * @param profile to get the organs for.
+     */
+    @Override
+    public void getDonating(Profile profile) {
+        String query = "select Organ from organs where ProfileId = ? and Donating = ?";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile.getId());
+            stmt.setBoolean(2, true);
+
+            stmt.executeUpdate();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Gets all organs that a profile requires.
+     * @param profile to get the organs for.
+     */
+    @Override
+    public void getRequired(Profile profile) {
+        String query = "select Organ from organs where ProfileId = ? and Required = ?";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile.getId());
+            stmt.setBoolean(2, true);
+
+            stmt.executeUpdate();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Gets all organs that a profile has received in the past.
+     * @param profile to get the organs for.
+     */
+    @Override
+    public void getReceived(Profile profile) {
+        String query = "select Organ from organs where ProfileId = ? and Received = ?";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile.getId());
+            stmt.setBoolean(2, true);
+
+            stmt.executeUpdate();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Adds an organ to a profiles past donations.
      * @param profile to add the past donation to.
      * @param organ donated.
@@ -100,7 +197,27 @@ public class MySqlOrganDAO implements OrganDAO {
 
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
+        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received) "
+                + "values (?, ?, ?, ?, ?, ?);";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
 
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile.getId());
+            stmt.setString(2, organ.getNamePlain());
+            stmt.setBoolean(3, false);
+            stmt.setBoolean(4, false);
+            stmt.setBoolean(5, false);
+            stmt.setBoolean(6, true);
+
+            stmt.executeUpdate();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

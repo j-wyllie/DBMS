@@ -6,6 +6,30 @@ import odms.profile.Profile;
 public interface OrganDAO {
 
     /**
+     * Gets all organs that a profile has donated in the past.
+     * @param profile to get the organs for.
+     */
+    void getDonations(Profile profile);
+
+    /**
+     * Gets all organs that a profile has registered to donate.
+     * @param profile to get the organs for.
+     */
+    void getDonating(Profile profile);
+
+    /**
+     * Gets all organs that a profile requires.
+     * @param profile to get the organs for.
+     */
+    void getRequired(Profile profile);
+
+    /**
+     * Gets all organs that a profile has received in the past.
+     * @param profile to get the organs for.
+     */
+    void getReceived(Profile profile);
+
+    /**
      * Adds an organ to a profiles past donations.
      * @param profile to add the past donation to.
      * @param organ donated.
