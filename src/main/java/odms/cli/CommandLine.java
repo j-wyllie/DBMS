@@ -180,7 +180,7 @@ public class CommandLine implements Runnable{
                 // Import a file of profiles.
                 if (input.size() == 2) {
                     String filepath = input.get(1);
-                    currentDatabase = ProfileDataIO.loadData(filepath);
+                    currentDatabase = ProfileDataIO.loadDataFromJSON(filepath);
                 } else {
                     System.out.println("Error: Invalid arguments. Expected: 1, "
                             + "Found: " + (input.size() - 1));

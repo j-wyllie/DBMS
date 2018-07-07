@@ -39,7 +39,7 @@ public class ProfileDataIOTest {
         ProfileDatabase loadedDb;
         ProfileDataIO.saveData(profileDb, "CommandUtilsTest.json");
 
-        loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
+        loadedDb = ProfileDataIO.loadDataFromJSON("CommandUtilsTest.json");
 
         assertEquals(
             profileDb.getProfile(0).getGivenNames(),

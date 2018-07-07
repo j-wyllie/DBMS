@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import odms.data.InvalidFileException;
 import odms.data.ProfileDataIO;
 import odms.user.User;
 
@@ -33,15 +34,7 @@ public class DataManagementController {
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
-        if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
-                if (AlertController.unsavedChangesImport()) {
-                    importAndCloseWindows(stage, file);
-                }
-            } else {
-                importAndCloseWindows(stage, file);
-            }
-        }
+        handleFile(stage, file);
     }
 
     /**
@@ -57,13 +50,25 @@ public class DataManagementController {
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
+        handleFile(stage, file);
+    }
+
+    private void handleFile(Stage stage, File file) {
         if (file != null) { // Check that the user actually selected a file
             if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
                 if (AlertController.unsavedChangesImport()) {
-                    importAndCloseWindows(stage, file);
+                    try {
+                        importAndCloseWindows(stage, file);
+                    } catch (InvalidFileException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
-                importAndCloseWindows(stage, file);
+                try {
+                    importAndCloseWindows(stage, file);
+                } catch (InvalidFileException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -74,8 +79,13 @@ public class DataManagementController {
      * @param stage Stage to be close
      * @param file file to be set as database
      */
-    private void importAndCloseWindows(Stage stage, File file) {
-        GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
+    private void importAndCloseWindows(Stage stage, File file) throws InvalidFileException {
+
+        if (file.getName().toLowerCase().contains(".json")) {
+            GuiMain.setCurrentDatabase(ProfileDataIO.loadDataFromJSON(file.getPath()));
+        } else if (file.getName().toLowerCase().contains(".csv")) {
+            GuiMain.setCurrentDatabase(ProfileDataIO.loadDataFromCSV(file));
+        }
 
         ClinicianProfileController.closeAllOpenProfiles();
         stage.close();
