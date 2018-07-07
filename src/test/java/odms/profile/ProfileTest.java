@@ -31,7 +31,7 @@ public class ProfileTest {
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
     }
 
     /**
@@ -47,7 +47,7 @@ public class ProfileTest {
 
     @Test
     public void testCreateBasicUserRawData() {
-        Profile testProfile = new Profile("John", "Smithy", "17-01-1998", 123456789);
+        Profile testProfile = new Profile("John", "Smithy", "17-01-1998", "123456789");
 
         assertNotNull(testProfile);
     }
@@ -74,11 +74,11 @@ public class ProfileTest {
     }
 
     /**
-     * Test to create an invalid user with no IRD no
+     * Test to create an invalid user with no NHI no
      * @throws IllegalArgumentException bad arguments
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateUserNoIRD() throws IllegalArgumentException {
+    public void testCreateUserNoNHI() throws IllegalArgumentException {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("\"given-names=John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
@@ -96,7 +96,7 @@ public class ProfileTest {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         new Profile(profileAttr);
     }
@@ -110,7 +110,7 @@ public class ProfileTest {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         new Profile(profileAttr);
     }
@@ -124,7 +124,7 @@ public class ProfileTest {
         ArrayList<String> profileAttr = new ArrayList<>();
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("dob=\"17-01-1998\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         new Profile(profileAttr);
     }
@@ -139,7 +139,7 @@ public class ProfileTest {
         profileAttr.add("given-na=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         new Profile(profileAttr);
     }
@@ -417,7 +417,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"01-01-2000\"");
         profileAttr.add("dod=\"01-01-2050\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         Profile testProfile = new Profile(profileAttr);
         testProfile.setId(9999);
@@ -871,7 +871,7 @@ public class ProfileTest {
         profileAttr.add("given-names=\"John\"");
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"01-01-2020\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         try {
             new Profile(profileAttr);
@@ -892,7 +892,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"01-01-2000\"");
         profileAttr.add("dod=\"01-01-1950\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         try {
             new Profile(profileAttr);
@@ -928,7 +928,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"01-01-2000\"");
         profileAttr.add("dod=\"01-01-2050\"");
-        profileAttr.add("ird=\"123456879\"");
+        profileAttr.add("nhi=\"123456879\"");
 
         Profile testProfile = null;
         SimpleStringProperty expected = new SimpleStringProperty();

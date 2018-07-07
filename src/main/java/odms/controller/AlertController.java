@@ -82,12 +82,12 @@ public class AlertController {
     }
 
     /**
-     * Creates a popup when the IRD number entered was invalid
+     * Creates a popup when the NHI number entered was invalid
      */
-    static void invalidIrd() {
+    static void invalidNhi() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
-            "Please enter a valid IRD number.",
+            "Please enter a valid NHI number.",
             ButtonType.CLOSE
         );
 

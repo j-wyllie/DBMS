@@ -94,7 +94,7 @@ public class Print extends CommandUtils {
      */
     public static void printProfileList(ArrayList<Profile> profileList) {
         for (Profile profile : profileList) {
-            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("NHI: " + profile.getNhi());
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Date/Time Created: " + profile.getTimeOfCreation());
@@ -124,7 +124,7 @@ public class Print extends CommandUtils {
      */
     public static void printProfileDonations(ArrayList<Profile> profileList) {
         for (Profile profile : profileList) {
-            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("NHI: " + profile.getNhi());
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Organs Donated:" + profile.getOrgansDonated());
@@ -174,7 +174,7 @@ public class Print extends CommandUtils {
      * @param profile to be displayed
      */
     private static void printProfileAttributes(Profile profile) {
-        System.out.println("IRD: " + profile.getIrdNumber());
+        System.out.println("NHI: " + profile.getNhi());
         System.out.println("ODMS ID: " + profile.getId());
         System.out.println("Given Names: " + profile.getGivenNames());
         System.out.println("Last Names: " + profile.getLastNames());

@@ -32,31 +32,31 @@ public class ProfileDatabase {
      * Determine unique ID for profile and add the profile to the database
      *
      * @param profile new profile object
-     * @throws IrdNumberConflictException IRD number already in use by another profile
+     * @throws NHIConflictException NHI number already in use by another profile
      */
-    public void addProfile(Profile profile) throws IrdNumberConflictException {
+    public void addProfile(Profile profile) throws NHIConflictException {
         lastID += 1;
         profile.setId(lastID);
 
-        if (checkIRDNumberExists(profile.getIrdNumber())) {
-            throw new IrdNumberConflictException("IRD number already in use", profile.getIrdNumber());
+        if (checkNHIExists(profile.getNhi())) {
+            throw new NHIConflictException("NHI already in use", profile.getNhi());
         }
 
         profileDb.put(lastID, profile);
     }
 
     /**
-     * Check if an IRD number exists in the Profile Database
+     * Check if an NHI number exists in the Profile Database
      *
-     * @param irdNumber the number to be checked
+     * @param nhiNumber the number to be checked
      * @return boolean of whether or not it exists already.
      */
-    private boolean checkIRDNumberExists(Integer irdNumber) {
-        Set<Integer> irdNumbers = new HashSet<>();
+    private boolean checkNHIExists(String nhiNumber) {
+        Set<String> nhiNumbers = new HashSet<>();
 
-        profileDb.forEach((id, profile) -> irdNumbers.add(profile.getIrdNumber()));
+        profileDb.forEach((id, profile) -> nhiNumbers.add(profile.getNhi()));
 
-        return irdNumbers.contains(irdNumber);
+        return nhiNumbers.contains(nhiNumber);
     }
 
     /**
@@ -147,16 +147,16 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for profiles via their IRD number
+     * Search for profiles via their NHI number
      *
-     * @param searchTerm integer of the IRD number
+     * @param searchTerm integer of the NHI number
      * @return Array of profiles found that match
      */
-    public ArrayList<Profile> searchIRDNumber(Integer searchTerm) {
+    public ArrayList<Profile> searchNHI(String searchTerm) {
         ArrayList<Profile> results = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
-            if (profile.getIrdNumber().equals(searchTerm)) {
+            if (profile.getNhi().equals(searchTerm)) {
                 results.add(profile);
             }
         });

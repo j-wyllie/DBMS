@@ -5,9 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,31 +29,31 @@ public class ProfileDatabaseTest {
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
-        profileOneAttr.add("ird=\"123456879\"");
+        profileOneAttr.add("nhi=\"123456879\"");
 
         ArrayList<String> profileTwoAttr = new ArrayList<>();
         profileTwoAttr.add("given-names=\"Sam\"");
         profileTwoAttr.add("last-names=\"Sick\"");
         profileTwoAttr.add("dob=\"17-01-1997\"");
-        profileTwoAttr.add("ird=\"123456878\"");
+        profileTwoAttr.add("nhi=\"123456878\"");
 
         ArrayList<String> profileThreeAttr = new ArrayList<>();
         profileThreeAttr.add("given-names=\"Sam\"");
         profileThreeAttr.add("last-names=\"Vladko\"");
         profileThreeAttr.add("dob=\"17-01-1997\"");
-        profileThreeAttr.add("ird=\"123456877\"");
+        profileThreeAttr.add("nhi=\"123456877\"");
 
         ArrayList<String> profileFourAttr = new ArrayList<>();
         profileFourAttr.add("given-names=\"Reece\"");
         profileFourAttr.add("last-names=\"Smith\"");
         profileFourAttr.add("dob=\"17-01-1997\"");
-        profileFourAttr.add("ird=\"123456876\"");
+        profileFourAttr.add("nhi=\"123456876\"");
 
         ArrayList<String> profileFiveAttr = new ArrayList<>();
         profileFiveAttr.add("given-names=\"Zu\"");
         profileFiveAttr.add("last-names=\"Tiu\"");
         profileFiveAttr.add("dob=\"17-01-1997\"");
-        profileFiveAttr.add("ird=\"123456875\"");
+        profileFiveAttr.add("nhi=\"123456875\"");
 
         try {
             profileOne = new Profile(profileOneAttr);
@@ -170,9 +168,9 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testCheckIRDNumberExists() throws IrdNumberConflictException {
-        thrown.expect(IrdNumberConflictException.class);
-        thrown.expectMessage("IRD number already in use");
+    public void testCheckNHINumberExists() throws NHIConflictException {
+        thrown.expect(NHIConflictException.class);
+        thrown.expectMessage("NHI number already in use");
 
         profileDb.addProfile(profileOne);
         profileDb.addProfile(profileOne);

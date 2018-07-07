@@ -34,7 +34,6 @@ public class Profile implements Comparable<Profile> {
     private Double height = 0.0;
     private Double weight = 0.0;
     private String bloodType;
-    private String nhi;
 
     private String address;
 
@@ -68,7 +67,7 @@ public class Profile implements Comparable<Profile> {
     private String mobilePhone;
     private String email;
 
-    private Integer irdNumber;
+    private String nhi;
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
 
@@ -87,7 +86,7 @@ public class Profile implements Comparable<Profile> {
         setExtraAttributes(attributes);
         procedures = new ArrayList<>();
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getNhi() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
@@ -98,15 +97,15 @@ public class Profile implements Comparable<Profile> {
      * @param givenNames Profile's given names as String
      * @param lastNames Profile's last names as String
      * @param dob Profile's date of birth as a string
-     * @param irdNumber Profile's IRD number as Integer
+     * @param nhi Profile's NHI number as Integer
      */
-    public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, String dob, String nhi) {
 
         // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
         attr.add("last-names=\"" + lastNames + "\"");
-        attr.add("ird=\"" + irdNumber + "\"");
+        attr.add("nhi=\"" + nhi + "\"");
         attr.add("dob=\"" + dob + "\"");
         this.setReceiver(false);
         setExtraAttributes(attr);
@@ -114,18 +113,18 @@ public class Profile implements Comparable<Profile> {
         if (getGivenNames() == null ||
                 getLastNames() == null ||
                 getDateOfBirth() == null ||
-                getIrdNumber() == null) {
+                getNhi() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
     }
 
-    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
         this(
                 givenNames,
                 lastNames,
                 dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                irdNumber
+                nhi
         );
     }
 
@@ -226,11 +225,11 @@ public class Profile implements Comparable<Profile> {
             setAddress(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
             setRegion(value);
-        } else if (attrName.equals(Attribute.IRD.getText())) {
+        } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
-                setIrdNumber(Integer.valueOf(value));
+                setNhi(value);
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid IRD number entered");
+                throw new IllegalArgumentException("Invalid NHI number entered");
             }
         } else if (attrName.equals("isSmoker")) {
             setIsSmoker(Boolean.valueOf(value));
@@ -323,7 +322,7 @@ public class Profile implements Comparable<Profile> {
     // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("ird=" + irdNumber);
+        summary = summary +("nhi=" + nhi);
         summary = summary +"," +("given-names=" + givenNames);
         summary = summary +"," +("last-names=" + lastNames);
         summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -944,15 +943,6 @@ public class Profile implements Comparable<Profile> {
         this.region = region;
     }
 
-    public Integer getIrdNumber() {
-        return irdNumber;
-    }
-
-    public void setIrdNumber(Integer irdNumber) {
-        generateUpdateInfo("ird");
-        this.irdNumber = irdNumber;
-    }
-
     public Boolean getDonor() {
         return donor;
     }
@@ -1071,6 +1061,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     public void setNhi(String nhi) {
+        generateUpdateInfo("nhi");
         this.nhi = nhi;
     }
 
