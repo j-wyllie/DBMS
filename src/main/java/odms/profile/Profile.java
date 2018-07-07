@@ -34,8 +34,18 @@ public class Profile implements Comparable<Profile> {
     private Double height = 0.0;
     private Double weight = 0.0;
     private String bloodType;
+    private String nhi;
+
     private String address;
+
+    private String streetNumber;
+    private String streetName;
+    private String city;
     private String region;
+    private String zipCode;
+    private String country;
+    private String birthCountry;
+
 
     private Boolean isSmoker;
     private String alcoholConsumption;
@@ -55,6 +65,7 @@ public class Profile implements Comparable<Profile> {
     private ArrayList<Condition> conditions = new ArrayList<>();
 
     private String phone;
+    private String mobilePhone;
     private String email;
 
     private Integer irdNumber;
@@ -1053,5 +1064,69 @@ public class Profile implements Comparable<Profile> {
 
     public void setPreferredName(String preferredName) {
         this.preferredName = preferredName;
+    }
+
+    public String getNhi() {
+        return nhi;
+    }
+
+    public void setNhi(String nhi) {
+        this.nhi = nhi;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getBirthCountry() {
+        return birthCountry;
+    }
+
+    public void setBirthCountry(String birthCountry) {
+        this.birthCountry = birthCountry;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 }
