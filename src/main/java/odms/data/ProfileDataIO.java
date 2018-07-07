@@ -125,8 +125,12 @@ public class ProfileDataIO extends CommonDataIO {
         return profileDb;
     }
 
-    public static String getHistory() { return history;}
-
+    /**
+     * Load the specified csv file instantiating a ProfileDatabase Object.
+     *
+     * @param csv the csv file that is being loaded
+     * @return ProfileDatabase
+     */
     public static ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
         ProfileDatabase profileDb = new ProfileDatabase();
 
@@ -147,6 +151,11 @@ public class ProfileDataIO extends CommonDataIO {
         return profileDb;
     }
 
+    /**
+     * Converts a record in the csv to a profile object
+     * @param csvRecord the record to be converted
+     * @return the profile object
+     */
     private static Profile csvToProfileConverter(CSVRecord csvRecord) {
         String[] dobString = csvRecord.get("date_of_birth").split("/");
         LocalDate dob = LocalDate.of(
@@ -191,7 +200,13 @@ public class ProfileDataIO extends CommonDataIO {
         return null;
     }
 
-    private static boolean isValidNHI(String nhi) {
+    /**
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers)
+     * public at the moment so we can test it, probably needs to be moved somewhere TODO
+     * @param nhi the nhi to check
+     * @return true if valid and false if not valid
+     */
+    public static boolean isValidNHI(String nhi) {
         String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
         Pattern r = Pattern.compile(pattern);
 
@@ -199,5 +214,5 @@ public class ProfileDataIO extends CommonDataIO {
         return m.find();
     }
 
-
+    public static String getHistory() { return history;}
 }

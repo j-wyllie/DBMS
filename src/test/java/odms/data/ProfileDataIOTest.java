@@ -1,6 +1,8 @@
 package odms.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,4 +55,25 @@ public class ProfileDataIOTest {
         }
     }
 
+    @Test
+    public void testInvalidNHI() {
+        // Only one assert going on here, nothing to see
+        String invalidNHI = "123TREE";
+        assertFalse(ProfileDataIO.isValidNHI(invalidNHI));
+
+        invalidNHI = "ABO1234";
+        assertFalse(ProfileDataIO.isValidNHI(invalidNHI));
+
+        invalidNHI = "ABI1234";
+        assertFalse(ProfileDataIO.isValidNHI(invalidNHI));
+
+        invalidNHI = "AB1234";
+        assertFalse(ProfileDataIO.isValidNHI(invalidNHI));
+    }
+
+    @Test
+    public void testValidNHI() {
+        String validNHI = "ABC1234";
+        assertTrue(ProfileDataIO.isValidNHI(validNHI));
+    }
 }

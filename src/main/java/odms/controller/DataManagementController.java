@@ -53,6 +53,12 @@ public class DataManagementController {
         handleFile(stage, file);
     }
 
+    /**
+     * Checks that a file is not null and if there are unsaved changes
+     * Then calls the function to import the data from the file
+     * @param stage The current stage that is open
+     * @param file The file that is trying to be imported
+     */
     private void handleFile(Stage stage, File file) {
         if (file != null) { // Check that the user actually selected a file
             if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
