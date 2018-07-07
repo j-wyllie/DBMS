@@ -380,7 +380,8 @@ public class ProfileDatabase {
 
         //parsing out organs as strings for later use
 
-        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()){
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType
+                .equals("") && selectedOrgans.isEmpty()){
             return resultProfiles;
         }
 
@@ -429,7 +430,7 @@ public class ProfileDatabase {
                     organsDonating.add(temp.getName());
                 }
 
-                if (organsDonating == null || organsDonating.size() == 0) {
+                if (organsDonating.isEmpty()) {
                     return true;
                 }
                 organsDonatingHash.retainAll(selectedOrgans);         //intersection
@@ -438,14 +439,16 @@ public class ProfileDatabase {
 
         }
 
-        if (!(selectedType == null)) {
+        if (!(selectedType.equals(""))) {
             resultProfiles.removeIf(profile -> {
-                if (selectedType.equals("donor")) {
-                    return !profile.isDonatingCertainOrgans(selectedOrgans);
-                } else if (selectedType.equals("receiver")){
-                    return !profile.isReceivingCertainOrgans(selectedOrgans);
-                } else {
-                    return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile.isDonatingCertainOrgans(selectedOrgans));
+                switch (selectedType) {
+                    case "donor":
+                        return !profile.isDonatingCertainOrgans(selectedOrgans);
+                    case "receiver":
+                        return !profile.isReceivingCertainOrgans(selectedOrgans);
+                    default:
+                        return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile
+                                .isDonatingCertainOrgans(selectedOrgans));
                 }
             });
         }
