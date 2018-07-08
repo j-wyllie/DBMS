@@ -21,10 +21,6 @@
         </rowConstraints>
          <children>
             <Button fx:id="buttonImportExisting" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleImportExistingDataClicked" prefHeight="300.0" prefWidth="300.0" text="Import Existing Data" />
-            <Button fx:id="buttonImport" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleImportSavedDataClicked" prefHeight="300.0" prefWidth="300.0" text="Import Saved Data" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin></Button>
          </children>
       </GridPane>
    </children>

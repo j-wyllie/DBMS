@@ -23,28 +23,14 @@ public class DataManagementController {
 
     /**
      * Opens a file chooser and imports the selected files.
-     * @param actionEvent
-     */
-    public void handleImportSavedDataClicked(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON file(*.json)",
-                "*.json");
-        fileChooser.getExtensionFilters().add(extFilter);
-        Stage stage = (Stage) dataManagementAp.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        handleFile(stage, file);
-    }
-
-    /**
-     * Opens a file chooser and imports the selected files.
+     * Lets the user choose from JSON and CSV files.
      * @param actionEvent
      */
     public void handleImportExistingDataClicked(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV file(*.csv)",
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON file(*.json)",
+                "*.json", "CSV file(*.csv)",
                 "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
