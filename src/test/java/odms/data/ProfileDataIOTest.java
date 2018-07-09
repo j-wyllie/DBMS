@@ -4,16 +4,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import odms.profile.Profile;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ProfileDataIOTest {
     private ProfileDatabase profileDb;
     private Profile profileOne;
+    private static final String SAMPLE_CSV_FILE = "./sample.csv";
 
     @Before
     public void setup() {
@@ -37,7 +46,7 @@ public class ProfileDataIOTest {
     }
 
     @Test
-    public void testSaveAndLoad() {
+    public void testSaveJSON() {
         ProfileDatabase loadedDb;
         ProfileDataIO.saveData(profileDb, "CommandUtilsTest.json");
 
@@ -53,6 +62,35 @@ public class ProfileDataIOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testLoad1ProfileFromCSV() throws InvalidFileException {
+        ProfileDatabase loadedDb;
+        File file = new File("./src/test/java/odms/data/profileTestData/CSVProfiles1.csv");
+        loadedDb = ProfileDataIO.loadDataFromCSV(file);
+        assertEquals(1, loadedDb.getProfiles(false).size());
+    }
+
+    @Test
+    public void testLoad100ProfilesFromCSV() throws InvalidFileException {
+        ProfileDatabase loadedDb;
+        File file = new File("./src/test/java/odms/data/profileTestData/CSVProfiles100.csv");
+        loadedDb = ProfileDataIO.loadDataFromCSV(file);
+        assertEquals(100, loadedDb.getProfiles(false).size());
+    }
+
+    @Test
+    public void testCSVToProfileConverterInvalid() {
+            ProfileDatabase loadedDb;
+
+            File file = new File("./src/test/java/odms/data/profileTestData/CSVProfilesInvalid.csv");
+            try {
+                loadedDb = ProfileDataIO.loadDataFromCSV(file);
+            } catch (InvalidFileException e) {
+                assert(true);
+            }
+
     }
 
     @Test
