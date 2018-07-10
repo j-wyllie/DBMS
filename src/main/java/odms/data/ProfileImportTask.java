@@ -35,7 +35,7 @@ public class ProfileImportTask extends Task<Void> {
      * @param csv the csv file that is being loaded
      * @return ProfileDatabase
      */
-    public ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
+    protected ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
         ProfileDatabase profileDb = new ProfileDatabase();
         int progressCount = 0;
         int successCount = 0;
@@ -120,7 +120,7 @@ public class ProfileImportTask extends Task<Void> {
      * @param nhi the nhi to check
      * @return true if valid and false if not valid
      */
-    public boolean isValidNHI(String nhi) {
+    protected boolean isValidNHI(String nhi) {
         String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
         Pattern r = Pattern.compile(pattern);
 
