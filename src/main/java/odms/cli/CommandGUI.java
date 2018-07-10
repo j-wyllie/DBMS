@@ -41,7 +41,35 @@ public class CommandGUI {
     /**
      * Sets key listeners for command line history
      *
-     * @param commandLine
+
+    @Test
+    public void testLoad1ProfileFromCSV() throws InvalidFileException {
+        ProfileDatabase loadedDb;
+        File file = new File("./src/test/java/odms/data/profileTestData/CSVProfiles1.csv");
+        loadedDb = ProfileDataIO.loadDataFromCSV(file);
+        assertEquals(1, loadedDb.getProfiles(false).size());
+    }
+
+    @Test
+    public void testLoad100ProfilesFromCSV() throws InvalidFileException {
+        ProfileDatabase loadedDb;
+        File file = new File("./src/test/java/odms/data/profileTestData/CSVProfiles100.csv");
+        loadedDb = ProfileDataIO.loadDataFromCSV(file);
+        assertEquals(100, loadedDb.getProfiles(false).size());
+    }
+
+    @Test
+    public void testCSVToProfileConverterInvalid() {
+            ProfileDatabase loadedDb;
+
+            File file = new File("./src/test/java/odms/data/profileTestData/CSVProfilesInvalid.csv");
+            try {
+                loadedDb = ProfileDataIO.loadDataFromCSV(file);
+            } catch (InvalidFileException e) {
+                assert(true);
+            }
+
+    }   * @param commandLine
      */
     public void initHistory(CommandLine commandLine) {
         displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
