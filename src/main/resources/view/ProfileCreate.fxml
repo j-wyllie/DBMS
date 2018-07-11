@@ -1,83 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="580.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.Profile.ProfileCreateController">
-   <children>
-      <GridPane focusTraversable="true" layoutX="-2.0" layoutY="2.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="400.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-            <ColumnConstraints />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="150.0" stylesheets="@../styles/Common.css" text="Please enter your details..." textAlignment="CENTER" textFill="WHITE" GridPane.columnSpan="3" GridPane.valignment="TOP">
-               <font>
-                  <Font name="Arial" size="30.0" />
-               </font>
-               <styleClass>
-                  <String fx:value="banner-default" />
-                  <String fx:value="banner" />
-               </styleClass>
-            </Label>
-            <TextField fx:id="givenNamesField" layoutX="110.0" layoutY="243.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Given Names" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </TextField>
-            <TextField fx:id="surnamesField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Surnames" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </TextField>
-             <DatePicker fx:id="dobDatePicker" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Date of Birth" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-             <TextField fx:id="irdNumberField" layoutX="110.0" layoutY="186.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="IRD Number" styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </TextField>
-            <Button fx:id="createAccountButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAccountButtonClicked" styleClass="button-create-account" stylesheets="@../styles/ProfileCreate.css" text="CREATE ACCOUNT" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Button>
-            <Hyperlink fx:id="loginLink" alignment="CENTER" contentDisplay="TOP" onAction="#handleLoginLinkClicked" prefHeight="35.0" prefWidth="600.0" text="Log in" GridPane.columnSpan="3" GridPane.rowIndex="7" GridPane.rowSpan="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="20.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <padding>
-                  <Insets bottom="10.0" />
-               </padding></Hyperlink>
-         </children>
-      </GridPane>
-   </children>
+<?import java.lang.String?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="580.0" prefWidth="600.0"
+        xmlns="http://javafx.com/javafx/8"
+        fx:controller="odms.view.profile.ProfileCreateAccountView">
+    <children>
+        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+                focusTraversable="true" layoutX="-2.0" layoutY="2.0"
+                prefHeight="400.0" prefWidth="600.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0"
+                        prefWidth="400.0"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="150.0"
+                        vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label GridPane.columnSpan="3" GridPane.valignment="TOP" alignment="CENTER"
+                        contentDisplay="CENTER" maxWidth="1.7976931348623157E308"
+                        prefHeight="150.0" stylesheets="@../styles/Common.css" text="Please enter your details..."
+                        textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Arial" size="30.0"/>
+                    </font>
+                    <styleClass>
+                        <String fx:value="banner-default"/>
+                        <String fx:value="banner"/>
+                    </styleClass>
+                </Label>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER"
+                        layoutX="110.0" layoutY="243.0"
+                        maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                        minWidth="-Infinity" promptText="Given Names"
+                        styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" fx:id="givenNamesField">
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                </TextField>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"
+                        GridPane.valignment="CENTER" maxHeight="1.7976931348623157E308"
+                        maxWidth="1.7976931348623157E308" promptText="Surnames"
+                        styleClass="text-field" stylesheets="@../styles/ProfileCreate.css" fx:id="surnamesField">
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                </TextField>
+                <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="4"
+                        maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        promptText="Date of Birth" fx:id="dobDatePicker"/>
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER"
+                        layoutX="110.0" layoutY="186.0"
+                        maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        promptText="IRD Number" styleClass="text-field"
+                        stylesheets="@../styles/ProfileCreate.css" fx:id="irdNumberField">
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                </TextField>
+                <Button GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                        GridPane.hgrow="ALWAYS" GridPane.rowIndex="6"
+                        GridPane.valignment="CENTER" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                        maxWidth="1.7976931348623157E308"
+                        minHeight="-Infinity"
+                        minWidth="-Infinity" mnemonicParsing="false"
+                        onAction="#handleCreateAccountButtonClicked" styleClass="button-create-account" stylesheets="@../styles/ProfileCreate.css"
+                        text="CREATE ACCOUNT" textFill="WHITE" fx:id="createAccountButton">
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                    <font>
+                        <Font name="System Bold" size="20.0"/>
+                    </font>
+                </Button>
+                <Hyperlink GridPane.columnSpan="3" GridPane.rowIndex="7" GridPane.rowSpan="2"
+                        GridPane.valignment="CENTER" alignment="CENTER" contentDisplay="TOP"
+                        onAction="#handleLoginLinkClicked" prefHeight="35.0" prefWidth="600.0"
+                        text="Log in" fx:id="loginLink">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                    <padding>
+                        <Insets bottom="10.0"/>
+                    </padding>
+                </Hyperlink>
+            </children>
+        </GridPane>
+    </children>
 </AnchorPane>

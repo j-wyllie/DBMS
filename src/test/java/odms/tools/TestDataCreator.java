@@ -1,47 +1,45 @@
 package odms.tools;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Random;
 import odms.controller.data.IrdNumberConflictException;
-import odms.Model.Data.ProfileDatabase;
-import odms.Model.profile.Condition;
-import odms.Model.enums.OrganEnum;
-import odms.Model.profile.OrganConflictException;
-import odms.Model.profile.Profile;
+import odms.model.data.ProfileDatabase;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.Condition;
+import odms.model.profile.OrganConflictException;
+import odms.model.profile.Profile;
+
+import java.util.*;
 
 public class TestDataCreator {
+
     private ProfileDatabase database;
     private List<OrganEnum> organs = Arrays.asList(OrganEnum.values());
 
     private List<String> names = Arrays.asList(
-        "Ash Ketchup",
-        "Basashi Tabetai",
-        "Boaty McBoatFace",
-        "Boobafina Otter",
-        "Chewy Pancake",
-        "Cloud Strife",
-        "Darbage Gumpster",
-        "Fried McChicken",
-        "Galil AR",
-        "Gordon Freeman",
-        "Hadron Collider",
-        "Hato Pigeon",
-        "Hojn Bjorn",
-        "Jake Dogg",
-        "John Wick",
-        "Marcus Fenix",
-        "Nathan Drake",
-        "Peppermint Butler",
-        "Ronald McDonald",
-        "Sammie Salmon",
-        "Samus Aran",
-        "Slim Flapjack",
-        "Snoop Dogg",
-        "Vorian Atreides",
-        "Xavier Harkonnen"
+            "Ash Ketchup",
+            "Basashi Tabetai",
+            "Boaty McBoatFace",
+            "Boobafina Otter",
+            "Chewy Pancake",
+            "Cloud Strife",
+            "Darbage Gumpster",
+            "Fried McChicken",
+            "Galil AR",
+            "Gordon Freeman",
+            "Hadron Collider",
+            "Hato Pigeon",
+            "Hojn Bjorn",
+            "Jake Dogg",
+            "John Wick",
+            "Marcus Fenix",
+            "Nathan Drake",
+            "Peppermint Butler",
+            "Ronald McDonald",
+            "Sammie Salmon",
+            "Samus Aran",
+            "Slim Flapjack",
+            "Snoop Dogg",
+            "Vorian Atreides",
+            "Xavier Harkonnen"
     );
 
     private List<String> regions = Arrays.asList(
@@ -61,7 +59,7 @@ public class TestDataCreator {
             "Auckland",
             "Wanganui",
             "Waikato"
-            );
+    );
 
     public TestDataCreator() {
         database = new ProfileDatabase();
@@ -128,8 +126,7 @@ public class TestDataCreator {
     }
 
     /**
-     * Select a random number of organs to add as previously donated organs to
-     * the profile.
+     * Select a random number of organs to add as previously donated organs to the profile.
      *
      * @param profile the profile in which to add the organs
      */
@@ -151,7 +148,8 @@ public class TestDataCreator {
      */
     private void addConditions(Profile profile) {
         profile.addCondition(new Condition("Heart Disease", "01-04-2018", true));
-        profile.addCondition(new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
+        profile.addCondition(
+                new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
     }
 
     /**
@@ -204,8 +202,8 @@ public class TestDataCreator {
         gc.set(GregorianCalendar.DAY_OF_YEAR, yearDay);
 
         return gc.get(GregorianCalendar.DAY_OF_MONTH) + "-" +
-            (gc.get(GregorianCalendar.MONTH) + 1) + "-" +
-            gc.get(GregorianCalendar.YEAR);
+                (gc.get(GregorianCalendar.MONTH) + 1) + "-" +
+                gc.get(GregorianCalendar.YEAR);
     }
 
     /**

@@ -1,8 +1,8 @@
 package odms.controller.data;
 
-import odms.Model.Data.UserDatabase;
-import odms.Model.user.User;
-import odms.Model.user.UserType;
+import odms.model.data.UserDatabase;
+import odms.model.user.User;
+import odms.model.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,14 +18,14 @@ public class UserDataIOTest {
     public void setup() {
         userDb = new UserDatabase();
 
-        user1 = new User(UserType.CLINICIAN, "John Smith","Christchurch");
+        user1 = new User(UserType.CLINICIAN, "John Smith", "Christchurch");
         user2 = new User(UserType.CLINICIAN, "Matt Smith", "Auckland");
         userDb.addUser(user1);
         userDb.addUser(user2);
     }
 
     @Test
-    public void testSaveAndLoad() throws Exception{
+    public void testSaveAndLoad() throws Exception {
         UserDatabase loadedDb;
         UserDataIO.saveUsers(userDb, "example/users.json");
         loadedDb = UserDataIO.loadData("example/users.json");

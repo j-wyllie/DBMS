@@ -1,9 +1,9 @@
 package odms.controller.data;
 
-import odms.Model.Data.UserDatabase;
-import odms.controller.User.UserNotFoundException;
-import odms.Model.user.User;
-import odms.Model.user.UserType;
+import odms.controller.user.UserNotFoundException;
+import odms.model.data.UserDatabase;
+import odms.model.user.User;
+import odms.model.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,15 +19,15 @@ public class UserDatabaseTest {
     public void setup() {
         userDb = new UserDatabase();
 
-        user1 = new User(UserType.CLINICIAN, "John Smith","Christchurch");
+        user1 = new User(UserType.CLINICIAN, "John Smith", "Christchurch");
         user2 = new User(UserType.CLINICIAN, "Matt Smith", "Auckland");
     }
 
     @Test
     public void testAddUser() throws UserNotFoundException {
-            userDb.addUser(user1);
-            assertEquals("John Smith", userDb.getUser(0).getName());
-            assertEquals("Christchurch", userDb.getUser(0).getRegion());
+        userDb.addUser(user1);
+        assertEquals("John Smith", userDb.getUser(0).getName());
+        assertEquals("Christchurch", userDb.getUser(0).getRegion());
 
     }
 }

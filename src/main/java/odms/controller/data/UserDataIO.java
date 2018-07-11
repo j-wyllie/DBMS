@@ -2,7 +2,7 @@ package odms.controller.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.Model.Data.UserDatabase;
+import odms.model.data.UserDatabase;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +14,7 @@ public class UserDataIO extends CommonDataIO {
     private static final String defaultPath = "example/user.json";
 
     /**
-     * Export full User Database object to the previously used path.
+     * Export full user Database object to the previously used path.
      *
      * @param userDb Database to be exported to JSON
      */
@@ -26,10 +26,10 @@ public class UserDataIO extends CommonDataIO {
     }
 
     /**
-     * Export full User Database object to a specified file.
+     * Export full user Database object to a specified file.
      *
      * @param userDb Database to be exported to JSON
-     * @param path The location of the saved file
+     * @param path   The location of the saved file
      */
     public static void saveUsers(UserDatabase userDb, String path) {
         userDb.setPath(path);
@@ -67,6 +67,7 @@ public class UserDataIO extends CommonDataIO {
 
     /**
      * Load the specified DonorDatabase JSON file instantiating a DonorDatabase Object.
+     *
      * @param path The location of the saved file
      * @return DonorDatabase
      */

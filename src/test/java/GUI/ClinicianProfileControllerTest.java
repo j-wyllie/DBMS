@@ -1,29 +1,20 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
-import odms.Model.enums.OrganEnum;
-import odms.Model.profile.Profile;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.Profile;
 import org.controlsfx.control.CheckComboBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.testfx.api.FxToolkit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Ignore
 public class ClinicianProfileControllerTest extends TestFxMethods {
@@ -49,11 +40,12 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
 
     /**
      * Initializes the main gui
+     *
      * @param stage current stage
      * @throws Exception throws Exception
      */
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage) throws Exception {
         GuiMain guiMain = new GuiMain();
         guiMain.start(stage);
     }
@@ -96,7 +88,6 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
 
         assertEquals("male", firstDonor.getGender());
 
-
         CheckComboBox organsCombobox = (CheckComboBox) scene.lookup("#organsCombobox");
         //to overcome 'not on FX' thread exception
         Platform.runLater(() -> {
@@ -134,9 +125,9 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
     }
 
     /**
-     * Tests that a donor's profile can be opened by a clinician and that the name can be successfully
-     * updated. The name is checked in the database and in the GUI to make sure it updates.
-     * Changes the donor back to the original.
+     * Tests that a donor's profile can be opened by a clinician and that the name can be
+     * successfully updated. The name is checked in the database and in the GUI to make sure it
+     * updates. Changes the donor back to the original.
      */
     @Test
     public void editSearchedProfileTest() {
@@ -146,10 +137,13 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         Scene scene = getTopScene();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
-        Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
+        Integer userId = Integer
+                .parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
 
-        String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText().substring(14);
-        String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText().substring(11);
+        String originalGivenNames = ((Label) scene.lookup("#givenNamesLabel")).getText()
+                .substring(14);
+        String originalLastNames = ((Label) scene.lookup("#lastNamesLabel")).getText()
+                .substring(11);
         // Opening edit tab
         clickOn((scene.lookup("#editButton")));
 
@@ -210,7 +204,8 @@ public class ClinicianProfileControllerTest extends TestFxMethods {
         Scene scene = getTopScene();
 
         Label userIdLabel = (Label) scene.lookup("#userIdLabel");
-        Integer userId = Integer.parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
+        Integer userId = Integer
+                .parseInt(userIdLabel.getText().substring(10)); //gets id of user being edited.
         assertEquals(1, (int) userId);
     }
 }

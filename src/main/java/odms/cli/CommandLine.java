@@ -1,19 +1,14 @@
 package odms.cli;
 
-import static odms.cli.CommandUtils.validateCommandType;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
+import odms.controller.GuiMain;
 import odms.controller.data.ProfileDataIO;
-import odms.Model.Data.ProfileDatabase;
 import odms.controller.data.UserDataIO;
-import odms.Model.Data.UserDatabase;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -22,8 +17,15 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import odms.controller.GuiMain;
-public class CommandLine implements Runnable{
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+
+import static odms.cli.CommandUtils.validateCommandType;
+
+public class CommandLine implements Runnable {
 
     private ProfileDatabase currentDatabase;
     private UserDatabase currentDatabaseUsers;
@@ -35,19 +37,19 @@ public class CommandLine implements Runnable{
      *
      * @param currentDatabase
      */
-    public CommandLine (ProfileDatabase currentDatabase, UserDatabase currentDatabaseUsers) {
+    public CommandLine(ProfileDatabase currentDatabase, UserDatabase currentDatabaseUsers) {
         this.currentDatabase = currentDatabase;
         this.currentDatabaseUsers = currentDatabaseUsers;
 
         try {
             terminal = TerminalBuilder.terminal();
             reader = LineReaderBuilder.builder()
-                .terminal(terminal)
-                .appName("ODMS")
-                .completer(Commands.commandAutoCompletion())
-                .history(new DefaultHistory())
-                .parser(new DefaultParser())
-                .build();
+                    .terminal(terminal)
+                    .appName("ODMS")
+                    .completer(Commands.commandAutoCompletion())
+                    .history(new DefaultHistory())
+                    .parser(new DefaultParser())
+                    .build();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,7 +100,7 @@ public class CommandLine implements Runnable{
         String input;
         currentDatabaseUsers = GuiMain.getUserDatabase();
 
-        System.out.println("Organ Profile Management System");
+        System.out.println("Organ profile Management System");
         System.out.println("\nPlease enter your commands below:");
 
         while (!exit) {
@@ -109,17 +111,19 @@ public class CommandLine implements Runnable{
             ParsedLine parsedInput = reader.getParser().parse(input, 0);
 
             if (parsedInput.word().toLowerCase().equals("exit") ||
-                parsedInput.word().toLowerCase().equals("quit")) {
+                    parsedInput.word().toLowerCase().equals("quit")) {
                 exit = true;
             } else {
                 reader.getHighlighter();
-                processInput(new ArrayList<>(parsedInput.words()),input);
+                processInput(new ArrayList<>(parsedInput.words()), input);
             }
 
         }
     }
 
-    public History getHistory() { return reader.getHistory(); }
+    public History getHistory() {
+        return reader.getHistory();
+    }
 
     /**
      * Take the input from the console commands and process them accordingly.
@@ -176,7 +180,7 @@ public class CommandLine implements Runnable{
                 }
                 break;
 
-            case IMPORT :
+            case IMPORT:
                 // Import a file of profiles.
                 if (input.size() == 2) {
                     String filepath = input.get(1);
@@ -201,7 +205,7 @@ public class CommandLine implements Runnable{
             case PROFILEDELETE:
                 // Delete a profile.
                 Profile.deleteProfileBySearch(currentDatabase, rawInput);
-                System.out.println("Profile(s) successfully deleted.");
+                System.out.println("profile(s) successfully deleted.");
                 break;
 
             case PROFILEDONATIONS:
@@ -213,7 +217,7 @@ public class CommandLine implements Runnable{
             case PROFILEUPDATE:
                 // Search profiles.
                 Profile.updateProfilesBySearch(currentDatabase, rawInput);
-                System.out.println("Profile(s) successfully updated.");
+                System.out.println("profile(s) successfully updated.");
                 break;
 
             case PROFILEVIEW:

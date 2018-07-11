@@ -1,9 +1,12 @@
 package GUI;
 
-import javafx.scene.control.*;
-import odms.Model.medications.Drug;
-import odms.Model.profile.Profile;
-import org.junit.*;
+import javafx.scene.control.TableView;
+import odms.model.medications.Drug;
+import odms.model.profile.Profile;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -61,7 +64,7 @@ public class DonorProfileControllerTest extends TestFxMethods {
         clickOn(row("#tableViewCurrentMedications", 0));
         clickOn("#buttonDeleteMedication");
 
-        assert(!donor.getCurrentMedications().contains(firstDrug));
+        assert (!donor.getCurrentMedications().contains(firstDrug));
         closeCurrentWindow();
         closeCurrentWindow();
     }
@@ -85,7 +88,7 @@ public class DonorProfileControllerTest extends TestFxMethods {
         TableView historicMedicationsTable = getTableView("#tableViewHistoricMedications");
         Drug firstDrug = (Drug) historicMedicationsTable.getItems().get(0);
 
-        assert(donor.getHistoryOfMedication().contains(firstDrug));
+        assert (donor.getHistoryOfMedication().contains(firstDrug));
         closeCurrentWindow();
         closeCurrentWindow();
     }
@@ -112,8 +115,7 @@ public class DonorProfileControllerTest extends TestFxMethods {
         TableView currentMedicationsTable = getTableView("#tableViewCurrentMedications");
         Drug firstDrug = (Drug) currentMedicationsTable.getItems().get(0);
 
-
-        assert(donor.getCurrentMedications().contains(firstDrug));
+        assert (donor.getCurrentMedications().contains(firstDrug));
         closeCurrentWindow();
         closeCurrentWindow();
     }
@@ -129,7 +131,6 @@ public class DonorProfileControllerTest extends TestFxMethods {
         clickOn("#textFieldMedicationSearch").write("s");
         clickOn("#textFieldMedicationSearch");
         clickOn("#buttonAddMedication");
-
 
         clickOn(row("#tableViewCurrentMedications", 0));
         clickOn("#buttonViewActiveIngredients");

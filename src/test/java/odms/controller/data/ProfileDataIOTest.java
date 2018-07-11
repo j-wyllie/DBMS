@@ -1,17 +1,18 @@
 package odms.controller.data;
 
-import static org.junit.Assert.assertEquals;
+import odms.model.data.ProfileDatabase;
+import odms.model.profile.Profile;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import odms.Model.Data.ProfileDatabase;
-import odms.Model.profile.Profile;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class ProfileDataIOTest {
+
     private ProfileDatabase profileDb;
     private Profile profileOne;
 
@@ -44,8 +45,8 @@ public class ProfileDataIOTest {
         loadedDb = ProfileDataIO.loadData("CommandUtilsTest.json");
 
         assertEquals(
-            profileDb.getProfile(0).getGivenNames(),
-            loadedDb.getProfile(0).getGivenNames()
+                profileDb.getProfile(0).getGivenNames(),
+                loadedDb.getProfile(0).getGivenNames()
         );
 
         try {

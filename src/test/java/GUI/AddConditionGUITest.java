@@ -1,10 +1,5 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -13,12 +8,19 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @Ignore
 public class AddConditionGUITest extends TestFxMethods {
+
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass
     public static void headless() {
-         GUITestSetup.headless();
+        GUITestSetup.headless();
     }
 
     /**

@@ -1,8 +1,5 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeoutException;
 import javafx.scene.Scene;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -11,6 +8,10 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
 
 public class LoginCreateAccountGUITest extends TestFxMethods {
 
@@ -29,7 +30,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
      * tests that the current donor is set when a successful username is entered
      */
     @Test
-    public void loginValidUser(){
+    public void loginValidUser() {
         clickOn("#usernameField").write("1");
         clickOn("#loginButton");
         // TODO Fix test so it doesn't access the static getCurrentProfile method.
@@ -40,7 +41,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
      * Tests that a popup is shown when an invalid username is entered
      */
     @Test
-    public void loginInvalidUser(){
+    public void loginInvalidUser() {
         clickOn("#usernameField").write("1234");
         clickOn("#loginButton");
         final javafx.stage.Stage actualAlertDialog = getAlertDialogue();
@@ -54,7 +55,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
      */
     @Ignore
     @Test
-    public void createValidUser(){
+    public void createValidUser() {
         clickOn("#createAccountLink");
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
@@ -62,7 +63,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#irdNumberField").write("88888888");
         clickOn("#createAccountButton");
 
-        Scene newScene= getTopScene();
+        Scene newScene = getTopScene();
         Label userFullName = (Label) newScene.lookup("#donorFullNameLabel");
 
         assertEquals("Jack Travis Hay", userFullName.getText());
@@ -72,12 +73,11 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
     }
 
     /**
-     * creates a user with invalid fields. Checks that the correct popups
-     * are displayed.
+     * creates a user with invalid fields. Checks that the correct popups are displayed.
      */
     @Ignore
     @Test
-    public void createInvalidUser(){
+    public void createInvalidUser() {
 
         //tests empty fields
         clickOn("#createAccountLink");

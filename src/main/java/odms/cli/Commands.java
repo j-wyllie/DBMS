@@ -19,7 +19,7 @@ public enum Commands {
     EXPORT,
     IMPORT,
 
-    // Profile Commands
+    // profile Commands
     PROFILECREATE,
     PROFILEDATECREATED,
     PROFILEDELETE,
@@ -35,7 +35,7 @@ public enum Commands {
     CLINICIANUPDATE,
     CLINICIANEVIEW,
 
-    // User commands TODO need to replace most clinician stuff with user, works for now
+    // user commands TODO need to replace most clinician stuff with user, works for now
 
     // Organ Commands
     ORGANADD,
@@ -51,25 +51,25 @@ public enum Commands {
     public static ArgumentCompleter commandAutoCompletion() {
         return new ArgumentCompleter(
 
-            new StringsCompleter("create-clinician"),
-            new StringsCompleter("create-profile"),
+                new StringsCompleter("create-clinician"),
+                new StringsCompleter("create-profile"),
 
-            new StringsCompleter("delete-clinician"),
-            new StringsCompleter("delete-profile"),
+                new StringsCompleter("delete-clinician"),
+                new StringsCompleter("delete-profile"),
 
-            new StringsCompleter("help"),
-            new StringsCompleter("print all"),
-            new StringsCompleter("print donors"),
+                new StringsCompleter("help"),
+                new StringsCompleter("print all"),
+                new StringsCompleter("print donors"),
 
-            new StringsCompleter("export"),
-            new StringsCompleter("import"),
+                new StringsCompleter("export"),
+                new StringsCompleter("import"),
 
-            new StringsCompleter("print all profiles"),
-            new StringsCompleter("print donors"),
-            new StringsCompleter("print all users"),
-            new StringsCompleter("print clinicians"),
+                new StringsCompleter("print all profiles"),
+                new StringsCompleter("print donors"),
+                new StringsCompleter("print all users"),
+                new StringsCompleter("print clinicians"),
 
-            new StringsCompleter("db-read")
+                new StringsCompleter("db-read")
         );
     }
 }

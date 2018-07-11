@@ -3,7 +3,7 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.Model.enums.OrganEnum;
+import odms.model.enums.OrganEnum;
 
 public class AlertController {
 
@@ -16,6 +16,7 @@ public class AlertController {
 
     /**
      * Creates a message based popup when the details are entered incorrectly.
+     *
      * @param message the message to be displayed
      */
     public static void invalidEntry(String message) {
@@ -54,9 +55,9 @@ public class AlertController {
      */
     public static void invalidUsername() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Please enter a valid username.",
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                "Please enter a valid username.",
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -86,9 +87,9 @@ public class AlertController {
      */
     public static void invalidIrd() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Please enter a valid IRD number.",
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                "Please enter a valid IRD number.",
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -102,8 +103,8 @@ public class AlertController {
      */
     public static void invalidDate() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Date entered is not in the format dd-mm-yyyy.",
+                AlertType.ERROR,
+                "Date entered is not in the format dd-mm-yyyy.",
                 ButtonType.CLOSE
         );
 
@@ -116,13 +117,14 @@ public class AlertController {
 
     /**
      * Creates a popup with a personalized message from the controller
+     *
      * @param message the message to be displayed
      */
     public static void guiPopup(String message) {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            message,
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                message,
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -149,14 +151,15 @@ public class AlertController {
 
     /**
      * Displays a popup prompting the user to confirm the changes they have made.
+     *
      * @return true or false on whether the changes were confirmed
      */
     public static boolean saveChanges() {
         Alert saveAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "Do you wish to save your changes?",
-            ButtonType.NO,
-            ButtonType.YES
+                AlertType.CONFIRMATION,
+                "Do you wish to save your changes?",
+                ButtonType.NO,
+                ButtonType.YES
         );
 
         saveAlert.showAndWait();
@@ -166,14 +169,15 @@ public class AlertController {
 
     /**
      * Displays a popup prompting the user to confirm cancellation of changes made
+     *
      * @return true or false on whether the changes were confirmed
      */
     public static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "Do you wish to cancel your changes?",
-            ButtonType.NO,
-            ButtonType.YES
+                AlertType.CONFIRMATION,
+                "Do you wish to cancel your changes?",
+                ButtonType.NO,
+                ButtonType.YES
         );
 
         cancelAlert.showAndWait();
@@ -183,6 +187,7 @@ public class AlertController {
 
     /**
      * Handle alert window responses
+     *
      * @param alert to handle
      * @return boolean of action chosen
      */
@@ -198,6 +203,7 @@ public class AlertController {
 
     /**
      * Displays a popup prompting the user to confirm cancellation of changes made
+     *
      * @return true or false on whether the changes were confirmed
      */
     public static boolean deleteUserConfirmation() {
@@ -214,16 +220,18 @@ public class AlertController {
     }
 
     /**
-     * Displays a popup prompting the user to that they have unsaved changes somewhere in the program
+     * Displays a popup prompting the user to that they have unsaved changes somewhere in the
+     * program
+     *
      * @return true or false on whether the changes were confirmed
      */
     public static boolean unsavedChangesImport() {
         Alert cancelAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "You have unsaved changes.\n" +
-                "Do you want to continue without saving?",
-            ButtonType.CANCEL,
-            ButtonType.YES
+                AlertType.CONFIRMATION,
+                "You have unsaved changes.\n" +
+                        "Do you want to continue without saving?",
+                ButtonType.CANCEL,
+                ButtonType.YES
         );
 
         cancelAlert.showAndWait();

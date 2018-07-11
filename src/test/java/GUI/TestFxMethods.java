@@ -1,20 +1,11 @@
 package GUI;
 
 import com.sun.javafx.robot.impl.FXRobotHelper;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -26,9 +17,13 @@ import odms.tools.TestDataCreator;
 import org.junit.After;
 import org.testfx.framework.junit.ApplicationTest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * regularly used methods in testfx.
- * Add to this if you find yourself copy and pasting a lot of code.
+ * regularly used methods in testfx. Add to this if you find yourself copy and pasting a lot of
+ * code.
  */
 abstract class TestFxMethods extends ApplicationTest {
 
@@ -43,11 +38,12 @@ abstract class TestFxMethods extends ApplicationTest {
 
     /**
      * Initializes the main gui
+     *
      * @param stage current stage
      * @throws Exception throws Exception
      */
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage) throws Exception {
         guiMain = new GuiMain();
         guiMain.setCurrentDatabase(new TestDataCreator().getDatabase());
         guiMain.start(stage);
@@ -76,9 +72,10 @@ abstract class TestFxMethods extends ApplicationTest {
 
     /**
      * logs in as a donor with the given ID
+     *
      * @param id
      */
-    protected void loginAsDonor(Integer id){
+    protected void loginAsDonor(Integer id) {
         clickOn("#usernameField").write(id.toString());
         clickOn("#loginButton");
     }
@@ -103,7 +100,7 @@ abstract class TestFxMethods extends ApplicationTest {
     }
 
     protected Integer getProfileIdFromWindow() {
-        Scene newScene= getTopScene();
+        Scene newScene = getTopScene();
         Label userId = (Label) newScene.lookup("#userIdLabel");
         return Integer.parseInt(userId.getText().substring(10, userId.getText().length()));
     }
@@ -118,46 +115,53 @@ abstract class TestFxMethods extends ApplicationTest {
     /**
      * Saves the current database
      */
-    protected void saveDatabase(){
+    protected void saveDatabase() {
         ProfileDataIO.saveData(GuiMain.getCurrentDatabase(), "example/example.json");
     }
 
     /**
      * gets current stage with all windows.
+     *
      * @return All of the current windows
      */
     protected Scene getTopScene() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        final List<Window> allWindows = new ArrayList<>(
+                robotContext().getWindowFinder().listWindows());
         Collections.reverse(allWindows);
 
         return allWindows.get(0).getScene();
     }
 
     /**
-     * gets current stage with all windows. Used to check that an alert controller has been created and is visible
+     * gets current stage with all windows. Used to check that an alert controller has been created
+     * and is visible
+     *
      * @return All of the current windows
      */
     protected javafx.stage.Stage getAlertDialogue() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        final List<Window> allWindows = new ArrayList<>(
+                robotContext().getWindowFinder().listWindows());
         Collections.reverse(allWindows);
 
         return (javafx.stage.Stage) allWindows
                 .stream()
                 .filter(window -> window instanceof javafx.stage.Stage)
-                .filter(window -> ((javafx.stage.Stage) window).getModality() == Modality.APPLICATION_MODAL)
+                .filter(window -> ((javafx.stage.Stage) window).getModality()
+                        == Modality.APPLICATION_MODAL)
                 .findFirst()
                 .orElse(null);
     }
 
     /**
      * Closes the currently open alert dialogue
+     *
      * @param alert the alert DialogPane to be closed
      */
-    protected void closeDialog(DialogPane alert){
+    protected void closeDialog(DialogPane alert) {
         robotContext();
         Button closeButton = (Button) alert.lookupButton(ButtonType.CLOSE);
         closeButton.setId("Close");
@@ -175,8 +179,8 @@ abstract class TestFxMethods extends ApplicationTest {
 
     /**
      * @param tableSelector The id of the table that contains the cell wanted
-     * @param row row number
-     * @param column column number
+     * @param row           row number
+     * @param column        column number
      * @return returns the cell data.
      */
     protected Object cellValue(String tableSelector, int row, int column) {
@@ -185,7 +189,7 @@ abstract class TestFxMethods extends ApplicationTest {
 
     /**
      * @param tableSelector Id of table that contains the row
-     * @param row row number
+     * @param row           row number
      * @return returns a table row
      */
     protected TableRow<?> row(String tableSelector, int row) {
@@ -208,8 +212,8 @@ abstract class TestFxMethods extends ApplicationTest {
 
     /**
      * @param tableSelector ID of the table that contains the cell wanted
-     * @param row row number
-     * @param column column number
+     * @param row           row number
+     * @param column        column number
      * @return the cell of the table
      */
     protected TableCell<?, ?> cell(String tableSelector, int row, int column) {

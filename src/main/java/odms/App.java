@@ -3,15 +3,16 @@ package odms;
 import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.controller.GuiMain;
-import odms.controller.History.HistoryController;
 import odms.controller.data.ProfileDataIO;
-import odms.Model.Data.ProfileDatabase;
 import odms.controller.data.UserDataIO;
-import odms.Model.Data.UserDatabase;
+import odms.controller.history.HistoryController;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
 
 import java.io.File;
 
 public class App {
+
     private static final String DONOR_DATABASE = "example/example.json";
     private static final String USER_DATABASE = "example/users.json";
 

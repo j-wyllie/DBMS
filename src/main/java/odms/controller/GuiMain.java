@@ -6,11 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.App;
-import odms.Model.Data.ProfileDatabase;
 import odms.controller.data.UserDataIO;
-import odms.Model.Data.UserDatabase;
-import odms.Model.user.User;
-import odms.Model.user.UserType;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
+import odms.model.user.User;
+import odms.model.user.UserType;
 
 import java.io.IOException;
 
@@ -22,8 +22,25 @@ public class GuiMain extends Application {
     private static ProfileDatabase profileDb = App.getProfileDb();
     private static UserDatabase userDb = App.getUserDb();
 
+    public static ProfileDatabase getCurrentDatabase() {
+        return profileDb;
+    }
+
+    public static void setCurrentDatabase(ProfileDatabase profileDb) {
+        GuiMain.profileDb = profileDb;
+    }
+
+    public static UserDatabase getUserDatabase() {
+        return userDb;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
+     *
      * @param primaryStage the primary stage
      * @throws IOException file read exception for login fxml
      */
@@ -52,19 +69,5 @@ public class GuiMain extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("ODMS"); // TODO Remove magic string
         primaryStage.show();
-    }
-
-    public static ProfileDatabase getCurrentDatabase() {
-        return profileDb;
-    }
-
-    public static UserDatabase getUserDatabase(){
-        return userDb;
-    }
-
-    public static void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

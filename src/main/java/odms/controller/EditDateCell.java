@@ -1,18 +1,20 @@
 package odms.controller;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import odms.Model.profile.Condition;
+import odms.model.profile.Condition;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class EditDateCell extends TableCell<Condition, LocalDate> {
 
     private TextField textField;
 
-    public EditDateCell() {}
+    public EditDateCell() {
+    }
 
     @Override
     public void startEdit() {
@@ -58,7 +60,7 @@ public class EditDateCell extends TableCell<Condition, LocalDate> {
 
     private void createTextField() {
         textField = new TextField(getString());
-        textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()*2);
+        textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -106,8 +108,10 @@ public class EditDateCell extends TableCell<Condition, LocalDate> {
         } else {
             final TableView table = getTableView();
             if (table != null) {
-                TablePosition position = new TablePosition(getTableView(), getTableRow().getIndex(), getTableColumn());
-                TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(table, position, TableColumn.editCommitEvent(), item);
+                TablePosition position = new TablePosition(getTableView(), getTableRow().getIndex(),
+                        getTableColumn());
+                TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(table, position,
+                        TableColumn.editCommitEvent(), item);
                 Event.fireEvent(getTableColumn(), editEvent);
             }
             updateItem(item, false);

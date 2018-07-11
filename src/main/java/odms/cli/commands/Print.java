@@ -1,14 +1,15 @@
 package odms.cli.commands;
 
+import odms.cli.CommandUtils;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.Profile;
+import odms.model.user.User;
+import odms.model.user.UserType;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import odms.cli.CommandUtils;
-import odms.Model.Data.ProfileDatabase;
-import odms.Model.Data.UserDatabase;
-import odms.Model.enums.OrganEnum;
-import odms.Model.profile.Profile;
-import odms.Model.user.User;
-import odms.Model.user.UserType;
 
 public class Print extends CommandUtils {
 
@@ -24,8 +25,7 @@ public class Print extends CommandUtils {
                 printProfileAttributes(profile);
                 System.out.println();
             }
-        }
-        else {
+        } else {
             System.out.println("There are no profiles to show.");
         }
     }
@@ -44,8 +44,7 @@ public class Print extends CommandUtils {
                     System.out.println();
                 }
             }
-        }
-        else {
+        } else {
             System.out.println("There are no clinicians to show.");
         }
     }
@@ -62,8 +61,7 @@ public class Print extends CommandUtils {
                 printUserAttributesAttributes(user);
                 System.out.println();
             }
-        }
-        else {
+        } else {
             System.out.println("There are no users to show.");
         }
     }
@@ -78,11 +76,11 @@ public class Print extends CommandUtils {
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
                 printProfileAttributes(profile);
-                System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
+                System.out.println("Organs Donating: " + OrganEnum
+                        .organSetToString(profile.getOrgansDonating()));
                 System.out.println();
             }
-        }
-        else {
+        } else {
             System.out.println("There are no profile profiles to show.");
         }
     }
@@ -111,7 +109,7 @@ public class Print extends CommandUtils {
         for (User user : userlist) {
             System.out.println("Staff ID: " + user.getStaffID());
             System.out.println("Name: " + user.getName());
-            System.out.println("User type: " + user.getUserType());
+            System.out.println("user type: " + user.getUserType());
             System.out.println("Date/Time Created: " + user.getTimeOfCreation());
             System.out.println();
         }
@@ -128,15 +126,17 @@ public class Print extends CommandUtils {
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Organs Donated:" + profile.getOrgansDonated());
-            System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
-            System.out.println("Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
+            System.out.println(
+                    "Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
+            System.out.println(
+                    "Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
             System.out.println();
         }
     }
 
     /**
-     * Display and print printAllProfiles search results from Profile array. If array empty, no search results
-     * have been found.
+     * Display and print printAllProfiles search results from profile array. If array empty, no
+     * search results have been found.
      *
      * @param profileList Results from searching
      */
@@ -152,8 +152,8 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Display and print printAllProfiles search results from Profile array. If array empty, no search results
-     * have been found.
+     * Display and print printAllProfiles search results from profile array. If array empty, no
+     * search results have been found.
      *
      * @param userlist Results from searching
      */
@@ -213,15 +213,18 @@ public class Print extends CommandUtils {
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
+            System.out.println(
+                    "Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Donated: " + OrganEnum.organSetToString(profile.getOrgansDonated()));
+            System.out.println(
+                    "Organs Donated: " + OrganEnum.organSetToString(profile.getOrgansDonated()));
         }
 
         if (profile.getOrgansDonating().size() > 0) {
-            System.out.println("Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
+            System.out.println(
+                    "Organs Required: " + OrganEnum.organSetToString(profile.getOrgansRequired()));
         }
 
         System.out.println("Last updated at: " + profile.getLastUpdated().format(
@@ -235,7 +238,7 @@ public class Print extends CommandUtils {
      * @param user to be displayed
      */
     private static void printUserAttributesAttributes(User user) {
-        System.out.println("User type: " + user.getUserType());
+        System.out.println("user type: " + user.getUserType());
         System.out.println("ODMS Staff ID: " + user.getStaffID());
 
         if (user.getName() != null) {
@@ -245,7 +248,6 @@ public class Print extends CommandUtils {
         if (user.getUsername() != null) {
             System.out.println("Username: " + user.getUsername());
         }
-
 
         if (user.getRegion() != null) {
             System.out.println("Region: " + user.getRegion());

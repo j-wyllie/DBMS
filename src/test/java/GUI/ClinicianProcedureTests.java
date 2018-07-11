@@ -1,11 +1,5 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +13,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @Ignore
 public class ClinicianProcedureTests extends TestFxMethods {
 
@@ -30,16 +31,17 @@ public class ClinicianProcedureTests extends TestFxMethods {
 
     @Before
     public void loginUser() {
-         logInClinician();
+        logInClinician();
     }
 
     /**
      * Initializes the main gui
+     *
      * @param stage current stage
      * @throws Exception throws Exception
      */
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage) throws Exception {
         GuiMain guiMain = new GuiMain();
         guiMain.start(stage);
     }
@@ -62,7 +64,7 @@ public class ClinicianProcedureTests extends TestFxMethods {
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
 
-        //Give user a new procedure named 'Generic Procedure'.
+        //Give user a new procedure named 'Generic procedure'.
         clickOn(scene.lookup("#procedureTab"));
         clickOn(scene.lookup("#addNewProcedureButton"));
         Scene scene2 = getTopModalStage();
@@ -93,7 +95,7 @@ public class ClinicianProcedureTests extends TestFxMethods {
         doubleClickOn(row("#searchTable", 0));
         Scene scene = getTopModalStage();
 
-        //Give user a new procedure named 'Generic Procedure'.
+        //Give user a new procedure named 'Generic procedure'.
         clickOn(scene.lookup("#procedureTab"));
         clickOn(scene.lookup("#addNewProcedureButton"));
         Scene scene2 = getTopModalStage();
@@ -112,7 +114,7 @@ public class ClinicianProcedureTests extends TestFxMethods {
         Integer newTableLength = getTableView("#pendingProcedureTable").getItems().size();
 
         //Check Deleted procedure is deleted.
-        assertTrue(tableLength == newTableLength+1);
+        assertTrue(tableLength == newTableLength + 1);
         closeCurrentWindow();
     }
 
@@ -134,12 +136,14 @@ public class ClinicianProcedureTests extends TestFxMethods {
 
     /**
      * gets current stage with all windows.
+     *
      * @return All of the current windows
      */
     private Scene getTopModalStage() {
         // Get a list of windows but ordered from top[0] to bottom[n] ones.
         // It is needed to get the first found modal window.
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder().listWindows());
+        final List<Window> allWindows = new ArrayList<>(
+                robotContext().getWindowFinder().listWindows());
         Collections.reverse(allWindows);
 
         return allWindows.get(0).getScene();

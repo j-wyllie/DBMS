@@ -1,21 +1,20 @@
 package odms.controller.data;
 
-import static odms.controller.data.MedicationDataIO.getActiveIngredients;
-import static odms.controller.data.MedicationDataIO.getSuggestionList;
-import static org.junit.Assert.*;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import org.junit.Before;
-import org.junit.Test;
+
+import static odms.controller.data.MedicationDataIO.getActiveIngredients;
+import static odms.controller.data.MedicationDataIO.getSuggestionList;
+import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MedicationDataIO.class)
@@ -125,13 +124,14 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetSuggestionList() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/controller/data/medicationTestData/suggestionListSampleResponse.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/controller/data/medicationTestData/suggestionListSampleResponse.json"));
         StringBuffer suggestionData = new StringBuffer();
         suggestionData.append(bufferedReader.readLine());
 
-
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(suggestionData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(suggestionData);
 
         //Test for substring with valid value.
         assertArrayEquals(expectedList2, getSuggestionList(substring3).toArray());
@@ -147,12 +147,14 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetActiveIngredients() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/controller/data/medicationTestData/activeIngredientSampleResponse1.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/controller/data/medicationTestData/activeIngredientSampleResponse1.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(ingredientData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(ingredientData);
 
         //Test for drug name with valid value.
         assertArrayEquals(expectedList3, getActiveIngredients(drugName).toArray());
@@ -161,12 +163,14 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/controller/data/medicationTestData/activeIngredientSampleResponse2.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/controller/data/medicationTestData/activeIngredientSampleResponse2.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(ingredientData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(ingredientData);
 
         //Test for drug name with valid value and it has a space in drug name.
         assertArrayEquals(expectedList4, getActiveIngredients(drugName2).toArray());
@@ -175,16 +179,18 @@ public class MedicationDataIOTest {
     @Test
     public void testGetDrugInteractions() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/controller/data/medicationTestData/drugInteractionsSampleResponse.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/controller/data/medicationTestData/drugInteractionsSampleResponse.json"));
         StringBuffer interactionData = new StringBuffer();
         interactionData.append(bufferedReader.readLine());
 
-
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(interactionData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(interactionData);
 
         // Test valid request
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugTwo, "male", 29);
+        Map<String, String> results = MedicationDataIO
+                .getDrugInteractions(drugOne, drugTwo, "male", 29);
         assertEquals(interactions, results);
 
         // Test valid request with drug with space in name
@@ -195,23 +201,26 @@ public class MedicationDataIOTest {
     @Test
     public void testGetDrugInteractionsWithSpaceInName() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/controller/data/medicationTestData/drugInteractionsSampleResponse.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/controller/data/medicationTestData/drugInteractionsSampleResponse.json"));
         StringBuffer interactionData = new StringBuffer();
         interactionData.append(bufferedReader.readLine());
 
-
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(interactionData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(interactionData);
 
         // Test valid request with drug with space in name
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugEight, "male", 29);
+        Map<String, String> results = MedicationDataIO
+                .getDrugInteractions(drugOne, drugEight, "male", 29);
         assertEquals(interactions, results);
     }
 
     @Test
     public void testGetDrugInteractionsNullOrEmptyString() throws Exception {
         //Test for null drug string
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugSix, "male", 29);
+        Map<String, String> results = MedicationDataIO
+                .getDrugInteractions(drugOne, drugSix, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for empty drug string
@@ -222,10 +231,12 @@ public class MedicationDataIOTest {
     @Test
     public void testGetDrugInteractionsValidStringsWithNoInteractions() throws Exception {
         // makeRequest will return null for these tests
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(null);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(null);
 
         // Test for two valid drugs, should return empty map.
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(drugOne, drugFive, "male", 29);
+        Map<String, String> results = MedicationDataIO
+                .getDrugInteractions(drugOne, drugFive, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for invalid drugs, should return empty map.

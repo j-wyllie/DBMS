@@ -1,19 +1,20 @@
 package odms.controller.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-
-import odms.Model.Data.ProfileDatabase;
-import odms.Model.profile.Profile;
+import odms.model.data.ProfileDatabase;
+import odms.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+
 public class ProfileDatabaseTest {
+
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
     private ProfileDatabase profileDb;
     private Profile profileOne;
     private Profile profileTwo;
@@ -87,9 +88,6 @@ public class ProfileDatabaseTest {
         }
 
     }
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testAddProfile() {
@@ -186,7 +184,7 @@ public class ProfileDatabaseTest {
 
         try {
             // No profiles in db, so no results
-            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Sam Sick", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +205,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Top result should be profile Sam Sick, next result Sam Vladko. No other results.
-            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Sam Sick", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 2);
             assertEquals(profileTwo, testResults.get(0));
             assertEquals(profileThree, testResults.get(1));
@@ -230,7 +228,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain no results because no names start with 'a'
-            testResults = profileDb.searchProfiles("a",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("a", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,7 +249,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("s",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("s", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileFour);
             assertEquals(testResults.get(1), profileTwo);
@@ -275,7 +273,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain Zu Tiu, but no other profiles.
-            testResults = profileDb.searchProfiles("Tiu",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Tiu", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 1);
             assertEquals(testResults.get(0), profileFive);
         } catch (Exception e) {
@@ -297,7 +295,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("sam",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("sam", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileTwo);
             assertEquals(testResults.get(1), profileThree);
@@ -322,7 +320,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain Zu Tiu only, because the preferred name will be matched.
-            testResults = profileDb.searchProfiles("dragon",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("dragon", -999, -999, "", "", "", null);
             assertTrue(testResults.size() == 1);
             assertEquals(testResults.get(0), profileFive);
         } catch (Exception e) {

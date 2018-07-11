@@ -10,33 +10,36 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import odms.controller.history.RedoController;
+import odms.controller.history.UndoController;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 
 public class CommonController {
+    //todo rework commoncontroller by cleaning up methods and removing or replacing them
 
     private static boolean isEdited = false;
+    private RedoController redoController = new RedoController();
+    private UndoController undoController = new UndoController();
 
     /**
-     * Scene change to log in view.
+     * checks whether the window has been edited
      *
-     * @param event clicking on the logout button.
+     * @param stage
+     * @return true if window has unsaved changes.
      */
-    @FXML
-    public void showLoginScene(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.setResizable(false);
-        appStage.setTitle("ODMS");
-        appStage.centerOnScreen();
-        appStage.show();
+    protected static boolean isEdited(Stage stage) {
+        return stage.getTitle().contains("(*)");
+//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
+//        CommonController controller = loader.getController();
+//        controller.toString();
+//        return controller.getEdited();
     }
 
     /**
      * JavaFX Scene loader
+     *
      * @param event the ActionEvent
      * @param scene the fxml path
      * @param title the window title
@@ -48,14 +51,15 @@ public class CommonController {
 
     /**
      * JavaFX Scene loader
-     * @param event the ActionEvent
-     * @param scene the fxml path
-     * @param title the window title
+     *
+     * @param event      the ActionEvent
+     * @param scene      the fxml path
+     * @param title      the window title
      * @param resizeable if the window can be resized
      * @throws IOException if the path is invalid
      */
     protected void showScene(ActionEvent event, String scene, String title, Boolean resizeable)
-        throws IOException {
+            throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(scene));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -67,7 +71,8 @@ public class CommonController {
     }
 
     /**
-     * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
+     * Changes the Edit profile title to include an astrix to indicate a value has been edited.
+     *
      * @param event Any key event within the text boxes.
      */
     @FXML
@@ -80,7 +85,8 @@ public class CommonController {
     }
 
     /**
-     * Changes the Edit Profile title to include an astrix to indicate a value has been edited.
+     * Changes the Edit profile title to include an astrix to indicate a value has been edited.
+     *
      * @param event Any click event within the text boxes.
      */
     @FXML
@@ -93,13 +99,16 @@ public class CommonController {
     }
 
     /**
-     * Changes the title of the parent window to include an astrix to indicate a value has been edited.
+     * Changes the title of the parent window to include an astrix to indicate a value has been
+     * edited.
+     *
      * @param event Any click event within the text boxes.
      */
     @FXML
     protected void editTrueAction(ActionEvent event, boolean forOwner) {
         if (forOwner) {
-            Stage currentStage = (Stage) ((Node) event.getTarget()).getParent().getScene().getWindow();
+            Stage currentStage = (Stage) ((Node) event.getTarget()).getParent().getScene()
+                    .getWindow();
             currentStage = (Stage) currentStage.getOwner();
             if (!currentStage.getTitle().contains("(*)")) {
                 currentStage.setTitle(currentStage.getTitle() + " (*)");
@@ -114,6 +123,7 @@ public class CommonController {
 
     /**
      * Changes the title of the stage to include an astrix to indicate a value has been edited.
+     *
      * @param stage the stage to be edited.
      */
     public void editTrueStage(Stage stage) {
@@ -124,25 +134,14 @@ public class CommonController {
     }
 
     /**
-     * checks whether the window has been edited
-     * @param stage
-     * @return true if window has unsaved changes.
-     */
-    protected static boolean isEdited(Stage stage) {
-        return stage.getTitle().contains("(*)");
-//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
-//        CommonController controller = loader.getController();
-//        controller.toString();
-//        return controller.getEdited();
-    }
-
-    /**
      * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
-     * @param event The event which is wanted to trigger a notification
+     *
+     * @param event       The event which is wanted to trigger a notification
      * @param editedField String of which is the thing edited.
      */
     @FXML
-    protected void showNotification(String editedField, ActionEvent event) throws IOException {
+    public void showNotification(String editedField, ActionEvent event) throws IOException {
+        //todo modify this method by making it common view possibly
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
@@ -157,11 +156,25 @@ public class CommonController {
                 .show();
     }
 
-    public void setEdited(Boolean edited) {
-        isEdited = edited;
+    /**
+     * Button handler to undo last action.
+     */
+    public void undo() {
+        undoController.undo(GuiMain.getCurrentDatabase());
+    }
+
+    /**
+     * Button handler to redo last undo action.
+     */
+    public void redo() {
+        redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     public Boolean getEdited() {
         return isEdited;
+    }
+
+    public void setEdited(Boolean edited) {
+        isEdited = edited;
     }
 }

@@ -2,8 +2,8 @@ package odms.controller.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.Model.Data.ProfileDatabase;
-import odms.controller.History.HistoryController;
+import odms.controller.history.HistoryController;
+import odms.model.data.ProfileDatabase;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +17,7 @@ public class ProfileDataIO extends CommonDataIO {
     private static int lastPosition = 1;
 
     /**
-     * Export full Profile Database object to the previously used path.
+     * Export full profile Database object to the previously used path.
      *
      * @param profileDb Database to be exported to JSON
      */
@@ -29,15 +29,15 @@ public class ProfileDataIO extends CommonDataIO {
     }
 
     /**
-     * Export full Profile Database object to specified file.
+     * Export full profile Database object to specified file.
      *
      * @param profileDb Database to be exported to JSON
-     * @param path target path
+     * @param path      target path
      */
     public static void saveData(ProfileDatabase profileDb, String path) {
         profileDb.setPath(path);
         File file = new File(path);
-        File historyFile = new File(path.replace(".json","history.json"));
+        File historyFile = new File(path.replace(".json", "history.json"));
 
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -45,13 +45,15 @@ public class ProfileDataIO extends CommonDataIO {
             BufferedWriter writeHistoryFile = new BufferedWriter(new FileWriter(historyFile));
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
-            if(history.equals("")) {
+            if (history.equals("")) {
                 history = gson.toJson(HistoryController.getHistory());
-            } else if (HistoryController.getHistory().get(HistoryController.getPosition()) != null){
-                history = history.substring(0, history.length()-1);
+            } else if (HistoryController.getHistory().get(HistoryController.getPosition())
+                    != null) {
+                history = history.substring(0, history.length() - 1);
 
                 for (int i = lastPosition; i < HistoryController.getPosition(); i++) {
-                    history = history+"," + gson.toJson(HistoryController.getHistory().get(i).toString());
+                    history = history + "," + gson
+                            .toJson(HistoryController.getHistory().get(i).toString());
                 }
                 lastPosition = HistoryController.getPosition();
             }
@@ -87,7 +89,7 @@ public class ProfileDataIO extends CommonDataIO {
      */
     public static ProfileDatabase loadData(String path) {
         File file = new File(path);
-        File historyFile = new File(path.replace(".json","History.json"));
+        File historyFile = new File(path.replace(".json", "history.json"));
 
         //if it's a new external file then this history file will not exist so maybe we should try to create it?
         // This fixes the FileNotFoundError but not really sure, I'll hit you up about this Jack
@@ -116,6 +118,8 @@ public class ProfileDataIO extends CommonDataIO {
         return profileDb;
     }
 
-    public static String getHistory() { return history;}
+    public static String getHistory() {
+        return history;
+    }
 
 }

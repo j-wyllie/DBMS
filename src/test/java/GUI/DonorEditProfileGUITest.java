@@ -1,23 +1,20 @@
 package GUI;
 
-import com.sun.javafx.robot.impl.FXRobotHelper;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import org.junit.*;
-import org.testfx.api.FxRobot;
-
-import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
 
+import static org.junit.Assert.assertEquals;
+
 @Ignore
 public class DonorEditProfileGUITest extends TestFxMethods {
+
     private final String errorRequiredFieldsString = "Error. Required fields were left blank.";
     private final String errorNotAllFieldsUpdatedString = "Error. Not all fields were updated.";
 
@@ -242,7 +239,6 @@ public class DonorEditProfileGUITest extends TestFxMethods {
 
     @Test
     public void editHeightTest() {
-
 
         Scene scene = getTopScene();
         clickOn(scene.lookup("#heightField"));

@@ -1,16 +1,13 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeoutException;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import odms.controller.GuiMain;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 public class ClinicianProfileGUITest extends TestFxMethods {
@@ -34,9 +31,9 @@ public class ClinicianProfileGUITest extends TestFxMethods {
     }
 
     /**
-     * Tests that a donor's profile can be opened by a clinician and that the name can be successfully
-     * updated. The name is checked in the database and in the GUI to make sure it updates.
-     * Changes the donor back to the original.
+     * Tests that a donor's profile can be opened by a clinician and that the name can be
+     * successfully updated. The name is checked in the database and in the GUI to make sure it
+     * updates. Changes the donor back to the original.
      */
     @Test
     public void editDonorNameTest() {

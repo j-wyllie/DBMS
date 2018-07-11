@@ -1,7 +1,5 @@
 package GUI;
 
-import static org.junit.Assert.assertEquals;
-
 import javafx.scene.Scene;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -10,19 +8,16 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
-import odms.Model.profile.Profile;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import odms.model.profile.Profile;
+import org.junit.*;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- * Tests for checking that the correct file was imported by the admin.
- * Can't be run in headless mode, as the file chooser is not supported.
- * Run these tests manually before you push.
+ * Tests for checking that the correct file was imported by the admin. Can't be run in headless
+ * mode, as the file chooser is not supported. Run these tests manually before you push.
  */
 @Ignore
 public class AdminProfileTests extends TestFxMethods {
@@ -42,11 +37,12 @@ public class AdminProfileTests extends TestFxMethods {
 
     /**
      * Initializes the main gui
+     *
      * @param stage current stage
      * @throws Exception throws Exception
      */
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage) throws Exception {
         guiMain = new GuiMain();
         guiMain.start(stage);
     }
@@ -70,7 +66,6 @@ public class AdminProfileTests extends TestFxMethods {
 
         sleep(100);
         press(KeyCode.ENTER).release(KeyCode.ENTER);         //remove this line when story finished
-
 
         Scene scene = getTopScene();
         Label adminLabel = (Label) scene.lookup("#givenNamesLabel");

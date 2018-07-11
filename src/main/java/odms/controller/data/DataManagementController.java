@@ -9,9 +9,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
-import odms.controller.User.ClinicianProfileController;
-import odms.controller.data.ProfileDataIO;
-import odms.Model.user.User;
+import odms.controller.user.ClinicianProfileController;
+import odms.model.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +24,7 @@ public class DataManagementController {
 
     /**
      * Opens a file chooser and imports the selected files.
+     *
      * @param actionEvent
      */
     public void handleImportSavedDataClicked(ActionEvent actionEvent) {
@@ -37,7 +37,8 @@ public class DataManagementController {
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
+            if (ClinicianProfileController
+                    .checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
                 if (AlertController.unsavedChangesImport()) {
                     importAndCloseWindows(stage, file);
                 }
@@ -48,10 +49,10 @@ public class DataManagementController {
     }
 
     /**
-     * Imports new json file.
-     * Closes all open windows and re-initializes the admin view.
+     * Imports new json file. Closes all open windows and re-initializes the admin view.
+     *
      * @param stage Stage to be close
-     * @param file file to be set as database
+     * @param file  file to be set as database
      */
     private void importAndCloseWindows(Stage stage, File file) {
         GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
