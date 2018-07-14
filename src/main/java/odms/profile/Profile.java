@@ -889,9 +889,14 @@ public class Profile implements Comparable<Profile> {
         return gender;
     }
 
-    public void setGender(String gender) {
-        generateUpdateInfo("gender");
-        this.gender = gender;
+    public void setGender(String gender) throws IllegalArgumentException {
+        String newGender = gender.toLowerCase().trim();
+        if (newGender.equals("male") || newGender.equals("female")) {
+            generateUpdateInfo("gender");
+            this.gender = gender;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Double getHeight() {
@@ -921,8 +926,6 @@ public class Profile implements Comparable<Profile> {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         } else {
-            String[] bloodTypes = new String[1];
-            bloodTypes[0] = bloodType;
             throw new IllegalArgumentException();
         }
     }
