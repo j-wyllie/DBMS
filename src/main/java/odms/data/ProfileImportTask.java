@@ -1,5 +1,6 @@
 package odms.data;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,47 +71,58 @@ public class ProfileImportTask extends Task<Void> {
      * @return the profile object
      */
     private Profile csvToProfileConverter(CSVRecord csvRecord) {
-        String[] dobString = csvRecord.get("date_of_birth").split("/");
-        LocalDate dob = LocalDate.of(
-                Integer.valueOf(dobString[2]),
-                Integer.valueOf(dobString[0]),
-                Integer.valueOf(dobString[1])
-        );
-
         if (isValidNHI(csvRecord.get("nhi"))) {
-            Profile profile = new Profile(csvRecord.get("first_names"), csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
-
-
-            if (!csvRecord.get("date_of_death").isEmpty()) {
-                String[] dodString = csvRecord.get("date_of_death").split("/");
-                LocalDate dod = LocalDate.of(
-                        Integer.valueOf(dodString[2]),
-                        Integer.valueOf(dodString[0]),
-                        Integer.valueOf(dodString[1])
+            try {
+                String[] dobString = csvRecord.get("date_of_birth").split("/");
+                LocalDate dob = LocalDate.of(
+                        Integer.valueOf(dobString[2]),
+                        Integer.valueOf(dobString[0]),
+                        Integer.valueOf(dobString[1])
                 );
-                profile.setDateOfDeath(dod);
+
+                Profile profile = new Profile(csvRecord.get("first_names"), csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
+
+                if (!csvRecord.get("date_of_death").isEmpty()) {
+                    String[] dodString = csvRecord.get("date_of_death").split("/");
+
+                    // If the dod is invalid then don't upload
+                    if (dodString.length != 3) {
+                        return null;
+                    }
+
+                    LocalDate dod = LocalDate.of(
+                            Integer.valueOf(dodString[2]),
+                            Integer.valueOf(dodString[0]),
+                            Integer.valueOf(dodString[1])
+                    );
+
+                    profile.setDateOfDeath(dod);
+                }
+
+                profile.setGender(csvRecord.get("birth_gender"));
+                profile.setPreferredGender(csvRecord.get("gender"));
+                profile.setBloodType(csvRecord.get("blood_type"));
+                profile.setHeight(Double.valueOf(csvRecord.get("height")));
+                profile.setWeight(Double.valueOf(csvRecord.get("weight")));
+                profile.setStreetNumber(Integer.valueOf(csvRecord.get("street_number")));
+                profile.setStreetName(csvRecord.get("street_name"));
+                profile.setNeighbourhood(csvRecord.get("neighborhood"));
+                profile.setCity(csvRecord.get("city"));
+                profile.setRegion(csvRecord.get("region"));
+                profile.setZipCode(csvRecord.get("zip_code"));
+                profile.setCountry(csvRecord.get("country"));
+                profile.setBirthCountry(csvRecord.get("birth_country"));
+                profile.setPhone(csvRecord.get("home_number"));
+                profile.setMobilePhone(csvRecord.get("mobile_number"));
+                profile.setEmail(csvRecord.get("email"));
+
+                return profile;
+            } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
+                return null;
             }
-
-            profile.setGender(csvRecord.get("birth_gender"));
-            profile.setPreferredGender(csvRecord.get("gender"));
-            profile.setBloodType(csvRecord.get("blood_type"));
-            profile.setHeight(Double.valueOf(csvRecord.get("height")));
-            profile.setWeight(Double.valueOf(csvRecord.get("weight")));
-            profile.setStreetNumber(Integer.valueOf(csvRecord.get("street_number")));
-            profile.setStreetName(csvRecord.get("street_name"));
-            profile.setNeighbourhood(csvRecord.get("neighborhood"));
-            profile.setCity(csvRecord.get("city"));
-            profile.setRegion(csvRecord.get("region"));
-            profile.setZipCode(csvRecord.get("zip_code"));
-            profile.setCountry(csvRecord.get("country"));
-            profile.setBirthCountry(csvRecord.get("birth_country"));
-            profile.setPhone(csvRecord.get("home_number"));
-            profile.setMobilePhone(csvRecord.get("mobile_number"));
-            profile.setEmail(csvRecord.get("email"));
-
-            return profile;
+        } else {
+            return null;
         }
-        return null;
     }
 
 

@@ -2,6 +2,7 @@ package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
 import odms.enums.OrganEnum;
 import odms.history.History;
 import odms.medications.Drug;
@@ -10,14 +11,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import odms.controller.HistoryController;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
+import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
@@ -919,10 +916,14 @@ public class Profile implements Comparable<Profile> {
         return bloodType;
     }
 
-    public void setBloodType(String bloodType) {
-        if (bloodType != null) {
+    public void setBloodType(String bloodType) throws IllegalArgumentException {
+        if (bloodType != null && BloodTypeEnum.toArrayList().contains(bloodType)) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
+        } else {
+            String[] bloodTypes = new String[1];
+            bloodTypes[0] = bloodType;
+            throw new IllegalArgumentException();
         }
     }
 
@@ -1033,8 +1034,13 @@ public class Profile implements Comparable<Profile> {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String email) throws IllegalArgumentException {
+        EmailValidator validator = EmailValidator.getInstance();
+        if (validator.isValid(email)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void setAllConditions(ArrayList<Condition> conditions) {
