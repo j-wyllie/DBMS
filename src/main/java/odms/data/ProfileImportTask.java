@@ -103,7 +103,7 @@ public class ProfileImportTask extends Task<Void> {
                 profile.setBloodType(csvRecord.get("blood_type"));
                 profile.setHeight(Double.valueOf(csvRecord.get("height")));
                 profile.setWeight(Double.valueOf(csvRecord.get("weight")));
-                profile.setStreetNumber(Integer.valueOf(csvRecord.get("street_number")));
+                profile.setStreetNumber(csvRecord.get("street_number"));
                 profile.setStreetName(csvRecord.get("street_name"));
                 profile.setNeighbourhood(csvRecord.get("neighborhood"));
                 profile.setCity(csvRecord.get("city"));

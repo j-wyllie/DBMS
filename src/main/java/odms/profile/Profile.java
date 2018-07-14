@@ -34,7 +34,7 @@ public class Profile implements Comparable<Profile> {
 
     private String address;
 
-    private Integer streetNumber;
+    private String streetNumber;
     private String streetName;
     private String neighbourhood;
     private String city;
@@ -1091,11 +1091,11 @@ public class Profile implements Comparable<Profile> {
         this.streetName = streetName;
     }
 
-    public Integer getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(Integer streetNumber) {
+    public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 
