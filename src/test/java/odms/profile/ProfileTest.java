@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import org.junit.Test;
 
 public class ProfileTest {
     private ArrayList<String> profileAttr;
+    private Profile profile;
 
     @Before
     public void setup() {
@@ -32,6 +34,7 @@ public class ProfileTest {
         profileAttr.add("last-names=\"Smithy Smith Face\"");
         profileAttr.add("dob=\"17-01-1998\"");
         profileAttr.add("nhi=\"123456879\"");
+        profile = new Profile(profileAttr);
     }
 
     /**
@@ -957,5 +960,27 @@ public class ProfileTest {
         testProfile.setReceiver(false);
         expected.setValue(null);
         assertEquals(expected.toString(), testProfile.donorReceiverProperty().toString());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidEmail() {
+        profile.setEmail("Tim@Tim@TIM.tim@tim.com");
+    }
+
+    @Test
+    public void testValidEmail() {
+        profile.setEmail("jack@sugarbabes.gg");
+        assertEquals(profile.getEmail(), "jack@sugarbabes.gg");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidGender() {
+        profile.setGender("Triceratops");
+    }
+
+    @Test
+    public void testValidGender() {
+        profile.setGender("mAlE");
+        assertEquals(profile.getGender(), "male");
     }
 }

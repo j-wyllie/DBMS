@@ -893,7 +893,7 @@ public class Profile implements Comparable<Profile> {
         String newGender = gender.toLowerCase().trim();
         if (newGender.equals("male") || newGender.equals("female")) {
             generateUpdateInfo("gender");
-            this.gender = gender;
+            this.gender = newGender;
         } else {
             throw new IllegalArgumentException();
         }
