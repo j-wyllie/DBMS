@@ -1,5 +1,5 @@
 package odms.dao;
 
-public class JsonMedicationInteractionsDAO {
+public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 
 }
