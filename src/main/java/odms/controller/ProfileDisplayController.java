@@ -90,7 +90,7 @@ public class ProfileDisplayController extends CommonController {
     private Label lastNamesLabel;
 
     @FXML
-    private Label irdLabel;
+    private Label nhiLabel;
 
     @FXML
     private Label dobLabel;
@@ -1052,8 +1052,8 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
-            if (currentProfile.getIrdNumber() != null) {
-                irdLabel.setText(irdLabel.getText() + currentProfile.getIrdNumber());
+            if (currentProfile.getNhi() != null) {
+                nhiLabel.setText(nhiLabel.getText() + currentProfile.getNhi());
             }
             if (currentProfile.getDateOfBirth() != null) {
                 dobLabel.setText(dobLabel.getText() + currentProfile.getDateOfBirth()

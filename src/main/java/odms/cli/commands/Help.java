@@ -9,10 +9,10 @@ public class Help {
      */
     public static void help() {
         System.out.println("\nCreate a new profile:");
-        System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
+        System.out.println("create-profile {attributes (given-names, last-names, dob and nhi is "
             + "required)}");
         System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" "
-            + "dob=\"03-03-1998\" ird=\"123456789\"");
+            + "dob=\"03-03-1998\" nhi=\"123456789\"");
 
         System.out.println("\nCreate a new clinician:");
         System.out.println("create-clinician {attributes (name, username and password is required)}");
@@ -88,7 +88,7 @@ public class Help {
 
         System.out.println("\nProfile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
-            + " address, region, ird");
+            + " address, region, nhi");
 
         System.out.println("\nUser attributes:");
         System.out.println("name, password, username, workAddress, staffID, region");
@@ -115,11 +115,11 @@ public class Help {
             "\nAdd an organ to donate", "\nRemove an organ to donate", "\nPrint all profiles ", "\nPrint all users ",
             "\nPrint all donors ", "\nPrint all clinicians ", "\nClose the app ",
             "The possible attributes are : given-names, last-names, dob, dod, gender, height, "
-                + "weight, blood-type, address, region, ird",
+                + "weight, blood-type, address, region, nhi",
             "The possible organs are : Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, "
                 + "Middle Ear, Skin, Bone, Bone Marrow, Connective Tissue"};
         String[] exampleArray = {
-            "create-profile {attributes (given-names, last-names, dob and ird is required)}",
+            "create-profile {attributes (given-names, last-names, dob and nhi is required)}",
             "create-clinician {attribute (name, username and password is required)}",
             "profile/clinician {attributes to search profiles/clinicians by} > view",
             "profile/clinician {attributes to search profiles/clinicians by} > date-created",
