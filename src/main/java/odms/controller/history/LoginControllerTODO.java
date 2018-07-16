@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.view.profile.ProfileDisplayController;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
-import odms.controller.user.ClinicianProfileController;
+import odms.controller.user.ClinicianProfileControllerTODO;
 import odms.controller.user.UserNotFoundException;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
@@ -23,7 +23,7 @@ import static odms.controller.AlertController.invalidUsernameOrPassword;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class LoginController extends CommonController {
+public class LoginControllerTODO extends CommonController {
 
     private static User currentUser;
     private ProfileDatabase currentDatabase = getCurrentDatabase();
@@ -67,7 +67,7 @@ public class LoginController extends CommonController {
                                 .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileController controller = fxmlLoader.getController();
+                        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
@@ -93,7 +93,7 @@ public class LoginController extends CommonController {
                                 .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileController controller = fxmlLoader.getController();
+                        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
                         controller.setCurrentUser(currentUser);
                         controller.initialize();
 
@@ -111,7 +111,7 @@ public class LoginController extends CommonController {
                                     getClass().getResource("/view/ProfileDisplay.fxml"));
 
                             scene = new Scene(fxmlLoader.load());
-                            ProfileDisplayController controller = fxmlLoader.getController();
+                            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
                             controller.setProfile(currentProfile);
                             controller.initialize();
 

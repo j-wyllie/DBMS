@@ -27,7 +27,7 @@ import java.io.IOException;
 import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class ViewUsersController extends CommonController {
+public class ViewUsersControllerTODO extends CommonController {
 
     ContextMenu contextMenu;
     @FXML
@@ -119,7 +119,7 @@ public class ViewUsersController extends CommonController {
         fxmlLoader.setLocation(getClass().getResource("/view/UserCreate.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        UserCreateController controller = fxmlLoader.getController();
+        UserCreateControllerTODO controller = fxmlLoader.getController();
         controller.initialize();
 
         Stage stage = new Stage();

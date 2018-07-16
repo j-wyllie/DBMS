@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import static odms.controller.AlertController.*;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class ClinicianProfileEditController extends CommonController {
+public class ClinicianProfileEditControllerTODO extends CommonController {
 
     private static User currentUser;
 
@@ -88,7 +88,7 @@ public class ClinicianProfileEditController extends CommonController {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        ClinicianProfileController controller = fxmlLoader.getController();
+        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
         controller.initialize();
 

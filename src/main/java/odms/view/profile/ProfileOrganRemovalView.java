@@ -10,14 +10,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.model.enums.OrganEnum;
+import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.profile.Profile;
+import odms.view.CommonView;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 
-public class ProfileOrganRemovalController {
-
+public class ProfileOrganRemovalView extends CommonView{
     @FXML
     private Label dynamicLabel;
 
@@ -36,9 +35,11 @@ public class ProfileOrganRemovalController {
 
     private Profile currentProfile;
 
-    private ProfileOrganEditController profileOrganEditController;
+    private ProfileOrganEditControllerTODO profileOrganEditController;
 
     private String currentOrgan;
+
+    ProfileOrganRemovalController controller = new ProfileOrganRemovalController(this);
 
     /**
      * Confirms the changes made to the organs required and stores the reason given for this
@@ -50,31 +51,14 @@ public class ProfileOrganRemovalController {
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         String selection = reasonSelector.getSelectionModel().getSelectedItem();
-        switch (selection) {
-            case "Error":
-                removeOrgan();
-                break;
-
-            case "No longer required":
-                removeOrgan();
-                break;
-
-            case "Patient deceased":
-                removeAllOrgans();
-                currentProfile.setDateOfDeath(dodPicker.getValue());
-                HashSet<OrganEnum> organsRequired = new HashSet<>(
-                        currentProfile.getOrgansRequired()
-                );
-                currentProfile.removeOrgansRequired(organsRequired);
-                break;
-        }
+        controller.confirm();
         appStage.close();
     }
 
     /**
      * Removes the selected organ from the observable list of required organs displayed.
      */
-    private void removeOrgan() {
+    public void removeOrgan() {
         profileOrganEditController.observableListOrgansSelected.remove(currentOrgan);
         profileOrganEditController.observableListOrgansAvailable.add(currentOrgan);
     }
@@ -82,7 +66,7 @@ public class ProfileOrganRemovalController {
     /**
      * Removes all organs from the observable list of required organs displayed.
      */
-    private void removeAllOrgans() {
+    public void removeAllOrgans() {
         profileOrganEditController.observableListOrgansAvailable.addAll(
                 profileOrganEditController.observableListOrgansSelected
         );
@@ -136,7 +120,7 @@ public class ProfileOrganRemovalController {
      * the window.
      */
     @FXML
-    public void initialize(String organ, Profile profile, ProfileOrganEditController controller) {
+    public void initialize(String organ, Profile profile, ProfileOrganEditControllerTODO controller) {
         currentProfile = profile;
         profileOrganEditController = controller;
         currentOrgan = organ;
@@ -153,5 +137,17 @@ public class ProfileOrganRemovalController {
         GridPane.setMargin(curedCheck, new Insets(5, 0, 0, 0));
         windowGrid.add(curedCheck, 2, 2, 2, 1);
         curedCheck.setVisible(false);
+    }
+
+    public Profile getCurrentProfile() {
+        return currentProfile;
+    }
+
+    public LocalDate getDOD(){
+        return dodPicker.getValue();
+    }
+
+    public String getSelection() {
+        return reasonSelector.getSelectionModel().getSelectedItem();
     }
 }

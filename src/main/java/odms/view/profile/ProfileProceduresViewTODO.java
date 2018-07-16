@@ -22,7 +22,7 @@ import odms.view.CommonView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ProfileProceduresView extends CommonView {
+public class ProfileProceduresViewTODO extends CommonView {
     //todo separate fxml files
     @FXML
     private TableView pendingProcedureTable;

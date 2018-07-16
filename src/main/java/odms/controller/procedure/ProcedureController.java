@@ -1,26 +1,17 @@
 package odms.controller.procedure;
 
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
-import odms.view.profile.ProfileProceduresView;
+import odms.view.profile.ProfileProceduresViewTODO;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ProcedureController {
-    ProfileProceduresView view;
+    ProfileProceduresViewTODO view;
 
-    public ProcedureController(ProfileProceduresView v) {
+    public ProcedureController(ProfileProceduresViewTODO v) {
         view = v;
     }
 

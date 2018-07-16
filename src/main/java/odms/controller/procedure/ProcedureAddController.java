@@ -1,26 +1,17 @@
 package odms.controller.procedure;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import odms.view.profile.ProfileAddProcedureView;
-import odms.view.profile.ProfileDisplayController;
-import odms.controller.data.ProfileDataIO;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-
 public class ProcedureAddController {
 
-    private ProfileDisplayController controller;
+    private ProfileDisplayControllerTODO controller;
 
     private ObservableList<OrganEnum> donatedOrgans;
 

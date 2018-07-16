@@ -16,11 +16,9 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import odms.controller.data.MedicationDataIO;
 import odms.controller.data.ProfileDataIO;
-import odms.controller.medication.MedicationHistory;
-import odms.controller.profile.ProfileDrugControllerTODO;
-import odms.controller.profile.ProfileGeneralController;
+import odms.controller.medication.MedicationHistoryTODO;
+import odms.controller.profile.ProfileMedicationsController;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
@@ -75,7 +73,7 @@ public class ProfileMedicationsView extends CommonView{
     @FXML
     private Button buttonViewActiveIngredients;
 
-    private ProfileDrugControllerTODO controller = new ProfileDrugControllerTODO(this);
+    private ProfileMedicationsController controller = new ProfileMedicationsController(this);
     private Profile currentProfile;
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
@@ -246,7 +244,7 @@ public class ProfileMedicationsView extends CommonView{
      * Button handler to open medicationHistory scene
      *
      * @param event clicking on delete button.
-     * @throws IOException If MedicationHistory fxml is not found.
+     * @throws IOException If MedicationHistoryTODO fxml is not found.
      */
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
@@ -254,7 +252,7 @@ public class ProfileMedicationsView extends CommonView{
         fxmlLoader.setLocation(getClass().getResource("/view/MedicationHistory.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        MedicationHistory controller = fxmlLoader.getController();
+        MedicationHistoryTODO controller = fxmlLoader.getController();
         controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();

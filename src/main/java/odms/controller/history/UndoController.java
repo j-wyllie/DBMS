@@ -225,7 +225,7 @@ public class UndoController extends UndoRedoController {
      * @param action
      */
     public void updated(History action) {
-        User user = LoginController.getCurrentUser();
+        User user = LoginControllerTODO.getCurrentUser();
         String previous = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("previous ") + 9,
                         action.getHistoryData().indexOf("new "));

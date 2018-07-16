@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import odms.model.profile.Profile;
 
 
-public class MedicationHistory {
+public class MedicationHistoryTODO {
 
     private Profile profile;
 

@@ -1,6 +1,6 @@
 package odms.model.profile;
 
-import odms.controller.profile.ProfileGeneralController;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.enums.OrganEnum;
 import odms.model.medications.Drug;
 
@@ -67,7 +67,7 @@ public class Profile implements Comparable<Profile> {
      */
     public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
         //todo Change how setExtraAttributes works
-        ProfileGeneralController.setExtraAttributes(attributes, this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attributes, this);
         procedures = new ArrayList<>();
 
         if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null
@@ -95,7 +95,7 @@ public class Profile implements Comparable<Profile> {
         attr.add("dob=\"" + dob + "\"");
         this.setReceiver(false);
         //todo Change how setExtraAttributes works
-        ProfileGeneralController.setExtraAttributes(attr, this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attr, this);
 
         if (getGivenNames() == null ||
                 getLastNames() == null ||
@@ -279,7 +279,7 @@ public class Profile implements Comparable<Profile> {
 
     public void setGivenNames(String givenNames) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("given-names", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("given-names", this);
         this.givenNames = givenNames;
     }
 
@@ -293,14 +293,14 @@ public class Profile implements Comparable<Profile> {
 
     public void setLastNames(String lastNames) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("last-names", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("last-names", this);
         this.lastNames = lastNames;
     }
 
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("dob", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("dob", this);
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -311,52 +311,53 @@ public class Profile implements Comparable<Profile> {
             );
         }
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("dod", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("dod", this);
         this.dateOfDeath = dateOfDeath;
     }
 
     public void setGender(String gender) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("gender", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("gender", this);
         this.gender = gender;
     }
 
     public void setHeight(double height) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("height", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("height", this);
         this.height = height;
     }
 
     public void setWeight(double weight) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("weight", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("weight", this);
         this.weight = weight;
     }
 
     public void setBloodType(String bloodType) {
         if (bloodType != null) {
             //todo refactor generateUpdateInfo
-            ProfileGeneralController.generateUpdateInfo("blood-type", this);
+            ProfileGeneralControllerTODOContainsOldProfileMethods
+                    .generateUpdateInfo("blood-type", this);
             this.bloodType = bloodType;
         }
     }
 
     public void setAddress(String address) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("address", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("address", this);
         this.address = address;
     }
 
     public void setRegion(String region) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("region", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("region", this);
         this.region = region;
     }
 
 
     public void setIrdNumber(Integer irdNumber) {
         //todo refactor generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo("ird", this);
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("ird", this);
         this.irdNumber = irdNumber;
     }
 
@@ -470,6 +471,10 @@ public class Profile implements Comparable<Profile> {
     public void setLastUpdated() {
         LocalDateTime currentTime = LocalDateTime.now();
         lastUpdated = currentTime;
+    }
+
+    public HashSet<OrganEnum> getOrgansRequired() {
+        return organsRequired;
     }
 
     @Override

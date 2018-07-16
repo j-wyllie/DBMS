@@ -34,7 +34,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#usernameField").write("1");
         clickOn("#loginButton");
         // TODO Fix test so it doesn't access the static getCurrentProfile method.
-        //assertEquals("1", LoginController.getCurrentProfile().getId().toString());
+        //assertEquals("1", LoginControllerTODO.getCurrentProfile().getId().toString());
     }
 
     /**

@@ -80,10 +80,6 @@ public class ProfileOrganControllerTODO {
         }
     }
 
-    public static HashSet<OrganEnum> getOrgansRequired(Profile profile) {
-        return organsRequired;
-    }
-
     /**
      * Add an organ to the set of received organs. If the organ exists in the receiving set, remove
      * it.
@@ -136,28 +132,7 @@ public class ProfileOrganControllerTODO {
         }
     }
 
-    /**
-     * Remove a set of organs from the list of organs required.
-     *
-     * @param organs a set of organs to be removed
-     */
-    public void removeOrgansRequired(Set<OrganEnum> organs) {
-        generateUpdateInfo("organsReceiving");
 
-        for (OrganEnum organ : organs) {
-            this.organsRequired.remove(organ);
-            History action = new History(
-                    "profile ",
-                    this.getId(),
-                    "removed required",
-                    organ.getNamePlain(),
-                    -1,
-                    LocalDateTime.now()
-            );
-
-            HistoryController.updateHistory(action);
-        }
-    }
 
     public void removeOrganReceived(OrganEnum organ) {
         if (this.organsReceived.contains(organ)) {

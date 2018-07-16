@@ -1,66 +1,32 @@
 package odms.view.profile;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.Duration;
 import odms.controller.CommonController;
-import odms.controller.EditDateCell;
-import odms.controller.EditingConditionsCell;
 import odms.controller.GuiMain;
-import odms.controller.condition.ConditionAddController;
-import odms.controller.data.MedicationDataIO;
 import odms.controller.data.ProfileDataIO;
-import odms.controller.history.HistoryController;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
-import odms.controller.medication.MedicationHistory;
-import odms.controller.procedure.ProcedureAddController;
-import odms.controller.procedure.ProcedureEditController;
 import odms.controller.profile.ProfileEditController;
-import odms.model.history.History;
-import odms.model.medications.Drug;
 import odms.model.profile.Condition;
-import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.data.MedicationDataIO.getActiveIngredients;
-import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
-public class ProfileDisplayController extends CommonController {
+public class ProfileDisplayControllerTODO extends CommonController {
 
     public Profile currentProfile;
     /**
@@ -75,7 +41,7 @@ public class ProfileDisplayController extends CommonController {
     @FXML
     private AnchorPane profileOrganOverview;
     @FXML
-    private ProfileOrganOverviewController profileOrganOverviewController;
+    private ProfileOrganOverviewControllerTODO profileOrganOverviewController;
     @FXML
     private Label donorFullNameLabel;
     @FXML

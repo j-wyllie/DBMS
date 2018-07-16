@@ -10,7 +10,7 @@ import odms.model.profile.Profile;
 import java.util.Collections;
 import java.util.Set;
 
-public class ProfileOrganCommonController {
+public class ProfileOrganCommonControllerTODO {
 
     protected ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
 

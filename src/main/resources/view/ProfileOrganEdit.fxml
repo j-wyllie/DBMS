@@ -6,7 +6,7 @@
 <?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="600.0"
         xmlns="http://javafx.com/javafx/8"
-        fx:controller="odms.view.profile.ProfileOrganEditController">
+        fx:controller="odms.view.profile.ProfileOrganEditControllerTODO">
     <children>
         <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
                 AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"

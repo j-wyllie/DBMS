@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" style="-:: #1fa98c;" prefHeight="700.0"
         prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111"
-        fx:controller="odms.controller.user.ClinicianProfileEditController">
+        fx:controller="odms.controller.user.ClinicianProfileEditControllerTODO">
     <children>
         <GridPane style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
                 AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"

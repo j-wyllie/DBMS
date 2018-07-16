@@ -19,12 +19,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.App;
-import odms.view.profile.ProfileDisplayController;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
 import odms.controller.CommonController;
 import odms.controller.GuiMain;
-import odms.controller.data.DataManagementController;
+import odms.controller.data.DataManagementControllerPOTENTIALTODO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.model.enums.OrganEnum;
@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ClinicianProfileController extends CommonController {
+public class ClinicianProfileControllerTODO extends CommonController {
 
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;
@@ -93,7 +93,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private Tab consoleTab;
     @FXML
-    private ViewUsersController viewUsersController;
+    private ViewUsersControllerTODO viewUsersControllerTODO;
     @FXML
     private TableView transplantTable;
     @FXML
@@ -103,7 +103,7 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private AnchorPane dataManagement;
     @FXML
-    private DataManagementController dataManagementController;
+    private DataManagementControllerPOTENTIALTODO dataManagementControllerPOTENTIALTODO;
     @FXML
     private Label labelResultCount;
     @FXML
@@ -204,7 +204,7 @@ public class ClinicianProfileController extends CommonController {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        ClinicianProfileEditController controller = fxmlLoader.getController();
+        ClinicianProfileEditControllerTODO controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
         controller.initialize();
 
@@ -536,7 +536,7 @@ public class ClinicianProfileController extends CommonController {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            ProfileDisplayController controller = fxmlLoader.getController();
+            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
             controller.setProfileViaClinician(selectedDonor);
             controller.initialize();
 
@@ -613,8 +613,8 @@ public class ClinicianProfileController extends CommonController {
      * Initializes the controller for the view users Tab
      */
     public void handleViewUsersTabClicked() {
-        viewUsersController.setCurrentUser(currentUser);
-        viewUsersController.setUpUsersTable();
+        viewUsersControllerTODO.setCurrentUser(currentUser);
+        viewUsersControllerTODO.setUpUsersTable();
     }
 
     /**
@@ -631,7 +631,7 @@ public class ClinicianProfileController extends CommonController {
     }
 
     public void handleTabDataManagementClicked() {
-        dataManagementController.setCurrentUser(currentUser);
+        dataManagementControllerPOTENTIALTODO.setCurrentUser(currentUser);
     }
 
     /**

@@ -15,9 +15,9 @@ import odms.model.enums.OrganSelectEnum;
 
 import java.io.IOException;
 
-import static odms.view.profile.ProfileOrganEditController.setWindowType;
+import static odms.view.profile.ProfileOrganEditControllerTODO.setWindowType;
 
-public class ProfileOrganOverviewController extends ProfileOrganCommonController {
+public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonControllerTODO {
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
@@ -104,7 +104,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
-        ProfileOrganEditController controller = fxmlLoader.getController();
+        ProfileOrganEditControllerTODO controller = fxmlLoader.getController();
         controller.setCurrentProfile(currentProfile.get());
         controller.initialize();
 

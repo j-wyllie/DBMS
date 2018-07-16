@@ -5,20 +5,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import odms.controller.GuiMain;
 import odms.controller.data.ProfileDataIO;
-import odms.controller.history.HistoryController;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
 import odms.controller.procedure.ProcedureEditController;
 import odms.model.enums.OrganEnum;
-import odms.model.history.History;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static odms.controller.GuiMain.getCurrentDatabase;
@@ -51,11 +45,11 @@ public class ProfileDetailedProcedureView extends CommonView {
     private Procedure currentProcedure;
     private ProcedureEditController controller = new ProcedureEditController(this);
     private Profile profile;
-    private ProfileProceduresView parent;
+    private ProfileProceduresViewTODO parent;
 
     @FXML
     public void initialize(Procedure selectedProcedure, Profile currentProfile,
-            ProfileProceduresView p) {
+            ProfileProceduresViewTODO p) {
         parent = p;
         profile = currentProfile;
         warningLabel.setVisible(false);

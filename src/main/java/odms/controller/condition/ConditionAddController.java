@@ -1,20 +1,10 @@
 package odms.controller.condition;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import odms.view.profile.ProfileAddConditionView;
-import odms.view.profile.ProfileDisplayController;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.profile.Condition;
-import odms.model.profile.Profile;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

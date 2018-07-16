@@ -10,7 +10,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ProfileGeneralController {
+public class ProfileGeneralControllerTODOContainsOldProfileMethods {
 
     /**
      * Sets the attributes that are passed into the constructor

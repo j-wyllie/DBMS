@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Ignore
-public class ClinicianProfileControllerTest extends TestFxMethods {
+public class ClinicianProfileControllerTODOTest extends TestFxMethods {
 
     //Runs tests in background if headless is set to true. This gets it working with the CI.
     @BeforeClass

@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
+import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.OrganConflictException;
@@ -24,7 +25,7 @@ import odms.model.profile.Profile;
 import java.io.IOException;
 import java.util.*;
 
-public class ProfileOrganEditController extends ProfileOrganCommonController {
+public class ProfileOrganEditControllerTODO extends ProfileOrganCommonControllerTODO {
 
     private static OrganSelectEnum windowType;
     protected ObservableList<String> observableListOrgansSelected = FXCollections
@@ -167,7 +168,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        HashSet<OrganEnum> organsAdded = ProfileOrganEditController.observableListStringsToOrgans(
+        HashSet<OrganEnum> organsAdded = ProfileOrganEditControllerTODO.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
         HashSet<OrganEnum> organsRemoved;

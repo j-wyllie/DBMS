@@ -183,7 +183,7 @@ public class RedoController extends UndoRedoController {
      */
     public void updated(History action) {
         int id = action.getHistoryId();
-        User user = LoginController.getCurrentUser();
+        User user = LoginControllerTODO.getCurrentUser();
         String newString = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
         String[] newValues = newString.split(",");

@@ -1,23 +1,11 @@
 package odms.controller.profile;
 
-import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.MenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 import odms.controller.CommonController;
 import odms.controller.data.MedicationDataIO;
 import odms.controller.history.HistoryController;
-import odms.controller.medication.MedicationHistory;
 import odms.model.history.History;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
@@ -30,12 +18,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static odms.controller.data.MedicationDataIO.getActiveIngredients;
-import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
-public class ProfileDrugControllerTODO extends CommonController {
+public class ProfileMedicationsController extends CommonController {
     ProfileMedicationsView view;
 
-    public ProfileDrugControllerTODO(ProfileMedicationsView profileMedicationsView) {
+    public ProfileMedicationsController(ProfileMedicationsView profileMedicationsView) {
         view = profileMedicationsView;
     }
 
@@ -57,7 +44,8 @@ public class ProfileDrugControllerTODO extends CommonController {
                 currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         profile.getMedicationTimestamps().add(data);
         //todo improve generateUpdateInfo
-        ProfileGeneralController.generateUpdateInfo(drug.getDrugName(),profile);
+        ProfileGeneralControllerTODOContainsOldProfileMethods
+                .generateUpdateInfo(drug.getDrugName(),profile);
         //todo maybe "profile" needs to be changed to "Profile"
         History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
@@ -87,7 +75,8 @@ public class ProfileDrugControllerTODO extends CommonController {
             profile.getCurrentMedications().remove(drug);
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
-            ProfileGeneralController.generateUpdateInfo(drug.getDrugName(),profile);
+            ProfileGeneralControllerTODOContainsOldProfileMethods
+                    .generateUpdateInfo(drug.getDrugName(),profile);
         } else if (profile.getHistoryOfMedication().contains(drug)) {
             profile.getHistoryOfMedication().remove(drug);
             data = "profile " +
@@ -124,7 +113,8 @@ public class ProfileDrugControllerTODO extends CommonController {
 
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
-            ProfileGeneralController.generateUpdateInfo(drug.getDrugName(),profile);
+            ProfileGeneralControllerTODOContainsOldProfileMethods
+                    .generateUpdateInfo(drug.getDrugName(),profile);
         }
 
 
@@ -152,7 +142,8 @@ public class ProfileDrugControllerTODO extends CommonController {
 
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
-            ProfileGeneralController.generateUpdateInfo(drug.getDrugName(),profile);
+            ProfileGeneralControllerTODOContainsOldProfileMethods
+                    .generateUpdateInfo(drug.getDrugName(),profile);
         }
 
     }
@@ -229,7 +220,7 @@ public class ProfileDrugControllerTODO extends CommonController {
                 drugs.get(0).getDrugName(),
                 drugs.get(1).getDrugName(),
                 currentProfile.getGender(),
-                ProfileGeneralController.calculateAge(currentProfile)
+                ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(currentProfile)
         );
         return interactionsRaw;
     }

@@ -13,7 +13,7 @@ import odms.controller.GuiMain;
 import odms.model.user.User;
 import odms.model.user.UserType;
 
-public class UserCreateController extends CommonController {
+public class UserCreateControllerTODO extends CommonController {
 
     @FXML
     private TextField userUsernameField;
