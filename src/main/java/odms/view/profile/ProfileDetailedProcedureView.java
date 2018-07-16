@@ -45,11 +45,11 @@ public class ProfileDetailedProcedureView extends CommonView {
     private Procedure currentProcedure;
     private ProcedureEditController controller = new ProcedureEditController(this);
     private Profile profile;
-    private ProfileProceduresViewTODO parent;
+    private ProfileProceduresView parent;
 
     @FXML
     public void initialize(Procedure selectedProcedure, Profile currentProfile,
-            ProfileProceduresViewTODO p) {
+            ProfileProceduresView p) {
         parent = p;
         profile = currentProfile;
         warningLabel.setVisible(false);

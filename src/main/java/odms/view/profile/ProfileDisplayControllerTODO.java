@@ -17,6 +17,7 @@ import odms.controller.data.ProfileDataIO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.controller.profile.ProfileEditController;
+import odms.controller.profile.ProfileOrganOverviewControllerPOSSIBLYREDUNDANT;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 
@@ -41,7 +42,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private AnchorPane profileOrganOverview;
     @FXML
-    private ProfileOrganOverviewControllerTODO profileOrganOverviewController;
+    private ProfileOrganOverviewControllerPOSSIBLYREDUNDANT profileOrganOverviewController;
     @FXML
     private Label donorFullNameLabel;
     @FXML
