@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<!--
+    checkstyle xml created based on:
+        https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
+        https://github.com/skeeto/sample-java-project/blob/master/checkstyle.xml
+-->
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+
+    <property name="fileExtensions" value="java, properties, xml"/>
+
+    <!-- Checks whether files end with a new line.                        -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- See http://checkstyle.sf.net/config_misc.html -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="message" value="Line has trailing spaces."/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+        <module name="JavadocMethod">
+            <property name="ignoreMethodNamesRegex" value="^(get|set).*$"/>
+        </module>
+        <module name="JavadocType"/>
+        <module name="JavadocStyle"/>
+
+        <!-- Whitespace: http://checkstyle.sourceforge.net/config_whitespace.html -->
+        <module name="NoWhitespaceAfter"/>
+
+    </module>
+
+</module>
