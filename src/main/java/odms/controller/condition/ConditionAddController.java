@@ -8,6 +8,7 @@ import odms.model.profile.Condition;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import odms.view.profile.ProfileMedicalHistoryView;
 
 public class ConditionAddController {
     private ProfileAddConditionView view;
@@ -65,5 +66,8 @@ public class ConditionAddController {
             throw new IllegalArgumentException();
         }
         return condition;
+    }
+
+    public void init(ProfileMedicalHistoryView profileMedicalHistoryView) {
     }
 }

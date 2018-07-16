@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import javax.swing.text.TableView.TableRow;
+import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 
 
@@ -59,6 +61,5 @@ public class MedicationHistoryTODO {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
-
 
 }
