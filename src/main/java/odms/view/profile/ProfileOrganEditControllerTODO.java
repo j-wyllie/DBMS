@@ -16,92 +16,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
+import odms.controller.CommonController;
+import odms.controller.history.HistoryController;
 import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
+import odms.model.history.History;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
-public class ProfileOrganEditControllerTODO extends ProfileOrganCommonControllerTODO {
-
-    private static OrganSelectEnum windowType;
-    protected ObservableList<String> observableListOrgansSelected = FXCollections
-            .observableArrayList();
-    @FXML
-    private ListView<String> viewOrgansAvailable;
-    @FXML
-    private ListView<String> viewOrgansSelected;
-    @FXML
-    private Button btnOrganSwitch;
-    @FXML
-    private Button btnSave;
-    @FXML
-    private Label lblBanner;
-    @FXML
-    private Label lblSelected;
-
-    /**
-     * Convert an HashSet of Organ Strings to a HashSet of OrganEnum.
-     *
-     * @param organStrings strings to convert
-     * @return set of OrganEnum
-     */
-    private static HashSet<OrganEnum> observableListStringsToOrgans(HashSet<String> organStrings) {
-        List<String> correctedOrganStrings = new ArrayList<>();
-
-        for (String organ : organStrings) {
-            correctedOrganStrings.add(organ.trim().toUpperCase().replace(" ", "_"));
-        }
-
-        return OrganEnum.stringListToOrganSet(correctedOrganStrings);
-    }
-
-    protected static void setWindowType(OrganSelectEnum type) {
-        windowType = type;
-    }
-
-    public void initialize() {
-        lblBanner.setText(windowType.toString());
-
-        if (currentProfile.get() != null) {
-            // Order of execution for building these is required due to removing items from the
-            // Available list that are present in the Required list.
-            buildOrgansSelected();
-            buildOrgansAvailable(observableListOrgansSelected);
-            viewOrgansAvailable.setItems(observableListOrgansAvailable);
-            viewOrgansSelected.setItems(observableListOrgansSelected);
-        }
-
-        btnOrganSwitch.setOnAction(this::handleBtnOrganSwitchClicked);
-        viewOrgansAvailable.setOnMouseClicked(this::handleListOrgansAvailableClick);
-        viewOrgansSelected.setOnMouseClicked(this::handleListOrgansRequiredClick);
-    }
-
-    /**
-     * Populate the ListView with the organs the profile currently requires.
-     */
-    private void buildOrgansSelected() {
-        Set<OrganEnum> organs = new HashSet<>();
-
-        switch (windowType) {
-            case DONATED:
-                lblSelected.setText("Donated");
-                organs = currentProfile.get().getOrgansDonated();
-                break;
-            case DONATING:
-                lblSelected.setText("Donating");
-                organs = currentProfile.get().getOrgansDonating();
-                break;
-            case REQUIRED:
-                lblSelected.setText("Required");
-                organs = currentProfile.get().getOrgansRequired();
-                break;
-        }
-
-        populateOrganList(observableListOrgansSelected, organs);
+public class ProfileOrganEditControllerTODO extends CommonController {
+    ProfileOrganEditView view;
+    public ProfileOrganEditControllerTODO(ProfileOrganEditView v) {
+        view = v;
     }
 
     /**
@@ -122,163 +53,227 @@ public class ProfileOrganEditControllerTODO extends ProfileOrganCommonController
         return organsRemoved;
     }
 
-    /**
-     * Button to perform moving the organ from one ListView to the other ListView
-     */
-    private void handleBtnOrganSwitchClicked(Event event) {
-        switchOrgans(event);
-    }
-
-    private void handleListOrgansAvailableClick(MouseEvent event) {
-        handleOrgansClick(event, viewOrgansSelected.getSelectionModel());
-    }
-
-    private void handleListOrgansRequiredClick(MouseEvent event) {
-        handleOrgansClick(event, viewOrgansAvailable.getSelectionModel());
-    }
-
-    /**
-     * Click Handler to handle Click actions on the ListViews. - A single click will clear the
-     * selection from the opposing ListView. - A double click will move the organ from the ListView
-     * to the opposing ListView.
-     *
-     * @param event the MouseEvent
-     * @param model the SelectionModel to operate against
-     */
-    private void handleOrgansClick(MouseEvent event, MultipleSelectionModel<String> model) {
-        if (event.getButton() == MouseButton.PRIMARY) {
-            model.clearSelection();
-
-            if (event.getClickCount() == 2) {
-                model.clearSelection();
-                switchOrgans(event);
-            }
-        }
-    }
-
-    /**
-     * Cancel the current changes in the view and close the window.
-     */
-    public void onBtnCancelClicked() {
-        Stage stage = (Stage) btnSave.getScene().getWindow();
-        stage.close();
-    }
-
-    /**
-     * Save the changes made in the current view and close the window.
-     */
-    public void onBtnSaveClicked() {
-        HashSet<OrganEnum> organsAdded = ProfileOrganEditControllerTODO.observableListStringsToOrgans(
-                new HashSet<>(observableListOrgansSelected)
-        );
+    public void caseDonated() {
         HashSet<OrganEnum> organsRemoved;
+        Profile currentProfile = view.getCurrentProfile();
+        organsRemoved = findOrgansRemoved(
+                currentProfile.getOrgansDonated(),
+                view.getOrgansAdded()
+        );
+        addOrgansDonated(view.getOrgansAdded());
+        removeOrgansDonated(organsRemoved);
+    }
+    /**
+     * Add a set of organsDonating to the list of organsDonating that the profile has donated
+     *
+     * @param organs a set of organsDonating that the profile has donated
+     */
+    public void addOrgansDonated(Set<OrganEnum> organs) {
+        //todo fix generate update info
+        generateUpdateInfo("pastDonations");
 
-        switch (windowType) {
-            case DONATED:
-                organsRemoved = findOrgansRemoved(
-                        currentProfile.get().getOrgansDonated(),
-                        organsAdded
-                );
+        for (OrganEnum organ : organs) {
+            //todo might need to change to addOrganDonated
+            view.getCurrentProfile().getOrgansDonated().add(organ);
+            History action = new History(
+                    "profile ",
+                    view.getCurrentProfile().getId(),
+                    "donated",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
+            HistoryController.updateHistory(action);
+        }
+    }
 
-                currentProfile.get().addOrgansDonated(organsAdded);
-                currentProfile.get().removeOrgansDonated(organsRemoved);
-                break;
-            case DONATING:
-                try {
-                    currentProfile.get().setDonor(true);
+    /**
+     * Remove a set of organs from the list of organs that the profile has donated
+     *
+     * @param organs a set of organs to remove from the list
+     */
+    public void removeOrgansDonated(Set<OrganEnum> organs) {
+        //todo fix generate update info
+        generateUpdateInfo("organsDonated");
 
-                    organsRemoved = findOrgansRemoved(
-                            currentProfile.get().getOrgansDonating(),
-                            organsAdded
-                    );
+        for (OrganEnum organ : organs) {
+            view.getCurrentProfile().getOrgansDonated().remove(organ);
+            History action = new History(
+                    "profile ",
+                    view.getCurrentProfile().getId(),
+                    "removed donated",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
+            HistoryController.updateHistory(action);
+        }
+    }
 
-                    organsAdded.removeAll(currentProfile.get().getOrgansDonating());
-                    currentProfile.get().addOrgansDonating(organsAdded);
-                    currentProfile.get().removeOrgansDonating(organsRemoved);
-                } catch (OrganConflictException e) {
-                    AlertController.invalidOrgan(e.getOrgan());
-                }
-                break;
-            case REQUIRED:
-                currentProfile.get().setReceiver(true);
-
-                organsRemoved = findOrgansRemoved(
-                        currentProfile.get().getOrgansRequired(),
-                        organsAdded
-                );
-
-                currentProfile.get().addOrgansRequired(organsAdded);
-                currentProfile.get().removeOrgansRequired(organsRemoved);
-                break;
+    /**
+     * Add an organ to the list of donated organsDonating. If the organ exists in the donating list,
+     * remove it from the donating list.
+     *
+     * @param organ the organ to be added
+     */
+    public void addOrganDonated(OrganEnum organ) {
+        if (view.getCurrentProfile().getOrgansDonating().contains(organ)) {
+            view.getCurrentProfile().getOrgansDonating().remove(organ);
         }
 
-        Stage stage = (Stage) btnSave.getScene().getWindow();
-        stage.close();
+        view.getCurrentProfile().getOrgansDonated().add(organ);
     }
 
-    /**
-     * Refresh the listViews
-     */
-    private void refreshListViews() {
-        Collections.sort(observableListOrgansSelected);
-        Collections.sort(observableListOrgansAvailable);
-
-        viewOrgansSelected.refresh();
-        viewOrgansAvailable.refresh();
-    }
-
-    /**
-     * Configure the currently selected profile
-     *
-     * @param profile the profile to operate against.
-     */
-    protected void setCurrentProfile(Profile profile) {
-        this.currentProfile.set(profile);
-    }
-
-    /**
-     * Take the selected organ from the ListView and move it to the other ListView.
-     */
-    private void switchOrgans(Event event) {
-        if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
-            String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
-            observableListOrgansAvailable.remove(item);
-            observableListOrgansSelected.add(item);
-        } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
-            String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
-            giveReasonForRemoval(event, item);
-        }
-        refreshListViews();
-
-        viewOrgansAvailable.getSelectionModel().clearSelection();
-        viewOrgansSelected.getSelectionModel().clearSelection();
-    }
-
-    /**
-     * Launch pane to add reasoning for organ removal.
-     *
-     * @param organ the organ to specify reason for
-     */
-    private void giveReasonForRemoval(Event event, String organ) {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganRemoval.fxml"));
-
+    public void caseDonating() {
         try {
-            Scene scene = new Scene(fxmlLoader.load());
-            ProfileOrganRemovalController controller = fxmlLoader.getController();
-            controller.initialize(organ, this.currentProfile.get(), this);
+            HashSet<OrganEnum> organsRemoved;
+            view.getCurrentProfile().setDonor(true);
 
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Organ Removal");
-            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.centerOnScreen();
-            stage.setOnHiding((ob) -> refreshListViews());
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+            organsRemoved = findOrgansRemoved(
+                    view.getCurrentProfile().getOrgansDonating(),
+                    view.getOrgansAdded()
+            );
+
+            view.getOrgansAdded().removeAll(view.getCurrentProfile().getOrgansDonating());
+            addOrgansDonating(view.getOrgansAdded());
+            removeOrgansDonating(organsRemoved);
+        } catch (OrganConflictException e) {
+            AlertController.invalidOrgan(e.getOrgan());
         }
     }
 
+    /**
+     * Remove a set of organs from the list of organs that the use wants to donate
+     *
+     * @param organs a set of organs to be removed
+     */
+    public void removeOrgansDonating(Set<OrganEnum> organs) {
+        //todo generateupdateinfo
+        generateUpdateInfo("organsDonating");
+
+        for (OrganEnum organ : organs) {
+            view.getCurrentProfile().getOrgansDonating().remove(organ);
+            History action = new History(
+                    "profile ",
+                    view.getCurrentProfile().getId(),
+                    "removed",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
+            HistoryController.updateHistory(action);
+        }
+    }
+
+    /**
+     * Add a set of organs to the list of organs that the profile wants to donate
+     *
+     * @param organs the set of organs to donate
+     * @throws IllegalArgumentException if a bad argument is used
+     * @throws OrganConflictException   if there is a conflicting organ
+     */
+    public void addOrgansDonating(Set<OrganEnum> organs)
+            throws IllegalArgumentException, OrganConflictException {
+        //todo
+        generateUpdateInfo("organsDonating");
+
+        for (OrganEnum organ : organs) {
+            if (view.getCurrentProfile().getOrgansDonating().contains(organ)) {
+                throw new IllegalArgumentException(
+                        "Organ " + organ + " already exists in donating list"
+                );
+            }
+            addOrganDonating(organ);
+
+            History action = new History("profile ", view.getCurrentProfile().getId(), "set", organ.getNamePlain(),
+                    -1, LocalDateTime.now());
+            HistoryController.updateHistory(action);
+        }
+    }
+
+    /**
+     * Add an organ to the organs donate list.
+     *
+     * @param organ the organ the profile wishes to donate
+     */
+    public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
+        if (view.getCurrentProfile().getOrgansReceived().contains(organ)) {
+            // A donor cannot donate an organ they've received.
+            throw new OrganConflictException(
+                    "profile has previously received " + organ,
+                    organ
+            );
+        }
+        view.getCurrentProfile().getOrgansDonating().add(organ);
+    }
+
+    public void caseRequired() {
+        HashSet<OrganEnum> organsRemoved;
+        view.getCurrentProfile().setReceiver(true);
+
+        organsRemoved = findOrgansRemoved(
+                view.getCurrentProfile().getOrgansRequired(),
+                view.getOrgansAdded()
+        );
+        addOrgansRequired(view.getOrgansAdded());
+        removeOrgansRequired(organsRemoved);
+    }
+
+    /**
+     * Add an organ to the organs required list.
+     *
+     * @param organ the organ the profile requires
+     */
+    public void addOrganRequired(OrganEnum organ) {//TODO Error Check
+        this.setReceiver(true);
+        this.organsRequired.add(organ);
+    }
+
+    /**
+     * Add a set of organs that the profile requires to the required organs set.
+     *
+     * @param organs the set of organs to be received
+     */
+    public void addOrgansRequired(HashSet<OrganEnum> organs) {
+        generateUpdateInfo("organsRequired");
+
+        for (OrganEnum organ : organs) {
+            addOrganRequired(organ);
+            LocalDateTime now = LocalDateTime.now();
+            History action = new History("profile", this.getId(), "required organ",
+                    "" + organ.getNamePlain(), -1, now);
+            HistoryController.updateHistory(action);
+        }
+    }
+
+    public void removeOrganReceived(OrganEnum organ) {
+        if (this.organsReceived.contains(organ)) {
+            this.organsReceived.remove(organ);
+        }
+
+        this.organsRequired.add(organ);
+    }
+
+    /**
+     * Remove a set of organs from the list of organs required.
+     *
+     * @param organs a set of organs to be removed
+     */
+    public void removeOrgansRequired(Set<OrganEnum> organs) {
+        //todo fix generate update info into simpler solution
+        //generateUpdateInfo("organsReceiving");
+        for (OrganEnum organ : organs) {
+            view.getCurrentProfile().getOrgansRequired().remove(organ);
+            History action = new History(
+                    "profile ",
+                    view.getCurrentProfile().getId(),
+                    "removed required",
+                    organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
+            );
+
+            HistoryController.updateHistory(action);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package odms.view.profile;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -35,7 +36,7 @@ public class ProfileOrganRemovalView extends CommonView{
 
     private Profile currentProfile;
 
-    private ProfileOrganEditControllerTODO profileOrganEditController;
+    private ProfileOrganEditView profileOrganEditView;
 
     private String currentOrgan;
 
@@ -59,18 +60,18 @@ public class ProfileOrganRemovalView extends CommonView{
      * Removes the selected organ from the observable list of required organs displayed.
      */
     public void removeOrgan() {
-        profileOrganEditController.observableListOrgansSelected.remove(currentOrgan);
-        profileOrganEditController.observableListOrgansAvailable.add(currentOrgan);
+        profileOrganEditView.observableListOrgansSelected.remove(currentOrgan);
+        profileOrganEditView.observableListOrgansAvailable.add(currentOrgan);
     }
 
     /**
      * Removes all organs from the observable list of required organs displayed.
      */
     public void removeAllOrgans() {
-        profileOrganEditController.observableListOrgansAvailable.addAll(
-                profileOrganEditController.observableListOrgansSelected
+        profileOrganEditView.observableListOrgansAvailable.addAll(
+                profileOrganEditView.observableListOrgansSelected
         );
-        profileOrganEditController.observableListOrgansSelected.clear();
+        profileOrganEditView.observableListOrgansSelected.clear();
     }
 
     /**
@@ -120,9 +121,9 @@ public class ProfileOrganRemovalView extends CommonView{
      * the window.
      */
     @FXML
-    public void initialize(String organ, Profile profile, ProfileOrganEditControllerTODO controller) {
+    public void initialize(String organ, Profile profile, ProfileOrganEditView v) {
         currentProfile = profile;
-        profileOrganEditController = controller;
+        profileOrganEditView = v;
         currentOrgan = organ;
         organLabel.setText(organLabel.getText() + organ);
         reasonSelector.getItems().addAll(
