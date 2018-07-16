@@ -86,6 +86,14 @@ public class Help {
         System.out.println("\nClose the app: ");
         System.out.println("quit");
 
+        System.out.println("\nUndo/redo: ");
+        System.out.println("undo");
+        System.out.println("redo");
+
+        System.out.println("\nImport/export data: ");
+        System.out.println("export");
+        System.out.println("import {filepath}");
+
         System.out.println("\nProfile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
             + " address, region, ird");
