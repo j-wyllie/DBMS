@@ -11,14 +11,18 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.controller.profile.ProfileOrganEditController;
+import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
+import odms.model.profile.Profile;
+import odms.view.CommonView;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 
-import static odms.view.profile.ProfileOrganEditControllerTODO.setWindowType;
-
-public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonControllerTODO {
-
+public class ProfileOrgansView extends CommonView {
+    private Profile currentProfile;
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
@@ -34,9 +38,12 @@ public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonContro
     @FXML
     private ListView<String> listViewReceiving;
 
-    public void initialize() {
-        listViewDonating.setCellFactory(param -> new HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new HighlightedCell());
+    private static OrganSelectEnum windowType;
+
+    public void initialize(Profile p) {
+        currentProfile = p;
+        listViewDonating.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
+        listViewReceiving.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
@@ -65,9 +72,9 @@ public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonContro
      * Populates the checklist with donating organs for highlighting.
      */
     public void populateOrganLists() {
-        populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
+        populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
+        populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
+        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
 
@@ -104,7 +111,8 @@ public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonContro
         setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
-        ProfileOrganEditControllerTODO controller = fxmlLoader.getController();
+        //todo replace with view
+        ProfileOrganEditController controller = fxmlLoader.getController();
         controller.setCurrentProfile(currentProfile.get());
         controller.initialize();
 
@@ -120,6 +128,10 @@ public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonContro
             refreshListViews();
         });
         stage.show();
+    }
+
+    protected static void setWindowType(OrganSelectEnum type) {
+        windowType = type;
     }
 
     /**
@@ -148,6 +160,24 @@ public class ProfileOrganOverviewControllerTODO extends ProfileOrganCommonContro
             } else {
                 getStyleClass().remove(highlight);
             }
+        }
+    }
+
+    /**
+     * Support function to populate an observable list with organs from an organ set.
+     *
+     * @param destinationList list to populate
+     * @param organs          source list of organs to populate from
+     */
+    protected void populateOrganList(ObservableList<String> destinationList,
+            Set<OrganEnum> organs) {
+        destinationList.clear();
+
+        if (organs != null) {
+            for (OrganEnum organ : organs) {
+                destinationList.add(organ.getNamePlain());
+            }
+            Collections.sort(destinationList);
         }
     }
 

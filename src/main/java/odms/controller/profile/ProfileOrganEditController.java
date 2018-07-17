@@ -1,4 +1,4 @@
-package odms.view.profile;
+package odms.controller.profile;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,14 +24,15 @@ import odms.model.enums.OrganSelectEnum;
 import odms.model.history.History;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
+import odms.view.profile.ProfileOrganEditView;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class ProfileOrganEditControllerTODO extends CommonController {
+public class ProfileOrganEditController extends CommonController {
     ProfileOrganEditView view;
-    public ProfileOrganEditControllerTODO(ProfileOrganEditView v) {
+    public ProfileOrganEditController(ProfileOrganEditView v) {
         view = v;
     }
 
@@ -225,8 +226,8 @@ public class ProfileOrganEditControllerTODO extends CommonController {
      * @param organ the organ the profile requires
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
-        this.setReceiver(true);
-        this.organsRequired.add(organ);
+        view.getCurrentProfile().setReceiver(true);
+        view.getCurrentProfile().getOrgansRequired().add(organ);
     }
 
     /**
@@ -235,23 +236,25 @@ public class ProfileOrganEditControllerTODO extends CommonController {
      * @param organs the set of organs to be received
      */
     public void addOrgansRequired(HashSet<OrganEnum> organs) {
+        //todo
         generateUpdateInfo("organsRequired");
 
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
-            History action = new History("profile", this.getId(), "required organ",
+            History action = new History("profile", view.getCurrentProfile().getId(), "required organ",
                     "" + organ.getNamePlain(), -1, now);
             HistoryController.updateHistory(action);
         }
     }
 
     public void removeOrganReceived(OrganEnum organ) {
-        if (this.organsReceived.contains(organ)) {
-            this.organsReceived.remove(organ);
+        //todo may need to change method as it is redundant
+        if (view.getCurrentProfile().getOrgansReceived().contains(organ)) {
+            view.getCurrentProfile().getOrgansReceived().remove(organ);
         }
 
-        this.organsRequired.add(organ);
+        view.getCurrentProfile().getOrgansRequired().add(organ);
     }
 
     /**

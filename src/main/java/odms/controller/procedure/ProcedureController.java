@@ -3,15 +3,15 @@ package odms.controller.procedure;
 import javafx.fxml.FXML;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
-import odms.view.profile.ProfileProceduresViewTODO;
+import odms.view.profile.ProfileProceduresView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ProcedureController {
-    ProfileProceduresViewTODO view;
+    ProfileProceduresView view;
 
-    public ProcedureController(ProfileProceduresViewTODO v) {
+    public ProcedureController(ProfileProceduresView v) {
         view = v;
     }
 

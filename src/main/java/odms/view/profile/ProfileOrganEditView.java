@@ -1,6 +1,5 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -16,11 +15,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.AlertController;
+import odms.controller.profile.ProfileOrganEditController;
 import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
-import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -30,8 +28,8 @@ import java.util.*;
 public class ProfileOrganEditView extends CommonView{
     protected ObservableList<String> observableListOrgansAvailable;
     private Profile currentProfile;
-    private ProfileOrganEditControllerTODO controller = new ProfileOrganEditControllerTODO(this);
-    private static OrganSelectEnum windowType;
+    private ProfileOrganEditController controller = new ProfileOrganEditController(this);
+
     protected ObservableList<String> observableListOrgansSelected = FXCollections
             .observableArrayList();
     @FXML
@@ -63,15 +61,11 @@ public class ProfileOrganEditView extends CommonView{
         return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
-    protected static void setWindowType(OrganSelectEnum type) {
-        windowType = type;
-    }
-
     public void initialize(Profile p) {
         currentProfile = p;
         lblBanner.setText(windowType.toString());
 
-        if (currentProfile.get() != null) {
+        if (currentProfile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
             buildOrgansSelected();
