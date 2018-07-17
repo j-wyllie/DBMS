@@ -10,11 +10,9 @@ import java.util.Set;
 import odms.dao.DAOFactory;
 import odms.dao.ReadOnlyDAO;
 
-import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
-import odms.user.User;
 
 public class CommandUtils {
 
@@ -65,22 +63,16 @@ public class CommandUtils {
     static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
         switch (cmd.get(0).toLowerCase()) {
             case "print":
-                switch (cmd.get(1).toLowerCase()) {
-                    case "all":
-                        if (cmd.size() == 2) { return Commands.INVALID; }
-                        if (cmd.get(2).toLowerCase().equals("profiles")) {
-                            return Commands.PRINTALLPROFILES;
-                        } else if (cmd.get(2).toLowerCase().equals("users")) {
-                            return Commands.PRINTALLUSERS;
-                        } else {
-                            return Commands.INVALID;
-                        }
-                    case "donors":
-                        return Commands.PRINTDONORS;
-                    case "clinicians":
-                        return Commands.PRINTCLINICIANS;
+                if (cmd.size() == 2) { return Commands.INVALID; }
+                if (cmd.get(2).toLowerCase().equals("profiles")) {
+                    return Commands.PRINTALLPROFILES;
+                } else if (cmd.get(2).toLowerCase().equals("clinicians")) {
+                    return Commands.PRINTALLCLINICIANS;
+                } else if (cmd.get(2).toLowerCase().equals("donors")) {
+                    return Commands.PRINTDONORS;
+                } else {
+                    return Commands.INVALID;
                 }
-                break;
             case "help":
                 return Commands.HELP;
             case "import":

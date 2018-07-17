@@ -8,9 +8,8 @@ public enum Commands {
 
     // General Commands
     HELP,
-    PRINTALLUSERS,
     PRINTALLPROFILES,
-    PRINTCLINICIANS,
+    PRINTALLCLINICIANS,
     PRINTDONORS,
     REDO,
     UNDO,

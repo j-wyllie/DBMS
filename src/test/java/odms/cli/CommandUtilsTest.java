@@ -132,8 +132,7 @@ public class CommandUtilsTest {
         // Check tokens validate appropriately
         assertEquals(Commands.PRINTALLPROFILES, validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
         assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest, printDonorsTestStr));
-        assertEquals(Commands.PRINTALLUSERS, validateCommandType(printAllUsersTest, printAllUsersTestStr));
-        assertEquals(Commands.PRINTCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
         assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));

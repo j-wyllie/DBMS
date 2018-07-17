@@ -148,14 +148,9 @@ public class CommandLine implements Runnable{
                 Print.printAllProfiles(currentDatabase);
                 break;
 
-            case PRINTCLINICIANS:
+            case PRINTALLCLINICIANS:
                 // Print all clinicians (print all).
                 Print.printAllClinicians(currentDatabaseUsers);
-                break;
-
-            case PRINTALLUSERS:
-                // Print all users (print all).
-                Print.printAllUsers(currentDatabaseUsers);
                 break;
 
             case PRINTDONORS:
