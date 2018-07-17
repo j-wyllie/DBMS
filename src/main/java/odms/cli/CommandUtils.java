@@ -106,8 +106,8 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations": // TODO is this meant to be donating or donated
-                            return Commands.PROFILEDONATIONS;
+                        case "organs":
+                            return Commands.PROFILEORGANS;
                         case "delete":
                             return Commands.PROFILEDELETE;
                     }
@@ -123,7 +123,7 @@ public class CommandUtils {
                             return Commands.ORGANREMOVE;
                         case "removereceive-organ":
                             return Commands.RECEIVEREMOVE;
-                        case "donate":
+                        case "donate-organ":
                             return Commands.ORGANDONATE;
                     }
 

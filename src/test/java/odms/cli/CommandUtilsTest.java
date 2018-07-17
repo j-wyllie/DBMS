@@ -138,7 +138,7 @@ public class CommandUtilsTest {
         assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
         assertEquals(Commands.PROFILEDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
-        assertEquals(Commands.PROFILEDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
+        assertEquals(Commands.PROFILEORGANS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
         assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
 
         assertEquals(Commands.CLINICIANCREATE, validateCommandType(createClinicianTest, createClinicianTestStr));

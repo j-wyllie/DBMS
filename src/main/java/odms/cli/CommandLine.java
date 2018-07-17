@@ -204,7 +204,7 @@ public class CommandLine implements Runnable{
                 System.out.println("Profile(s) successfully deleted.");
                 break;
 
-            case PROFILEDONATIONS:
+            case PROFILEORGANS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
                 Profile.viewDonationsBySearch(currentDatabase, rawInput);

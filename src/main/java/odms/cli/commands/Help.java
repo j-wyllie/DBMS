@@ -21,6 +21,9 @@ public class Help {
         System.out.println("\nView a clinician:");
         System.out.println("clinician {attributes to search clinicians by} > view");
 
+        System.out.println("\nDelete a clinician:");
+        System.out.println("clinician {attributes to search clinicians by} > delete");
+
         System.out.println("\nView the date a clinician was created:");
         System.out.println("clinician {attributes to search clinicians by} > date-created");
 
@@ -31,11 +34,15 @@ public class Help {
         System.out.println("\nView a profile:");
         System.out.println("profile {attributes to search profiles by} > view");
 
+        System.out.println("\nDelete a profile:");
+        System.out.println("profile {attributes to search profiles by} > delete");
+
         System.out.println("\nView the date a profile was created:");
         System.out.println("profile {attributes to search profiles by} > date-created");
 
-        System.out.println("\nView a profiles past donations:");
-        System.out.println("profile {attributes to search profiles by} > donations");
+        System.out.println("\nView a profiles past donations, required organs and currently "
+                + "donating organs:");
+        System.out.println("profile {attributes to search profiles by} > organs");
 
         System.out.println("\nUpdate a profiles attributes:");
         System.out.println("profile {attributes to search profiles by} > {attributes to update}");
@@ -56,6 +63,14 @@ public class Help {
             + "organs to remove} \"");
         System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
             + "03-1998\" > remove-organ=\"liver, kidney\"");
+
+        System.out.println("\nAdd an organ to profiles donated organs:");
+        System.out
+                .println("profile {attributes to search profiles by} > donate-organ=\" {list of "
+                        + "donated organs} \"");
+        System.out
+                .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+                        + "-1998\" > donate-organ=\"liver, kidney\"");
 
         System.out.println("\nAdd an organ to receive:");
         System.out
@@ -83,18 +98,21 @@ public class Help {
         System.out.println("\nPrint all clinicians: ");
         System.out.println("print clinicians");
 
-        System.out.println("\nClose the app: ");
-        System.out.println("quit");
+        System.out.println("\nImport/export data: ");
+        System.out.println("export");
+        System.out.println("import {filepath}");
 
         System.out.println("\nUndo/redo: ");
         System.out.println("undo");
         System.out.println("redo");
 
-        System.out.println("\nImport/export data: ");
-        System.out.println("export");
-        System.out.println("import {filepath}");
+        System.out.println("\nMake select call to the database: ");
+        System.out.println("db-read {SELECT statement}");
 
-        System.out.println("\nProfile attributes:");
+        System.out.println("\nClose the app: ");
+        System.out.println("quit");
+
+        System.out.println("\n---------------------------------------------\nProfile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
             + " address, region, ird");
 
@@ -106,6 +124,7 @@ public class Help {
             "Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, Middle Ear, Skin, Bone, "
                 + "Bone Marrow, Connective Tissue");
 
+        System.out.println("\n---------------------------------------------");
     }
 
     /**
