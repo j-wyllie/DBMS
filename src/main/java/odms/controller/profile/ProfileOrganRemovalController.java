@@ -15,6 +15,7 @@ import odms.controller.history.HistoryController;
 import odms.model.enums.OrganEnum;
 import odms.model.history.History;
 import odms.model.profile.Profile;
+import odms.view.profile.ProfileOrganEditView;
 import odms.view.profile.ProfileOrganRemovalView;
 
 import java.time.LocalDate;

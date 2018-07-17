@@ -25,7 +25,7 @@ import odms.view.CommonView;
 import java.io.IOException;
 import java.util.*;
 
-public class ProfileOrganEditView extends CommonView{
+public class ProfileOrganEditView extends CommonView {
     protected ObservableList<String> observableListOrgansAvailable;
     private Profile currentProfile;
     private ProfileOrganEditController controller = new ProfileOrganEditController(this);
@@ -63,7 +63,7 @@ public class ProfileOrganEditView extends CommonView{
 
     public void initialize(Profile p) {
         currentProfile = p;
-        lblBanner.setText(windowType.toString());
+        lblBanner.setText(controller.getWindowType().toString());
 
         if (currentProfile != null) {
             // Order of execution for building these is required due to removing items from the
@@ -113,7 +113,7 @@ public class ProfileOrganEditView extends CommonView{
     private void buildOrgansSelected() {
         Set<OrganEnum> organs = new HashSet<>();
 
-        switch (windowType) {
+        switch (controller.getWindowType()) {
             case DONATED:
                 lblSelected.setText("Donated");
                 organs = currentProfile.getOrgansDonated();
@@ -176,7 +176,7 @@ public class ProfileOrganEditView extends CommonView{
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        switch (windowType) {
+        switch (controller.getWindowType()) {
             case DONATED:
                 controller.caseDonated();
                 break;
@@ -233,8 +233,8 @@ public class ProfileOrganEditView extends CommonView{
         try {
             Scene scene = new Scene(fxmlLoader.load());
             //todo replace with view
-            ProfileOrganRemovalController controller = fxmlLoader.getController();
-            controller.initialize(organ, this.currentProfile, this);
+//            ProfileOrganRemovalController controller = fxmlLoader.getController(); //don't think this is necessary
+//            controller.initialize(organ, this.currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -254,7 +254,7 @@ public class ProfileOrganEditView extends CommonView{
     }
 
     public HashSet getOrgansAdded() {
-        return this.observableListStringsToOrgans(
+        return observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
     }

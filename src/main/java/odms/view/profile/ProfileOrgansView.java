@@ -113,8 +113,8 @@ public class ProfileOrgansView extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
         //todo replace with view
         ProfileOrganEditController controller = fxmlLoader.getController();
-        controller.setCurrentProfile(currentProfile.get());
-        controller.initialize();
+        controller.setWindowType(windowType);
+        //controller.initialize(); don't think we need this
 
         Stage stage = new Stage();
         stage.setTitle(selectType.toString());
@@ -130,7 +130,7 @@ public class ProfileOrgansView extends CommonView {
         stage.show();
     }
 
-    protected static void setWindowType(OrganSelectEnum type) {
+    private static void setWindowType(OrganSelectEnum type) {
         windowType = type;
     }
 

@@ -32,6 +32,7 @@ import java.util.*;
 
 public class ProfileOrganEditController extends CommonController {
     ProfileOrganEditView view;
+    OrganSelectEnum windowType;
     public ProfileOrganEditController(ProfileOrganEditView v) {
         view = v;
     }
@@ -278,5 +279,13 @@ public class ProfileOrganEditController extends CommonController {
 
             HistoryController.updateHistory(action);
         }
+    }
+
+    public void setWindowType(OrganSelectEnum windowType) {
+        this.windowType = windowType;
+    }
+
+    public OrganSelectEnum getWindowType() {
+        return windowType;
     }
 }
