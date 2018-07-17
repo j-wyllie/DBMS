@@ -204,7 +204,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        ClinicianProfileEditControllerTODO controller = fxmlLoader.getController();
+        ClinicianProfileEditController controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
         controller.initialize();
 

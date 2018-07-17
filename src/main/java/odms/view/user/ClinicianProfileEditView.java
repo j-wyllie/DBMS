@@ -1,4 +1,4 @@
-package odms.controller.user;
+package odms.view.user;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,21 +8,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.controller.CommonController;
 import odms.controller.data.UserDataIO;
-import odms.controller.history.HistoryController;
-import odms.model.history.History;
+import odms.controller.user.ClinicianProfileControllerTODO;
+import odms.controller.user.ClinicianProfileEditController;
 import odms.model.user.User;
+import odms.view.CommonView;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
-import static odms.controller.AlertController.*;
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class ClinicianProfileEditControllerTODO extends CommonController {
-
+public class ClinicianProfileEditView extends CommonView {
     private static User currentUser;
+
+    private ClinicianProfileEditController controller = new ClinicianProfileEditController(this);
 
     @FXML
     private Label clinicianFullName;
@@ -48,7 +50,6 @@ public class ClinicianProfileEditControllerTODO extends CommonController {
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
         boolean cancelBool = profileCancelChanges();
-
         if (cancelBool) {
             openClinicianWindow(event);
         }
@@ -64,14 +65,7 @@ public class ClinicianProfileEditControllerTODO extends CommonController {
         boolean error = false;
 
         if (saveChanges()) {
-            History action = new History("Clinician", currentUser.getStaffID(), "updated",
-                    "previous " + currentUser.getAttributesSummary() + " new " +
-                            currentUser.getAttributesSummary(), -1, LocalDateTime.now());
-            currentUser.setName(givenNamesField.getText());
-            currentUser.setStaffID(Integer.valueOf(staffIdField.getText()));
-            currentUser.setWorkAddress(addressField.getText());
-            currentUser.setRegion(regionField.getText());
-            HistoryController.updateHistory(action);
+            controller.save();
 
             if (error) {
                 guiPopup("Error. Not all fields were updated.");
@@ -127,5 +121,25 @@ public class ClinicianProfileEditControllerTODO extends CommonController {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public User getUser() {
+        return currentUser;
+    }
+
+    public String getGivenNamesField() {
+        return givenNamesField.getText();
+    }
+
+    public String getStaffIdField() {
+        return staffIdField.getText();
+    }
+
+    public String getAddressField() {
+        return addressField.getText();
+    }
+
+    public String getRegionField() {
+        return regionField.getText();
     }
 }
