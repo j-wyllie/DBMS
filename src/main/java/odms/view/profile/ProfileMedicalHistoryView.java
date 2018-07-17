@@ -104,12 +104,17 @@ private void makeTable(ArrayList<Condition> curConditions,
         });
     }
 
-    public ArrayList<Condition> convertConditionObservableToArray(
+    /**
+     * Converts the conditions observable array to an arraylist.
+     * @param conditions observable list of conditions
+     * @return arraylist of conditions
+     */
+    private ArrayList<Condition> convertConditionObservableToArray(
             ObservableList<Condition> conditions) {
         ArrayList<Condition> toReturn = new ArrayList<>();
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i) != null) {
-                toReturn.add(conditions.get(i));
+        for (Condition condition : conditions) {
+            if (condition != null) {
+                toReturn.add(condition);
             }
         }
         return toReturn;
@@ -148,6 +153,9 @@ private void makeTable(ArrayList<Condition> curConditions,
 
     }
 
+    /**
+     * Sets custom sort order of the current conditions table.
+     */
     private void setCurrentConditionsTableSort() {
         curConditionsTable.sortPolicyProperty().set(
                 (Callback<TableView<Condition>, Boolean>) param -> {
@@ -177,6 +185,10 @@ private void makeTable(ArrayList<Condition> curConditions,
                 });
     }
 
+    /**
+     * sets the past date of diagnosis column to the new condition
+     * @param cellFactoryDate cell factory of the date that the condition was added
+     */
     private void initializePastDateOfDiagnosisColumn(
             Callback<TableColumn, TableCell> cellFactoryDate) {
         pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
@@ -199,6 +211,10 @@ private void makeTable(ArrayList<Condition> curConditions,
                 });
     }
 
+    /**
+     * Sets the date that the condition was cured in the column
+     * @param cellFactoryDate cell factory of the date the condition was cured
+     */
     private void initializePastDateCuredColumn(Callback<TableColumn, TableCell> cellFactoryDate) {
         pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
         pastDateCuredColumn.setCellFactory(cellFactoryDate);
@@ -221,6 +237,10 @@ private void makeTable(ArrayList<Condition> curConditions,
                 });
     }
 
+    /**
+     * sets the past conditions column to the corresponding condition
+     * @param cellFactory cell factory that contains column data.
+     */
     private void initializePastConditionsColumn(Callback<TableColumn, TableCell> cellFactory) {
         pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         pastDescriptionColumn.setCellFactory(cellFactory);
@@ -230,6 +250,10 @@ private void makeTable(ArrayList<Condition> curConditions,
                                 t.getTablePosition().getRow())).setName(t.getNewValue()));
     }
 
+    /**
+     * Sets the current date of diagnosis column
+     * @param cellFactoryDate cell factory of the current date
+     */
     private void initializeCurrentDateOfDiagnosisColumn(
             Callback<TableColumn, TableCell> cellFactoryDate) {
         curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
@@ -250,6 +274,9 @@ private void makeTable(ArrayList<Condition> curConditions,
                 });
     }
 
+    /**
+     * sets the current chronic column
+     */
     private void initializeCurrentChronicColumn() {
         curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
         curChronicColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
@@ -270,6 +297,10 @@ private void makeTable(ArrayList<Condition> curConditions,
         });
     }
 
+    /**
+     * sets the current conditions column
+     * @param cellFactory
+     */
     private void initializeCurrentConditionsColumn(Callback<TableColumn, TableCell> cellFactory) {
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         curDescriptionColumn.setCellFactory(cellFactory);
@@ -284,6 +315,9 @@ private void makeTable(ArrayList<Condition> curConditions,
                 });
     }
 
+    /**
+     * Sets the conditions lists and populates the observable lists.
+     */
     private void initializeConditionLists() {
         if (curConditionsObservableList != null) {
             curConditionsObservableList = FXCollections.observableArrayList();
