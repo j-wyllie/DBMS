@@ -41,6 +41,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -289,6 +290,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label labelPreferredName;
+
+    @FXML
+    private ImageView profileImage;
 
     /**
      * Called when there has been an edit to the current profile.
@@ -1110,6 +1114,12 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentProfile.getIsSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
+            }
+
+            //setting profile photo
+            if (currentProfile.getPictureName() != null) {
+                //TODO this is where the image would be fetched from wherever it is stored, also this currently throws an error, photo does get displayed though
+                profileImage.setImage(currentProfile.getPictureFile());
             }
 
             String history = ProfileDataIO.getHistory();

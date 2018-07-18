@@ -1,11 +1,13 @@
 package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.image.Image;
 import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
 import odms.history.History;
 import odms.medications.Drug;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -66,7 +68,9 @@ public class Profile implements Comparable<Profile> {
     private String phone;
     private String mobilePhone;
     private String email;
-    private String picture = "default.png";
+    private String pictureName;
+    private Image pictureFile;
+
 
     private String nhi;
     private LocalDateTime timeOfCreation;
@@ -1037,10 +1041,6 @@ public class Profile implements Comparable<Profile> {
         this.email = email;
     }
 
-    public String getPicture() { return picture; }
-
-    public void setPicture(String picture) { this.picture = picture; }
-
     public void setAllConditions(ArrayList<Condition> conditions) {
         this.conditions = conditions;
     }
@@ -1124,5 +1124,21 @@ public class Profile implements Comparable<Profile> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public Image getPictureFile() {
+        return pictureFile;
+    }
+
+    public void setPictureFile(Image pictureFile) {
+        this.pictureFile = pictureFile;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 }

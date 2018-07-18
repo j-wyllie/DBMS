@@ -1,5 +1,7 @@
 package odms.user;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +19,8 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
-    private String picture = "default.png";
+    private String pictureName;
+    private Image pictureFile;
 
 
     /**
@@ -220,11 +223,19 @@ public class User {
         return isDefault;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPictureName() {
+        return pictureName;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+    }
+
+    public Image getPictureFile() {
+        return pictureFile;
+    }
+
+    public void setPictureFile(Image pictureFile) {
+        this.pictureFile = pictureFile;
     }
 }

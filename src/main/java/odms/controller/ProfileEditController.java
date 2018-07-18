@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
@@ -117,7 +118,16 @@ public class ProfileEditController extends CommonController {
                     chooser.getSelectedFile().getName());
             pictureText.setText(chooser.getSelectedFile().getName());
         }
-        return chooser.getSelectedFile().getName();
+
+        if (chooser.getSelectedFile() == null) {
+            return null;
+        } else {
+            Image image = new Image(chooser.getSelectedFile().toURI().toString());
+            //TODO how are photos being stored
+            currentProfile.setPictureFile(image);
+            currentProfile.setPictureName(chooser.getSelectedFile().getName());
+            return chooser.getSelectedFile().getName();
+        }
     }
 
 

@@ -31,6 +31,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -151,6 +152,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private Button buttonShowNext;
+
+    @FXML
+    private ImageView userImage;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
@@ -452,6 +456,13 @@ public class ClinicianProfileController extends CommonController {
                 regionLabel.getText() +
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
+
+        //setting user photo
+        if (currentUser.getPictureName() != null) {
+            //TODO this is where the image would be fetched from wherever it is stored, also this currently throws an error, photo does get displayed though
+            userImage.setImage(currentUser.getPictureFile());
+        }
+
     }
 
     /**
