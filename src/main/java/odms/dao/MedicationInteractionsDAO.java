@@ -1,5 +1,6 @@
 package odms.dao;
 
+import java.io.IOException;
 import odms.medications.Interaction;
 
 public interface MedicationInteractionsDAO {
@@ -10,7 +11,7 @@ public interface MedicationInteractionsDAO {
      * @param drugB is another interacting medications.
      * @return the interaction.
      */
-    Interaction get(String drugA, String drugB);
+    Interaction get(String drugA, String drugB) throws IOException;
 
     /**
      * Sets the location of the cached medication interactions.

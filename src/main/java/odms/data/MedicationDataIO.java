@@ -84,7 +84,7 @@ public class MedicationDataIO {
      * @param isInteraction boolean that identifies if drug will be used in drug interaction request or not.
      * @return drug name with space replaced with correct replacement.
      */
-    private static String replaceSpace(String drug, Boolean isInteraction) {
+    public static String replaceSpace(String drug, Boolean isInteraction) {
         if (!isInteraction) {
             return drug.replace(" ", "%20");
         } else {
@@ -98,7 +98,7 @@ public class MedicationDataIO {
      * @param urlString represents the address the HTTP GET request is made to.
      * @throws IOException URL and HttpURLConnection may cause IOExceptions.
      */
-    private static StringBuffer makeRequest(String urlString) throws IOException {
+    public static StringBuffer makeRequest(String urlString) throws IOException {
         URL url = new URL(urlString);
         StringBuffer responseContent;
         //Creating the connection to the API server.
@@ -165,9 +165,7 @@ public class MedicationDataIO {
      * @throws IOException creation of URL may cause IOException.
      */
     public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
-        Map<String, String> interactions;
-        interactions = new HashMap<>();
-
+        Map<String, String> interactions = new HashMap<>();
 
         if (!(drug1 == null || drug1.equals("") || drug2 == null || drug2.equals(""))) {
             drug1 = replaceSpace(drug1, true);
