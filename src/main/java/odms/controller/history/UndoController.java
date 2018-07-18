@@ -7,6 +7,7 @@ import odms.model.medications.Drug;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 import odms.model.user.User;
+import odms.view.LoginView;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -226,7 +227,7 @@ public class UndoController extends UndoRedoController {
      * @param action
      */
     public void updated(History action) {
-        User user = LoginControllerTODO.getCurrentUser();
+        User user = LoginView.getCurrentUser();
         String previous = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("previous ") + 9,
                         action.getHistoryData().indexOf("new "));

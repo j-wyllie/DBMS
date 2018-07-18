@@ -159,8 +159,7 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         currentUser = null;
-        //todo replace with standard maybe use change scene method with login as fxml
-        showLoginScene(event);
+        changeScene(event, "/view/Login.fxml");
     }
 
     /**

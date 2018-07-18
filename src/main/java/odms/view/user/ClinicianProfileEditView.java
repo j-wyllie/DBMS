@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.controller.data.UserDataIO;
-import odms.controller.user.ClinicianProfileControllerTODO;
 import odms.controller.user.ClinicianProfileEditController;
 import odms.model.user.User;
 import odms.view.CommonView;

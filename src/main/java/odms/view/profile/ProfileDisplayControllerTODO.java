@@ -19,7 +19,6 @@ import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.controller.profile.ProfileEditController;
 import odms.controller.profile.ProfileMedicationsController;
-import odms.controller.profile.ProfileOrganOverviewControllerPOSSIBLYREDUNDANT;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 
@@ -128,13 +127,10 @@ public class ProfileDisplayControllerTODO extends CommonController {
                         .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
 
-            refreshConditionTable();
-
         } catch (Exception e) {
             e.printStackTrace();
             invalidUsername();
         }
-        refreshConditionTable();
     }
 
 
@@ -143,13 +139,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
      */
     @FXML
     private void refreshPageElements() {
-        ArrayList<Condition> allConditions = convertConditionObservableToArray(
-                curConditionsTable.getSelectionModel().getSelectedItems());
-        allConditions.addAll(convertConditionObservableToArray(
-                pastConditionsTable.getSelectionModel().getSelectedItems()));
-
         hideItems();
-        disableButtonsIfNoItems(allConditions);
     }
 
 
@@ -160,53 +150,15 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private void hideItems() {
         if (isOpenedByClinician) {
             //user is a clinician looking at donors profile, maximise functionality
-            curConditionsTable.setEditable(true);
-            pastConditionsTable.setEditable(true);
-            toggleChronicButton.setDisable(false);
-            toggleChronicButton.setVisible(true);
-            toggleCuredButton.setDisable(false);
-            toggleCuredButton.setVisible(true);
-            addNewConditionButton.setVisible(true);
-            deleteConditionButton.setVisible(true);
             addNewProcedureButton.setVisible(true);
             deleteProcedureButton.setVisible(true);
-            buttonSaveMedications.setVisible(true);
-            buttonDeleteMedication.setVisible(true);
-            buttonShowDrugInteractions.setVisible(true);
-            buttonViewActiveIngredients.setVisible(true);
-            buttonAddMedication.setVisible(true);
-            buttonMedicationCurrentToHistoric.setVisible(true);
-            buttonMedicationHistoricToCurrent.setVisible(true);
-            textFieldMedicationSearch.setVisible(true);
-            tableViewActiveIngredients.setVisible(true);
-            tableViewDrugInteractionsNames.setVisible(true);
-            tableViewDrugInteractions.setVisible(true);
             buttonViewMedicationHistory.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
             // user is a standard profile, limit functionality
-            curConditionsTable.setEditable(false);
-            pastConditionsTable.setEditable(false);
-            toggleChronicButton.setDisable(true);
-            toggleChronicButton.setVisible(false);
-            toggleCuredButton.setDisable(true);
-            toggleCuredButton.setVisible(false);
-            addNewConditionButton.setVisible(false);
-            deleteConditionButton.setVisible(false);
             addNewProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
-            buttonSaveMedications.setVisible(false);
-            buttonDeleteMedication.setVisible(false);
-            buttonShowDrugInteractions.setVisible(false);
-            buttonViewActiveIngredients.setVisible(false);
-            buttonAddMedication.setVisible(false);
-            buttonMedicationCurrentToHistoric.setVisible(false);
-            buttonMedicationHistoricToCurrent.setVisible(false);
-            textFieldMedicationSearch.setVisible(false);
-            tableViewActiveIngredients.setVisible(false);
-            tableViewDrugInteractionsNames.setVisible(false);
-            tableViewDrugInteractions.setVisible(false);
             buttonViewMedicationHistory.setVisible(false);
         }
     }

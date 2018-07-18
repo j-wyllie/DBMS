@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.controller.data.UserDataIO;
-import odms.controller.user.UserCreateControllerTODO;
 import odms.model.data.UserDatabase;
 import odms.model.user.User;
 import odms.view.CommonView;

@@ -106,7 +106,7 @@ public class ProfileEditView extends CommonView {
         if (AlertController.saveChanges()) {
             try {
                 controller.save();
-                controller.showNotification("profile", event);
+                showNotification("profile", event);
                 closeEditWindow(event);
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(

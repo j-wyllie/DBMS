@@ -1,4 +1,4 @@
-package odms.controller.history;
+package odms.view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +23,7 @@ import static odms.controller.AlertController.invalidUsernameOrPassword;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class LoginControllerTODO extends CommonController {
+public class LoginView extends CommonController {
 
     private static User currentUser;
     private ProfileDatabase currentDatabase = getCurrentDatabase();

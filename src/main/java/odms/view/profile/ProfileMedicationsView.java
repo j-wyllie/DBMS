@@ -120,7 +120,7 @@ public class ProfileMedicationsView extends CommonView {
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (saveChanges()) {
             //todo sort out show notification
-            controller.showNotification("Medications Tab", event);
+            showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }
     }
