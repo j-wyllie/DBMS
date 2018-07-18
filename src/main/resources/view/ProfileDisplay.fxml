@@ -6,9 +6,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileDisplayController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -163,6 +163,9 @@
                                           <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
                                           <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -268,6 +271,21 @@
                                              <GridPane.margin>
                                                 <Insets left="20.0" />
                                              </GridPane.margin>
+                                          </Label>
+                                          <Label fx:id="countryOfDeathLabel" prefHeight="30.0" prefWidth="104.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country of Death: " GridPane.rowIndex="12">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="cityOfDeathLabel" prefHeight="30.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City of Death: " GridPane.rowIndex="13">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="regionOfDeathLabel" prefHeight="30.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region of Death: " GridPane.rowIndex="14">
+                                             <font>
+                                                <Font size="22.0" />
+                                             </font>
                                           </Label>
                                        </children>
                                        <GridPane.margin>
@@ -643,7 +661,7 @@
                                     <TableView fx:id="curConditionsTable" onMouseReleased="#refreshPageElements" prefHeight="458.0" prefWidth="414.0" GridPane.rowIndex="1">
                                       <columns>
                                         <TableColumn fx:id="curDescriptionColumn" prefWidth="170.0" text="Description" />
-                                        <TableColumn fx:id="curChronicColumn" minWidth="0.0" text="Chronic" prefWidth="80.0" />
+                                        <TableColumn fx:id="curChronicColumn" minWidth="0.0" prefWidth="80.0" text="Chronic" />
                                           <TableColumn fx:id="curDateOfDiagnosisColumn" prefWidth="200.0" text="Date of diagnosis" />
                                       </columns>
                                        <columnResizePolicy>

@@ -37,6 +37,10 @@ public class Profile implements Comparable<Profile> {
 
     private String address;
 
+    private String countryOfDeath;
+    private String regionOfDeath;
+    private String cityOfDeath;
+
     private String streetNumber;
     private String streetName;
     private String city;
@@ -195,6 +199,9 @@ public class Profile implements Comparable<Profile> {
                         Integer.valueOf(dates[0])
                 );
                 setDateOfDeath(date);
+                setCountryOfDeath(getCountry());
+                setCityOfDeath(getCity());
+                setRegionOfDeath(getRegion());
             }
         } else if (attrName.equals(Attribute.GENDER.getText())) {
             setGender(value.toLowerCase());
@@ -1119,5 +1126,29 @@ public class Profile implements Comparable<Profile> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public String getCountryOfDeath() {
+        return countryOfDeath;
+    }
+
+    public void setCountryOfDeath(String countryOfDeath) {
+        this.countryOfDeath = countryOfDeath;
+    }
+
+    public String getRegionOfDeath() {
+        return regionOfDeath;
+    }
+
+    public void setRegionOfDeath(String regionOfDeath) {
+        this.regionOfDeath = regionOfDeath;
+    }
+
+    public String getCityOfDeath() {
+        return cityOfDeath;
+    }
+
+    public void setCityOfDeath(String cityOfDeath) {
+        this.cityOfDeath = cityOfDeath;
     }
 }

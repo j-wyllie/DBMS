@@ -147,6 +147,15 @@ public class ProfileDisplayController extends CommonController {
     private Label userIdLabel;
 
     @FXML
+    private Label countryOfDeathLabel;
+
+    @FXML
+    private Label regionOfDeathLabel;
+
+    @FXML
+    private Label cityOfDeathLabel;
+
+    @FXML
     private Button logoutButton;
 
     @FXML
@@ -1110,6 +1119,18 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentProfile.getIsSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
+            }
+
+            if (currentProfile.getDateOfDeath() != null) {
+                if (currentProfile.getCountryOfDeath() == null || currentProfile.getCityOfDeath() == null || currentProfile.getRegionOfDeath() == null) {
+                    countryOfDeathLabel.setText(countryOfDeathLabel.getText() + currentProfile.getCountry());
+                    regionOfDeathLabel.setText(regionOfDeathLabel.getText() + currentProfile.getRegion());
+                    cityOfDeathLabel.setText(cityOfDeathLabel.getText() + currentProfile.getCity());
+                } else {
+                    countryOfDeathLabel.setText(currentProfile.getCountryOfDeath());
+                    regionOfDeathLabel.setText(currentProfile.getCityOfDeath());
+                    cityOfDeathLabel.setText(currentProfile.getCityOfDeath());
+                }
             }
 
             String history = ProfileDataIO.getHistory();

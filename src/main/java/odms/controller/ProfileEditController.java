@@ -80,6 +80,25 @@ public class ProfileEditController extends CommonController {
     @FXML
     private TextField preferredNameField;
 
+    @FXML
+    private TextField countryOfDeathField;
+
+    @FXML
+    private TextField regionOfDeathField;
+
+    @FXML
+    private TextField cityOfDeathField;
+
+
+    @FXML
+    private Label countryOfDeathLabel;
+
+    @FXML
+    private Label regionOfDeathLabel;
+
+    @FXML
+    private Label cityOfDeathLabel;
+
     private Boolean isClinician;
 
     @FXML
@@ -232,6 +251,36 @@ public class ProfileEditController extends CommonController {
     private void saveEmail() {
         if (!emailField.getText().isEmpty()) {
             currentProfile.setEmail(emailField.getText());
+        }
+    }
+
+    /**
+     * Save Country of death field to profile.
+     */
+    private void saveCountryOfDeath() {
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        if (!countryOfDeathField.getText().isEmpty()) {
+            currentProfile.setCountryOfDeath(countryOfDeathField.getText());
+        }
+    }
+
+    /**
+     * Save Region of death field to profile.
+     */
+    private void saveRegionOfDeath() {
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        if (!regionOfDeathField.getText().isEmpty()) {
+            currentProfile.setRegionOfDeath(regionOfDeathField.getText());
+        }
+    }
+
+    /**
+     * Save City of death field to profile.
+     */
+    private void saveCityOfDeath() {
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        if (!cityOfDeathField.getText().isEmpty()) {
+            currentProfile.setCityOfDeath(cityOfDeathField.getText());
         }
     }
 
@@ -469,6 +518,28 @@ public class ProfileEditController extends CommonController {
                 }
                 if (currentProfile.getAlcoholConsumption() != null) {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                }
+
+                if (currentProfile.getDateOfDeath() != null) {
+                    if (currentProfile.getCountryOfDeath() == null || currentProfile.getCityOfDeath() == null || currentProfile.getRegionOfDeath() == null) {
+                        countryOfDeathField.setText(currentProfile.getCountry());
+                        regionOfDeathField.setText(currentProfile.getRegion());
+                        cityOfDeathField.setText(currentProfile.getCity());
+                    } else {
+                        countryOfDeathField.setText(currentProfile.getCountryOfDeath());
+                        regionOfDeathField.setText(currentProfile.getCityOfDeath());
+                        cityOfDeathField.setText(currentProfile.getCityOfDeath());
+                    }
+                }
+
+                if (isClinician) {
+                    countryOfDeathField.setEditable(true);
+                    regionOfDeathField.setEditable(true);
+                    cityOfDeathField.setEditable(true);
+                } else {
+                    countryOfDeathField.setEditable(false);
+                    regionOfDeathField.setEditable(false);
+                    cityOfDeathField.setEditable(false);
                 }
 
                 comboGender.setEditable(false);

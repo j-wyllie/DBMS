@@ -171,6 +171,9 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
                                                                 <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -318,6 +321,24 @@
                                                                         <Insets right="20.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
+                                                <Label fx:id="countryOfDeathLabel" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country of Death: " GridPane.rowIndex="11">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="regionOfDeathLabel" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region of Death: " GridPane.rowIndex="12">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="cityOfDeathLabel" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City of Death: " GridPane.rowIndex="13">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="countryOfDeathField" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+                                                <TextField fx:id="regionOfDeathField" layoutX="280.0" layoutY="371.0" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+                                                <TextField fx:id="cityOfDeathField" layoutX="280.0" layoutY="402.0" GridPane.columnIndex="3" GridPane.rowIndex="13" />
                                                             </children>
                                                         </GridPane>
                                                     </children>
