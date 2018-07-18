@@ -1,6 +1,7 @@
 package odms.dao;
 
-import static java.time.LocalDateTime.*;
+import static java.time.LocalDateTime.now;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -17,7 +18,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     private Map<Integer, Interaction> interactionDb = new HashMap<>();
     private String defaultPath = "cache/medication_interactions.json";
     private String path;
-    private static final String INTERACTIONURL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
+    private static final String INTERACTION_URL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
     private static final String SERVERERROR = "1";
 
     /**
@@ -28,8 +29,8 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
         for (Interaction interaction : interactionDb.values()) {
-            if (interaction.getDrugA().toLowerCase().equals(drugA)
-                    && interaction.getDrugB().toLowerCase().equals(drugB)) {
+            if (interaction.getDrugA().equalsIgnoreCase(drugA)
+                    && interaction.getDrugB().equalsIgnoreCase(drugB)) {
 
                 if (interaction.getDateTimeExpired().isBefore(now())
                     || interaction.getDateTimeExpired().isEqual(now())) {
@@ -59,7 +60,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
             StringBuffer response = getResponse(drugA, drugB);
 
-            if (!(response == null)) {
+            if (response != null) {
                 JsonParser parser = new JsonParser();
                 JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
@@ -97,19 +98,18 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         drugA = MedicationDataIO.replaceSpace(drugA, true);
         drugB = MedicationDataIO.replaceSpace(drugB, true);
         String urlString = String
-                .format(INTERACTIONURL, drugA, drugB);
+                .format(INTERACTION_URL, drugA, drugB);
 
         //Reading the response from the connection.
         StringBuffer response = MedicationDataIO.makeRequest(urlString);
 
         if (response == null) {
-            return  response;
+            return response;
         }
         else if (response.toString().equals(SERVERERROR)) {
             // Server is fussy about what order the drugs are in the url, if request fails will
             // try again with drugs in different order.
-            urlString = String
-                    .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugB, drugA);
+            urlString = String.format(INTERACTION_URL, drugB, drugA);
             response = MedicationDataIO.makeRequest(urlString);
             if (response == null || response.toString().equals(SERVERERROR)) {
                 return null;
@@ -128,8 +128,8 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         Map<String, List<String>> result = new HashMap<>();
         Gson gson = new Gson();
 
-        interactionObj.keySet().forEach((key) -> {
-            List<String> value = gson.fromJson(interactionObj.get(key).getAsJsonArray(),
+        interactionObj.keySet().forEach(key -> {
+            ArrayList value = gson.fromJson(interactionObj.get(key).getAsJsonArray(),
                     ArrayList.class);
             result.put(key, value);
         });
