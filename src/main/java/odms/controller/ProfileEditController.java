@@ -10,15 +10,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ProfileEditController extends CommonController {
 
@@ -87,6 +86,23 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private ComboBox comboGender;
+
+    @FXML
+    private Button imageChoose;
+
+    @FXML//TODO
+    private String handleChooseImageClicked(ActionEvent event){
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Images", "jpg", "png");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+        }
+        return chooser.getSelectedFile().getName();
+    }
 
     /**
      * Button handler to undo last action.
