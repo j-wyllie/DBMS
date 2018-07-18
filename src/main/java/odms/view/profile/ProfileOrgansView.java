@@ -1,5 +1,7 @@
 package odms.view.profile;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +24,9 @@ import java.util.Collections;
 import java.util.Set;
 
 public class ProfileOrgansView extends CommonView {
-    private Profile currentProfile;
+    //private Profile currentProfile;
+    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
@@ -41,7 +45,7 @@ public class ProfileOrgansView extends CommonView {
     private static OrganSelectEnum windowType;
 
     public void initialize(Profile p) {
-        currentProfile = p;
+        //currentProfile = p;
         listViewDonating.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
 
@@ -72,9 +76,9 @@ public class ProfileOrgansView extends CommonView {
      * Populates the checklist with donating organs for highlighting.
      */
     public void populateOrganLists() {
-        populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
+        populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
+        populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
+        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
 
         checkList.clear();
 

@@ -15,7 +15,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1"
     xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="odms.controller.profile.ProfileMedicalTabController">
+    fx:controller="odms.view.profile.ProfileMedicalViewTODO">
     <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
         AnchorPane.rightAnchor="-1.0"
         AnchorPane.topAnchor="-1.0" layoutX="-1.0"

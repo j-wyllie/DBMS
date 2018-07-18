@@ -18,6 +18,7 @@ import odms.controller.data.ProfileDataIO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.controller.profile.ProfileEditController;
+import odms.controller.profile.ProfileMedicationsController;
 import odms.controller.profile.ProfileOrganOverviewControllerPOSSIBLYREDUNDANT;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
@@ -36,22 +37,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
      */
     @FXML
     public Text editedText;
-    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
-    private Boolean isOpenedByClinician = false;
-    // Displays in IntelliJ as unused but is a false positive
-    // The FXML includes operate this way and allow access to the instantiated controller.
-    @FXML
-    private AnchorPane profileOrganOverview;
-    @FXML
-    private ProfileOrganOverviewControllerPOSSIBLYREDUNDANT profileOrganOverviewController;
-
-    @FXML
-    private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
-    @FXML
-    private ProfileMedicalViewTODO profileMedicalViewTODO;
-    @FXML
-    private ProfileHistoryViewTODO profileHistoryViewTODO;
-
     @FXML
     private Label donorFullNameLabel;
     @FXML
@@ -68,6 +53,25 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private Button deleteProcedureButton;
     @FXML
     private Label receiverStatusLabel;
+
+    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
+    private Boolean isOpenedByClinician = false;
+    // Displays in IntelliJ as unused but is a false positive
+    // The FXML includes operate this way and allow access to the instantiated controller.
+    @FXML
+    private AnchorPane profileOrganOverview;
+    @FXML
+    private ProfileOrgansView profileOrgansView;
+
+    @FXML
+    private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
+    @FXML
+    private ProfileMedicalViewTODO profileMedicalViewTODO;
+    @FXML
+    private ProfileHistoryViewTODO profileHistoryViewTODO;
+    @FXML
+    private ProfileMedicationsView profileMedicationsView;
+
 
     /**
      * Called when there has been an edit to the current profile.
@@ -86,9 +90,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         showLoginScene(event);
     }
-
-
-
 
 
     /**
@@ -127,10 +128,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
                         .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
 
-
-
-            setMedicationSearchFieldListener();
-
             refreshConditionTable();
 
         } catch (Exception e) {
@@ -139,7 +136,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
         }
         refreshConditionTable();
     }
-
 
 
     /**
@@ -155,7 +151,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
         hideItems();
         disableButtonsIfNoItems(allConditions);
     }
-
 
 
     /**
@@ -222,20 +217,27 @@ public class ProfileDisplayControllerTODO extends CommonController {
 
     @FXML
     private void onTabOrgansSelected() {
-        profileOrganOverviewController.currentProfile.bind(currentProfileBound);
-        profileOrganOverviewController.populateOrganLists();
+        profileOrgansView.currentProfile.bind(currentProfileBound);
+        profileOrgansView.populateOrganLists();
     }
+
     @FXML
     public void onTabGeneralSelected() {
         profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
     }
+
     @FXML
     public void onTabMedicalSelected() {
         profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
     }
+
     @FXML
     public void onTabHistorySelected() {
         profileHistoryViewTODO.currentProfile.bind(currentProfileBound);
+    }
+
+    public void onTabMedicationsSelected() {
+        profileMedicationsView.currentProfile.bind(currentProfileBound);
     }
 
 
@@ -250,15 +252,10 @@ public class ProfileDisplayControllerTODO extends CommonController {
             setPage(currentProfile);
         }
 
-        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        curChronicColumn.setSortable(false);
-
         refreshPageElements();
 
-        disableTableHeaderReorder();
     }
+
 
     /**
      * sets the profile if it is being opened by a clinician If opened by clinician, set appropriate
@@ -279,5 +276,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
     public void setProfile(Profile profile) {
         currentProfile = profile;
     }
+
 
 }

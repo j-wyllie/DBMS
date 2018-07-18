@@ -84,7 +84,7 @@ public class CommonController {
         setEdited(true);
     }
 
-    /**
+    /** //todo should these be in commonview?
      * Changes the Edit profile title to include an astrix to indicate a value has been edited.
      *
      * @param event Any click event within the text boxes.

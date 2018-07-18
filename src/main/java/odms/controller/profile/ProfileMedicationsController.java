@@ -282,8 +282,4 @@ public class ProfileMedicationsController extends CommonController {
             }
         }
     }
-
-
-
-
 }

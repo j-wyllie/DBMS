@@ -1,6 +1,8 @@
 package odms.view.profile;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.medication.MedicationHistoryTODO;
+import odms.controller.profile.ProfileHistoryTabController;
 import odms.controller.profile.ProfileMedicationsController;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
@@ -31,7 +34,7 @@ import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
-public class ProfileMedicationsView extends CommonView{
+public class ProfileMedicationsView extends CommonView {
     //todo split FXML
 
     @FXML
@@ -74,7 +77,8 @@ public class ProfileMedicationsView extends CommonView{
     private Button buttonViewActiveIngredients;
 
     private ProfileMedicationsController controller = new ProfileMedicationsController(this);
-    private Profile currentProfile;
+    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    // init controller corresponding to this view
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
     private ObservableList<Map.Entry<String, String>> interactions;
@@ -87,12 +91,12 @@ public class ProfileMedicationsView extends CommonView{
     private void refreshMedicationsTable() {
 
         tableViewCurrentMedications.getItems().clear();
-        if (currentProfile.getCurrentMedications() != null) {
-            currentMedication.addAll(currentProfile.getCurrentMedications());
+        if (currentProfile.get().getCurrentMedications() != null) {
+            currentMedication.addAll(currentProfile.get().getCurrentMedications());
         }
         tableViewHistoricMedications.getItems().clear();
-        if (currentProfile.getHistoryOfMedication() != null) {
-            historicMedication.addAll(currentProfile.getHistoryOfMedication());
+        if (currentProfile.get().getHistoryOfMedication() != null) {
+            historicMedication.addAll(currentProfile.get().getHistoryOfMedication());
         }
 
         tableViewCurrentMedications.setItems(currentMedication);
@@ -253,7 +257,7 @@ public class ProfileMedicationsView extends CommonView{
 
         Scene scene = new Scene(fxmlLoader.load());
         MedicationHistoryTODO controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile);
+        controller.setProfile(currentProfile.get());
         controller.initialize();
         Stage stage = new Stage();
         stage.setTitle("medication history");
@@ -313,13 +317,15 @@ public class ProfileMedicationsView extends CommonView{
 
     public void init(Profile p, Boolean b) {
         isOpenedByClinician = b;
-        currentProfile = p;
+        //currentProfile.get() = p;
         tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        setMedicationSearchFieldListener(); //todo where would this go?
+
     }
 
     public Profile getCurrentProfile() {
-        return currentProfile;
+        return currentProfile.get();
     }
 
     public Drug getSelectedCurrentDrug() {

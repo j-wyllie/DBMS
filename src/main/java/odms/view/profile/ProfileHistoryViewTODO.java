@@ -21,7 +21,7 @@ public class ProfileHistoryViewTODO {
         return currentProfile.get();
     }
 
-    public void setHistoryView() {
+    private void setHistoryView() {
         historyView.setText(controller.getHistory());
     }
 

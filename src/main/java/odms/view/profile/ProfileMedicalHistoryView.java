@@ -499,4 +499,14 @@ private void makeTable(ArrayList<Condition> curConditions,
             toggleChronicButton.setDisable(false);
         }
     }
+
+    public void initialize() {
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        curChronicColumn.setSortable(false);
+
+        disableTableHeaderReorder();
+
+    }
     }
