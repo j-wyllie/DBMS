@@ -17,6 +17,8 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
+    private String picture = "default.png";
+
 
     /**
      * Logs which property was updated and the time it was updated
@@ -216,5 +218,13 @@ public class User {
 
     public boolean getDefault() {
         return isDefault;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
