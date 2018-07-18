@@ -25,33 +25,33 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -92,18 +92,15 @@
       "receiver": true,
       "givenNames": "Basashi",
       "lastNames": "Tabetai",
-      "preferredName": "",
       "dateOfBirth": {
         "year": 1966,
         "month": 3,
         "day": 14
       },
-      "gender": "Male",
-      "preferredGender": "Male",
+      "gender": "male",
       "height": 0.0,
       "weight": 0.0,
       "region": "Northland",
-      "isSmoker": false,
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 01:15 PM 07-07-2018",
@@ -111,35 +108,27 @@
         "nhi updated at 01:15 PM 07-07-2018",
         "dob updated at 01:15 PM 07-07-2018",
         "gender updated at 01:15 PM 07-07-2018",
-        "region updated at 01:15 PM 07-07-2018",
-        "dob updated at 02:03 PM 17-07-2018",
-        "given-names updated at 02:03 PM 17-07-2018",
-        "nhi updated at 02:03 PM 17-07-2018",
-        "last-names updated at 02:03 PM 17-07-2018",
-        "gender updated at 02:03 PM 17-07-2018",
-        "height updated at 02:03 PM 17-07-2018",
-        "region updated at 02:03 PM 17-07-2018",
-        "weight updated at 02:03 PM 17-07-2018"
+        "region updated at 01:15 PM 07-07-2018"
       ],
       "procedures": [],
       "organsDonating": [
         "BONE"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -161,13 +150,13 @@
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 17
+          "day": 7
         },
         "time": {
-          "hour": 14,
-          "minute": 3,
-          "second": 36,
-          "nano": 977000000
+          "hour": 13,
+          "minute": 15,
+          "second": 15,
+          "nano": 348000000
         }
       },
       "id": 1,
@@ -200,18 +189,18 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsDonated": [],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -273,14 +262,14 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsRequired": [
@@ -345,31 +334,31 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
-        "CORNEA",
-        "LUNG",
-        "INTESTINE",
         "PANCREAS",
-        "BONE_MARROW"
+        "CORNEA",
+        "INTESTINE",
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [],
       "organsRequired": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
-        "CORNEA",
-        "LUNG",
-        "INTESTINE",
         "PANCREAS",
-        "BONE_MARROW"
+        "CORNEA",
+        "INTESTINE",
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -430,27 +419,27 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
         "BONE"
@@ -514,24 +503,24 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -593,28 +582,28 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -676,31 +665,31 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [
@@ -792,33 +781,33 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -879,25 +868,25 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
         "BONE"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -958,36 +947,36 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1028,18 +1017,15 @@
       "receiver": true,
       "givenNames": "Hojn",
       "lastNames": "Bjorn",
-      "preferredName": "",
       "dateOfBirth": {
         "year": 1944,
         "month": 6,
         "day": 10
       },
-      "gender": "Male",
-      "preferredGender": "Male",
+      "gender": "male",
       "height": 0.0,
       "weight": 0.0,
       "region": "Taranaki",
-      "isSmoker": false,
       "chronicDiseases": [],
       "updateActions": [
         "given-names updated at 01:15 PM 07-07-2018",
@@ -1047,43 +1033,35 @@
         "nhi updated at 01:15 PM 07-07-2018",
         "dob updated at 01:15 PM 07-07-2018",
         "gender updated at 01:15 PM 07-07-2018",
-        "region updated at 01:15 PM 07-07-2018",
-        "dob updated at 01:53 PM 18-07-2018",
-        "given-names updated at 01:53 PM 18-07-2018",
-        "nhi updated at 01:53 PM 18-07-2018",
-        "last-names updated at 01:53 PM 18-07-2018",
-        "gender updated at 01:53 PM 18-07-2018",
-        "height updated at 01:53 PM 18-07-2018",
-        "region updated at 01:53 PM 18-07-2018",
-        "weight updated at 01:53 PM 18-07-2018"
+        "region updated at 01:15 PM 07-07-2018"
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1105,13 +1083,13 @@
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 18
+          "day": 7
         },
         "time": {
           "hour": 13,
-          "minute": 53,
-          "second": 14,
-          "nano": 103000000
+          "minute": 15,
+          "second": 15,
+          "nano": 354000000
         }
       },
       "id": 12,
@@ -1144,19 +1122,19 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1218,22 +1196,22 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
-        "CORNEA",
-        "LUNG",
-        "INTESTINE",
         "PANCREAS",
-        "BONE_MARROW"
+        "CORNEA",
+        "INTESTINE",
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsRequired": [
@@ -1299,37 +1277,37 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
-        "CORNEA",
-        "LUNG",
-        "INTESTINE",
         "PANCREAS",
-        "BONE_MARROW"
+        "CORNEA",
+        "INTESTINE",
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1390,23 +1368,23 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1467,39 +1445,39 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1560,27 +1538,27 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [],
       "organsReceived": [],
@@ -1642,22 +1620,22 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -1719,36 +1697,36 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
-        "CORNEA",
-        "LUNG",
-        "INTESTINE",
         "PANCREAS",
-        "BONE_MARROW"
+        "CORNEA",
+        "INTESTINE",
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsReceived": [],
       "conditions": [],
@@ -1813,8 +1791,8 @@
       ],
       "organsDonated": [],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -1876,24 +1854,24 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
-        "HEART",
         "CORNEA",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "BONE_MARROW",
+        "HEART"
       ],
       "organsRequired": [
-        "BONE",
         "CONNECTIVE_TISSUE",
         "CORNEA",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsReceived": [],
@@ -2023,20 +2001,20 @@
       ],
       "procedures": [],
       "organsDonating": [
-        "BONE",
         "MIDDLE_EAR",
         "CONNECTIVE_TISSUE",
-        "HEART",
-        "KIDNEY",
-        "LIVER",
         "CORNEA",
-        "LUNG",
         "INTESTINE",
-        "BONE_MARROW"
+        "BONE",
+        "LIVER",
+        "BONE_MARROW",
+        "LUNG",
+        "HEART",
+        "KIDNEY"
       ],
       "organsDonated": [
-        "BONE",
         "CONNECTIVE_TISSUE",
+        "BONE",
         "BONE_MARROW"
       ],
       "organsRequired": [
