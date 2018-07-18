@@ -74,7 +74,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      *
      * @return BMI
      */
-    public Double calculateBMI(Profile profile) {
+    public static Double calculateBMI(Profile profile) {
         return profile.getWeight() / ((profile.getHeight()) * (profile.getHeight()));
     }
 

@@ -11,13 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ProfileOrganControllerTODO {
-
-
-
-
-
-
-
     /**
      * Add an organ to the set of received organs. If the organ exists in the receiving set, remove
      * it.
@@ -25,6 +18,7 @@ public class ProfileOrganControllerTODO {
      * @param organ to be added
      */
     private void addOrganReceived(OrganEnum organ) {
+        //todo I think method is useless however a method in another class may be able to be reworked to use it
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -38,6 +32,7 @@ public class ProfileOrganControllerTODO {
      * @param organs set to be added
      */
     public void addOrgansReceived(Set<OrganEnum> organs) {
+        //todo I think method is useless however a method in another class may be able to be reworked to use it
         generateUpdateInfo("organsReceived");
 
         for (OrganEnum organ : organs) {
@@ -50,11 +45,8 @@ public class ProfileOrganControllerTODO {
 
 
 
-
-
-
-
     public void removeOrganDonated(OrganEnum organ) {
+        //todo I think method is useless however a method in another class may be able to be reworked to use it
         if (this.organsDonated.contains(organ)) {
             this.organsDonated.remove(organ);
         }

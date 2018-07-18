@@ -1,4 +1,4 @@
-package odms.controller.user;
+package odms.view.user;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,19 +16,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.CommonController;
 import odms.controller.GuiMain;
 import odms.controller.data.UserDataIO;
+import odms.controller.user.UserCreateControllerTODO;
 import odms.model.data.UserDatabase;
 import odms.model.user.User;
+import odms.view.CommonView;
 
 import java.io.IOException;
 
 import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getUserDatabase;
 
-public class ViewUsersControllerTODO extends CommonController {
-
+public class ViewUsersView extends CommonView {
     ContextMenu contextMenu;
     @FXML
     TableView<User> viewUsersTable;
@@ -118,6 +118,7 @@ public class ViewUsersControllerTODO extends CommonController {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/UserCreate.fxml"));
 
+        //todo replace controller creation with view?
         Scene scene = new Scene(fxmlLoader.load());
         UserCreateControllerTODO controller = fxmlLoader.getController();
         controller.initialize();
@@ -139,4 +140,5 @@ public class ViewUsersControllerTODO extends CommonController {
             UserDataIO.saveUsers(getUserDatabase());
         }
     }
+
 }
