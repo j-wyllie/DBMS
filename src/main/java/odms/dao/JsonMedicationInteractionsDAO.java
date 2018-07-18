@@ -19,7 +19,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     private String defaultPath = "cache/medication_interactions.json";
     private String path;
     private static final String INTERACTION_URL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
-    private static final String SERVERERROR = "1";
+    private static final String SERVER_ERROR = "1";
 
     /**
      * Get the interactions between two medications.
@@ -44,7 +44,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     @Override
     public void load() {
-
+        // noop
     }
 
     /**
@@ -97,21 +97,20 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     private StringBuffer getResponse(String drugA, String drugB) throws IOException {
         drugA = MedicationDataIO.replaceSpace(drugA, true);
         drugB = MedicationDataIO.replaceSpace(drugB, true);
-        String urlString = String
-                .format(INTERACTION_URL, drugA, drugB);
+        String urlString = String.format(INTERACTION_URL, drugA, drugB);
 
-        //Reading the response from the connection.
+        // Reading the response from the connection.
         StringBuffer response = MedicationDataIO.makeRequest(urlString);
 
         if (response == null) {
             return response;
         }
-        else if (response.toString().equals(SERVERERROR)) {
+        else if (response.toString().equals(SERVER_ERROR)) {
             // Server is fussy about what order the drugs are in the url, if request fails will
             // try again with drugs in different order.
             urlString = String.format(INTERACTION_URL, drugB, drugA);
             response = MedicationDataIO.makeRequest(urlString);
-            if (response == null || response.toString().equals(SERVERERROR)) {
+            if (response == null || response.toString().equals(SERVER_ERROR)) {
                 return null;
             }
         }
@@ -129,8 +128,11 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         Gson gson = new Gson();
 
         interactionObj.keySet().forEach(key -> {
-            ArrayList value = gson.fromJson(interactionObj.get(key).getAsJsonArray(),
-                    ArrayList.class);
+            ArrayList value = gson.fromJson(
+                    interactionObj.get(key).getAsJsonArray(),
+                    ArrayList.class
+            );
+
             result.put(key, value);
         });
         return result;
@@ -146,7 +148,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         Map<String, Integer> result = new HashMap<>();
         Gson gson = new Gson();
 
-        interactionObj.keySet().forEach((key) -> {
+        interactionObj.keySet().forEach(key -> {
             Integer value = gson.fromJson(interactionObj.get(key), Integer.class);
             result.put(key, value);
         });
@@ -158,9 +160,11 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public void clear() {
-        interactionDb.clear();
+        this.interactionDb.clear();
     }
 
     @Override
-    public void setLocation(String path) { this.path = path; }
+    public void setLocation(String path) {
+        this.path = path;
+    }
 }
