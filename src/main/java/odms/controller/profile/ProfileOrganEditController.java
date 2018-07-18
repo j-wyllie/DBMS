@@ -44,9 +44,9 @@ public class ProfileOrganEditController extends CommonController {
      * @param changedOrgans changed organs list to search with
      * @return a list of organs to remove from the profile
      */
-    private HashSet<OrganEnum> findOrgansRemoved(HashSet<OrganEnum> currentOrgans,
-            HashSet<OrganEnum> changedOrgans) {
-        HashSet<OrganEnum> organsRemoved = new HashSet<>();
+    private Set<OrganEnum> findOrgansRemoved(Set<OrganEnum> currentOrgans,
+            Set<OrganEnum> changedOrgans) {
+        Set<OrganEnum> organsRemoved = new HashSet<>();
         for (OrganEnum organ : currentOrgans) {
             if (!changedOrgans.contains(organ)) {
                 organsRemoved.add(organ);
@@ -56,7 +56,7 @@ public class ProfileOrganEditController extends CommonController {
     }
 
     public void caseDonated() {
-        HashSet<OrganEnum> organsRemoved;
+        Set<OrganEnum> organsRemoved;
         Profile currentProfile = view.getCurrentProfile();
         organsRemoved = findOrgansRemoved(
                 currentProfile.getOrgansDonated(),
@@ -128,7 +128,7 @@ public class ProfileOrganEditController extends CommonController {
 
     public void caseDonating() {
         try {
-            HashSet<OrganEnum> organsRemoved;
+            Set<OrganEnum> organsRemoved;
             view.getCurrentProfile().setDonor(true);
 
             organsRemoved = findOrgansRemoved(
@@ -210,7 +210,7 @@ public class ProfileOrganEditController extends CommonController {
     }
 
     public void caseRequired() {
-        HashSet<OrganEnum> organsRemoved;
+        Set<OrganEnum> organsRemoved;
         view.getCurrentProfile().setReceiver(true);
 
         organsRemoved = findOrgansRemoved(
@@ -236,7 +236,7 @@ public class ProfileOrganEditController extends CommonController {
      *
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(HashSet<OrganEnum> organs) {
+    public void addOrgansRequired(Set<OrganEnum> organs) {
         //todo
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsRequired",view.getCurrentProfile());
 

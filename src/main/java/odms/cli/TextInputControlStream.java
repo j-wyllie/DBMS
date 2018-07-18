@@ -77,7 +77,7 @@ class TextInputControlStream {
         private final TextInputControl textInputControl;
         private final PipedInputStream outputTextSource;
         private final PipedOutputStream inputTextTarget;
-        private int lastLineBreakIndex = 0;
+        private int lastLineBreakIndex;
 
         public TextInputControlInputStream(TextInputControl textInputControl) {
             this.textInputControl = textInputControl;

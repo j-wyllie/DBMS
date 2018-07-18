@@ -21,7 +21,7 @@ import odms.view.profile.ProfileGeneralViewTODOReplacesDisplayController;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
-    private static boolean isEdited = false;
+    private static boolean isEdited;
     /**
      * Scene change to log in view.
      *

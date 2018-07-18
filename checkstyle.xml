@@ -30,7 +30,7 @@
         <!-- Blocks                                               -->
         <!-- http://checkstyle.sourceforge.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
+        <!--<module name="EmptyBlock"/>-->
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
@@ -43,12 +43,73 @@
         <module name="InterfaceIsType"/>
         <module name="MutableException"/>
         <module name="OneTopLevelClass"/>
-        <module name="ThrowsCount">
-            <property name="max" value="2"/>
-        </module>
+        <module name="ThrowsCount"/>
         <!--<module name="VisibilityModifier"/>-->
 
-
+        <!-- Coding                                      -->
+        <!-- http://checkstyle.sf.net/config_coding.html -->
+        <module name="ArrayTrailingComma"/>
+        <module name="CovariantEquals"/>
+        <!--<module name="DeclarationOrder"/>-->
+        <module name="DefaultComesLast"/>
+        <module name="EmptyStatement"/>
+        <!--<module name="EqualsAvoidNull"/>-->
+        <module name="EqualsHashCode"/>
+        <module name="ExplicitInitialization"/>
+        <module name="FallThrough"/>
+        <!--<module name="IllegalCatch">-->
+            <!--<property name="illegalClassNames"-->
+                <!--value="java.lang.Exception,-->
+                         <!--java.lang.Throwable,-->
+                         <!--java.lang.RuntimeException,-->
+                         <!--java.lang.NullPointerException"/>-->
+        <!--</module>-->
+        <module name="IllegalInstantiation">
+            <property name="classes"
+                value="org.xml.sax.SAXException, org.xml.sax.SAXParseException,
+                         org.apache.commons.beanutils.ConversionException,
+                         org.antlr.v4.runtime.misc.ParseCancellationException,
+                         antlr.RecognitionException, antlr.TokenStreamException,
+                         antlr.TokenStreamRecognitionException, antlr.ANTLRException"/>
+        </module>
+        <module name="IllegalThrows"/>
+        <module name="IllegalToken">
+            <property name="tokens" value="LABELED_STAT"/>
+            <property name="tokens" value="LITERAL_NATIVE"/>
+            <property name="tokens" value="LITERAL_VOLATILE"/>
+            <property name="tokens" value="LITERAL_ASSERT"/>
+        </module>
+        <module name="IllegalTokenText">
+            <property name="tokens" value="STRING_LITERAL"/>
+            <property name="format" value="^(US-ASCII|ISO-8859-1|UTF-8|UTF-16BE|UTF-16LE|UTF-16)$"/>
+            <property name="ignoreCase" value="true"/>
+        </module>
+        <module name="IllegalType"/>
+        <module name="InnerAssignment"/>
+        <!--<module name="MagicNumber"/>-->
+        <!--<module name="MissingSwitchDefault"/>-->
+        <module name="ModifiedControlVariable"/>
+        <!--<module name="MultipleStringLiterals"/>-->
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NestedForDepth">
+            <property name="max" value="2"/>
+        </module>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NestedTryDepth"/>
+        <module name="NoClone"/>
+        <module name="NoFinalizer"/>
+        <module name="OneStatementPerLine"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="PackageDeclaration"/>
+        <module name="RequireThis"/>
+        <module name="SimplifyBooleanExpression"/>
+        <!--<module name="SimplifyBooleanReturn"/>-->
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="UnnecessaryParentheses"/>
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->

@@ -129,7 +129,7 @@ public class ViewUsersView extends CommonView {
         stage.initOwner(viewUsersTable.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding((ob) -> refreshViewUsersTable());
+        stage.setOnHiding(ob -> refreshViewUsersTable());
         stage.show();
     }
 

@@ -10,8 +10,8 @@ import java.util.*;
 
 public class UserDatabase {
 
-    private HashSet<Integer> deletedUsers = new HashSet<>();
-    private HashMap<Integer, User> userDb = new HashMap<>();
+    private Set<Integer> deletedUsers = new HashSet<>();
+    private Map<Integer, User> userDb = new HashMap<>();
 
     private Integer lastID = -1;
     private String path;

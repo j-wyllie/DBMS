@@ -51,7 +51,7 @@ public class ProfileOrganEditView extends CommonView {
      * @param organStrings strings to convert
      * @return set of OrganEnum
      */
-    private static HashSet<OrganEnum> observableListStringsToOrgans(HashSet<String> organStrings) {
+    private static Set<OrganEnum> observableListStringsToOrgans(Set<String> organStrings) {
         List<String> correctedOrganStrings = new ArrayList<>();
 
         for (String organ : organStrings) {
@@ -242,7 +242,7 @@ public class ProfileOrganEditView extends CommonView {
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding((ob) -> refreshListViews());
+            stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -253,7 +253,7 @@ public class ProfileOrganEditView extends CommonView {
         return currentProfile;
     }
 
-    public HashSet getOrgansAdded() {
+    public Set getOrgansAdded() {
         return observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );

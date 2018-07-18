@@ -483,7 +483,7 @@ public class ClinicianProfileView extends CommonView {
         searchTable.setRowFactory(tableView -> {
             final TableRow<Profile> row = new TableRow<>();
 
-            row.hoverProperty().addListener((observable) -> {
+            row.hoverProperty().addListener(observable -> {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {

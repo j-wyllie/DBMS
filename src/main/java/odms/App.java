@@ -63,7 +63,7 @@ public class App {
     }
 
     public void setCurrentDatabase(ProfileDatabase profileDb) {
-        profileDb = profileDb;
+        this.profileDb = profileDb;
     }
 
 }

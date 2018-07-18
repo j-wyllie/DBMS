@@ -16,7 +16,7 @@ public class User {
     private LocalDateTime timeOfCreation;
     private String username;
     private String password; //not being used yet, but will be in the future.
-    private boolean isDefault = false;
+    private boolean isDefault;
 
     /**
      * user constructor

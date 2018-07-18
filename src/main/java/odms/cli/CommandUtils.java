@@ -37,7 +37,7 @@ public final class CommandUtils {
                     + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)"
                     + "[\"]))*";
     public static ArrayList<String> currentSessionHistory = new ArrayList<>();
-    public static int historyPosition = 0;
+    public static int historyPosition;
     protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
     protected static String searchErrorText = "Please enter only one search criteria\n "
             + "Profiles: given-names, last-names, ird\n"
@@ -89,10 +89,12 @@ public final class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
+                break;
             case "create-clinician":
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.CLINICIANCREATE;
                 }
+                break;
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -125,6 +127,7 @@ public final class CommandUtils {
                         && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
+                break;
             case "clinician":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -139,6 +142,7 @@ public final class CommandUtils {
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
+                break;
             case "db-read":
                 return Commands.SQLREADONLY;
         }
@@ -356,7 +360,7 @@ public final class CommandUtils {
      */
     private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
+            Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
@@ -382,7 +386,7 @@ public final class CommandUtils {
      */
     private static void addReceiverOrgans(ArrayList<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
-            HashSet<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
+            Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
                 try {
@@ -498,15 +502,15 @@ public final class CommandUtils {
                 for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
                     if (currentSessionHistory.get(i).contains("profile " + oldid)) {
                         currentSessionHistory.set(i,
-                                ("profile " + id + " " + currentSessionHistory.get(i).substring(
+                                "profile " + id + " " + currentSessionHistory.get(i).substring(
                                         action.indexOf("profile " + oldid) + 6 + Integer
                                                 .toString(id)
-                                                .length())));
+                                                .length()));
                     }
                 }
                 currentSessionHistory
                         .set(historyPosition,
-                                ("profile " + id + " deleted at " + LocalDateTime.now()));
+                                "profile " + id + " deleted at " + LocalDateTime.now());
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -629,14 +633,14 @@ public final class CommandUtils {
                     for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
                         if (currentSessionHistory.get(i).contains("profile " + oldid)) {
                             currentSessionHistory.set(i,
-                                    ("profile " + id + currentSessionHistory.get(i).substring(
+                                    "profile " + id + currentSessionHistory.get(i).substring(
                                             action.indexOf("profile " + oldid) + 6 + Integer
                                                     .toString(id)
-                                                    .length())));
+                                                    .length()));
                         }
                     }
                     currentSessionHistory.set(historyPosition,
-                            ("profile " + id + " added at " + LocalDateTime.now()));
+                            "profile " + id + " added at " + LocalDateTime.now());
                 } else if (action.contains("deleted")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);

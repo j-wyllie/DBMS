@@ -14,8 +14,8 @@ import java.util.Map.Entry;
 
 public class ProfileDatabase {
 
-    private HashMap<Integer, Profile> profileDb = new HashMap<>();
-    private HashSet<Integer> deletedProfiles = new HashSet<>();
+    private Map<Integer, Profile> profileDb = new HashMap<>();
+    private Set<Integer> deletedProfiles = new HashSet<>();
 
     private Integer lastID = -1;
     private String path;
@@ -369,7 +369,7 @@ public class ProfileDatabase {
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt,
             int ageRangeSearchInt, String regionSearchString, String selectedGender,
-            String selectedType, HashSet<OrganEnum> selectedOrgans) {
+            String selectedType, Set<OrganEnum> selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
@@ -410,14 +410,14 @@ public class ProfileDatabase {
                 //use a range
                 if (ageRangeSearchInt > ageSearchInt) {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) > ageRangeSearchInt) || (
+                            profile -> (ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) > ageRangeSearchInt) || (
                                     ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    < ageSearchInt)));
+                                    < ageSearchInt));
                 } else {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) < ageRangeSearchInt) || (
+                            profile -> (ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) < ageRangeSearchInt) || (
                                     ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    > ageSearchInt)));
+                                    > ageSearchInt));
                 }
 
             } else {
@@ -441,7 +441,7 @@ public class ProfileDatabase {
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
 
-                HashSet<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
+                Set<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
                 List<String> organsDonating = new ArrayList<String>();
 
                 for (OrganEnum temp : organsDonatingHash) {

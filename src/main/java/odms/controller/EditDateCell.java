@@ -69,19 +69,19 @@ public class EditDateCell extends TableCell<Condition, LocalDate> {
                 try {
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
             }
         };
         textField.focusedProperty().addListener(changeListener);
 
-        textField.setOnKeyPressed((ke) -> {
+        textField.setOnKeyPressed(ke -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 try {
                     textField.focusedProperty().removeListener(changeListener);
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
                 textField.focusedProperty().addListener(changeListener);
             }

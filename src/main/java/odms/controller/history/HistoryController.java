@@ -13,7 +13,7 @@ public final class HistoryController {
     }
 
     public static ArrayList<History> currentSessionHistory = new ArrayList<>();
-    public static int historyPosition = 0;
+    public static int historyPosition;
     public static ArrayList<Profile> deletedProfiles = new ArrayList<>();
     public static ArrayList<User> deletedUsers = new ArrayList<odms.model.user.User>();
 

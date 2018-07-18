@@ -66,7 +66,7 @@ public class EditingConditionsCell extends TableCell<Condition, String> {
         };
         textField.focusedProperty().addListener(changeListener);
 
-        textField.setOnKeyPressed((ke) -> {
+        textField.setOnKeyPressed(ke -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 commitEdit(textField.getText());
             }

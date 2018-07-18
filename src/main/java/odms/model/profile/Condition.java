@@ -11,11 +11,11 @@ public class Condition {
 
     private String name;
     private LocalDate dateOfDiagnosis;
-    private LocalDate dateCured = null;
+    private LocalDate dateCured;
     private String dateOfDiagnosisString;
     private String dateCuredString;
-    private boolean isCured = false;
-    private boolean isChronic = false;
+    private boolean isCured;
+    private boolean isChronic;
     private String chronicText = "";
 
     /**
