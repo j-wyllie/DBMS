@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
@@ -88,9 +89,14 @@ public class ProfileEditController extends CommonController {
     private ComboBox comboGender;
 
     @FXML
-    private Button imageChoose;
+    private Text pictureText;
 
-    @FXML//TODO
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+    @FXML
     private String handleChooseImageClicked(ActionEvent event){
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -100,6 +106,7 @@ public class ProfileEditController extends CommonController {
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             System.out.println("You chose to open this file: " +
                     chooser.getSelectedFile().getName());
+            pictureText.setText(chooser.getSelectedFile().getName());
         }
         return chooser.getSelectedFile().getName();
     }

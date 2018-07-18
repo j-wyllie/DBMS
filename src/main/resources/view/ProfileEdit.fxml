@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
@@ -153,6 +154,7 @@
                                                       <Insets />
                                                    </opaqueInsets>
                                                 </Button>
+                                                <Text fx:id="pictureText" fill="BLUE" strokeType="OUTSIDE" strokeWidth="0.0" text="No Image Selected" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                                                             </children>
                                                         </GridPane>
                                                     </children>
