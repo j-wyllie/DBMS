@@ -14,17 +14,40 @@ public class Interaction {
     private Map<String, List<String>> genderInteractions;
     private LocalDateTime dateTimeCreated;
 
-    public Interaction(String drug1, String drug2, Map<String, List<String>> ageEffects,
-            Map<String, Integer> coexistingEffects, Map<String, List<String>> durationEffects,
+    public Interaction(
+            String drugA,
+            String drugB,
+            Map<String, List<String>> ageEffects,
+            Map<String, Integer> coexistingEffects,
+            Map<String, List<String>> durationEffects,
             Map<String, List<String>> genderEffects) {
+        this(
+                drugA,
+                drugB,
+                ageEffects,
+                coexistingEffects,
+                durationEffects,
+                genderEffects,
+                LocalDateTime.now()
+        );
+    }
 
-        this.drugA = drug1;
-        this.drugB = drug2;
+    public Interaction(
+            String drugA,
+            String drugB,
+            Map<String, List<String>> ageEffects,
+            Map<String, Integer> coexistingEffects,
+            Map<String, List<String>> durationEffects,
+            Map<String, List<String>> genderEffects,
+            LocalDateTime dateTimeCreated) {
+
+        this.drugA = drugA;
+        this.drugB = drugB;
         this.ageInteractions = ageEffects;
         this.coexistingConditions = coexistingEffects;
         this.durationInteractions = durationEffects;
         this.genderInteractions = genderEffects;
-        this.dateTimeCreated = LocalDateTime.now();
+        this.dateTimeCreated = dateTimeCreated;
     }
 
     public String getDrugA() { return drugA; }
