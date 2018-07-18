@@ -4,6 +4,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import odms.controller.profile.ProfileHistoryTabController;
+import odms.controller.profile.ProfileMedicalTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -21,6 +23,8 @@ public class ProfileMedicalViewTODO extends CommonView {
     private Label bmiLabel;
 
     public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    // init controller corresponding to this view
+    private ProfileMedicalTabController controller = new ProfileMedicalTabController(this);
 
     private void setUpDetails() {
         if (currentProfile.get().getAlcoholConsumption() != null) {

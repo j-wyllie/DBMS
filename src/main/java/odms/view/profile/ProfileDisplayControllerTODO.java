@@ -50,27 +50,22 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private ProfileMedicalViewTODO profileMedicalViewTODO;
     @FXML
+    private ProfileHistoryViewTODO profileHistoryViewTODO;
+
+    @FXML
     private Label donorFullNameLabel;
     @FXML
     private Label donorStatusLabel;
-
-    @FXML
-    private TextArea historyView;
-
     @FXML
     private Label userIdLabel;
     @FXML
     private Button logoutButton;
-
     @FXML
     private Button buttonViewMedicationHistory;
     @FXML
     private Button addNewProcedureButton;
-
     @FXML
     private Button deleteProcedureButton;
-
-
     @FXML
     private Label receiverStatusLabel;
 
@@ -80,12 +75,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
     public void editedTextArea() {
         editedText.setText("The profile was successfully edited.");
     }
-
-
-
-
-
-
 
 
     /**
@@ -139,20 +128,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
             }
 
 
-            String history = ProfileDataIO.getHistory();
-            history = history.replace(",", " ").replace("]", "").
-                    replace("[", "").replace("\\u003d", "=");
-            String[] histories = history.split("\"");
 
-            String historyDisplay = "";
-
-            for (String h : histories) {
-                if (!h.equals("") && h.contains("profile " + currentProfile.getId() + " ")) {
-                    historyDisplay += h + "\n";
-                }
-            }
-
-            historyView.setText(historyDisplay);
             setMedicationSearchFieldListener();
 
             refreshConditionTable();
@@ -250,12 +226,16 @@ public class ProfileDisplayControllerTODO extends CommonController {
         profileOrganOverviewController.populateOrganLists();
     }
     @FXML
-    public void onTabGeneralSelected(Event event) {
+    public void onTabGeneralSelected() {
         profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
     }
     @FXML
-    public void onTabMedicalSelected(Event event) {
+    public void onTabMedicalSelected() {
         profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
+    }
+    @FXML
+    public void onTabHistorySelected() {
+        profileHistoryViewTODO.currentProfile.bind(currentProfileBound);
     }
 
 
@@ -272,8 +252,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
 
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
 
         curChronicColumn.setSortable(false);
 

@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import odms.controller.profile.ProfileGeneralTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -42,7 +43,8 @@ public class ProfileGeneralViewTODOReplacesDisplayController  extends CommonView
     private Label ageLabel;
 
     public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
-
+    // init controller corresponding to this view
+    private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
 
     private void setUpDetails() {
         if (currentProfile.get().getGivenNames() != null) {
