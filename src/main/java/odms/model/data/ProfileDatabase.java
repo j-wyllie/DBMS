@@ -3,7 +3,7 @@ package odms.model.data;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.data.IrdNumberConflictException;
-import odms.controller.profile.ProfileGeneralController;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.ProfileOrganControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -410,17 +410,20 @@ public class ProfileDatabase {
                 //use a range
                 if (ageRangeSearchInt > ageSearchInt) {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralController.calculateAge(profile) > ageRangeSearchInt) || (ProfileGeneralController.calculateAge(profile)
+                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) > ageRangeSearchInt) || (
+                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
                                     < ageSearchInt)));
                 } else {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralController.calculateAge(profile) < ageRangeSearchInt) || (ProfileGeneralController.calculateAge(profile)
+                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) < ageRangeSearchInt) || (
+                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
                                     > ageSearchInt)));
                 }
 
             } else {
                 //just the age specified
-                resultProfiles.removeIf(profile -> ProfileGeneralController.calculateAge(profile) != ageSearchInt);
+                resultProfiles.removeIf(profile -> ProfileGeneralControllerTODOContainsOldProfileMethods
+                        .calculateAge(profile) != ageSearchInt);
             }
         }
 

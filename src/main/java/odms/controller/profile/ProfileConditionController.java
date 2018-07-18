@@ -143,4 +143,8 @@ public class ProfileConditionController {
             }
         }
     }
+
+    public void addCondition(Condition condition) {
+        view.getCurrentProfile().getAllConditions().add(condition);
+    }
 }

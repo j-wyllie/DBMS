@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -103,12 +104,17 @@ private void makeTable(ArrayList<Condition> curConditions,
         });
     }
 
-    public ArrayList<Condition> convertConditionObservableToArray(
+    /**
+     * Converts the conditions observable array to an arraylist.
+     * @param conditions observable list of conditions
+     * @return arraylist of conditions
+     */
+    private ArrayList<Condition> convertConditionObservableToArray(
             ObservableList<Condition> conditions) {
         ArrayList<Condition> toReturn = new ArrayList<>();
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i) != null) {
-                toReturn.add(conditions.get(i));
+        for (Condition condition : conditions) {
+            if (condition != null) {
+                toReturn.add(condition);
             }
         }
         return toReturn;
@@ -119,125 +125,38 @@ private void makeTable(ArrayList<Condition> curConditions,
      */
     @FXML
     public void refreshConditionTable() {
-        //todo clean up this absolute unit of a method
         Callback<TableColumn, TableCell> cellFactory = p -> new EditingConditionsCell();
-
         Callback<TableColumn, TableCell> cellFactoryDate = p -> new EditDateCell();
 
-        if (curConditionsObservableList != null) {
-            curConditionsObservableList = FXCollections.observableArrayList();
-        }
-        if (pastConditionsObservableList != null) {
-            pastConditionsObservableList = FXCollections.observableArrayList();
-        }
-
-        if (controller.getCurrentConditions() != null) {
-            curConditionsObservableList.addAll(controller.getCurrentConditions());
-        }
-        if (controller.getCuredConditions() != null) {
-            pastConditionsObservableList.addAll(controller.getCuredConditions());
-        }
+        initializeConditionLists();
 
         curConditionsTable.setItems(curConditionsObservableList);
+        initializeCurrentConditionsColumn(cellFactory);
+        initializeCurrentChronicColumn();
+        initializeCurrentDateOfDiagnosisColumn(cellFactoryDate);
 
-        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        curDescriptionColumn.setCellFactory(cellFactory);
-        curDescriptionColumn.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> {
-                    controller.removeCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
-                    (t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setName(t.getNewValue());
-                    controller.addCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
-                });
-
-        curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
-        curChronicColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
-            @Override
-            public TableCell call(TableColumn param) {
-                return new TableCell<ArrayList<Condition>, String>() {
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            this.setTextFill(Color.RED);
-                            setText(item);
-                        }
-                    }
-                };
-            }
-        });
-
-        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
-
-        curDateOfDiagnosisColumn.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-                    if (!t.getNewValue().isAfter(LocalDate.now())) {
-                        controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                        (t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                        controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                    }
-
-                    refreshConditionTable();
-                });
         curConditionsTable.getColumns()
                 .setAll(curDescriptionColumn, curChronicColumn, curDateOfDiagnosisColumn);
 
         pastConditionsTable.setItems(pastConditionsObservableList);
-        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        pastDescriptionColumn.setCellFactory(cellFactory);
-        pastDescriptionColumn.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<Condition, String>>) t -> (t.getTableView().getItems()
-                        .get(
-                                t.getTablePosition().getRow())).setName(t.getNewValue()));
 
-        pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
-        pastDateCuredColumn.setCellFactory(cellFactoryDate);
+        initializePastConditionsColumn(cellFactory);
+        initializePastDateCuredColumn(cellFactoryDate);
+        initializePastDateOfDiagnosisColumn(cellFactoryDate);
 
-        pastDateCuredColumn.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-                    if (t.getNewValue().isBefore(
-                            t.getTableView().getItems().get(t.getTablePosition().getRow())
-                                    .getDateOfDiagnosis())
-                            || t.getNewValue().isAfter(LocalDate.now())) {
-                    } else {
-                        controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                        (t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setDateCured(t.getNewValue());
-                        controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                    }
-                    refreshConditionTable();
-                });
-
-        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
-        pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
-
-        pastDateOfDiagnosisColumn.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<Condition, LocalDate>>) t -> {
-                    if (!(t.getNewValue().isAfter(
-                            t.getTableView().getItems().get(t.getTablePosition().getRow())
-                                    .getDateCured())
-                            || t.getNewValue().isAfter(LocalDate.now()))) {
-                        controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                        (t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
-                        controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
-                    }
-                    refreshConditionTable();
-                });
         pastConditionsTable.getColumns()
                 .setAll(pastDescriptionColumn, pastDateOfDiagnosisColumn, pastDateCuredColumn);
 
+        setCurrentConditionsTableSort();
+        refreshPageElements();
+        forceConditionSortOrder();
+
+    }
+
+    /**
+     * Sets custom sort order of the current conditions table.
+     */
+    private void setCurrentConditionsTableSort() {
         curConditionsTable.sortPolicyProperty().set(
                 (Callback<TableView<Condition>, Boolean>) param -> {
                     Comparator<Condition> comparator = (o1, o2) -> {
@@ -264,10 +183,155 @@ private void makeTable(ArrayList<Condition> curConditions,
                     FXCollections.sort(curConditionsTable.getItems(), comparator);
                     return true;
                 });
+    }
 
-        refreshPageElements();
-        forceConditionSortOrder();
+    /**
+     * sets the past date of diagnosis column to the new condition
+     * @param cellFactoryDate cell factory of the date that the condition was added
+     */
+    private void initializePastDateOfDiagnosisColumn(
+            Callback<TableColumn, TableCell> cellFactoryDate) {
+        pastDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
 
+        pastDateOfDiagnosisColumn.setOnEditCommit(
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
+                    if (!(t.getNewValue().isAfter(
+                            t.getTableView().getItems().get(t.getTablePosition().getRow())
+                                    .getDateCured())
+                            || t.getNewValue().isAfter(LocalDate.now()))) {
+                        controller.removeCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
+                        controller.addCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                    }
+                    refreshConditionTable();
+                });
+    }
+
+    /**
+     * Sets the date that the condition was cured in the column
+     * @param cellFactoryDate cell factory of the date the condition was cured
+     */
+    private void initializePastDateCuredColumn(Callback<TableColumn, TableCell> cellFactoryDate) {
+        pastDateCuredColumn.setCellValueFactory(new PropertyValueFactory("dateCured"));
+        pastDateCuredColumn.setCellFactory(cellFactoryDate);
+
+        pastDateCuredColumn.setOnEditCommit(
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
+                    if (t.getNewValue().isBefore(
+                            t.getTableView().getItems().get(t.getTablePosition().getRow())
+                                    .getDateOfDiagnosis())
+                            || t.getNewValue().isAfter(LocalDate.now())) {
+                    } else {
+                        controller.removeCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setDateCured(t.getNewValue());
+                        controller.addCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                    }
+                    refreshConditionTable();
+                });
+    }
+
+    /**
+     * sets the past conditions column to the corresponding condition
+     * @param cellFactory cell factory that contains column data.
+     */
+    private void initializePastConditionsColumn(Callback<TableColumn, TableCell> cellFactory) {
+        pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        pastDescriptionColumn.setCellFactory(cellFactory);
+        pastDescriptionColumn.setOnEditCommit(
+                (EventHandler<CellEditEvent<Condition, String>>) t -> (t.getTableView().getItems()
+                        .get(
+                                t.getTablePosition().getRow())).setName(t.getNewValue()));
+    }
+
+    /**
+     * Sets the current date of diagnosis column
+     * @param cellFactoryDate cell factory of the current date
+     */
+    private void initializeCurrentDateOfDiagnosisColumn(
+            Callback<TableColumn, TableCell> cellFactoryDate) {
+        curDateOfDiagnosisColumn.setCellValueFactory(new PropertyValueFactory("dateOfDiagnosis"));
+        curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
+
+        curDateOfDiagnosisColumn.setOnEditCommit(
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
+                    if (!t.getNewValue().isAfter(LocalDate.now())) {
+                        controller.removeCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
+                        controller.addCondition(t.getTableView().getItems().get(
+                                t.getTablePosition().getRow()));
+                    }
+
+                    refreshConditionTable();
+                });
+    }
+
+    /**
+     * sets the current chronic column
+     */
+    private void initializeCurrentChronicColumn() {
+        curChronicColumn.setCellValueFactory(new PropertyValueFactory("chronicText"));
+        curChronicColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return new TableCell<ArrayList<Condition>, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            this.setTextFill(Color.RED);
+                            setText(item);
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    /**
+     * sets the current conditions column
+     * @param cellFactory
+     */
+    private void initializeCurrentConditionsColumn(Callback<TableColumn, TableCell> cellFactory) {
+        curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        curDescriptionColumn.setCellFactory(cellFactory);
+        curDescriptionColumn.setOnEditCommit(
+                (EventHandler<CellEditEvent<Condition, String>>) t -> {
+                    controller.removeCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                    (t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setName(t.getNewValue());
+                    controller.addCondition(t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()));
+                });
+    }
+
+    /**
+     * Sets the conditions lists and populates the observable lists.
+     */
+    private void initializeConditionLists() {
+        if (curConditionsObservableList != null) {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditionsObservableList != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
+
+        if (controller.getCurrentConditions() != null) {
+            curConditionsObservableList.addAll(controller.getCurrentConditions());
+        }
+        if (controller.getCuredConditions() != null) {
+            pastConditionsObservableList.addAll(controller.getCuredConditions());
+        }
     }
 
     /**
@@ -299,7 +363,7 @@ private void makeTable(ArrayList<Condition> curConditions,
             fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            //todo fix this by using the view?
+            //todo fix this by using the view? Don't know if this window is actually opened
             ConditionAddController controller = fxmlLoader.<ConditionAddController>getController();
             controller.init(this);
 
@@ -434,5 +498,15 @@ private void makeTable(ArrayList<Condition> curConditions,
             toggleCuredButton.setDisable(false);
             toggleChronicButton.setDisable(false);
         }
+    }
+
+    public void initialize() {
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        curChronicColumn.setSortable(false);
+
+        disableTableHeaderReorder();
+
     }
     }

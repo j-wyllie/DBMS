@@ -15,18 +15,21 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.AlertController;
+import odms.controller.profile.ProfileOrganEditController;
+import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
-import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
+import odms.view.CommonView;
 
 import java.io.IOException;
 import java.util.*;
 
-public class ProfileOrganEditController extends ProfileOrganCommonController {
+public class ProfileOrganEditView extends CommonView {
+    protected ObservableList<String> observableListOrgansAvailable;
+    private Profile currentProfile;
+    private ProfileOrganEditController controller = new ProfileOrganEditController(this);
 
-    private static OrganSelectEnum windowType;
     protected ObservableList<String> observableListOrgansSelected = FXCollections
             .observableArrayList();
     @FXML
@@ -58,14 +61,11 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
         return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
-    protected static void setWindowType(OrganSelectEnum type) {
-        windowType = type;
-    }
+    public void initialize(Profile p) {
+        currentProfile = p;
+        lblBanner.setText(controller.getWindowType().toString());
 
-    public void initialize() {
-        lblBanner.setText(windowType.toString());
-
-        if (currentProfile.get() != null) {
+        if (currentProfile != null) {
             // Order of execution for building these is required due to removing items from the
             // Available list that are present in the Required list.
             buildOrgansSelected();
@@ -80,45 +80,54 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
     }
 
     /**
+     * Populate the ListView with the organs that are available and that are not in the required
+     * list.
+     */
+    protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
+        observableListOrgansAvailable = FXCollections.observableArrayList();
+        observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
+        observableListOrgansAvailable.removeIf(removeStrings::contains);
+    }
+
+    /**
+     * Support function to populate an observable list with organs from an organ set.
+     *
+     * @param destinationList list to populate
+     * @param organs          source list of organs to populate from
+     */
+    protected void populateOrganList(ObservableList<String> destinationList,
+            Set<OrganEnum> organs) {
+        destinationList.clear();
+
+        if (organs != null) {
+            for (OrganEnum organ : organs) {
+                destinationList.add(organ.getNamePlain());
+            }
+            Collections.sort(destinationList);
+        }
+    }
+
+    /**
      * Populate the ListView with the organs the profile currently requires.
      */
     private void buildOrgansSelected() {
         Set<OrganEnum> organs = new HashSet<>();
 
-        switch (windowType) {
+        switch (controller.getWindowType()) {
             case DONATED:
                 lblSelected.setText("Donated");
-                organs = currentProfile.get().getOrgansDonated();
+                organs = currentProfile.getOrgansDonated();
                 break;
             case DONATING:
                 lblSelected.setText("Donating");
-                organs = currentProfile.get().getOrgansDonating();
+                organs = currentProfile.getOrgansDonating();
                 break;
             case REQUIRED:
                 lblSelected.setText("Required");
-                organs = currentProfile.get().getOrgansRequired();
+                organs = currentProfile.getOrgansRequired();
                 break;
         }
-
         populateOrganList(observableListOrgansSelected, organs);
-    }
-
-    /**
-     * Support function to detect organs removed from the selected list view.
-     *
-     * @param currentOrgans the current organ list to detect against
-     * @param changedOrgans changed organs list to search with
-     * @return a list of organs to remove from the profile
-     */
-    private HashSet<OrganEnum> findOrgansRemoved(HashSet<OrganEnum> currentOrgans,
-            HashSet<OrganEnum> changedOrgans) {
-        HashSet<OrganEnum> organsRemoved = new HashSet<>();
-        for (OrganEnum organ : currentOrgans) {
-            if (!changedOrgans.contains(organ)) {
-                organsRemoved.add(organ);
-            }
-        }
-        return organsRemoved;
     }
 
     /**
@@ -167,47 +176,15 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        HashSet<OrganEnum> organsAdded = ProfileOrganEditController.observableListStringsToOrgans(
-                new HashSet<>(observableListOrgansSelected)
-        );
-        HashSet<OrganEnum> organsRemoved;
-
-        switch (windowType) {
+        switch (controller.getWindowType()) {
             case DONATED:
-                organsRemoved = findOrgansRemoved(
-                        currentProfile.get().getOrgansDonated(),
-                        organsAdded
-                );
-
-                currentProfile.get().addOrgansDonated(organsAdded);
-                currentProfile.get().removeOrgansDonated(organsRemoved);
+                controller.caseDonated();
                 break;
             case DONATING:
-                try {
-                    currentProfile.get().setDonor(true);
-
-                    organsRemoved = findOrgansRemoved(
-                            currentProfile.get().getOrgansDonating(),
-                            organsAdded
-                    );
-
-                    organsAdded.removeAll(currentProfile.get().getOrgansDonating());
-                    currentProfile.get().addOrgansDonating(organsAdded);
-                    currentProfile.get().removeOrgansDonating(organsRemoved);
-                } catch (OrganConflictException e) {
-                    AlertController.invalidOrgan(e.getOrgan());
-                }
+                controller.caseDonating();
                 break;
             case REQUIRED:
-                currentProfile.get().setReceiver(true);
-
-                organsRemoved = findOrgansRemoved(
-                        currentProfile.get().getOrgansRequired(),
-                        organsAdded
-                );
-
-                currentProfile.get().addOrgansRequired(organsAdded);
-                currentProfile.get().removeOrgansRequired(organsRemoved);
+                controller.caseRequired();
                 break;
         }
 
@@ -224,15 +201,6 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         viewOrgansSelected.refresh();
         viewOrgansAvailable.refresh();
-    }
-
-    /**
-     * Configure the currently selected profile
-     *
-     * @param profile the profile to operate against.
-     */
-    protected void setCurrentProfile(Profile profile) {
-        this.currentProfile.set(profile);
     }
 
     /**
@@ -264,8 +232,9 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
 
         try {
             Scene scene = new Scene(fxmlLoader.load());
-            ProfileOrganRemovalController controller = fxmlLoader.getController();
-            controller.initialize(organ, this.currentProfile.get(), this);
+            //todo replace with view
+//            ProfileOrganRemovalController controller = fxmlLoader.getController(); //don't think this is necessary
+//            controller.initialize(organ, this.currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -280,4 +249,13 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
         }
     }
 
+    public Profile getCurrentProfile() {
+        return currentProfile;
+    }
+
+    public HashSet getOrgansAdded() {
+        return observableListStringsToOrgans(
+                new HashSet<>(observableListOrgansSelected)
+        );
+    }
 }

@@ -106,7 +106,7 @@ public class ProfileEditView extends CommonView {
         if (AlertController.saveChanges()) {
             try {
                 controller.save();
-                controller.showNotification("profile", event);
+                showNotification("profile", event);
                 closeEditWindow(event);
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(
@@ -124,7 +124,7 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        ProfileGeneralView.initialize(controller.close());
+        ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
@@ -136,7 +136,7 @@ public class ProfileEditView extends CommonView {
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
         if (profileCancelChanges()) {
-            ProfileGeneralView.initialize(controller.close());
+            ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
             changeScene(event, "/view/ProfileDisplay.fxml");
         }
     }

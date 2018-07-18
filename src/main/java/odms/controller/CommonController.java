@@ -19,23 +19,10 @@ import java.io.IOException;
 public class CommonController {
     //todo rework commoncontroller by cleaning up methods and removing or replacing them
 
-    private static boolean isEdited = false;
+
     private RedoController redoController = new RedoController();
     private UndoController undoController = new UndoController();
 
-    /**
-     * checks whether the window has been edited
-     *
-     * @param stage
-     * @return true if window has unsaved changes.
-     */
-    protected static boolean isEdited(Stage stage) {
-        return stage.getTitle().contains("(*)");
-//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
-//        CommonController controller = loader.getController();
-//        controller.toString();
-//        return controller.getEdited();
-    }
 
     /**
      * JavaFX Scene loader
@@ -69,93 +56,6 @@ public class CommonController {
         appStage.centerOnScreen();
         appStage.show();
     }
-
-    /**
-     * Changes the Edit profile title to include an astrix to indicate a value has been edited.
-     *
-     * @param event Any key event within the text boxes.
-     */
-    @FXML
-    protected void editTrueKey(javafx.scene.input.KeyEvent event) throws IOException {
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if (!currentStage.getTitle().contains("(*)")) {
-            currentStage.setTitle(currentStage.getTitle() + " (*)");
-        }
-        setEdited(true);
-    }
-
-    /**
-     * Changes the Edit profile title to include an astrix to indicate a value has been edited.
-     *
-     * @param event Any click event within the text boxes.
-     */
-    @FXML
-    protected void editTrueClick(MouseEvent event) {
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if (!currentStage.getTitle().contains("(*)")) {
-            currentStage.setTitle(currentStage.getTitle() + " (*)");
-        }
-        setEdited(true);
-    }
-
-    /**
-     * Changes the title of the parent window to include an astrix to indicate a value has been
-     * edited.
-     *
-     * @param event Any click event within the text boxes.
-     */
-    @FXML
-    protected void editTrueAction(ActionEvent event, boolean forOwner) {
-        if (forOwner) {
-            Stage currentStage = (Stage) ((Node) event.getTarget()).getParent().getScene()
-                    .getWindow();
-            currentStage = (Stage) currentStage.getOwner();
-            if (!currentStage.getTitle().contains("(*)")) {
-                currentStage.setTitle(currentStage.getTitle() + " (*)");
-            }
-        } else {
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            if (!currentStage.getTitle().contains("(*)")) {
-                currentStage.setTitle(currentStage.getTitle() + " (*)");
-            }
-        }
-    }
-
-    /**
-     * Changes the title of the stage to include an astrix to indicate a value has been edited.
-     *
-     * @param stage the stage to be edited.
-     */
-    public void editTrueStage(Stage stage) {
-        if (!stage.getTitle().contains("(*)")) {
-            stage.setTitle(stage.getTitle() + " (*)");
-        }
-        setEdited(true);
-    }
-
-    /**
-     * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
-     *
-     * @param event       The event which is wanted to trigger a notification
-     * @param editedField String of which is the thing edited.
-     */
-    @FXML
-    public void showNotification(String editedField, ActionEvent event) throws IOException {
-        //todo modify this method by making it common view possibly
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if (currentStage.getTitle().contains("(*)")) {
-            currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
-        }
-
-        Notifications.create()
-                .title("Edit Successful")
-                .text("The " + editedField + " was edited successfully!")
-                .hideAfter(Duration.millis(2500))
-                .position(Pos.BOTTOM_LEFT)
-                .owner(currentStage)
-                .show();
-    }
-
     /**
      * Button handler to undo last action.
      */
@@ -170,11 +70,5 @@ public class CommonController {
         redoController.redo(GuiMain.getCurrentDatabase());
     }
 
-    public Boolean getEdited() {
-        return isEdited;
-    }
 
-    public void setEdited(Boolean edited) {
-        isEdited = edited;
-    }
 }

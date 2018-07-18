@@ -8,6 +8,7 @@ import odms.model.profile.Condition;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 import odms.model.user.User;
+import odms.view.LoginView;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class RedoController extends UndoRedoController {
      * @param currentDatabase
      */
     public void redo(ProfileDatabase currentDatabase) {
+        //todo change the methods to controller functions
         try {
             currentSessionHistory = HistoryController.getHistory();
             historyPosition = HistoryController.getPosition();
@@ -183,7 +185,7 @@ public class RedoController extends UndoRedoController {
      */
     public void updated(History action) {
         int id = action.getHistoryId();
-        User user = LoginController.getCurrentUser();
+        User user = LoginView.getCurrentUser();
         String newString = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
         String[] newValues = newString.split(",");

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-        fx:controller="odms.controller.user.ViewUsersController"
+        fx:controller="odms.view.user.ViewUsersView"
         fx:id="dataManagementAp">
     <children>
         <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"

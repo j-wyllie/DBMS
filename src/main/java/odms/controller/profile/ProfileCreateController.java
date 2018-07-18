@@ -1,12 +1,6 @@
 package odms.controller.profile;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import odms.view.profile.ProfileCreateAccountView;
-import odms.view.profile.ProfileDisplayController;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.IrdNumberConflictException;

@@ -32,7 +32,7 @@ public class ProfileCreateAccountView extends CommonView {
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-        ProfileGeneralView.initialize(controller.createAccount());
+        ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.createAccount());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
 

@@ -10,7 +10,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ProfileGeneralController {
+public class ProfileGeneralControllerTODOContainsOldProfileMethods {
 
     /**
      * Sets the attributes that are passed into the constructor
@@ -74,7 +74,7 @@ public class ProfileGeneralController {
      *
      * @return BMI
      */
-    public Double calculateBMI(Profile profile) {
+    public static Double calculateBMI(Profile profile) {
         return profile.getWeight() / ((profile.getHeight()) * (profile.getHeight()));
     }
 
