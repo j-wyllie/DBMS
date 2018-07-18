@@ -28,6 +28,7 @@ public class RedoController extends UndoRedoController {
      * @param currentDatabase
      */
     public void redo(ProfileDatabase currentDatabase) {
+        //todo change the methods to controller functions
         try {
             currentSessionHistory = HistoryController.getHistory();
             historyPosition = HistoryController.getPosition();

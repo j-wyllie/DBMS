@@ -1,4 +1,4 @@
-package odms.controller.user;
+package odms.view.user;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,12 +8,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.CommonController;
 import odms.controller.GuiMain;
 import odms.model.user.User;
 import odms.model.user.UserType;
 
-public class UserCreateControllerTODO extends CommonController {
+public class UserCreateView {
 
     @FXML
     private TextField userUsernameField;
@@ -44,7 +43,6 @@ public class UserCreateControllerTODO extends CommonController {
                 GuiMain.getUserDatabase().addUser(user);
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
-
                 editTrueAction(event, true);
             } else {
                 AlertController.uniqueUsername();

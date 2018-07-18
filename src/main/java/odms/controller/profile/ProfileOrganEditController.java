@@ -265,7 +265,7 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void removeOrgansRequired(Set<OrganEnum> organs) {
         //todo fix generate update info into simpler solution
-        //generateUpdateInfo("organsReceiving");
+        generateUpdateInfo("organsReceiving");
         for (OrganEnum organ : organs) {
             view.getCurrentProfile().getOrgansRequired().remove(organ);
             History action = new History(

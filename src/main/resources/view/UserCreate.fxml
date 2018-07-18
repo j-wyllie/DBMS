@@ -7,7 +7,7 @@
 <?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="580.0" prefWidth="600.0"
         xmlns="http://javafx.com/javafx/8"
-        fx:controller="odms.controller.user.UserCreateControllerTODO">
+        fx:controller="odms.view.user.UserCreateView">
     <children>
         <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
                 focusTraversable="true" layoutX="-2.0" layoutY="2.0"

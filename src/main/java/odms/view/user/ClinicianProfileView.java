@@ -1,5 +1,4 @@
-package odms.controller.user;
-
+package odms.view.user;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,27 +18,27 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.App;
-import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
-import odms.controller.CommonController;
 import odms.controller.GuiMain;
 import odms.controller.data.DataManagementControllerPOTENTIALTODO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
+import odms.controller.user.ClinicianProfileEditController;
+import odms.controller.user.ViewUsersControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.model.user.UserType;
+import odms.view.CommonView;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 
-public class ClinicianProfileControllerTODO extends CommonController {
-
+public class ClinicianProfileView extends CommonView {
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;
     // Constant that holds the max number of search results that can be displayed.
@@ -93,7 +92,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
     @FXML
     private Tab consoleTab;
     @FXML
-    private ViewUsersControllerTODO viewUsersControllerTODO;
+    private ViewUsersView viewUsersView;
     @FXML
     private TableView transplantTable;
     @FXML
@@ -115,7 +114,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
     @FXML
     private Button buttonShowNext;
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
-    private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
+    private ObservableList<Map.Entry<Profile, OrganEnum>> receiverObservableList;
     private Profile selectedDonor;
     private RedoController redoController = new RedoController();
     private UndoController undoController = new UndoController();
@@ -132,6 +131,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
      */
     public static boolean checkUnsavedChanges(Stage currentStage) {
         for (Stage stage : openProfileStages) {
+            //todo maybe need to move isEdited from common controller to common view?
             if (isEdited(stage) && stage.isShowing()) {
                 return true;
             }
@@ -159,6 +159,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         currentUser = null;
+        //todo replace with standard maybe use change scene method with login as fxml
         showLoginScene(event);
     }
 
@@ -169,6 +170,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
+        //todo replace with standardised?
         undoController.undo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
@@ -184,6 +186,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
+        //todo replace with standardised?
         redoController.redo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
@@ -204,6 +207,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
+        //todo replace scene change with standardised and controller with view
         ClinicianProfileEditController controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
         controller.initialize();
@@ -536,6 +540,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
+            //todo replace with standardised method and view
             ProfileDisplayControllerTODO controller = fxmlLoader.getController();
             controller.setProfileViaClinician(selectedDonor);
             controller.initialize();
@@ -558,7 +563,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
+    private void makeTransplantWaitingList(List<Map.Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
 
         receiverObservableList = FXCollections.observableList(receivers);
@@ -601,7 +606,7 @@ public class ClinicianProfileControllerTODO extends CommonController {
                     transplantTable.getSelectionModel().getSelectedItem() != null) {
 
                 createNewDonorWindow(
-                        ((Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
+                        ((Map.Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
                                 .getSelectedItem()).getKey());
             }
         });
@@ -613,8 +618,8 @@ public class ClinicianProfileControllerTODO extends CommonController {
      * Initializes the controller for the view users Tab
      */
     public void handleViewUsersTabClicked() {
-        viewUsersControllerTODO.setCurrentUser(currentUser);
-        viewUsersControllerTODO.setUpUsersTable();
+        viewUsersView.setCurrentUser(currentUser);
+        viewUsersView.setUpUsersTable();
     }
 
     /**
@@ -723,4 +728,5 @@ public class ClinicianProfileControllerTODO extends CommonController {
     private void closeStage(Stage stage) {
         openProfileStages.remove(stage);
     }
+
 }
