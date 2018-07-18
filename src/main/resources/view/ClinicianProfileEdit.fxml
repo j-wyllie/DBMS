@@ -15,8 +15,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileEditController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
@@ -142,6 +143,19 @@
                                                       <Insets left="50.0" right="20.0" />
                                                    </GridPane.margin>
                                                 </TextField>
+                                                <Label fx:id="photoLabel" prefHeight="51.0" prefWidth="154.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Photo :" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                      <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Button mnemonicParsing="false" onAction="#handleChooseImageClicked" text="Choose Photo" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin></Button>
+                                                <Text fx:id="pictureText" fill="BLUE" strokeType="OUTSIDE" strokeWidth="0.0" text="No Photo Selected" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
                                              </children>
                                           </GridPane>
                                        </children>

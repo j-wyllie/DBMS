@@ -107,6 +107,12 @@ public class ProfileEditController extends CommonController {
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
+
+            if (chooser.getSelectedFile().length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+                return chooser.getSelectedFile().getName();
+            }
+
             System.out.println("You chose to open this file: " +
                     chooser.getSelectedFile().getName());
             pictureText.setText(chooser.getSelectedFile().getName());
