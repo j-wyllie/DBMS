@@ -48,23 +48,14 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
     @FXML
+    private ProfileMedicalViewTODO profileMedicalViewTODO;
+    @FXML
     private Label donorFullNameLabel;
     @FXML
     private Label donorStatusLabel;
 
     @FXML
-    private Label bloodTypeLabel;
-    @FXML
-    private Label smokerLabel;
-    @FXML
-    private Label alcoholConsumptionLabel;
-    @FXML
-    private Label bloodPressureLabel;
-
-    @FXML
     private TextArea historyView;
-    @FXML
-    private Label bmiLabel;
 
     @FXML
     private Label userIdLabel;
@@ -140,30 +131,13 @@ public class ProfileDisplayControllerTODO extends CommonController {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
-            if (currentProfile.getAlcoholConsumption() != null) {
-                alcoholConsumptionLabel.setText(
-                        alcoholConsumptionLabel.getText() +
-                                currentProfile.getAlcoholConsumption()
-                );
-            }
-            if (currentProfile.getBloodPressure() != null) {
-                bloodPressureLabel
-                        .setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
-            }
-            if (currentProfile.getBloodType() != null) {
-                bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
-            }
-            if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
-                bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
-            }
+
 
             if (currentProfile.getId() != null) {
                 userIdLabel
                         .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
             }
-            if (currentProfile.getIsSmoker() != null) {
-                smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
-            }
+
 
             String history = ProfileDataIO.getHistory();
             history = history.replace(",", " ").replace("]", "").
@@ -275,10 +249,15 @@ public class ProfileDisplayControllerTODO extends CommonController {
         profileOrganOverviewController.currentProfile.bind(currentProfileBound);
         profileOrganOverviewController.populateOrganLists();
     }
-
+    @FXML
     public void onTabGeneralSelected(Event event) {
         profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
     }
+    @FXML
+    public void onTabMedicalSelected(Event event) {
+        profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
+    }
+
 
     /**
      * Sets the current donor attributes to the labels on start up.

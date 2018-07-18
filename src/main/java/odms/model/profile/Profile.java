@@ -498,4 +498,13 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
+    /**
+     * Calculates and returns the profiles bmi
+     *
+     * @return BMI
+     */
+    public Double getBMI() {
+        return weight / Math.pow(height, 2);
+    }
+
 }
