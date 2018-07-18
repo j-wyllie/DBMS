@@ -12,12 +12,6 @@ import java.util.Set;
 
 public class ProfileOrganControllerTODO {
 
-
-
-
-
-
-
     /**
      * Add an organ to the set of received organs. If the organ exists in the receiving set, remove
      * it.
@@ -47,12 +41,6 @@ public class ProfileOrganControllerTODO {
             HistoryController.updateHistory(action);
         }
     }
-
-
-
-
-
-
 
     public void removeOrganDonated(OrganEnum organ) {
         if (this.organsDonated.contains(organ)) {

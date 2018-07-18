@@ -1,5 +1,6 @@
 package odms.model.profile;
 
+import java.time.Period;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.enums.OrganEnum;
 import odms.model.medications.Drug;
@@ -481,4 +482,20 @@ public class Profile implements Comparable<Profile> {
     public int compareTo(Profile o) {
         return 0;
     }
+
+    /**
+     * Calculate the profiles age if they are alive and their age at death if they are dead
+     * If the age is calculated on the users birthday they are the age they are turning that day
+     * e.g. if it's your 20th birthday you are 20
+     * @return profile age
+     */
+    public int getAge() {
+        //todo should we store this?
+        if (dateOfDeath == null) {
+            return Period.between(dateOfBirth, LocalDate.now()).getYears();
+        } else {
+            return Period.between(dateOfBirth, dateOfDeath).getYears();
+        }
+    }
+
 }

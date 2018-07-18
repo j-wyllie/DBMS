@@ -3,6 +3,7 @@ package odms.view.profile;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -43,34 +44,14 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private AnchorPane profileOrganOverview;
     @FXML
     private ProfileOrganOverviewControllerPOSSIBLYREDUNDANT profileOrganOverviewController;
+
+    @FXML
+    private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
     @FXML
     private Label donorFullNameLabel;
     @FXML
     private Label donorStatusLabel;
-    @FXML
-    private Label givenNamesLabel;
-    @FXML
-    private Label lastNamesLabel;
-    @FXML
-    private Label irdLabel;
-    @FXML
-    private Label dobLabel;
-    @FXML
-    private Label dodLabel;
-    @FXML
-    private Label genderLabel;
-    @FXML
-    private Label heightLabel;
-    @FXML
-    private Label weightLabel;
-    @FXML
-    private Label phoneLabel;
-    @FXML
-    private Label emailLabel;
-    @FXML
-    private Label addressLabel;
-    @FXML
-    private Label regionLabel;
+
     @FXML
     private Label bloodTypeLabel;
     @FXML
@@ -84,8 +65,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private TextArea historyView;
     @FXML
     private Label bmiLabel;
-    @FXML
-    private Label ageLabel;
+
     @FXML
     private Label userIdLabel;
     @FXML
@@ -100,19 +80,8 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private Button deleteProcedureButton;
 
 
-
-
-
     @FXML
     private Label receiverStatusLabel;
-
-    @FXML
-    private Label labelGenderPreferred;
-
-    @FXML
-    private Label labelPreferredName;
-    private RedoController redoController = new RedoController();
-    private UndoController undoController = new UndoController();
 
     /**
      * Called when there has been an edit to the current profile.
@@ -138,41 +107,8 @@ public class ProfileDisplayControllerTODO extends CommonController {
         showLoginScene(event);
     }
 
-    /**
-     * Button handler to undo last action.
-     */
-    @FXML
-    private void handleUndoButtonClicked() {
-        undoController.undo(GuiMain.getCurrentDatabase());
-    }
 
-    /**
-     * Button handler to redo last undo action.
-     */
-    @FXML
-    private void handleRedoButtonClicked() {
-        redoController.redo(GuiMain.getCurrentDatabase());
-    }
 
-    /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        ProfileEditController controller = fxmlLoader.getController();
-        controller.setCurrentProfile(currentProfile);
-        controller.setIsClinician(isOpenedByClinician);
-        controller.initialize();
-
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        appStage.setScene(scene);
-        appStage.show();
-    }
 
 
     /**
@@ -203,52 +139,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
             if (currentProfile.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
-            if (currentProfile.getGivenNames() != null) {
-                givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.getGivenNames());
-            }
-            if (currentProfile.getPreferredName() != null) {
-                labelPreferredName
-                        .setText(labelPreferredName.getText() + currentProfile.getPreferredName());
-            }
-            if (currentProfile.getLastNames() != null) {
-                lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
-            }
-            if (currentProfile.getIrdNumber() != null) {
-                irdLabel.setText(irdLabel.getText() + currentProfile.getIrdNumber());
-            }
-            if (currentProfile.getDateOfBirth() != null) {
-                dobLabel.setText(dobLabel.getText() + currentProfile.getDateOfBirth()
-                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            }
-            if (currentProfile.getDateOfDeath() != null) {
-                dodLabel.setText(dodLabel.getText() + currentProfile.getDateOfDeath()
-                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            }
-            if (currentProfile.getGender() != null) {
-                genderLabel.setText(genderLabel.getText() + currentProfile.getGender());
-            }
-            if (currentProfile.getPreferredGender() != null) {
-                labelGenderPreferred.setText(
-                        labelGenderPreferred.getText() + currentProfile.getPreferredGender());
-            }
-            if (currentProfile.getHeight() != 0.0) {
-                heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
-            }
-            if (currentProfile.getWeight() != 0.0) {
-                weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
-            }
-            if (currentProfile.getPhone() != null) {
-                phoneLabel.setText(phoneLabel.getText() + currentProfile.getPhone());
-            }
-            if (currentProfile.getEmail() != null) {
-                emailLabel.setText(emailLabel.getText() + currentProfile.getEmail());
-            }
-            if (currentProfile.getAddress() != null) {
-                addressLabel.setText(addressLabel.getText() + currentProfile.getAddress());
-            }
-            if (currentProfile.getRegion() != null) {
-                regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
-            }
+
             if (currentProfile.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(
                         alcoholConsumptionLabel.getText() +
@@ -265,10 +156,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
             if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
                 bmiLabel.setText(bmiLabel.getText() + currentProfile.calculateBMI());
             }
-            if (currentProfile.getDateOfBirth() != null) {
-                ageLabel.setText(
-                        ageLabel.getText() + Integer.toString(currentProfile.calculateAge()));
-            }
+
             if (currentProfile.getId() != null) {
                 userIdLabel
                         .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
@@ -378,10 +266,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
         }
     }
 
-
-
-
-
     public Profile getCurrentProfile() {
         return currentProfile;
     }
@@ -390,6 +274,10 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private void onTabOrgansSelected() {
         profileOrganOverviewController.currentProfile.bind(currentProfileBound);
         profileOrganOverviewController.populateOrganLists();
+    }
+
+    public void onTabGeneralSelected(Event event) {
+        profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
     }
 
     /**
