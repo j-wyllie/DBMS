@@ -1,7 +1,6 @@
 package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.image.Image;
 import odms.controller.HistoryController;
 import odms.enums.OrganEnum;
 import odms.history.History;
@@ -67,7 +66,6 @@ public class Profile implements Comparable<Profile> {
     private String phone;
     private String mobilePhone;
     private String email;
-    private Image picture = new Image("../user_profile_images/default.png");
 
     private String nhi;
     private LocalDateTime timeOfCreation;
@@ -1028,14 +1026,6 @@ public class Profile implements Comparable<Profile> {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Image getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Image picture) {
-        this.picture = picture;
     }
 
     public String getEmail() {

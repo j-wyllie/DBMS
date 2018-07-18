@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -51,12 +51,12 @@
                                                 <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="203.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TilePane prefHeight="355.0" prefWidth="422.0" style="-fx-background-color: #e3e3e5;" GridPane.rowSpan="2">
+                                                <TilePane prefHeight="355.0" prefWidth="421.0" style="-fx-background-color: #e3e3e5;" GridPane.rowSpan="2">
                                                     <GridPane.margin>
                                                         <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
                                                     </GridPane.margin>
                                                     <children>
-                                                        <GridPane focusTraversable="true" prefHeight="301.0" prefWidth="422.0">
+                                                        <GridPane focusTraversable="true" prefHeight="254.0" prefWidth="422.0">
                                                             <columnConstraints>
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -69,7 +69,6 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
                                                                 <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
@@ -140,19 +139,6 @@
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                <Label fx:id="regionLabel1" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Photo :" GridPane.rowIndex="5">
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <Button fx:id="imageChoose" mnemonicParsing="false" onAction="#handleChooseImageClicked" text="Choose File" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                </Button>
                                                             </children>
                                                         </GridPane>
                                                     </children>
