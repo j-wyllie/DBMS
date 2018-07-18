@@ -24,6 +24,7 @@ public class ProfileCreateAccountView extends CommonView {
     private TextField irdNumberField;
 
     private ProfileCreateController controller = new ProfileCreateController(this);
+
     /**
      * Scene change to profile profile view if all required fields are filled in.
      *

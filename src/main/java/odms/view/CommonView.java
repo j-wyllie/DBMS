@@ -1,5 +1,6 @@
 package odms.view;
 
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,14 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import odms.controller.CommonController;
-
-import java.io.IOException;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
-import odms.controller.profile.ProfileEditController;
-import odms.view.profile.ProfileGeneralViewTODOReplacesDisplayController;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
@@ -27,6 +23,7 @@ public class CommonView {
      *
      * @param event clicking on the logout button.
      */
+
     @FXML
     protected void changeScene(ActionEvent event, String resourceName) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(resourceName));

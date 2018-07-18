@@ -9,7 +9,7 @@ import odms.controller.profile.ProfileGeneralTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-public class ProfileGeneralViewTODOReplacesDisplayController  extends CommonView {
+public class ProfileGeneralViewTODOReplacesDisplayController extends CommonView {
 
     @FXML
     private Label phoneLabel;

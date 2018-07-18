@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import odms.controller.profile.ProfileHistoryTabController;
 import odms.controller.profile.ProfileMedicalTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;

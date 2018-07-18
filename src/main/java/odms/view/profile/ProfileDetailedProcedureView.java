@@ -1,21 +1,26 @@
 package odms.view.profile;
 
+import static odms.controller.GuiMain.getCurrentDatabase;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.procedure.ProcedureEditController;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileDetailedProcedureView extends CommonView {
     @FXML
@@ -152,6 +157,7 @@ public class ProfileDetailedProcedureView extends CommonView {
     }
 
     public ArrayList getAffectedOrgansListView() {
-        return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());}
+        return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
+    }
 
 }

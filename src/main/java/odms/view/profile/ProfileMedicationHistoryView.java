@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-public class ProfileMedicationHistoryView extends CommonView{
+public class ProfileMedicationHistoryView extends CommonView {
     //todo
     private Profile profile;
 

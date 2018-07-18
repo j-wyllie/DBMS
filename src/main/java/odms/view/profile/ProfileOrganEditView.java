@@ -1,5 +1,11 @@
 package odms.view.profile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -16,14 +22,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.profile.ProfileOrganEditController;
-import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
-import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.util.*;
 
 public class ProfileOrganEditView extends CommonView {
     protected ObservableList<String> observableListOrgansAvailable;

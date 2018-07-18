@@ -1,5 +1,15 @@
 package odms.model.data;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.data.IrdNumberConflictException;
@@ -7,10 +17,6 @@ import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMet
 import odms.controller.profile.ProfileOrganControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-
-import java.util.AbstractMap.SimpleEntry;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class ProfileDatabase {
 
@@ -385,9 +391,7 @@ public class ProfileDatabase {
                 break;
         }
 
-        //ArrayList<profile> resultProfiles = allProfiles;
-
-        //parsing out organs as strings for later use
+        // parsing out organs as strings for later use
 
         if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999
                 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()) {
@@ -403,7 +407,7 @@ public class ProfileDatabase {
             resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
         }
 
-        //definitely need a better way than just a magic number lol
+        // definitely need a better way than just a magic number lol TODO
         if (ageSearchInt != -999) {
             if (ageRangeSearchInt != -999) {
                 //todo fix get age

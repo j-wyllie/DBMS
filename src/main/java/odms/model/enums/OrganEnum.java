@@ -1,7 +1,12 @@
 package odms.model.enums;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public enum OrganEnum {
     BONE("bone"),

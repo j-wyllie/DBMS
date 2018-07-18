@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ProfileDataIO extends CommonDataIO {
 
-    private static final String defaultPath = "example/example.json";
+    private static final String DEFAULT_PATH = "example/example.json";
     private static String history = "";
     private static int lastPosition = 1;
 
@@ -23,7 +23,7 @@ public class ProfileDataIO extends CommonDataIO {
      */
     public static void saveData(ProfileDatabase profileDb) {
         if (profileDb.getPath() == null) {
-            profileDb.setPath(defaultPath);
+            profileDb.setPath(DEFAULT_PATH);
         }
         saveData(profileDb, profileDb.getPath());
     }

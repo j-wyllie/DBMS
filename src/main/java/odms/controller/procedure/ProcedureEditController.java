@@ -17,7 +17,7 @@ public class ProcedureEditController {
         view = v;
     }
 
-    public void save() throws IllegalArgumentException{
+    public void save() throws IllegalArgumentException {
         Profile profile = view.getProfile();
         Procedure procedure = view.getCurrentProcedure();
         History action = new History("profile ", profile.getId(), "EDITED",

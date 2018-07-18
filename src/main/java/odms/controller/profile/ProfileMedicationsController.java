@@ -45,7 +45,7 @@ public class ProfileMedicationsController extends CommonController {
         profile.getMedicationTimestamps().add(data);
         //todo improve generateUpdateInfo
         ProfileGeneralControllerTODOContainsOldProfileMethods
-                .generateUpdateInfo(drug.getDrugName(),profile);
+                .generateUpdateInfo(drug.getDrugName(), profile);
         //todo maybe "profile" needs to be changed to "Profile"
         History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
@@ -76,7 +76,7 @@ public class ProfileMedicationsController extends CommonController {
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
             ProfileGeneralControllerTODOContainsOldProfileMethods
-                    .generateUpdateInfo(drug.getDrugName(),profile);
+                    .generateUpdateInfo(drug.getDrugName(), profile);
         } else if (profile.getHistoryOfMedication().contains(drug)) {
             profile.getHistoryOfMedication().remove(drug);
             data = "profile " +
@@ -114,9 +114,8 @@ public class ProfileMedicationsController extends CommonController {
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
             ProfileGeneralControllerTODOContainsOldProfileMethods
-                    .generateUpdateInfo(drug.getDrugName(),profile);
+                    .generateUpdateInfo(drug.getDrugName(), profile);
         }
-
 
     }
 
@@ -143,7 +142,7 @@ public class ProfileMedicationsController extends CommonController {
             profile.getMedicationTimestamps().add(data);
             //todo improve generateUpdateInfo
             ProfileGeneralControllerTODOContainsOldProfileMethods
-                    .generateUpdateInfo(drug.getDrugName(),profile);
+                    .generateUpdateInfo(drug.getDrugName(), profile);
         }
 
     }
@@ -153,7 +152,7 @@ public class ProfileMedicationsController extends CommonController {
      *
      */
     @FXML
-    public ArrayList<String> viewActiveIngredients() throws IOException{
+    public ArrayList<String> viewActiveIngredients() throws IOException {
         Drug drug = getSelectedDrug();
         ArrayList<String> activeIngredients;
         activeIngredients = getActiveIngredients(drug.getDrugName());
@@ -212,7 +211,7 @@ public class ProfileMedicationsController extends CommonController {
         return drugs;
     }
 
-    public Map<String, String> getRawInteractions() throws IOException{
+    public Map<String, String> getRawInteractions() throws IOException {
         Map<String, String> interactionsRaw;
         Profile currentProfile = view.getCurrentProfile();
         ArrayList<Drug> drugs = getDrugsList();
@@ -247,8 +246,8 @@ public class ProfileMedicationsController extends CommonController {
         for (Drug drug : drugs) {
             if (drug != null) {
                 moveDrugToHistory(drug);
-                String data = currentProfile.getMedicationTimestamps().
-                        get(currentProfile.getMedicationTimestamps().size() - 1);
+                String data = currentProfile.getMedicationTimestamps()
+                        .get(currentProfile.getMedicationTimestamps().size() - 1);
                 History history = new History("profile", currentProfile.getId(),
                         "stopped", drug.getDrugName(),
                         Integer.parseInt(data.substring(data.indexOf("index of") + 9,
@@ -275,8 +274,8 @@ public class ProfileMedicationsController extends CommonController {
                 String data = currentProfile.getMedicationTimestamps()
                         .get(currentProfile.getMedicationTimestamps().size() - 1);
                 History history = new History("profile", currentProfile.getId(),
-                        "started", drug.getDrugName(), Integer.parseInt(data.substring
-                        (data.indexOf("index of") + 9,
+                        "started", drug.getDrugName(), Integer.parseInt(data.substring(
+                                data.indexOf("index of") + 9,
                                 data.indexOf(" again"))), LocalDateTime.now());
                 HistoryController.updateHistory(history);
             }

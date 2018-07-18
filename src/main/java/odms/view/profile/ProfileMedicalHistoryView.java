@@ -1,6 +1,11 @@
 package odms.view.profile;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,8 +14,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -19,19 +29,10 @@ import javafx.util.Callback;
 import odms.controller.EditDateCell;
 import odms.controller.EditingConditionsCell;
 import odms.controller.condition.ConditionAddController;
-import odms.controller.history.HistoryController;
 import odms.controller.profile.ProfileConditionController;
-import odms.model.history.History;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class ProfileMedicalHistoryView extends CommonView {
     private Profile currentProfile;
@@ -66,24 +67,25 @@ public class ProfileMedicalHistoryView extends CommonView {
     private Button addNewConditionButton;
     @FXML
     private Button deleteConditionButton;
+
     /**
- * initializes and refreshes the current and past conditions tables
- */
-@FXML
-private void makeTable(ArrayList<Condition> curConditions,
-        ArrayList<Condition> pastConditions) {
-    if (curConditions != null) {
-        curConditionsObservableList = FXCollections.observableArrayList(curConditions);
-    } else {
-        curConditionsObservableList = FXCollections.observableArrayList();
+     * initializes and refreshes the current and past conditions tables
+     */
+    @FXML
+    private void makeTable(ArrayList<Condition> curConditions,
+            ArrayList<Condition> pastConditions) {
+        if (curConditions != null) {
+            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        } else {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditions != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+        } else {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
+        refreshConditionTable();
     }
-    if (pastConditions != null) {
-        pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
-    } else {
-        pastConditionsObservableList = FXCollections.observableArrayList();
-    }
-    refreshConditionTable();
-}
 
     /**
      * Disables the ability for the table headers to be reordered.
@@ -426,9 +428,6 @@ private void makeTable(ArrayList<Condition> curConditions,
         currentProfile = profile;
             curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
-
             curChronicColumn.setSortable(false);
 
             refreshPageElements();

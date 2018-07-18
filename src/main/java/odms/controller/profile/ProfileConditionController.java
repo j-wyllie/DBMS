@@ -1,17 +1,15 @@
 package odms.controller.profile;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.profile.Condition;
 import odms.view.profile.ProfileMedicalHistoryView;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class ProfileConditionController {
 

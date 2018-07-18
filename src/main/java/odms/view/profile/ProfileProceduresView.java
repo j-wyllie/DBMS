@@ -152,7 +152,7 @@ public class ProfileProceduresView extends CommonView {
             Scene scene = new Scene(fxmlLoader.load());
             ProcedureEditController controller = fxmlLoader.<ProcedureEditController>getController();
             ProfileDetailedProcedureView child = new ProfileDetailedProcedureView();
-            child.initialize(selectedProcedure, currentProfile,this);
+            child.initialize(selectedProcedure, currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);

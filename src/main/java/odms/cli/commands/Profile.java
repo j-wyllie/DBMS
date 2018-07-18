@@ -15,10 +15,10 @@ public class Profile extends CommandUtils {
     /**
      * Add history for profile
      *
-     * @param Id profile ID
+     * @param id profile ID
      */
-    protected static void addProfileHistory(int Id) {
-        History action = new History("profile", Id, "added", "", -1, LocalDateTime.now());
+    protected static void addProfileHistory(Integer id) {
+        History action = new History("profile", id, "added", "", -1, LocalDateTime.now());
         HistoryController.updateHistory(action);
     }
 

@@ -1,12 +1,17 @@
 package odms.model.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
 import odms.model.user.UserType;
-
-import java.util.*;
 
 public class UserDatabase {
 

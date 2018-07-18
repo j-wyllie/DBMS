@@ -1,5 +1,11 @@
 package odms.view.user;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +16,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -25,7 +41,6 @@ import odms.controller.data.DataManagementControllerPOTENTIALTODO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.controller.user.ClinicianProfileEditController;
-import odms.controller.user.ViewUsersControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
@@ -34,9 +49,6 @@ import odms.view.CommonView;
 import odms.view.profile.ProfileDisplayControllerTODO;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
-
-import java.io.IOException;
-import java.util.*;
 
 public class ClinicianProfileView extends CommonView {
     // Constant that holds the number of search results displayed on a page at a time.
@@ -395,8 +407,8 @@ public class ClinicianProfileView extends CommonView {
                     if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size())
                             .size() < PAGESIZE) {
                         buttonShowNext.setText("Show next " + profileSearchResults
-                                .subList(size + PAGESIZE, profileSearchResults.size()).size()
-                                + " results");
+                                .subList(size + PAGESIZE, profileSearchResults.size()).size() +
+                                " results");
                     }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
@@ -503,18 +515,18 @@ public class ClinicianProfileView extends CommonView {
      * @param maxLength that can be entered in the textfield
      * @return
      */
-    public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= maxLength) {
+                TextField txtTextField = (TextField) e.getSource();
+                if (txtTextField.getText().length() >= maxLength) {
                     e.consume();
                 }
                 if (e.getCharacter().matches("[0-9.]")) {
-                    if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
+                    if (txtTextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
                         e.consume();
-                    } else if (txt_TextField.getText().length() == 0 && e.getCharacter()
+                    } else if (txtTextField.getText().length() == 0 && e.getCharacter()
                             .matches("[.]")) {
                         e.consume();
                     }
@@ -572,14 +584,14 @@ public class ClinicianProfileView extends CommonView {
         //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
         //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
-                "Organs Required");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol =
+                new TableColumn<>("Organs Required");
         //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol = new TableColumn<>(
-                "Name");
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol =
+                new TableColumn<>("Name");
         transplantReceiverNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
 
@@ -669,8 +681,8 @@ public class ClinicianProfileView extends CommonView {
     public void initialize() {
         if (currentUser != null) {
             ageRangeField.setDisable(true);
-            ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+            ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
 
             genderStrings.clear();
             genderStrings.add("any");
@@ -710,8 +722,8 @@ public class ClinicianProfileView extends CommonView {
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             searchTable.getItems().clear();
             searchTable.setPlaceholder(new Label(
-                    "There are " + GuiMain.getCurrentDatabase().getProfiles(false).size()
-                            + " profiles"));
+                    "There are " + GuiMain.getCurrentDatabase()
+                            .getProfiles(false).size() + " profiles"));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {

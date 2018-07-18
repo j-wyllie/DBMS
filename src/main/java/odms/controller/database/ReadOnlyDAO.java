@@ -7,6 +7,6 @@ public interface ReadOnlyDAO {
      *
      * @param query
      */
-    public void queryDatabase(String query);
+    void queryDatabase(String query);
 
 }

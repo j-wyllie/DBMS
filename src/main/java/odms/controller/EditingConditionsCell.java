@@ -2,7 +2,12 @@ package odms.controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
-import javafx.scene.control.*;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import odms.model.profile.Condition;
 
@@ -59,7 +64,8 @@ public class EditingConditionsCell extends TableCell<Condition, String> {
         textField = new TextField(getString());
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 
-        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) -> {
+        ChangeListener<? super Boolean> changeListener;
+        changeListener = (observable, oldSelection, newSelection) -> {
             if (!newSelection) {
                 commitEdit(textField.getText());
             }

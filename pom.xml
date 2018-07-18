@@ -152,6 +152,12 @@
                 </dependencies>
                 <executions>
                     <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>verify-style</id>
                         <phase>process-classes</phase>
                         <goals>
@@ -162,7 +168,9 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                     <!-- exclude generated sources from checkstyle https://stackoverflow.com/a/30406454/7189686 -->
-                    <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                    <encoding>UTF-8</encoding>
+                    <!--<failsOnError>true</failsOnError> This needs to be enabled once current errors are address.-->
+                    <sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
                 </configuration>
             </plugin>
 

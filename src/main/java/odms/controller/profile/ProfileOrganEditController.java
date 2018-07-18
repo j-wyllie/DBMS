@@ -1,24 +1,11 @@
 package odms.controller.profile;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.history.HistoryController;
-import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.history.History;
@@ -26,15 +13,12 @@ import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileOrganEditView;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
-
 public class ProfileOrganEditController extends CommonController {
     ProfileOrganEditView view;
     OrganSelectEnum windowType;
-    public ProfileOrganEditController(ProfileOrganEditView v) {
-        view = v;
+
+    public ProfileOrganEditController(ProfileOrganEditView view) {
+        this.view = view;
     }
 
     /**
@@ -65,6 +49,7 @@ public class ProfileOrganEditController extends CommonController {
         addOrgansDonated(view.getOrgansAdded());
         removeOrgansDonated(organsRemoved);
     }
+
     /**
      * Add a set of organsDonating to the list of organsDonating that the profile has donated
      *
@@ -72,7 +57,8 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void addOrgansDonated(Set<OrganEnum> organs) {
         //todo fix generate update info
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("pastDonations",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("pastDonations",
+                view.getCurrentProfile());
 
         for (OrganEnum organ : organs) {
             //todo might need to change to addOrganDonated
@@ -96,7 +82,8 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void removeOrgansDonated(Set<OrganEnum> organs) {
         //todo fix generate update info
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonated",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonated",
+                view.getCurrentProfile());
 
         for (OrganEnum organ : organs) {
             view.getCurrentProfile().getOrgansDonated().remove(organ);
@@ -151,7 +138,8 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void removeOrgansDonating(Set<OrganEnum> organs) {
         //todo generateupdateinfo
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonating",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonating",
+                view.getCurrentProfile());
 
         for (OrganEnum organ : organs) {
             view.getCurrentProfile().getOrgansDonating().remove(organ);
@@ -177,7 +165,8 @@ public class ProfileOrganEditController extends CommonController {
     public void addOrgansDonating(Set<OrganEnum> organs)
             throws IllegalArgumentException, OrganConflictException {
         //todo
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonating",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonating",
+                view.getCurrentProfile());
 
         for (OrganEnum organ : organs) {
             if (view.getCurrentProfile().getOrgansDonating().contains(organ)) {
@@ -187,7 +176,8 @@ public class ProfileOrganEditController extends CommonController {
             }
             addOrganDonating(organ);
 
-            History action = new History("profile ", view.getCurrentProfile().getId(), "set", organ.getNamePlain(),
+            History action = new History("profile ", view.getCurrentProfile().getId(), "set",
+                    organ.getNamePlain(),
                     -1, LocalDateTime.now());
             HistoryController.updateHistory(action);
         }
@@ -226,7 +216,7 @@ public class ProfileOrganEditController extends CommonController {
      *
      * @param organ the organ the profile requires
      */
-    public void addOrganRequired(OrganEnum organ) {//TODO Error Check
+    public void addOrganRequired(OrganEnum organ) { //TODO Error Check
         view.getCurrentProfile().setReceiver(true);
         view.getCurrentProfile().getOrgansRequired().add(organ);
     }
@@ -238,7 +228,8 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void addOrgansRequired(Set<OrganEnum> organs) {
         //todo
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsRequired",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsRequired",
+                view.getCurrentProfile());
 
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
@@ -265,7 +256,8 @@ public class ProfileOrganEditController extends CommonController {
      */
     public void removeOrgansRequired(Set<OrganEnum> organs) {
         //todo fix generate update info into simpler solution
-        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsReceiving",view.getCurrentProfile());
+        ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsReceiving",
+                view.getCurrentProfile());
         for (OrganEnum organ : organs) {
             view.getCurrentProfile().getOrgansRequired().remove(organ);
             History action = new History(

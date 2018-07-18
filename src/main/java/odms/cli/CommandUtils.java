@@ -1,14 +1,17 @@
 package odms.cli;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ReadOnlyDAO;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
 
 public final class CommandUtils {
 
@@ -16,21 +19,21 @@ public final class CommandUtils {
         throw new UnsupportedOperationException();
     }
 
-    private static final String cmdRegexCreate =
+    private static final String CMD_REGEX_CREATE =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                     + "[\"]))*";
-    private static final String cmdRegexProfileView =
+    private static final String CMD_REGEX_PROFILE_VIEW =
             "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                     + "([a-z]+)([-]([a-z]+))?)";
-    private static final String cmdRegexProfileUpdate =
+    private static final String CMD_REGEX_PROFILE_UPDATE =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]([a-z]"
                     + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                     + "[\"]))*";
-    private static final String cmdRegexOrganUpdate =
+    private static final String CMD_REGEX_ORGAN_UPDATE =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+)"
@@ -62,9 +65,9 @@ public final class CommandUtils {
                         if (cmd.size() == 2) {
                             return Commands.INVALID;
                         }
-                        if (cmd.get(2).toLowerCase().equals("profiles")) {
+                        if (cmd.get(2).equalsIgnoreCase("profiles")) {
                             return Commands.PRINTALLPROFILES;
-                        } else if (cmd.get(2).toLowerCase().equals("users")) {
+                        } else if (cmd.get(2).equalsIgnoreCase("users")) {
                             return Commands.PRINTALLUSERS;
                         } else {
                             return Commands.INVALID;
@@ -86,17 +89,17 @@ public final class CommandUtils {
             case "redo":
                 return Commands.REDO;
             case "create-profile":
-                if (rawInput.matches(cmdRegexCreate)) {
+                if (rawInput.matches(CMD_REGEX_CREATE)) {
                     return Commands.PROFILECREATE;
                 }
                 break;
             case "create-clinician":
-                if (rawInput.matches(cmdRegexCreate)) {
+                if (rawInput.matches(CMD_REGEX_CREATE)) {
                     return Commands.CLINICIANCREATE;
                 }
                 break;
             case "profile":
-                if (rawInput.matches(cmdRegexProfileView)) {
+                if (rawInput.matches(CMD_REGEX_PROFILE_VIEW)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
                         case "view":
                             return Commands.PROFILEVIEW;
@@ -107,7 +110,7 @@ public final class CommandUtils {
                         case "delete":
                             return Commands.PROFILEDELETE;
                     }
-                } else if (rawInput.matches(cmdRegexOrganUpdate)
+                } else if (rawInput.matches(CMD_REGEX_ORGAN_UPDATE)
                         && rawInput.contains("organ")) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2,
                             rawInput.lastIndexOf('=')).trim()) {
@@ -123,13 +126,13 @@ public final class CommandUtils {
                             return Commands.ORGANDONATE;
                     }
 
-                } else if (rawInput.matches(cmdRegexProfileUpdate)
+                } else if (rawInput.matches(CMD_REGEX_PROFILE_UPDATE)
                         && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
                 break;
             case "clinician":
-                if (rawInput.matches(cmdRegexProfileView)) {
+                if (rawInput.matches(CMD_REGEX_PROFILE_VIEW)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
                         case "view":
                             return Commands.CLINICIANEVIEW;
@@ -138,7 +141,7 @@ public final class CommandUtils {
                         case "delete":
                             return Commands.CLINICIANDELETE;
                     }
-                } else if (rawInput.matches(cmdRegexProfileUpdate)
+                } else if (rawInput.matches(CMD_REGEX_PROFILE_UPDATE)
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
@@ -174,10 +177,10 @@ public final class CommandUtils {
 
                 addOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+                String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
                 ArrayList<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr_ird));
+                        .searchIRDNumber(Integer.valueOf(attrIrd));
 
                 addOrgans(profileList, organList);
             }
@@ -212,10 +215,10 @@ public final class CommandUtils {
 
                 addReceiverOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+                String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
                 ArrayList<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr_ird));
+                        .searchIRDNumber(Integer.valueOf(attrIrd));
 
                 addReceiverOrgans(profileList, organList);
             }
@@ -232,8 +235,8 @@ public final class CommandUtils {
      * @param expression      Search expression
      */
     static void removeOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
-        String[] organList = expression.substring(expression.lastIndexOf("=") + 1).
-                replace("\"", "")
+        String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
+                .replace("\"", "")
                 .split(",");
 
         // TODO should we be able to remove organs using search by names, as this means it will
@@ -269,8 +272,8 @@ public final class CommandUtils {
      * @param expression      Search expression
      */
     static void removeReceiverOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
-        String[] organList = expression.substring(expression.lastIndexOf("=") + 1).
-                replace("\"", "")
+        String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
+                .replace("\"", "")
                 .split(",");
 
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
@@ -572,10 +575,10 @@ public final class CommandUtils {
                 String[] previousValues = previous.split(",");
                 String organs = action
                         .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
-                List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
+                List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
                 ArrayList<OrganEnum> organList = new ArrayList<>();
                 System.out.println(organs);
-                for (String organ : List) {
+                for (String organ : list) {
                     System.out.println(organ);
                     try {
                         organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
@@ -693,8 +696,8 @@ public final class CommandUtils {
                     String organs;
                     ArrayList<OrganEnum> organList = new ArrayList<>();
                     organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
-                    List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-                    for (String organ : List) {
+                    List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
+                    for (String organ : list) {
                         System.out.println(organ);
                         organList.add(OrganEnum.valueOf(organ
                                 .replace(" ", "")

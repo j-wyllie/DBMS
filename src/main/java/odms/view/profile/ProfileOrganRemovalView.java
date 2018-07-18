@@ -1,6 +1,6 @@
 package odms.view.profile;
 
-import javafx.collections.ObservableList;
+import java.time.LocalDate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -15,9 +15,7 @@ import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-import java.time.LocalDate;
-
-public class ProfileOrganRemovalView extends CommonView{
+public class ProfileOrganRemovalView extends CommonView {
     @FXML
     private Label dynamicLabel;
 
@@ -144,7 +142,7 @@ public class ProfileOrganRemovalView extends CommonView{
         return currentProfile;
     }
 
-    public LocalDate getDOD(){
+    public LocalDate getDOD() {
         return dodPicker.getValue();
     }
 

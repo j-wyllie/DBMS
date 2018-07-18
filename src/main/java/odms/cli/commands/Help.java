@@ -67,7 +67,8 @@ public final class Help {
         System.out.println("\nAdd an organ to receive:");
         System.out
                 .println(
-                        "profile {attributes to search profiles by} > receive-organ=\" {list of organs "
+                        "profile {attributes to search profiles by} > receive-organ=\" "
+                                + "{list of organs "
                                 + "to donate} \"");
         System.out
                 .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
@@ -137,10 +138,12 @@ public final class Help {
                 "profile/clinician {attributes to search profiles/clinicians by} > view",
                 "profile/clinician {attributes to search profiles/clinicians by} > date-created",
                 "profile {attributes to search profiles by} > donations",
-                "profile/clinician {attributes to search profiles/clinicians by} > {attributes to update}"
-                ,
-                "profile {attributes to search profiles by} > add-organ=\" {list of organs to donate} \"",
-                "profile {attributes to search profiles by} > remove-organ=\" {list of organs to remove} \"",
+                "profile/clinician {attributes to search profiles/clinicians by} > {attributes to "
+                        + "update}",
+                "profile {attributes to search profiles by} > add-organ=\" {list of organs to "
+                        + "donate} \"",
+                "profile {attributes to search profiles by} > remove-organ=\" {list of organs "
+                        + "to remove} \"",
                 "print all profiles ", "print all users ", "print donors", "print clinicians",
                 "quit"};
         if (Arrays.asList(cmdArray).contains(cmd)) {

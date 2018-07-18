@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Procedure {
 
-    private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
+    private static final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
     private String summary;
     private LocalDate date;

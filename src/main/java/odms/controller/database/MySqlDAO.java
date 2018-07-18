@@ -1,9 +1,12 @@
 package odms.controller.database;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class MySqlDAO implements ReadOnlyDAO {

@@ -1,32 +1,18 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.invalidUsername;
+
+import java.io.IOException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import odms.controller.CommonController;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
-import odms.controller.profile.ProfileEditController;
-import odms.controller.profile.ProfileMedicationsController;
-import odms.model.profile.Condition;
 import odms.model.profile.Profile;
-
-import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import static odms.controller.AlertController.invalidUsername;
 
 public class ProfileDisplayControllerTODO extends CommonController {
 
@@ -119,8 +105,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
             if (currentProfile.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
-
-
 
             if (currentProfile.getId() != null) {
                 userIdLabel

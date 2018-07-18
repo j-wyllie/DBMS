@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class UserDataIO extends CommonDataIO {
 
-    private static final String defaultPath = "example/user.json";
+    private static final String DEFAULT_PATH = "example/user.json";
 
     /**
      * Export full user Database object to the previously used path.
@@ -20,7 +20,7 @@ public class UserDataIO extends CommonDataIO {
      */
     public static void saveUsers(UserDatabase userDb) {
         if (userDb.getPath() == null) {
-            userDb.setPath(defaultPath);
+            userDb.setPath(DEFAULT_PATH);
         }
         saveUsers(userDb, userDb.getPath());
     }
