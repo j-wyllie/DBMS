@@ -27,4 +27,9 @@ public class Interaction {
         this.dateTimeCreated = LocalDateTime.now();
     }
 
+    public String getDrugA() { return drugA; }
+
+    public String getDrugB() { return drugB; }
+
+    public LocalDateTime getDateTimeExpired() { return dateTimeCreated.plusDays(7); }
 }
