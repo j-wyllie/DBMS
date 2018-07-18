@@ -2,7 +2,7 @@ package odms.controller.data;
 
 public class IrdNumberConflictException extends Exception {
 
-    private Integer irdNumber;
+    private final Integer irdNumber;
 
     public IrdNumberConflictException(String message, int irdNumber) {
         super(message);

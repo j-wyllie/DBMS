@@ -27,13 +27,36 @@
     </module>
 
     <module name="TreeWalker">
+        <!-- Blocks                                               -->
+        <!-- http://checkstyle.sourceforge.net/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+
+        <!-- Class design                                -->
+        <!-- http://checkstyle.sf.net/config_design.html -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <module name="MutableException"/>
+        <module name="OneTopLevelClass"/>
+        <module name="ThrowsCount">
+            <property name="max" value="2"/>
+        </module>
+        <!--<module name="VisibilityModifier"/>-->
+
+
+
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod">
-            <property name="ignoreMethodNamesRegex" value="^(get|set).*$"/>
-        </module>
-        <module name="JavadocType"/>
-        <module name="JavadocStyle"/>
+        <!--<module name="JavadocMethod">-->
+            <!--<property name="ignoreMethodNamesRegex" value="^(get|set).*$"/>-->
+        <!--</module>-->
+        <!--<module name="JavadocType"/>-->
+        <!--<module name="JavadocStyle"/>-->
 
         <!-- Whitespace: http://checkstyle.sourceforge.net/config_whitespace.html -->
         <module name="NoWhitespaceAfter"/>

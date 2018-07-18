@@ -59,8 +59,7 @@ public class EditingConditionsCell extends TableCell<Condition, String> {
         textField = new TextField(getString());
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 
-        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) ->
-        {
+        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) -> {
             if (!newSelection) {
                 commitEdit(textField.getText());
             }

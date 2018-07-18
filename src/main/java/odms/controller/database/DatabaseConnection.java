@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import static java.lang.System.getProperty;
 
-public class DatabaseConnection {
+public final class DatabaseConnection {
 
     private static DataSource connectionSource;
     private ComboPooledDataSource source;

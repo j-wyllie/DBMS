@@ -139,6 +139,25 @@ public class ProfileOrgansView extends CommonView {
     }
 
     /**
+     * Support function to populate an observable list with organs from an organ set.
+     *
+     * @param destinationList list to populate
+     * @param organs          source list of organs to populate from
+     */
+    protected void populateOrganList(ObservableList<String> destinationList,
+            Set<OrganEnum> organs) {
+        destinationList.clear();
+
+        if (organs != null) {
+            for (OrganEnum organ : organs) {
+                destinationList.add(organ.getNamePlain());
+            }
+            Collections.sort(destinationList);
+        }
+    }
+
+
+    /**
      * Override the Cell Formatting for colour highlighting.
      */
     class HighlightedCell extends ListCell<String> {
@@ -164,24 +183,6 @@ public class ProfileOrgansView extends CommonView {
             } else {
                 getStyleClass().remove(highlight);
             }
-        }
-    }
-
-    /**
-     * Support function to populate an observable list with organs from an organ set.
-     *
-     * @param destinationList list to populate
-     * @param organs          source list of organs to populate from
-     */
-    protected void populateOrganList(ObservableList<String> destinationList,
-            Set<OrganEnum> organs) {
-        destinationList.clear();
-
-        if (organs != null) {
-            for (OrganEnum organ : organs) {
-                destinationList.add(organ.getNamePlain());
-            }
-            Collections.sort(destinationList);
         }
     }
 

@@ -1,6 +1,10 @@
 package odms.controller.database;
 
-public class DAOFactory {
+public final class DAOFactory {
+
+    private DAOFactory() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gives the data access object class.

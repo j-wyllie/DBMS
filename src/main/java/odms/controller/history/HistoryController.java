@@ -6,7 +6,11 @@ import odms.model.user.User;
 
 import java.util.ArrayList;
 
-public class HistoryController {
+public final class HistoryController {
+
+    private HistoryController() {
+        throw new UnsupportedOperationException();
+    }
 
     public static ArrayList<History> currentSessionHistory = new ArrayList<>();
     public static int historyPosition = 0;

@@ -64,8 +64,7 @@ public class EditDateCell extends TableCell<Condition, LocalDate> {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) ->
-        {
+        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) -> {
             if (!newSelection) {
                 try {
                     commitEdit(LocalDate.parse(textField.getText(), dtf));

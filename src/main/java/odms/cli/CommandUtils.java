@@ -10,7 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class CommandUtils {
+public final class CommandUtils {
+
+    private CommandUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     private static final String cmdRegexCreate =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"

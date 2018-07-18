@@ -56,12 +56,20 @@ public class ProfileCreateAccountView extends CommonView {
         });
     }
 
-    public String getGivenNamesFieldValue() {return givenNamesField.getText();}
+    public String getGivenNamesFieldValue() {
+        return givenNamesField.getText();
+    }
 
-    public String getsurnamesFieldValue() {return surnamesField.getText();}
+    public String getsurnamesFieldValue() {
+        return surnamesField.getText();
+    }
 
-    public LocalDate getdobDatePickerValue() {return dobDatePicker.getValue();}
+    public LocalDate getdobDatePickerValue() {
+        return dobDatePicker.getValue();
+    }
 
-    public String getirdNumberFieldValue() {return irdNumberField.getText();}
+    public String getirdNumberFieldValue() {
+        return irdNumberField.getText();
+    }
 
 }

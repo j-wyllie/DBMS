@@ -2,7 +2,11 @@ package odms.cli.commands;
 
 import java.util.Arrays;
 
-public class Help {
+public final class Help {
+
+    private Help() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Output a list of all commands and explanations/examples of use

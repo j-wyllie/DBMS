@@ -222,9 +222,10 @@ private void makeTable(ArrayList<Condition> curConditions,
         pastDateCuredColumn.setOnEditCommit(
                 (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (t.getNewValue().isBefore(
-                            t.getTableView().getItems().get(t.getTablePosition().getRow())
-                                    .getDateOfDiagnosis())
+                            t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow()).getDateOfDiagnosis())
                             || t.getNewValue().isAfter(LocalDate.now())) {
+                        // TODO why is this empty
                     } else {
                         controller.removeCondition(t.getTableView().getItems().get(
                                 t.getTablePosition().getRow()));

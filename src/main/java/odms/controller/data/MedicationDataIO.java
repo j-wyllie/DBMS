@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MedicationDataIO {
+public final class MedicationDataIO {
+
+    private MedicationDataIO() {
+        throw new UnsupportedOperationException();
+    }
 
     // Value used to identify if response was a internal server error.
     private static final String SERVERERROR = "1";

@@ -131,11 +131,27 @@ public class ProfileDetailedProcedureView extends CommonView {
         parent.refreshProcedureTable();
     }
 
-    public Profile getProfile() {return profile;}
-    public Procedure getCurrentProcedure() {return currentProcedure;}
-    public String getDescEntry() {return descEntry.getText();}
-    public String getSummaryEntry() {return summaryEntry.getText();}
-    public LocalDate getDateOfProcedure() {return dateOfProcedureDatePicker.getValue();}
-    public ArrayList getAffectedOrgansListView() {return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());}
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public Procedure getCurrentProcedure() {
+        return currentProcedure;
+    }
+
+    public String getDescEntry() {
+        return descEntry.getText();
+    }
+
+    public String getSummaryEntry() {
+        return summaryEntry.getText();
+    }
+
+    public LocalDate getDateOfProcedure() {
+        return dateOfProcedureDatePicker.getValue();
+    }
+
+    public ArrayList getAffectedOrgansListView() {
+        return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());}
 
 }
