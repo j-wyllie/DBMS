@@ -66,6 +66,7 @@ public class Profile implements Comparable<Profile> {
     private String phone;
     private String mobilePhone;
     private String email;
+    private String picture = "default.png";
 
     private String nhi;
     private LocalDateTime timeOfCreation;
@@ -1035,6 +1036,10 @@ public class Profile implements Comparable<Profile> {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) { this.picture = picture; }
 
     public void setAllConditions(ArrayList<Condition> conditions) {
         this.conditions = conditions;
