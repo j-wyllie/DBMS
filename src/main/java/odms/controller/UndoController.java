@@ -22,8 +22,8 @@ public class UndoController extends UndoRedoController{
     private static ArrayList<History> currentSessionHistory;
 
     /**
-     * Performs logic for undoes
-     * @param currentDatabase
+     * Performs logic for undoes.
+     * @param currentDatabase imported data.
      */
     public void undo(ProfileDatabase currentDatabase) {
         historyPosition = HistoryController.getPosition();
@@ -40,10 +40,10 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes organs being donated
-     * @param currentDatabase
-     * @param action
-     */
+     * Undoes organs being donated.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
+    */
     public void addedDonated(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
@@ -51,9 +51,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes organs being received
-     * @param currentDatabase
-     * @param action
+     * Undoes organs being received.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -62,9 +62,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes removed conditions
-     * @param currentDatabase
-     * @param action
+     * Undoes removed conditions.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void removedCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -90,10 +90,10 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes added conditions
-     * @param currentDatabase
-     * @param action
-     */
+     * Undoes added conditions.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
+    */
     public void addCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int c = action.getHistoryDataIndex();
@@ -107,8 +107,8 @@ public class UndoController extends UndoRedoController{
 
     /**
      * Undoes a drug being moved to history
-     * @param currentDatabase
-     * @param action
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void stopDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         try {
@@ -132,55 +132,55 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes a drug being moved to current
-     * @param currentDatabase
-     * @param action
-     */
+     * Undoes a drug being moved to current.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
+    */
     public void renewDrug(ProfileDatabase currentDatabase, History action){
-        try{
-        Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getCurrentMedications();
-        Drug drug = drugs.get(d);
-        profile.moveDrugToHistory(drug);
-        LocalDateTime currentTime = LocalDateTime.now();
-        History newAction = new History("Profile",profile.getId(), "started", drug.getDrugName(),
-                profile.getHistoryOfMedication().indexOf(drug) ,currentTime);
-        HistoryController.currentSessionHistory.set(historyPosition, newAction);
-        if (historyPosition > 0) {
-            historyPosition -= 1;
-        }
-        HistoryController.setPosition(historyPosition);
-    } catch (IndexOutOfBoundsException e) {
-
-    }
-    }
-
-    /**
-     * Undoes a drug being added
-     * @param currentDatabase
-     * @param action
-     */
-    public void addDrug(ProfileDatabase currentDatabase, History action){
-        try{
-        Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getCurrentMedications();
-        profile.deleteDrug(drugs.get(d));
-        if (historyPosition > 0) {
-            historyPosition -= 1;
-        }
-        HistoryController.setPosition(historyPosition);
+        try {
+            Profile profile = currentDatabase.getProfile(action.getHistoryId());
+            int d = action.getHistoryDataIndex();
+            ArrayList<Drug> drugs = profile.getCurrentMedications();
+            Drug drug = drugs.get(d);
+            profile.moveDrugToHistory(drug);
+            LocalDateTime currentTime = LocalDateTime.now();
+            History newAction = new History("Profile",profile.getId(), "started", drug.getDrugName(),
+                    profile.getHistoryOfMedication().indexOf(drug) ,currentTime);
+            HistoryController.currentSessionHistory.set(historyPosition, newAction);
+            if (historyPosition > 0) {
+                historyPosition -= 1;
+            }
+            HistoryController.setPosition(historyPosition);
         } catch (IndexOutOfBoundsException e) {
 
         }
     }
 
     /**
-     * Undoes a drug being deleted
-     * @param currentDatabase
-     * @param action
-     */
+     * Undoes a drug being added.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
+    */
+    public void addDrug(ProfileDatabase currentDatabase, History action){
+        try {
+            Profile profile = currentDatabase.getProfile(action.getHistoryId());
+            int d = action.getHistoryDataIndex();
+            ArrayList<Drug> drugs = profile.getCurrentMedications();
+            profile.deleteDrug(drugs.get(d));
+            if (historyPosition > 0) {
+                historyPosition -= 1;
+            }
+            HistoryController.setPosition(historyPosition);
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+    }
+
+    /**
+     * Undoes a drug being deleted.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
+    */
     public void deleteDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         try{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -203,8 +203,8 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes an update to a clinician
-     * @param action
+     * Undoes an update to a clinician.
+     * @param action to be undone.
      */
     public void updated(History action) {
         User user = LoginController.getCurrentUser();
@@ -223,9 +223,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes a profile being added
-     * @param currentDatabase
-     * @param action
+     * Undoes a profile being added.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void added(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -238,9 +238,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes a profile being deleted
-     * @param currentDatabase
-     * @param action
+     * Undoes a profile being deleted.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void deleted(ProfileDatabase currentDatabase, History action) {
         int oldid = action.getHistoryId();
@@ -259,9 +259,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes an organ being removed from organs donating
-     * @param currentDatabase
-     * @param action
+     * Undoes an organ being removed from organs donating.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      * @throws Exception
      */
     public void removed(ProfileDatabase currentDatabase, History action) throws Exception{
@@ -275,9 +275,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes organs being set to donating
-     * @param currentDatabase
-     * @param action
+     * Undoes organs being set to donating.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void set(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -293,9 +293,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes an organ being donated
-     * @param currentDatabase
-     * @param action
+     * Undoes an organ being donated.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void donate(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -309,9 +309,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes a profile being updated
-     * @param currentDatabase
-     * @param action
+     * Undoes a profile being updated.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void update(ProfileDatabase currentDatabase, History action){
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -326,9 +326,9 @@ public class UndoController extends UndoRedoController{
     }
 
     /**
-     * Undoes a procedure being edited
-     * @param currentDatabase
-     * @param action
+     * Undoes a procedure being edited.
+     * @param currentDatabase imported data.
+     * @param action to be undone.
      */
     public void edited(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
