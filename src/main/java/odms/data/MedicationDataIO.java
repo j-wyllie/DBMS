@@ -52,7 +52,6 @@ public class MedicationDataIO {
 
     /**
      * Gets a list of active ingredients for the drug selected by the clinician user.
-     *
      * @param drugName represents the value to send in the HTTP GET request to the API.
      * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
