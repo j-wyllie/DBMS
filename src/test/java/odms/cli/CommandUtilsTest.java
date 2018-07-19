@@ -104,6 +104,7 @@ public class CommandUtilsTest {
         String printAllProfilesTestStr = "print all profiles";
         String printDonorsTestStr = "print all donors";
         String printCliniciansTestStr = "print all clinicians";
+        String printUsersTestStr = "print all users";
         String helpTestStr = "help";
         String addOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
         String deleteOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
@@ -122,6 +123,7 @@ public class CommandUtilsTest {
         ArrayList<String> printAllProfilesTest = new ArrayList<>(Arrays.asList(printAllProfilesTestStr.split("\\s")));
         ArrayList<String> printDonorsTest = new ArrayList<>(Arrays.asList(printDonorsTestStr.split("\\s")));
         ArrayList<String> printCliniciansTest = new ArrayList<>(Arrays.asList(printCliniciansTestStr.split("\\s")));
+        ArrayList<String> printUsersTest = new ArrayList<>(Arrays.asList(printUsersTestStr.split("\\s")));
         ArrayList<String> helpTest = new ArrayList<>(Arrays.asList(helpTestStr.split("\\s")));
         ArrayList<String> addOrganTest = new ArrayList<>(Arrays.asList(addOrganTestStr.split("\\s")));
         ArrayList<String> deleteOrganTest = new ArrayList<>(Arrays.asList(deleteOrganTestStr.split("\\s")));
@@ -131,6 +133,7 @@ public class CommandUtilsTest {
         assertEquals(Commands.PRINTALLPROFILES, validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
         assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest, printDonorsTestStr));
         assertEquals(Commands.PRINTALLCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLUSERS, validateCommandType(printUsersTest, printUsersTestStr));
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
         assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));

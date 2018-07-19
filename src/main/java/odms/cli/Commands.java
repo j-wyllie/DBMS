@@ -10,6 +10,7 @@ public enum Commands {
     HELP,
     PRINTALLPROFILES,
     PRINTALLCLINICIANS,
+    PRINTALLUSERS,
     PRINTDONORS,
     REDO,
     UNDO,

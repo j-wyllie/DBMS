@@ -68,7 +68,9 @@ public class CommandUtils {
                     return Commands.PRINTALLPROFILES;
                 } else if (cmd.get(2).toLowerCase().equals("clinicians")) {
                     return Commands.PRINTALLCLINICIANS;
-                } else if (cmd.get(2).toLowerCase().equals("donors")) {
+                } else if (cmd.get(2).toLowerCase().equals("users")) {
+                    return Commands.PRINTALLUSERS;
+                }else if (cmd.get(2).toLowerCase().equals("donors")) {
                     return Commands.PRINTDONORS;
                 } else {
                     return Commands.INVALID;

@@ -31,7 +31,7 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles in the Database
+     * Print all clinicians in the Database
      *
      * @param currentDatabase Database reference
      */
@@ -47,6 +47,24 @@ public class Print extends CommandUtils {
         }
         else {
             System.out.println("There are no clinicians to show.");
+        }
+    }
+
+    /**
+     * Print all users in the Database
+     *
+     * @param currentDatabase Database reference
+     */
+    public static void printAllUsers(UserDatabase currentDatabase) {
+        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
+        if (allUsers.size() > 0) {
+            for (User user : allUsers) {
+                printUserAttributesAttributes(user);
+                System.out.println();
+            }
+        }
+        else {
+            System.out.println("There are no users to show.");
         }
     }
 

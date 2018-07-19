@@ -92,8 +92,12 @@ public class Help {
         System.out.println("\n-Print all donors: ");
         System.out.println("print all donors");
 
-        System.out.println("\nPrint all clinicians: ");
+        System.out.println("\n-Print all clinicians: ");
         System.out.println("print all clinicians");
+
+        System.out.println("\n-Print all users: ");
+        System.out.println("(Users are all admins and clinicians)");
+        System.out.println("print all users");
 
         System.out.println("\n-Import/export data: ");
         System.out.println("export");
@@ -135,7 +139,7 @@ public class Help {
                 "update", "add-organ", "remove-organ", "print all profiles", "print all clinicians",
                 "print all donors", "quit", "donate-organ", "delete", "receive-organ",
                 "removereceive-organ", "import", "export", "undo", "redo", "db-read",
-                "attribute list", "organ list"};
+                "print all users", "attribute list", "organ list"};
         String[] definitionArray = {"\nCreate a new profile", "\nCreate a new clinician",
                 "\nView a profile or clinician", "\nView the date a profile or clinician was created",
                 "\nView a profiles past, present and required donations",
@@ -147,6 +151,7 @@ public class Help {
                 "import profile/clinician data", "export the current data to a JSON file",
                 "undo the last action", "redo the last undone action",
                 "make a select call to the external database",
+                "Prints all users (Users are all admins and clinicians)",
                 "The possible attributes are : given-names, last-names, dob, dod, gender, height, "
                 + "weight, blood-type, address, region, ird",
                 "The possible organs are : Liver, Kidney, Pancreas, Heart, Lung, Intestine, Cornea, "
@@ -166,7 +171,8 @@ public class Help {
                 "profile {attributes to search profiles by} > receive-organ=\" {list of organs to donate} \"",
                 "profile {attributes to search profiles by} > removereceive-organ=\" {list of "
                         + "organs to remove} \"",
-                "import {filepath}", "export", "undo", "redo", "db-read {SELECT statement}"};
+                "import {filepath}", "export", "undo", "redo", "db-read {SELECT statement}",
+                "print all users"};
         if (Arrays.asList(cmdArray).contains(cmd)) {
             int position = Arrays.asList(cmdArray).indexOf(cmd);
             System.out.println(definitionArray[position]);

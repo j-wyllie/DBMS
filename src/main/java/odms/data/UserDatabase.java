@@ -161,24 +161,6 @@ public class UserDatabase {
     }
 
     /**
-     * Generate a list of clinicians
-     * @return Array of clinicians
-     */
-    public ArrayList<User> getClinicians() {
-        ArrayList<User> clinicians = new ArrayList<>();
-
-        userDb.forEach((id, user) -> {
-
-                if (user.getUserType() == UserType.CLINICIAN) {
-                    clinicians.add(user);
-                }
-
-        });
-
-        return clinicians;
-    }
-
-    /**
      * Fuzzy search that finds the top 30 users that match the provided search string.
      * @param searchString the string that the user names will be searched against.
      * @return list of users that match the provided search string, with a max size of 30.
