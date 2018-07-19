@@ -8,12 +8,6 @@ public class Help {
      * Output a list of all commands and explanations/examples of use
      */
     public static void help() {
-        System.out.println("\n-Create a new profile:");
-        System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
-            + "required)}");
-        System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" "
-            + "dob=\"03-03-1998\" ird=\"123456789\"");
-
         System.out.println("\n-Create a new clinician:");
         System.out.println("create-clinician {attributes (name, username and password is required)}");
         System.out.println("e.g. create-clinician name=\"Bob Ross\"");
@@ -31,6 +25,12 @@ public class Help {
         System.out.println("clinician {attributes to search clinicians by} > {attributes to update}");
         System.out.println("e.g. clinician name=\"Bob Ross\" > region=\"Waikato\"");
 
+        System.out.println("\n-Create a new profile:");
+        System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
+                + "required)}");
+        System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" "
+                + "dob=\"03-03-1998\" ird=\"123456789\"");
+
         System.out.println("\n-View a profile:");
         System.out.println("profile {attributes to search profiles by} > view");
 
@@ -40,15 +40,15 @@ public class Help {
         System.out.println("\n-View the date a profile was created:");
         System.out.println("profile {attributes to search profiles by} > date-created");
 
-        System.out.println("\n-View a profiles past donations, required organs and currently "
-                + "donating organs:");
-        System.out.println("profile {attributes to search profiles by} > organs");
-
         System.out.println("\n-Update a profiles attributes:");
         System.out.println("profile {attributes to search profiles by} > {attributes to update}");
         System.out
             .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
                 + "-1998\" > height=\"169\"");
+
+        System.out.println("\n-View a profiles past donations, required organs and currently "
+                + "donating organs:");
+        System.out.println("profile {attributes to search profiles by} > organs");
 
         System.out.println("\n-Add an organ to donate:");
         System.out
