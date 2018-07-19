@@ -18,20 +18,19 @@ import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.controller.data.UserDataIO;
+import odms.controller.user.ViewUsersController;
 import odms.model.data.UserDatabase;
 import odms.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;
 
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getUserDatabase;
-
 public class ViewUsersView extends CommonView {
+    private ViewUsersController controller = new ViewUsersController(this);
     ContextMenu contextMenu;
+
     @FXML
     TableView<User> viewUsersTable;
-
 
     @FXML
     public void handleCreateUserBtnPressed() throws IOException {
@@ -53,12 +52,4 @@ public class ViewUsersView extends CommonView {
         stage.setOnHiding((ob) -> refreshViewUsersTable());
         stage.show();
     }
-
-    public void handleViewUsersSaveBtn(ActionEvent actionEvent) throws IOException {
-        if (saveChanges()) {
-            showNotification("Users File", actionEvent);
-            UserDataIO.saveUsers(getUserDatabase());
-        }
-    }
-
 }
