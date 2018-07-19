@@ -124,7 +124,7 @@ public class ProfileEditController extends CommonController {
             return null;
         } else {
             Image image = new Image(chooser.getSelectedFile().toURI().toString());
-            //TODO how are photos being stored
+            //TODO how are photos being stored - Below is the class loader which may help with uploading images to storage.
 
 //            ClassLoader classLoader = getClass().getClassLoader();
 //            pictureDestination = new File(classLoader.getResource("profile_images/default.png").getFile());
