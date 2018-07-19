@@ -69,8 +69,6 @@ public class Profile implements Comparable<Profile> {
     private String mobilePhone;
     private String email;
     private String pictureName;
-    private Image pictureFile;
-
 
     private String nhi;
     private LocalDateTime timeOfCreation;
@@ -1124,14 +1122,6 @@ public class Profile implements Comparable<Profile> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
-    }
-
-    public Image getPictureFile() {
-        return pictureFile;
-    }
-
-    public void setPictureFile(Image pictureFile) {
-        this.pictureFile = pictureFile;
     }
 
     public String getPictureName() {

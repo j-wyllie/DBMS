@@ -225,7 +225,7 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
-     * Button handler to make fields editable.
+     * Button handler to make fdields editable.
      *
      * @param event clicking on the edit button.
      */

@@ -7,6 +7,8 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +43,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -57,6 +60,8 @@ import odms.medications.Drug;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
+
+import javax.imageio.ImageIO;
 
 public class ProfileDisplayController extends CommonController {
 
@@ -1119,7 +1124,11 @@ public class ProfileDisplayController extends CommonController {
             //setting profile photo
             if (currentProfile.getPictureName() != null) {
                 //TODO this is where the image would be fetched from wherever it is stored, also this currently throws an error, photo does get displayed though
-                profileImage.setImage(currentProfile.getPictureFile());
+                File image = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+                profileImage.setImage(new Image(image.toURI().toURL().toString()));
             }
 
             String history = ProfileDataIO.getHistory();
