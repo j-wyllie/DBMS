@@ -33,9 +33,9 @@ public class ProfileImportTask extends Task<Void> {
      * Load the specified csv file instantiating a ProfileDatabase Object.
      *
      * @param csv the csv file that is being loaded
-     * @return ProfileDatabase
+     * @return ProfileDatabase the updated profile database.
      */
-    protected ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
+    private ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
         ProfileDatabase profileDb = new ProfileDatabase();
         int progressCount = 0;
         int successCount = 0;
