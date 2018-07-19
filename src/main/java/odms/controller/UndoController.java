@@ -262,7 +262,7 @@ public class UndoController extends UndoRedoController{
      * Undoes an organ being removed from organs donating.
      * @param currentDatabase imported data.
      * @param action to be undone.
-     * @throws Exception
+     * @throws Exception error.
      */
     public void removed(ProfileDatabase currentDatabase, History action) throws Exception{
         //todo overhaul organ donating stuff

@@ -208,7 +208,7 @@ public class RedoController extends UndoRedoController{
      * Redoes a organ being removed.
      * @param currentDatabase imported data.
      * @param action to be redone.
-     * @throws Exception
+     * @throws Exception error.
      */
     public void removed(ProfileDatabase currentDatabase, History action) throws Exception {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -219,7 +219,7 @@ public class RedoController extends UndoRedoController{
      * Redoes a organ being set.
      * @param currentDatabase imported data.
      * @param action to be redone.
-     * @throws OrganConflictException
+     * @throws OrganConflictException error.
      */
     public void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
