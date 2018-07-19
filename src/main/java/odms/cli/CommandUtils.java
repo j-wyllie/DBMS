@@ -87,10 +87,12 @@ public class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
+                break;
             case "create-clinician":
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.CLINICIANCREATE;
                 }
+                break;
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -118,11 +120,11 @@ public class CommandUtils {
                         case "donate-organ":
                             return Commands.ORGANDONATE;
                     }
-
                 } else if (rawInput.matches(cmdRegexProfileUpdate)
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
+                break;
             case "clinician":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -137,8 +139,11 @@ public class CommandUtils {
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
+                break;
             case "db-read":
                 return Commands.SQLREADONLY;
+            default:
+                return Commands.INVALID;
         }
         return Commands.INVALID;
     }
