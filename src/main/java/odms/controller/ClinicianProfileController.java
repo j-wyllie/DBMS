@@ -372,8 +372,8 @@ public class ClinicianProfileController extends CommonController {
         }
 
         searchTable.getItems().clear();
-        donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
+        profileSearchResults.clear();
+        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(
                 searchString,
                 ageSearchInt,
                 ageRangeSearchInt,
@@ -467,7 +467,7 @@ public class ClinicianProfileController extends CommonController {
 
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
