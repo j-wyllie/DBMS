@@ -3,6 +3,7 @@ package odms.controller;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
@@ -25,6 +26,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
+    private File pictureDestination;
 
     private RedoController redoController= new RedoController();
     private UndoController undoController= new UndoController();
@@ -101,7 +103,7 @@ public class ProfileEditController extends CommonController {
      */
 
     @FXML//TODO
-    private String handleChooseImageClicked(ActionEvent event){
+    private String handleChooseImageClicked(ActionEvent event) throws IOException{
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "Images", "jpg", "png");
@@ -118,12 +120,18 @@ public class ProfileEditController extends CommonController {
                     chooser.getSelectedFile().getName());
             pictureText.setText(chooser.getSelectedFile().getName());
         }
-
         if (chooser.getSelectedFile() == null) {
             return null;
         } else {
             Image image = new Image(chooser.getSelectedFile().toURI().toString());
             //TODO how are photos being stored
+
+//            ClassLoader classLoader = getClass().getClassLoader();
+//            pictureDestination = new File(classLoader.getResource("profile_images/default.png").getFile());
+
+
+            copyFileUsingStream(chooser.getSelectedFile(), pictureDestination);
+
             currentProfile.setPictureFile(image);
             currentProfile.setPictureName(chooser.getSelectedFile().getName());
             return chooser.getSelectedFile().getName();

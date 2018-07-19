@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.io.IOException;
+import java.io.*;
 
 class CommonController {
 
@@ -155,6 +155,26 @@ class CommonController {
                 .position(Pos.BOTTOM_LEFT)
                 .owner(currentStage)
                 .show();
+    }
+
+    protected static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+         try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+             try { if (is != null) is.close();
+                } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}//closes quietly
+             try { if (os != null) os.close();
+                } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
+
+        }
     }
 
     public void setEdited(Boolean edited) {
