@@ -151,12 +151,12 @@
                     </dependency>
                 </dependencies>
                 <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<phase>process-sources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>check</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
                     <execution>
                         <id>verify-style</id>
                         <phase>process-classes</phase>
@@ -169,7 +169,8 @@
                     <configLocation>checkstyle.xml</configLocation>
                     <!-- exclude generated sources from checkstyle https://stackoverflow.com/a/30406454/7189686 -->
                     <encoding>UTF-8</encoding>
-                    <!--<failsOnError>true</failsOnError> This needs to be enabled once current errors are address.-->
+                    <!--This needs to be enabled once current errors are address.-->
+                    <failsOnError>false</failsOnError>
                     <sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
                 </configuration>
             </plugin>
