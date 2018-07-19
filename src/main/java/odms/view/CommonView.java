@@ -1,5 +1,6 @@
 package odms.view;
 
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,16 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import odms.controller.CommonController;
-
-import java.io.IOException;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
-import odms.controller.profile.ProfileEditController;
-import odms.view.profile.ProfileGeneralViewTODOReplacesDisplayController;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
@@ -34,6 +31,28 @@ public class CommonView {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
+    }
+
+    @FXML
+    protected void createPopup(ActionEvent actionEvent, String fxmlFile, String title) {
+        try {
+            //todo create a general pop-up window method?
+            Node source = (Node) actionEvent.getSource();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource(fxmlFile));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
     }
 
     /**

@@ -72,6 +72,8 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private ProfileMedicationsView profileMedicationsView;
     @FXML
     private ProfileMedicalHistoryView profileMedicalHistoryView;
+    @FXML
+    private ProfileProceduresView profileProceduresView;
 
 
     /**
@@ -198,6 +200,11 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     public void onTabMedicalHistorySelected() {
         profileMedicalHistoryView.currentProfile.bind(currentProfileBound);
+    }
+
+    @FXML
+    public void onTabProceduresSelected() {
+        profileProceduresView.currentProfile.bind(currentProfileBound);
     }
 
 

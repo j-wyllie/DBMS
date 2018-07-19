@@ -1,5 +1,6 @@
 package odms.view.profile;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,11 +45,11 @@ public class ProfileDetailedProcedureView extends CommonView {
 
     private Procedure currentProcedure;
     private ProcedureEditController controller = new ProcedureEditController(this);
-    private Profile profile;
+    private ObjectProperty<Profile> profile;
     private ProfileProceduresView parent;
 
     @FXML
-    public void initialize(Procedure selectedProcedure, Profile currentProfile,
+    public void initialize(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
             ProfileProceduresView p) {
         parent = p;
         profile = currentProfile;
@@ -74,7 +75,7 @@ public class ProfileDetailedProcedureView extends CommonView {
         try {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<OrganEnum> organsDonated = FXCollections
-                    .observableArrayList(profile.getOrgansDonated());
+                    .observableArrayList(profile.get().getOrgansDonated());
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
         } catch (NullPointerException e) {
