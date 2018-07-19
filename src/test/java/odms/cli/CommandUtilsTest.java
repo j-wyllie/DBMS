@@ -95,16 +95,15 @@ public class CommandUtilsTest {
         String createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"";
         String createClinicianTestStr = "create-clinician name=\"Bob Ross\"";
         String viewDonorTestStr = "profile dob=\"03-03-1998\" > view";
-        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > donations";
+        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > organs";
         String viewDateCreatedTestStr = "profile dob=\"03-03-1998\" > date-created";
         String updateDonorTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
         String viewClinicianTestStr = "clinician name=\"Bob Ross\" > view";
         String viewClinicianDateCreatedTestStr = "clinician dob=\"03-03-1998\" > date-created";
         String updateClinicianTestStr = "clinician name=\"Bob Ross\" region=\"Waikato\" > name=\"Johny Sinz\"";
         String printAllProfilesTestStr = "print all profiles";
-        String printDonorsTestStr = "print donors";
-        String printAllUsersTestStr = "print all users";
-        String printCliniciansTestStr = "print clinicians";
+        String printDonorsTestStr = "print all donors";
+        String printCliniciansTestStr = "print all clinicians";
         String helpTestStr = "help";
         String addOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
         String deleteOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
@@ -122,7 +121,6 @@ public class CommandUtilsTest {
         ArrayList<String> updateClinicianTest = new ArrayList<>(Arrays.asList(updateClinicianTestStr.split("\\s")));
         ArrayList<String> printAllProfilesTest = new ArrayList<>(Arrays.asList(printAllProfilesTestStr.split("\\s")));
         ArrayList<String> printDonorsTest = new ArrayList<>(Arrays.asList(printDonorsTestStr.split("\\s")));
-        ArrayList<String> printAllUsersTest = new ArrayList<>(Arrays.asList(printAllUsersTestStr.split("\\s")));
         ArrayList<String> printCliniciansTest = new ArrayList<>(Arrays.asList(printCliniciansTestStr.split("\\s")));
         ArrayList<String> helpTest = new ArrayList<>(Arrays.asList(helpTestStr.split("\\s")));
         ArrayList<String> addOrganTest = new ArrayList<>(Arrays.asList(addOrganTestStr.split("\\s")));
