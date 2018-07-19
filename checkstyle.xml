@@ -27,7 +27,7 @@
         <!-- Blocks                                               -->
         <!-- http://checkstyle.sourceforge.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
-        <!--<module name="EmptyBlock"/>-->
+        <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
@@ -41,7 +41,7 @@
         <module name="MutableException"/>
         <module name="OneTopLevelClass"/>
         <module name="ThrowsCount"/>
-        <!--<module name="VisibilityModifier"/>-->
+        <module name="VisibilityModifier"/>
 
         <!-- Coding                                      -->
         <!-- http://checkstyle.sf.net/config_coding.html -->
