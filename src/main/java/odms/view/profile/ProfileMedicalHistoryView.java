@@ -1,6 +1,13 @@
 package odms.view.profile;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,8 +16,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -19,23 +31,16 @@ import javafx.util.Callback;
 import odms.controller.EditDateCell;
 import odms.controller.EditingConditionsCell;
 import odms.controller.condition.ConditionAddController;
-import odms.controller.history.HistoryController;
 import odms.controller.profile.ProfileConditionController;
-import odms.model.history.History;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 public class ProfileMedicalHistoryView extends CommonView {
-    private Profile currentProfile;
+
+    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
     private ProfileConditionController controller = new ProfileConditionController(this);
+    //    private ProfileMedicalHistoryTabController controller = new ProfileMedicalHistoryTabController(this);
     private Boolean isOpenedByClinician;
 
     private ObservableList<Condition> curConditionsObservableList;
@@ -66,6 +71,8 @@ public class ProfileMedicalHistoryView extends CommonView {
     private Button addNewConditionButton;
     @FXML
     private Button deleteConditionButton;
+
+
     /**
  * initializes and refreshes the current and past conditions tables
  */
@@ -415,27 +422,28 @@ private void makeTable(ArrayList<Condition> curConditions,
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         controller.toggleCured();
         refreshConditionTable();
-        }
+    }
 
-        private void init(Profile profile, Boolean c) {
+    // TODO: do we need this?? why are there 2 initalisation function?
+    private void init(ObjectProperty<Profile> profile, Boolean c) {
 
-            makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
-            refreshConditionTable();
+        makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
+        refreshConditionTable();
         isOpenedByClinician = c;
         currentProfile = profile;
-            curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 
 
-            curChronicColumn.setSortable(false);
+        curChronicColumn.setSortable(false);
 
-            refreshPageElements();
+        refreshPageElements();
 
-            disableTableHeaderReorder();
-        }
+        disableTableHeaderReorder();
+    }
 
-        public Profile getCurrentProfile() {
+        public ObjectProperty<Profile> getCurrentProfile() {
         return currentProfile;
         }
 
@@ -509,4 +517,4 @@ private void makeTable(ArrayList<Condition> curConditions,
         disableTableHeaderReorder();
 
     }
-    }
+}

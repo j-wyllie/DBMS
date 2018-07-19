@@ -1,5 +1,12 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.saveChanges;
+import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.controller.data.MedicationDataIO.getSuggestionList;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,7 +19,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
@@ -20,19 +34,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.medication.MedicationHistoryTODO;
-import odms.controller.profile.ProfileHistoryTabController;
 import odms.controller.profile.ProfileMedicationsController;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
 public class ProfileMedicationsView extends CommonView {
     //todo split FXML
@@ -253,7 +258,7 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/MedicationHistory.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         MedicationHistoryTODO controller = fxmlLoader.getController();
