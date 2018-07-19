@@ -1,5 +1,6 @@
 package odms.controller.history;
 
+import java.util.Collections;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.history.History;
@@ -76,7 +77,8 @@ public class RedoController extends UndoRedoController {
     public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
-        profile.addOrgansReceived(new HashSet<>(Arrays.asList(OrganEnum.valueOf(organ))));
+        profile.addOrgansReceived(new HashSet<OrganEnum>(
+                Collections.singletonList(OrganEnum.valueOf(organ))));
     }
 
     /**
@@ -184,7 +186,6 @@ public class RedoController extends UndoRedoController {
      * @param action
      */
     public void updated(History action) {
-        int id = action.getHistoryId();
         User user = LoginView.getCurrentUser();
         String newString = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
@@ -274,7 +275,7 @@ public class RedoController extends UndoRedoController {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String newInfo = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
-        profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+        profile.setExtraAttributes(new ArrayList<String>(Arrays.asList(newInfo.split(","))));
     }
 
     /**

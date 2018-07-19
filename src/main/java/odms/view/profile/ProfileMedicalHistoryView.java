@@ -40,7 +40,6 @@ public class ProfileMedicalHistoryView extends CommonView {
 
     public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
     private ProfileConditionController controller = new ProfileConditionController(this);
-    //    private ProfileMedicalHistoryTabController controller = new ProfileMedicalHistoryTabController(this);
     private Boolean isOpenedByClinician;
 
     private ObservableList<Condition> curConditionsObservableList;
