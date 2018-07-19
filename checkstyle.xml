@@ -117,11 +117,11 @@
 
         <!-- Javadoc                                      -->
         <!-- http://checkstyle.sf.net/config_javadoc.html -->
-        <!--<module name="JavadocMethod">-->
-            <!--<property name="ignoreMethodNamesRegex" value="^(get|set).*$"/>-->
-        <!--</module>-->
-        <!--<module name="JavadocType"/>-->
-        <!--<module name="JavadocStyle"/>-->
+        <module name="JavadocMethod">
+            <property name="ignoreMethodNamesRegex" value="^(get|set).*$"/>
+        </module>
+        <module name="JavadocType"/>
+        <module name="JavadocStyle"/>
 
         <!-- Metrics                                               -->
         <!-- http://checkstyle.sourceforge.net/config_metrics.html -->
@@ -206,33 +206,33 @@
             <property name="tokens" value="METHOD_REF"/>
             <property name="allowLineBreaks" value="true"/>
         </module>
-        <!--<module name="OperatorWrap">-->
-            <!--<property name="tokens" value="QUESTION"/>-->
-            <!--<property name="tokens" value="COLON"/>-->
-            <!--<property name="tokens" value="EQUAL"/>-->
-            <!--<property name="tokens" value="NOT_EQUAL"/>-->
-            <!--<property name="tokens" value="DIV"/>-->
-            <!--<property name="tokens" value="PLUS"/>-->
-            <!--<property name="tokens" value="MINUS"/>-->
-            <!--<property name="tokens" value="STAR"/>-->
-            <!--<property name="tokens" value="MOD"/>-->
-            <!--<property name="tokens" value="SR"/>-->
-            <!--<property name="tokens" value="BSR"/>-->
-            <!--<property name="tokens" value="GE"/>-->
-            <!--<property name="tokens" value="GT"/>-->
-            <!--<property name="tokens" value="SL"/>-->
-            <!--<property name="tokens" value="LE"/>-->
-            <!--<property name="tokens" value="LT"/>-->
-            <!--<property name="tokens" value="BXOR"/>-->
-            <!--<property name="tokens" value="BOR"/>-->
-            <!--<property name="tokens" value="LOR"/>-->
-            <!--<property name="tokens" value="BAND"/>-->
-            <!--<property name="tokens" value="LAND"/>-->
-            <!--<property name="tokens" value="TYPE_EXTENSION_AND"/>-->
-            <!--<property name="tokens" value="LITERAL_INSTANCEOF"/>-->
-            <!--<property name="tokens" value="METHOD_REF"/>-->
-            <!--<property name="option" value="nl"/>-->
-        <!--</module>-->
+        <module name="OperatorWrap">
+            <property name="tokens" value="QUESTION"/>
+            <property name="tokens" value="COLON"/>
+            <property name="tokens" value="EQUAL"/>
+            <property name="tokens" value="NOT_EQUAL"/>
+            <property name="tokens" value="DIV"/>
+            <property name="tokens" value="PLUS"/>
+            <property name="tokens" value="MINUS"/>
+            <property name="tokens" value="STAR"/>
+            <property name="tokens" value="MOD"/>
+            <property name="tokens" value="SR"/>
+            <property name="tokens" value="BSR"/>
+            <property name="tokens" value="GE"/>
+            <property name="tokens" value="GT"/>
+            <property name="tokens" value="SL"/>
+            <property name="tokens" value="LE"/>
+            <property name="tokens" value="LT"/>
+            <property name="tokens" value="BXOR"/>
+            <property name="tokens" value="BOR"/>
+            <property name="tokens" value="LOR"/>
+            <property name="tokens" value="BAND"/>
+            <property name="tokens" value="LAND"/>
+            <property name="tokens" value="TYPE_EXTENSION_AND"/>
+            <property name="tokens" value="LITERAL_INSTANCEOF"/>
+            <property name="tokens" value="METHOD_REF"/>
+            <property name="option" value="eol"/>
+        </module>
         <module name="OperatorWrap">
             <property name="tokens" value="ASSIGN"/>
             <property name="tokens" value="DIV_ASSIGN"/>
