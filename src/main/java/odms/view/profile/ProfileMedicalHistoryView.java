@@ -443,8 +443,8 @@ private void makeTable(ArrayList<Condition> curConditions,
         disableTableHeaderReorder();
     }
 
-        public ObjectProperty<Profile> getCurrentProfile() {
-        return currentProfile;
+        public Profile getCurrentProfile() {
+        return currentProfile.getValue();
         }
 
     /**

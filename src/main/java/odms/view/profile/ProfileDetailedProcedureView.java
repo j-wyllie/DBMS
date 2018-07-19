@@ -132,7 +132,7 @@ public class ProfileDetailedProcedureView extends CommonView {
         parent.refreshProcedureTable();
     }
 
-    public Profile getProfile() {return profile;}
+    public Profile getProfile() {return profile.getValue();}
     public Procedure getCurrentProcedure() {return currentProcedure;}
     public String getDescEntry() {return descEntry.getText();}
     public String getSummaryEntry() {return summaryEntry.getText();}

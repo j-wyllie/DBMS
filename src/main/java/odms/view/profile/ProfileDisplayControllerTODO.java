@@ -91,7 +91,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        showLoginScene(event);
+        //todo showLoginScene(event);
     }
 
 
@@ -120,7 +120,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
                 currentProfile.setReceiver(true);
             }
 
-            if (currentProfile.isReceiver()) {
+            if (currentProfile.getReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 

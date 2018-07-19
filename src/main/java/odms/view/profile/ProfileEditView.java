@@ -2,6 +2,7 @@ package odms.view.profile;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
@@ -124,7 +125,11 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(
+                getClass().getResource("/view/ProfileDisplay.fxml"));
+        ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
+        v.initialize(controller.close());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
@@ -136,7 +141,11 @@ public class ProfileEditView extends CommonView {
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
         if (profileCancelChanges()) {
-            ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(
+                    getClass().getResource("/view/ProfileDisplay.fxml"));
+            ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
+            v.initialize(controller.close());
             changeScene(event, "/view/ProfileDisplay.fxml");
         }
     }

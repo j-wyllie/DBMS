@@ -100,7 +100,8 @@ public class ProfileGeneralViewTODOReplacesDisplayController  extends CommonView
     }
 
     //todo do we need this function?????
-    public void initialize() {
+    public void initialize(Profile p) {
+        currentProfile.set(p);
         if (currentProfile != null) {
             setUpDetails();
         }

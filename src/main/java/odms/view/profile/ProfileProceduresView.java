@@ -150,8 +150,8 @@ public class ProfileProceduresView extends CommonView {
         }
 
         // update all procedures
-        if (currentProfile.getAllProcedures() != null) {
-            for (Procedure procedure : currentProfile.getAllProcedures()) {
+        if (currentProfile.getValue().getAllProcedures() != null) {
+            for (Procedure procedure : currentProfile.getValue().getAllProcedures()) {
                 procedure.update();
             }
         }
@@ -203,11 +203,11 @@ public class ProfileProceduresView extends CommonView {
     }
 
     public Profile getProfile() {
-        return currentProfile;
+        return currentProfile.getValue();
     }
 
     public void initialize(Profile p) {
-        currentProfile = p;
+        currentProfile.setValue(p);
         makeProcedureTable(controller.getPreviousProcedures(),
                 controller.getPendingProcedures());
         refreshProcedureTable();

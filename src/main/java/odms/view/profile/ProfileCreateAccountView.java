@@ -2,6 +2,7 @@ package odms.view.profile;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import odms.controller.profile.ProfileCreateController;
@@ -32,7 +33,11 @@ public class ProfileCreateAccountView extends CommonView {
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-        ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.createAccount());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(
+                getClass().getResource("/view/ProfileDisplay.fxml"));
+        ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
+        v.initialize(controller.createAccount());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
 

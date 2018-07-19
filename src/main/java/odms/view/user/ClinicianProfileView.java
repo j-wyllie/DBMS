@@ -25,7 +25,6 @@ import odms.controller.data.DataManagementControllerPOTENTIALTODO;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.controller.user.ClinicianProfileEditController;
-import odms.controller.user.ViewUsersControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
@@ -207,9 +206,9 @@ public class ClinicianProfileView extends CommonView {
 
         Scene scene = new Scene(fxmlLoader.load());
         //todo replace scene change with standardised and controller with view
-        ClinicianProfileEditController controller = fxmlLoader.getController();
-        controller.setCurrentUser(currentUser);
-        controller.initialize();
+        ClinicianProfileEditView v = fxmlLoader.getController();
+        v.setCurrentUser(currentUser);
+        v.initialize();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Edit profile");

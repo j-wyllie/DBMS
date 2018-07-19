@@ -20,11 +20,11 @@ public class ProfileOrganControllerTODO {
      */
     private void addOrganReceived(OrganEnum organ) {
         //todo I think method is useless however a method in another class may be able to be reworked to use it
-        if (this.organsRequired.contains(organ)) {
-            this.organsRequired.remove(organ);
-        }
+        //if (this.organsRequired.contains(organ)) {
+        //    this.organsRequired.remove(organ);
+        //}
 
-        this.organsReceived.add(organ);
+        //this.organsReceived.add(organ);
     }
 
     /**
@@ -34,13 +34,13 @@ public class ProfileOrganControllerTODO {
      */
     public void addOrgansReceived(Set<OrganEnum> organs) {
         //todo I think method is useless however a method in another class may be able to be reworked to use it
-        generateUpdateInfo("organsReceived");
+        //generateUpdateInfo("organsReceived");
 
         for (OrganEnum organ : organs) {
             addOrganReceived(organ);
-            History action = new History("profile ", this.getId(),
-                    "received", organ.getNamePlain(), -1, LocalDateTime.now());
-            HistoryController.updateHistory(action);
+            //History action = new History("profile ", this.getId(),
+                    //"received", organ.getNamePlain(), -1, LocalDateTime.now());
+            //HistoryController.updateHistory(action);
         }
     }
 
@@ -48,11 +48,11 @@ public class ProfileOrganControllerTODO {
 
     public void removeOrganDonated(OrganEnum organ) {
         //todo I think method is useless however a method in another class may be able to be reworked to use it
-        if (this.organsDonated.contains(organ)) {
-            this.organsDonated.remove(organ);
-        }
+        //if (this.organsDonated.contains(organ)) {
+         //   this.organsDonated.remove(organ);
+        //}
 
-        this.organsDonating.add(organ);
+        //this.organsDonating.add(organ);
     }
 
 
