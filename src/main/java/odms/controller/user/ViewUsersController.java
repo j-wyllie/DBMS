@@ -23,11 +23,18 @@ public class ViewUsersController {
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
 
-
+    /**
+     * public constructor for the ViewUsersController class.
+     * @param v instance of ViewUsersView
+     */
     public ViewUsersController(ViewUsersView v) {
         view = v;
+        setUpUsersTable();
     }
 
+    /**
+     * Initialize the UsersTable.
+     */
     public void setUpUsersTable() {
 
         fetchData();
@@ -71,13 +78,6 @@ public class ViewUsersController {
     }
 
     /**
-     * Gets an observable list of users.
-     */
-    private void fetchData() {
-        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
-    }
-
-    /**
      * creates and populate the context menu for the table.
      */
     private void createContextMenu() {
@@ -95,14 +95,26 @@ public class ViewUsersController {
         });
     }
 
+    /**
+     * save changes made in the view users window.
+     */
     public void saveChanges() {
         UserDataIO.saveUsers(userDatabase);
     }
 
+    /**
+     * Refresh the user data in the UsersTable.
+     */
     public void refreshViewUsersTable() {
         fetchData();
         view.getViewUsersTable().getItems().clear();
         view.getViewUsersTable().getItems().addAll(usersObservableList);
     }
 
+    /**
+     * Gets an observable list of users.
+     */
+    private void fetchData() {
+        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
+    }
 }

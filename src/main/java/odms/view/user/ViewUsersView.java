@@ -5,24 +5,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.AlertController;
-import odms.controller.GuiMain;
-import odms.controller.data.UserDataIO;
 import odms.controller.user.ViewUsersController;
-import odms.model.data.UserDatabase;
 import odms.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;
 
 import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getUserDatabase;
 
 public class ViewUsersView extends CommonView {
     private ViewUsersController controller = new ViewUsersController(this);
