@@ -256,7 +256,7 @@ public class ClinicianProfileController extends CommonController {
             ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
-        updateLabels();
+        performSearchFromFilters();
     }
 
 
@@ -289,7 +289,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonorsMouse(MouseEvent event) {
-        updateLabels();
+        performSearchFromFilters();
     }
 
     /**
@@ -298,7 +298,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        updateLabels();
+        performSearchFromFilters();
     }
 
     /**
@@ -306,8 +306,7 @@ public class ClinicianProfileController extends CommonController {
      */
     private void updateLabels() {
         labelToManyResults.setVisible(false);
-
-        updateSearchTable();
+        int size = donorObservableList.size();
 
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
@@ -327,7 +326,11 @@ public class ClinicianProfileController extends CommonController {
                     buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
-                    buttonShowNext.setText("Show next 25 results");
+                    if ((profileSearchResults.size() - size) < (PAGESIZE)) {
+                        buttonShowNext.setText("Show next " + (profileSearchResults.size() - size) + " results");
+                    } else {
+                        buttonShowNext.setText("Show next 25 results");
+                    }
                     buttonShowAll.setVisible(true);
                     buttonShowNext.setVisible(true);
                 }
@@ -338,7 +341,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
-    private void updateSearchTable() {
+    private void performSearchFromFilters() {
         String selectedGender = null;
         String selectedType = null;
         ObservableList<OrganEnum> selectedOrgans;
@@ -386,6 +389,7 @@ public class ClinicianProfileController extends CommonController {
                 new HashSet<>(selectedOrgans)
         ));
         updateTable(false, false);
+        updateLabels();
     }
 
     /**
@@ -415,9 +419,6 @@ public class ClinicianProfileController extends CommonController {
             } else if (showNext) {
                 if (profileSearchResults.size() > (size + PAGESIZE)) {
                     donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
-                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() < PAGESIZE) {
-                        buttonShowNext.setText("Show next " + profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() + " results");
-                    }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                     buttonShowNext.setVisible(false);
@@ -485,13 +486,11 @@ public class ClinicianProfileController extends CommonController {
         });
 
         genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
-        genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateLabels();
-        });
+
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
 
         addTooltipToRow();
@@ -740,13 +739,13 @@ public class ClinicianProfileController extends CommonController {
 
             typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
 
             genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
 

@@ -240,11 +240,11 @@
                                            <children>
                                                <Label fx:id="labelCurrentOnDisplay" prefHeight="36.0" prefWidth="149.0" text="displaying 0 to 0" GridPane.columnIndex="1" />
                                                <Label fx:id="labelResultCount" prefHeight="36.0" prefWidth="149.0" text=" results found" />
-                                               <Button fx:id="buttonShowNext" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetXResults" text="Show next 25 results" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
+                                               <Button fx:id="buttonShowNext" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetXResults" text="Show next 25 results" visible="false" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
                                              <GridPane.margin>
                                                 <Insets left="10.0" />
                                              </GridPane.margin></Button>
-                                               <Button fx:id="buttonShowAll" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all results" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+                                               <Button fx:id="buttonShowAll" maxWidth="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAllResults" text="Show all results" visible="false" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
                                              <GridPane.margin>
                                                 <Insets left="10.0" right="10.0" />
                                              </GridPane.margin></Button>

@@ -358,7 +358,6 @@ public class ProfileDatabase {
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
-        ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
         switch (selectedType) {
@@ -366,7 +365,7 @@ public class ProfileDatabase {
                 resultProfiles = getProfiles(false);
                 break;
             case "donor":
-                resultProfiles = getProfiles(false);
+                resultProfiles = getProfiles(true);
                 break;
             default:
                 resultProfiles = getReceivers(true);
