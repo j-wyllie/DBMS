@@ -86,12 +86,16 @@ public class ProfileDatabase {
      * @return current ProfileDatabase lastId
      */
     public int restoreProfile(Integer id, Profile profile) {
-        // Should deleted users simply be disabled for safety reasons?
-        lastID += 1;
-        profile.setId(lastID);
-        profileDb.put(lastID, profile);
-        deletedProfiles.remove(id);
-        return lastID ;
+        try {
+            // Should deleted users simply be disabled for safety reasons?
+            lastID += 1;
+            profile.setId(lastID);
+            profileDb.put(lastID, profile);
+            deletedProfiles.remove(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lastID;
     }
 
     public String getPath() {
@@ -362,16 +366,14 @@ public class ProfileDatabase {
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
-        ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
-
 
         switch (selectedType) {
             case "any":
                 resultProfiles = getProfiles(false);
                 break;
             case "donor":
-                resultProfiles = getProfiles(false);
+                resultProfiles = getProfiles(true);
                 break;
             default:
                 resultProfiles = getReceivers(true);
@@ -455,8 +457,6 @@ public class ProfileDatabase {
                 }
             });
         }
-
-
         return resultProfiles;
     }
 
