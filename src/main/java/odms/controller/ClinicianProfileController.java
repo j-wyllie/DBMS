@@ -245,6 +245,9 @@ public class ClinicianProfileController extends CommonController {
         stage.show();
     }
 
+    /**
+     * Dynamic update of the age range label.
+     */
     @FXML
     private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
@@ -521,25 +524,22 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Limits the characters entered in textfield to only digits and maxLength
      * @param maxLength that can be entered in the textfield
-     * @return KeyEvent EventHandler
+     * @return an event handler.
      */
     public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
-        return new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= maxLength) {
+        return e -> {
+            TextField txt_TextField = (TextField) e.getSource();
+            if (txt_TextField.getText().length() >= maxLength) {
+                e.consume();
+            }
+            if (e.getCharacter().matches("[0-9.]")){
+                if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
+                    e.consume();
+                } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
                     e.consume();
                 }
-                if (e.getCharacter().matches("[0-9.]")){
-                    if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
-                        e.consume();
-                    } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
-                        e.consume();
-                    }
-                } else {
-                    e.consume();
-                }
+            } else {
+                e.consume();
             }
         };
     }
@@ -711,6 +711,9 @@ public class ClinicianProfileController extends CommonController {
         }
     }
 
+    /**
+     * Initialises the controller for the current view.
+     */
     @FXML
     public void initialize() {
         if (currentUser != null) {
@@ -770,6 +773,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Checks if there are unsaved changes in any open window.
+     * @param currentStage viewing.
      * @return true if there are unsaved changes.
      */
     public static boolean checkUnsavedChanges(Stage currentStage) {
@@ -782,6 +786,10 @@ public class ClinicianProfileController extends CommonController {
         return isEdited(currentStage);
     }
 
+    /**
+     * Closes the current stage.
+     * @param stage viewing.
+     */
     private void closeStage(Stage stage) {
         openProfileStages.remove(stage);
     }

@@ -64,6 +64,7 @@ public class ProfileDatabase {
      * logging of removed profiles.
      *
      * @param id unique profile ID
+     * @return boolean on whether the profile was successfully deleted.
      */
     public boolean deleteProfile(Integer id) {
         try {
@@ -270,6 +271,7 @@ public class ProfileDatabase {
      * Similar matches in last names ordered alphabetically,
      * Similar matches in first names ordered alphabetically
      * @param searchString the string that the donor names will be searched against.
+     * @param profilesList the list of profiles that the search string is searching through.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList, String searchString) {
@@ -355,6 +357,12 @@ public class ProfileDatabase {
     /**
      * Fuzzy search that finds the top 30 donors that match the provided search string.
      * @param searchString the string that the donor names will be searched against.
+     * @param ageSearchInt integer of the age to be searched.
+     * @param ageRangeSearchInt integer of the age range to be searched.
+     * @param regionSearchString the region to be searched.
+     * @param selectedGender the selected gender to be searched.
+     * @param selectedType the selected type (donor or receiver) to be searched.
+     * @param selectedOrgans the selected organs to be searched.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {

@@ -52,7 +52,6 @@ public class MedicationDataIO {
 
     /**
      * Gets a list of active ingredients for the drug selected by the clinician user.
-     *
      * @param drugName represents the value to send in the HTTP GET request to the API.
      * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
@@ -133,9 +132,8 @@ public class MedicationDataIO {
 
     /**
      * Parse the list of results from the JSON in the HTTP response.
-     *
      * @param content represents the buffer holding the JSON response to parse.
-     **/
+     */
     private static ArrayList<String> parseJSON(StringBuffer content, boolean ingredients) {
         ArrayList<String> responseList = new ArrayList<>();
         JsonParser parser = new JsonParser();
@@ -157,11 +155,11 @@ public class MedicationDataIO {
     /**
      * Get Map of interactions between two drugs. The values of each key is the time frame after taking both drugs in
      * which the interaction may occur. Age and gender is used to get the most relevant interactions for a profile.
-     * @param drug1 Name of first drug.
-     * @param drug2 Name of second drug.
+     * @param drug1 name of first drug.
+     * @param drug2 name of second drug.
      * @param gender gender of profile request is made for.
      * @param age age of profile request is made for.
-     * @return Map
+     * @return map.
      * @throws IOException creation of URL may cause IOException.
      */
     public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
@@ -202,7 +200,7 @@ public class MedicationDataIO {
      * Parse the JSON object returned from the HTTP response for drug interactions. Returns Map of valid interactions
      * for profile and the duration after which an interaction may occur.
      * @param content JSON text to be parsed.
-     * @return Map<String, String> keys are valid interactions and values are duration of time after which an
+     * @return a map where keys are valid interactions and values are duration of time after which an
      * interaction may occur.
      */
     private static Map<String, String> parseInteractionsJSON(StringBuffer content, String gender, int age) {
@@ -234,7 +232,7 @@ public class MedicationDataIO {
      * @param interactionGender JSONObject that contains two JSONArrays, male or female. Arrays contain drug
      *                           interactions
      * @param gender gender of profile request is made for.
-     * @return Map<String, String> keys are valid interactions and values are empty strings.
+     * @return a map where keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseGenderInteractionsJSON(Map<String, String> interactions,
                                                                    JsonObject interactionGender, String gender) {
@@ -254,7 +252,7 @@ public class MedicationDataIO {
      * @param interactionAge JSON object that contains arrays of interactions, each array represents the age group in
      *                       which interactions may occur.
      * @param age age of profile request is made for.
-     * @return Map<String, String> keys are valid interactions and values are empty strings.
+     * @return a map where keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseInteractionAgeJSON(Map<String, String> interactions,
                                                                JsonObject interactionAge, int age) {
@@ -296,7 +294,7 @@ public class MedicationDataIO {
      *                     which an interaction may occur.
      * @param interactionDuration JSON object that contains arrays of interactions, each array represents the time frame
      *                            in which the interaction may occur.
-     * @return Map<String, String> keys are valid interactions and values are duration of time after which an
+     * @return a map where keys are valid interactions and values are duration of time after which an
      * interaction may occur.
      */
     private static Map<String, String> parseInteractionDurationJSON(Map<String, String> interactions,
