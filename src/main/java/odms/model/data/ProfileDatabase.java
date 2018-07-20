@@ -406,24 +406,20 @@ public class ProfileDatabase {
         //definitely need a better way than just a magic number lol
         if (ageSearchInt != -999) {
             if (ageRangeSearchInt != -999) {
-                //todo fix get age
                 //use a range
                 if (ageRangeSearchInt > ageSearchInt) {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) > ageRangeSearchInt) || (
-                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    < ageSearchInt)));
+                            profile -> ((profile.getAge() > ageRangeSearchInt) || (
+                                    profile.getAge() < ageSearchInt)));
                 } else {
                     resultProfiles.removeIf(
-                            profile -> ((ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) < ageRangeSearchInt) || (
-                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    > ageSearchInt)));
+                            profile -> ((profile.getAge() < ageRangeSearchInt) || (
+                                    profile.getAge() > ageSearchInt)));
                 }
 
             } else {
                 //just the age specified
-                resultProfiles.removeIf(profile -> ProfileGeneralControllerTODOContainsOldProfileMethods
-                        .calculateAge(profile) != ageSearchInt);
+                resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
             }
         }
 

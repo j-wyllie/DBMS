@@ -96,7 +96,7 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations": // TODO is this meant to be donating or donated
+                        case "donations":
                             return Commands.PROFILEDONATIONS;
                         case "delete":
                             return Commands.PROFILEDELETE;
