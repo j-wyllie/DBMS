@@ -2,15 +2,17 @@ package odms.controller;
 
 import java.io.File;
 import java.io.IOException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.data.ProfileDatabase;
@@ -25,16 +27,13 @@ public class ImportLoadingDialogController {
     private ProgressBar progressBarImport;
 
     @FXML
-    private Label labelImportStatus;
-
-    @FXML
     private Button buttonImportCancel;
 
     @FXML
     private Button buttonImportConfirm;
 
     @FXML
-    private TableView tableStatus;
+    private TableView<ImportResult> tableStatus;
 
     private Stage currentStage;
     private User currentUser;
@@ -50,7 +49,7 @@ public class ImportLoadingDialogController {
 
         profileImportTask.messageProperty().addListener((observable, oldValue, newValue) -> {
             String[] currentResults = newValue.split(",");
-            // todo
+            updateTable(currentResults);
         });
 
         profileImportTask.progressProperty().addListener((observable, oldValue, newValue) -> {
@@ -59,8 +58,8 @@ public class ImportLoadingDialogController {
             currentStage.setTitle(newTitle);
         });
 
-        profileImportTask.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
-            if(newValue != null) {
+        profileImportTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
                 ((Stage) buttonImportConfirm.getScene().getWindow()).close();
 
                 AlertController.guiPopup("CSV file is not formatted correctly.");
@@ -74,6 +73,7 @@ public class ImportLoadingDialogController {
 
     /**
      * Creates the profile import task, adds handlers for the buttons and calls update progress
+     *
      * @param file the file being imported
      */
     @FXML
@@ -82,12 +82,12 @@ public class ImportLoadingDialogController {
             profileImportTask = new ProfileImportTask(file);
 
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> buttonImportConfirm.setDisable(false));
+                event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
                 ProfileDatabase db = profileImportTask.getDb();
                 closeWindows(currentStage);
-                    GuiMain.setCurrentDatabase(db);
+                GuiMain.setCurrentDatabase(db);
             });
 
             buttonImportCancel.setOnAction(event -> {
@@ -95,18 +95,48 @@ public class ImportLoadingDialogController {
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 
+            setupTable();
             updateProgress();
         }
 
     }
 
     private void setupTable() {
-        TableColumn labels = new TableColumn("labels");
+        TableColumn<ImportResult, String> tcLabels = new TableColumn<>("labels");
+        TableColumn<ImportResult, String> tcValues = new TableColumn<>("values");
 
+        tcLabels.setCellValueFactory(new PropertyValueFactory<>("result"));
+
+        tcValues.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        tableStatus.getColumns().addAll(tcLabels, tcValues);
+
+        tableStatus.getItems().addAll(
+            new ImportResult("Success", "0"),
+            new ImportResult("Failure", "0"),
+            new ImportResult("Total", "0")
+        );
+
+        tableStatus.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+            Pane header = (Pane) tableStatus.lookup("TableHeaderRow");
+            if (header.isVisible()) {
+                header.setMaxHeight(0);
+                header.setMinHeight(0);
+                header.setPrefHeight(0);
+                header.setVisible(false);
+            }
+        });
+    }
+
+    private void updateTable(String[] results) {
+        for (Integer i = 0; i < results.length; i++) {
+            tableStatus.getItems().get(i).setValue(results[i]);
+        }
     }
 
     /**
      * Closes all of the open windows and re-opens an admin page
+     *
      * @param stage the current stage
      */
     private void closeWindows(Stage stage) {
@@ -134,6 +164,7 @@ public class ImportLoadingDialogController {
 
     /**
      * Sets the current user of the program
+     *
      * @param currentUser the current user
      */
     public void setCurrentUser(User currentUser) {
@@ -145,9 +176,52 @@ public class ImportLoadingDialogController {
     }
 
     public void setOnCloseRequest() {
-        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
-            importTask.interrupt();
-        });
+        this.currentStage.setOnCloseRequest((WindowEvent event) -> importTask.interrupt());
+    }
+
+    public class ImportResult {
+
+        private SimpleStringProperty result;
+        private SimpleStringProperty value;
+
+        ImportResult(String result, String value) {
+            this.result = new SimpleStringProperty(result);
+            this.value = new SimpleStringProperty(value);
+        }
+
+        /**
+         * Required by javafx
+         *
+         * @return result property
+         */
+        public SimpleStringProperty resultProperty() {
+            return this.result;
+        }
+
+        /**
+         * Rquired by javafx
+         *
+         * @return value property
+         */
+        public SimpleStringProperty valueProperty() {
+            return this.value;
+        }
+
+        public String getResult() {
+            return result.get();
+        }
+
+        public String getValue() {
+            return value.get();
+        }
+
+        public void setResult(String result) {
+            this.result.set(result);
+        }
+
+        public void setValue(String value) {
+            this.value.set(value);
+        }
     }
 
 }
