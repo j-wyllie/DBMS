@@ -248,6 +248,7 @@
                                              <GridPane.margin>
                                                 <Insets left="10.0" right="10.0" />
                                              </GridPane.margin></Button>
+                                          <Label fx:id="labelToManyResults" prefHeight="36.0" text="There are to many results, please refine search" visible="false" GridPane.columnIndex="2" />
                                            </children>
                                        <GridPane.margin>
                                           <Insets top="7.5" />
