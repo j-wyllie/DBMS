@@ -91,11 +91,10 @@ public class ProfileDatabase {
             profile.setId(lastID);
             profileDb.put(lastID, profile);
             deletedProfiles.remove(id);
-            return lastID;
         } catch (Exception e) {
             e.printStackTrace();
-            return lastID;
         }
+        return lastID;
     }
 
     public String getPath() {
@@ -448,7 +447,6 @@ public class ProfileDatabase {
                 }
             });
         }
-        System.out.println(resultProfiles.size());
         return resultProfiles;
     }
 

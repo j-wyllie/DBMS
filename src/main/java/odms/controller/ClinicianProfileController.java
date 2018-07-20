@@ -152,6 +152,9 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private Button buttonShowNext;
 
+    @FXML
+    private TextField transplantListSearchField;
+
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
@@ -574,6 +577,40 @@ public class ClinicianProfileController extends CommonController {
     }
 
     /**
+     * Whenever a character is entered or removed in the transplant waiting list search field this
+     * calls the searchTransplantWaitingList method.
+     * @param e
+     */
+    @FXML
+    public void handleSearchTransplantWaitingList(KeyEvent e) {
+        searchTransplantWaitingList(transplantListSearchField.getText());
+    }
+
+    /**
+     * Searches the transplant waiting list using the string entered in the transplant waiting list
+     * search field in the GUI.
+     * @param searchString string from the search text field in the GUI.
+     */
+    private void searchTransplantWaitingList(String searchString) {
+        List<Profile> results;
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
+
+        if (!searchString.equals("")) {
+            results = GuiMain.getCurrentDatabase().searchProfilesName(GuiMain.getCurrentDatabase().getReceivers(true), searchString);
+
+            for (Map.Entry<Profile, OrganEnum> p: GuiMain.getCurrentDatabase().getAllOrgansRequired()) {
+                if (results.contains(p.getKey())) {
+                    receivers.add(p);
+                }
+            }
+        } else {
+            receivers = GuiMain.getCurrentDatabase().getAllOrgansRequired();
+        }
+
+        makeTransplantWaitingList(receivers);
+    }
+
+    /**
      * Initializes and refreshes the search table
      * Adds a listener to each row so that when it is double clicked
      * a new donor window is opened.
@@ -582,7 +619,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
-
         receiverObservableList = FXCollections.observableList(receivers);
         //transplantTable.setItems(receiverObservableList);
         //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
@@ -638,7 +674,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void refreshTable() {
-        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+        transplantListSearchField.setText("");
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
