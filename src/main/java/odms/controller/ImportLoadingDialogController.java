@@ -32,8 +32,10 @@ public class ImportLoadingDialogController {
 
     private User currentUser;
 
+    private Stage currentStage;
+
     /**
-     * Binds the progress bar a ad the text property to the profile import task
+     * Binds the progress bar and the text property to the profile import task
      */
     private void updateProgress() {
         progressBarImport.setProgress(0);
@@ -43,7 +45,16 @@ public class ImportLoadingDialogController {
         labelImportStatus.textProperty().unbind();
         labelImportStatus.textProperty().bind(profileImportTask.messageProperty());
 
+
         new Thread(profileImportTask).start();
+
+        profileImportTask.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
+            if(newValue != null) {
+                ((Stage) buttonImportConfirm.getScene().getWindow()).close();
+
+                AlertController.guiPopup("CSV file is not formatted correctly.");
+            }
+        });
     }
 
     /**
@@ -54,24 +65,20 @@ public class ImportLoadingDialogController {
     @FXML
     public void initialize(File file, Stage stage) {
         if (currentUser != null) {
+            currentStage = stage;
             profileImportTask = new ProfileImportTask(file);
 
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> {
-                        buttonImportConfirm.setDisable(false);
-                    });
+                    event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
                 ProfileDatabase db = profileImportTask.getDb();
-                GuiMain.setCurrentDatabase(db);
-
-                closeWindows(stage);
+                closeWindows(currentStage);
+                    GuiMain.setCurrentDatabase(db);
             });
 
 
-            buttonImportCancel.setOnAction(event -> {
-                ((Stage) progressBarImport.getScene().getWindow()).close();
-            });
+            buttonImportCancel.setOnAction(event -> ((Stage) progressBarImport.getScene().getWindow()).close());
 
             updateProgress();
         }

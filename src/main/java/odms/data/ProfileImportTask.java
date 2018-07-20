@@ -23,8 +23,11 @@ public class ProfileImportTask extends Task<Void> {
 
     @Override
     protected Void call() throws InvalidFileException {
-
-        db = loadDataFromCSV(this.file);
+        try {
+            db = loadDataFromCSV(this.file);
+        } catch (InvalidFileException e) {
+            throw new InvalidFileException(e.getMessage(), e.getFile());
+        }
 
         return null;
     }
@@ -41,25 +44,36 @@ public class ProfileImportTask extends Task<Void> {
         int successCount = 0;
         int failedCount = 0;
         try {
-            CSVParser csvParser = CSVFormat.EXCEL.withHeader().parse(new FileReader(csv));
-            Integer csvLength = CSVFormat.EXCEL.withHeader().parse(new FileReader(csv)).getRecords().size();
+            CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
+            Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv)).getRecords().size();
 
-            for (CSVRecord csvRecord : csvParser) {
-                Profile profile = csvToProfileConverter(csvRecord);
-                if (profile != null) {
+            profileDb = parseCsvRecord(profileDb, progressCount, successCount, failedCount, csvParser,
+                    csvLength);
+        } catch (IOException | IllegalArgumentException e) {
+            throw new InvalidFileException("CSV file could not be read.", csv);
+        }
+        return profileDb;
+    }
+
+    private ProfileDatabase parseCsvRecord(ProfileDatabase profileDb, int progressCount, int successCount,
+            int failedCount, CSVParser csvParser, Integer csvLength) {
+        for (CSVRecord csvRecord : csvParser) {
+            Profile profile = csvToProfileConverter(csvRecord);
+            if (profile != null) {
+                try {
                     profileDb.addProfile(profile);
                     successCount++;
-                } else {
+
+                } catch (NHIConflictException e) {
                     failedCount++;
                 }
-                progressCount++;
-                this.updateProgress(progressCount, csvLength);
-                this.updateMessage("Successful: " + successCount + "\nFailed: " + failedCount + "\nTotal Profiles: " + progressCount);
+            } else {
+                failedCount++;
             }
-        } catch (IOException e) {
-            throw new InvalidFileException("CSV file could not be read.", csv);
-        } catch (NHIConflictException e) {
-            e.printStackTrace();
+
+            progressCount++;
+            this.updateProgress(progressCount, csvLength);
+            this.updateMessage("Successful: " + successCount + "\nFailed: " + failedCount + "\nTotal Profiles: " + progressCount);
         }
         return profileDb;
     }
