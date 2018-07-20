@@ -323,6 +323,7 @@ public class ProfileMedicationsView extends CommonView {
     public void init(Profile p, Boolean b) {
         isOpenedByClinician = b;
         //currentProfile.get() = p;
+        hideItems();
         tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         setMedicationSearchFieldListener(); //todo where would this go?

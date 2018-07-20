@@ -110,7 +110,7 @@ public class UndoController extends UndoRedoController {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int c = action.getHistoryDataIndex();
         Condition condition = profile.getCurrentConditions().get(c);
-        profile.removeCondition(condition);
+        .removeCondition(condition);
         if (historyPosition > 0) {
             historyPosition -= 1;
         }

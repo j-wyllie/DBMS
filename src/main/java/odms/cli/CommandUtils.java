@@ -2,6 +2,7 @@ package odms.cli;
 
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ReadOnlyDAO;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -671,7 +672,8 @@ public class CommandUtils {
                                     .replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
                     String newInfo = action.substring(action.indexOf("ird"));
-                    profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+                    ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(
+                            new ArrayList<>(Arrays.asList(newInfo.split(","))), profile);
                 } else if (action.contains("EDITED")) {
                     int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE"))
                             .replaceAll("[\\D]", ""));
