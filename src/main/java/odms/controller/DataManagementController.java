@@ -28,7 +28,8 @@ public class DataManagementController {
     public void handleImportExistingDataClicked(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON file(*.json)",
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "JSON file(*.json)",
                 "*.json", "CSV file(*.csv)",
                 "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
@@ -68,10 +69,12 @@ public class DataManagementController {
         ImportLoadingDialogController controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
 
-        controller.initialize(file, (Stage) dataManagementAp.getScene().getWindow());
+        controller.initialize(file);
 
         Stage stage = new Stage();
-        stage.setTitle("Importing data...");
+        controller.setCurrentStage(stage);
+        controller.setOnCloseRequest();
+        stage.setTitle("Import data");
         stage.initOwner(dataManagementAp.getScene().getWindow());
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);

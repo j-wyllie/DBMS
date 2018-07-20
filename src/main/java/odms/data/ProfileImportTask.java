@@ -42,7 +42,8 @@ public class ProfileImportTask extends Task<Void> {
         ProfileDatabase profileDb = new ProfileDatabase();
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
-            Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv)).getRecords().size();
+            Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
+                    .getRecords().size();
 
             profileDb = parseCsvRecord(profileDb, csvParser, csvLength);
         } catch (IOException | IllegalArgumentException e) {
@@ -65,6 +66,10 @@ public class ProfileImportTask extends Task<Void> {
         int successCount = 0;
         int failedCount = 0;
         for (CSVRecord csvRecord : csvParser) {
+            if (Thread.currentThread().isInterrupted()) {
+                return null;
+            }
+
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
@@ -80,8 +85,7 @@ public class ProfileImportTask extends Task<Void> {
 
             progressCount++;
             this.updateProgress(progressCount, csvLength);
-            this.updateMessage("Successful: " + successCount + "\nFailed: " +
-                    failedCount + "\nTotal Profiles: " + progressCount);
+            this.updateMessage(successCount + "," + failedCount + "," + progressCount);
         }
         return profileDb;
     }
@@ -146,7 +150,6 @@ public class ProfileImportTask extends Task<Void> {
             return null;
         }
     }
-
 
     /**
      * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers)

@@ -9,7 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import odms.data.ProfileDatabase;
 import odms.data.ProfileImportTask;
 import odms.user.User;
@@ -30,9 +33,12 @@ public class ImportLoadingDialogController {
     @FXML
     private Button buttonImportConfirm;
 
-    private User currentUser;
+    @FXML
+    private TableView tableStatus;
 
     private Stage currentStage;
+    private User currentUser;
+    private Thread importTask;
 
     /**
      * Binds the progress bar and the text property to the profile import task
@@ -42,11 +48,16 @@ public class ImportLoadingDialogController {
         progressBarImport.progressProperty().unbind();
         progressBarImport.progressProperty().bind(profileImportTask.progressProperty());
 
-        labelImportStatus.textProperty().unbind();
-        labelImportStatus.textProperty().bind(profileImportTask.messageProperty());
+        profileImportTask.messageProperty().addListener((observable, oldValue, newValue) -> {
+            String[] currentResults = newValue.split(",");
+            // todo
+        });
 
-
-        new Thread(profileImportTask).start();
+        profileImportTask.progressProperty().addListener((observable, oldValue, newValue) -> {
+            Float percValue = newValue.floatValue() * 100;
+            String newTitle = "Importing data: " + Math.round(percValue) + "%";
+            currentStage.setTitle(newTitle);
+        });
 
         profileImportTask.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
             if(newValue != null) {
@@ -55,17 +66,19 @@ public class ImportLoadingDialogController {
                 AlertController.guiPopup("CSV file is not formatted correctly.");
             }
         });
+
+        importTask = new Thread(profileImportTask);
+        importTask.setDaemon(true);
+        importTask.start();
     }
 
     /**
      * Creates the profile import task, adds handlers for the buttons and calls update progress
      * @param file the file being imported
-     * @param stage the stage that is below the current window
      */
     @FXML
-    public void initialize(File file, Stage stage) {
+    public void initialize(File file) {
         if (currentUser != null) {
-            currentStage = stage;
             profileImportTask = new ProfileImportTask(file);
 
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
@@ -77,11 +90,18 @@ public class ImportLoadingDialogController {
                     GuiMain.setCurrentDatabase(db);
             });
 
-
-            buttonImportCancel.setOnAction(event -> ((Stage) progressBarImport.getScene().getWindow()).close());
+            buttonImportCancel.setOnAction(event -> {
+                importTask.interrupt();
+                ((Stage) progressBarImport.getScene().getWindow()).close();
+            });
 
             updateProgress();
         }
+
+    }
+
+    private void setupTable() {
+        TableColumn labels = new TableColumn("labels");
 
     }
 
@@ -118,6 +138,16 @@ public class ImportLoadingDialogController {
      */
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public void setCurrentStage(Stage stage) {
+        this.currentStage = stage;
+    }
+
+    public void setOnCloseRequest() {
+        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
+            importTask.interrupt();
+        });
     }
 
 }
