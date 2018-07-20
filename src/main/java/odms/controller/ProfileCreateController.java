@@ -2,7 +2,7 @@ package odms.controller;
 
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
-import static odms.controller.AlertController.invalidIrd;
+import static odms.controller.AlertController.invalidNhi;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.data.IrdNumberConflictException;
+import odms.data.NHIConflictException;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.profile.Profile;
@@ -34,7 +34,7 @@ public class ProfileCreateController extends CommonController {
     private DatePicker dobDatePicker;
 
     @FXML
-    private TextField irdNumberField;
+    private TextField nhiNumberField;
 
     private String checkDetailsEntered() {
         if (givenNamesField.getText().isEmpty()) {
@@ -47,17 +47,17 @@ public class ProfileCreateController extends CommonController {
         if (dobDatePicker.getEditor().getText().isEmpty()) {
             return "Please enter a Date of Birth";
         }
-        if (irdNumberField.getText().isEmpty()) {
-            return "Please enter an IRD number";
+        if (nhiNumberField.getText().isEmpty()) {
+            return "Please enter an NHI number";
         } else {
             return "";
         }
     }
 
     public void initialize() {
-        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+        nhiNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+                nhiNumberField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
     }
@@ -78,9 +78,9 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = givenNamesField.getText();
                 String surnames = surnamesField.getText();
                 LocalDate dob = dobDatePicker.getValue();
-                Integer ird = Integer.valueOf(irdNumberField.getText());
+                String nhi = nhiNumberField.getText();
 
-                Profile newProfile = new Profile(givenNames, surnames, dob, ird);
+                Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
 
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
@@ -99,16 +99,16 @@ public class ProfileCreateController extends CommonController {
                 appStage.setScene(scene);
                 appStage.show();
             } catch (NumberFormatException e) {
-                if (irdNumberField.getText().length() > 9) {
-                    invalidEntry("Entered IRD number is too long.\nPlease enter up to 9 digits");
+                if (nhiNumberField.getText().length() > 9) {
+                    invalidEntry("Entered NHI number is too long.\nPlease enter up to 9 digits");
                 } else {
-                    invalidEntry("Invalid IRD number entered");
+                    invalidEntry("Invalid NHI number entered");
                 }
             } catch (IllegalArgumentException e) {
                 //show error window.
                 invalidEntry();
-            } catch (IrdNumberConflictException e) {
-                invalidIrd();
+            } catch (NHIConflictException e) {
+                invalidNhi();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
             }

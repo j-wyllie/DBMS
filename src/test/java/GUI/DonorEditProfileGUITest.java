@@ -134,7 +134,7 @@ public class DonorEditProfileGUITest extends TestFxMethods {
     }
 
     @Ignore
-    public void editIRDTest() {
+    public void editNHITest() {
 
     }
 

@@ -22,13 +22,13 @@ public class ProfileDataIOTest {
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
-        profileOneAttr.add("ird=\"123456879\"");
+        profileOneAttr.add("nhi=\"123456879\"");
 
         try {
             profileOne = new Profile(profileOneAttr);
             profileDb.addProfile(profileOne);
 
-        } catch (IrdNumberConflictException e) {
+        } catch (NHIConflictException e) {
             e.printStackTrace();
         }
 
