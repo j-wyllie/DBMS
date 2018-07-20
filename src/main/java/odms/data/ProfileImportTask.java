@@ -40,23 +40,30 @@ public class ProfileImportTask extends Task<Void> {
      */
     private ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
         ProfileDatabase profileDb = new ProfileDatabase();
-        int progressCount = 0;
-        int successCount = 0;
-        int failedCount = 0;
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
             Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv)).getRecords().size();
 
-            profileDb = parseCsvRecord(profileDb, progressCount, successCount, failedCount, csvParser,
-                    csvLength);
+            profileDb = parseCsvRecord(profileDb, csvParser, csvLength);
         } catch (IOException | IllegalArgumentException e) {
             throw new InvalidFileException("CSV file could not be read.", csv);
         }
         return profileDb;
     }
 
-    private ProfileDatabase parseCsvRecord(ProfileDatabase profileDb, int progressCount, int successCount,
-            int failedCount, CSVParser csvParser, Integer csvLength) {
+    /**
+     * Loops through the csv records and adds it to the profileDB if it is valid.
+     * Updates the counts of successful and failed imports.
+     *
+     * @param csvParser the csv parser to parse each row.
+     * @param csvLength the length of the csv.
+     * @return a profile database to be saved as the new database.
+     */
+    private ProfileDatabase parseCsvRecord(ProfileDatabase profileDb, CSVParser csvParser,
+            Integer csvLength) {
+        int progressCount = 0;
+        int successCount = 0;
+        int failedCount = 0;
         for (CSVRecord csvRecord : csvParser) {
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
@@ -73,7 +80,8 @@ public class ProfileImportTask extends Task<Void> {
 
             progressCount++;
             this.updateProgress(progressCount, csvLength);
-            this.updateMessage("Successful: " + successCount + "\nFailed: " + failedCount + "\nTotal Profiles: " + progressCount);
+            this.updateMessage("Successful: " + successCount + "\nFailed: " +
+                    failedCount + "\nTotal Profiles: " + progressCount);
         }
         return profileDb;
     }
@@ -93,7 +101,8 @@ public class ProfileImportTask extends Task<Void> {
                         Integer.valueOf(dobString[1])
                 );
 
-                Profile profile = new Profile(csvRecord.get("first_names"), csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
+                Profile profile = new Profile(csvRecord.get("first_names"),
+                        csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
 
                 if (!csvRecord.get("date_of_death").isEmpty()) {
                     String[] dodString = csvRecord.get("date_of_death").split("/");
@@ -141,7 +150,7 @@ public class ProfileImportTask extends Task<Void> {
 
     /**
      * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers)
-     * public at the moment so we can test it, probably needs to be moved somewhere TODO
+     *
      * @param nhi the nhi to check
      * @return true if valid and false if not valid
      */
