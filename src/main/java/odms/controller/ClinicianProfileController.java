@@ -576,7 +576,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Whenever a character is entered or removed in the transplant waiting list search field this
      * calls the searchTransplantWaitingList method.
-     * @param e KeyEvent, key being pressed.
+     * @param e KeyEvent key being pressed.
      */
     @FXML
     public void handleSearchTransplantWaitingList(KeyEvent e) {
