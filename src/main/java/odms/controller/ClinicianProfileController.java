@@ -707,6 +707,7 @@ public class ClinicianProfileController extends CommonController {
             CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
+            t.setDaemon(true);
             t.start();
         }
     }
