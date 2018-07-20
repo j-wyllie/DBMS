@@ -32,6 +32,7 @@ public class App {
             File profileDbFile = new File(DONOR_DATABASE);
             if (!profileDbFile.isFile()) {
                 profileDb = new ProfileDatabase();
+                ProfileDataIO.saveData(profileDb, DONOR_DATABASE);
             } else {
                 profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
             }
