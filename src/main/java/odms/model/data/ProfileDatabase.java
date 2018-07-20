@@ -503,7 +503,7 @@ public class ProfileDatabase {
             if (profile.getReceiver()) {
                 if (receiving) {
                     //todo make getting organs permanent
-                    if (ProfileOrganControllerTODO.getOrgansRequired(profile).size() > 0) {
+                    if (profile.getOrgansRequired().size() > 0) {
                         profiles.add(profile);
                     }
                 } else {
@@ -528,7 +528,7 @@ public class ProfileDatabase {
         ArrayList<Profile> allReceivers = getReceivers(true);
 
         for (Profile profile : allReceivers) {
-            for (OrganEnum organ : ProfileOrganControllerTODO.getOrgansRequired(profile)) {
+            for (OrganEnum organ : profile.getOrgansRequired()) {
                 Map.Entry<Profile, OrganEnum> pair = new SimpleEntry<>(profile, organ);
                 receivers.add(pair);
             }

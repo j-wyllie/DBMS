@@ -3,6 +3,7 @@ package odms.cli;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ReadOnlyDAO;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
+import odms.controller.profile.ProfileUndoRedoCLIServiceController;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -357,7 +358,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonating(organSet);
+                    ProfileUndoRedoCLIServiceController.addOrgansDonating(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
                 } catch (Exception e) {
@@ -383,7 +384,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansRequired(organSet);
+                    ProfileUndoRedoCLIServiceController.addOrgansRequired(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
                 } catch (Exception e) {
@@ -405,8 +406,8 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.addOrgansDonated(
-                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
+                    ProfileUndoRedoCLIServiceController.addOrgansDonated(
+                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                     profile.setDonor(true);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ already exists.");
@@ -429,8 +430,8 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgansDonating(
-                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
+                    ProfileUndoRedoCLIServiceController.removeOrgansDonating(
+                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
                 }
@@ -453,8 +454,8 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    profile.removeOrgansRequired(
-                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)));
+                    ProfileUndoRedoCLIServiceController.removeOrgansRequired(
+                            OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
                 }
@@ -510,11 +511,11 @@ public class CommandUtils {
             } else if (action.contains("removed")) {
                 int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
-                profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+                ProfileUndoRedoCLIServiceController.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                         action.substring(
                                 action.indexOf("[") + 1,
                                 action.indexOf("]")).split(",")
-                )));
+                )), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -526,7 +527,7 @@ public class CommandUtils {
                                 action.indexOf("[") + 1,
                                 action.indexOf("]")).split(","))
                 );
-                profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
+                ProfileUndoRedoCLIServiceController.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -539,7 +540,7 @@ public class CommandUtils {
                                 action.indexOf("]")).split(","))
                 );
                 // TODO bug here for removing organs from wrong list based on command
-                profile.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet));
+                ProfileUndoRedoCLIServiceController.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -549,7 +550,7 @@ public class CommandUtils {
                 Profile profile = currentDatabase.getProfile(id);
                 System.out.println(action);
                 String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
-                profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
+                ProfileUndoRedoCLIServiceController.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -645,19 +646,19 @@ public class CommandUtils {
                     List<String> organSet = new ArrayList<>(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]"))
                                     .split(",")));
-                    profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet));
+                    ProfileUndoRedoCLIServiceController.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    profile.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+                    ProfileUndoRedoCLIServiceController.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
                             action.substring(
                                     action.indexOf("[") + 1,
                                     action.indexOf("]")).split(",")
-                    )));
+                    )), profile);
                 } else if (action.contains("donate")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    profile.addOrgansDonated(
+                    ProfileUndoRedoCLIServiceController.addOrgansDonated(
                             OrganEnum.stringListToOrganSet(
                                     Arrays.asList(
                                             action.substring(
@@ -665,7 +666,7 @@ public class CommandUtils {
                                                     action.indexOf("]")).split(",")
                                     )
                             )
-                    );
+                    , profile);
                 } else if (action.contains("update")) {
                     int id = Integer.parseInt(
                             action.substring(0, action.indexOf("previous"))

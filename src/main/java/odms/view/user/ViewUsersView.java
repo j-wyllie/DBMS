@@ -18,6 +18,7 @@ import static odms.controller.AlertController.saveChanges;
 
 public class ViewUsersView extends CommonView {
     private ViewUsersController controller = new ViewUsersController(this);
+    private User currentUser;
 
     @FXML
     TableView<User> viewUsersTable;
@@ -53,5 +54,14 @@ public class ViewUsersView extends CommonView {
 
     public TableView<User> getViewUsersTable() {
         return viewUsersTable;
+    }
+
+    public void setUpUsersTable() {
+        controller.setUpUsersTable();
+    }
+
+    public void setCurrentUser(User user) {
+        //todo currentUser isn't used but the method is called in ClinicianProfileView so it might have a purpose
+        currentUser = user;
     }
 }
