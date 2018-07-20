@@ -29,9 +29,9 @@ public class DataManagementController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-                "JSON file(*.json)",
-                "*.json", "CSV file(*.csv)",
-                "*.csv");
+                "Data Files (*.json;*.csv)",
+                "*.json", "*.csv"
+        );
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
