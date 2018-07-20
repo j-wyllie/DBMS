@@ -850,6 +850,17 @@ public class Profile implements Comparable<Profile> {
         return givenNames + " " + lastNames;
     }
 
+    /**
+     * This method is used to populate a column in the search table, intelliJ thinks it is un-used.
+     */
+    public String getFullPreferredName() {
+        if (preferredName == null || preferredName.equals("")) {
+            return givenNames + " " + lastNames;
+        } else {
+            return givenNames + " \"" + preferredName + "\" " + lastNames;
+        }
+    }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
