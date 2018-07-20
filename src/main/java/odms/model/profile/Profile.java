@@ -116,7 +116,6 @@ public class Profile implements Comparable<Profile> {
         );
     }
 
-
     /**
      * Gets all of the profiles procedures
      *

@@ -39,15 +39,14 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      * @return a string depicting whether to profile is a donor, receiver, or both.
      */
     public SimpleStringProperty donorReceiverProperty(Profile profile) {
-        //todo fix the if statements
         SimpleStringProperty result = new SimpleStringProperty();
-        if (!(profile.getDonor() == null) && profile.getDonor()) {
-            if (!(profile.getReceiver() == null) && profile.getReceiver()) {
+        if ((profile.getDonor() != null) && profile.getDonor()) {
+            if ((profile.getReceiver() != null) && profile.getReceiver()) {
                 result.setValue("Donor/Receiver");
             } else {
                 result.setValue("Donor");
             }
-        } else if (!(profile.getReceiver() == null) && profile.getReceiver()) {
+        } else if ((profile.getReceiver() != null) && profile.getReceiver()) {
             result.setValue("Receiver");
 
         }
