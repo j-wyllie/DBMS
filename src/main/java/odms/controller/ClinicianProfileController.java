@@ -521,7 +521,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Limits the characters entered in textfield to only digits and maxLength
      * @param maxLength that can be entered in the textfield
-     * @return
+     * @return KeyEvent EventHandler
      */
     public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
         return new EventHandler<KeyEvent>() {
@@ -566,9 +566,7 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> {
-                closeStage(stage);
-            });
+            stage.setOnCloseRequest((WindowEvent event) -> closeStage(stage));
             openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -578,7 +576,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Whenever a character is entered or removed in the transplant waiting list search field this
      * calls the searchTransplantWaitingList method.
-     * @param e
+     * @param e KeyEvent, key being pressed.
      */
     @FXML
     public void handleSearchTransplantWaitingList(KeyEvent e) {
@@ -595,9 +593,11 @@ public class ClinicianProfileController extends CommonController {
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
         if (!searchString.equals("")) {
-            results = GuiMain.getCurrentDatabase().searchProfilesName(GuiMain.getCurrentDatabase().getReceivers(true), searchString);
+            results = GuiMain.getCurrentDatabase().searchProfilesName(GuiMain.getCurrentDatabase()
+                    .getReceivers(true), searchString);
 
-            for (Map.Entry<Profile, OrganEnum> p: GuiMain.getCurrentDatabase().getAllOrgansRequired()) {
+            for (Map.Entry<Profile, OrganEnum> p: GuiMain.getCurrentDatabase()
+                    .getAllOrgansRequired()) {
                 if (results.contains(p.getKey())) {
                     receivers.add(p);
                 }
