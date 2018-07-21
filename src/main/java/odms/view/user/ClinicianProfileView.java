@@ -634,6 +634,7 @@ public class ClinicianProfileView extends CommonView {
     }
 
     public void handleTabDataManagementClicked() {
+        dataManagementControllerPOTENTIALTODO = new DataManagementControllerPOTENTIALTODO();
         dataManagementControllerPOTENTIALTODO.setCurrentUser(currentUser);
     }
 
