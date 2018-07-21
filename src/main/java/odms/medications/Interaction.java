@@ -50,9 +50,17 @@ public class Interaction {
         this.dateTimeCreated = dateTimeCreated;
     }
 
-    public String getDrugA() { return drugA; }
+    public String getDrugA() { return this.drugA; }
 
-    public String getDrugB() { return drugB; }
+    public String getDrugB() { return this.drugB; }
+
+    public Map<String, List<String>> getAgeInteractions() { return this.ageInteractions; }
+
+    public Map<String, Integer> getCoexistingConditions() { return this.coexistingConditions; }
+
+    public Map<String, List<String>> getDurationInteractions() { return this.durationInteractions; }
+
+    public Map<String, List<String>> getGenderInteractions() { return this.genderInteractions; }
 
     public LocalDateTime getDateTimeExpired() { return dateTimeCreated.plusDays(7); }
 }
