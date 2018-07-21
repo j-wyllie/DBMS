@@ -13,17 +13,18 @@ public interface MedicationInteractionsDAO {
      */
     Interaction get(String drugA, String drugB) throws IOException;
 
-    /**
-     * Sets the location of the cached medication interactions.
-     * @param path to the location.
-     */
-    void setLocation(String path);
-
     void load();
+
+    void save();
 
     /**
      * Clear all cached medication interactions.
      */
     void clear();
 
+    /**
+     * Sets the location of the cached medication interactions.
+     * @param path to the location.
+     */
+    void setLocation(String path);
 }

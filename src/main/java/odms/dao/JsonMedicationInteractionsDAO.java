@@ -3,8 +3,14 @@ package odms.dao;
 import static java.time.LocalDateTime.now;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +50,43 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     @Override
     public void load() {
-        // noop
+        Gson gson = new Gson();
+
+        String file = defaultPath;
+        if (!(path == null)) {
+            file = path;
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            this.interactionDb = gson.fromJson(reader, Map.class);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void save() {
+        File file = new File(this.defaultPath);
+        if (!(this.path == null)) {
+            file = new File(this.path);
+        }
+
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
+
+            writeFile.write(gson.toJson(interactionDb));
+
+            writeFile.close();
+
+            System.out.println("File exported successfully!");
+
+        } catch (IOException e) {
+            System.out.println("IO exception, please check the specified file");
+            System.out.println("File requested: " + path);
+        }
     }
 
     /**
@@ -163,6 +205,10 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         this.interactionDb.clear();
     }
 
+    /**
+     * Sets the location of the cached medication interactions.
+     * @param path to the location.
+     */
     @Override
     public void setLocation(String path) {
         this.path = path;
