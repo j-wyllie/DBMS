@@ -32,31 +32,31 @@ public class ProfileDatabase {
      * Determine unique ID for profile and add the profile to the database
      *
      * @param profile new profile object
-     * @throws IrdNumberConflictException IRD number already in use by another profile
+     * @throws NHIConflictException NHI number already in use by another profile
      */
-    public void addProfile(Profile profile) throws IrdNumberConflictException {
+    public void addProfile(Profile profile) throws NHIConflictException {
         lastID += 1;
         profile.setId(lastID);
 
-        if (checkIRDNumberExists(profile.getIrdNumber())) {
-            throw new IrdNumberConflictException("IRD number already in use", profile.getIrdNumber());
+        if (checkNHIExists(profile.getNhi())) {
+            throw new NHIConflictException("NHI already in use", profile.getNhi());
         }
 
         profileDb.put(lastID, profile);
     }
 
     /**
-     * Check if an IRD number exists in the Profile Database
+     * Check if an NHI number exists in the Profile Database
      *
-     * @param irdNumber the number to be checked
+     * @param nhiNumber the number to be checked
      * @return boolean of whether or not it exists already.
      */
-    private boolean checkIRDNumberExists(Integer irdNumber) {
-        Set<Integer> irdNumbers = new HashSet<>();
+    private boolean checkNHIExists(String nhiNumber) {
+        Set<String> nhiNumbers = new HashSet<>();
 
-        profileDb.forEach((id, profile) -> irdNumbers.add(profile.getIrdNumber()));
+        profileDb.forEach((id, profile) -> nhiNumbers.add(profile.getNhi()));
 
-        return irdNumbers.contains(irdNumber);
+        return nhiNumbers.contains(nhiNumber);
     }
 
     /**
@@ -64,6 +64,7 @@ public class ProfileDatabase {
      * logging of removed profiles.
      *
      * @param id unique profile ID
+     * @return boolean on whether the profile was successfully deleted.
      */
     public boolean deleteProfile(Integer id) {
         try {
@@ -91,11 +92,10 @@ public class ProfileDatabase {
             profile.setId(lastID);
             profileDb.put(lastID, profile);
             deletedProfiles.remove(id);
-            return lastID;
         } catch (Exception e) {
             e.printStackTrace();
-            return lastID;
         }
+        return lastID;
     }
 
     public String getPath() {
@@ -147,16 +147,16 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for profiles via their IRD number
+     * Search for profiles via their NHI number
      *
-     * @param searchTerm integer of the IRD number
+     * @param searchTerm integer of the NHI number
      * @return Array of profiles found that match
      */
-    public ArrayList<Profile> searchIRDNumber(Integer searchTerm) {
+    public ArrayList<Profile> searchNHI(String searchTerm) {
         ArrayList<Profile> results = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
-            if (profile.getIrdNumber().equals(searchTerm)) {
+            if (profile.getNhi().equals(searchTerm)) {
                 results.add(profile);
             }
         });
@@ -271,6 +271,7 @@ public class ProfileDatabase {
      * Similar matches in last names ordered alphabetically,
      * Similar matches in first names ordered alphabetically
      * @param searchString the string that the donor names will be searched against.
+     * @param profilesList the list of profiles that the search string is searching through.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList, String searchString) {
@@ -356,19 +357,23 @@ public class ProfileDatabase {
     /**
      * Fuzzy search that finds the top 30 donors that match the provided search string.
      * @param searchString the string that the donor names will be searched against.
+     * @param ageSearchInt integer of the age to be searched.
+     * @param ageRangeSearchInt integer of the age range to be searched.
+     * @param regionSearchString the region to be searched.
+     * @param selectedGender the selected gender to be searched.
+     * @param selectedType the selected type (donor or receiver) to be searched.
+     * @param selectedOrgans the selected organs to be searched.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt, String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
-        ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
-
 
         switch (selectedType) {
             case "any":
                 resultProfiles = getProfiles(false);
                 break;
             case "donor":
-                resultProfiles = getProfiles(false);
+                resultProfiles = getProfiles(true);
                 break;
             default:
                 resultProfiles = getReceivers(true);
@@ -380,7 +385,8 @@ public class ProfileDatabase {
 
         //parsing out organs as strings for later use
 
-        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()){
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType
+                .equals("") && selectedOrgans.isEmpty()){
             return resultProfiles;
         }
 
@@ -429,7 +435,7 @@ public class ProfileDatabase {
                     organsDonating.add(temp.getName());
                 }
 
-                if (organsDonating == null || organsDonating.size() == 0) {
+                if (organsDonating.isEmpty()) {
                     return true;
                 }
                 organsDonatingHash.retainAll(selectedOrgans);         //intersection
@@ -438,19 +444,19 @@ public class ProfileDatabase {
 
         }
 
-        if (!(selectedType == null)) {
+        if (!(selectedType.equals(""))) {
             resultProfiles.removeIf(profile -> {
-                if (selectedType.equals("donor")) {
-                    return !profile.isDonatingCertainOrgans(selectedOrgans);
-                } else if (selectedType.equals("receiver")){
-                    return !profile.isReceivingCertainOrgans(selectedOrgans);
-                } else {
-                    return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile.isDonatingCertainOrgans(selectedOrgans));
+                switch (selectedType) {
+                    case "donor":
+                        return !profile.isDonatingCertainOrgans(selectedOrgans);
+                    case "receiver":
+                        return !profile.isReceivingCertainOrgans(selectedOrgans);
+                    default:
+                        return !(profile.isReceivingCertainOrgans(selectedOrgans) || profile
+                                .isDonatingCertainOrgans(selectedOrgans));
                 }
             });
         }
-
-
         return resultProfiles;
     }
 

@@ -5,7 +5,7 @@
     <groupId>seng302</groupId>
     <artifactId>odms</artifactId>
     <packaging>jar</packaging>
-    <version>0.3</version>
+    <version>0.5</version>
     <name>Organ Donor Management System</name>
     <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
@@ -112,6 +112,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.sonarsource.sonarqube/sonar-plugin-api -->
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <version>7.2.1</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
         <dependency>
             <groupId>org.testfx</groupId>
@@ -126,6 +133,20 @@
             <artifactId>testfx-junit</artifactId>
             <version>4.0.13-alpha</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
         </dependency>
 
     </dependencies>
@@ -170,7 +191,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.0</version>
                 <configuration>
-                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
                     <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
                 </configuration>
                 <executions>
@@ -191,6 +211,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Optional URL to server. Default value is http://localhost:9000 -->
+                <sonar.host.url>
+                    http://csse-s302g2.canterbury.ac.nz:9000/
+                </sonar.host.url>
+            </properties>
+        </profile>
+    </profiles>
+
     <reporting>
         <plugins>
             <plugin>
