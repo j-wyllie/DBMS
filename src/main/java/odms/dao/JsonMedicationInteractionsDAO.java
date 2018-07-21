@@ -21,11 +21,20 @@ import odms.medications.Interaction;
 
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 
-    private Map<Integer, Interaction> interactionDb = new HashMap<>();
+    private Map<Integer, Interaction> interactionMap = new HashMap<>();
     private String defaultPath = "cache/medication_interactions.json";
     private String path;
     private static final String INTERACTION_URL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
     private static final String SERVER_ERROR = "1";
+
+    /**
+     * Get all interaction data stored in the cache.
+     * @return all interactions data.
+     */
+    @Override
+    public Map<Integer, Interaction> getAll() {
+        return interactionMap;
+    }
 
     /**
      * Get the interactions between two medications.
@@ -34,27 +43,30 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
-        for (Integer interactionKey : interactionDb.keySet()) {
+        for (Integer interactionKey : interactionMap.keySet()) {
 
-            Interaction value = interactionDb.get(interactionKey);
+            Interaction value = interactionMap.get(interactionKey);
             if (value.getDrugA().equalsIgnoreCase(drugA)
                     && value.getDrugB().equalsIgnoreCase(drugB)) {
 
                 if (value.getDateTimeExpired().isBefore(now())
                     || value.getDateTimeExpired().isEqual(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
-                    interactionDb.replace(interactionKey, value);
+                    interactionMap.replace(interactionKey, value);
                 }
                 return value;
             }
         }
         Interaction newInteraction = add(drugA, drugB);
         if (!(newInteraction == null)) {
-            interactionDb.put(interactionDb.size(), newInteraction);
+            interactionMap.put(interactionMap.size(), newInteraction);
         }
         return newInteraction;
     }
 
+    /**
+     * Loads the JSON interactions data the set location.
+     */
     @Override
     public void load() {
         Gson gson = new Gson();
@@ -66,13 +78,16 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
 
-            this.interactionDb = gson.fromJson(reader, Map.class);
+            this.interactionMap = gson.fromJson(reader, Map.class);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Saves the JSON interactions data to the set location.
+     */
     @Override
     public void save() {
         File file = new File(this.defaultPath);
@@ -84,7 +99,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
 
-            writeFile.write(gson.toJson(interactionDb));
+            writeFile.write(gson.toJson(interactionMap));
 
             writeFile.close();
 
@@ -141,7 +156,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      * @param drugA is an interacting medication.
      * @param drugB is the other interacting medication.
      * @return the response from the server.
-     * @throws IOException
+     * @throws IOException error.
      */
     private StringBuffer getResponse(String drugA, String drugB) throws IOException {
         drugA = MedicationDataIO.replaceSpace(drugA, true);
@@ -205,11 +220,11 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     }
 
     /**
-     * Clear all cached medication interactions.
+     * Clear all cached medication interaction data.
      */
     @Override
     public void clear() {
-        this.interactionDb.clear();
+        this.interactionMap.clear();
     }
 
     /**

@@ -1,10 +1,16 @@
 package odms.dao;
 
 import java.io.IOException;
+import java.util.Map;
 import odms.medications.Interaction;
 
 public interface MedicationInteractionsDAO {
 
+    /**
+     * Get all interaction data stored in the cache.
+     * @return all interactions data.
+     */
+    Map<Integer, Interaction> getAll();
     /**
      * Get the interactions between two medications.
      * @param drugA is a interacting medication.
@@ -13,12 +19,18 @@ public interface MedicationInteractionsDAO {
      */
     Interaction get(String drugA, String drugB) throws IOException;
 
+    /**
+     * Loads the JSON interactions data the set location.
+     */
     void load();
 
+    /**
+     * Saves the JSON interactions data to the set location.
+     */
     void save();
 
     /**
-     * Clear all cached medication interactions.
+     * Clear all cached medication interaction data.
      */
     void clear();
 
