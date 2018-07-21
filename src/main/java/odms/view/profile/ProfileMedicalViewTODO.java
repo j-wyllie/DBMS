@@ -50,7 +50,7 @@ public class ProfileMedicalViewTODO extends CommonView {
 
     //todo do we need this function?????
     public void initialize() {
-        if (currentProfile != null) {
+        if (currentProfile.get() != null) {
             setUpDetails();
         }
     }

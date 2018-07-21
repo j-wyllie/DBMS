@@ -9,7 +9,7 @@ import odms.controller.profile.ProfileGeneralTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-public class ProfileGeneralViewTODOReplacesDisplayController  extends CommonView {
+public class ProfileGeneralView extends CommonView {
 
     @FXML
     private Label phoneLabel;
@@ -46,64 +46,57 @@ public class ProfileGeneralViewTODOReplacesDisplayController  extends CommonView
     // init controller corresponding to this view
     private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
 
-    private void setUpDetails() {
+    public void setUpDetails() {
         if (currentProfile.get().getGivenNames() != null) {
-            givenNamesLabel.setText(givenNamesLabel.getText() + currentProfile.get().getGivenNames());
+            givenNamesLabel.setText(currentProfile.get().getGivenNames());
         }
         if (currentProfile.get().getPreferredName() != null) {
             labelPreferredName
-                    .setText(labelPreferredName.getText() + currentProfile.get().getPreferredName());
+                    .setText(currentProfile.get().getPreferredName());
         }
         if (currentProfile.get().getLastNames() != null) {
-            lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.get().getLastNames());
+            lastNamesLabel.setText(currentProfile.get().getLastNames());
         }
         if (currentProfile.get().getIrdNumber() != null) {
-            irdLabel.setText(irdLabel.getText() + currentProfile.get().getIrdNumber());
+            irdLabel.setText(currentProfile.get().getIrdNumber().toString());
         }
         if (currentProfile.get().getDateOfBirth() != null) {
-            dobLabel.setText(dobLabel.getText() + currentProfile.get().getDateOfBirth()
+            dobLabel.setText(currentProfile.get().getDateOfBirth()
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
         if (currentProfile.get().getDateOfDeath() != null) {
-            dodLabel.setText(dodLabel.getText() + currentProfile.get().getDateOfDeath()
+            dodLabel.setText(currentProfile.get().getDateOfDeath()
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
         if (currentProfile.get().getGender() != null) {
-            genderLabel.setText(genderLabel.getText() + currentProfile.get().getGender());
+            genderLabel.setText(currentProfile.get().getGender());
         }
         if (currentProfile.get().getPreferredGender() != null) {
-            labelGenderPreferred.setText(
-                    labelGenderPreferred.getText() + currentProfile.get().getPreferredGender());
+            labelGenderPreferred.setText(currentProfile.get().getPreferredGender());
         }
         if (currentProfile.get().getHeight() != 0.0) {
-            heightLabel.setText(heightLabel.getText() + currentProfile.get().getHeight() + "cm");
+            heightLabel.setText(currentProfile.get().getHeight() + "cm");
         }
         if (currentProfile.get().getWeight() != 0.0) {
-            weightLabel.setText(weightLabel.getText() + currentProfile.get().getWeight() + "kg");
+            weightLabel.setText(currentProfile.get().getWeight() + "kg");
         }
         if (currentProfile.get().getPhone() != null) {
-            phoneLabel.setText(phoneLabel.getText() + currentProfile.get().getPhone());
+            phoneLabel.setText(currentProfile.get().getPhone());
         }
         if (currentProfile.get().getEmail() != null) {
-            emailLabel.setText(emailLabel.getText() + currentProfile.get().getEmail());
+            emailLabel.setText(currentProfile.get().getEmail());
         }
         if (currentProfile.get().getAddress() != null) {
-            addressLabel.setText(addressLabel.getText() + currentProfile.get().getAddress());
+            addressLabel.setText(currentProfile.get().getAddress());
         }
         if (currentProfile.get().getRegion() != null) {
-            regionLabel.setText(regionLabel.getText() + currentProfile.get().getRegion());
+            regionLabel.setText(currentProfile.get().getRegion());
         }
         if (currentProfile.get().getDateOfBirth() != null) {
-            ageLabel.setText(
-                    ageLabel.getText() + Integer.toString(currentProfile.get().getAge()));
+            ageLabel.setText(Integer.toString(currentProfile.get().getAge()));
         }
     }
 
-    //todo do we need this function?????
-    public void initialize(Profile p) {
-        currentProfile.set(p);
-        if (currentProfile != null) {
-            setUpDetails();
-        }
+    public void initialize() {
     }
 }

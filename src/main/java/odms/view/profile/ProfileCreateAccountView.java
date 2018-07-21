@@ -36,7 +36,7 @@ public class ProfileCreateAccountView extends CommonView {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileDisplay.fxml"));
-        ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
+        ProfileDisplayControllerTODO v = fxmlLoader.getController();
         v.initialize(controller.createAccount());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }

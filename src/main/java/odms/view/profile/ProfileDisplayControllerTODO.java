@@ -3,28 +3,13 @@ package odms.view.profile;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import odms.controller.CommonController;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
-import odms.controller.profile.ProfileEditController;
-import odms.controller.profile.ProfileMedicationsController;
-import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 import static odms.controller.AlertController.invalidUsername;
 
@@ -45,35 +30,21 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private Button logoutButton;
     @FXML
-    private Button buttonViewMedicationHistory;
-    @FXML
-    private Button addNewProcedureButton;
-    @FXML
-    private Button deleteProcedureButton;
-    @FXML
     private Label receiverStatusLabel;
 
     protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
     private Boolean isOpenedByClinician = false;
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
-    @FXML
-    private AnchorPane profileOrganOverview;
-    @FXML
-    private ProfileOrgansView profileOrgansView;
 
-    @FXML
-    private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
-    @FXML
-    private ProfileMedicalViewTODO profileMedicalViewTODO;
-    @FXML
-    private ProfileHistoryViewTODO profileHistoryViewTODO;
-    @FXML
-    private ProfileMedicationsView profileMedicationsView;
-    @FXML
-    private ProfileMedicalHistoryView profileMedicalHistoryView;
-    @FXML
-    private ProfileProceduresView profileProceduresView;
+    private ProfileGeneralView profileGeneralView
+             = new ProfileGeneralView();
+    private ProfileOrgansView profileOrgansView = new ProfileOrgansView();
+    private ProfileMedicalViewTODO profileMedicalViewTODO = new ProfileMedicalViewTODO();
+    private ProfileHistoryViewTODO profileHistoryViewTODO = new ProfileHistoryViewTODO();
+    private ProfileMedicationsView profileMedicationsView = new ProfileMedicationsView();
+    private ProfileMedicalHistoryView profileMedicalHistoryView = new ProfileMedicalHistoryView();
+    private ProfileProceduresView profileProceduresView = new ProfileProceduresView();
 
 
     /**
@@ -138,34 +109,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
     }
 
 
-    /**
-     * Enables the relevant buttons on medications tab for how many drugs are selected
-     */
-    @FXML
-    private void refreshPageElements() {
-        hideItems();
-    }
-
-
-    /**
-     * hides items that shouldn't be visible to either a donor or clinician
-     */
-    @FXML
-    private void hideItems() {
-        if (isOpenedByClinician) {
-            //user is a clinician looking at donors profile, maximise functionality
-            addNewProcedureButton.setVisible(true);
-            deleteProcedureButton.setVisible(true);
-            buttonViewMedicationHistory.setVisible(true);
-
-            logoutButton.setVisible(false);
-        } else {
-            // user is a standard profile, limit functionality
-            addNewProcedureButton.setVisible(false);
-            deleteProcedureButton.setVisible(false);
-            buttonViewMedicationHistory.setVisible(false);
-        }
-    }
 
     public Profile getCurrentProfile() {
         return currentProfile;
@@ -173,13 +116,18 @@ public class ProfileDisplayControllerTODO extends CommonController {
 
     @FXML
     private void onTabOrgansSelected() {
+        profileOrgansView = new ProfileOrgansView();
         profileOrgansView.currentProfile.bind(currentProfileBound);
         profileOrgansView.populateOrganLists();
     }
 
     @FXML
     public void onTabGeneralSelected() {
-        profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
+        if (currentProfileBound.get() != null) {
+            profileGeneralView.currentProfile
+                    .bind(currentProfileBound);
+            profileGeneralView.setUpDetails();
+        }
     }
 
     @FXML
@@ -212,15 +160,11 @@ public class ProfileDisplayControllerTODO extends CommonController {
      * Sets the current donor attributes to the labels on start up.
      */
     @FXML
-    public void initialize() {
-
+    public void initialize(Profile profile) {
         if (currentProfile != null) {
-            currentProfileBound.set(currentProfile);
-            setPage(currentProfile);
+            currentProfileBound.set(profile);
+            setPage(profile);
         }
-
-        refreshPageElements();
-
     }
 
 
@@ -243,6 +187,4 @@ public class ProfileDisplayControllerTODO extends CommonController {
     public void setProfile(Profile profile) {
         currentProfile = profile;
     }
-
-
 }

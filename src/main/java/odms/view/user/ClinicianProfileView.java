@@ -541,7 +541,7 @@ public class ClinicianProfileView extends CommonView {
             //todo replace with standardised method and view
             ProfileDisplayControllerTODO controller = fxmlLoader.getController();
             controller.setProfileViaClinician(selectedDonor);
-            controller.initialize();
+            controller.initialize(selectedDonor);
 
             Stage stage = new Stage();
             stage.setTitle(selectedDonor.getFullName() + "'s profile");

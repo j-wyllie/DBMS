@@ -125,12 +125,7 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(
-                getClass().getResource("/view/ProfileDisplay.fxml"));
-        ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
-        v.initialize(controller.close());
-        changeScene(event, "/view/ProfileDisplay.fxml");
+        closeWindow(event);
     }
 
     /**
@@ -140,14 +135,17 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        if (profileCancelChanges()) {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(
-                    getClass().getResource("/view/ProfileDisplay.fxml"));
-            ProfileGeneralViewTODOReplacesDisplayController v = fxmlLoader.getController();
-            v.initialize(controller.close());
-            changeScene(event, "/view/ProfileDisplay.fxml");
-        }
+        if (profileCancelChanges())
+            closeWindow(event);
+    }
+
+    private void closeWindow(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(
+                getClass().getResource("/view/ProfileDisplay.fxml"));
+        ProfileDisplayControllerTODO v = fxmlLoader.getController();
+        v.initialize(controller.close());
+        changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
     /**
