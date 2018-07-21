@@ -29,7 +29,6 @@ public class ViewUsersController {
      */
     public ViewUsersController(ViewUsersView v) {
         view = v;
-        setUpUsersTable();
     }
 
     /**

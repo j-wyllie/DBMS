@@ -616,8 +616,8 @@ public class ClinicianProfileView extends CommonView {
      * Initializes the controller for the view users Tab
      */
     public void handleViewUsersTabClicked() {
+        viewUsersView = new ViewUsersView();
         viewUsersView.setCurrentUser(currentUser);
-        viewUsersView.setUpUsersTable();
     }
 
     /**

@@ -60,6 +60,11 @@ public class ViewUsersView extends CommonView {
         controller.setUpUsersTable();
     }
 
+    @FXML
+    public void initialize() {
+        setUpUsersTable();
+    }
+
     public void setCurrentUser(User user) {
         //todo currentUser isn't used but the method is called in ClinicianProfileView so it might have a purpose
         currentUser = user;
