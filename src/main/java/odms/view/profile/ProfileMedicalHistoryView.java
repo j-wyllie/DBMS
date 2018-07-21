@@ -443,7 +443,7 @@ private void makeTable(ArrayList<Condition> curConditions,
     }
 
         public Profile getCurrentProfile() {
-        return currentProfile.getValue();
+        return currentProfile.get();
         }
 
     /**
