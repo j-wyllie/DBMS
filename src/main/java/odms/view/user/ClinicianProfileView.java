@@ -1,9 +1,12 @@
 package odms.view.user;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -95,8 +98,6 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     private TableView transplantTable;
     @FXML
-    private TextArea displayTextArea;
-    @FXML
     private Tab dataManagementTab;
     @FXML
     private AnchorPane dataManagement;
@@ -122,6 +123,10 @@ public class ClinicianProfileView extends CommonView {
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+
+    protected ObjectProperty<User> currentUserBound = new SimpleObjectProperty<>();
+    private UserConsoleTabView userConsoleTabView = new UserConsoleTabView();
+
 
     /**
      * Checks if there are unsaved changes in any open window.
@@ -613,14 +618,6 @@ public class ClinicianProfileView extends CommonView {
     }
 
     /**
-     * Initializes the controller for the view users Tab
-     */
-    public void handleViewUsersTabClicked() {
-        viewUsersView = new ViewUsersView();
-        viewUsersView.setCurrentUser(currentUser);
-    }
-
-    /**
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
@@ -650,24 +647,15 @@ public class ClinicianProfileView extends CommonView {
             dataManagementTab.setDisable(false);
             viewUsersTab.setDisable(false);
             consoleTab.setDisable(false);
-
-            // Initialize command line GUI
-            commandGUI = new CommandGUI(displayTextArea);
-            System.setIn(commandGUI.getIn());
-            System.setOut(commandGUI.getOut());
-
-            // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(),
-                    commandGUI.getOut());
-            commandGUI.initHistory(commandLine);
-            Thread t = new Thread(commandLine);
-            t.start();
         }
     }
 
     @FXML
     public void initialize() {
         if (currentUser != null) {
+
+            currentUserBound.setValue(currentUser);
+
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -728,4 +716,15 @@ public class ClinicianProfileView extends CommonView {
         openProfileStages.remove(stage);
     }
 
+    public void handleConsoleTabClicked(Event event) {
+        userConsoleTabView.currentProfile.bind(currentUserBound);
+    }
+
+    /**
+     * Initializes the controller for the view users Tab
+     */
+    public void handleViewUsersTabClicked() {
+        viewUsersView = new ViewUsersView();
+        viewUsersView.setCurrentUser(currentUser);
+    }
 }

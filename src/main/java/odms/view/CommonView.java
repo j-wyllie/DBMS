@@ -1,6 +1,8 @@
 package odms.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,14 +13,19 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
+import odms.model.profile.Profile;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
     private static boolean isEdited = false;
+
+
     /**
      * Scene change to log in view.
      *
@@ -201,5 +208,6 @@ public class CommonView {
                 .owner(currentStage)
                 .show();
     }
+
 
 }

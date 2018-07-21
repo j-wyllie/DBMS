@@ -126,13 +126,13 @@ public class ProfileDisplayControllerTODO extends CommonController {
         if (currentProfileBound.get() != null) {
             profileGeneralView.currentProfile
                     .bind(currentProfileBound);
-            profileGeneralView.setUpDetails();
         }
     }
 
     @FXML
     public void onTabMedicalSelected() {
         profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
+        profileMedicalViewTODO.initialize();
     }
 
     @FXML
