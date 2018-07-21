@@ -94,8 +94,6 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     private Tab consoleTab;
     @FXML
-    private ViewUsersView viewUsersView;
-    @FXML
     private TableView transplantTable;
     @FXML
     private Tab dataManagementTab;
@@ -126,6 +124,7 @@ public class ClinicianProfileView extends CommonView {
 
     protected ObjectProperty<User> currentUserBound = new SimpleObjectProperty<>();
     private UserConsoleTabView userConsoleTabView = new UserConsoleTabView();
+    private ViewUsersView viewUsersView = new ViewUsersView();
 
 
     /**
@@ -724,7 +723,6 @@ public class ClinicianProfileView extends CommonView {
      * Initializes the controller for the view users Tab
      */
     public void handleViewUsersTabClicked() {
-        viewUsersView = new ViewUsersView();
         viewUsersView.setCurrentUser(currentUser);
     }
 }
