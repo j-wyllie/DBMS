@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,7 +36,7 @@ import odms.view.CommonView;
 
 public class ProfileMedicalHistoryView extends CommonView {
 
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    private Profile currentProfile;
     private ProfileConditionController controller = new ProfileConditionController(this);
     private Boolean isOpenedByClinician;
 
@@ -424,7 +422,7 @@ private void makeTable(ArrayList<Condition> curConditions,
     }
 
     // TODO: do we need this?? why are there 2 initalisation function?
-    private void init(ObjectProperty<Profile> profile, Boolean c) {
+    private void init(Profile profile, Boolean c) {
 
         makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
         refreshConditionTable();
@@ -443,7 +441,7 @@ private void makeTable(ArrayList<Condition> curConditions,
     }
 
         public Profile getCurrentProfile() {
-        return currentProfile.get();
+        return currentProfile;
         }
 
     /**
@@ -507,7 +505,8 @@ private void makeTable(ArrayList<Condition> curConditions,
         }
     }
 
-    public void initialize() {
+    public void initialize(Profile p) {
+        currentProfile = p;
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 

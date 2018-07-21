@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import odms.controller.CommonController;
@@ -15,12 +16,12 @@ import static odms.controller.AlertController.invalidUsername;
 
 public class ProfileDisplayControllerTODO extends CommonController {
 
-    public Profile currentProfile;
+    private Profile currentProfile;
     /**
      * Text for showing recent edits.
      */
     @FXML
-    public Text editedText;
+    private Text editedText;
     @FXML
     private Label donorFullNameLabel;
     @FXML
@@ -31,14 +32,27 @@ public class ProfileDisplayControllerTODO extends CommonController {
     private Button logoutButton;
     @FXML
     private Label receiverStatusLabel;
+    @FXML
+    private Tab tabGeneral;
+    @FXML
+    private Tab tabMedical;
+    @FXML
+    private Tab tabMedicalHistory;
+    @FXML
+    private Tab tabMedications;
+    @FXML
+    private Tab tabOrgans;
+    @FXML
+    private Tab tabHistory;
+    @FXML
+    private Tab tabProcedures;
 
-    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
+    private ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
     private Boolean isOpenedByClinician = false;
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
 
-    private ProfileGeneralView profileGeneralView
-             = new ProfileGeneralView();
+    private ProfileGeneralView profileGeneralView = new ProfileGeneralView();
     private ProfileOrgansView profileOrgansView = new ProfileOrgansView();
     private ProfileMedicalViewTODO profileMedicalViewTODO = new ProfileMedicalViewTODO();
     private ProfileHistoryViewTODO profileHistoryViewTODO = new ProfileHistoryViewTODO();
@@ -108,51 +122,96 @@ public class ProfileDisplayControllerTODO extends CommonController {
         }
     }
 
-
-
     public Profile getCurrentProfile() {
         return currentProfile;
     }
 
     @FXML
-    private void onTabOrgansSelected() {
-        profileOrgansView = new ProfileOrgansView();
-        profileOrgansView.currentProfile.bind(currentProfileBound);
-        profileOrgansView.populateOrganLists();
+    public void onTabGeneralSelected() {
+        if (currentProfileBound.get() != null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileGeneralTab.fxml"));
+            loader.setController(profileGeneralView);
+            try {
+                tabGeneral.setContent(loader.load());
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+            profileGeneralView.initialize(currentProfile);
+        }
+
     }
 
     @FXML
-    public void onTabGeneralSelected() {
-        if (currentProfileBound.get() != null) {
-            profileGeneralView.currentProfile
-                    .bind(currentProfileBound);
+    private void onTabOrgansSelected() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
+        loader.setController(profileOrgansView);
+        try {
+            tabOrgans.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
         }
+        profileOrgansView.initialize(currentProfile);
     }
 
     @FXML
     public void onTabMedicalSelected() {
-        profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
-        profileMedicalViewTODO.initialize();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalTab.fxml"));
+        loader.setController(profileMedicalViewTODO);
+        try {
+            tabMedical.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicalViewTODO.initialize(currentProfile);
     }
 
     @FXML
     public void onTabHistorySelected() {
-        profileHistoryViewTODO.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileHistoryTab.fxml"));
+        loader.setController(profileHistoryViewTODO);
+        try {
+            tabHistory.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileHistoryViewTODO.initialize(currentProfile);
+
     }
 
     @FXML
     public void onTabMedicationsSelected() {
-        profileMedicationsView.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicationsTab.fxml"));
+        loader.setController(profileMedicationsView);
+        try {
+            tabMedications.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicationsView.initialize(currentProfile, isOpenedByClinician);
     }
 
     @FXML
     public void onTabMedicalHistorySelected() {
-        profileMedicalHistoryView.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
+        loader.setController(profileMedicalHistoryView);
+        try {
+            tabMedicalHistory.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicalHistoryView.initialize(currentProfile);
     }
 
     @FXML
     public void onTabProceduresSelected() {
-        profileProceduresView.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileProceduresTab.fxml"));
+        loader.setController(profileProceduresView);
+        try {
+            tabProcedures.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileProceduresView.initialize(currentProfile);
     }
 
 
@@ -164,6 +223,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
         if (currentProfile != null) {
             currentProfileBound.set(profile);
             setPage(profile);
+            onTabGeneralSelected();
         }
     }
 

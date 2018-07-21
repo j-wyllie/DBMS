@@ -1,7 +1,5 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,8 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class ProfileOrgansView extends CommonView {
-    //private Profile currentProfile;
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    private Profile currentProfile;
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
@@ -45,13 +42,14 @@ public class ProfileOrgansView extends CommonView {
     private static OrganSelectEnum windowType;
 
     public void initialize(Profile p) {
-        //currentProfile = p;
+        currentProfile = p;
         listViewDonating.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+        populateOrganLists();
     }
 
     @FXML
@@ -75,10 +73,10 @@ public class ProfileOrgansView extends CommonView {
      * <p>
      * Populates the checklist with donating organs for highlighting.
      */
-    public void populateOrganLists() {
-        populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
+    private void populateOrganLists() {
+        populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
+        populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
+        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
 
@@ -173,7 +171,7 @@ public class ProfileOrgansView extends CommonView {
      * @param destinationList list to populate
      * @param organs          source list of organs to populate from
      */
-    protected void populateOrganList(ObservableList<String> destinationList,
+    private void populateOrganList(ObservableList<String> destinationList,
             Set<OrganEnum> organs) {
         destinationList.clear();
 

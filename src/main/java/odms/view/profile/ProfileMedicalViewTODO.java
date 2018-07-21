@@ -1,10 +1,7 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import odms.controller.profile.ProfileHistoryTabController;
 import odms.controller.profile.ProfileMedicalTabController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
@@ -22,35 +19,35 @@ public class ProfileMedicalViewTODO extends CommonView {
     @FXML
     private Label bmiLabel;
 
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    private Profile currentProfile;
     // init controller corresponding to this view
     private ProfileMedicalTabController controller = new ProfileMedicalTabController(this);
 
     private void setUpDetails() {
-        if (currentProfile.get().getAlcoholConsumption() != null) {
+        if (currentProfile.getAlcoholConsumption() != null) {
             alcoholConsumptionLabel.setText(
                     alcoholConsumptionLabel.getText() +
-                            currentProfile.get().getAlcoholConsumption()
+                            currentProfile.getAlcoholConsumption()
             );
         }
-        if (currentProfile.get().getBloodPressure() != null) {
+        if (currentProfile.getBloodPressure() != null) {
             bloodPressureLabel
-                    .setText(bloodPressureLabel.getText() + currentProfile.get().getBloodPressure());
+                    .setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
         }
-        if (currentProfile.get().getBloodType() != null) {
-            bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.get().getBloodType());
+        if (currentProfile.getBloodType() != null) {
+            bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
         }
-        if (currentProfile.get().getHeight() != 0.0 && currentProfile.get().getWeight() != 0.0) {
-            bmiLabel.setText(bmiLabel.getText() + currentProfile.get().getBMI());
+        if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
+            bmiLabel.setText(bmiLabel.getText() + currentProfile.getBMI());
         }
-        if (currentProfile.get().getIsSmoker() != null) {
-            smokerLabel.setText(smokerLabel.getText() + currentProfile.get().getIsSmoker());
+        if (currentProfile.getIsSmoker() != null) {
+            smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
         }
     }
 
-    //todo do we need this function?????
-    public void initialize() {
-        if (currentProfile.get() != null) {
+    public void initialize(Profile p) {
+        currentProfile = p;
+        if (currentProfile != null) {
             setUpDetails();
         }
     }
