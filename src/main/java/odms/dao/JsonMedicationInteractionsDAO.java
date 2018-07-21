@@ -34,18 +34,25 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
-        for (Interaction interaction : interactionDb.values()) {
-            if (interaction.getDrugA().equalsIgnoreCase(drugA)
-                    && interaction.getDrugB().equalsIgnoreCase(drugB)) {
+        for (Integer interactionKey : interactionDb.keySet()) {
 
-                if (interaction.getDateTimeExpired().isBefore(now())
-                    || interaction.getDateTimeExpired().isEqual(now())) {
-                    interaction = add(interaction.getDrugA(), interaction.getDrugB());
+            Interaction value = interactionDb.get(interactionKey);
+            if (value.getDrugA().equalsIgnoreCase(drugA)
+                    && value.getDrugB().equalsIgnoreCase(drugB)) {
+
+                if (value.getDateTimeExpired().isBefore(now())
+                    || value.getDateTimeExpired().isEqual(now())) {
+                    value = add(value.getDrugA(), value.getDrugB());
+                    interactionDb.replace(interactionKey, value);
                 }
-                return interaction;
+                return value;
             }
         }
-        return add(drugA, drugB);
+        Interaction newInteraction = add(drugA, drugB);
+        if (!(newInteraction == null)) {
+            interactionDb.put(interactionDb.size(), newInteraction);
+        }
+        return newInteraction;
     }
 
     @Override
@@ -132,7 +139,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     /**
      * Makes a request to the server to get the interactions between the medications.
      * @param drugA is an interacting medication.
-     * @param drugB is the othe interacting medication.
+     * @param drugB is the other interacting medication.
      * @return the response from the server.
      * @throws IOException
      */

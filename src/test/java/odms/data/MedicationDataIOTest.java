@@ -19,6 +19,7 @@ import org.junit.Test;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MedicationDataIO.class)
+
 public class MedicationDataIOTest {
 
     private String substring1;
