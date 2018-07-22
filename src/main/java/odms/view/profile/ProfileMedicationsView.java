@@ -260,9 +260,9 @@ public class ProfileMedicationsView extends CommonView {
         fxmlLoader.setLocation(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        MedicationHistoryTODO controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile);
-        controller.initialize();
+        ProfileMedicationHistoryView view = fxmlLoader.getController();
+        view.setProfile(currentProfile);
+        view.initialize();
         Stage stage = new Stage();
         stage.setTitle("medication history");
         stage.setScene(scene);

@@ -78,4 +78,23 @@ public class ProfileCreateAccountView extends CommonView {
         return irdNumberField.getText();
     }
 
+    public void setGivenNamesFieldValue(String s) {
+        givenNamesField.setText(s);
+    }
+
+    public void setsurnamesFieldValue(String s) {
+        surnamesField.setText(s);
+    }
+
+    public void setirdNumberFieldValue(String s) {
+        irdNumberField.setText(s);
+    }
+
+    public void setdobDatePickerValue(LocalDate l) {
+        dobDatePicker.setValue(l);
+    }
+
+    public ProfileCreateController getController() {
+        return controller;
+    }
 }

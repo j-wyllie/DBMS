@@ -15,7 +15,6 @@ import odms.view.profile.ProfileOrganEditView;
 
 public class ProfileOrganEditController extends CommonController {
     ProfileOrganEditView view;
-    OrganSelectEnum windowType;
 
     public ProfileOrganEditController(ProfileOrganEditView view) {
         this.view = view;
@@ -250,11 +249,5 @@ public class ProfileOrganEditController extends CommonController {
         }
     }
 
-    public void setWindowType(OrganSelectEnum windowType) {
-        this.windowType = windowType;
-    }
 
-    public OrganSelectEnum getWindowType() {
-        return windowType;
-    }
 }

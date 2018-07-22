@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.profile.ProfileOrganEditController;
 import odms.model.enums.OrganEnum;
+import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -46,6 +47,8 @@ public class ProfileOrganEditView extends CommonView {
     @FXML
     private Label lblSelected;
 
+    private OrganSelectEnum windowType;
+
     /**
      * Convert an HashSet of Organ Strings to a HashSet of OrganEnum.
      *
@@ -62,9 +65,16 @@ public class ProfileOrganEditView extends CommonView {
         return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
+
+    public void setWindowType(OrganSelectEnum windowType) {
+        this.windowType = windowType;
+    }
+    public OrganSelectEnum getWindowType() {
+        return windowType;
+    }
     public void initialize(Profile p) {
         currentProfile = p;
-        lblBanner.setText(controller.getWindowType().toString());
+        lblBanner.setText(getWindowType().toString());
 
         if (currentProfile != null) {
             // Order of execution for building these is required due to removing items from the
@@ -114,7 +124,7 @@ public class ProfileOrganEditView extends CommonView {
     private void buildOrgansSelected() {
         Set<OrganEnum> organs = new HashSet<>();
 
-        switch (controller.getWindowType()) {
+        switch (getWindowType()) {
             case DONATED:
                 lblSelected.setText("Donated");
                 organs = currentProfile.getOrgansDonated();
@@ -177,7 +187,7 @@ public class ProfileOrganEditView extends CommonView {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
-        switch (controller.getWindowType()) {
+        switch (getWindowType()) {
             case DONATED:
                 controller.caseDonated();
                 break;

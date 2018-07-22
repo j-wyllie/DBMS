@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
+import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
