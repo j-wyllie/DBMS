@@ -1,34 +1,24 @@
 package odms.view.user;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import odms.cli.commands.User;
 import odms.controller.GuiMain;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.model.user.User;
+import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
-import org.controlsfx.control.table.TableFilter;
 
-import java.io.IOException;
 import java.util.*;
 
-public class UserSearchView {
+public class UserSearchView extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;
@@ -36,17 +26,9 @@ public class UserSearchView {
     private static final int MAXPAGESIZE = 200;
     private odms.model.user.User currentUser;
 
-    private static Collection<Stage> openProfileStages = new ArrayList<>();
-
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
-
-    @FXML
-    private TableView transplantTable;
-
-
-
 
     @FXML
     private TextField ageField;
@@ -75,11 +57,7 @@ public class UserSearchView {
     @FXML
     private TableColumn<Profile, String> regionColumn;
     @FXML
-    private TextField transplantSearchField;
-    @FXML
     private CheckBox ageRangeCheckbox;
-    @FXML
-    private AnchorPane dataManagement;
     @FXML
     private Label labelResultCount;
     @FXML
@@ -90,113 +68,12 @@ public class UserSearchView {
     private Button buttonShowAll;
     @FXML
     private Button buttonShowNext;
+
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
     private Profile selectedDonor;
 
-    protected ObjectProperty<odms.model.user.User> currentUserBound = new SimpleObjectProperty<>();
-
-    private ObservableList<Map.Entry<Profile, OrganEnum>> receiverObservableList;
-
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
-    /**
-     * Initializes and refreshes the search table Adds a listener to each row so that when it is
-     * double clicked a new donor window is opened. Calls the setTooltipToRow function.
-     */
-    @FXML
-    private void makeTransplantWaitingList(List<Map.Entry<Profile, OrganEnum>> receivers) {
-        transplantTable.getColumns().clear();
-
-        receiverObservableList = FXCollections.observableList(receivers);
-        //transplantTable.setItems(receiverObservableList);
-        //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
-        //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
-        //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
-        //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
-                "Organs Required");
-        //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
-        transplantOrganRequiredCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol = new TableColumn<>(
-                "Name");
-        transplantReceiverNameCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getFullName()));
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantRegionCol = new TableColumn<>(
-                "Region");
-        transplantRegionCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol = new TableColumn<>(
-                "Date");
-        transplantDateCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
-
-        transplantTable.getColumns().add(transplantOrganRequiredCol);
-        transplantTable.getColumns().add(transplantReceiverNameCol);
-        transplantTable.getColumns().add(transplantRegionCol);
-        transplantTable.getColumns().add(transplantDateCol);
-        transplantTable.setItems(receiverObservableList);
-
-        transplantTable.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() &&
-                    event.getClickCount() == 2 &&
-                    transplantTable.getSelectionModel().getSelectedItem() != null) {
-
-                createNewDonorWindow(
-                        ((Map.Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
-                                .getSelectedItem()).getKey());
-            }
-        });
-
-        addTooltipToRow();
-    }
-    /**
-     * Refresh the search and transplant medication tables with the most up to date data
-     */
-    @FXML
-    private void refreshTable() {
-        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
-        try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Creates a new window when a row in the search table is double clicked. The new window
-     * contains a donors profile.
-     *
-     * @param donor The donor object that has been clicked on
-     */
-    @FXML
-    private void createNewDonorWindow(Profile donor) {
-        selectedDonor = donor;
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
-
-            Scene scene = new Scene(fxmlLoader.load());
-            //todo replace with standardised method and view
-            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
-            controller.setProfileViaClinician(selectedDonor);
-            controller.initialize(selectedDonor);
-
-            Stage stage = new Stage();
-            stage.setTitle(selectedDonor.getFullName() + "'s profile");
-            stage.setScene(scene);
-            stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> {
-                closeStage(stage);
-            });
-            openProfileStages.add(stage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private ClinicianProfileView parentView;
 
     /**
      * Initializes and refreshes the search table Adds a listener to each row so that when it is
@@ -220,7 +97,7 @@ public class UserSearchView {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem());
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
             }
         });
 
@@ -455,10 +332,6 @@ public class UserSearchView {
         }
     }
 
-
-    private void closeStage(Stage stage) {
-        openProfileStages.remove(stage);
-    }
     public void setCurrentUser(odms.model.user.User currentUser) {
         this.currentUser = currentUser;
     }
@@ -492,9 +365,9 @@ public class UserSearchView {
     }
 
     @FXML
-    public void initialize(odms.model.user.User currentUser) {
+    public void initialize(User currentUser, ClinicianProfileView parentView) {
+        this.parentView = parentView;
         if (currentUser != null) {
-            currentUserBound.setValue(currentUser);
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -528,18 +401,11 @@ public class UserSearchView {
                     updateSearchTable();
                 }
             });
-
-            TableFilter filter = new TableFilter<>(transplantTable);
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             searchTable.getItems().clear();
             searchTable.setPlaceholder(new Label(
                     "There are " + GuiMain.getCurrentDatabase().getProfiles(false).size()
                             + " profiles"));
-            try {
-                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

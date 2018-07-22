@@ -20,6 +20,7 @@ import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.view.user.ClinicianProfileView;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
@@ -119,7 +120,7 @@ public class CommonView {
         return isEdited;
     }
 
-    public void setEdited(Boolean edited) {
+    private void setEdited(Boolean edited) {
         isEdited = edited;
     }
 
@@ -193,7 +194,7 @@ public class CommonView {
      * @param editedField String of which is the thing edited.
      */
     @FXML
-    public void showNotification(String editedField, ActionEvent event) throws IOException {
+    protected void showNotification(String editedField, ActionEvent event) throws IOException {
         //todo modify this method by making it common view possibly
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
@@ -209,5 +210,35 @@ public class CommonView {
                 .show();
     }
 
+    /**
+     * Creates a new window when a row in the search table is double clicked. The new window
+     * contains a donors profile.
+     *
+     * @param donor The donor object that has been clicked on
+     * @param parentView The parent view of the stage being created
+     */
+    @FXML
+    protected void createNewDonorWindow(Profile donor, ClinicianProfileView parentView) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
+            Scene scene = new Scene(fxmlLoader.load());
+            //todo replace with standardised method and view
+            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
+            controller.setProfileViaClinician(donor);
+            controller.initialize(donor);
+
+            Stage stage = new Stage();
+            stage.setTitle(donor.getFullName() + "'s profile");
+            stage.setScene(scene);
+            stage.show();
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                parentView.closeStage(stage);
+            });
+            parentView.addToOpenProfileStages(stage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

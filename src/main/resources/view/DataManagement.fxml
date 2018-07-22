@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-        fx:controller="odms.controller.data.DataManagementControllerPOTENTIALTODO"
+        fx:controller="odms.view.user.UserDataManagementTabView"
         fx:id="dataManagementAp">
     <children>
         <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0"

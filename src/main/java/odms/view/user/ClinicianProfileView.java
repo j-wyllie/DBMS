@@ -2,40 +2,17 @@ package odms.view.user;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import odms.App;
-import odms.cli.CommandGUI;
-import odms.cli.CommandLine;
-import odms.controller.GuiMain;
-import odms.controller.data.DataManagementControllerPOTENTIALTODO;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
-import odms.controller.user.ClinicianProfileEditController;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.controller.user.UserDataManagementController;
+import odms.controller.user.UserProfileController;
 import odms.model.user.User;
 import odms.model.user.UserType;
 import odms.view.CommonView;
-import odms.view.profile.ProfileDisplayControllerTODO;
-import org.controlsfx.control.CheckComboBox;
-import org.controlsfx.control.table.TableFilter;
 
 import java.io.IOException;
 import java.util.*;
@@ -57,11 +34,16 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     private Tab generalTab;
     @FXML
-    private DataManagementControllerPOTENTIALTODO dataManagementControllerPOTENTIALTODO;
+    private Tab searchTab;
+    @FXML
+    private Tab transplantTab;
+    @FXML
+    private UserDataManagementController userDataManagementController;
     private UserGeneralTabView userGeneralTabView = new UserGeneralTabView();
-    protected ObjectProperty<User> currentUserBound = new SimpleObjectProperty<>();
     private UserConsoleTabView userConsoleTabView = new UserConsoleTabView();
     private ViewUsersView viewUsersView = new ViewUsersView();
+
+    private UserProfileController userProfileController = new UserProfileController(this);
 
 
     /**
@@ -113,18 +95,34 @@ public class ClinicianProfileView extends CommonView {
     }
 
 
-    public void handleConsoleTabClicked(Event event) {
-        userConsoleTabView.currentProfile.bind(currentUserBound);
+    public void handleConsoleTabClicked() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
+        try {
+            consoleTab.setContent(loader.load());
+            UserConsoleTabView userConsoleTabView = loader.getController();
+            userConsoleTabView.initialize();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
      * Initializes the controller for the view users Tab
      */
     public void handleViewUsersTabClicked() {
-        viewUsersView.setCurrentUser(currentUser);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ViewUsersTab.fxml"));
+        try {
+            viewUsersTab.setContent(loader.load());
+            ViewUsersView viewUsersView = loader.getController();
+            viewUsersView.initialize();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+
+//        viewUsersView.setCurrentUser(currentUser);
     }
 
-    public void handleGeneralTabClicked(Event event) {
+    public void handleGeneralTabClicked() {
         if (currentUser != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserGeneralTab.fxml"));
             try {
@@ -138,8 +136,14 @@ public class ClinicianProfileView extends CommonView {
     }
 
     public void handleTabDataManagementClicked() {
-        dataManagementControllerPOTENTIALTODO = new DataManagementControllerPOTENTIALTODO();
-        dataManagementControllerPOTENTIALTODO.setCurrentUser(currentUser);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DataManagement.fxml"));
+        try {
+            dataManagementTab.setContent(loader.load());
+            UserDataManagementTabView userDataManagementTabView = loader.getController();
+            userDataManagementTabView.initialize(currentUser);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -160,8 +164,7 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     public void initialize() {
         if (currentUser != null) {
-
-            currentUserBound.setValue(currentUser);
+            handleGeneralTabClicked();
             setClinicianDetails();
             setupAdmin();
         }
@@ -171,18 +174,35 @@ public class ClinicianProfileView extends CommonView {
         this.currentUser = currentUser;
     }
 
-    private void closeStage(Stage stage) {
-        openProfileStages.remove(stage);
-    }
-
-    public void handleSearchTabClicked(Event event) {
+    public void handleSearchTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSearchTab.fxml"));
         try {
-            generalTab.setContent(loader.load());
+            searchTab.setContent(loader.load());
             UserSearchView userSearchView = loader.getController();
-            userSearchView.initialize(currentUser);
+            userSearchView.initialize(currentUser, this);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public void handleTransplantWaitingListTabClicked() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
+        try {
+            transplantTab.setContent(loader.load());
+            UserTransplantWaitingListTabView userTransplantWaitingListTabView = loader.getController();
+            userTransplantWaitingListTabView.initialize(currentUser, this);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public boolean addToOpenProfileStages(Stage s) {
+        return userProfileController.addToOpenProfileStages(s);
+    }
+
+    public void closeStage(Stage stage) {
+        userProfileController.removeStageFromProfileStages(stage);
+
+        openProfileStages.remove(stage);
     }
 }

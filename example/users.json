@@ -156,8 +156,48 @@
       "username": "bob",
       "password": "1",
       "isDefault": false
+    },
+    "4": {
+      "userType": "CLINICIAN",
+      "name": "Jack",
+      "staffID": 4,
+      "region": "Jack",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 22
+        },
+        "time": {
+          "hour": 18,
+          "minute": 54,
+          "second": 34,
+          "nano": 886000000
+        }
+      },
+      "updateActions": [
+        "Account for Jackcreated at 2018-07-22T18:54:34.859",
+        "Jack1 updated at 06:54 PM 22-07-2018",
+        "4 updated at 06:54 PM 22-07-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 22
+        },
+        "time": {
+          "hour": 18,
+          "minute": 54,
+          "second": 34,
+          "nano": 859000000
+        }
+      },
+      "username": "Jack1",
+      "password": "Jack",
+      "isDefault": false
     }
   },
-  "lastID": 3,
+  "lastID": 4,
   "path": "example/users.json"
 }
