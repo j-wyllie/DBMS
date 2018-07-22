@@ -5,6 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -17,9 +20,10 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      * @param pending procedures or false for past procedures.
      */
     @Override
-    public void getAll(Profile profile, Boolean pending) {
+    public List<Procedure> getAll(Profile profile, Boolean pending) {
         String query = "select * from procedures where ProfileId = ? where Pending = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        List<Procedure> result = new ArrayList<>();
 
         try {
             Connection conn = connectionInstance.getConnection();
@@ -30,12 +34,31 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             ResultSet allProcedures = stmt.executeQuery();
             conn.close();
 
-            //todo: get affected organs at some point.
-            //todo: return procedures in some kind of set/list.
+            while (allProcedures.next()) {
+                Procedure procedure = parseProcedure(allProcedures);
+                result.add(procedure);
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
+        return result;
+    }
+
+    /**
+     * Parses the rows returned by the database into Procedure objects.
+     * @param procedures rows returned by the database.
+     * @return a procedure object.
+     * @throws SQLException error.
+     */
+    private Procedure parseProcedure(ResultSet procedures) throws SQLException {
+        int id = procedures.getInt("Id");
+        String summary = procedures.getString("Summary");
+        LocalDate procedureDate = LocalDate.parse(procedures.getString("ProcedureDate"));
+        String description = procedures.getString("Description");
+        List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
+
+        return new Procedure(id, summary, procedureDate, description, affectedOrgans);
     }
 
     /**
@@ -59,10 +82,12 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
             stmt.executeUpdate();
-
-            //todo: insert affected organs.
-
+            //todo: return and update procedure id.
             conn.close();
+
+            for (OrganEnum organ : procedure.getOrgansAffected()) {
+                addAffectedOrgan(procedure, organ);
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +142,38 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets all affected organs for a procedure.
+     * @param procedureId the procedure id.
+     * @return a list of organs.
+     */
+    @Override
+    public List<OrganEnum> getAffectedOrgans(int procedureId) {
+        String query = "select * from affected_organs where Id = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<OrganEnum> organs = new ArrayList<>();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, procedureId);
+
+            ResultSet allOrgans = stmt.executeQuery();
+            conn.close();
+
+            while (allOrgans.next()) {
+                String organName = allOrgans.getString("Organ");
+                OrganEnum organ = OrganEnum.valueOf(organName);
+                organs.add(organ);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return organs;
     }
 
     /**

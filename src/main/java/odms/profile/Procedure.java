@@ -2,6 +2,8 @@ package odms.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import odms.enums.OrganEnum;
 
 /**
@@ -33,6 +35,15 @@ public class Procedure {
         this.date = date;
         this.longDescription = longDescription;
     }
+
+    public Procedure(int id, String summary, LocalDate date, String longDescription, List<OrganEnum> organs) {
+        this.procedureId = id;
+        this.summary = summary;
+        this.date = date;
+        this.longDescription = longDescription;
+        this.organsAffected = new ArrayList<>(organs);
+    }
+
 
     public Procedure(String summary, LocalDate date) {
         this(summary, date, "");

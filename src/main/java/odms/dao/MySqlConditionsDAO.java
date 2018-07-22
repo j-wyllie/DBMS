@@ -46,17 +46,17 @@ public class MySqlConditionsDAO implements ConditionsDAO {
 
     /**
      * Parses a single row of the condition table and returns a condition object
-     * @param rs
+     * @param rs rows returned by the database.
      * @return the parsed condition object
-     * @throws SQLException
+     * @throws SQLException error.
      */
     private Condition parseCondition(ResultSet rs) throws SQLException {
         String name = rs.getString("Description");
         LocalDate dateOfDiagnosis = LocalDate.parse(rs.getString("DiagnosisDate"));
         LocalDate dateCured = LocalDate.parse(rs.getString("CuredDate"));
         boolean isChronic = rs.getBoolean("Chronic");
-        Condition condition = new Condition(name, dateOfDiagnosis, dateCured, isChronic);
 
+        Condition condition = new Condition(name, dateOfDiagnosis, dateCured, isChronic);
         return condition;
     }
 

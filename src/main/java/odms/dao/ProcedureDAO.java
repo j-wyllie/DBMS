@@ -1,5 +1,6 @@
 package odms.dao;
 
+import java.util.List;
 import odms.enums.OrganEnum;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -10,8 +11,9 @@ public interface ProcedureDAO {
      * Get all procedures for the profile.
      * @param profile to get the conditions for.
      * @param current procedures or false for past procedures.
+     * @return a list of past or current procedures.
      */
-    void getAll(Profile profile, Boolean current);
+    List<Procedure> getAll(Profile profile, Boolean current);
 
     /**
      * Add a new procedure to a profile.
@@ -31,6 +33,13 @@ public interface ProcedureDAO {
      * @param procedure to update.
      */
     void update(Procedure procedure);
+
+    /**
+     * Gets all affected organs for a procedure.
+     * @param procedureId the procedure id.
+     * @return a list of organs.
+     */
+    List<OrganEnum> getAffectedOrgans(int procedureId);
 
     /**
      * Add an affected organ to a procedure for a profile.

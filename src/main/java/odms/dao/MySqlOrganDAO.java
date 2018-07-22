@@ -52,7 +52,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
-                OrganEnum organ = convertOrganToEnum(organName);
+                OrganEnum organ = OrganEnum.valueOf(organName);
                 allOrgans.add(organ);
             }
         }
@@ -61,37 +61,6 @@ public class MySqlOrganDAO implements OrganDAO {
         }
 
         return allOrgans;
-    }
-
-    private OrganEnum convertOrganToEnum(String organName) {
-        switch (organName) {
-            case "bone":
-                return OrganEnum.BONE;
-            case "bone-marrow":
-                return OrganEnum.BONE_MARROW;
-            case "connective-tissue":
-                return OrganEnum.CONNECTIVE_TISSUE;
-            case "cornea":
-                return OrganEnum.CORNEA;
-            case "heart":
-                return OrganEnum.HEART;
-            case "intestine":
-                return OrganEnum.INTESTINE;
-            case "kidney":
-                return OrganEnum.KIDNEY;
-            case "liver":
-                return OrganEnum.LIVER;
-            case "lung":
-                return OrganEnum.LUNG;
-            case "middle-ear":
-                return OrganEnum.MIDDLE_EAR;
-            case "pancreas":
-                return OrganEnum.PANCREAS;
-            case "skin":
-                return OrganEnum.SKIN;
-            default:
-                return null;
-        }
     }
 
     /**
