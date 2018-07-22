@@ -28,7 +28,7 @@ import org.controlsfx.control.table.TableFilter;
 import java.io.IOException;
 import java.util.*;
 
-public class ClinicianSearchView {
+public class UserSearchView {
 
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;

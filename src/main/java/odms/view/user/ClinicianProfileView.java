@@ -127,13 +127,13 @@ public class ClinicianProfileView extends CommonView {
     public void handleGeneralTabClicked(Event event) {
         if (currentUser != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserGeneralTab.fxml"));
-            loader.setController(userGeneralTabView);
             try {
                 generalTab.setContent(loader.load());
+                UserGeneralTabView userGeneralTabView = loader.getController();
+                userGeneralTabView.initialize(currentUser);
             } catch (IOException e){
                 System.out.println(e.getMessage());
             }
-            userGeneralTabView.initialize(currentUser);
         }
     }
 
@@ -175,4 +175,14 @@ public class ClinicianProfileView extends CommonView {
         openProfileStages.remove(stage);
     }
 
+    public void handleSearchTabClicked(Event event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSearchTab.fxml"));
+        try {
+            generalTab.setContent(loader.load());
+            UserSearchView userSearchView = loader.getController();
+            userSearchView.initialize(currentUser);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }

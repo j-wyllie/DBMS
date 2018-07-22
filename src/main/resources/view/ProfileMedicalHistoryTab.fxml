@@ -14,144 +14,139 @@
 
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1"
-  xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <GridPane AnchorPane.bottomAnchor="-1.0"
-          AnchorPane.leftAnchor="-1.0"
-          AnchorPane.rightAnchor="-1.0"
-          AnchorPane.topAnchor="-1.0">
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="odms.view.profile.ProfileMedicalHistoryView">
+    <GridPane AnchorPane.bottomAnchor="-1.0"
+            AnchorPane.leftAnchor="-1.0"
+            AnchorPane.rightAnchor="-1.0"
+            AnchorPane.topAnchor="-1.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER"
+                    hgrow="SOMETIMES" minWidth="10.0"
+                    prefWidth="100.0"/>
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER"
+                    maxWidth="170.0" minWidth="10.0"
+                    prefWidth="170.0"/>
+            <ColumnConstraints halignment="CENTER"
+                    hgrow="SOMETIMES" minWidth="10.0"
+                    prefWidth="100.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="40.0"
+                    valignment="CENTER" vgrow="NEVER"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0"
+                    vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0"
+                    top="10.0"/>
+        </padding>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                text="Current Diseases/Conditions">
+            <font>
+                <Font name="Arial Bold" size="25.0"/>
+            </font>
+        </Text>
+        <Text GridPane.columnIndex="2" strokeType="OUTSIDE"
+                strokeWidth="0.0"
+                text="Past Diseases/Conditions">
+            <font>
+                <Font name="Arial Bold" size="25.0"/>
+            </font>
+        </Text>
+        <TableView GridPane.rowIndex="1"
+                onMouseReleased="#refreshPageElements"
+                prefHeight="458.0" prefWidth="414.0"
+                fx:id="curConditionsTable">
+            <columns>
+                <TableColumn prefWidth="170.0"
+                        text="Description"
+                        fx:id="curDescriptionColumn"/>
+                <TableColumn minWidth="0.0"
+                        prefWidth="80.0" text="Chronic"
+                        fx:id="curChronicColumn"/>
+                <TableColumn
+                        prefWidth="200.0"
+                        text="Date of diagnosis"
+                        fx:id="curDateOfDiagnosisColumn"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView
+                        fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <TableView GridPane.columnIndex="2"
+                GridPane.rowIndex="1"
+                onMouseReleased="#refreshPageElements" prefHeight="453.0"
+                prefWidth="423.0"
+                fx:id="pastConditionsTable">
+            <columns>
+                <TableColumn prefWidth="170.0"
+                        text="Description"
+                        fx:id="pastDescriptionColumn"/>
+                <TableColumn
+                        prefWidth="160.0"
+                        text="Date of diagnosis"
+                        fx:id="pastDateOfDiagnosisColumn"/>
+                <TableColumn prefWidth="160.0"
+                        text="Date cured"
+                        fx:id="pastDateCuredColumn"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView
+                        fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <GridPane GridPane.columnIndex="1"
+                GridPane.rowIndex="1">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER"
-                  hgrow="SOMETIMES" minWidth="10.0"
-                  prefWidth="100.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="NEVER"
-                  maxWidth="170.0" minWidth="10.0"
-                  prefWidth="170.0"/>
-                <ColumnConstraints halignment="CENTER"
-                  hgrow="SOMETIMES" minWidth="10.0"
-                  prefWidth="100.0"/>
+                        hgrow="ALWAYS" minWidth="10.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="40.0"
-                  valignment="CENTER" vgrow="NEVER"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0"
-                  vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="30.0"
+                        vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="40.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="40.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="40.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="40.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0"
+                        prefHeight="30.0"
+                        vgrow="SOMETIMES"/>
             </rowConstraints>
-            <children>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0"
-                  text="Current Diseases/Conditions">
-                    <font>
-                        <Font name="Arial Bold" size="25.0"/>
-                    </font>
-                </Text>
-                <Text GridPane.columnIndex="2" strokeType="OUTSIDE"
-                  strokeWidth="0.0"
-                  text="Past Diseases/Conditions">
-                    <font>
-                        <Font name="Arial Bold" size="25.0"/>
-                    </font>
-                </Text>
-                <TableView GridPane.rowIndex="1"
-                  onMouseReleased="#refreshPageElements"
-                  prefHeight="458.0" prefWidth="414.0"
-                  fx:id="curConditionsTable">
-                    <columns>
-                        <TableColumn prefWidth="170.0"
-                          text="Description"
-                          fx:id="curDescriptionColumn"/>
-                        <TableColumn minWidth="0.0"
-                          prefWidth="80.0" text="Chronic"
-                          fx:id="curChronicColumn"/>
-                        <TableColumn
-                          prefWidth="200.0"
-                          text="Date of diagnosis"
-                          fx:id="curDateOfDiagnosisColumn"/>
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView
-                          fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                </TableView>
-                <TableView GridPane.columnIndex="2"
-                  GridPane.rowIndex="1"
-                  onMouseReleased="#refreshPageElements" prefHeight="453.0"
-                  prefWidth="423.0"
-                  fx:id="pastConditionsTable">
-                    <columns>
-                        <TableColumn prefWidth="170.0"
-                          text="Description"
-                          fx:id="pastDescriptionColumn"/>
-                        <TableColumn
-                          prefWidth="160.0"
-                          text="Date of diagnosis"
-                          fx:id="pastDateOfDiagnosisColumn"/>
-                        <TableColumn prefWidth="160.0"
-                          text="Date cured"
-                          fx:id="pastDateCuredColumn"/>
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView
-                          fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                </TableView>
-                <GridPane GridPane.columnIndex="1"
-                  GridPane.rowIndex="1">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="CENTER"
-                          hgrow="ALWAYS" minWidth="10.0"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="30.0"
-                          vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="40.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="40.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="40.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="40.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0"
-                          prefHeight="30.0"
-                          vgrow="SOMETIMES"/>
-                    </rowConstraints>
-                    <children>
-                        <Button GridPane.rowIndex="1"
-                          maxWidth="1.7976931348623157E308"
-                          mnemonicParsing="false"
-                          onAction="#handleToggleCuredButtonClicked"
-                          text="Toggle Cured"
-                          fx:id="toggleCuredButton"/>
-                        <Button GridPane.rowIndex="2"
-                          maxWidth="1.7976931348623157E308"
-                          mnemonicParsing="false"
-                          onAction="#handleToggleChronicButtonClicked"
-                          text="Toggle Chronic"
-                          fx:id="toggleChronicButton"/>
-                        <Button GridPane.rowIndex="3"
-                          maxWidth="1.7976931348623157E308"
-                          mnemonicParsing="false"
-                          onAction="#handleAddNewCondition"
-                          text="Add New Condition"
-                          fx:id="addNewConditionButton"/>
-                        <Button GridPane.rowIndex="4"
-                          maxWidth="1.7976931348623157E308"
-                          mnemonicParsing="false"
-                          onAction="#handleDeleteCondition"
-                          text="Delete Condition"
-                          fx:id="deleteConditionButton"/>
-                    </children>
-                    <GridPane.margin>
-                        <Insets bottom="10.0" left="10.0"
-                          right="10.0" top="10.0"/>
-                    </GridPane.margin>
-                </GridPane>
-            </children>
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0"
-                  top="10.0"/>
-            </padding>
+            <GridPane.margin>
+                <Insets bottom="10.0" left="10.0"
+                        right="10.0" top="10.0"/>
+            </GridPane.margin>
+            <Button GridPane.rowIndex="1"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#handleToggleCuredButtonClicked"
+                    text="Toggle Cured"
+                    fx:id="toggleCuredButton"/>
+            <Button GridPane.rowIndex="2"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#handleToggleChronicButtonClicked"
+                    text="Toggle Chronic"
+                    fx:id="toggleChronicButton"/>
+            <Button GridPane.rowIndex="3"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#handleAddNewCondition"
+                    text="Add New Condition"
+                    fx:id="addNewConditionButton"/>
+            <Button GridPane.rowIndex="4"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#handleDeleteCondition"
+                    text="Delete Condition"
+                    fx:id="deleteConditionButton"/>
         </GridPane>
-    </children>
+    </GridPane>
 </AnchorPane>
