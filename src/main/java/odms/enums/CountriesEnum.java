@@ -11,7 +11,7 @@ public enum CountriesEnum {
     AL("Albania"),
     DZ("Algeria"),
     AS("American Samoa"),
-    AD("AndorrA"),
+    AD("Andorra"),
     AO("Angola"),
     AI("Anguilla"),
     AQ("Antarctica"),
