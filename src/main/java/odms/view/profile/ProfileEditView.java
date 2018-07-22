@@ -267,6 +267,10 @@ public class ProfileEditView extends CommonView {
         return dobDatePicker.getValue();
     }
 
+    public void setdobDatePicker(LocalDate date){
+        dobDatePicker.setValue(date);
+    }
+
     public String getGivenNamesField() {
         return givenNamesField.getText();
     }

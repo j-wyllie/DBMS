@@ -92,7 +92,7 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    private void saveDateOfBirth() throws IllegalArgumentException {
+    public void saveDateOfBirth() throws IllegalArgumentException {
         if (view.getdobDatePicker().equals(null)) {
             throw new IllegalArgumentException("Date of Birth field cannot be blank");
         }
