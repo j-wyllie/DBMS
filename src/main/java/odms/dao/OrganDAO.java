@@ -3,31 +3,33 @@ package odms.dao;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
+import java.util.ArrayList;
+
 public interface OrganDAO {
 
     /**
      * Gets all organs that a profile has donated in the past.
      * @param profile to get the organs for.
      */
-    void getDonations(Profile profile);
+    ArrayList<OrganEnum> getDonations(Profile profile);
 
     /**
      * Gets all organs that a profile has registered to donate.
      * @param profile to get the organs for.
      */
-    void getDonating(Profile profile);
+    ArrayList<OrganEnum> getDonating(Profile profile);
 
     /**
      * Gets all organs that a profile requires.
      * @param profile to get the organs for.
      */
-    void getRequired(Profile profile);
+    ArrayList<OrganEnum> getRequired(Profile profile);
 
     /**
      * Gets all organs that a profile has received in the past.
      * @param profile to get the organs for.
      */
-    void getReceived(Profile profile);
+    ArrayList<OrganEnum> getReceived(Profile profile);
 
     /**
      * Adds an organ to a profiles past donations.
