@@ -116,7 +116,6 @@ public class Profile implements Comparable<Profile> {
         );
     }
 
-
     /**
      * Gets all of the profiles procedures
      *
@@ -485,7 +484,6 @@ public class Profile implements Comparable<Profile> {
      * @return profile age
      */
     public int getAge() {
-        //todo should we store this?
         if (dateOfDeath == null) {
             return Period.between(dateOfBirth, LocalDate.now()).getYears();
         } else {

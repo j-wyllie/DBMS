@@ -1,8 +1,5 @@
 package odms.view.profile;
 
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import odms.controller.profile.ProfileHistoryTabController;
@@ -13,12 +10,12 @@ public class ProfileHistoryViewTODO {
     @FXML
     private TextArea historyView;
 
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    private Profile currentProfile;
     // init controller corresponding to this view
     private ProfileHistoryTabController controller = new ProfileHistoryTabController(this);
 
     public Profile getProfile() {
-        return currentProfile.get();
+        return currentProfile;
     }
 
     private void setHistoryView() {
@@ -26,7 +23,8 @@ public class ProfileHistoryViewTODO {
     }
 
     //todo do we need this function?????
-    public void initialize() {
+    public void initialize(Profile p) {
+        currentProfile = p;
         if (currentProfile != null) {
             setHistoryView();
         }

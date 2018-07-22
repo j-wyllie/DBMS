@@ -1,12 +1,12 @@
 package odms.controller.profile;
 
-import odms.view.profile.ProfileGeneralViewTODOReplacesDisplayController;
+import odms.view.profile.ProfileGeneralView;
 
 public class ProfileGeneralTabController {
 
-    ProfileGeneralViewTODOReplacesDisplayController view;
+    ProfileGeneralView view;
 
-    public ProfileGeneralTabController(ProfileGeneralViewTODOReplacesDisplayController v) {
+    public ProfileGeneralTabController(ProfileGeneralView v) {
         view = v;
     }
 

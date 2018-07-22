@@ -1,27 +1,27 @@
 package odms.view.profile;
 
-import static odms.controller.AlertController.invalidUsername;
-
-import java.io.IOException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import odms.controller.CommonController;
 import odms.model.profile.Profile;
 
+import java.io.IOException;
+
+import static odms.controller.AlertController.invalidUsername;
+
 public class ProfileDisplayControllerTODO extends CommonController {
 
-    public Profile currentProfile;
+    private Profile currentProfile;
     /**
      * Text for showing recent edits.
      */
     @FXML
-    public Text editedText;
+    private Text editedText;
     @FXML
     private Label donorFullNameLabel;
     @FXML
@@ -31,31 +31,34 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private Button logoutButton;
     @FXML
-    private Button buttonViewMedicationHistory;
-    @FXML
-    private Button addNewProcedureButton;
-    @FXML
-    private Button deleteProcedureButton;
-    @FXML
     private Label receiverStatusLabel;
+    @FXML
+    private Tab tabGeneral;
+    @FXML
+    private Tab tabMedical;
+    @FXML
+    private Tab tabMedicalHistory;
+    @FXML
+    private Tab tabMedications;
+    @FXML
+    private Tab tabOrgans;
+    @FXML
+    private Tab tabHistory;
+    @FXML
+    private Tab tabProcedures;
 
-    protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
+    private ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
     private Boolean isOpenedByClinician = false;
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
-    @FXML
-    private AnchorPane profileOrganOverview;
-    @FXML
-    private ProfileOrgansView profileOrgansView;
 
-    @FXML
-    private ProfileGeneralViewTODOReplacesDisplayController profileGeneralViewTODOReplacesDisplayController;
-    @FXML
-    private ProfileMedicalViewTODO profileMedicalViewTODO;
-    @FXML
-    private ProfileHistoryViewTODO profileHistoryViewTODO;
-    @FXML
-    private ProfileMedicationsView profileMedicationsView;
+    private ProfileGeneralView profileGeneralView = new ProfileGeneralView();
+    private ProfileOrgansView profileOrgansView = new ProfileOrgansView();
+    private ProfileMedicalViewTODO profileMedicalViewTODO = new ProfileMedicalViewTODO();
+    private ProfileHistoryViewTODO profileHistoryViewTODO = new ProfileHistoryViewTODO();
+    private ProfileMedicationsView profileMedicationsView = new ProfileMedicationsView();
+    private ProfileMedicalHistoryView profileMedicalHistoryView = new ProfileMedicalHistoryView();
+    private ProfileProceduresView profileProceduresView = new ProfileProceduresView();
 
 
     /**
@@ -73,7 +76,7 @@ public class ProfileDisplayControllerTODO extends CommonController {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        showLoginScene(event);
+        //todo showLoginScene(event);
     }
 
 
@@ -102,9 +105,11 @@ public class ProfileDisplayControllerTODO extends CommonController {
                 currentProfile.setReceiver(true);
             }
 
-            if (currentProfile.isReceiver()) {
+            if (currentProfile.getReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
+
+
 
             if (currentProfile.getId() != null) {
                 userIdLabel
@@ -117,63 +122,96 @@ public class ProfileDisplayControllerTODO extends CommonController {
         }
     }
 
-
-    /**
-     * Enables the relevant buttons on medications tab for how many drugs are selected
-     */
-    @FXML
-    private void refreshPageElements() {
-        hideItems();
-    }
-
-
-    /**
-     * hides items that shouldn't be visible to either a donor or clinician
-     */
-    @FXML
-    private void hideItems() {
-        if (isOpenedByClinician) {
-            //user is a clinician looking at donors profile, maximise functionality
-            addNewProcedureButton.setVisible(true);
-            deleteProcedureButton.setVisible(true);
-            buttonViewMedicationHistory.setVisible(true);
-
-            logoutButton.setVisible(false);
-        } else {
-            // user is a standard profile, limit functionality
-            addNewProcedureButton.setVisible(false);
-            deleteProcedureButton.setVisible(false);
-            buttonViewMedicationHistory.setVisible(false);
-        }
-    }
-
     public Profile getCurrentProfile() {
         return currentProfile;
     }
 
     @FXML
-    private void onTabOrgansSelected() {
-        profileOrgansView.currentProfile.bind(currentProfileBound);
-        profileOrgansView.populateOrganLists();
+    public void onTabGeneralSelected() {
+        if (currentProfileBound.get() != null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileGeneralTab.fxml"));
+            loader.setController(profileGeneralView);
+            try {
+                tabGeneral.setContent(loader.load());
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+            profileGeneralView.initialize(currentProfile);
+        }
+
     }
 
     @FXML
-    public void onTabGeneralSelected() {
-        profileGeneralViewTODOReplacesDisplayController.currentProfile.bind(currentProfileBound);
+    private void onTabOrgansSelected() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
+        loader.setController(profileOrgansView);
+        try {
+            tabOrgans.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileOrgansView.initialize(currentProfile);
     }
 
     @FXML
     public void onTabMedicalSelected() {
-        profileMedicalViewTODO.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalTab.fxml"));
+        loader.setController(profileMedicalViewTODO);
+        try {
+            tabMedical.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicalViewTODO.initialize(currentProfile);
     }
 
     @FXML
     public void onTabHistorySelected() {
-        profileHistoryViewTODO.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileHistoryTab.fxml"));
+        loader.setController(profileHistoryViewTODO);
+        try {
+            tabHistory.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileHistoryViewTODO.initialize(currentProfile);
+
     }
 
+    @FXML
     public void onTabMedicationsSelected() {
-        profileMedicationsView.currentProfile.bind(currentProfileBound);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicationsTab.fxml"));
+        loader.setController(profileMedicationsView);
+        try {
+            tabMedications.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicationsView.initialize(currentProfile, isOpenedByClinician);
+    }
+
+    @FXML
+    public void onTabMedicalHistorySelected() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
+        loader.setController(profileMedicalHistoryView);
+        try {
+            tabMedicalHistory.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileMedicalHistoryView.initialize(currentProfile);
+    }
+
+    @FXML
+    public void onTabProceduresSelected() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileProceduresTab.fxml"));
+        loader.setController(profileProceduresView);
+        try {
+            tabProcedures.setContent(loader.load());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        profileProceduresView.initialize(currentProfile);
     }
 
 
@@ -181,15 +219,12 @@ public class ProfileDisplayControllerTODO extends CommonController {
      * Sets the current donor attributes to the labels on start up.
      */
     @FXML
-    public void initialize() {
-
+    public void initialize(Profile profile) {
         if (currentProfile != null) {
-            currentProfileBound.set(currentProfile);
-            setPage(currentProfile);
+            currentProfileBound.set(profile);
+            setPage(profile);
+            onTabGeneralSelected();
         }
-
-        refreshPageElements();
-
     }
 
 
@@ -212,6 +247,4 @@ public class ProfileDisplayControllerTODO extends CommonController {
     public void setProfile(Profile profile) {
         currentProfile = profile;
     }
-
-
 }

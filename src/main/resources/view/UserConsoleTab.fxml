@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="odms.view.user.UserConsoleTabView"
+    stylesheets="@../styles/ClinicianProfile.css"
+    prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane AnchorPane.bottomAnchor="-1.0"
+        AnchorPane.leftAnchor="-1.0"
+        AnchorPane.rightAnchor="-1.0"
+        AnchorPane.topAnchor="-1.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                prefWidth="100.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0"
+                vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0"
+                vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0"
+                vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0"
+                top="10.0"/>
+        </padding>
+        <TextArea GridPane.columnSpan="2" GridPane.rowSpan="3"
+            prefHeight="516.0" prefWidth="1202.0"
+            styleClass="textArea-cli"
+            fx:id="displayTextArea"/>
+    </GridPane>
+</AnchorPane>

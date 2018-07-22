@@ -219,7 +219,7 @@ public class ProfileMedicationsController extends CommonController {
                 drugs.get(0).getDrugName(),
                 drugs.get(1).getDrugName(),
                 currentProfile.getGender(),
-                ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(currentProfile)
+                currentProfile.getAge()
         );
         return interactionsRaw;
     }

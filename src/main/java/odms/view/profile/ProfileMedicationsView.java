@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -82,7 +80,7 @@ public class ProfileMedicationsView extends CommonView {
     private Button buttonViewActiveIngredients;
 
     private ProfileMedicationsController controller = new ProfileMedicationsController(this);
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    private Profile currentProfile;
     // init controller corresponding to this view
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
@@ -97,12 +95,12 @@ public class ProfileMedicationsView extends CommonView {
     private void refreshMedicationsTable() {
 
         tableViewCurrentMedications.getItems().clear();
-        if (currentProfile.get().getCurrentMedications() != null) {
-            currentMedication.addAll(currentProfile.get().getCurrentMedications());
+        if (currentProfile.getCurrentMedications() != null) {
+            currentMedication.addAll(currentProfile.getCurrentMedications());
         }
         tableViewHistoricMedications.getItems().clear();
-        if (currentProfile.get().getHistoryOfMedication() != null) {
-            historicMedication.addAll(currentProfile.get().getHistoryOfMedication());
+        if (currentProfile.getHistoryOfMedication() != null) {
+            historicMedication.addAll(currentProfile.getHistoryOfMedication());
         }
 
         tableViewCurrentMedications.setItems(currentMedication);
@@ -259,11 +257,11 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/MedicationHistory.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         MedicationHistoryTODO controller = fxmlLoader.getController();
-        controller.setProfile(currentProfile.get());
+        controller.setProfile(currentProfile);
         controller.initialize();
         Stage stage = new Stage();
         stage.setTitle("medication history");
@@ -321,17 +319,17 @@ public class ProfileMedicationsView extends CommonView {
         });
     }
 
-    public void init(Profile p, Boolean b) {
+    public void initialize(Profile p, Boolean b) {
         isOpenedByClinician = b;
-        //currentProfile.get() = p;
+        currentProfile = p;
+        hideItems();
         tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         setMedicationSearchFieldListener(); //todo where would this go?
-
     }
 
     public Profile getCurrentProfile() {
-        return currentProfile.get();
+        return currentProfile;
     }
 
     public Drug getSelectedCurrentDrug() {

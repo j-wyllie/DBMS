@@ -1,15 +1,5 @@
 package odms.model.data;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.data.IrdNumberConflictException;
@@ -18,10 +8,14 @@ import odms.controller.profile.ProfileOrganControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
+import java.util.Map.Entry;
+
 public class ProfileDatabase {
 
-    private Map<Integer, Profile> profileDb = new HashMap<>();
-    private Set<Integer> deletedProfiles = new HashSet<>();
+    private HashMap<Integer, Profile> profileDb = new HashMap<>();
+    private HashSet<Integer> deletedProfiles = new HashSet<>();
 
     private Integer lastID = -1;
     private String path;
@@ -375,7 +369,7 @@ public class ProfileDatabase {
      */
     public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt,
             int ageRangeSearchInt, String regionSearchString, String selectedGender,
-            String selectedType, Set<OrganEnum> selectedOrgans) {
+            String selectedType, HashSet<OrganEnum> selectedOrgans) {
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> resultProfiles;
 
@@ -391,7 +385,9 @@ public class ProfileDatabase {
                 break;
         }
 
-        // parsing out organs as strings for later use
+        //ArrayList<profile> resultProfiles = allProfiles;
+
+        //parsing out organs as strings for later use
 
         if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999
                 && selectedGender.equals("") && selectedType == null && selectedOrgans.isEmpty()) {
@@ -407,27 +403,23 @@ public class ProfileDatabase {
             resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
         }
 
-        // definitely need a better way than just a magic number lol TODO
+        //definitely need a better way than just a magic number lol
         if (ageSearchInt != -999) {
             if (ageRangeSearchInt != -999) {
-                //todo fix get age
                 //use a range
                 if (ageRangeSearchInt > ageSearchInt) {
                     resultProfiles.removeIf(
-                            profile -> (ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) > ageRangeSearchInt) || (
-                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    < ageSearchInt));
+                            profile -> ((profile.getAge() > ageRangeSearchInt) || (
+                                    profile.getAge() < ageSearchInt)));
                 } else {
                     resultProfiles.removeIf(
-                            profile -> (ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile) < ageRangeSearchInt) || (
-                                    ProfileGeneralControllerTODOContainsOldProfileMethods.calculateAge(profile)
-                                    > ageSearchInt));
+                            profile -> ((profile.getAge() < ageRangeSearchInt) || (
+                                    profile.getAge() > ageSearchInt)));
                 }
 
             } else {
                 //just the age specified
-                resultProfiles.removeIf(profile -> ProfileGeneralControllerTODOContainsOldProfileMethods
-                        .calculateAge(profile) != ageSearchInt);
+                resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
             }
         }
 
@@ -445,7 +437,7 @@ public class ProfileDatabase {
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
 
-                Set<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
+                HashSet<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
                 List<String> organsDonating = new ArrayList<String>();
 
                 for (OrganEnum temp : organsDonatingHash) {
@@ -511,7 +503,7 @@ public class ProfileDatabase {
             if (profile.getReceiver()) {
                 if (receiving) {
                     //todo make getting organs permanent
-                    if (ProfileOrganControllerTODO.getOrgansRequired(profile).size() > 0) {
+                    if (profile.getOrgansRequired().size() > 0) {
                         profiles.add(profile);
                     }
                 } else {
@@ -536,7 +528,7 @@ public class ProfileDatabase {
         ArrayList<Profile> allReceivers = getReceivers(true);
 
         for (Profile profile : allReceivers) {
-            for (OrganEnum organ : ProfileOrganControllerTODO.getOrgansRequired(profile)) {
+            for (OrganEnum organ : profile.getOrgansRequired()) {
                 Map.Entry<Profile, OrganEnum> pair = new SimpleEntry<>(profile, organ);
                 receivers.add(pair);
             }

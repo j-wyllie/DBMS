@@ -3,6 +3,7 @@ package odms.cli.commands;
 import odms.cli.CommandUtils;
 import odms.controller.data.IrdNumberConflictException;
 import odms.controller.history.HistoryController;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.data.ProfileDatabase;
 import odms.model.history.History;
 
@@ -124,7 +125,7 @@ public class Profile extends CommandUtils {
             for (odms.model.profile.Profile profile : profileList) {
                 History action = new History("profile", profile.getId(), "update",
                         profile.getAttributesSummary(), -1, null);
-                profile.setExtraAttributes(attrArray);
+                ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attrArray, profile);
                 action.setHistoryData(action.getHistoryData() + profile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);

@@ -64,6 +64,7 @@ public class ProfileConditionController {
 
     public ArrayList<Condition> convertConditionObservableToArray(
             ObservableList<Condition> conditions) {
+        //todo not called might have a use though or another class isn't calling it properly
         ArrayList<Condition> toReturn = new ArrayList<>();
         for (int i = 0; i < conditions.size(); i++) {
             if (conditions.get(i) != null) {

@@ -9,12 +9,12 @@ import javafx.stage.Stage;
 import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
-import odms.controller.user.ClinicianProfileControllerTODO;
 import odms.controller.user.UserNotFoundException;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
 import odms.model.profile.Profile;
 import odms.model.user.User;
+import odms.view.user.ClinicianProfileView;
 
 import java.io.IOException;
 
@@ -67,9 +67,9 @@ public class LoginView extends CommonController {
                                 .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
-                        controller.setCurrentUser(currentUser);
-                        controller.initialize();
+                        ClinicianProfileView v = fxmlLoader.getController();
+                        v.setCurrentUser(currentUser);
+                        v.initialize();
 
                         Stage stage = new Stage();
                         stage.setTitle(currentUser.getUserType().getName());
@@ -93,9 +93,9 @@ public class LoginView extends CommonController {
                                 .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
-                        controller.setCurrentUser(currentUser);
-                        controller.initialize();
+                        ClinicianProfileView v = fxmlLoader.getController();
+                        v.setCurrentUser(currentUser);
+                        v.initialize();
 
                         Stage stage = new Stage();
                         stage.setTitle(currentUser.getUserType().getName());
@@ -113,7 +113,7 @@ public class LoginView extends CommonController {
                             scene = new Scene(fxmlLoader.load());
                             ProfileDisplayControllerTODO controller = fxmlLoader.getController();
                             controller.setProfile(currentProfile);
-                            controller.initialize();
+                            controller.initialize(currentProfile);
 
                             Stage stage = new Stage();
                             stage.setTitle(currentProfile.getFullName() + "'s profile");

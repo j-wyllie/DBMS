@@ -99,20 +99,6 @@ public class ProfileOrganEditController extends CommonController {
         }
     }
 
-    /**
-     * Add an organ to the list of donated organsDonating. If the organ exists in the donating list,
-     * remove it from the donating list.
-     *
-     * @param organ the organ to be added
-     */
-    public void addOrganDonated(OrganEnum organ) {
-        if (view.getCurrentProfile().getOrgansDonating().contains(organ)) {
-            view.getCurrentProfile().getOrgansDonating().remove(organ);
-        }
-
-        view.getCurrentProfile().getOrgansDonated().add(organ);
-    }
-
     public void caseDonating() {
         try {
             Set<OrganEnum> organsRemoved;
@@ -238,15 +224,6 @@ public class ProfileOrganEditController extends CommonController {
                     "" + organ.getNamePlain(), -1, now);
             HistoryController.updateHistory(action);
         }
-    }
-
-    public void removeOrganReceived(OrganEnum organ) {
-        //todo may need to change method as it is redundant
-        if (view.getCurrentProfile().getOrgansReceived().contains(organ)) {
-            view.getCurrentProfile().getOrgansReceived().remove(organ);
-        }
-
-        view.getCurrentProfile().getOrgansRequired().add(organ);
     }
 
     /**

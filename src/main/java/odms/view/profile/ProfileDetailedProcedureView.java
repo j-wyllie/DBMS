@@ -1,26 +1,22 @@
 package odms.view.profile;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.procedure.ProcedureEditController;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileDetailedProcedureView extends CommonView {
     @FXML
@@ -49,11 +45,11 @@ public class ProfileDetailedProcedureView extends CommonView {
 
     private Procedure currentProcedure;
     private ProcedureEditController controller = new ProcedureEditController(this);
-    private Profile profile;
+    private ObjectProperty<Profile> profile;
     private ProfileProceduresView parent;
 
     @FXML
-    public void initialize(Procedure selectedProcedure, Profile currentProfile,
+    public void initialize(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
             ProfileProceduresView p) {
         parent = p;
         profile = currentProfile;
@@ -79,7 +75,7 @@ public class ProfileDetailedProcedureView extends CommonView {
         try {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<OrganEnum> organsDonated = FXCollections
-                    .observableArrayList(profile.getOrgansDonated());
+                    .observableArrayList(profile.get().getOrgansDonated());
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
         } catch (NullPointerException e) {
@@ -136,28 +132,11 @@ public class ProfileDetailedProcedureView extends CommonView {
         parent.refreshProcedureTable();
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public Procedure getCurrentProcedure() {
-        return currentProcedure;
-    }
-
-    public String getDescEntry() {
-        return descEntry.getText();
-    }
-
-    public String getSummaryEntry() {
-        return summaryEntry.getText();
-    }
-
-    public LocalDate getDateOfProcedure() {
-        return dateOfProcedureDatePicker.getValue();
-    }
-
-    public ArrayList getAffectedOrgansListView() {
-        return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
-    }
+    public Profile getProfile() {return profile.getValue();}
+    public Procedure getCurrentProcedure() {return currentProcedure;}
+    public String getDescEntry() {return descEntry.getText();}
+    public String getSummaryEntry() {return summaryEntry.getText();}
+    public LocalDate getDateOfProcedure() {return dateOfProcedureDatePicker.getValue();}
+    public ArrayList getAffectedOrgansListView() {return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());}
 
 }

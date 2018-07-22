@@ -35,6 +35,7 @@ import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ProfileMedicalHistoryView extends CommonView {
+
     private Profile currentProfile;
     private ProfileConditionController controller = new ProfileConditionController(this);
     private Boolean isOpenedByClinician;
@@ -68,24 +69,25 @@ public class ProfileMedicalHistoryView extends CommonView {
     @FXML
     private Button deleteConditionButton;
 
+
     /**
-     * initializes and refreshes the current and past conditions tables
-     */
-    @FXML
-    private void makeTable(ArrayList<Condition> curConditions,
-            ArrayList<Condition> pastConditions) {
-        if (curConditions != null) {
-            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
-        } else {
-            curConditionsObservableList = FXCollections.observableArrayList();
-        }
-        if (pastConditions != null) {
-            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
-        } else {
-            pastConditionsObservableList = FXCollections.observableArrayList();
-        }
-        refreshConditionTable();
+ * initializes and refreshes the current and past conditions tables
+ */
+@FXML
+private void makeTable(ArrayList<Condition> curConditions,
+        ArrayList<Condition> pastConditions) {
+    if (curConditions != null) {
+        curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+    } else {
+        curConditionsObservableList = FXCollections.observableArrayList();
     }
+    if (pastConditions != null) {
+        pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+    } else {
+        pastConditionsObservableList = FXCollections.observableArrayList();
+    }
+    refreshConditionTable();
+}
 
     /**
      * Disables the ability for the table headers to be reordered.
@@ -224,10 +226,9 @@ public class ProfileMedicalHistoryView extends CommonView {
         pastDateCuredColumn.setOnEditCommit(
                 (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (t.getNewValue().isBefore(
-                            t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow()).getDateOfDiagnosis())
+                            t.getTableView().getItems().get(t.getTablePosition().getRow())
+                                    .getDateOfDiagnosis())
                             || t.getNewValue().isAfter(LocalDate.now())) {
-                        // TODO why is this empty
                     } else {
                         controller.removeCondition(t.getTableView().getItems().get(
                                 t.getTablePosition().getRow()));
@@ -418,22 +419,26 @@ public class ProfileMedicalHistoryView extends CommonView {
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         controller.toggleCured();
         refreshConditionTable();
-        }
+    }
 
-        private void init(Profile profile, Boolean c) {
+    // TODO: do we need this?? why are there 2 initalisation function?
+    private void init(Profile profile, Boolean c) {
 
-            makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
-            refreshConditionTable();
+        makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
+        refreshConditionTable();
         isOpenedByClinician = c;
         currentProfile = profile;
-            curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            curChronicColumn.setSortable(false);
+        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-            refreshPageElements();
 
-            disableTableHeaderReorder();
-        }
+
+        curChronicColumn.setSortable(false);
+
+        refreshPageElements();
+
+        disableTableHeaderReorder();
+    }
 
         public Profile getCurrentProfile() {
         return currentProfile;
@@ -500,7 +505,8 @@ public class ProfileMedicalHistoryView extends CommonView {
         }
     }
 
-    public void initialize() {
+    public void initialize(Profile p) {
+        currentProfile = p;
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -509,4 +515,4 @@ public class ProfileMedicalHistoryView extends CommonView {
         disableTableHeaderReorder();
 
     }
-    }
+}

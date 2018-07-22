@@ -1,26 +1,24 @@
 package odms.view.profile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.procedure.ProcedureAddController;
 import odms.controller.procedure.ProcedureController;
 import odms.controller.procedure.ProcedureEditController;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class ProfileProceduresView extends CommonView {
     //todo separate fxml files
@@ -48,9 +46,7 @@ public class ProfileProceduresView extends CommonView {
     @FXML
     private TableColumn previousAffectsColumn;
 
-    private Profile currentProfile;
-
-
+    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
 
@@ -58,28 +54,7 @@ public class ProfileProceduresView extends CommonView {
 
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
-        try {
-            //todo create a general pop-up window method?
-            Node source = (Node) actionEvent.getSource();
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ProcedureAdd.fxml"));
-
-            Scene scene = new Scene(fxmlLoader.load());
-            ProcedureAddController controller = fxmlLoader.getController();
-            ProfileAddProcedureView.init(currentProfile);
-
-            Stage stage = new Stage();
-            stage.setTitle("Add a procedure");
-            stage.initOwner(source.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
-        }
-
+        createPopup(actionEvent, "/view/ProcedureAdd.fxml", "Add Procedure");
     }
 
     /**
@@ -175,8 +150,8 @@ public class ProfileProceduresView extends CommonView {
         }
 
         // update all procedures
-        if (currentProfile.getAllProcedures() != null) {
-            for (Procedure procedure : currentProfile.getAllProcedures()) {
+        if (currentProfile.getValue().getAllProcedures() != null) {
+            for (Procedure procedure : currentProfile.getValue().getAllProcedures()) {
                 procedure.update();
             }
         }
@@ -228,11 +203,11 @@ public class ProfileProceduresView extends CommonView {
     }
 
     public Profile getProfile() {
-        return currentProfile;
+        return currentProfile.getValue();
     }
 
     public void initialize(Profile p) {
-        currentProfile = p;
+        currentProfile.setValue(p);
         makeProcedureTable(controller.getPreviousProcedures(),
                 controller.getPendingProcedures());
         refreshProcedureTable();

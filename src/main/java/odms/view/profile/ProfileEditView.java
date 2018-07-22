@@ -1,20 +1,18 @@
 package odms.view.profile;
 
-import static odms.controller.AlertController.profileCancelChanges;
-
-import java.io.IOException;
-import java.time.LocalDate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
+
+import java.io.IOException;
+import java.time.LocalDate;
+
+import static odms.controller.AlertController.profileCancelChanges;
 
 public class ProfileEditView extends CommonView {
     @FXML
@@ -127,8 +125,7 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void closeEditWindow(ActionEvent event) throws IOException {
-        ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
-        changeScene(event, "/view/ProfileDisplay.fxml");
+        closeWindow(event);
     }
 
     /**
@@ -138,10 +135,17 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        if (profileCancelChanges()) {
-            ProfileGeneralViewTODOReplacesDisplayController.initialize(controller.close());
-            changeScene(event, "/view/ProfileDisplay.fxml");
-        }
+        if (profileCancelChanges())
+            closeWindow(event);
+    }
+
+    private void closeWindow(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(
+                getClass().getResource("/view/ProfileDisplay.fxml"));
+        ProfileDisplayControllerTODO v = fxmlLoader.getController();
+        v.initialize(controller.close());
+        changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
     /**
@@ -259,8 +263,12 @@ public class ProfileEditView extends CommonView {
         }
     }
 
-    public LocalDate getdobDatePicker() {
+    public LocalDate getdobDatePicker(){
         return dobDatePicker.getValue();
+    }
+
+    public void setdobDatePicker(LocalDate date){
+        dobDatePicker.setValue(date);
     }
 
     public String getGivenNamesField() {

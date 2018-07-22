@@ -1,5 +1,8 @@
 package odms.controller.history;
 
+import java.util.Collections;
+
+import odms.controller.profile.ProfileUndoRedoCLIServiceController;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.history.History;
@@ -64,7 +67,7 @@ public class RedoController extends UndoRedoController {
     public void addedDonated(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
-        profile.addOrganDonated(OrganEnum.valueOf(organ));
+        ProfileUndoRedoCLIServiceController.addOrganDonated(OrganEnum.valueOf(organ), profile);
     }
 
     /**
@@ -76,7 +79,8 @@ public class RedoController extends UndoRedoController {
     public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
-        profile.addOrgansReceived(new HashSet<>(Arrays.asList(OrganEnum.valueOf(organ))));
+        ProfileUndoRedoCLIServiceController.addOrgansReceived(new HashSet<OrganEnum>(
+                Collections.singletonList(OrganEnum.valueOf(organ))), profile);
     }
 
     /**
@@ -88,8 +92,8 @@ public class RedoController extends UndoRedoController {
     public void removedCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int c = action.getHistoryDataIndex();
-        Condition condition = profile.getCurrentConditions().get(c);
-        profile.removeCondition(condition);
+        Condition condition = ProfileUndoRedoCLIServiceController.getCurrentConditions(profile).get(c);
+        ProfileUndoRedoCLIServiceController.removeCondition(condition, profile);
     }
 
     /**
@@ -103,7 +107,7 @@ public class RedoController extends UndoRedoController {
         String s = action.getHistoryData();
         String[] values = s.split(",");
         Condition condition = new Condition(values[0], values[1], null, Boolean.valueOf(values[2]));
-        profile.addCondition(condition);
+        ProfileUndoRedoCLIServiceController.addCondition(condition, profile);
     }
 
     /**
@@ -117,7 +121,7 @@ public class RedoController extends UndoRedoController {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
-        profile.deleteDrug(drugs.get(d));
+        ProfileUndoRedoCLIServiceController.deleteDrug(drugs.get(d), profile);
     }
 
     /**
@@ -132,7 +136,7 @@ public class RedoController extends UndoRedoController {
         int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getCurrentMedications();
         Drug drug = drugs.get(d);
-        profile.moveDrugToHistory(drug);
+        ProfileUndoRedoCLIServiceController.moveDrugToHistory(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
         History data = new History("profile", profile.getId(), "stopped", drug.getDrugName(),
                 profile.getHistoryOfMedication().indexOf(drug), currentTime);
@@ -151,7 +155,7 @@ public class RedoController extends UndoRedoController {
         int d = action.getHistoryDataIndex();
         ArrayList<Drug> drugs = profile.getHistoryOfMedication();
         Drug drug = drugs.get(d);
-        profile.moveDrugToCurrent(drug);
+        ProfileUndoRedoCLIServiceController.moveDrugToCurrent(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
         History data = new History("profile", profile.getId(), "started", drug.getDrugName(),
                 profile.getCurrentMedications().indexOf(drug), currentTime);
@@ -170,11 +174,11 @@ public class RedoController extends UndoRedoController {
         if (action.getHistoryAction().contains("history")) {
             String drug = action.getHistoryData();
             Drug d = new Drug(drug);
-            profile.addDrug(d);
-            profile.moveDrugToHistory(d);
+            ProfileUndoRedoCLIServiceController.addDrug(d, profile);
+            ProfileUndoRedoCLIServiceController.moveDrugToHistory(d, profile);
         } else {
             String drug = action.getHistoryData();
-            profile.addDrug(new Drug(drug));
+            ProfileUndoRedoCLIServiceController.addDrug(new Drug(drug), profile);
         }
     }
 
@@ -184,7 +188,6 @@ public class RedoController extends UndoRedoController {
      * @param action
      */
     public void updated(History action) {
-        int id = action.getHistoryId();
         User user = LoginView.getCurrentUser();
         String newString = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
@@ -234,8 +237,8 @@ public class RedoController extends UndoRedoController {
      */
     public void removed(ProfileDatabase currentDatabase, History action) throws Exception {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(
-                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))));
+        ProfileUndoRedoCLIServiceController.removeOrgansDonating(OrganEnum.stringListToOrganSet(
+                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
     }
 
     /**
@@ -247,9 +250,9 @@ public class RedoController extends UndoRedoController {
      */
     public void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        profile.addOrgansDonating(OrganEnum.stringListToOrganSet(
+        ProfileUndoRedoCLIServiceController.addOrgansDonating(OrganEnum.stringListToOrganSet(
                 Arrays.asList(action.getHistoryData().replace(' ', '_').split(",")
-                )));
+                )), profile);
     }
 
     /**
@@ -260,8 +263,8 @@ public class RedoController extends UndoRedoController {
      */
     public void donate(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
-        profile.addOrgansDonated(OrganEnum.stringListToOrganSet(
-                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))));
+        ProfileUndoRedoCLIServiceController.addOrgansDonated(OrganEnum.stringListToOrganSet(
+                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
     }
 
     /**
@@ -274,7 +277,7 @@ public class RedoController extends UndoRedoController {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String newInfo = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
-        profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
+        ProfileUndoRedoCLIServiceController.setExtraAttributes(new ArrayList<String>(Arrays.asList(newInfo.split(","))), profile);
     }
 
     /**

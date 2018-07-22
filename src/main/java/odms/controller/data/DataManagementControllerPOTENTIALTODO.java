@@ -9,8 +9,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
-import odms.controller.user.ClinicianProfileControllerTODO;
 import odms.model.user.User;
+import odms.view.user.ClinicianProfileView;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class DataManagementControllerPOTENTIALTODO {
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileControllerTODO
+            if (ClinicianProfileView
                     .checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
                 if (AlertController.unsavedChangesImport()) {
                     importAndCloseWindows(stage, file);
@@ -57,7 +57,7 @@ public class DataManagementControllerPOTENTIALTODO {
     private void importAndCloseWindows(Stage stage, File file) {
         GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
 
-        ClinicianProfileControllerTODO.closeAllOpenProfiles();
+        ClinicianProfileView.closeAllOpenProfiles();
         stage.close();
 
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -66,9 +66,9 @@ public class DataManagementControllerPOTENTIALTODO {
         try {
             Scene scene = new Scene(fxmlLoader.load());
 
-            ClinicianProfileControllerTODO controller = fxmlLoader.getController();
-            controller.setCurrentUser(currentUser);
-            controller.initialize();
+            ClinicianProfileView v = fxmlLoader.getController();
+            v.setCurrentUser(currentUser);
+            v.initialize();
 
             stage = new Stage();
             stage.setTitle("Admin");

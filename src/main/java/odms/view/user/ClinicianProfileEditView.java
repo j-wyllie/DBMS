@@ -81,9 +81,9 @@ public class ClinicianProfileEditView extends CommonView {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        ClinicianProfileControllerTODO controller = fxmlLoader.getController();
-        controller.setCurrentUser(currentUser);
-        controller.initialize();
+        ClinicianProfileView v = fxmlLoader.getController();
+        v.setCurrentUser(currentUser);
+        v.initialize();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Clinician");

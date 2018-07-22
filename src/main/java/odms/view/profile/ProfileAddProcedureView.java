@@ -70,7 +70,8 @@ public class ProfileAddProcedureView {
      *
      * @param p
      */
-    public static void init(Profile p) {
+    @FXML
+    public static void initialize(Profile p) {
         warningLabel.setVisible(false);
         searchedDonor = p;
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

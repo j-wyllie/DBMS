@@ -39,15 +39,14 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      * @return a string depicting whether to profile is a donor, receiver, or both.
      */
     public SimpleStringProperty donorReceiverProperty(Profile profile) {
-        //todo fix the if statements
         SimpleStringProperty result = new SimpleStringProperty();
-        if (!(profile.getDonor() == null) && profile.getDonor()) {
-            if (!(profile.getReceiver() == null) && profile.getReceiver()) {
+        if ((profile.getDonor() != null) && profile.getDonor()) {
+            if ((profile.getReceiver() != null) && profile.getReceiver()) {
                 result.setValue("Donor/Receiver");
             } else {
                 result.setValue("Donor");
             }
-        } else if (!(profile.getReceiver() == null) && profile.getReceiver()) {
+        } else if ((profile.getReceiver() != null) && profile.getReceiver()) {
             result.setValue("Receiver");
 
         }
@@ -76,22 +75,6 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      */
     public static Double calculateBMI(Profile profile) {
         return profile.getWeight() / ((profile.getHeight()) * (profile.getHeight()));
-    }
-
-    /**
-     * Calculate the profiles age if they are alive and their age at death if they are dead If the
-     * age is calculated on the users birthday they are the age they are turning that day e.g. if
-     * it's your 20th birthday you are 20
-     *
-     * @return profile age
-     */
-    public static int calculateAge(Profile profile) {
-        //todo change it so you don't have to re-calculate age every time
-        if (profile.getDateOfDeath() == null) {
-            return Period.between(profile.getDateOfBirth(), LocalDate.now()).getYears();
-        } else {
-            return Period.between(profile.getDateOfBirth(), profile.getDateOfDeath()).getYears();
-        }
     }
 
     /**

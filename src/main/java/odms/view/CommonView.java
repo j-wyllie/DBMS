@@ -1,6 +1,8 @@
 package odms.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,21 +11,26 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
+import odms.model.profile.Profile;
+import odms.view.profile.ProfileDisplayControllerTODO;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
-    private static boolean isEdited;
+    private static boolean isEdited = false;
+
+
     /**
      * Scene change to log in view.
      *
      * @param event clicking on the logout button.
      */
-
     @FXML
     protected void changeScene(ActionEvent event, String resourceName) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(resourceName));
@@ -31,6 +38,28 @@ public class CommonView {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(newScene);
         appStage.show();
+    }
+
+    @FXML
+    protected void createPopup(ActionEvent actionEvent, String fxmlFile, String title) {
+        try {
+            //todo create a general pop-up window method?
+            Node source = (Node) actionEvent.getSource();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource(fxmlFile));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
     }
 
     /**
@@ -179,5 +208,6 @@ public class CommonView {
                 .owner(currentStage)
                 .show();
     }
+
 
 }

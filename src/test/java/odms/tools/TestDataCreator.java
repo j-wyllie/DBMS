@@ -1,6 +1,7 @@
 package odms.tools;
 
 import odms.controller.data.IrdNumberConflictException;
+import odms.controller.profile.ProfileUndoRedoCLIServiceController;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Condition;
@@ -136,7 +137,7 @@ public class TestDataCreator {
         if (numberDonations > 0) {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonations; i++) {
-                profile.addOrganDonated(organs.get(i));
+                ProfileUndoRedoCLIServiceController.addOrganDonated(organs.get(i), profile);
             }
         }
     }
@@ -147,9 +148,9 @@ public class TestDataCreator {
      * @param profile the profile that the diseases will be given
      */
     private void addConditions(Profile profile) {
-        profile.addCondition(new Condition("Heart Disease", "01-04-2018", true));
-        profile.addCondition(
-                new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
+        ProfileUndoRedoCLIServiceController.addCondition(new Condition("Heart Disease", "01-04-2018", true), profile);
+        ProfileUndoRedoCLIServiceController.addCondition(
+                new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false), profile);
     }
 
     /**
@@ -164,7 +165,7 @@ public class TestDataCreator {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonating; i++) {
                 try {
-                    profile.addOrganDonating(organs.get(i));
+                    ProfileUndoRedoCLIServiceController.addOrganDonating(organs.get(i), profile);
                 } catch (OrganConflictException e) {
                     // As is test data, no action required.
                 }
@@ -183,7 +184,7 @@ public class TestDataCreator {
         if (numberReceiving > 0) {
             profile.setReceiver(true);
             for (Integer i = 0; i < numberReceiving; i++) {
-                profile.addOrganRequired(organs.get(i));
+                ProfileUndoRedoCLIServiceController.addOrganRequired(organs.get(i), profile);
             }
         }
     }
