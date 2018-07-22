@@ -50,7 +50,7 @@ ODMS refers to the specifics of a profile as attributes, such as names, date of 
 A profile profile can be created from the base command `create-profile` followed by the desired 
 attributes you wish to set at time of creation.
 
-**Note: **Profiles must be created with `given-names`, `last-names`, `dob`, and `ird`
+**Note: **Profiles must be created with `given-names`, `last-names`, `dob`, and `nhi`
 
 The following attributes are available within ODMS:
 
@@ -59,7 +59,7 @@ The following attributes are available within ODMS:
 | `given-names` | All given (first) names | `given-names="Marion Mitchell"`        |
 | `last-names`  | All last (family) names | `last-names="Morrison"`                |
 | `dob`         | Date of birth           | `dob="dd-mm-yyyy"`                     |
-| `ird`         | IRD number              | `ird="123546789"`                      |
+| `nhi`         | NHI number              | `nhi="123546789"`                      |
 | `dod`         | Date of death           | `dod="dd-mm-yyyy"`                     |
 | `gender`      | Gender                  | `gender="Male"`                        |
 | `height`      | Height in centimetres   | `height="180"`                         |
@@ -73,15 +73,15 @@ When using attributes the format is always `attribute="value"`
 ##### Examples
 Basic profile profile creation
 
-    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789"
+    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" nhi="123456789"
     
 More detailed profile profile creation
 
-    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" ird="123456789" gender="male" height="180" weight="104"
+    create-profile given-names="Marion Mitchell" last-names="Morrison" dob="1-08-1989" nhi="123456789" gender="male" height="180" weight="104"
 
 #### Viewing or updating a profile
 A profile profile can be selected by searching via the `profile` command and providing attributes 
-`given-names`, `last-names`, or `ird`. After selecting these attributes follow them with ` > ` and 
+`given-names`, `last-names`, or `nhi`. After selecting these attributes follow them with ` > ` and 
 either `view` or the attributes you wish to modify.
 
 ##### Examples
@@ -91,11 +91,11 @@ Viewing a profile:
     
 This will result in a summary of all profiles that match the criteria:
 
-    IRD: 123456789
+    NHI: 123456789
     Given Names: Marion Mitchell
     Last Names: Morrison
     Date Of Birth: 01-08-1989
-    IRD: 123456789
+    NHI: 123456789
     Last updated at: 03:10 PM 08-03-2018
     
 Updating a profile:
@@ -129,17 +129,17 @@ The organs that are available to be added to a profile are:
 `connective-tissue`
 
 Please be explicit when adding organs that are available to be donated to a profile, explicitly use an
- IRD number for best accuracy.
+ NHI number for best accuracy.
 
-    profile ird="123456789" > add-organ="heart"
+    profile nhi="123456789" > add-organ="heart"
 
 Multiple organs can be added by either space or comma delimitation
 
-    profile ird="123456789" > add-organ="liver,kidney"
+    profile nhi="123456789" > add-organ="liver,kidney"
     
 To remove an organ from the opted donation list use the `remove-organ` command
 
-    profile ird="123456789" > remove-organ="liver"
+    profile nhi="123456789" > remove-organ="liver"
     
 #### Displaying all profile's
 You can display all profile profiles at any time with the following command:

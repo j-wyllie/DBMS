@@ -14,8 +14,7 @@ public class DatabaseConnection {
     private ComboPooledDataSource source;
 
     /**
-     * Constructor to create the singleton database connection
-     * class.
+     * Constructor to create the singleton database connection class.
      */
     private DatabaseConnection() {
         try {
@@ -72,7 +71,7 @@ public class DatabaseConnection {
     /**
      * Returns a connection from the database connection pool.
      * @return a connection.
-     * @throws SQLException
+     * @throws SQLException error.
      */
     public static Connection getConnection() throws SQLException {
         return connectionSource.getConnection();

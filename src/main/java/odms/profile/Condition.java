@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 /**
- * A specific condition for use in medical history
+ * A specific condition for use in medical history.
  */
 public class Condition {
     private String name;
@@ -20,14 +20,14 @@ public class Condition {
     private String chronicText = "";
 
     /**
-     * Constructor for cured conditions
-     * @param name
-     * @param dateOfDiagnosis
-     * @param dateCured
-     * @param isChronic
+     * Constructor for cured conditions.
+     * @param name name of the condition.
+     * @param dateOfDiagnosis date of diagnosis.
+     * @param dateCured date cured.
+     * @param isChronic boolean for if the disease is chronic.
+     * @throws IllegalArgumentException an argument that was not valid.
      */
-    public Condition(String name, String dateOfDiagnosis, String dateCured, boolean isChronic)
-            throws IllegalArgumentException {
+    public Condition(String name, String dateOfDiagnosis, String dateCured, boolean isChronic) {
 
         this.name = name;
         dateOfDiagnosisString = dateOfDiagnosis;
@@ -55,10 +55,10 @@ public class Condition {
     }
 
     /**
-     * Constructor for uncured conditions
-     * @param name
-     * @param dateOfDiagnosis
-     * @param isChronic
+     * Constructor for uncured conditions.
+     * @param name name of the condition.
+     * @param dateOfDiagnosis date of diagnosis.
+     * @param isChronic is the condition chronic.
      */
     public Condition(String name, String dateOfDiagnosis, boolean isChronic)
             throws IllegalArgumentException {
