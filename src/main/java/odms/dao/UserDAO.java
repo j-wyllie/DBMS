@@ -13,7 +13,7 @@ public interface UserDAO {
 
     /**
      * Get a single user from the database.
-     * @return
+     * @return a user.
      */
     User getUser(int userId);
 

@@ -44,10 +44,10 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets a single user from the database by userID.
-     * @return the specified user
+     * @return the specified user.
      */
     public User getUser(int userId) {
-        String query = "select * from user when UserId = ?;";
+        String query = "select * from users when UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user = null;
 
@@ -59,12 +59,7 @@ public class MySqlUserDAO implements UserDAO {
             ResultSet rs = stmt.executeQuery();
             conn.close();
 
-            UserType userType = convertStringToUserType(rs.getString("UserType"));
-            String name = rs.getString("Name");
-            String region = rs.getString("Region");
-            user = new User(userType, name, region);
-            user.setStaffID(rs.getInt("UserId"));
-            user.setWorkAddress(rs.getString("Address"));
+            user = parseUser(rs);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -74,10 +69,10 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     /**
-     * Parses a single row of the user table and converts it to a user object
-     * @param rs
-     * @return parsed user
-     * @throws SQLException
+     * Parses a single row of the user table and converts it to a user object.
+     * @param rs the result set.
+     * @return parsed user.
+     * @throws SQLException error.
      */
     private User parseUser(ResultSet rs) throws SQLException {
         UserType userType = convertStringToUserType(rs.getString("UserType"));
@@ -110,7 +105,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void add(User user) {
-        String query = "insert into user (UserId, Username, Password, Name, UserType, Address,"
+        String query = "insert into users (UserId, Username, Password, Name, UserType, Address,"
                 + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -143,7 +138,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void remove(User user) {
-        String query = "delete from user where UserId = ?;";
+        String query = "delete from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -166,7 +161,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void update(User user) {
-        String query = "update user set Username = ?, Password = ?, Name = ?, UserType = ?, "
+        String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where"
                 + "UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();

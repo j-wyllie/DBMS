@@ -1,5 +1,6 @@
 package odms.dao;
 
+import java.util.List;
 import odms.profile.Profile;
 
 public interface ProfileDAO {
@@ -7,7 +8,13 @@ public interface ProfileDAO {
     /**
      * Gets all profiles from the database.
      */
-    void getAll();
+    List<Profile> getAll();
+
+    /**
+     * Get a single profile from the database.
+     * @return a profile.
+     */
+    Profile getProfile(int profileId);
 
     /**
      * Adds a new profile to the database.
