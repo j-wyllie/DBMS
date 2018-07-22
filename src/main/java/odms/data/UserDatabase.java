@@ -131,11 +131,11 @@ public class UserDatabase {
             user.setStaffID(lastID);
             userDb.put(lastID, user);
             deletedUsers.remove(id);
-            return lastID;
         } catch (Exception e) {
             e.printStackTrace();
-            return lastID;
         }
+        return lastID;
+
     }
 
     public String getPath() {
@@ -148,12 +148,12 @@ public class UserDatabase {
 
     /**
      * Checks for a duplicate username in the user database.
-     * @param username
-     * @return boolean for whether a username is unique/
+     * @param username The requested username for the user
+     * @return boolean for whether a username is unique
      */
     public boolean checkUniqueUsername(String username) {
         for (User user : userDb.values()) {
-            if (user.getUsername().equals(username)) {
+            if (user.getUsername() != null && user.getUsername().equalsIgnoreCase(username)) {
                 return false;
             }
         }
