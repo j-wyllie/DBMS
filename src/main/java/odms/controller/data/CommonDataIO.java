@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-final class CommonDataIO {
+public class CommonDataIO {
 
-    private CommonDataIO() {
+    public CommonDataIO() {
         throw new UnsupportedOperationException();
     }
 

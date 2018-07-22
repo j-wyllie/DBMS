@@ -15,9 +15,9 @@ import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
-public final class CommandUtils {
+public class CommandUtils {
 
-    private CommandUtils() {
+    public CommandUtils() {
         throw new UnsupportedOperationException();
     }
 
