@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import odms.model.profile.Attribute;
 import odms.model.profile.Profile;
@@ -18,7 +19,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      * @param attributes the attributes given in the constructor
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public static void setExtraAttributes(ArrayList<String> attributes, Profile profile)
+    public static void setExtraAttributes(List<String> attributes, Profile profile)
             throws IllegalArgumentException {
         //todo Change how setExtraAttributes works
         for (String val : attributes) {

@@ -6,6 +6,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.enums.OrganEnum;
@@ -36,16 +37,16 @@ public class Profile implements Comparable<Profile> {
     private Integer bloodPressureDiastolic;
     private Set<String> chronicDiseases = new HashSet<>();
 
-    private ArrayList<String> updateActions = new ArrayList<>();
+    private List<String> updateActions = new ArrayList<>();
 
-    private ArrayList<Procedure> procedures = new ArrayList<>();
+    private List<Procedure> procedures = new ArrayList<>();
 
     private Set<OrganEnum> organsDonating = new HashSet<>();
     private Set<OrganEnum> organsDonated = new HashSet<>();
     private Set<OrganEnum> organsRequired = new HashSet<>();
     private Set<OrganEnum> organsReceived = new HashSet<>();
 
-    private ArrayList<Condition> conditions = new ArrayList<>();
+    private List<Condition> conditions = new ArrayList<>();
 
     private String phone;
     private String email;
@@ -56,9 +57,9 @@ public class Profile implements Comparable<Profile> {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications = new ArrayList<>();
-    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
-    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+    private List<Drug> currentMedications = new ArrayList<>();
+    private List<Drug> historyOfMedication = new ArrayList<>();
+    private List<String> medicationTimestamps = new ArrayList<>();
 
     /**
      * Instantiates the profile class with data from the CLI
@@ -66,7 +67,7 @@ public class Profile implements Comparable<Profile> {
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
+    public Profile(List<String> attributes) throws IllegalArgumentException {
         //todo Change how setExtraAttributes works
         ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attributes, this);
         procedures = new ArrayList<>();
@@ -121,7 +122,7 @@ public class Profile implements Comparable<Profile> {
      *
      * @return all procedures
      */
-    public ArrayList<Procedure> getAllProcedures() {
+    public List<Procedure> getAllProcedures() {
         return procedures;
     }
 
@@ -158,15 +159,15 @@ public class Profile implements Comparable<Profile> {
         return organsReceived;
     }
 
-    public ArrayList<Drug> getCurrentMedications() {
+    public List<Drug> getCurrentMedications() {
         return currentMedications;
     }
 
-    public ArrayList<Drug> getHistoryOfMedication() {
+    public List<Drug> getHistoryOfMedication() {
         return historyOfMedication;
     }
 
-    public ArrayList<String> getMedicationTimestamps() {
+    public List<String> getMedicationTimestamps() {
         return medicationTimestamps;
     }
 
@@ -183,7 +184,7 @@ public class Profile implements Comparable<Profile> {
      *
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() {
+    public List<Condition> getAllConditions() {
         return this.conditions;
     }
 
@@ -272,7 +273,7 @@ public class Profile implements Comparable<Profile> {
         return receiver;
     }
 
-    public void setAllConditions(ArrayList<Condition> conditions) {
+    public void setAllConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 
@@ -373,7 +374,7 @@ public class Profile implements Comparable<Profile> {
         this.id = id;
     }
 
-    public ArrayList<String> getUpdateActions() {
+    public List<String> getUpdateActions() {
         return updateActions;
     }
 

@@ -1,5 +1,6 @@
 package odms.controller.procedure;
 
+import java.util.List;
 import javafx.fxml.FXML;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
@@ -46,8 +47,8 @@ public class ProcedureController {
      *
      * @param procedure the procedure to remove
      */
-    public void removeProcedure(Procedure procedure, Profile profile) {
-        ArrayList<Procedure> procedures = profile.getAllProcedures();
+    private void removeProcedure(Procedure procedure, Profile profile) {
+        List<Procedure> procedures = profile.getAllProcedures();
         procedures.remove(procedure);
     }
 
@@ -56,10 +57,10 @@ public class ProcedureController {
      *
      * @return previous procedures
      */
-    public ArrayList<Procedure> getPreviousProcedures() {
+    public List<Procedure> getPreviousProcedures() {
         Profile profile = view.getProfile();
         ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        ArrayList<Procedure> procedures = profile.getAllProcedures();
+        List<Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
             for (Procedure procedure : procedures) {
                 if (procedure.getDate().isBefore(LocalDate.now())) {
@@ -75,10 +76,10 @@ public class ProcedureController {
      *
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
+    public List<Procedure> getPendingProcedures() {
         Profile profile = view.getProfile();
-        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-        ArrayList<Procedure> procedures = profile.getAllProcedures();
+        List<Procedure> pendingProcedures = new ArrayList<>();
+        List<Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
             for (Procedure procedure : procedures) {
                 if (procedure.getDate().isAfter(LocalDate.now())) {

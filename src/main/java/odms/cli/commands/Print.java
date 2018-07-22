@@ -1,5 +1,6 @@
 package odms.cli.commands;
 
+import java.util.List;
 import odms.cli.CommandUtils;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
@@ -19,7 +20,7 @@ public class Print extends CommandUtils {
      * @param currentDatabase Database reference
      */
     public static void printAllProfiles(ProfileDatabase currentDatabase) {
-        ArrayList<Profile> allProfiles = currentDatabase.getProfiles(false);
+        List<Profile> allProfiles = currentDatabase.getProfiles(false);
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
                 printProfileAttributes(profile);
@@ -72,7 +73,7 @@ public class Print extends CommandUtils {
      * @param currentDatabase Database reference
      */
     public static void printDonors(ProfileDatabase currentDatabase) {
-        ArrayList<Profile> allProfiles = currentDatabase.getProfiles(true);
+        List<Profile> allProfiles = currentDatabase.getProfiles(true);
         if (allProfiles.size() > 0) {
             for (Profile profile : allProfiles) {
                 printProfileAttributes(profile);
@@ -90,7 +91,7 @@ public class Print extends CommandUtils {
      *
      * @param profileList List of profiles
      */
-    public static void printProfileList(ArrayList<Profile> profileList) {
+    public static void printProfileList(List<Profile> profileList) {
         for (Profile profile : profileList) {
             System.out.println("IRD: " + profile.getIrdNumber());
             System.out.println("Given Names: " + profile.getGivenNames());
@@ -120,7 +121,7 @@ public class Print extends CommandUtils {
      *
      * @param profileList list of profiles
      */
-    public static void printProfileDonations(ArrayList<Profile> profileList) {
+    public static void printProfileDonations(List<Profile> profileList) {
         for (Profile profile : profileList) {
             System.out.println("IRD: " + profile.getIrdNumber());
             System.out.println("Given Names: " + profile.getGivenNames());
@@ -140,7 +141,7 @@ public class Print extends CommandUtils {
      *
      * @param profileList Results from searching
      */
-    public static void printProfileSearchResults(ArrayList<Profile> profileList) {
+    public static void printProfileSearchResults(List<Profile> profileList) {
         if (profileList.size() > 0) {
             for (Profile profile : profileList) {
                 printProfileAttributes(profile);

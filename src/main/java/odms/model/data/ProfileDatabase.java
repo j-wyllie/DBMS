@@ -1,40 +1,49 @@
 package odms.model.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.data.IrdNumberConflictException;
-import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
-import odms.controller.profile.ProfileOrganControllerTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * Handles the local profile database.
+ * Contains method to manipulate profiles.
+ */
 public class ProfileDatabase {
 
-    private HashMap<Integer, Profile> profileDb = new HashMap<>();
-    private HashSet<Integer> deletedProfiles = new HashSet<>();
+    private Map<Integer, Profile> profileDb = new HashMap<>();
+    private Set<Integer> deletedProfiles = new HashSet<>();
 
     private Integer lastID = -1;
     private String path;
 
     /**
-     * Find profile by ID
+     * Find profile by ID.
      *
-     * @param profileID unique ID for requested profile
-     * @return profile object
+     * @param profileID unique ID for requested profile.
+     * @return profile object.
      */
     public Profile getProfile(Integer profileID) {
         return profileDb.get(profileID);
     }
 
     /**
-     * Determine unique ID for profile and add the profile to the database
+     * Determine unique ID for profile and add the profile to the database.
      *
-     * @param profile new profile object
-     * @throws IrdNumberConflictException IRD number already in use by another profile
+     * @param profile new profile object.
+     * @throws IrdNumberConflictException IRD number already in use by another profile.
      */
     public void addProfile(Profile profile) throws IrdNumberConflictException {
         lastID += 1;
@@ -49,9 +58,9 @@ public class ProfileDatabase {
     }
 
     /**
-     * Check if an IRD number exists in the profile Database
+     * Check if an IRD number exists in the profile Database.
      *
-     * @param irdNumber the number to be checked
+     * @param irdNumber the number to be checked.
      * @return boolean of whether or not it exists already.
      */
     private boolean checkIRDNumberExists(Integer irdNumber) {
@@ -66,39 +75,32 @@ public class ProfileDatabase {
      * Remove profile from the database, adding their ID to the deletedID's set for logging of
      * removed profiles.
      *
-     * @param id unique profile ID
+     * @param id unique profile ID.
+     * @return Boolean based on whether the profile was successfully removed.
      */
     public boolean deleteProfile(Integer id) {
         try {
-            // Should deleted users simply be disabled for safety reasons?
             deletedProfiles.add(id);
             profileDb.remove(id);
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
             return false;
         }
     }
 
     /**
-     * Restore a previously deleted profile
+     * Restore a previously deleted profile.
      *
-     * @param id      ODMS ID of deleted profile
-     * @param profile the profile to be restored
-     * @return current ProfileDatabase lastId
+     * @param id      ODMS ID of deleted profile.
+     * @param profile the profile to be restored.
+     * @return current ProfileDatabase lastId.
      */
     public int restoreProfile(Integer id, Profile profile) {
-        try {
-            // Should deleted users simply be disabled for safety reasons?
-            lastID += 1;
-            profile.setId(lastID);
-            profileDb.put(lastID, profile);
-            deletedProfiles.remove(id);
-            return lastID;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return lastID;
-        }
+        lastID += 1;
+        profile.setId(lastID);
+        profileDb.put(lastID, profile);
+        deletedProfiles.remove(id);
+        return lastID;
     }
 
     public String getPath() {
@@ -114,16 +116,16 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for profiles via their given names
+     * Search for profiles via their given names.
      *
-     * @param searchTerm string of the names
-     * @return Array of profiles found that match
+     * @param searchTerm string of the names.
+     * @return Array of profiles found that match.
      */
-    public ArrayList<Profile> searchGivenNames(String searchTerm) {
-        ArrayList<Profile> results = new ArrayList<>();
+    public List<Profile> searchGivenNames(String searchTerm) {
+        List<Profile> results = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
-            if (profile.getGivenNames().toLowerCase().equals(searchTerm.toLowerCase())) {
+            if (profile.getGivenNames().equalsIgnoreCase(searchTerm)) {
                 results.add(profile);
             }
         });
@@ -132,16 +134,16 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for profiles via their last names
+     * Search for profiles via their last names.
      *
-     * @param searchTerm string of the names
-     * @return Array of profiles found that match
+     * @param searchTerm string of the names.
+     * @return Array of profiles found that match.
      */
-    public ArrayList<Profile> searchLastNames(String searchTerm) {
-        ArrayList<Profile> results = new ArrayList<>();
+    public List<Profile> searchLastNames(String searchTerm) {
+        List<Profile> results = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
-            if (profile.getLastNames().toLowerCase().equals(searchTerm.toLowerCase())) {
+            if (profile.getLastNames().equalsIgnoreCase(searchTerm)) {
                 results.add(profile);
             }
         });
@@ -150,13 +152,13 @@ public class ProfileDatabase {
     }
 
     /**
-     * Search for profiles via their IRD number
+     * Search for profiles via their IRD number.
      *
-     * @param searchTerm integer of the IRD number
-     * @return Array of profiles found that match
+     * @param searchTerm integer of the IRD number.
+     * @return Array of profiles found that match.
      */
-    public ArrayList<Profile> searchIRDNumber(Integer searchTerm) {
-        ArrayList<Profile> results = new ArrayList<>();
+    public List<Profile> searchIRDNumber(Integer searchTerm) {
+        List<Profile> results = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
             if (profile.getIrdNumber().equals(searchTerm)) {
@@ -174,12 +176,12 @@ public class ProfileDatabase {
      * @param donating specify donating organs or not
      * @return Array of profiles found that match
      */
-    public ArrayList<Profile> getProfiles(boolean donating) {
-        ArrayList<Profile> profiles = new ArrayList<>();
+    public List<Profile> getProfiles(boolean donating) {
+        List<Profile> profiles = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
             if (donating) {
-                if (profile.getOrgansDonating().size() > 0) {
+                if (!profile.getOrgansDonating().isEmpty()) {
                     profiles.add(profile);
                 }
             } else {
@@ -200,32 +202,34 @@ public class ProfileDatabase {
      * @param type          type of attribute to filter against
      * @return the filtered list of profiles
      */
-    public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString,
+    private List<Profile> fuzzySearch(List<Profile> profilesGiven, String searchString,
             String type) {
         ArrayList<Profile> resultProfiles = new ArrayList<>();
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> temp = new ArrayList<>();
 
-        if (type.equals("name")) {
-            return searchProfilesName(profilesGiven, searchString);
-        } else if (type.equals("region")) {
-            for (Profile profile : profilesGiven) {
-                if (profile.getRegion() == null || profile.getRegion().equals("")) {
-                    temp.add(profile);
+        switch (type) {
+            case "name":
+                return searchProfilesName(profilesGiven, searchString);
+            case "region":
+                for (Profile profile : profilesGiven) {
+                    if (profile.getRegion() == null || profile.getRegion().equals("")) {
+                        temp.add(profile);
+                    }
                 }
-            }
-            for (Profile profile : temp) {
-                profilesGiven.remove(profile);
-            }
-            for (Profile profile : profilesGiven) {
-                if (profile.getRegion() == null || profile.getRegion().equals("")) {
-                    continue;
-                } else {
-                    profiles.add(profile.getRegion());
+                for (Profile profile : temp) {
+                    profilesGiven.remove(profile);
                 }
-            }
-        } else {
-            return profilesGiven;
+                for (Profile profile : profilesGiven) {
+                    if (profile.getRegion() == null || profile.getRegion().equals("")) {
+                        continue;
+                    } else {
+                        profiles.add(profile.getRegion());
+                    }
+                }
+                break;
+            default:
+                return profilesGiven;
         }
 
         //Fuzzywuzzy, fuzzy search algorithm. Returns list of donor names sorted by closest match to the searchString.
@@ -275,24 +279,25 @@ public class ProfileDatabase {
      * Fuzzy search that finds profiles with a name similar to the search string. Order of results
      * goes as follows: Exact matches in last names ordered alphabetically, Exact matches in first
      * names ordered alphabetically, Similar matches in last names ordered alphabetically, Similar
-     * matches in first names ordered alphabetically
+     * matches in first names ordered alphabetically.
      *
+     * @param profilesList The list of profiles being searched.
      * @param searchString the string that the donor names will be searched against.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList,
+    private List<Profile> searchProfilesName(List<Profile> profilesList,
             String searchString) {
         // Constant that represents the cutoff at which profiles will not be added to search results
         final Integer matchLimit = 60;
 
         // Need separate Lists to order results by relevance.
-        ArrayList<Profile> profilesSimilarFirst = new ArrayList<>();
-        ArrayList<Profile> profilesSimilarLast = new ArrayList<>();
-        ArrayList<Profile> profilesMatchesFirst = new ArrayList<>();
-        ArrayList<Profile> profilesMatchesLast = new ArrayList<>();
-        ArrayList<Profile> profilesMatchesPreferred = new ArrayList<>();
-        ArrayList<Profile> profilesSimilarPreferred = new ArrayList<>();
-        ArrayList<Profile> profiles = new ArrayList<>();
+        List<Profile> profilesSimilarFirst = new ArrayList<>();
+        List<Profile> profilesSimilarLast = new ArrayList<>();
+        List<Profile> profilesMatchesFirst = new ArrayList<>();
+        List<Profile> profilesMatchesLast = new ArrayList<>();
+        List<Profile> profilesMatchesPreferred = new ArrayList<>();
+        List<Profile> profilesSimilarPreferred = new ArrayList<>();
+        List<Profile> profiles = new ArrayList<>();
 
         if (searchString.equals("")) {
             return null;
@@ -364,14 +369,19 @@ public class ProfileDatabase {
     /**
      * Fuzzy search that finds the top 30 donors that match the provided search string.
      *
-     * @param searchString the string that the donor names will be searched against.
-     * @return list of donors that match the provided search string, with a max size of 30.
+     * @param searchString The string being searched.
+     * @param ageSearchInt The age being searched.
+     * @param ageRangeSearchInt The age range being search.
+     * @param regionSearchString The region being searched.
+     * @param selectedGender The selected gender of the search.
+     * @param selectedType The type of profile being searched.
+     * @param selectedOrgans The organs being searched for.
+     * @return A list of profiles that matched the search criteria.
      */
-    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt,
+    public List<Profile> searchProfiles(String searchString, int ageSearchInt,
             int ageRangeSearchInt, String regionSearchString, String selectedGender,
-            String selectedType, HashSet<OrganEnum> selectedOrgans) {
-        ArrayList<String> profiles = new ArrayList<>();
-        ArrayList<Profile> resultProfiles;
+            String selectedType, Set<OrganEnum> selectedOrgans) {
+        List<Profile> resultProfiles;
 
         switch (selectedType) {
             case "any":
@@ -385,7 +395,6 @@ public class ProfileDatabase {
                 break;
         }
 
-        //ArrayList<profile> resultProfiles = allProfiles;
 
         //parsing out organs as strings for later use
 
@@ -399,7 +408,7 @@ public class ProfileDatabase {
         }
 
         if (!regionSearchString.equals("")) {
-            ArrayList<Profile> resultProfilesBefore = resultProfiles;
+            List<Profile> resultProfilesBefore = resultProfiles;
             resultProfiles = fuzzySearch(resultProfilesBefore, regionSearchString, "region");
         }
 
@@ -429,7 +438,7 @@ public class ProfileDatabase {
                     if (profile.getGender() == null) {
                         return true;
                     }
-                    return !selectedGender.equals(profile.getGender().toLowerCase());
+                    return !selectedGender.equalsIgnoreCase(profile.getGender());
                 });
             }
         }
@@ -437,14 +446,14 @@ public class ProfileDatabase {
         if (!selectedOrgans.isEmpty()) {
             resultProfiles.removeIf(profile -> {
 
-                HashSet<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
+                Set<OrganEnum> organsDonatingHash = new HashSet<>(profile.getOrgansDonating());
                 List<String> organsDonating = new ArrayList<String>();
 
                 for (OrganEnum temp : organsDonatingHash) {
                     organsDonating.add(temp.getName());
                 }
 
-                if (organsDonating == null || organsDonating.size() == 0) {
+                if (organsDonating.isEmpty()) {
                     return true;
                 }
                 organsDonatingHash.retainAll(selectedOrgans);         //intersection
@@ -473,15 +482,15 @@ public class ProfileDatabase {
     private List<String> getOrgansAsStrings(List selectedOrgans) {
         List<String> selectedOrgansStrings = new ArrayList<>();
         if (selectedOrgans != null) {
-            for (int i = 0; i < selectedOrgans.size(); i++) {
+            for (Object selectedOrgan : selectedOrgans) {
                 //todo need some consistency in how we are naming organs that have two words in them.
-                if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
+                if (selectedOrgan.toString().equalsIgnoreCase("connective tissue")) {
                     selectedOrgansStrings.add("connective_tissue");
                 }
-                if (selectedOrgans.get(i).toString().toLowerCase().equals("bone marrow")) {
+                if (selectedOrgan.toString().equalsIgnoreCase("bone marrow")) {
                     selectedOrgansStrings.add("bone_marrow");
                 }
-                selectedOrgansStrings.add(selectedOrgans.get(i).toString().toLowerCase());
+                selectedOrgansStrings.add(selectedOrgan.toString().toLowerCase());
             }
         }
         return selectedOrgansStrings;
@@ -495,7 +504,7 @@ public class ProfileDatabase {
      * @param receiving specify currently receiving organs or not
      * @return Array of profiles found that match
      */
-    public ArrayList<Profile> getReceivers(Boolean receiving) {
+    private List<Profile> getReceivers(Boolean receiving) {
         ArrayList<Profile> profiles = new ArrayList<>();
 
         profileDb.forEach((id, profile) -> {
@@ -503,7 +512,7 @@ public class ProfileDatabase {
             if (profile.getReceiver()) {
                 if (receiving) {
                     //todo make getting organs permanent
-                    if (profile.getOrgansRequired().size() > 0) {
+                    if (!profile.getOrgansRequired().isEmpty()) {
                         profiles.add(profile);
                     }
                 } else {
@@ -518,14 +527,14 @@ public class ProfileDatabase {
 
 
     /**
-     * Generates a collection of a profile and organ for each organ that a receiver requires
+     * Generates a collection of a profile and organ for each organ that a receiver requires.
      *
-     * @return Collection of profile and Organ that match
+     * @return Collection of profile and Organ that match.
      */
     public List<Entry<Profile, OrganEnum>> getAllOrgansRequired() {
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
-        ArrayList<Profile> allReceivers = getReceivers(true);
+        List<Profile> allReceivers = getReceivers(true);
 
         for (Profile profile : allReceivers) {
             for (OrganEnum organ : profile.getOrgansRequired()) {

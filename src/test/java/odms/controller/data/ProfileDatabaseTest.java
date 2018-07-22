@@ -1,5 +1,6 @@
 package odms.controller.data;
 
+import java.util.List;
 import odms.model.data.ProfileDatabase;
 import odms.model.profile.Profile;
 import org.junit.Before;
@@ -27,31 +28,31 @@ public class ProfileDatabaseTest {
         // Create profile Database with basic profile
         profileDb = new ProfileDatabase();
 
-        ArrayList<String> profileOneAttr = new ArrayList<>();
+        List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("ird=\"123456879\"");
 
-        ArrayList<String> profileTwoAttr = new ArrayList<>();
+        List<String> profileTwoAttr = new ArrayList<>();
         profileTwoAttr.add("given-names=\"Sam\"");
         profileTwoAttr.add("last-names=\"Sick\"");
         profileTwoAttr.add("dob=\"17-01-1997\"");
         profileTwoAttr.add("ird=\"123456878\"");
 
-        ArrayList<String> profileThreeAttr = new ArrayList<>();
+        List<String> profileThreeAttr = new ArrayList<>();
         profileThreeAttr.add("given-names=\"Sam\"");
         profileThreeAttr.add("last-names=\"Vladko\"");
         profileThreeAttr.add("dob=\"17-01-1997\"");
         profileThreeAttr.add("ird=\"123456877\"");
 
-        ArrayList<String> profileFourAttr = new ArrayList<>();
+        List<String> profileFourAttr = new ArrayList<>();
         profileFourAttr.add("given-names=\"Reece\"");
         profileFourAttr.add("last-names=\"Smith\"");
         profileFourAttr.add("dob=\"17-01-1997\"");
         profileFourAttr.add("ird=\"123456876\"");
 
-        ArrayList<String> profileFiveAttr = new ArrayList<>();
+        List<String> profileFiveAttr = new ArrayList<>();
         profileFiveAttr.add("given-names=\"Zu\"");
         profileFiveAttr.add("last-names=\"Tiu\"");
         profileFiveAttr.add("dob=\"17-01-1997\"");
@@ -146,7 +147,7 @@ public class ProfileDatabaseTest {
 
     @Test
     public void testGetProfiles() {
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -180,7 +181,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_noProfiles() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             // No profiles in db, so no results
@@ -195,7 +196,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_fullName() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -218,7 +219,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_singleCharNoResults() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -239,7 +240,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_singleCharResults() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -263,7 +264,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_lastName() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -285,7 +286,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_firstName() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileDb.addProfile(profileOne);
@@ -309,7 +310,7 @@ public class ProfileDatabaseTest {
     public void TestSearchProfiles_preferredName() {
         // Since the fuzzy search is implemented by an external library it will be hard to test what names match the
         // string. So tests will be based on strings that definitely should or shouldn't be matched.
-        ArrayList<Profile> testResults;
+        List<Profile> testResults;
 
         try {
             profileFive.setPreferredName("dragon");

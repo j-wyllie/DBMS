@@ -2,6 +2,7 @@ package odms.view.profile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -72,8 +73,8 @@ public class ProfileProceduresView extends CommonView {
      * Initializes and refreshes the previous and pending procedure tables
      */
     @FXML
-    private void makeProcedureTable(ArrayList<Procedure> previousProcedures,
-            ArrayList<Procedure> pendingProcedures) {
+    private void makeProcedureTable(List<Procedure> previousProcedures,
+            List<Procedure> pendingProcedures) {
         pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
 
         if (previousProcedures != null) {
@@ -141,7 +142,7 @@ public class ProfileProceduresView extends CommonView {
      * Refreshes the procedure table, updating it with the current values pendingProcedureTable;
      */
     @FXML
-    public void refreshProcedureTable() {
+    void refreshProcedureTable() {
         if (previousProceduresObservableList == null) {
             previousProceduresObservableList = FXCollections.observableArrayList();
         }

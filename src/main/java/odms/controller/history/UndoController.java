@@ -129,7 +129,7 @@ public class UndoController extends UndoRedoController {
         try {
             Profile profile = currentDatabase.getProfile(action.getHistoryId());
             int d = action.getHistoryDataIndex();
-            ArrayList<Drug> drugs = profile.getHistoryOfMedication();
+            List<Drug> drugs = profile.getHistoryOfMedication();
             Drug drug = drugs.get(d);
             ProfileUndoRedoCLIServiceController.moveDrugToCurrent(drug, profile);
             LocalDateTime currentTime = LocalDateTime.now();
@@ -156,7 +156,7 @@ public class UndoController extends UndoRedoController {
         try {
             Profile profile = currentDatabase.getProfile(action.getHistoryId());
             int d = action.getHistoryDataIndex();
-            ArrayList<Drug> drugs = profile.getCurrentMedications();
+            List<Drug> drugs = profile.getCurrentMedications();
             Drug drug = drugs.get(d);
             ProfileUndoRedoCLIServiceController.moveDrugToHistory(drug, profile);
             LocalDateTime currentTime = LocalDateTime.now();
@@ -183,7 +183,7 @@ public class UndoController extends UndoRedoController {
         try {
             Profile profile = currentDatabase.getProfile(action.getHistoryId());
             int d = action.getHistoryDataIndex();
-            ArrayList<Drug> drugs = profile.getCurrentMedications();
+            List<Drug> drugs = profile.getCurrentMedications();
             ProfileUndoRedoCLIServiceController.deleteDrug(drugs.get(d), profile);
             if (historyPosition > 0) {
                 historyPosition -= 1;

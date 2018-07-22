@@ -80,7 +80,7 @@ public class UserSearchView extends CommonView {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable(ArrayList<Profile> donors) {
+    private void makeSearchTable(List<Profile> donors) {
         labelResultCount.setText(0 + " results found");
         searchTable.getItems().clear();
 

@@ -120,7 +120,7 @@ public class RedoController extends UndoRedoController {
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getCurrentMedications();
+        List<Drug> drugs = profile.getCurrentMedications();
         ProfileUndoRedoCLIServiceController.deleteDrug(drugs.get(d), profile);
     }
 
@@ -134,7 +134,7 @@ public class RedoController extends UndoRedoController {
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getCurrentMedications();
+        List<Drug> drugs = profile.getCurrentMedications();
         Drug drug = drugs.get(d);
         ProfileUndoRedoCLIServiceController.moveDrugToHistory(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -153,7 +153,7 @@ public class RedoController extends UndoRedoController {
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
-        ArrayList<Drug> drugs = profile.getHistoryOfMedication();
+        List<Drug> drugs = profile.getHistoryOfMedication();
         Drug drug = drugs.get(d);
         ProfileUndoRedoCLIServiceController.moveDrugToCurrent(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -293,7 +293,7 @@ public class RedoController extends UndoRedoController {
                 .substring(action.getHistoryData().indexOf("CURRENT(") + 8);
         String[] previousValues = previous.split(",");
         String organs;
-        ArrayList<OrganEnum> organList = new ArrayList<>();
+        List<OrganEnum> organList = new ArrayList<>();
         organs = action.getHistoryData();
         List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
         for (String organ : list) {

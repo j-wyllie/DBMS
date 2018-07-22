@@ -1,5 +1,6 @@
 package odms.controller.procedure;
 
+import java.util.List;
 import javafx.collections.ObservableList;
 import odms.view.profile.ProfileAddProcedureView;
 import odms.view.profile.ProfileDisplayControllerTODO;
@@ -49,7 +50,7 @@ public class ProcedureAddController {
      * @param procedure
      */
     private void addProcedure(Procedure procedure) {
-        ArrayList<Procedure> procedures = view.getSearchedDonor().getAllProcedures();
+        List<Procedure> procedures = view.getSearchedDonor().getAllProcedures();
         procedures.add(procedure);
     }
 

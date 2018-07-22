@@ -170,18 +170,18 @@ public class CommandUtils {
                     expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 addOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
 
-                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+                List<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase
+                List<Profile> profileList = currentDatabase
                         .searchIRDNumber(Integer.valueOf(attrIrd));
 
                 addOrgans(profileList, organList);
@@ -208,18 +208,18 @@ public class CommandUtils {
                     expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 addReceiverOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
 
-                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+                List<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addReceiverOrgans(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase
+                List<Profile> profileList = currentDatabase
                         .searchIRDNumber(Integer.valueOf(attrIrd));
 
                 addReceiverOrgans(profileList, organList);
@@ -249,15 +249,15 @@ public class CommandUtils {
                     expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+                List<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                ArrayList<Profile> profileList = currentDatabase
+                List<Profile> profileList = currentDatabase
                         .searchIRDNumber(Integer.valueOf(attr));
 
                 removeOrgansDonating(profileList, organList);
@@ -284,15 +284,15 @@ public class CommandUtils {
                     expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+                List<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                ArrayList<Profile> profileList = currentDatabase
+                List<Profile> profileList = currentDatabase
                         .searchIRDNumber(Integer.valueOf(attr));
 
                 removeReceiverOrgansDonating(profileList, organList);
@@ -319,7 +319,7 @@ public class CommandUtils {
                     expression.indexOf(">") - 2);
 
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchGivenNames(attr);
+                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
 
                 if (profileList.size() > 0) {
                     addDonation(profileList, organList);
@@ -328,7 +328,7 @@ public class CommandUtils {
                 }
 
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
+                List<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 if (profileList.size() > 0) {
                     addDonation(profileList, organList);
@@ -352,7 +352,7 @@ public class CommandUtils {
             String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
-        ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+        List<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
 
         addOrgans(profileList, organList);
     }
@@ -363,7 +363,7 @@ public class CommandUtils {
      * @param profileList list of profiles
      * @param organList   list of organs to be added
      */
-    private static void addOrgans(ArrayList<Profile> profileList, String[] organList) {
+    private static void addOrgans(List<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
@@ -389,8 +389,8 @@ public class CommandUtils {
      * @param profileList list of profiles
      * @param organList   list of organs to be added
      */
-    private static void addReceiverOrgans(ArrayList<Profile> profileList, String[] organList) {
-        if (profileList.size() > 0) {
+    private static void addReceiverOrgans(List<Profile> profileList, String[] organList) {
+        if (!profileList.isEmpty()) {
             Set<OrganEnum> organSet = OrganEnum.stringListToOrganSet(Arrays.asList(organList));
 
             for (Profile profile : profileList) {
@@ -412,7 +412,7 @@ public class CommandUtils {
     /**
      * TODO Is this a duplicate function for a reason, unsure
      */
-    private static void addDonation(ArrayList<Profile> profileList, String[] organList) {
+    private static void addDonation(List<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
 
             for (Profile profile : profileList) {
@@ -435,7 +435,7 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList   list of organs to be removed
      */
-    private static void removeOrgansDonating(ArrayList<Profile> profileList, String[] organList) {
+    private static void removeOrgansDonating(List<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
 
@@ -458,7 +458,7 @@ public class CommandUtils {
      * @param profileList list of profile
      * @param organList   list of organs to be removed
      */
-    private static void removeReceiverOrgansDonating(ArrayList<Profile> profileList,
+    private static void removeReceiverOrgansDonating(List<Profile> profileList,
             String[] organList) {
         if (profileList.size() > 0) {
             Set<String> organSet = new HashSet<>(Arrays.asList(organList));
