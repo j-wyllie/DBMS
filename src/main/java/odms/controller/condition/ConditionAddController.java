@@ -17,12 +17,14 @@ public class ConditionAddController {
         view = v;
     }
 
-    public void add() throws Exception{
+    public void add() throws Exception {
         Condition condition = checkIfValid();
         view.getCurrentProfile().getAllConditions().add(condition);
         LocalDateTime currentTime = LocalDateTime.now();
         History action = new History("profile", view.getCurrentProfile().getId(),
-                "added condition", "(" + condition.getName() + "," + condition.getDateOfDiagnosisString() + "," + condition.getChronic() + ")",
+                "added condition",
+                "(" + condition.getName() + "," + condition.getDateOfDiagnosisString() +
+                        "," + condition.getChronic() + ")",
                   getCurrentConditions().indexOf(condition), currentTime);
         HistoryController.updateHistory(action);
     }

@@ -84,7 +84,7 @@ public class ProfileAddProcedureView {
         return searchedDonor;
     }
 
-    public String getSummaryField(){
+    public String getSummaryField() {
         return summaryField.getText();
     }
 

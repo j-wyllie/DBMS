@@ -21,7 +21,7 @@ public class ProcedureAddController {
         view = v;
     }
 
-    public void add() throws IllegalArgumentException{
+    public void add() throws IllegalArgumentException {
         String summary = view.getSummaryField();
         LocalDate dateOfProcedure = view.getDateOfProcedureDatePicker();
         String longDescription = view.getDescriptionField();

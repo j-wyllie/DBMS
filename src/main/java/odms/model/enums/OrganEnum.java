@@ -1,7 +1,12 @@
 package odms.model.enums;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public enum OrganEnum {
     BONE("bone"),
@@ -47,8 +52,8 @@ public enum OrganEnum {
      * @param organStrings List of Organ Strings
      * @return HashSet of Organs
      */
-    public static HashSet<OrganEnum> stringListToOrganSet(List<String> organStrings) {
-        HashSet<OrganEnum> organs = new HashSet<>();
+    public static Set<OrganEnum> stringListToOrganSet(List<String> organStrings) {
+        Set<OrganEnum> organs = new HashSet<>();
 
         for (String organ : organStrings) {
             organs.add(valueOf(organ.toUpperCase()));
@@ -63,7 +68,7 @@ public enum OrganEnum {
      * @param organs Organ HashSet to be converted
      * @return comma delimited string
      */
-    public static String organSetToString(HashSet<OrganEnum> organs) {
+    public static String organSetToString(Set<OrganEnum> organs) {
         List<String> organsList = new ArrayList<>();
 
         for (OrganEnum organ : organs) {

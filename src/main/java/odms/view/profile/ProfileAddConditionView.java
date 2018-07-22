@@ -1,5 +1,6 @@
 package odms.view.profile;
 
+import java.time.LocalDate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,9 +10,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.controller.condition.ConditionAddController;
 import odms.model.profile.Profile;
-
-import java.time.DateTimeException;
-import java.time.LocalDate;
 
 public class ProfileAddConditionView {
     private Profile searchedDonor;

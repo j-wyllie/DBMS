@@ -1,5 +1,11 @@
 package odms.view.profile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -16,14 +22,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.profile.ProfileOrganEditController;
-import odms.controller.profile.ProfileOrganRemovalController;
 import odms.model.enums.OrganEnum;
-import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.util.*;
 
 public class ProfileOrganEditView extends CommonView {
     protected ObservableList<String> observableListOrgansAvailable;
@@ -51,7 +52,7 @@ public class ProfileOrganEditView extends CommonView {
      * @param organStrings strings to convert
      * @return set of OrganEnum
      */
-    private static HashSet<OrganEnum> observableListStringsToOrgans(HashSet<String> organStrings) {
+    private static Set<OrganEnum> observableListStringsToOrgans(Set<String> organStrings) {
         List<String> correctedOrganStrings = new ArrayList<>();
 
         for (String organ : organStrings) {
@@ -242,7 +243,7 @@ public class ProfileOrganEditView extends CommonView {
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding((ob) -> refreshListViews());
+            stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -253,7 +254,7 @@ public class ProfileOrganEditView extends CommonView {
         return currentProfile;
     }
 
-    public HashSet getOrgansAdded() {
+    public Set getOrgansAdded() {
         return observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );

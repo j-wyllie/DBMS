@@ -16,7 +16,7 @@ public class User {
     private LocalDateTime timeOfCreation;
     private String username;
     private String password; //not being used yet, but will be in the future.
-    private boolean isDefault = false;
+    private boolean isDefault;
 
     /**
      * user constructor
@@ -44,6 +44,22 @@ public class User {
         this.region = region;
         timeOfCreation = LocalDateTime.now();
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
+    }
+
+    /**
+     *
+     * @param userType type of user
+     * @param name name of user
+     * @param region users region
+     * @param username username of the user
+     * @param password users password
+     */
+    public User(UserType userType, String name, String region, String username, String password) {
+        this.userType = userType;
+        this.name = name;
+        this.region = region;
+        this.username = username;
+        this.password = password;
     }
 
     /**

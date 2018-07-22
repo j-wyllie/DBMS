@@ -13,8 +13,8 @@ public class ProfileHistoryTabController {
 
     public String getHistory() {
         String history = ProfileDataIO.getHistory();
-        history = history.replace(",", " ").replace("]", "").
-                replace("[", "").replace("\\u003d", "=");
+        history = history.replace(",", " ").replace("]", "")
+                .replace("[", "").replace("\\u003d", "=");
         String[] histories = history.split("\"");
 
         String historyDisplay = "";

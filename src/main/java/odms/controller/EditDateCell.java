@@ -1,13 +1,17 @@
 package odms.controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.event.Event;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import odms.model.profile.Condition;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javafx.beans.value.ChangeListener;
+import javafx.event.Event;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import odms.model.profile.Condition;
 
 public class EditDateCell extends TableCell<Condition, LocalDate> {
 
@@ -64,25 +68,25 @@ public class EditDateCell extends TableCell<Condition, LocalDate> {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) ->
-        {
+        ChangeListener<? super Boolean> changeListener;
+        changeListener = (observable, oldSelection, newSelection) -> {
             if (!newSelection) {
                 try {
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
             }
         };
         textField.focusedProperty().addListener(changeListener);
 
-        textField.setOnKeyPressed((ke) -> {
+        textField.setOnKeyPressed(ke -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 try {
                     textField.focusedProperty().removeListener(changeListener);
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
                 textField.focusedProperty().addListener(changeListener);
             }

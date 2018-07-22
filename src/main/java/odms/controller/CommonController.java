@@ -1,20 +1,14 @@
 package odms.controller;
 
+import java.io.IOException;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
-import org.controlsfx.control.Notifications;
-
-import java.io.IOException;
 
 public class CommonController {
     //todo rework commoncontroller by cleaning up methods and removing or replacing them
@@ -56,6 +50,7 @@ public class CommonController {
         appStage.centerOnScreen();
         appStage.show();
     }
+
     /**
      * Button handler to undo last action.
      */

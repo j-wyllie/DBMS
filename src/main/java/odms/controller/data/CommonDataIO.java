@@ -1,8 +1,16 @@
 package odms.controller.data;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
-class CommonDataIO {
+public class CommonDataIO {
+
+    public CommonDataIO() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Populate the fileBuffer with the content of the file.
@@ -11,16 +19,14 @@ class CommonDataIO {
      * @param fileBuffer the buffer to populate
      */
     static void loadDataInBuffer(File file, StringBuilder fileBuffer) {
+        BufferedReader readFile;
         String lineBuffer;
         try {
-            BufferedReader readFile = new BufferedReader(new FileReader(file));
+            readFile = new BufferedReader(new FileReader(file));
 
             while ((lineBuffer = readFile.readLine()) != null) {
                 fileBuffer.append(lineBuffer);
             }
-
-            readFile.close();
-
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             System.out.println("File requested: " + file);

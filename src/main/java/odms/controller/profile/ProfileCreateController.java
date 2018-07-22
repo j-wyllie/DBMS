@@ -64,7 +64,7 @@ public class ProfileCreateController extends CommonController {
                 Profile newProfile = new Profile(givenNames, surnames, dob, ird);
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
-                return (currentDatabase.getProfile(newProfile.getId()));
+                return currentDatabase.getProfile(newProfile.getId());
             } catch (NumberFormatException e) {
                 if (view.getirdNumberFieldValue().length() > 9) {
                     AlertController.invalidEntry(

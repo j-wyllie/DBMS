@@ -14,15 +14,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MedicationDataIO {
+public final class MedicationDataIO {
+
+    private MedicationDataIO() {
+        throw new UnsupportedOperationException();
+    }
 
     // Value used to identify if response was a internal server error.
     private static final String SERVERERROR = "1";
 
     // URL strings for the API endpoints
-    private static final String INTERACTIONURL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
-    private static final String INGREDIENTURL = "http://mapi-us.iterar.co/api/%s/substances.json";
-    private static final String SUGGESTIONURL = "http://mapi-us.iterar.co/api/autocomplete?query=%s";
+    private static final String INTERACTION_URL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
+    private static final String INGREDIENT_URL = "http://mapi-us.iterar.co/api/%s/substances.json";
+    private static final String SUGGESTION_URL = "http://mapi-us.iterar.co/api/autocomplete?query=%s";
 
     /**
      * Gets a list of suggestions for the clinician user based on a string or substring they have
@@ -37,7 +41,7 @@ public class MedicationDataIO {
         if (!(substring == null || substring.equals(""))) {
             substring = replaceSpace(substring, false);
             String urlString = String
-                    .format(SUGGESTIONURL, substring);
+                    .format(SUGGESTION_URL, substring);
 
             //Reading the response from the connection.
             StringBuffer response = makeRequest(urlString);
@@ -64,7 +68,7 @@ public class MedicationDataIO {
         if (!(drugName == null || drugName.equals(""))) {
             drugName = replaceSpace(drugName, false);
             String urlString = String
-                    .format(INGREDIENTURL, drugName);
+                    .format(INGREDIENT_URL, drugName);
 
             //Reading the response from the connection.
             StringBuffer response = makeRequest(urlString);
@@ -180,7 +184,7 @@ public class MedicationDataIO {
             drug1 = replaceSpace(drug1, true);
             drug2 = replaceSpace(drug2, true);
             String urlString = String
-                    .format(INTERACTIONURL, drug1, drug2);
+                    .format(INTERACTION_URL, drug1, drug2);
 
             //Reading the response from the connection.
             StringBuffer response = makeRequest(urlString);

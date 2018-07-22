@@ -1,37 +1,40 @@
 package odms.model.profile;
 
+import java.util.Set;
 import odms.model.enums.OrganEnum;
-
-import java.util.HashSet;
 
 public class OrganConflictException extends Exception {
 
-    private OrganEnum organ;
-    private HashSet<OrganEnum> organs;
+    private final OrganEnum organ;
+    private final Set<OrganEnum> organs;
 
     public OrganConflictException() {
-        super();
+        this("");
     }
 
     public OrganConflictException(String message) {
         super(message);
+        this.organ = null;
+        this.organs = null;
     }
 
-    public OrganConflictException(String message, HashSet<OrganEnum> organs) {
+    public OrganConflictException(String message, Set<OrganEnum> organs) {
         super(message);
+        this.organ = null;
         this.organs = organs;
     }
 
     public OrganConflictException(String message, OrganEnum organ) {
         super(message);
         this.organ = organ;
+        this.organs = null;
     }
 
     public OrganEnum getOrgan() {
         return organ;
     }
 
-    public HashSet<OrganEnum> getOrgans() {
+    public Set<OrganEnum> getOrgans() {
         return organs;
     }
 }

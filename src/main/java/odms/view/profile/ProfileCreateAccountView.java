@@ -25,6 +25,7 @@ public class ProfileCreateAccountView extends CommonView {
     private TextField irdNumberField;
 
     private ProfileCreateController controller = new ProfileCreateController(this);
+
     /**
      * Scene change to profile profile view if all required fields are filled in.
      *
@@ -61,12 +62,20 @@ public class ProfileCreateAccountView extends CommonView {
         });
     }
 
-    public String getGivenNamesFieldValue() {return givenNamesField.getText();}
+    public String getGivenNamesFieldValue() {
+        return givenNamesField.getText();
+    }
 
-    public String getsurnamesFieldValue() {return surnamesField.getText();}
+    public String getsurnamesFieldValue() {
+        return surnamesField.getText();
+    }
 
-    public LocalDate getdobDatePickerValue() {return dobDatePicker.getValue();}
+    public LocalDate getdobDatePickerValue() {
+        return dobDatePicker.getValue();
+    }
 
-    public String getirdNumberFieldValue() {return irdNumberField.getText();}
+    public String getirdNumberFieldValue() {
+        return irdNumberField.getText();
+    }
 
 }

@@ -1,32 +1,20 @@
 package odms.controller.user;
 
-import javafx.event.ActionEvent;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.controller.CommonController;
-import odms.controller.data.UserDataIO;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.user.User;
 import odms.view.user.ClinicianProfileEditView;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getUserDatabase;
-
 public class ClinicianProfileEditController extends CommonController {
 
     private ClinicianProfileEditView view;
 
-    public ClinicianProfileEditController(ClinicianProfileEditView v){
-        view = v;
+    public ClinicianProfileEditController(ClinicianProfileEditView view) {
+        this.view = view;
     }
 
     /**

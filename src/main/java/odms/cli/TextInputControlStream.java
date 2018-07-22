@@ -1,14 +1,18 @@
 package odms.cli;
 
-import javafx.application.Platform;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.input.KeyEvent;
-
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import javafx.application.Platform;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyEvent;
 
 class TextInputControlStream {
 
@@ -77,9 +81,9 @@ class TextInputControlStream {
         private final TextInputControl textInputControl;
         private final PipedInputStream outputTextSource;
         private final PipedOutputStream inputTextTarget;
-        private int lastLineBreakIndex = 0;
+        private int lastLineBreakIndex;
 
-        public TextInputControlInputStream(TextInputControl textInputControl) {
+        TextInputControlInputStream(TextInputControl textInputControl) {
             this.textInputControl = textInputControl;
             this.inputTextTarget = new PipedOutputStream();
             try {

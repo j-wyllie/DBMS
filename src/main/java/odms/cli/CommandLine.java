@@ -186,8 +186,8 @@ public class CommandLine implements Runnable {
                     String filepath = input.get(1);
                     currentDatabase = ProfileDataIO.loadData(filepath);
                 } else {
-                    System.out.println("Error: Invalid arguments. Expected: 1, "
-                            + "Found: " + (input.size() - 1));
+                    System.out.println("Error: Invalid arguments. Expected: 1, " +
+                            "Found: " + (input.size() - 1));
                 }
                 break;
 

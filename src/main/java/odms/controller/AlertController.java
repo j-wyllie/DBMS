@@ -5,7 +5,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import odms.model.enums.OrganEnum;
 
-public class AlertController {
+public final class AlertController {
+
+    private AlertController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Creates a generic popup when details are entered incorrectly.

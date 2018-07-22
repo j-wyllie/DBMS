@@ -87,6 +87,7 @@ public class ProfileMedicationsView extends CommonView {
     private ObservableList<Map.Entry<String, String>> interactions;
     private ContextMenu suggestionMenu = new ContextMenu();
     private Boolean isOpenedByClinician;
+
     /**
      * Refresh the current and historic medication tables with the most up to date data
      */
@@ -182,7 +183,7 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleShowInteractions(ActionEvent event) {
         try {
-            Map<String, String>interactionsRaw = controller.getRawInteractions();
+            Map<String, String> interactionsRaw = controller.getRawInteractions();
             ObservableList<String> drugsList = controller.getObservableDrugsList();
             tableViewDrugInteractionsNames.setItems(drugsList);
             tableColumnDrugInteractions

@@ -1,17 +1,22 @@
 package odms.model.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
 import odms.model.user.UserType;
 
-import java.util.*;
-
 public class UserDatabase {
 
-    private HashSet<Integer> deletedUsers = new HashSet<>();
-    private HashMap<Integer, User> userDb = new HashMap<>();
+    private Set<Integer> deletedUsers = new HashSet<>();
+    private Map<Integer, User> userDb = new HashMap<>();
 
     private Integer lastID = -1;
     private String path;
@@ -19,47 +24,43 @@ public class UserDatabase {
     /**
      * Find clinician by ID
      *
-     * @param id unique ID for requested user
-     * @return user object
+     * @param id unique ID for requested User
+     * @return User object
      */
     public User getUser(Integer id) throws UserNotFoundException {
 
         User user = userDb.get(id);
         if (user == null) {
-            throw new UserNotFoundException("user not found with id " + id, id);
+            throw new UserNotFoundException("User not found with id " + id, id);
         }
         return user;
     }
 
     /**
-     * Determine unique ID for user and add the user to the database find user by username
+     * Determine unique ID for user and add the user to the database
+     * find user by username
      *
      * @param username username requested
      * @return the user object.
      */
     public User getUser(String username) throws UserNotFoundException {
-        for (User value : userDb.values()) {
-            if (value.getUsername() != null) {
-                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
-                    return value;
-                }
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null && value.getUsername().equalsIgnoreCase(username)) {
+                return value;
             }
         }
-        throw new UserNotFoundException("user not found with username " + username, username);
+        throw new UserNotFoundException("User not found with username " + username, username);
     }
 
     /**
      * Checks whether a user exists in the database with a certain username
-     *
      * @param username Username to be searched for
      * @return Boolean based on whether the user exists or not.
      */
     public Boolean isUser(String username) {
-        for (User value : userDb.values()) {
-            if (value.getUsername() != null) {
-                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
-                    return true;
-                }
+        for(User value : userDb.values()) {
+            if (value.getUsername() != null && value.getUsername().equalsIgnoreCase(username)) {
+                return true;
             }
         }
         return false;
@@ -67,7 +68,6 @@ public class UserDatabase {
 
     /**
      * Checks whether a user exists in the database with a certain user id
-     *
      * @param userId Id to be searched for
      * @return Boolean based on whether the user exists or not.
      */
@@ -80,7 +80,7 @@ public class UserDatabase {
      *
      * @param user new user object
      */
-    public void addUser(User user) {
+    public void addUser(User user){
         lastID += 1;
         user.setStaffID(lastID);
 
@@ -89,20 +89,14 @@ public class UserDatabase {
 
     /**
      * Returns all the users in the current database
-     *
      * @return ArrayList of users
      */
     public Collection<User> getUsers() {
-        Collection<User> users = new ArrayList();
-        for (User user : userDb.values()) {
-            users.add(user);
-        }
-        return users;
+        return new ArrayList<>(userDb.values());
     }
 
     /**
      * Returns all the users in the current database
-     *
      * @return ArrayList of users
      */
     public ArrayList<User> getUsersAsArrayList() {
@@ -110,7 +104,6 @@ public class UserDatabase {
 
         userDb.forEach((id, user) -> {
             users.add(user);
-
         });
 
         return users;
@@ -120,22 +113,20 @@ public class UserDatabase {
     /**
      * Restore a previously deleted user
      *
-     * @param id   ODMS ID of deleted profile
+     * @param id ODMS ID of deleted profile
      * @param user the profile to be restored
      * @return current ProfileDatabase lastId
      */
     public int restoreProfile(Integer id, User user) {
         try {
-            // Should deleted users simply be disabled for safety reasons?
             lastID += 1;
             user.setStaffID(lastID);
             userDb.put(lastID, user);
             deletedUsers.remove(id);
-            return lastID;
         } catch (Exception e) {
             e.printStackTrace();
-            return lastID;
         }
+        return lastID;
     }
 
     public String getPath() {
@@ -148,13 +139,12 @@ public class UserDatabase {
 
     /**
      * Checks for a duplicate username in the user database.
-     *
-     * @param username
-     * @return boolean for whether a username is unique/
+     * @param username The requested username for the user
+     * @return boolean for whether a username is unique
      */
     public boolean checkUniqueUsername(String username) {
         for (User user : userDb.values()) {
-            if (user.getUsername().equals(username)) {
+            if (user.getUsername() != null && user.getUsername().equalsIgnoreCase(username)) {
                 return false;
             }
         }
@@ -163,10 +153,9 @@ public class UserDatabase {
 
     /**
      * Generate a list of clinicians
-     *
      * @return Array of clinicians
      */
-    public ArrayList<User> getClinicians() {
+    public Collection<User> getClinicians() {
         ArrayList<User> clinicians = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
@@ -174,23 +163,20 @@ public class UserDatabase {
             if (user.getUserType() == UserType.CLINICIAN) {
                 clinicians.add(user);
             }
-
         });
-
         return clinicians;
     }
 
     /**
      * Fuzzy search that finds the top 30 users that match the provided search string.
-     *
      * @param searchString the string that the user names will be searched against.
      * @return list of users that match the provided search string, with a max size of 30.
      */
-    public ArrayList<User> searchUsers(String searchString) {
+    public Collection<User> searchUsers(String searchString) {
         ArrayList<String> users = new ArrayList<>();
 
         if (searchString == null || searchString.equals("")) {
-            return (ArrayList) getUsers();
+            return getUsers();
         }
 
         for (User user : getUsers()) {
@@ -210,23 +196,24 @@ public class UserDatabase {
     }
 
     /**
-     * Remove user from the user database, adding their ID to the deletedID's set for logging of
-     * removed users.
+     * Remove user from the user database, adding their ID to the deletedID's set for
+     * logging of removed users.
      *
      * @param staffID unique user ID
      */
     public boolean deleteUser(Integer staffID) {
         try {
-            // Should deleted users simply be disabled for safety reasons?
-            deletedUsers.add(staffID);
-            userDb.remove(staffID);
-            return true;
+            if (isUser(staffID)) {
+                deletedUsers.add(staffID);
+                userDb.remove(staffID);
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
-
 
     /**
      * Search for users via their given names
@@ -238,7 +225,7 @@ public class UserDatabase {
         ArrayList<User> results = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
-            if (user.getName().toLowerCase().equals(searchTerm.toLowerCase())) {
+            if (user.getName().equalsIgnoreCase(searchTerm)) {
                 results.add(user);
             }
         });
@@ -256,7 +243,7 @@ public class UserDatabase {
         ArrayList<User> results = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
-            if (user.getStaffID().equals(searchTerm)) {
+            if (user.getStaffID() == (searchTerm)) {
                 results.add(user);
             }
         });

@@ -1,27 +1,17 @@
 package odms.controller.profile;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import odms.controller.AlertController;
-import odms.controller.CommonController;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.history.HistoryController;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
-import odms.model.history.History;
-import odms.model.profile.Profile;
-import odms.view.profile.ProfileEditView;
+import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-
-import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
+import javafx.fxml.FXML;
+import odms.controller.AlertController;
+import odms.controller.CommonController;
+import odms.controller.data.ProfileDataIO;
+import odms.controller.history.HistoryController;
+import odms.model.history.History;
+import odms.model.profile.Profile;
+import odms.view.profile.ProfileEditView;
 
 public class ProfileEditController extends CommonController {
 

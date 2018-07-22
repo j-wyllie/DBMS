@@ -1,15 +1,15 @@
 package odms.model.profile;
 
-import java.time.Period;
-import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
-import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
+import odms.model.enums.OrganEnum;
+import odms.model.medications.Drug;
 
 public class Profile implements Comparable<Profile> {
     //todo tidy-up
@@ -34,16 +34,16 @@ public class Profile implements Comparable<Profile> {
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private HashSet<String> chronicDiseases = new HashSet<>();
+    private Set<String> chronicDiseases = new HashSet<>();
 
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
-    private HashSet<OrganEnum> organsDonating = new HashSet<>();
-    private HashSet<OrganEnum> organsDonated = new HashSet<>();
-    private HashSet<OrganEnum> organsRequired = new HashSet<>();
-    private HashSet<OrganEnum> organsReceived = new HashSet<>();
+    private Set<OrganEnum> organsDonating = new HashSet<>();
+    private Set<OrganEnum> organsDonated = new HashSet<>();
+    private Set<OrganEnum> organsRequired = new HashSet<>();
+    private Set<OrganEnum> organsReceived = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -154,7 +154,7 @@ public class Profile implements Comparable<Profile> {
         return summary;
     }
 
-    public HashSet<OrganEnum> getOrgansReceived() {
+    public Set<OrganEnum> getOrgansReceived() {
         return organsReceived;
     }
 
@@ -170,11 +170,11 @@ public class Profile implements Comparable<Profile> {
         return medicationTimestamps;
     }
 
-    public HashSet<OrganEnum> getOrgansDonated() {
+    public Set<OrganEnum> getOrgansDonated() {
         return organsDonated;
     }
 
-    public HashSet<OrganEnum> getOrgansDonating() {
+    public Set<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
 
@@ -199,7 +199,7 @@ public class Profile implements Comparable<Profile> {
         return null;
     }
 
-    public HashSet<String> getChronicDiseases() {
+    public Set<String> getChronicDiseases() {
         return chronicDiseases;
     }
 
@@ -286,7 +286,7 @@ public class Profile implements Comparable<Profile> {
     // condition functions
 
 
-    public void setReceiver(boolean receiver) {
+    public void setReceiver(Boolean receiver) {
         this.receiver = receiver;
     }
 
@@ -365,11 +365,6 @@ public class Profile implements Comparable<Profile> {
         this.donor = donor;
     }
 
-
-    public void setReceiver(Boolean receiver) {
-        this.receiver = receiver;
-    }
-
     public Integer getId() {
         return this.id;
     }
@@ -412,7 +407,7 @@ public class Profile implements Comparable<Profile> {
 
 
     // TODO access to this array should be restricted, this makes it public and redundant.
-    public void setChronicDiseases(HashSet<String> chronicDiseases) {
+    public void setChronicDiseases(Set<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
     }
 
@@ -454,7 +449,7 @@ public class Profile implements Comparable<Profile> {
      * @param organs organs to be checked
      * @return true if they are
      */
-    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+    public boolean isDonatingCertainOrgans(Set<OrganEnum> organs) {
         return organsDonating.containsAll(organs);
     }
 
@@ -464,7 +459,7 @@ public class Profile implements Comparable<Profile> {
      * @param organs organs to be checked
      * @return true if they are
      */
-    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+    public boolean isReceivingCertainOrgans(Set<OrganEnum> organs) {
         return organsRequired.containsAll(organs);
     }
 
@@ -473,7 +468,7 @@ public class Profile implements Comparable<Profile> {
         lastUpdated = currentTime;
     }
 
-    public HashSet<OrganEnum> getOrgansRequired() {
+    public Set<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
 

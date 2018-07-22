@@ -203,7 +203,7 @@ public class ProfileUndoRedoCLIServiceController {
      *
      * @param organs the set of organs to be received
      */
-    public static void addOrgansRequired(HashSet<OrganEnum> organs, Profile p) {
+    public static void addOrgansRequired(Set<OrganEnum> organs, Profile p) {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ, p);
         }

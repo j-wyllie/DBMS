@@ -16,10 +16,10 @@ public class User extends CommandUtils {
     /**
      * Add history for profile
      *
-     * @param Id profile ID
+     * @param id profile ID
      */
-    protected static void addClinicianHistory(int Id) {
-        History action = new History("user", Id, "added", "", -1, LocalDateTime.now());
+    protected static void addClinicianHistory(Integer id) {
+        History action = new History("user", id, "added", "", -1, LocalDateTime.now());
         HistoryController.updateHistory(action);
     }
 

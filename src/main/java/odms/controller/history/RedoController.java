@@ -138,8 +138,8 @@ public class RedoController extends UndoRedoController {
         Drug drug = drugs.get(d);
         ProfileUndoRedoCLIServiceController.moveDrugToHistory(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
-        History data = new History("profile", profile.getId(), "stopped", drug.getDrugName()
-                , profile.getHistoryOfMedication().indexOf(drug), currentTime);
+        History data = new History("profile", profile.getId(), "stopped", drug.getDrugName(),
+                profile.getHistoryOfMedication().indexOf(drug), currentTime);
         HistoryController.currentSessionHistory.set(historyPosition - 1, data);
     }
 
@@ -157,8 +157,8 @@ public class RedoController extends UndoRedoController {
         Drug drug = drugs.get(d);
         ProfileUndoRedoCLIServiceController.moveDrugToCurrent(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
-        History data = new History("profile", profile.getId(), "started", drug.getDrugName()
-                , profile.getCurrentMedications().indexOf(drug), currentTime);
+        History data = new History("profile", profile.getId(), "started", drug.getDrugName(),
+                profile.getCurrentMedications().indexOf(drug), currentTime);
         HistoryController.currentSessionHistory.set(historyPosition - 1, data);
     }
 
@@ -295,8 +295,8 @@ public class RedoController extends UndoRedoController {
         String organs;
         ArrayList<OrganEnum> organList = new ArrayList<>();
         organs = action.getHistoryData();
-        List<String> List = new ArrayList<>(Arrays.asList(organs.split(",")));
-        for (String organ : List) {
+        List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
+        for (String organ : list) {
             System.out.println(organ);
             organList.add(OrganEnum.valueOf(organ.replace(" ", "").replace("NEWORGANS[", "")));
         }

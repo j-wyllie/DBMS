@@ -6,7 +6,7 @@ public class ProfileMedicalTabController {
 
     private ProfileMedicalViewTODO view;
 
-    public ProfileMedicalTabController(ProfileMedicalViewTODO v){
-        view = v;
+    public ProfileMedicalTabController(ProfileMedicalViewTODO view) {
+        this.view = view;
     }
 }
