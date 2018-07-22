@@ -2,12 +2,20 @@ package odms.dao;
 
 import odms.user.User;
 
+import java.util.ArrayList;
+
 public interface UserDAO {
 
     /**
      * Gets all users from the database.
      */
-    void getAll();
+    ArrayList<User> getAll();
+
+    /**
+     * Get a single user from the database.
+     * @return
+     */
+    User getUser(int userId);
 
     /**
      * Adds a new user to the database.
