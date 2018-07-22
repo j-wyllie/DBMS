@@ -1,6 +1,11 @@
 package odms.enums;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
 public enum CountriesEnum {
+    NZ("New Zealand"),
     AF("Afghanistan"),
     AX("Åland Islands"),
     AL("Albania"),
@@ -157,7 +162,6 @@ public enum CountriesEnum {
     NL("Netherlands"),
     AN("Netherlands Antilles"),
     NC("New Caledonia"),
-    NZ("New Zealand"),
     NI("Nicaragua"),
     NE("Niger"),
     NG("Nigeria"),
@@ -253,5 +257,20 @@ public enum CountriesEnum {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Generate an ArrayList of strings of country names.
+     * @return the array list of countries
+     */
+    public List<String> toArrayList() {
+        ArrayList<CountriesEnum> countries = new ArrayList<>(EnumSet.allOf(CountriesEnum.class));
+        ArrayList<String> countryStrings = new ArrayList<>();
+
+        for (CountriesEnum country : countries) {
+            countryStrings.add(country.getName());
+        }
+
+        return countryStrings;
     }
 }
