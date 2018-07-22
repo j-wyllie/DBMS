@@ -35,7 +35,7 @@ public class User {
      * @param userType type of user.
      * @param attrArray array containing users attributes.
      */
-    public User(UserType userType, ArrayList<String> attrArray){
+    public User(UserType userType, ArrayList<String> attrArray) {
         this.userType = userType;
         setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
@@ -47,7 +47,7 @@ public class User {
      * @param name user name.
      * @param region user region.
      */
-    public User(UserType userType, String name, String region){
+    public User(UserType userType, String name, String region) {
         this.timeOfCreation = LocalDateTime.now();
         this.userType = userType;
         this.name = name;
@@ -147,7 +147,7 @@ public class User {
     }
 
 
-    public void setWorkAddress(String address){
+    public void setWorkAddress(String address) {
         this.workAddress = address;
         generateUpdateInfo(workAddress);
     }

@@ -5,30 +5,97 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import odms.user.User;
 import odms.data.UserDatabase;
+import odms.user.UserType;
 
 public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets all users from the database.
+     * @return ArrayList of all users in the database
      */
     @Override
-    public void getAll() {
+    public ArrayList<User> getAll() {
+        ArrayList<User> allUsers = new ArrayList<>();
+
         String query = "select * from users;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = connectionInstance.getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet allUsers = stmt.executeQuery(query);
+            ResultSet allUserRows = stmt.executeQuery(query);
             conn.close();
 
-            UserDatabase userDb = new UserDatabase();
-            //todo: store users locally.
+            while (allUserRows.next()) {
+                User user = parseUser(allUserRows);
+                allUsers.add(user);
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        return allUsers;
+    }
+
+    /**
+     * Gets a single user from the database by userID.
+     * @return the specified user.
+     */
+    public User getUser(int userId) {
+        String query = "select * from users when UserId = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        User user = null;
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            conn.close();
+
+            user = parseUser(rs);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    /**
+     * Parses a single row of the user table and converts it to a user object.
+     * @param rs the result set.
+     * @return parsed user.
+     * @throws SQLException error.
+     */
+    private User parseUser(ResultSet rs) throws SQLException {
+        UserType userType = convertStringToUserType(rs.getString("UserType"));
+        String name = rs.getString("Name");
+        String region = rs.getString("Region");
+        User user = new User(userType, name, region);
+        user.setStaffID(rs.getInt("UserId"));
+        user.setWorkAddress(rs.getString("Address"));
+
+        return user;
+    }
+
+    // ToDo: implement this with proper enum usage
+    private UserType convertStringToUserType(String name) {
+        switch (name) {
+            case "administrator":
+                return UserType.ADMIN;
+            case "clinician":
+                return UserType.CLINICIAN;
+            case "profile":
+                return UserType.PROFILE;
+            default:
+                return UserType.PROFILE;
         }
     }
 
@@ -38,7 +105,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void add(User user) {
-        String query = "insert into user (UserId, Username, Password, Name, UserType, Address,"
+        String query = "insert into users (UserId, Username, Password, Name, UserType, Address,"
                 + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -71,7 +138,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void remove(User user) {
-        String query = "delete from user where UserId = ?;";
+        String query = "delete from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -94,7 +161,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void update(User user) {
-        String query = "update user set Username = ?, Password = ?, Name = ?, UserType = ?, "
+        String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where"
                 + "UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();

@@ -10,6 +10,7 @@ import odms.enums.OrganEnum;
 public class Procedure {
     private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
+    private int procedureId;
     private String summary;
     private LocalDate date;
     private String longDescription;
@@ -45,6 +46,7 @@ public class Procedure {
         }
     }
 
+    public int getId() { return this.procedureId; }
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }

@@ -2,7 +2,10 @@ package odms.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
@@ -13,23 +16,8 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public void getDonations(Profile profile) {
-        String query = "select Organ from organs where ProfileId = ? and Donated = ?";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
-            stmt.setBoolean(2, true);
-
-            stmt.executeUpdate();
-            conn.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<OrganEnum> getDonations(Profile profile) {
+        return getOrgans( profile, "select Organ from organs where ProfileId = ? and Donated = ?");
 
     }
 
@@ -38,9 +26,20 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public void getDonating(Profile profile) {
-        String query = "select Organ from organs where ProfileId = ? and Donating = ?";
+    public ArrayList<OrganEnum> getDonating(Profile profile) {
+        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Donating = ?");
+    }
+
+    /**
+     * Runs the given query with the first parameter set to the profile and the second set to true
+     * @param profile
+     * @param query
+     * @return the list of the returned organs
+     */
+    private ArrayList<OrganEnum> getOrgans(Profile profile, String query) {
+
         DatabaseConnection instance = DatabaseConnection.getInstance();
+        ArrayList<OrganEnum> allOrgans = null;
 
         try {
             Connection conn = instance.getConnection();
@@ -48,12 +47,50 @@ public class MySqlOrganDAO implements OrganDAO {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setBoolean(2, true);
-
-            stmt.executeUpdate();
+            ResultSet allOrganRows = stmt.executeQuery();
             conn.close();
+
+            while (allOrganRows.next()) {
+                String organName = allOrganRows.getString("Organ");
+                OrganEnum organ = convertOrganToEnum(organName);
+                allOrgans.add(organ);
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        return allOrgans;
+    }
+
+    private OrganEnum convertOrganToEnum(String organName) {
+        switch (organName) {
+            case "bone":
+                return OrganEnum.BONE;
+            case "bone-marrow":
+                return OrganEnum.BONE_MARROW;
+            case "connective-tissue":
+                return OrganEnum.CONNECTIVE_TISSUE;
+            case "cornea":
+                return OrganEnum.CORNEA;
+            case "heart":
+                return OrganEnum.HEART;
+            case "intestine":
+                return OrganEnum.INTESTINE;
+            case "kidney":
+                return OrganEnum.KIDNEY;
+            case "liver":
+                return OrganEnum.LIVER;
+            case "lung":
+                return OrganEnum.LUNG;
+            case "middle-ear":
+                return OrganEnum.MIDDLE_EAR;
+            case "pancreas":
+                return OrganEnum.PANCREAS;
+            case "skin":
+                return OrganEnum.SKIN;
+            default:
+                return null;
         }
     }
 
@@ -62,23 +99,8 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public void getRequired(Profile profile) {
-        String query = "select Organ from organs where ProfileId = ? and Required = ?";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
-            stmt.setBoolean(2, true);
-
-            stmt.executeUpdate();
-            conn.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<OrganEnum> getRequired(Profile profile) {
+        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Required = ?");
     }
 
     /**
@@ -86,23 +108,8 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public void getReceived(Profile profile) {
-        String query = "select Organ from organs where ProfileId = ? and Received = ?";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
-            stmt.setBoolean(2, true);
-
-            stmt.executeUpdate();
-            conn.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<OrganEnum> getReceived(Profile profile) {
+        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Received = ?");
     }
 
     /**
