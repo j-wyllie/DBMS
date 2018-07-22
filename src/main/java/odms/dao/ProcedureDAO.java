@@ -22,17 +22,15 @@ public interface ProcedureDAO {
 
     /**
      * Remove a procedure from a profile.
-     * @param profile to remove the procedure from.
      * @param procedure to remove.
      */
-    void remove(Profile profile, Procedure procedure);
+    void remove(Procedure procedure);
 
     /**
      * Update a procedure for the profile.
-     * @param profile to update the procedure for.
      * @param procedure to update.
      */
-    void update(Profile profile, Procedure procedure);
+    void update(Procedure procedure);
 
     /**
      * Add an affected organ to a procedure for a profile.

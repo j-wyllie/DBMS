@@ -71,11 +71,10 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Remove a procedure from a profile.
-     * @param profile to remove the procedure from.
      * @param procedure to remove.
      */
     @Override
-    public void remove(Profile profile, Procedure procedure) {
+    public void remove(Procedure procedure) {
         String query = "delete from procedures where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -83,7 +82,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            //stmt.setInt(1, procedure.getId());
+            stmt.setInt(1, procedure.getId());
 
             stmt.executeUpdate();
             conn.close();
@@ -95,11 +94,10 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Update a procedure for the profile.
-     * @param profile to update the procedure for.
      * @param procedure to update.
      */
     @Override
-    public void update(Profile profile, Procedure procedure) {
+    public void update(Procedure procedure) {
         String query = "update procedures set Summary = ?, Description = ?, ProcedureDate = ? "
                 + "where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -111,7 +109,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(1, procedure.getSummary());
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
-            //stmt.setInt(4, procedure.getId());
+            stmt.setInt(4, procedure.getId());
 
             stmt.executeUpdate();
             conn.close();
@@ -135,7 +133,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            //stmt.setInt(1, procedure.getId());
+            stmt.setInt(1, procedure.getId());
             stmt.setString(2, organ.getName());
 
             stmt.executeUpdate();
@@ -153,14 +151,14 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public void removeAffectedOrgan(Procedure procedure, OrganEnum organ) {
-        String query = "delete from affected_organs where ProcedureId = ? and Organ =?;";
+        String query = "delete from affected_organs where ProcedureId = ? and Organ = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            //stmt.setInt(1, procedure.getId());
+            stmt.setInt(1, procedure.getId());
             stmt.setString(2, organ.getName());
 
             stmt.executeUpdate();

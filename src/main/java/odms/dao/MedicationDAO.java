@@ -8,10 +8,12 @@ import odms.profile.Profile;
 public interface MedicationDAO {
 
     /**
-     * Gets all drugs from the database for a single profile.
+     * Gets all the current and past drugs from the database for a single profile.
      * @param profile to get the drugs from.
+     * @param current true if the current drugs are required for that profile.
+     * @return a list of current or past drugs.
      */
-    Map<String, List<Drug>> getAll(Profile profile);
+    List<Drug> getAll(Profile profile, Boolean current);
 
     /**
      * Adds a new drug for a profile stored in the database.

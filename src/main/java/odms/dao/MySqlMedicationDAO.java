@@ -16,40 +16,32 @@ public class MySqlMedicationDAO implements MedicationDAO {
     /**
      * Gets all the current and past drugs from the database for a single profile.
      * @param profile to get the drugs from.
-     * @return a map of current and past drugs.
+     * @param current true if the current drugs are required for that profile.
+     * @return a list of current or past drugs.
      */
     @Override
-    public Map<String, List<Drug>> getAll(Profile profile) {
-        String query = "select * from drugs where ProfileId = ?;";
+    public List<Drug> getAll(Profile profile, Boolean current) {
+        String query = "select * from drugs where ProfileId = ? and Current = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Map<String, List<Drug>>  result = new HashMap<>();
-        List<Drug> currentDrugs = new ArrayList<>();
-        List<Drug> pastDrugs = new ArrayList<>();
+        List<Drug> result = new ArrayList<>();
 
         try {
             Connection conn = connectionInstance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
+            stmt.setBoolean(2, current);
 
             ResultSet allDrugs = stmt.executeQuery();
             conn.close();
 
             while (allDrugs.next()) {
                 Drug drug = parseDrug(allDrugs);
-
-                if (allDrugs.getBoolean("Current")) {
-                    currentDrugs.add(drug);
-                }
-                else {
-                    pastDrugs.add(drug);
-                }
+                result.add(drug);
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        result.put("Current", currentDrugs);
-        result.put("Past", pastDrugs);
 
         return result;
     }
