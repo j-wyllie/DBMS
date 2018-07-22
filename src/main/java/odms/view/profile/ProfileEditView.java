@@ -275,16 +275,32 @@ public class ProfileEditView extends CommonView {
         return givenNamesField.getText();
     }
 
+    public void setGivenNamesField(String s) {
+        givenNamesField.setText(s);
+    }
+
     public String getIRDNumberField() {
         return irdNumberField.getText();
+    }
+
+    public void getIRDNumberField(String s) {
+        irdNumberField.setText(s);
     }
 
     public String getLastNamesField() {
         return lastNamesField.getText();
     }
 
+    public void setLastNamesField(String s) {
+        lastNamesField.setText(s);
+    }
+
     public String getAddressField() {
         return addressField.getText();
+    }
+
+    public void setAddressField(String s) {
+        addressField.setText(s);
     }
 
     public LocalDate getDODDatePicker() {
@@ -337,6 +353,62 @@ public class ProfileEditView extends CommonView {
 
     public boolean getIsSmokerRadioButton() {
         return isSmokerRadioButton.isSelected();
+    }
+
+    public void setDODDatePicker(LocalDate l) {
+        dodDatePicker.setValue(l);
+    }
+
+    public void setIRDNumberField(String s) {
+       irdNumberField.setText(s);
+    }
+
+    public void setEmailField(String s) {
+        emailField.setText(s);
+    }
+
+    public void setComboGender(Object o) {
+        comboGender.setValue(o);
+    }
+
+    public void setHeightField(String s) {
+        heightField.setText(s);
+    }
+
+    public void setPhoneField(String s) {
+        phoneField.setText(s);
+    }
+
+    public void setComboGenderPref(String s) {
+        comboGenderPref.getEditor().setText(s);
+    }
+
+    public void setPreferredNameField(String s) {
+        preferredNameField.setText(s);
+    }
+
+    public void setRegionField(String s) {
+        regionField.setText(s);
+    }
+
+    public void setWeightField(String s) {
+        weightField.setText(s);
+    }
+
+    public void setAlcoholConsumptionField(String s) {
+        alcoholConsumptionField.setText(s);
+    }
+
+    public void setBloodPressureField(String s) {
+        bloodPressureField.setText(s);
+    }
+
+    public void setBloodTypeField(String s) {
+        bloodTypeField.setText(s);
+    }
+
+    public void setIsSmokerRadioButton(boolean b) {
+        isSmokerRadioButton.setSelected(b);
     }
 
 
