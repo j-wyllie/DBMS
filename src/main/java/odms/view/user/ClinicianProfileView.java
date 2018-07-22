@@ -45,14 +45,7 @@ public class ClinicianProfileView extends CommonView {
     private User currentUser;
     @FXML
     private Label clinicianFullName;
-    @FXML
-    private Label givenNamesLabel;
-    @FXML
-    private Label staffIdLabel;
-    @FXML
-    private Label addressLabel;
-    @FXML
-    private Label regionLabel;
+
     @FXML
     private Label donorStatusLabel;
     @FXML
@@ -62,9 +55,10 @@ public class ClinicianProfileView extends CommonView {
     @FXML
     private Tab dataManagementTab;
     @FXML
+    private Tab generalTab;
+    @FXML
     private DataManagementControllerPOTENTIALTODO dataManagementControllerPOTENTIALTODO;
-    private RedoController redoController = new RedoController();
-    private UndoController undoController = new UndoController();
+    private UserGeneralTabView userGeneralTabView = new UserGeneralTabView();
     protected ObjectProperty<User> currentUserBound = new SimpleObjectProperty<>();
     private UserConsoleTabView userConsoleTabView = new UserConsoleTabView();
     private ViewUsersView viewUsersView = new ViewUsersView();
@@ -108,64 +102,6 @@ public class ClinicianProfileView extends CommonView {
         changeScene(event, "/view/Login.fxml");
     }
 
-    /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
-    @FXML
-    private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        //todo replace with standardised?
-        undoController.undo(GuiMain.getCurrentDatabase());
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
-    @FXML
-    private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        //todo replace with standardised?
-        redoController.redo(GuiMain.getCurrentDatabase());
-        Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
-        Scene newScene = new Scene(parent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(newScene);
-        appStage.show();
-    }
-
-    /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load());
-        //todo replace scene change with standardised and controller with view
-        ClinicianProfileEditView v = fxmlLoader.getController();
-        v.setCurrentUser(currentUser);
-        v.initialize();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setTitle("Edit profile");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-
-
 
     /**
      * Sets all the clinicians details in the GUI.
@@ -174,27 +110,32 @@ public class ClinicianProfileView extends CommonView {
     private void setClinicianDetails() {
         donorStatusLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
-        givenNamesLabel.setText(
-                givenNamesLabel.getText() + (
-                        currentUser.getName() != null ? currentUser.getName() : ""));
-        staffIdLabel.setText(
-                staffIdLabel.getText() + (
-                        currentUser.getStaffID() != null ? currentUser.getStaffID() : ""));
-        addressLabel.setText(
-                addressLabel.getText() +
-                        (currentUser.getWorkAddress() != null ? currentUser.getWorkAddress() : "")
-        );
-        regionLabel.setText(
-                regionLabel.getText() +
-                        (currentUser.getRegion() != null ? currentUser.getRegion() : "")
-        );
     }
 
 
+    public void handleConsoleTabClicked(Event event) {
+        userConsoleTabView.currentProfile.bind(currentUserBound);
+    }
 
+    /**
+     * Initializes the controller for the view users Tab
+     */
+    public void handleViewUsersTabClicked() {
+        viewUsersView.setCurrentUser(currentUser);
+    }
 
-
-
+    public void handleGeneralTabClicked(Event event) {
+        if (currentUser != null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserGeneralTab.fxml"));
+            loader.setController(userGeneralTabView);
+            try {
+                generalTab.setContent(loader.load());
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+            userGeneralTabView.initialize(currentUser);
+        }
+    }
 
     public void handleTabDataManagementClicked() {
         dataManagementControllerPOTENTIALTODO = new DataManagementControllerPOTENTIALTODO();
@@ -234,14 +175,4 @@ public class ClinicianProfileView extends CommonView {
         openProfileStages.remove(stage);
     }
 
-    public void handleConsoleTabClicked(Event event) {
-        userConsoleTabView.currentProfile.bind(currentUserBound);
-    }
-
-    /**
-     * Initializes the controller for the view users Tab
-     */
-    public void handleViewUsersTabClicked() {
-        viewUsersView.setCurrentUser(currentUser);
-    }
 }
