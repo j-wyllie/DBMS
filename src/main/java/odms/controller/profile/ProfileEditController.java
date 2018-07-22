@@ -94,7 +94,7 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    private void saveGivenNames() throws IllegalArgumentException {
+    public void saveGivenNames() throws IllegalArgumentException {
         if (view.getGivenNamesField().isEmpty()) {
             throw new IllegalArgumentException("Given Names field cannot be blank");
         }
@@ -106,7 +106,7 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    private void saveIrdNumber() throws IllegalArgumentException {
+    public void saveIrdNumber() throws IllegalArgumentException {
         if (view.getIRDNumberField().isEmpty()) {
             throw new IllegalArgumentException("IRD Number field cannot be blank");
         }
@@ -118,7 +118,7 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    private void saveLastNames() throws IllegalArgumentException {
+    public void saveLastNames() throws IllegalArgumentException {
         if (view.getLastNamesField().isEmpty()) {
             throw new IllegalArgumentException("Last Names field cannot be blank");
         }
@@ -128,7 +128,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    private void saveAddress() {
+    public void saveAddress() {
         if (!view.getAddressField().isEmpty()) {
             currentProfile.setAddress(view.getAddressField());
         }
@@ -139,7 +139,7 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if date is prior to birth date
      */
-    private void saveDateOfDeath() throws IllegalArgumentException {
+    public void saveDateOfDeath() throws IllegalArgumentException {
         if (!view.getDODDatePicker().equals(null)) {
             currentProfile.setDateOfDeath(view.getDODDatePicker());
         }
@@ -148,7 +148,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Email field to profile.
      */
-    private void saveEmail() {
+    public void saveEmail() {
         if (!view.getEmailField().isEmpty()) {
             currentProfile.setEmail(view.getEmailField());
         }
@@ -157,7 +157,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Gender field to profile.
      */
-    private void saveGender() {
+    public void saveGender() {
         if (view.getComboGender() != null) {
             currentProfile.setGender(view.getComboGender().toString());
         }
@@ -166,7 +166,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Height field to profile.
      */
-    private void saveHeight() {
+    public void saveHeight() {
         if (!view.getHeightField().isEmpty()) {
             currentProfile.setHeight(Double.valueOf(view.getHeightField()));
         } else {
@@ -177,7 +177,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Phone field to profile.
      */
-    private void savePhone() {
+    public void savePhone() {
         if (!view.getPhoneField().isEmpty()) {
             currentProfile.setPhone(view.getPhoneField());
         }
@@ -186,7 +186,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Preferred Gender value to profile.
      */
-    private void savePreferredGender() {
+    public void savePreferredGender() {
         // If there is no preferred gender just set it to the gender
         if (view.getComboGenderPref().equals("")) {
             if (view.getComboGender() != null) {
@@ -200,14 +200,14 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Preferred Name field to profile.
      */
-    private void savePreferredName() {
+    public void savePreferredName() {
         currentProfile.setPreferredName(view.getPreferredNameField());
     }
 
     /**
      * Save Region field to profile.
      */
-    private void saveRegion() {
+    public void saveRegion() {
         if (!view.getRegionField().isEmpty()) {
             currentProfile.setRegion(view.getRegionField());
         }
@@ -216,7 +216,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Weight field to profile.
      */
-    private void saveWeight() {
+    public void saveWeight() {
         if (!view.getWeightField().isEmpty()) {
             currentProfile.setWeight(Double.valueOf(view.getWeightField()));
         } else {
@@ -227,7 +227,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Alcohol Consumption field to profile.
      */
-    private void saveAlcoholConsumption() {
+    public void saveAlcoholConsumption() {
         if (!view.getAlcoholConsumptionField().isEmpty()) {
             currentProfile.setAlcoholConsumption(view.getAlcoholConsumptionField());
         }
@@ -236,7 +236,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Blood Pressure field to profile. Must be in format of Systolic/Diastolic.
      */
-    private void saveBloodPressure() {
+    public void saveBloodPressure() {
         if (!view.getBloodPressureField().isEmpty() && view.getBloodPressureField().contains("/")) {
             String systolic = view.getBloodPressureField().substring(
                     0, view.getBloodPressureField().indexOf("/")
@@ -253,7 +253,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Blood Type field to profile.
      */
-    private void saveBloodType() {
+    public void saveBloodType() {
         if (!view.getBloodTypeField().isEmpty()) {
             currentProfile.setBloodType(view.getBloodTypeField());
         }
@@ -262,7 +262,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Smoker Status to profile.
      */
-    private void saveIsSmoker() {
+    public void saveIsSmoker() {
         // TODO this should be a checkbox and not a radio button.
         currentProfile.setIsSmoker(view.getIsSmokerRadioButton());
     }

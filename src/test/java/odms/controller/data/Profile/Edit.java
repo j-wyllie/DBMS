@@ -53,4 +53,330 @@ public class Edit {
         }
     }
 
+    @Test
+    public void testSaveGivenNamesNullValue() {
+        try {
+            controller.saveGivenNames();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveGivenNamesCorrectValue() {
+        try {
+            String oldValue = currentProfile.getGivenNames();
+            view.setGivenNamesField("Jim");
+            controller.saveGivenNames();
+            assertNotEquals(oldValue, currentProfile.getGivenNames());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveLastNamesNullValue() {
+        try {
+            controller.saveLastNames();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveLastNamesCorrectValue() {
+        try {
+            String oldValue = currentProfile.getLastNames();
+            view.setLastNamesField("Smith");
+            controller.saveLastNames();
+            assertNotEquals(oldValue, currentProfile.getLastNames());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveDateOfDeathNullValue() {
+        try {
+            controller.saveDateOfDeath();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveDateOfDeathCorrectValue() {
+        try {
+            LocalDate oldValue = currentProfile.getDateOfDeath();
+            view.setDODDatePicker(LocalDate.now());
+            controller.saveDateOfDeath();
+            assertNotEquals(oldValue, currentProfile.getDateOfDeath());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveIRDNullValue() {
+        try {
+            controller.saveIrdNumber();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveIRDCorrectValue() {
+        try {
+            Integer oldValue = currentProfile.getIrdNumber();
+            view.setIRDNumberField("587095144");
+            controller.saveIrdNumber();
+            assertNotEquals(oldValue, currentProfile.getIrdNumber());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveAddressNullValue() {
+        try {
+            controller.saveAddress();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveAddressCorrectValue() {
+        try {
+            String oldValue = currentProfile.getAddress();
+            view.setAddressField("51 Somewhere St");
+            controller.saveAddress();
+            assertNotEquals(oldValue, currentProfile.getAddress());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveEmailNullValue() {
+        try {
+            controller.saveEmail();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveEmailCorrectValue() {
+        try {
+            String oldValue = currentProfile.getEmail();
+            view.setAddressField("an.email@gmail.com");
+            controller.saveEmail();
+            assertNotEquals(oldValue, currentProfile.getEmail());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveGenderNullValue() {
+        try {
+            controller.saveGender();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveGenderCorrectValue() {
+        try {
+            String oldValue = currentProfile.getGender();
+            //todo work out what the object is
+            view.setComboGender("MALE");
+            controller.saveGender();
+            assertNotEquals(oldValue, currentProfile.getGender());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveHeightNullValue() {
+        try {
+            controller.saveHeight();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveHeightCorrectValue() {
+        try {
+            Double oldValue = currentProfile.getHeight();
+            view.setHeightField("1.42");
+            controller.saveHeight();
+            assertNotEquals(oldValue, currentProfile.getHeight());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveWeightNullValue() {
+        try {
+            controller.saveWeight();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveWeightCorrectValue() {
+        try {
+            Double oldValue = currentProfile.getWeight();
+            view.setHeightField("74.0");
+            controller.saveWeight();
+            assertNotEquals(oldValue, currentProfile.getWeight());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSavePhoneNullValue() {
+        try {
+            controller.savePhone();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSavePhoneCorrectValue() {
+        try {
+            String oldValue = currentProfile.getPhone();
+            view.setPhoneField("0274511902");
+            controller.savePhone();
+            assertNotEquals(oldValue, currentProfile.getPhone());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSavePreferredGenderNullValue() {
+        try {
+            String oldValue = currentProfile.getPreferredGender();
+            controller.savePreferredGender();
+            assertEquals(oldValue, currentProfile.getPreferredGender());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSavePreferredGenderCorrectValue() {
+        try {
+            String oldValue = currentProfile.getPreferredGender();
+            view.setPhoneField("Female");
+            controller.savePreferredGender();
+            assertNotEquals(oldValue, currentProfile.getPreferredGender());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSavePreferredNameCorrectValue() {
+        try {
+            String oldValue = currentProfile.getPreferredName();
+            view.setPhoneField("Jimmy");
+            controller.savePreferredName();
+            assertNotEquals(oldValue, currentProfile.getPreferredName());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveRegionNullValue() {
+        try {
+            controller.saveRegion();
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testSaveRegionCorrectValue() {
+        try {
+            String oldValue = currentProfile.getRegion();
+            view.setPhoneField("Canterbury");
+            controller.saveRegion();
+            assertNotEquals(oldValue, currentProfile.getRegion());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveAlcoholConsumptionCorrectValue() {
+        try {
+            String oldValue = currentProfile.getAlcoholConsumption();
+            view.setAlcoholConsumptionField("120");
+            controller.saveAlcoholConsumption();
+            assertNotEquals(oldValue, currentProfile.getAlcoholConsumption());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveBloodPressureCorrectValue() {
+        try {
+            String oldValue = currentProfile.getBloodPressure();
+            view.setBloodPressureField("12/14");
+            controller.saveBloodPressure();
+            assertNotEquals(oldValue, currentProfile.getBloodPressure());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveBloodTypeCorrectValue() {
+        try {
+            String oldValue = currentProfile.getBloodType();
+            view.setBloodTypeField("O-");
+            controller.saveBloodType();
+            assertNotEquals(oldValue, currentProfile.getBloodType());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSaveisSmokerCorrectValue() {
+        try {
+            Boolean oldValue = currentProfile.getIsSmoker();
+            view.setIsSmokerRadioButton(true);
+            controller.saveIsSmoker();
+            assertNotEquals(oldValue, currentProfile.getIsSmoker());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
 }
