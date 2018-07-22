@@ -43,10 +43,8 @@ public class UserDatabase {
      */
     public User getUser(String username) throws UserNotFoundException {
         for(User value : userDb.values()) {
-            if (value.getUsername() != null) {
-                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
-                    return value;
-                }
+            if (value.getUsername() != null && value.getUsername().equalsIgnoreCase(username)) {
+                return value;
             }
         }
         throw new UserNotFoundException("User not found with username " + username, username);
@@ -59,10 +57,8 @@ public class UserDatabase {
      */
     public Boolean isUser(String username) {
         for(User value : userDb.values()) {
-            if (value.getUsername() != null) {
-                if (value.getUsername().toLowerCase().equals(username.toLowerCase())) {
-                    return true;
-                }
+            if (value.getUsername() != null && value.getUsername().equalsIgnoreCase(username)) {
+                return true;
             }
         }
         return false;
@@ -94,11 +90,7 @@ public class UserDatabase {
      * @return ArrayList of users
      */
     public Collection<User> getUsers() {
-        Collection<User> users = new ArrayList();
-        for (User user : userDb.values()) {
-            users.add(user);
-        }
-        return users;
+        return new ArrayList<>(userDb.values());
     }
 
     /**
@@ -110,7 +102,6 @@ public class UserDatabase {
 
         userDb.forEach((id, user) -> {
             users.add(user);
-
         });
 
         return users;
@@ -126,7 +117,6 @@ public class UserDatabase {
      */
     public int restoreProfile(Integer id, User user) {
         try {
-            // Should deleted users simply be disabled for safety reasons?
             lastID += 1;
             user.setStaffID(lastID);
             userDb.put(lastID, user);
@@ -135,7 +125,6 @@ public class UserDatabase {
             e.printStackTrace();
         }
         return lastID;
-
     }
 
     public String getPath() {
@@ -164,17 +153,15 @@ public class UserDatabase {
      * Generate a list of clinicians
      * @return Array of clinicians
      */
-    public ArrayList<User> getClinicians() {
+    public Collection<User> getClinicians() {
         ArrayList<User> clinicians = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
 
-                if (user.getUserType() == UserType.CLINICIAN) {
-                    clinicians.add(user);
-                }
-
+            if (user.getUserType() == UserType.CLINICIAN) {
+                clinicians.add(user);
+            }
         });
-
         return clinicians;
     }
 
@@ -183,11 +170,11 @@ public class UserDatabase {
      * @param searchString the string that the user names will be searched against.
      * @return list of users that match the provided search string, with a max size of 30.
      */
-    public ArrayList<User> searchUsers(String searchString) {
+    public Collection<User> searchUsers(String searchString) {
         ArrayList<String> users = new ArrayList<>();
 
         if (searchString == null || searchString.equals("")) {
-            return (ArrayList) getUsers();
+            return getUsers();
         }
 
         for (User user : getUsers()) {
@@ -214,17 +201,17 @@ public class UserDatabase {
      */
     public boolean deleteUser(Integer staffID) {
         try {
-            // Should deleted users simply be disabled for safety reasons?
-            deletedUsers.add(staffID);
-            userDb.remove(staffID);
-            return true;
+            if (isUser(staffID)) {
+                deletedUsers.add(staffID);
+                userDb.remove(staffID);
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
-
-
 
     /**
      * Search for users via their given names
@@ -236,7 +223,7 @@ public class UserDatabase {
         ArrayList<User> results = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
-            if (user.getName().toLowerCase().equals(searchTerm.toLowerCase())) {
+            if (user.getName().equalsIgnoreCase(searchTerm)) {
                 results.add(user);
             }
         });
@@ -254,7 +241,7 @@ public class UserDatabase {
         ArrayList<User> results = new ArrayList<>();
 
         userDb.forEach((id, user) -> {
-            if (user.getStaffID().equals(searchTerm)) {
+            if (user.getStaffID() == (searchTerm)) {
                 results.add(user);
             }
         });

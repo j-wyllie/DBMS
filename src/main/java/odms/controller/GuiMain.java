@@ -33,8 +33,7 @@ public class GuiMain extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         if (!userDb.isUser(0)) {
-            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch");
-            user.setUsername("Clinician");
+            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
             user.setStaffID(0);
             userDb.addUser(user);
             user.setDefault(true);
