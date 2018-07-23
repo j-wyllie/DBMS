@@ -1,7 +1,7 @@
 package odms.data;
 
 import odms.enums.CountriesEnum;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +17,26 @@ public class AddressIOTest {
     @Test
     public void addressValidCountryTest() {
         assert(AddressIO.checkValidCountry("1600 Amphitheatre Parkway", validCountries));
+    }
+    @Test
+    public void addressInvalidCountryTest() {
+        assertFalse(AddressIO.checkValidCountry("15 Riccarton Road", validCountries));
+    }
+    @Test
+    public void addressValidRegionTest() {
+        assert(AddressIO.checkValidRegion("15 Riccarton Road", "Canterbury"));
+    }
+    @Test
+    public void addressInvalidRegionTest() {
+        assertFalse(AddressIO.checkValidRegion("1600 Amphitheatre Parkway", "Canterbury"));
+    }
+    @Test
+    public void addressValidCityTest() {
+        assert(AddressIO.checkValidCity("15 Riccarton Road", "Christchurch"));
+    }
+    @Test
+    public void addressInvalidCityTest() {
+        assertFalse(AddressIO.checkValidCity("1600 Amphitheatre Parkway", "Christchurch"));
     }
 
 }
