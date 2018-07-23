@@ -49,6 +49,8 @@ public class JsonMedicationInteractionsDAOTest {
     private Interaction testLoadInteraction;
     private Interaction testSaveInteraction;
 
+    private Interaction testDuplicationOrReplace;
+
     @Before
     public void setup() throws IOException {
         interactionsTestDb = DAOFactory.getMedicalInteractionsDao();
@@ -169,6 +171,20 @@ public class JsonMedicationInteractionsDAOTest {
         interactionsTestDb.load();
 
         assertEquals(2, interactionsTestDb.getAll().size());
+    }
+
+    @Test
+    public void testDuplicationOrReplace() throws IOException {
+        interactionsTestDb.clear();
+
+        // Mock makeRequests method, returns json data of interactions in a stringBuffer
+        PowerMockito.stub(PowerMockito.method(JsonMedicationInteractionsDAO.class, "getResponse"))
+                .toReturn(interactionData);
+
+        testDuplicationOrReplace = interactionsTestDb.get(drugNameA, drugNameB);
+        testDuplicationOrReplace = interactionsTestDb.get(drugNameA, drugNameB);
+
+        assertEquals(1, interactionsTestDb.getAll().size());
     }
 
     @Test

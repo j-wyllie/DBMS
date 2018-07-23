@@ -44,7 +44,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
-        for (Integer interactionKey : interactionMap.keySet()) {
+        for (Object interactionKey : interactionMap.keySet()) {
 
             Interaction value = interactionMap.get(interactionKey);
             if (value.getDrugA().equalsIgnoreCase(drugA)
@@ -53,7 +53,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 if (value.getDateTimeExpired().isBefore(now())
                     || value.getDateTimeExpired().isEqual(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
-                    interactionMap.replace(interactionKey, value);
+                    interactionMap.replace((Integer) interactionKey, value);
                 }
                 return value;
             }
@@ -77,9 +77,17 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             file = path;
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            this.interactionMap.clear();
+            JsonParser parser = new JsonParser();
+            JsonObject cache = parser.parse(new FileReader(file)).getAsJsonObject();
 
-            this.interactionMap = gson.fromJson(reader, Map.class);
+            cache.keySet().forEach(key -> {
+                Interaction value = gson.fromJson(
+                        cache.get(key).getAsJsonObject(),
+                        Interaction.class
+                );
+                this.interactionMap.put(Integer.valueOf(key), value);
+            });
         }
         catch (Exception e) {
             e.printStackTrace();
