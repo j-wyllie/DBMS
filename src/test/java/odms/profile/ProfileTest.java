@@ -66,7 +66,7 @@ public class ProfileTest {
         profileAttr.add("weight=\"72.0\"");
         profileAttr.add("blood-type=\"O+\"");
         profileAttr.add("address=\"Riccarton\"");
-        profileAttr.add("region=\"Christchurch\"");
+        profileAttr.add("region=\"Canterbury\"");
 
         Profile testProfile = new Profile(profileAttr);
 
