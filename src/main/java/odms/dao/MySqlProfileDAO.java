@@ -29,7 +29,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             ResultSet allProfiles = stmt.executeQuery(query);
             conn.close();
 
-            //todo: store profiles locally.
             while (allProfiles.next()) {
                 Profile newProfile  = parseProfile(allProfiles);
                 result.add(newProfile);
