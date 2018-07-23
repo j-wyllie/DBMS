@@ -175,7 +175,6 @@ public class MedicationDataIO {
 
             //Reading the response from the connection.
             StringBuffer response = makeRequest(urlString);
-
             if (response == null) {
                 return  interactions;
             } else if (response.toString().equals(SERVERERROR)) {
