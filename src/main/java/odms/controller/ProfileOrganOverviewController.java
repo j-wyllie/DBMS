@@ -3,6 +3,7 @@ package odms.controller;
 import static odms.controller.ProfileOrganEditController.setWindowType;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.enums.OrganEnum;
 import odms.enums.OrganSelectEnum;
 
 public class ProfileOrganOverviewController extends ProfileOrganCommonController {
@@ -24,7 +26,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
-    private ObservableList<String> observableListReceiving = FXCollections.observableArrayList();
+    private ObservableList<OrganEnum> observableListReceiving = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> listViewDonated;
@@ -77,10 +79,10 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
 
-//        tableViewReceiving.setItems(observableListReceiving);
-////        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("organ"));
-////        tableColumnDate.setCellValueFactory(new PropertyValueFactory("date"));
-//        tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnOrgan);
+        tableViewReceiving.setItems(observableListReceiving);
+        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
+        tableColumnDate.setCellValueFactory(new PropertyValueFactory<OrganEnum, LocalDate>("date"));
+        tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
     }
 
     @FXML
@@ -107,8 +109,8 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     public void populateOrganLists() {
         populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
-
+        populateOrganReceivingList(observableListReceiving, currentProfile.get().getOrgansRequired());
+        System.out.println(currentProfile.get().getOrgansRequired());
         checkList.clear();
 
         for (String organ : observableListDonating) {

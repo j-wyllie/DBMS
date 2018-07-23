@@ -69,10 +69,10 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </Label>
-            <TableView fx:id="tableViewDonating" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TableView fx:id="tableViewReceiving" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="tabelColumnOrgan" prefWidth="100.0" resizable="false" text="organ" />
-                <TableColumn fx:id="tableColumnDate" prefWidth="100.0" resizable="false" text="date registered" />
+                <TableColumn fx:id="tableColumnOrgan" prefWidth="100.0" resizable="false" text="Organ" />
+                <TableColumn fx:id="tableColumnDate" prefWidth="100.0" resizable="false" text="Date Registered" />
               </columns>
             </TableView>
          </children>

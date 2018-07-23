@@ -41,6 +41,18 @@ public class ProfileOrganCommonController {
         }
     }
 
+    /**
+     * Support function to populate an observable list with organs from an organ set.
+     *
+     * @param destinationList list to populate
+     * @param organs source list of organs to populate from
+     */
+    protected void populateOrganReceivingList(ObservableList<OrganEnum> destinationList, Set<OrganEnum> organs) {
+        destinationList.clear();
+        destinationList.addAll(organs);
+        Collections.sort(destinationList);
+    }
+
     public ObjectProperty<Profile> getCurrentProfile() {
         return currentProfile;
     }
