@@ -101,14 +101,13 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
 
             writeFile.write(gson.toJson(interactionMap));
-
             writeFile.close();
 
-            System.out.println("File exported successfully!");
+            System.out.println("Cache exported successfully!");
 
         } catch (IOException e) {
-            System.out.println("IO exception, please check the specified file");
-            System.out.println("File requested: " + path);
+            System.out.println("IO exception, please check the specified cache location.");
+            System.out.println("Cache requested: " + path);
         }
     }
 

@@ -144,10 +144,10 @@ public class JsonMedicationInteractionsDAOTest {
         interactionsTestDb.clear();
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+        PowerMockito.stub(PowerMockito.method(JsonMedicationInteractionsDAO.class, "getResponse"))
                 .toReturn(interactionData);
-        testLoadInteraction = interactionsTestDb.get(drugNameA, drugNameB);
 
+        testLoadInteraction = interactionsTestDb.get(drugNameA, drugNameB);
         interactionsTestDb.save();
         interactionsTestDb.load();
 
@@ -159,8 +159,9 @@ public class JsonMedicationInteractionsDAOTest {
         interactionsTestDb.clear();
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+        PowerMockito.stub(PowerMockito.method(JsonMedicationInteractionsDAO.class, "getResponse"))
                 .toReturn(interactionData);
+
         testSaveInteraction = interactionsTestDb.get(drugNameA, drugNameB);
         testSaveInteraction = interactionsTestDb.get(drugNameC, drugNameD);
 
