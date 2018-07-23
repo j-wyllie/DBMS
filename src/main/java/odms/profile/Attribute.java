@@ -11,6 +11,7 @@ public enum Attribute {
     BLOODTYPE("blood-type"),
     ADDRESS("address"),
     REGION("region"),
+    COUNTRY("country"),
     NHI("nhi");
 
     private String text;

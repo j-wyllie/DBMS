@@ -2,6 +2,8 @@ package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
+import odms.controller.ProfileEditController;
+import odms.enums.CountriesEnum;
 import odms.enums.OrganEnum;
 import odms.history.History;
 import odms.medications.Drug;
@@ -20,6 +22,9 @@ import odms.history.History;
 import odms.medications.Drug;
 
 public class Profile implements Comparable<Profile> {
+
+    //TODO do we want regions as enum? Or stored somewhere else at least
+    public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
     private Boolean donor = false;
     private Boolean receiver = false;
@@ -44,7 +49,6 @@ public class Profile implements Comparable<Profile> {
     private String zipCode;
     private String country;
     private String birthCountry;
-
 
     private Boolean isSmoker;
     private String alcoholConsumption;
@@ -223,7 +227,20 @@ public class Profile implements Comparable<Profile> {
             setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
             setAddress(value);
+        }
+        else if (attrName.equals(Attribute.COUNTRY.getText())) {
+            if (!CountriesEnum.toArrayList().contains(value)) {
+                throw new IllegalArgumentException("Must be a valid country!");
+            }
+            setCountry(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
+            if (getCountry() != null) {
+                if (getCountry().toLowerCase().equals(CountriesEnum.NZ.getName().toLowerCase()) || getCountry().toLowerCase().equals(CountriesEnum.NZ.toString().toLowerCase())) {
+                    if (!regionsNZ.contains(value.toString())) {
+                        throw new IllegalArgumentException("Must be a region within New Zealand");
+                    }
+                }
+            }
             setRegion(value);
         } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
@@ -334,6 +351,7 @@ public class Profile implements Comparable<Profile> {
         summary = summary +"," +("blood-type=" + bloodType);
         summary = summary +"," +("address=" + address);
         summary = summary +"," +("region=" + region);
+        summary = summary +"," +("country=" + country);
         summary = summary +"," +("isSmoker=" + isSmoker);
         summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
         summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
@@ -690,9 +708,6 @@ public class Profile implements Comparable<Profile> {
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
-
-
-
     }
 
     /**

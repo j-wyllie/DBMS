@@ -88,7 +88,7 @@ public class Help {
 
         System.out.println("\nProfile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
-            + " address, region, nhi");
+            + " address, region, country, nhi");
 
         System.out.println("\nUser attributes:");
         System.out.println("name, password, username, workAddress, staffID, region");

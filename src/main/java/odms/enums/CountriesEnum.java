@@ -263,7 +263,7 @@ public enum CountriesEnum {
      * Generate an ArrayList of strings of country names.
      * @return the array list of countries
      */
-    public List<String> toArrayList() {
+    public static List<String> toArrayList() {
         ArrayList<CountriesEnum> countries = new ArrayList<>(EnumSet.allOf(CountriesEnum.class));
         ArrayList<String> countryStrings = new ArrayList<>();
 
