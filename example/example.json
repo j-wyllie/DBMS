@@ -1,6 +1,349 @@
 {
-  "profileDb": {},
+  "profileDb": {
+    "0": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "Josh",
+      "lastNames": "wyllie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 18
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 06:26 PM 23-07-2018",
+        "last-names updated at 06:26 PM 23-07-2018",
+        "nhi updated at 06:26 PM 23-07-2018",
+        "dob updated at 06:26 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "1343241324",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 26,
+          "second": 26,
+          "nano": 197000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 26,
+          "second": 26,
+          "nano": 197000000
+        }
+      },
+      "id": 0,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    },
+    "1": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "josh",
+      "lastNames": "wyllie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 18
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 06:41 PM 23-07-2018",
+        "last-names updated at 06:41 PM 23-07-2018",
+        "nhi updated at 06:41 PM 23-07-2018",
+        "dob updated at 06:41 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "32143214132",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 41,
+          "second": 23,
+          "nano": 578000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 41,
+          "second": 23,
+          "nano": 578000000
+        }
+      },
+      "id": 1,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    },
+    "2": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "josh",
+      "lastNames": "wyllie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 18
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 07:27 PM 23-07-2018",
+        "last-names updated at 07:27 PM 23-07-2018",
+        "nhi updated at 07:27 PM 23-07-2018",
+        "dob updated at 07:27 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "1324134143",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 27,
+          "second": 32,
+          "nano": 756000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 27,
+          "second": 32,
+          "nano": 756000000
+        }
+      },
+      "id": 2,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    },
+    "3": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "josh",
+      "lastNames": "wyllie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 18
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 07:29 PM 23-07-2018",
+        "last-names updated at 07:29 PM 23-07-2018",
+        "nhi updated at 07:29 PM 23-07-2018",
+        "dob updated at 07:29 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "1234312433",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 29,
+          "second": 1,
+          "nano": 369000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 29,
+          "second": 1,
+          "nano": 369000000
+        }
+      },
+      "id": 3,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    },
+    "4": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "josh",
+      "lastNames": "wylie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 19
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 07:31 PM 23-07-2018",
+        "last-names updated at 07:31 PM 23-07-2018",
+        "nhi updated at 07:31 PM 23-07-2018",
+        "dob updated at 07:31 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "1434324334",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 31,
+          "second": 28,
+          "nano": 992000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 31,
+          "second": 28,
+          "nano": 992000000
+        }
+      },
+      "id": 4,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    },
+    "5": {
+      "donor": false,
+      "receiver": false,
+      "givenNames": "josh",
+      "lastNames": "wylllie",
+      "dateOfBirth": {
+        "year": 1997,
+        "month": 7,
+        "day": 18
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 07:32 PM 23-07-2018",
+        "last-names updated at 07:32 PM 23-07-2018",
+        "nhi updated at 07:32 PM 23-07-2018",
+        "dob updated at 07:32 PM 23-07-2018"
+      ],
+      "procedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "3241432432432",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 32,
+          "second": 6,
+          "nano": 138000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 19,
+          "minute": 32,
+          "second": 6,
+          "nano": 138000000
+        }
+      },
+      "id": 5,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    }
+  },
   "deletedProfiles": [],
-  "lastID": -1,
+  "lastID": 5,
   "path": "example/example.json"
 }

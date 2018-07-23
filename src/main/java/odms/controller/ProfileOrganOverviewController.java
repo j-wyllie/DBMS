@@ -12,6 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.enums.OrganSelectEnum;
@@ -30,7 +33,13 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     private ListView<String> listViewDonating;
 
     @FXML
-    private ListView<String> listViewReceiving;
+    private TableView tableViewReceiving;
+
+    @FXML
+    private TableColumn tableColumnOrgan;
+
+    @FXML
+    private TableColumn tableColumnDate;
 
     /**
      * Override the Cell Formatting for colour highlighting.
@@ -60,13 +69,18 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         }
     }
 
+    @FXML
     public void initialize() {
         listViewDonating.setCellFactory(param -> new HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new HighlightedCell());
+        //listViewReceiving.setCellFactory(param -> new HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
-        listViewReceiving.setItems(observableListReceiving);
+
+//        tableViewReceiving.setItems(observableListReceiving);
+////        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("organ"));
+////        tableColumnDate.setCellValueFactory(new PropertyValueFactory("date"));
+//        tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnOrgan);
     }
 
     @FXML
@@ -112,7 +126,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
         listViewDonated.refresh();
         listViewDonating.refresh();
-        listViewReceiving.refresh();
+        tableViewReceiving.refresh();
     }
 
     /**

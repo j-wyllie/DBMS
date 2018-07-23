@@ -74,8 +74,47 @@
         }
       },
       "isDefault": false
+    },
+    "2": {
+      "userType": "ADMIN",
+      "name": "admin",
+      "staffID": 2,
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 24,
+          "second": 34,
+          "nano": 449000000
+        }
+      },
+      "updateActions": [
+        "ADMINaccount for admincreated at 2018-07-23T18:24:34.434",
+        "admin updated at 06:24 PM 23-07-2018",
+        "2 updated at 06:24 PM 23-07-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 7,
+          "day": 23
+        },
+        "time": {
+          "hour": 18,
+          "minute": 24,
+          "second": 34,
+          "nano": 434000000
+        }
+      },
+      "username": "admin",
+      "password": "admin",
+      "isDefault": true
     }
   },
-  "lastID": 1,
+  "lastID": 2,
   "path": "example/users.json"
 }

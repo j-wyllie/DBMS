@@ -20,6 +20,8 @@ public class Organ {
         return dateOfRegistration;
     }
 
+    public void setDateOfRegistration(LocalDate date) { dateOfRegistration = date; }
+
     public OrganEnum getOrganType() {
         return organType;
     }
