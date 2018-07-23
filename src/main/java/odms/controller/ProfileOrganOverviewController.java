@@ -74,8 +74,6 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     @FXML
     public void initialize() {
         listViewDonating.setCellFactory(param -> new HighlightedCell());
-        //listViewReceiving.setCellFactory(param -> new HighlightedCell());
-
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
 
@@ -110,7 +108,6 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
         populateOrganReceivingList(observableListReceiving, currentProfile.get().getOrgansRequired());
-        System.out.println(currentProfile.get().getOrgansRequired());
         checkList.clear();
 
         for (String organ : observableListDonating) {

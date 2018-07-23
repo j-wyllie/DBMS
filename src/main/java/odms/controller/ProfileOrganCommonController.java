@@ -18,7 +18,7 @@ public class ProfileOrganCommonController {
      * Populate the ListView with the organs that are available and that are not in the
      * required list.
      */
-    protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
+    void buildOrgansAvailable(ObservableList<String> removeStrings) {
         observableListOrgansAvailable = FXCollections.observableArrayList();
         observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
         observableListOrgansAvailable.removeIf(removeStrings::contains);
@@ -30,7 +30,7 @@ public class ProfileOrganCommonController {
      * @param destinationList list to populate
      * @param organs source list of organs to populate from
      */
-    protected void populateOrganList(ObservableList<String> destinationList, Set<OrganEnum> organs) {
+    void populateOrganList(ObservableList<String> destinationList, Set<OrganEnum> organs) {
         destinationList.clear();
 
         if (organs != null) {
@@ -47,7 +47,8 @@ public class ProfileOrganCommonController {
      * @param destinationList list to populate
      * @param organs source list of organs to populate from
      */
-    protected void populateOrganReceivingList(ObservableList<OrganEnum> destinationList, Set<OrganEnum> organs) {
+    void populateOrganReceivingList(ObservableList<OrganEnum> destinationList,
+            Set<OrganEnum> organs) {
         destinationList.clear();
         destinationList.addAll(organs);
         Collections.sort(destinationList);
