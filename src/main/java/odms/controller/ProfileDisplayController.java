@@ -1124,6 +1124,8 @@ public class ProfileDisplayController extends CommonController {
                     if (currentProfile.getCountry() != null) {
                         currentProfile.setCountryOfDeath(currentProfile.getCountry());
                         countryLabel.setText("Country of Death : " + currentProfile.getCountry());
+                    } else {
+                        countryLabel.setText("Country of Death : ");
                     }
                 } else {
                     countryLabel.setText("Country of Death : " + currentProfile.getCountryOfDeath());

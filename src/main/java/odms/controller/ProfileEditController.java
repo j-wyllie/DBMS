@@ -581,10 +581,8 @@ public class ProfileEditController extends CommonController {
                 }
 
 
-
-
                 if (currentProfile.getDateOfDeath() != null) {
-                    //profile is dead
+                    //Profile is dead
 
                     cityLabel.setText("City of death : ");
                     countryLabel.setText("Country of death: ");
@@ -592,15 +590,15 @@ public class ProfileEditController extends CommonController {
 
                     //Only a clinician should be able to edit these
                     if (isClinician) {
-                        comboCountry.setEditable(true);
-                        regionField.setEditable(true);
-                        comboRegion.setEditable(true);
-                        cityField.setEditable(true);
+                        comboCountry.setDisable(false);
+                        regionField.setDisable(false);
+                        comboRegion.setDisable(false);
+                        cityField.setDisable(false);
                     } else {
-                        comboCountry.setEditable(false);
-                        regionField.setEditable(false);
-                        comboRegion.setEditable(false);
-                        cityField.setEditable(false);
+                        comboCountry.setDisable(true);
+                        regionField.setDisable(true);
+                        comboRegion.setDisable(true);
+                        cityField.setDisable(true);
                     }
 
                     if (currentProfile.getCountryOfDeath() == null ) {
