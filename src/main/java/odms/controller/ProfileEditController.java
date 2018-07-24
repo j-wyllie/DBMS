@@ -386,10 +386,15 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void refreshRegionSelection() {
-        if (comboCountry.getValue().toString().equals("NZ")) {
-            comboRegion.setDisable(false);
-            regionField.setDisable(true);
-            comboRegion.getItems().setAll(regionsNZ);
+        if (comboCountry.getValue() != null) {
+            if (comboCountry.getValue().toString().equals("New Zealand")) {
+                comboRegion.setDisable(false);
+                regionField.setDisable(true);
+                comboRegion.getItems().setAll(regionsNZ);
+            } else {
+                comboRegion.setDisable(true);
+                regionField.setDisable(false);
+            }
         } else {
             comboRegion.setDisable(true);
             regionField.setDisable(false);
@@ -503,8 +508,8 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getCountry() != null) {
                     comboCountry.setValue(currentProfile.getCountry());
                 }
-                if (currentProfile.getRegion() != null) {
-                    if (currentProfile.getCountry().equals("NZ")) {
+                if (currentProfile.getRegion() != null && currentProfile.getCountry() != null) {
+                    if (currentProfile.getCountry().equals("New Zealand")) {
                         comboRegion.setDisable(false);
                         regionField.setDisable(true);
                         comboRegion.setValue(currentProfile.getRegion());
@@ -552,7 +557,7 @@ public class ProfileEditController extends CommonController {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
 
-                comboCountry.getItems().addAll(CountriesEnum.values());
+                comboCountry.getItems().addAll(CountriesEnum.toArrayList());
 
                 refreshRegionSelection();
 
