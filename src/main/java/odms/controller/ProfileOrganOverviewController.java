@@ -47,7 +47,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
      * Override the Cell Formatting for colour highlighting.
      */
     class HighlightedCell extends ListCell<String> {
-        private final String highlight = "cell-highlighted";
+        private static final String HIGHLIGHT = "cell-highlighted";
 
         @Override
         protected void updateItem(String item, boolean empty) {
@@ -56,17 +56,17 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
             // Handle null item case
             if (item == null) {
                 setText("");
-                getStyleClass().remove(highlight);
+                getStyleClass().remove(HIGHLIGHT);
                 return;
             }
 
             setText(item);
 
             if (checkList.contains(item)) {
-                getStyleClass().add(highlight);
+                getStyleClass().add(HIGHLIGHT);
 
             } else {
-                getStyleClass().remove(highlight);
+                getStyleClass().remove(HIGHLIGHT);
             }
         }
     }
@@ -81,6 +81,8 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
         tableColumnDate.setCellValueFactory(new PropertyValueFactory<OrganEnum, LocalDate>("date"));
         tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
+        tableViewReceiving.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
     }
 
     @FXML
@@ -153,7 +155,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding((ob) -> {
+        stage.setOnHiding(ob -> {
             populateOrganLists();
             refreshListViews();
         });
