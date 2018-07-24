@@ -123,6 +123,9 @@ public class ProfileDisplayController extends CommonController {
     private Label countryLabel;
 
     @FXML
+    private Label cityLabel;
+
+    @FXML
     private Label bloodTypeLabel;
 
     @FXML
@@ -148,15 +151,6 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label userIdLabel;
-
-    @FXML
-    private Label countryOfDeathLabel;
-
-    @FXML
-    private Label regionOfDeathLabel;
-
-    @FXML
-    private Label cityOfDeathLabel;
 
     @FXML
     private Button logoutButton;
@@ -1096,12 +1090,6 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentProfile.getAddress());
             }
-            if (currentProfile.getRegion() != null) {
-                regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
-            }
-            if (currentProfile.getCountry() != null) {
-                countryLabel.setText(countryLabel.getText() + currentProfile.getCountry());
-            }
             if (currentProfile.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(
                         alcoholConsumptionLabel.getText() +
@@ -1127,17 +1115,54 @@ public class ProfileDisplayController extends CommonController {
                 smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
             }
 
+
+
+            //Profile is dead
             if (currentProfile.getDateOfDeath() != null) {
-                if (currentProfile.getCountryOfDeath() == null || currentProfile.getCityOfDeath() == null || currentProfile.getRegionOfDeath() == null) {
-                    countryOfDeathLabel.setText(countryOfDeathLabel.getText() + currentProfile.getCountry());
-                    regionOfDeathLabel.setText(regionOfDeathLabel.getText() + currentProfile.getRegion());
-                    cityOfDeathLabel.setText(cityOfDeathLabel.getText() + currentProfile.getCity());
+
+                if (currentProfile.getCountryOfDeath() == null ) {
+                    if (currentProfile.getCountry() != null) {
+                        currentProfile.setCountryOfDeath(currentProfile.getCountry());
+                        countryLabel.setText("Country of Death : " + currentProfile.getCountry());
+                    }
                 } else {
-                    countryOfDeathLabel.setText(currentProfile.getCountryOfDeath());
-                    regionOfDeathLabel.setText(currentProfile.getCityOfDeath());
-                    cityOfDeathLabel.setText(currentProfile.getCityOfDeath());
+                    countryLabel.setText("Country of Death : " + currentProfile.getCountryOfDeath());
                 }
+
+                if (currentProfile.getCityOfDeath() == null) {
+                    if (currentProfile.getCity() != null) {
+                        currentProfile.setCityOfDeath(currentProfile.getCity());
+                        cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
+                    }
+                } else {
+                    cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
+                }
+
+                if (currentProfile.getRegionOfDeath() == null) {
+                    if (currentProfile.getRegion() != null) {
+                        currentProfile.setRegionOfDeath(currentProfile.getRegion());
+                        regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
+                    }
+                } else {
+                    regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
+                }
+
+            } else {
+                //Profile is alive
+
+                if (currentProfile.getRegion() != null) {
+                    regionLabel.setText("Region : " + currentProfile.getRegion());
+                }
+                if (currentProfile.getCountry() != null) {
+                    countryLabel.setText("Country : " + currentProfile.getCountry());
+                }
+                if (currentProfile.getCity() != null) {
+                    cityLabel.setText("City : " + currentProfile.getCity());
+                }
+
             }
+
+
 
             String history = ProfileDataIO.getHistory();
              history= history.replace(",", " ").replace("]", "").

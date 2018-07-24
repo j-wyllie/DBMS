@@ -68,7 +68,19 @@ public class ProfileEditController extends CommonController {
     private TextField emailField;
 
     @FXML
+    private Label cityLabel;
+
+    @FXML
+    private Label countryLabel;
+
+    @FXML
+    private Label regionLabel;
+
+    @FXML
     private TextField addressField;
+
+    @FXML
+    private TextField cityField;
 
     @FXML
     private ComboBox comboRegion;
@@ -102,16 +114,6 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private TextField cityOfDeathField;
-
-
-    @FXML
-    private Label countryOfDeathLabel;
-
-    @FXML
-    private Label regionOfDeathLabel;
-
-    @FXML
-    private Label cityOfDeathLabel;
 
     private Boolean isClinician;
 
@@ -171,6 +173,7 @@ public class ProfileEditController extends CommonController {
                 savePreferredName();
                 saveRegion();
                 saveCountry();
+                saveCity();
                 saveWeight();
 
                 // Medical Fields
@@ -369,8 +372,16 @@ public class ProfileEditController extends CommonController {
      */
     private void saveCountry() {
         if (comboCountry.getValue() != null) {
-            System.out.println(comboCountry.getValue());
             currentProfile.setCountry( comboCountry.getValue().toString());
+        }
+    }
+
+    /**
+     * Save City field to profile.
+     */
+    private void saveCity() {
+        if (cityField != null) {
+            currentProfile.setCity(cityField.getText());
         }
     }
 
@@ -554,20 +565,6 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
                 }
-                if (currentProfile.getCountry() != null) {
-                    comboCountry.setValue(currentProfile.getCountry());
-                }
-                if (currentProfile.getRegion() != null && currentProfile.getCountry() != null) {
-                    if (currentProfile.getCountry().equals("New Zealand")) {
-                        comboRegion.setDisable(false);
-                        regionField.setDisable(true);
-                        comboRegion.setValue(currentProfile.getRegion());
-                    } else {
-                        comboRegion.setDisable(true);
-                        regionField.setDisable(false);
-                        regionField.setText(currentProfile.getRegion());
-                    }
-                }
                 if (currentProfile.getBloodPressure() != null) {
                     bloodPressureField.setText(currentProfile.getBloodPressure());
                 }
@@ -583,27 +580,113 @@ public class ProfileEditController extends CommonController {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
 
+
+
+
                 if (currentProfile.getDateOfDeath() != null) {
-                    if (currentProfile.getCountryOfDeath() == null || currentProfile.getCityOfDeath() == null || currentProfile.getRegionOfDeath() == null) {
-                        countryOfDeathField.setText(currentProfile.getCountry());
-                        regionOfDeathField.setText(currentProfile.getRegion());
-                        cityOfDeathField.setText(currentProfile.getCity());
+                    //profile is dead
+
+                    cityLabel.setText("City of death : ");
+                    countryLabel.setText("Country of death: ");
+                    regionLabel.setText("Region of death: ");
+
+                    //Only a clinician should be able to edit these
+                    if (isClinician) {
+                        comboCountry.setEditable(true);
+                        regionField.setEditable(true);
+                        comboRegion.setEditable(true);
+                        cityField.setEditable(true);
                     } else {
-                        countryOfDeathField.setText(currentProfile.getCountryOfDeath());
-                        regionOfDeathField.setText(currentProfile.getCityOfDeath());
-                        cityOfDeathField.setText(currentProfile.getCityOfDeath());
+                        comboCountry.setEditable(false);
+                        regionField.setEditable(false);
+                        comboRegion.setEditable(false);
+                        cityField.setEditable(false);
                     }
+
+                    if (currentProfile.getCountryOfDeath() == null ) {
+                        if (currentProfile.getCountry() != null) {
+                            comboCountry.setValue(currentProfile.getCountry());
+                        }
+                    } else {
+                        comboCountry.setValue(currentProfile.getCountryOfDeath());
+                    }
+
+                    if (currentProfile.getCityOfDeath() == null) {
+                        if (currentProfile.getCity() != null) {
+                            cityField.setText(currentProfile.getCity());
+                        }
+                    } else {
+                        cityField.setText(currentProfile.getCityOfDeath());
+                    }
+
+                    if (currentProfile.getRegionOfDeath() == null) {
+                        if (currentProfile.getRegion() != null) {
+                            if (currentProfile.getCountry() != null) {
+                                if (currentProfile.getCountry().equals("New Zealand")) {
+                                    comboRegion.setDisable(false);
+                                    regionField.setDisable(true);
+                                    comboRegion.setValue(currentProfile.getRegion());
+                                } else {
+                                    comboRegion.setDisable(true);
+                                    regionField.setDisable(false);
+                                    regionField.setText(currentProfile.getRegion());
+                                }
+                            } else {
+                                    comboRegion.setDisable(true);
+                                    regionField.setDisable(false);
+                                    regionField.setText(currentProfile.getRegion());
+                                }
+                        }
+                    } else {
+                        if (currentProfile.getCountry() != null) {
+                            if (currentProfile.getCountry().equals("New Zealand")) {
+                                comboRegion.setDisable(false);
+                                regionField.setDisable(true);
+                                comboRegion.setValue(currentProfile.getRegionOfDeath());
+                            }
+                        }
+                        else {
+                            comboRegion.setDisable(true);
+                            regionField.setDisable(false);
+                            regionField.setText(currentProfile.getRegionOfDeath());
+                        }
+                    }
+
+
+                } else {
+                    //profile is alive
+                    cityLabel.setText("City : ");
+                    countryLabel.setText("Country : ");
+                    regionLabel.setText("Region : ");
+
+
+                    if (currentProfile.getCity() != null) {
+                        cityField.setText(currentProfile.getCity());
+                    }
+                    if (currentProfile.getCountry() != null) {
+                        comboCountry.setValue(currentProfile.getCountry());
+                    }
+                    if (currentProfile.getRegion() != null) {
+                        if (currentProfile.getCountry() != null) {
+                            if (currentProfile.getCountry().equals("New Zealand")) {
+                                comboRegion.setDisable(false);
+                                regionField.setDisable(true);
+                                comboRegion.setValue(currentProfile.getRegion());
+                            } else {
+                                comboRegion.setDisable(true);
+                                regionField.setDisable(false);
+                                regionField.setText(currentProfile.getRegion());
+                            }
+                        } else {
+                            comboRegion.setDisable(true);
+                            regionField.setDisable(false);
+                            regionField.setText(currentProfile.getRegion());
+                        }
+
+                    }
+
                 }
 
-                if (isClinician) {
-                    countryOfDeathField.setEditable(true);
-                    regionOfDeathField.setEditable(true);
-                    cityOfDeathField.setEditable(true);
-                } else {
-                    countryOfDeathField.setEditable(false);
-                    regionOfDeathField.setEditable(false);
-                    cityOfDeathField.setEditable(false);
-                }
 
                 comboGender.setEditable(false);
                 comboGender.getItems().addAll("Male", "Female");
