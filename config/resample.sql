@@ -32,6 +32,40 @@ INSERT INTO `procedures` (`Id`, `ProfileId`, `Summary`, `ProcedureDate`, `Pendin
 -- Dumping data for table `profiles`
 --
 
+-- phpMyAdmin SQL Dump
+-- version 4.4.15.5
+-- http://www.phpmyadmin.net
+--
+-- Host: csse-mysql2
+-- Generation Time: Jul 24, 2018 at 09:06 AM
+-- Server version: 5.6.40
+-- PHP Version: 5.4.16
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `seng302-2018-team200-prod`
+--
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`UserId`, `Username`, `Password`, `Name`, `UserType`, `Address`, `Region`, `Created`, `LastUpdated`, `IsDefault`) VALUES
+  (1, 'admin', 'admin', 'admin', 'ADMIN', NULL, 'Canterbury', '2018-07-24 20:54:28', '2018-07-24 20:54:28', 1),
+  (3, 'brooker', '123', 'Brooke Rakowitz', 'CLINICIAN', NULL, 'Otago', '2018-07-24 20:56:45', '2018-07-24 20:56:45', 0);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 INSERT INTO `profiles` (`ProfileId`, `NHI`, `Username`, `IsDonor`, `IsReceiver`, `GivenNames`, `Lastnames`, `Dob`, `Dod`, `Gender`, `Height`, `Weight`, `BloodType`, `IsSmoker`, `AloholConsumption`, `BloodPressureSystolic`, `BloodPressureDiastolic`, `Address`, `Region`, `Phone`, `Email`, `Created`, `LastUpdated`) VALUES
   (0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (2, '123445678', 'sp333d', 1, 1, 'Joshua', 'Wyllie', '1997-07-18 00:00:00', NULL, 'male', 183, 78, 'O', 0, '12', 140, 80, '163 waimairi road', 'canterbury', '0221379514', 'jwy31@uclive.com', NULL, NULL),

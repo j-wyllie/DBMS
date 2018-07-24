@@ -11,16 +11,31 @@ public interface ProfileDAO {
     List<Profile> getAll();
 
     /**
-     * Get a single profile from the database.
+     * Get a single profile from the database by id.
+     * @param profileId of the profile.
      * @return a profile.
      */
-    Profile getProfile(int profileId);
+    Profile get(int profileId);
+
+    /**
+     * Get a single profile from the database by username.
+     * @param username of the profile.
+     * @return a profile.
+     */
+    Profile get(String username);
 
     /**
      * Adds a new profile to the database.
      * @param profile to add.
      */
     void add(Profile profile);
+
+    /**
+     * Checks if a username already exists in the database.
+     * @param username to check.
+     * @return true is the username does not already exist.
+     */
+    boolean isUniqueUsername(String username);
 
     /**
      * Removes a profile from the database.

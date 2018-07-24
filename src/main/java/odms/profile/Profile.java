@@ -1180,4 +1180,6 @@ public class Profile implements Comparable<Profile> {
     public void setNeighbourhood(String neighbourhood) {
         this.neighbourhood = neighbourhood;
     }
+
+    public String getUsername() { return username; }
 }

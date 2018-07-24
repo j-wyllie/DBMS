@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 import odms.data.UserDatabase;
 import odms.user.UserType;
@@ -44,10 +45,12 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     /**
-     * Gets a single user from the database by userID.
+     * Gets a single user from the database by id.
+     * @param userId of the user.
      * @return the specified user.
+     * @throws UserNotFoundException error.
      */
-    public User getUser(int userId) {
+    public User get(int userId) throws UserNotFoundException {
         String query = "select * from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user = null;
@@ -63,7 +66,7 @@ public class MySqlUserDAO implements UserDAO {
             user = parseUser(rs);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new UserNotFoundException("Not found", userId);
         }
 
         return user;
@@ -73,8 +76,9 @@ public class MySqlUserDAO implements UserDAO {
      * Gets a single user from the database by userID.
      * @param username of the user.
      * @return the specified user.
+     * @throws UserNotFoundException error.
      */
-    public User getUser(String username) {
+    public User get(String username) throws UserNotFoundException {
         String query = "select * from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user = null;
@@ -92,7 +96,7 @@ public class MySqlUserDAO implements UserDAO {
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new UserNotFoundException("Not found", username);
         }
 
         return user;

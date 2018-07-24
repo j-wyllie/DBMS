@@ -27,13 +27,12 @@ public class MySqlProfileDAO implements ProfileDAO {
             Connection conn = connectionInstance.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet allProfiles = stmt.executeQuery(query);
-            conn.close();
 
             while (allProfiles.next()) {
                 Profile newProfile  = parseProfile(allProfiles);
                 result.add(newProfile);
             }
-
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -46,8 +45,8 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @return a profile.
      */
     @Override
-    public Profile getProfile(int profileId) {
-        String query = "select * from profiles when ProfileId = ?;";
+    public Profile get(int profileId) {
+        String query = "select * from profiles where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
 
@@ -57,9 +56,41 @@ public class MySqlProfileDAO implements ProfileDAO {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profileId);
             ResultSet rs = stmt.executeQuery();
-            conn.close();
 
+            rs.next();
             profile = parseProfile(rs);
+
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return profile;
+    }
+
+    /**
+     * Get a single profile from the database by username.
+     * @param username of the profile.
+     * @return a profile.
+     */
+    @Override
+    public Profile get(String username) {
+        String query = "select * from profiles where Username = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Profile profile = null;
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            rs.next();
+            profile = parseProfile(rs);
+
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -82,8 +113,14 @@ public class MySqlProfileDAO implements ProfileDAO {
         Boolean isReceiver = profiles.getBoolean("IsReceiver");
         String givenNames = profiles.getString("GivenNames");
         String lastNames = profiles.getString("LastNames");
-        LocalDate dob = LocalDate.parse(profiles.getString("Dob"));
-        LocalDate dod = LocalDate.parse(profiles.getString("Dod"));
+        LocalDate dob = null;
+        if (!(profiles.getDate("Dob") == null)) {
+            dob = profiles.getDate("Dob").toLocalDate();
+        }
+        LocalDate dod = null;
+        if (!(profiles.getDate("Dod") == null)) {
+            dob = profiles.getDate("Dod").toLocalDate();
+        }
         String gender = profiles.getString("Gender");
         Double height = profiles.getDouble("Height");
         Double weight = profiles.getDouble("Weight");
@@ -96,8 +133,14 @@ public class MySqlProfileDAO implements ProfileDAO {
         String region = profiles.getString("Region");
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
-        LocalDateTime created = LocalDateTime.parse(profiles.getString("Created"));
-        LocalDateTime updated = LocalDateTime.parse(profiles.getString("LastUpdated"));
+        LocalDateTime created = null;
+        if (!(profiles.getTimestamp("Created") == null)) {
+            created = profiles.getTimestamp("Created").toLocalDateTime();
+        }
+        LocalDateTime updated = null;
+        if (!(profiles.getTimestamp("Created") == null)) {
+            updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
+        }
 
         return new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
                 gender, height, weight, bloodType, isSmoker, alcoholConsump, bpSystolic, bpDiastolic,
@@ -110,38 +153,37 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public void add(Profile profile) {
-        String query = "insert into profiles (ProfileId, NHI, Username, IsDonor, IsReceiver, GivenNames,"
+        String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
                 + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
                 + " BloodPressure, Address, Region, Phone, Email, Created, LastUpdated) values (?, ?, ?,"
-                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
-            stmt.setString(2, profile.getNhi());
-            //stmt.setString(3, profile.getUsername());
-            stmt.setBoolean(4, profile.getDonor());
-            stmt.setBoolean(5, profile.getReceiver());
-            stmt.setString(6, profile.getGivenNames());
-            stmt.setString(7, profile.getLastNames());
-            stmt.setString(8, profile.getDateOfBirth().toString());
-            stmt.setString(9, profile.getDateOfDeath().toString());
-            stmt.setString(10, profile.getGender());
-            stmt.setDouble(11, profile.getHeight());
-            stmt.setDouble(12, profile.getWeight());
-            stmt.setString(13, profile.getBloodType());
-            stmt.setBoolean(14, profile.getIsSmoker());
-            stmt.setString(15, profile.getAlcoholConsumption());
-            stmt.setString(16, profile.getBloodPressure());
-            stmt.setString(17, profile.getAddress());
-            stmt.setString(18, profile.getRegion());
-            stmt.setString(19, profile.getPhone());
-            stmt.setString(20, profile.getEmail());
-            stmt.setString(21, profile.getTimeOfCreation().toString());
-            stmt.setString(22, profile.getLastUpdated().toString());
+            stmt.setString(1, profile.getNhi());
+            stmt.setString(2, profile.getUsername());
+            stmt.setBoolean(3, profile.getDonor());
+            stmt.setBoolean(4, profile.getReceiver());
+            stmt.setString(5, profile.getGivenNames());
+            stmt.setString(6, profile.getLastNames());
+            stmt.setString(7, profile.getDateOfBirth().toString());
+            stmt.setString(8, profile.getDateOfDeath().toString());
+            stmt.setString(9, profile.getGender());
+            stmt.setDouble(10, profile.getHeight());
+            stmt.setDouble(11, profile.getWeight());
+            stmt.setString(12, profile.getBloodType());
+            stmt.setBoolean(13, profile.getIsSmoker());
+            stmt.setString(14, profile.getAlcoholConsumption());
+            stmt.setString(15, profile.getBloodPressure());
+            stmt.setString(16, profile.getAddress());
+            stmt.setString(17, profile.getRegion());
+            stmt.setString(18, profile.getPhone());
+            stmt.setString(19, profile.getEmail());
+            stmt.setString(20, LocalDateTime.now().toString());
+            stmt.setString(21, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
@@ -152,14 +194,43 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
+     * Checks if a username already exists in the database.
+     * @param username to check.
+     * @return true is the username does not already exist.
+     */
+    @Override
+    public boolean isUniqueUsername(String username) {
+        String query = "select * from profiles where Username = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+
+            ResultSet result = stmt.executeQuery();
+
+            if (result.getFetchSize() == 0) {
+                return true;
+            }
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Removes a profile from the database.
      * @param profile to remove.
      */
     @Override
     public void remove(Profile profile) {
         String query = "delete from profiles where ProfileId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
+        DatabaseConnection instance = DatabaseConnection.getInstance();
         try {
             Connection conn = instance.getConnection();
 
@@ -168,8 +239,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             stmt.executeUpdate();
             conn.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -183,7 +253,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressure = ?, Address = ?,"
-                + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where UserId = ?;";
+                + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -191,7 +261,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, profile.getNhi());
-            //stmt.setString(2, profile.getUsername());
+            stmt.setString(2, profile.getUsername());
             stmt.setBoolean(3, profile.getDonor());
             stmt.setBoolean(4, profile.getReceiver());
             stmt.setString(5, profile.getGivenNames());

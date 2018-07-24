@@ -1,5 +1,6 @@
 package odms.dao;
 
+import odms.controller.UserNotFoundException;
 import odms.user.User;
 
 import java.util.ArrayList;
@@ -12,16 +13,20 @@ public interface UserDAO {
     ArrayList<User> getAll();
 
     /**
-     * Get a single user from the database by id.
-     * @return a user.
+     * Gets a single user from the database by id.
+     * @param userId of the user.
+     * @return the specified user.
+     * @throws UserNotFoundException error.
      */
-    User getUser(int userId);
+    User get(int userId) throws UserNotFoundException;
 
     /**
-     * Get a single user from the database by username.
-     * @return a user.
+     * Gets a single user from the database by username.
+     * @param username of the user.
+     * @return the specified user.
+     * @throws UserNotFoundException error.
      */
-    User getUser(String username);
+    User get(String username) throws UserNotFoundException;
 
     /**
      * Adds a new user to the database.
