@@ -53,7 +53,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
-                OrganEnum organ = OrganEnum.valueOf(organName);
+                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase());
                 allOrgans.add(organ);
             }
             conn.close();

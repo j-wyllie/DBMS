@@ -114,12 +114,14 @@ public class LoginController extends CommonController {
                             stage.show();
 
                             closeCurrentStage();
+
                         } else {
                             invalidUsername();
                         }
                     }
                 } catch (NumberFormatException e) {
                     invalidEntry();
+                    e.printStackTrace();
 
                 } catch (Exception e) {
                     e.printStackTrace();

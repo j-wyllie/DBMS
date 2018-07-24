@@ -93,10 +93,9 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             rs.next();
             profile = parseProfile(rs);
-
             conn.close();
         }
-        catch (SQLException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
 

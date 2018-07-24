@@ -21,6 +21,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.OrganDAO;
 import odms.enums.OrganEnum;
 import odms.enums.OrganSelectEnum;
 import odms.profile.OrganConflictException;
@@ -154,6 +156,8 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
+        OrganDAO database = DAOFactory.getOrganDao();
+
         HashSet<OrganEnum> organsAdded = ProfileOrganEditController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
@@ -165,9 +169,12 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                         currentProfile.get().getOrgansDonated(),
                         organsAdded
                 );
-
-                currentProfile.get().addOrgansDonated(organsAdded);
-                currentProfile.get().removeOrgansDonated(organsRemoved);
+                organsRemoved.forEach(organ -> {
+                    database.removeDonation(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    database.addDonation(currentProfile.get(), organ);
+                });
                 break;
             case DONATING:
                 try {
