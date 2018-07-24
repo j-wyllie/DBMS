@@ -29,12 +29,12 @@ public class MySqlUserDAO implements UserDAO {
             Connection conn = connectionInstance.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet allUserRows = stmt.executeQuery(query);
-            conn.close();
 
             while (allUserRows.next()) {
                 User user = parseUser(allUserRows);
                 allUsers.add(user);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -140,24 +140,23 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void add(User user) {
-        String query = "insert into users (UserId, Username, Password, Name, UserType, Address,"
-                + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String query = "insert into users (Username, Password, Name, UserType, Address,"
+                + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, user.getStaffID());
-            stmt.setString(2, user.getUsername());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getName());
-            stmt.setString(5, user.getUserType().toString());
-            stmt.setString(6, user.getWorkAddress());
-            stmt.setString(7, user.getRegion());
-            stmt.setString(8, user.getTimeOfCreation().toString());
-            stmt.setString(9, user.getLastUpdated().toString());
-            stmt.setBoolean(10, user.getDefault());
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getUserType().toString());
+            stmt.setString(5, user.getWorkAddress());
+            stmt.setString(6, user.getRegion());
+            stmt.setString(7, LocalDateTime.now().toString());
+            stmt.setString(8, LocalDateTime.now().toString());
+            stmt.setBoolean(9, user.getDefault());
 
             stmt.executeUpdate();
             conn.close();
@@ -165,6 +164,35 @@ public class MySqlUserDAO implements UserDAO {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Checks if a username already exists in the database.
+     * @param username to check.
+     * @return true is the username does not already exist.
+     */
+    @Override
+    public boolean isUniqueUsername(String username) {
+        String query = "select * from users where Username = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+
+            ResultSet result = stmt.executeQuery();
+
+            if (result.getFetchSize() == 0) {
+                return true;
+            }
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

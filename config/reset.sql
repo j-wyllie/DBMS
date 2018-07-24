@@ -173,12 +173,15 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
+  `Username` varchar(50),
+  `Password` varchar(50),
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
-  `Created` datetime DEFAULT NULL,
-  `LastUpdated` datetime DEFAULT NULL
+  `Created` datetime DEFAULT now(),
+  `LastUpdated` datetime DEFAULT now(),
+  `IsDefault` BOOLEAN DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -248,7 +251,11 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+ALTER TABLE `users`
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `profiles`
+  MODIFY `ProfileId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --

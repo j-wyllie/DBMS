@@ -18,7 +18,7 @@ public interface UserDAO {
     User getUser(int userId);
 
     /**
-     * Get a single user from the database by uername.
+     * Get a single user from the database by username.
      * @return a user.
      */
     User getUser(String username);
@@ -28,6 +28,13 @@ public interface UserDAO {
      * @param user to add.
      */
     void add(User user);
+
+    /**
+     * Checks if a username already exists in the database.
+     * @param username to check.
+     * @return true is the username does not already exist.
+     */
+    boolean isUniqueUsername(String username);
 
     /**
      * Removes a user from the database.

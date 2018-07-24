@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
 import odms.user.User;
 import odms.user.UserType;
 
@@ -37,7 +38,7 @@ public class UserCreateController extends CommonController {
                 User user = new User(userTypeBox.getValue(), userNameField.getText(), userRegionField.getText());
                 user.setUsername(userUsernameField.getText());
                 user.setPassword(userPasswordField.getText());
-                GuiMain.getUserDatabase().addUser(user);
+                DAOFactory.getUserDao().add(user);
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
 
@@ -55,7 +56,7 @@ public class UserCreateController extends CommonController {
      * @return a boolean signalling that all fields were filled it.
      */
     private boolean checkUniqueUsername() {
-        return GuiMain.getUserDatabase().checkUniqueUsername(userUsernameField.getText());
+        return DAOFactory.getUserDao().isUniqueUsername(userUsernameField.getText());
     }
 
     /**
