@@ -5,6 +5,10 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,8 +23,12 @@ import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
+import odms.enums.CountriesEnum;
 
 public class ProfileEditController extends CommonController {
+
+    //TODO do we want regions as enum? Or stored somewhere else at least
+    public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
     private Profile currentProfile;
 
@@ -63,7 +71,13 @@ public class ProfileEditController extends CommonController {
     private TextField addressField;
 
     @FXML
+    private ComboBox comboRegion;
+
+    @FXML
     private TextField regionField;
+
+    @FXML
+    private ComboBox comboCountry;
 
     @FXML
     private TextField bloodTypeField;
@@ -156,6 +170,7 @@ public class ProfileEditController extends CommonController {
                 savePreferredGender();
                 savePreferredName();
                 saveRegion();
+                saveCountry();
                 saveWeight();
 
                 // Medical Fields
@@ -338,8 +353,24 @@ public class ProfileEditController extends CommonController {
      * Save Region field to profile.
      */
     private void saveRegion() {
-        if (!regionField.getText().isEmpty()) {
-            currentProfile.setRegion(regionField.getText());
+        if (!comboRegion.isDisabled()) {
+            if (comboRegion.getValue() != null) {
+                currentProfile.setRegion((String) comboRegion.getValue());
+            }
+        } else {
+            if (regionField.getText() != null) {
+                currentProfile.setRegion(regionField.getText());
+            }
+        }
+    }
+
+    /**
+     * Save Country field to profile.
+     */
+    private void saveCountry() {
+        if (comboCountry.getValue() != null) {
+            System.out.println(comboCountry.getValue());
+            currentProfile.setCountry( comboCountry.getValue().toString());
         }
     }
 
@@ -396,6 +427,27 @@ public class ProfileEditController extends CommonController {
     private void saveIsSmoker() {
         // TODO this should be a checkbox and not a radio button.
         currentProfile.setIsSmoker(isSmokerRadioButton.isSelected());
+    }
+
+    /**
+     * Ensures the correct input method for region is displayed,
+     * also populates region with NZ regions when NZ is selected as country
+     */
+    @FXML
+    private void refreshRegionSelection() {
+        if (comboCountry.getValue() != null) {
+            if (comboCountry.getValue().toString().equals("New Zealand")) {
+                comboRegion.setDisable(false);
+                regionField.setDisable(true);
+                comboRegion.getItems().setAll(regionsNZ);
+            } else {
+                comboRegion.setDisable(true);
+                regionField.setDisable(false);
+            }
+        } else {
+            comboRegion.setDisable(true);
+            regionField.setDisable(false);
+        }
     }
 
     /**
@@ -502,8 +554,19 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getAddress() != null) {
                     addressField.setText(currentProfile.getAddress());
                 }
-                if (currentProfile.getRegion() != null) {
-                    regionField.setText(currentProfile.getRegion());
+                if (currentProfile.getCountry() != null) {
+                    comboCountry.setValue(currentProfile.getCountry());
+                }
+                if (currentProfile.getRegion() != null && currentProfile.getCountry() != null) {
+                    if (currentProfile.getCountry().equals("New Zealand")) {
+                        comboRegion.setDisable(false);
+                        regionField.setDisable(true);
+                        comboRegion.setValue(currentProfile.getRegion());
+                    } else {
+                        comboRegion.setDisable(true);
+                        regionField.setDisable(false);
+                        regionField.setText(currentProfile.getRegion());
+                    }
                 }
                 if (currentProfile.getBloodPressure() != null) {
                     bloodPressureField.setText(currentProfile.getBloodPressure());
@@ -564,6 +627,11 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getPreferredGender() != null) {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
+
+                comboCountry.getItems().addAll(CountriesEnum.toArrayList());
+
+                refreshRegionSelection();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

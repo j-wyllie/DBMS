@@ -120,6 +120,9 @@ public class ProfileDisplayController extends CommonController {
     private Label regionLabel;
 
     @FXML
+    private Label countryLabel;
+
+    @FXML
     private Label bloodTypeLabel;
 
     @FXML
@@ -1095,6 +1098,9 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentProfile.getRegion() != null) {
                 regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
+            }
+            if (currentProfile.getCountry() != null) {
+                countryLabel.setText(countryLabel.getText() + currentProfile.getCountry());
             }
             if (currentProfile.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(
