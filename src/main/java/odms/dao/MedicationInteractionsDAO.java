@@ -27,7 +27,7 @@ public interface MedicationInteractionsDAO {
     /**
      * Saves the JSON interactions data to the set location.
      */
-    void save();
+    boolean save();
 
     /**
      * Clear all cached medication interaction data.

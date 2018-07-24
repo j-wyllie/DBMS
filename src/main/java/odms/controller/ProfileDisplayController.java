@@ -1,7 +1,7 @@
 package odms.controller;
 
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.saveChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
@@ -25,7 +25,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -49,10 +48,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import odms.dao.DAOFactory;
+import odms.dao.MedicationInteractionsDAO;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.medications.Drug;
+import odms.medications.Interaction;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -67,6 +69,7 @@ public class ProfileDisplayController extends CommonController {
     private ContextMenu suggestionMenu = new ContextMenu();
     private ObservableList<Condition> curConditionsObservableList;
     private ObservableList<Condition> pastConditionsObservableList;
+    private MedicationInteractionsDAO medicationInteractions;
 
     protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
 
@@ -199,6 +202,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Button buttonSaveMedications;
+
+    @FXML
+    private Button buttonClearCache;
 
     @FXML
     private TextField textFieldMedicationSearch;
@@ -720,7 +726,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
-        if (saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
         }
@@ -825,6 +831,24 @@ public class ProfileDisplayController extends CommonController {
         }
 
         try {
+
+            Interaction interaction = medicationInteractions.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
+
+            if (interaction != null) {
+                interaction.getAgeInteractions();
+
+//                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+//                tableViewDrugInteractions.setItems(interactions);
+//                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+//                        <Map.Entry<String, String>, String> param) ->
+//                        new SimpleStringProperty(param.getValue().getKey()));
+//                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+//                        <Map.Entry<String, String>, String> param) ->
+//                        new SimpleStringProperty(param.getValue().getValue()));
+//                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+            }
+
+
             interactionsRaw = MedicationDataIO.getDrugInteractions(
                     drugs.get(0).getDrugName(),
                     drugs.get(1).getDrugName(),
@@ -960,6 +984,17 @@ public class ProfileDisplayController extends CommonController {
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
+    }
+
+    @FXML
+    private void handleClearCache(ActionEvent event) {
+        if (AlertController.generalConfirmation("Are you sure you want to clear the cache?\nThis cannot be undone.\n\nNote: The cache contains temporary drug interaction data.")) {
+            medicationInteractions.clear();
+            if (!medicationInteractions.save()) {
+                AlertController.guiPopup("There was an error saving the cache.\nThe cache has been "
+                        + "cleared, but could not be saved.");
+            }
+        }
     }
 
     /**
@@ -1255,6 +1290,7 @@ public class ProfileDisplayController extends CommonController {
             tableViewDrugInteractionsNames.setVisible(true);
             tableViewDrugInteractions.setVisible(true);
             buttonViewMedicationHistory.setVisible(true);
+            buttonClearCache.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1281,6 +1317,7 @@ public class ProfileDisplayController extends CommonController {
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
             buttonViewMedicationHistory.setVisible(false);
+            buttonClearCache.setVisible(false);
         }
     }
 
@@ -1429,6 +1466,9 @@ public class ProfileDisplayController extends CommonController {
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         curChronicColumn.setSortable(false);
+
+        medicationInteractions = DAOFactory.getMedicalInteractionsDao();
+        medicationInteractions.load();
 
         refreshPageElements();
 

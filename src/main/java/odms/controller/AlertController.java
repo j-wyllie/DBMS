@@ -148,20 +148,20 @@ public class AlertController {
     }
 
     /**
-     * Displays a popup prompting the user to confirm the changes they have made.
+     * Displays a popup prompting the user to confirm the action they want to perform.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean saveChanges() {
-        Alert saveAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "Do you wish to save your changes?",
-            ButtonType.NO,
-            ButtonType.YES
+    static boolean generalConfirmation(String message) {
+        Alert confirmAlert = new Alert(
+                AlertType.CONFIRMATION,
+                message,
+                ButtonType.NO,
+                ButtonType.YES
         );
 
-        saveAlert.showAndWait();
+        confirmAlert.showAndWait();
 
-        return handleAlert(saveAlert);
+        return handleAlert(confirmAlert);
     }
 
     /**

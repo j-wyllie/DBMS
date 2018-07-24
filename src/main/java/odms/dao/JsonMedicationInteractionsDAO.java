@@ -58,7 +58,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             }
         }
         Interaction newInteraction = add(drugA, drugB);
-        if (!(newInteraction == null)) {
+        if ((newInteraction != null)) {
             interactionMap.put(interactionMap.size(), newInteraction);
         }
         return newInteraction;
@@ -72,7 +72,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         Gson gson = new Gson();
 
         String file = defaultPath;
-        if (!(path == null)) {
+        if ((path != null)) {
             file = path;
         }
         try {
@@ -89,9 +89,9 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      * Saves the JSON interactions data to the set location.
      */
     @Override
-    public void save() {
+    public boolean save() {
         File file = new File(this.defaultPath);
-        if (!(this.path == null)) {
+        if ((this.path != null)) {
             file = new File(this.path);
         }
 
@@ -104,11 +104,12 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             writeFile.close();
 
             System.out.println("File exported successfully!");
+            return true;
 
         } catch (IOException e) {
             System.out.println("IO exception, please check the specified file");
             System.out.println("File requested: " + path);
-        }
+            return false;        }
     }
 
     /**
@@ -196,6 +197,8 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                     interactionObj.get(key).getAsJsonArray(),
                     ArrayList.class
             );
+            System.out.println(key);
+            System.out.println(value.get(0));
 
             result.put(key, value);
         });
