@@ -12,10 +12,16 @@ public interface UserDAO {
     ArrayList<User> getAll();
 
     /**
-     * Get a single user from the database.
+     * Get a single user from the database by id.
      * @return a user.
      */
     User getUser(int userId);
+
+    /**
+     * Get a single user from the database by uername.
+     * @return a user.
+     */
+    User getUser(String username);
 
     /**
      * Adds a new user to the database.

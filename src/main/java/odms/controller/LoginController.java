@@ -13,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.UserDAO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -49,7 +51,9 @@ public class LoginController extends CommonController {
 
             String username = usernameField.getText();
             try {
-                currentUser = userDatabase.getUser(username);
+                UserDAO database = DAOFactory.getUserDao();
+                currentUser = database.getUser(username);
+
                 System.out.println(currentUser.getUsername());
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
@@ -72,8 +76,10 @@ public class LoginController extends CommonController {
                 } else {
                     invalidUsernameOrPassword();
                 }
-            } catch (UserNotFoundException u) {
+            } catch (Exception u) {
+                u.printStackTrace();
                 try {
+                    //todo: what is going on here?
                     int userId = Integer.valueOf(usernameField.getText());
                     if (userId == 0) {
                         currentUser = userDatabase.getUser(0);

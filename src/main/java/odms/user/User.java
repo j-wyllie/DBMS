@@ -57,6 +57,26 @@ public class User {
     }
 
     /**
+     * user constructor.
+     * @param userType type of user.
+     * @param name user name.
+     * @param region user region.
+     */
+    public User(int userId, String username, String password, String name, UserType userType,
+            String address, String region, LocalDateTime created, LocalDateTime updated) {
+        this.staffID = userId;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.userType = userType;
+        this.workAddress = address;
+        this.region = region;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+        this.updateActions.add(name + " logged on at " + LocalDateTime.now());
+    }
+
+    /**
      * Creates an administrator account.
      * @param userType the user type to be set.
      * @param name the users name.
