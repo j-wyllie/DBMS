@@ -1,21 +1,21 @@
 package odms.profile;
 
-import javafx.beans.property.SimpleStringProperty;
-import odms.controller.HistoryController;
-import odms.enums.BloodTypeEnum;
-import odms.controller.ProfileEditController;
-import odms.enums.CountriesEnum;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javafx.beans.property.SimpleStringProperty;
+import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
+import odms.enums.CountriesEnum;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
