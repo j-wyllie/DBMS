@@ -4,6 +4,7 @@ import static java.time.LocalDateTime.now;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
-        for (Integer interactionKey : interactionMap.keySet()) {
+        for (Object interactionKey : interactionMap.keySet()) {
 
             Interaction value = interactionMap.get(interactionKey);
             if (value.getDrugA().equalsIgnoreCase(drugA)
@@ -52,7 +53,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 if (value.getDateTimeExpired().isBefore(now())
                     || value.getDateTimeExpired().isEqual(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
-                    interactionMap.replace(interactionKey, value);
+                    interactionMap.replace((Integer) interactionKey, value);
                 }
                 return value;
             }
@@ -76,9 +77,17 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             file = path;
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            this.interactionMap.clear();
+            JsonParser parser = new JsonParser();
+            JsonObject cache = parser.parse(new FileReader(file)).getAsJsonObject();
 
-            this.interactionMap = gson.fromJson(reader, Map.class);
+            cache.keySet().forEach(key -> {
+                Interaction value = gson.fromJson(
+                        cache.get(key).getAsJsonObject(),
+                        Interaction.class
+                );
+                this.interactionMap.put(Integer.valueOf(key), value);
+            });
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -100,16 +109,16 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
 
             writeFile.write(gson.toJson(interactionMap));
-
             writeFile.close();
 
-            System.out.println("File exported successfully!");
+            System.out.println("Cache exported successfully!");
             return true;
 
         } catch (IOException e) {
-            System.out.println("IO exception, please check the specified file");
-            System.out.println("File requested: " + path);
-            return false;        }
+            System.out.println("IO exception, please check the specified cache location.");
+            System.out.println("Cache requested: " + path);
+            return false;
+        }
     }
 
     /**
@@ -122,7 +131,6 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         Interaction interaction = null;
 
         if (!(drugA == null || drugA.equals("") || drugB == null || drugB.equals(""))) {
-
             StringBuffer response = getResponse(drugA, drugB);
 
             if (response != null) {
@@ -130,20 +138,16 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
                 Map<String, List<String>> ageEffects = parseListInteractions(results
-                        .get("age_interaction")
-                        .getAsJsonObject());
+                        .get("age_interaction"));
 
                 Map<String, Integer>  coexistingConditions = parseAtomicInteractions(results
-                        .get("co_existing_conditions")
-                        .getAsJsonObject());
+                        .get("co_existing_conditions"));
 
                 Map<String, List<String>> durationInteractions = parseListInteractions(results
-                        .get("duration_interaction")
-                        .getAsJsonObject());
+                        .get("duration_interaction"));
 
                 Map<String, List<String>> genderInteractions = parseListInteractions(results
-                        .get("gender_interaction")
-                        .getAsJsonObject());
+                        .get("gender_interaction"));
 
                 interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
                         durationInteractions, genderInteractions);
@@ -185,10 +189,14 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     /**
      * Reformats the interaction data from a JSON string to a mapping between string keys and lists
      * of the relevant data.
-     * @param interactionObj the json object representing the interactions data.
+     * @param element the json element representing the interactions data.
      * @return a key/value mapping of the interaction data.
      */
-    private Map<String, List<String>> parseListInteractions(JsonObject interactionObj) {
+    public Map<String, List<String>> parseListInteractions(JsonElement element) {
+        if (element.isJsonNull()) {
+            return null;
+        }
+        JsonObject interactionObj = element.getAsJsonObject();
         Map<String, List<String>> result = new HashMap<>();
         Gson gson = new Gson();
 
@@ -197,9 +205,6 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                     interactionObj.get(key).getAsJsonArray(),
                     ArrayList.class
             );
-            System.out.println(key);
-            System.out.println(value.get(0));
-
             result.put(key, value);
         });
         return result;
@@ -208,10 +213,14 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     /**
      * Reformats the interaction data from a JSON string to a mapping between string keys and the
      * integer values of the relevant data.
-     * @param interactionObj the json object representing the interactions data.
+     * @param element the json element representing the interactions data.
      * @return a key/value mapping of the interaction data.
      */
-    private Map<String, Integer> parseAtomicInteractions(JsonObject interactionObj) {
+    public Map<String, Integer> parseAtomicInteractions(JsonElement element) {
+        if (element.isJsonNull()) {
+            return null;
+        }
+        JsonObject interactionObj = element.getAsJsonObject();
         Map<String, Integer> result = new HashMap<>();
         Gson gson = new Gson();
 
