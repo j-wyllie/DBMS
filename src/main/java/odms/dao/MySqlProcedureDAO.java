@@ -21,7 +21,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public List<Procedure> getAll(Profile profile, Boolean pending) {
-        String query = "select * from procedures where ProfileId = ? where Pending = ?;";
+        String query = "select * from procedures where ProfileId = ? and Pending = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Procedure> result = new ArrayList<>();
 
@@ -32,12 +32,12 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setBoolean(2, pending);
 
             ResultSet allProcedures = stmt.executeQuery();
-            conn.close();
 
             while (allProcedures.next()) {
                 Procedure procedure = parseProcedure(allProcedures);
                 result.add(procedure);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

@@ -35,6 +35,12 @@ public class DAOFactory {
     public static ConditionDAO getConditionDao() { return new MySqlConditionDAO(); }
 
     /**
+     * Gives the data access object class for the Procedure object.
+     * @return dao for the Procedure object database transactions.
+     */
+    public static ProcedureDAO getProcedureDao() { return new MySqlProcedureDAO(); }
+
+    /**
      * Gives the data access object class for the Organ object.
      * @return dao for the Organ object database transactions.
      */

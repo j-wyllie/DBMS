@@ -32,12 +32,12 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.setBoolean(2, current);
 
             ResultSet allDrugs = stmt.executeQuery();
-            conn.close();
 
             while (allDrugs.next()) {
                 Drug drug = parseDrug(allDrugs);
                 result.add(drug);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

@@ -5,6 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import odms.profile.Condition;
 import odms.profile.Profile;
 
@@ -16,24 +19,45 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @param current conditions or false for past conditions.
      */
     @Override
-    public void getAll(Profile profile, Boolean current) {
-        String query = "select * from conditions where ProfileId = ? where Current = ?;";
+    public ArrayList<Condition> getAll(Profile profile, Boolean current) {
+        String query = "select * from conditions where ProfileId = ? and Current = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        ArrayList<Condition> allConditions = new ArrayList<>();
 
         try {
             Connection conn = connectionInstance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setBoolean(2, current);
+            ResultSet allConditionRows = stmt.executeQuery();
 
-            ResultSet allConditions = stmt.executeQuery();
+            while (allConditionRows.next()) {
+                Condition condition = parseCondition(allConditionRows);
+                allConditions.add(condition);
+            }
             conn.close();
-
-            //todo: return conditions in some kind of set/list.
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return allConditions;
+    }
+
+    /**
+     * Parses a single row of the condition table and returns a condition object
+     * @param rs rows returned by the database.
+     * @return the parsed condition object
+     * @throws SQLException error.
+     */
+    private Condition parseCondition(ResultSet rs) throws SQLException {
+        String name = rs.getString("Description");
+        LocalDate dateOfDiagnosis = LocalDate.parse(rs.getString("DiagnosisDate"));
+        LocalDate dateCured = LocalDate.parse(rs.getString("CuredDate"));
+        boolean isChronic = rs.getBoolean("Chronic");
+
+        Condition condition = new Condition(name, dateOfDiagnosis, dateCured, isChronic);
+        return condition;
     }
 
     /**
@@ -69,22 +93,18 @@ public class MySqlConditionDAO implements ConditionDAO {
 
     /**
      * Remove a condition from a profile.
-     * @param profile to remove the condition from.
      * @param condition to remove.
      */
     @Override
-    public void remove(Profile profile, Condition condition) {
-        String query = "delete from conditions where ProfileId = ? and Description = ? "
-                + "and DiagnosisDate = ?;";
+    public void remove(Condition condition) {
+        String query = "delete from conditions where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
-            stmt.setString(2, condition.getName());
-            stmt.setDate(3, Date.valueOf(condition.getDateOfDiagnosis()));
+            stmt.setInt(1, condition.getId());
 
             stmt.executeUpdate();
             conn.close();
@@ -96,14 +116,12 @@ public class MySqlConditionDAO implements ConditionDAO {
 
     /**
      * Update a condition for the profile.
-     * @param profile to update the condition for.
      * @param condition to update.
      */
     @Override
-    public void update(Profile profile, Condition condition) {
+    public void update(Condition condition) {
         String query = "update conditions set Description = ?, DiagnosisDate = ?, Chronic = ?, "
-                + "Current = ?, Past = ?, DateCured = ? where ProfileId = ? and "
-                + "Description = ? and DiagnosisDate = ?;";
+                + "Current = ?, Past = ?, DateCured = ? where Id = ?";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -116,9 +134,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setBoolean(4, !condition.getCured());
             stmt.setBoolean(5, condition.getCured());
             stmt.setDate(6, Date.valueOf(condition.getDateCured()));
-            stmt.setInt(7, profile.getId());
-            stmt.setString(8, condition.getName());
-            stmt.setDate(9, Date.valueOf(condition.getDateOfDiagnosis()));
+            stmt.setInt(7, condition.getId());
 
             stmt.executeUpdate();
             conn.close();

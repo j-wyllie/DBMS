@@ -8,8 +8,12 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import odms.data.ProfileDatabase;
+import odms.enums.OrganEnum;
+import odms.medications.Drug;
+import odms.profile.OrganConflictException;
+import odms.profile.Procedure;
 import odms.profile.Profile;
 
 public class MySqlProfileDAO implements ProfileDAO {
@@ -141,10 +145,56 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getTimestamp("Created") == null)) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
-
-        return new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
+        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
                 gender, height, weight, bloodType, isSmoker, alcoholConsump, bpSystolic, bpDiastolic,
                 address, region, phone, email, created, updated);
+
+        try {
+            profile = setOrgans(profile);
+            profile = setMedications(profile);
+            profile = setProcedures(profile);
+            profile = setConditions(profile);
+        } catch (OrganConflictException e) {
+            e.printStackTrace();
+        }
+
+        return profile;
+    }
+
+    private Profile setOrgans(Profile profile) throws OrganConflictException {
+        OrganDAO database = DAOFactory.getOrganDao();
+
+        profile.addOrgansDonating(database.getDonating(profile));
+        profile.addOrgansDonated(database.getDonations(profile));
+        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
+        profile.addOrgansReceived(database.getReceived(profile));
+
+        return profile;
+    }
+
+    private Profile setMedications(Profile profile) {
+        MedicationDAO database = DAOFactory.getMedicationDao();
+
+        profile.setCurrentMedications((ArrayList<Drug>) database.getAll(profile, true));
+        profile.setHistoryOfMedication((ArrayList<Drug>) database.getAll(profile, false));
+
+        return profile;
+    }
+
+    private Profile setProcedures(Profile profile) {
+        ProcedureDAO database = DAOFactory.getProcedureDao();
+
+        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, false));
+        profile.setCurrentProcedures((ArrayList<Procedure>) database.getAll(profile, true));
+
+        return profile;
+    }
+
+    private Profile setConditions(Profile profile) {
+        ConditionDAO database = DAOFactory.getConditionDao();
+
+        profile.setConditions(database.getAll(profile, true));
+        return profile;
     }
 
     /**

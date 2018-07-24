@@ -3,6 +3,8 @@ package odms.dao;
 import odms.profile.Condition;
 import odms.profile.Profile;
 
+import java.util.ArrayList;
+
 public interface ConditionDAO {
 
     /**
@@ -10,7 +12,7 @@ public interface ConditionDAO {
      * @param profile to get the conditions for.
      * @param current conditions or false for past conditions.
      */
-    void getAll(Profile profile, Boolean current);
+    ArrayList<Condition> getAll(Profile profile, Boolean current);
 
     /**
      * Add a new condition to a profile.
@@ -21,15 +23,13 @@ public interface ConditionDAO {
 
     /**
      * Remove a condition from a profile.
-     * @param profile to remove the condition from.
      * @param condition to remove.
      */
-    void remove(Profile profile, Condition condition);
+    void remove(Condition condition);
 
     /**
      * Update a condition for the profile.
-     * @param profile to update the condition for.
      * @param condition to update.
      */
-    void update(Profile profile, Condition condition);
+    void update(Condition condition);
 }

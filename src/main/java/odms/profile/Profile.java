@@ -55,6 +55,9 @@ public class Profile implements Comparable<Profile> {
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
+    private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+    private ArrayList<Procedure> currentProcedures = new ArrayList<>();
+
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
@@ -1065,6 +1068,35 @@ public class Profile implements Comparable<Profile> {
     // TODO access to this array should be restricted, this makes it public and redundant.
     public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
+    }
+
+    public void setProcedures(ArrayList<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+        this.pendingProcedures = pendingProcedures;
+    }
+
+    public ArrayList<Procedure> getCurrentProcedures() {
+        return currentProcedures;
+    }
+
+    public void setCurrentProcedures(ArrayList<Procedure> currentProcedures) {
+        this.currentProcedures = currentProcedures;
+    }
+
+
+    public void setConditions(ArrayList<Condition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public void setCurrentMedications(ArrayList<Drug> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    public void setHistoryOfMedication(ArrayList<Drug> historyOfMedication) {
+        this.historyOfMedication = historyOfMedication;
     }
 
     public String getPhone() {

@@ -1,5 +1,6 @@
 package odms.dao;
 
+import java.util.Set;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
@@ -11,25 +12,25 @@ public interface OrganDAO {
      * Gets all organs that a profile has donated in the past.
      * @param profile to get the organs for.
      */
-    ArrayList<OrganEnum> getDonations(Profile profile);
+    Set<OrganEnum>  getDonations(Profile profile);
 
     /**
      * Gets all organs that a profile has registered to donate.
      * @param profile to get the organs for.
      */
-    ArrayList<OrganEnum> getDonating(Profile profile);
+    Set<OrganEnum> getDonating(Profile profile);
 
     /**
      * Gets all organs that a profile requires.
      * @param profile to get the organs for.
      */
-    ArrayList<OrganEnum> getRequired(Profile profile);
+    Set<OrganEnum> getRequired(Profile profile);
 
     /**
      * Gets all organs that a profile has received in the past.
      * @param profile to get the organs for.
      */
-    ArrayList<OrganEnum> getReceived(Profile profile);
+    Set<OrganEnum> getReceived(Profile profile);
 
     /**
      * Adds an organ to a profiles past donations.

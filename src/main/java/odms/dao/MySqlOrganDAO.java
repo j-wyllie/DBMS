@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import java.util.HashSet;
+import java.util.Set;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
@@ -16,7 +18,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public ArrayList<OrganEnum> getDonations(Profile profile) {
+    public Set<OrganEnum> getDonations(Profile profile) {
         return getOrgans( profile, "select Organ from organs where ProfileId = ? and Donated = ?");
 
     }
@@ -26,7 +28,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public ArrayList<OrganEnum> getDonating(Profile profile) {
+    public Set<OrganEnum> getDonating(Profile profile) {
         return getOrgans(profile, "select Organ from organs where ProfileId = ? and Donating = ?");
     }
 
@@ -36,10 +38,10 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param query
      * @return the list of the returned organs
      */
-    private ArrayList<OrganEnum> getOrgans(Profile profile, String query) {
+    private Set<OrganEnum> getOrgans(Profile profile, String query) {
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        ArrayList<OrganEnum> allOrgans = null;
+        Set<OrganEnum> allOrgans = new HashSet<>();
 
         try {
             Connection conn = instance.getConnection();
@@ -48,13 +50,13 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setInt(1, profile.getId());
             stmt.setBoolean(2, true);
             ResultSet allOrganRows = stmt.executeQuery();
-            conn.close();
 
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
                 OrganEnum organ = OrganEnum.valueOf(organName);
                 allOrgans.add(organ);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public ArrayList<OrganEnum> getRequired(Profile profile) {
+    public Set<OrganEnum> getRequired(Profile profile) {
         return getOrgans(profile, "select Organ from organs where ProfileId = ? and Required = ?");
     }
 
@@ -77,7 +79,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public ArrayList<OrganEnum> getReceived(Profile profile) {
+    public Set<OrganEnum> getReceived(Profile profile) {
         return getOrgans(profile, "select Organ from organs where ProfileId = ? and Received = ?");
     }
 
