@@ -2,6 +2,7 @@ package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
 import odms.controller.ProfileEditController;
 import odms.enums.CountriesEnum;
 import odms.enums.OrganEnum;
@@ -12,14 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import odms.controller.HistoryController;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
+import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
@@ -48,6 +45,7 @@ public class Profile implements Comparable<Profile> {
 
     private String streetNumber;
     private String streetName;
+    private String neighbourhood;
     private String city;
     private String region;
     private String zipCode;
@@ -872,6 +870,17 @@ public class Profile implements Comparable<Profile> {
         return givenNames + " " + lastNames;
     }
 
+    /**
+     * This method is used to populate a column in the search table, intelliJ thinks it is un-used.
+     */
+    public String getFullPreferredName() {
+        if (preferredName == null || preferredName.equals("")) {
+            return givenNames + " " + lastNames;
+        } else {
+            return givenNames + " \"" + preferredName + "\" " + lastNames;
+        }
+    }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
@@ -913,9 +922,14 @@ public class Profile implements Comparable<Profile> {
         return gender;
     }
 
-    public void setGender(String gender) {
-        generateUpdateInfo("gender");
-        this.gender = gender;
+    public void setGender(String gender) throws IllegalArgumentException {
+        String newGender = gender.toLowerCase().trim();
+        if (newGender.equals("male") || newGender.equals("female")) {
+            generateUpdateInfo("gender");
+            this.gender = newGender;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Double getHeight() {
@@ -940,10 +954,12 @@ public class Profile implements Comparable<Profile> {
         return bloodType;
     }
 
-    public void setBloodType(String bloodType) {
-        if (bloodType != null) {
+    public void setBloodType(String bloodType) throws IllegalArgumentException {
+        if (bloodType != null && BloodTypeEnum.toArrayList().contains(bloodType)) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -1054,8 +1070,13 @@ public class Profile implements Comparable<Profile> {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String email) throws IllegalArgumentException {
+        EmailValidator validator = EmailValidator.getInstance();
+        if (validator.isValid(email)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void setAllConditions(ArrayList<Condition> conditions) {
@@ -1165,5 +1186,13 @@ public class Profile implements Comparable<Profile> {
 
     public void setCityOfDeath(String cityOfDeath) {
         this.cityOfDeath = cityOfDeath;
+    }
+
+    public String getNeighbourhood() {
+        return neighbourhood;
+    }
+
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
     }
 }

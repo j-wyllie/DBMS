@@ -5,7 +5,7 @@
     <groupId>seng302</groupId>
     <artifactId>odms</artifactId>
     <packaging>jar</packaging>
-    <version>0.3</version>
+    <version>0.5</version>
     <name>Organ Donor Management System</name>
     <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
@@ -135,6 +135,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -177,7 +191,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.0</version>
                 <configuration>
-                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
                     <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
                 </configuration>
                 <executions>
