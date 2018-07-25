@@ -136,13 +136,13 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
 
         if (!(drugA == null || drugA.equals("") || drugB == null || drugB.equals(""))) {
             StringBuffer response = getResponse(drugA, drugB);
-
             if (response != null) {
                 if (response.toString().equals(SERVER_ERROR)) {
                     interaction = new Interaction(null, null,null, null, null, null);
                 } else {
                     JsonParser parser = new JsonParser();
                     JsonObject results = parser.parse(response.toString()).getAsJsonObject();
+
 
                     Map<String, List<String>> ageEffects = parseListInteractions(results
                             .get("age_interaction"));

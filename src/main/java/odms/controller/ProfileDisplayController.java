@@ -976,6 +976,10 @@ public class ProfileDisplayController extends CommonController {
         stage.show();
     }
 
+    /**
+     * Clears the cache and handles the messages.
+     * @param event
+     */
     @FXML
     private void handleClearCache(ActionEvent event) {
         if (AlertController.generalConfirmation("Are you sure you want to clear the cache?"
