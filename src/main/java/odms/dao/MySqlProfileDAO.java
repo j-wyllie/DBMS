@@ -1,10 +1,12 @@
 package odms.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -205,8 +207,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     public void add(Profile profile) {
         String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
                 + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
-                + " BloodPressure, Address, Region, Phone, Email, Created, LastUpdated) values (?, ?, ?,"
-                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + " BloodPressureSystolic, BloodPressureDiastolic, Address, Region, Phone, Email, Created, LastUpdated) values (?, ?, ?,"
+                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -227,13 +229,14 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(12, profile.getBloodType());
             stmt.setBoolean(13, profile.getIsSmoker());
             stmt.setString(14, profile.getAlcoholConsumption());
-            stmt.setString(15, profile.getBloodPressure());
-            stmt.setString(16, profile.getAddress());
-            stmt.setString(17, profile.getRegion());
-            stmt.setString(18, profile.getPhone());
-            stmt.setString(19, profile.getEmail());
-            stmt.setString(20, LocalDateTime.now().toString());
+            stmt.setInt(15, profile.getBloodPressureSystolic());
+            stmt.setInt(16, profile.getBloodPressureDiastolic());
+            stmt.setString(17, profile.getAddress());
+            stmt.setString(18, profile.getRegion());
+            stmt.setString(19, profile.getPhone());
+            stmt.setString(20, profile.getEmail());
             stmt.setString(21, LocalDateTime.now().toString());
+            stmt.setString(22, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
@@ -302,7 +305,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     public void update(Profile profile) {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
-                + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressure = ?, Address = ?,"
+                + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
+                + "BloodPressureSystolic = ?, Address = ?,"
                 + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -316,27 +320,33 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setBoolean(4, profile.getReceiver());
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
-            stmt.setString(7, profile.getDateOfBirth().toString());
-            stmt.setString(8, profile.getDateOfDeath().toString());
+            stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
+            if (!(profile.getDateOfDeath() == null)) {
+                stmt.setDate(8, Date.valueOf(profile.getDateOfDeath()));
+            }
+            else {
+                stmt.setDate(8, null);
+            }
             stmt.setString(9, profile.getGender());
             stmt.setDouble(10, profile.getHeight());
             stmt.setDouble(11, profile.getWeight());
             stmt.setString(12, profile.getBloodType());
             stmt.setBoolean(13, profile.getIsSmoker());
             stmt.setString(14, profile.getAlcoholConsumption());
-            stmt.setString(15, profile.getBloodPressure());
-            stmt.setString(16, profile.getAddress());
-            stmt.setString(17, profile.getRegion());
-            stmt.setString(18, profile.getPhone());
-            stmt.setString(19, profile.getEmail());
-            stmt.setString(20, profile.getTimeOfCreation().toString());
-            stmt.setString(21, profile.getLastUpdated().toString());
-            stmt.setInt(22, profile.getId());
+            stmt.setInt(15, profile.getBloodPressureDiastolic());
+            stmt.setInt(16, profile.getBloodPressureSystolic());
+            stmt.setString(17, profile.getAddress());
+            stmt.setString(18, profile.getRegion());
+            stmt.setString(19, profile.getPhone());
+            stmt.setString(20, profile.getEmail());
+            stmt.setTimestamp(21, Timestamp.valueOf(profile.getTimeOfCreation()));
+            stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
+            stmt.setInt(23, profile.getId());
 
             stmt.executeUpdate();
             conn.close();
         }
-        catch (SQLException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1197,4 +1197,8 @@ public class Profile implements Comparable<Profile> {
     }
 
     public String getUsername() { return username; }
+
+    public int getBloodPressureSystolic() { return this.bloodPressureSystolic; }
+
+    public int getBloodPressureDiastolic() { return this.bloodPressureDiastolic; }
 }

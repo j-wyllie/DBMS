@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.ProfileDAO;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
@@ -119,7 +121,7 @@ public class ProfileEditController extends CommonController {
             try {
                 // History Generation
                 History action = new History("Profile" , currentProfile.getId() ,"update",
-                        "previous "+currentProfile.getAttributesSummary(),-1,null);
+                        "previous " + currentProfile.getAttributesSummary(),-1,null);
 
                 // Required General Fields
                 saveDateOfBirth();
@@ -145,16 +147,18 @@ public class ProfileEditController extends CommonController {
                 saveBloodType();
                 saveIsSmoker();
 
-                ProfileDataIO.saveData(getCurrentDatabase());
+                ProfileDAO database = DAOFactory.getProfileDao();
+                database.update(currentProfile);
                 showNotification("Profile", event);
                 closeEditWindow(event);
 
                 // History Changes
-                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
+                action.setHistoryData(action.getHistoryData()+" new " + currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
                         "Changes not saved."
