@@ -51,6 +51,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.enums.CountriesEnum;
 import odms.history.History;
 import odms.medications.Drug;
 import odms.profile.Condition;
@@ -1131,12 +1132,12 @@ public class ProfileDisplayController extends CommonController {
                 if (currentProfile.getCountryOfDeath() == null ) {
                     if (currentProfile.getCountry() != null) {
                         currentProfile.setCountryOfDeath(currentProfile.getCountry());
-                        countryLabel.setText("Country of Death : " + currentProfile.getCountry());
+                        countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
                     } else {
                         countryLabel.setText("Country of Death : ");
                     }
                 } else {
-                    countryLabel.setText("Country of Death : " + currentProfile.getCountryOfDeath());
+                    countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
                 }
 
                 if (currentProfile.getCityOfDeath() == null) {
@@ -1164,7 +1165,7 @@ public class ProfileDisplayController extends CommonController {
                     regionLabel.setText("Region : " + currentProfile.getRegion());
                 }
                 if (currentProfile.getCountry() != null) {
-                    countryLabel.setText("Country : " + currentProfile.getCountry());
+                    countryLabel.setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
                 }
                 if (currentProfile.getCity() != null) {
                     cityLabel.setText("City : " + currentProfile.getCity());

@@ -31,8 +31,8 @@ public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
-    private RedoController redoController= new RedoController();
-    private UndoController undoController= new UndoController();
+    private RedoController redoController = new RedoController();
+    private UndoController undoController = new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -152,8 +152,8 @@ public class ProfileEditController extends CommonController {
         if (AlertController.saveChanges()) {
             try {
                 // History Generation
-                History action = new History("Profile" , currentProfile.getId() ,"update",
-                        "previous "+currentProfile.getAttributesSummary(),-1,null);
+                History action = new History("Profile", currentProfile.getId(), "update",
+                        "previous " + currentProfile.getAttributesSummary(), -1, null);
 
                 // Required General Fields
                 saveDateOfBirth();
@@ -186,14 +186,15 @@ public class ProfileEditController extends CommonController {
                 closeEditWindow(event);
 
                 // History Changes
-                action.setHistoryData(action.getHistoryData()+" new "+currentProfile.getAttributesSummary());
+                action.setHistoryData(
+                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
-                        "Changes not saved."
+                                "Changes not saved."
                 );
             }
         }
@@ -201,6 +202,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save Date of Birth field to profile.
+     *
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveDateOfBirth() throws IllegalArgumentException {
@@ -212,6 +214,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save Given Names field to profile.
+     *
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveGivenNames() throws IllegalArgumentException {
@@ -223,12 +226,14 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save NHI Number field to profile.
+     *
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveNhiNumber() throws IllegalArgumentException {
         System.out.println(GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText()));
-        if ((!nhiNumberField.getText().equals(currentProfile.getNhi()) && (!nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$") ||
-                GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
+        if ((!nhiNumberField.getText().equals(currentProfile.getNhi()) && (
+                !nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$") ||
+                        GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
             throw new IllegalArgumentException("NHI must be valid");
         }
         currentProfile.setNhi(nhiNumberField.getText());
@@ -236,6 +241,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save Last Names field to profile.
+     *
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveLastNames() throws IllegalArgumentException {
@@ -256,6 +262,7 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save Date of Death field to profile.
+     *
      * @throws IllegalArgumentException if date is prior to birth date
      */
     private void saveDateOfDeath() throws IllegalArgumentException {
@@ -288,7 +295,9 @@ public class ProfileEditController extends CommonController {
      */
     private void saveRegionOfDeath() {
         //TODO waiting for the API from previous story to validate if this is a valid place
-        if (!regionOfDeathField.getText().isEmpty()&& AddressIO.checkValidCity(regionOfDeathField.getText()+" "+countryOfDeathField.getText(),regionField.getText())) {
+        if (!regionOfDeathField.getText().isEmpty() && AddressIO
+                .checkValidCity(regionOfDeathField.getText() + " " + countryOfDeathField.getText(),
+                        regionField.getText())) {
             currentProfile.setRegionOfDeath(regionOfDeathField.getText());
         }
     }
@@ -298,7 +307,9 @@ public class ProfileEditController extends CommonController {
      */
     private void saveCityOfDeath() {
         //TODO waiting for the API from previous story to validate if this is a valid place
-        if (!cityOfDeathField.getText().isEmpty() && AddressIO.checkValidCity(cityOfDeathField.getText()+" "+countryOfDeathField.getText(),cityField.getText())) {
+        if (!cityOfDeathField.getText().isEmpty() && AddressIO
+                .checkValidCity(cityOfDeathField.getText() + " " + countryOfDeathField.getText(),
+                        cityField.getText())) {
             currentProfile.setCityOfDeath(cityOfDeathField.getText());
         }
     }
@@ -373,7 +384,7 @@ public class ProfileEditController extends CommonController {
      */
     private void saveCountry() {
         if (comboCountry.getValue() != null) {
-            currentProfile.setCountry( comboCountry.getValue().toString());
+            currentProfile.setCountry(comboCountry.getValue().toString());
         }
     }
 
@@ -407,8 +418,7 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Save Blood Pressure field to profile.
-     * Must be in format of Systolic/Diastolic.
+     * Save Blood Pressure field to profile. Must be in format of Systolic/Diastolic.
      */
     private void saveBloodPressure() {
         if (!bloodPressureField.getText().isEmpty() && bloodPressureField.getText().contains("/")) {
@@ -442,8 +452,8 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Ensures the correct input method for region is displayed,
-     * also populates region with NZ regions when NZ is selected as country
+     * Ensures the correct input method for region is displayed, also populates region with NZ
+     * regions when NZ is selected as country
      */
     @FXML
     private void refreshRegionSelection() {
@@ -451,7 +461,9 @@ public class ProfileEditController extends CommonController {
             if (comboCountry.getValue().toString().equals("New Zealand")) {
                 comboRegion.setDisable(false);
                 regionField.setDisable(true);
+                regionField.setText("");
                 comboRegion.getItems().setAll(NewZealandRegionsEnum.toArrayList());
+                comboRegion.setValue(currentProfile.getRegion());
             } else {
                 comboRegion.setDisable(true);
                 regionField.setDisable(false);
@@ -555,11 +567,11 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getDateOfDeath() != null) {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
-                if (currentProfile.getHeight() != 0.0){
-                    heightField.setText(String.valueOf(currentProfile.getHeight()/100));
+                if (currentProfile.getHeight() != 0.0) {
+                    heightField.setText(String.valueOf(currentProfile.getHeight() / 100));
                 }
                 if (currentProfile.getWeight() != 0.0) {
-                    weightField.setText(String.valueOf(currentProfile.getWeight()/100));
+                    weightField.setText(String.valueOf(currentProfile.getWeight() / 100));
                 }
                 if (currentProfile.getPhone() != null) {
                     phoneField.setText(currentProfile.getPhone());
@@ -585,7 +597,6 @@ public class ProfileEditController extends CommonController {
                     alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
                 }
 
-
                 if (currentProfile.getDateOfDeath() != null) {
                     //Profile is dead
 
@@ -593,25 +604,27 @@ public class ProfileEditController extends CommonController {
                     countryLabel.setText("Country of death: ");
                     regionLabel.setText("Region of death: ");
 
-                    //Only a clinician should be able to edit these
-                    if (isClinician) {
-                        comboCountry.setDisable(false);
-                        regionField.setDisable(false);
-                        comboRegion.setDisable(false);
-                        cityField.setDisable(false);
-                    } else {
-                        comboCountry.setDisable(true);
-                        regionField.setDisable(true);
-                        comboRegion.setDisable(true);
-                        cityField.setDisable(true);
-                    }
+                    //Only a clinician should be able to edit these -- not sure about this.
+//                    if (isClinician) {
+//                        comboCountry.setDisable(false);
+//                        regionField.setDisable(false);
+//                        comboRegion.setDisable(false);
+//                        cityField.setDisable(false);
+//                    } else {
+//                        comboCountry.setDisable(true);
+//                        regionField.setDisable(true);
+//                        comboRegion.setDisable(true);
+//                        cityField.setDisable(true);
+//                    }
 
-                    if (currentProfile.getCountryOfDeath() == null ) {
+                    if (currentProfile.getCountryOfDeath() == null) {
                         if (currentProfile.getCountry() != null) {
-                            comboCountry.setValue(currentProfile.getCountry());
+                            comboCountry.setValue(CountriesEnum
+                                    .getValidNameFromString(currentProfile.getCountry()));
                         }
                     } else {
-                        comboCountry.setValue(currentProfile.getCountryOfDeath());
+                        comboCountry.setValue(CountriesEnum
+                                .getValidNameFromString(currentProfile.getCountryOfDeath()));
                     }
 
                     if (currentProfile.getCityOfDeath() == null) {
@@ -635,10 +648,10 @@ public class ProfileEditController extends CommonController {
                                     regionField.setText(currentProfile.getRegion());
                                 }
                             } else {
-                                    comboRegion.setDisable(true);
-                                    regionField.setDisable(false);
-                                    regionField.setText(currentProfile.getRegion());
-                                }
+                                comboRegion.setDisable(true);
+                                regionField.setDisable(false);
+                                regionField.setText(currentProfile.getRegion());
+                            }
                         }
                     } else {
                         if (currentProfile.getCountry() != null) {
@@ -647,8 +660,7 @@ public class ProfileEditController extends CommonController {
                                 regionField.setDisable(true);
                                 comboRegion.setValue(currentProfile.getRegionOfDeath());
                             }
-                        }
-                        else {
+                        } else {
                             comboRegion.setDisable(true);
                             regionField.setDisable(false);
                             regionField.setText(currentProfile.getRegionOfDeath());
@@ -662,12 +674,12 @@ public class ProfileEditController extends CommonController {
                     countryLabel.setText("Country : ");
                     regionLabel.setText("Region : ");
 
-
                     if (currentProfile.getCity() != null) {
                         cityField.setText(currentProfile.getCity());
                     }
                     if (currentProfile.getCountry() != null) {
-                        comboCountry.setValue(CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                        comboCountry.setValue(
+                                CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
                     }
                     if (currentProfile.getRegion() != null) {
                         if (currentProfile.getCountry() != null) {
@@ -690,7 +702,6 @@ public class ProfileEditController extends CommonController {
 
                 }
 
-
                 comboGender.setEditable(false);
                 comboGender.getItems().addAll("Male", "Female");
                 if (currentProfile.getGender() != null) {
@@ -708,7 +719,8 @@ public class ProfileEditController extends CommonController {
                 }
 
                 comboGenderPref.setEditable(true);
-                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
+                comboGenderPref.getItems().addAll("Male", "Female",
+                        "Non binary"); //TODO Add database call for all preferred genders.
 
                 if (currentProfile.getPreferredGender() != null) {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
