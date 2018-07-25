@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import odms.medications.Interaction;
@@ -166,7 +167,7 @@ public class MedicationDataIO {
      * @throws IOException creation of URL may cause IOException.
      */
     public static Map<String, String> getDrugInteractions(Interaction interaction, String gender, int age) throws IOException {
-        Map<String, String> interactions = new HashMap<>();
+        Map<String, String> interactions;
 
         interactions = parseInteractionsJSON(interaction, gender, age);
         return interactions;
@@ -182,20 +183,19 @@ public class MedicationDataIO {
     private static Map<String, String> parseInteractionsJSON(Interaction interaction, String gender, int age) {
         Map<String, String> interactions;
         interactions = new HashMap<>();
-//
-//        JsonObject genderInteractions = results.get("gender_interaction").getAsJsonObject();
-//        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
-//            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "male"));
-//            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "female"));
-//        } else {
-//            interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, gender));
-//        }
-//
-//        JsonObject interactionAge = results.get("age_interaction").getAsJsonObject();
-//        interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
-//
-//        JsonObject interactionDuration = results.get("duration_interaction").getAsJsonObject();
-//        interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
+
+        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
+            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "male"));
+            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "female"));
+        } else {
+            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), gender));
+        }
+
+        JsonObject interactionAge = results.get("age_interaction").getAsJsonObject();
+        interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
+
+        JsonObject interactionDuration = results.get("duration_interaction").getAsJsonObject();
+        interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
         return interactions;
     }
 
@@ -204,13 +204,24 @@ public class MedicationDataIO {
      * Parse JSON object that contains drug interactions based on male or female genders.
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
      *                     which an interaction may occur.
-     * @param interactionGender JSONObject that contains two JSONArrays, male or female. Arrays contain drug
-     *                           interactions
+     * @param interactionGender Interaction object that contains
      * @param gender gender of profile request is made for.
      * @return Map<String, String> keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseGenderInteractionsJSON(Map<String, String> interactions,
-                                                                   JsonObject interactionGender, String gender) {
+                                                                   Map<String, List<String>>
+                                                                           interactionGender,
+                                                                   String gender) {
+
+        for (Map.Entry<String, List<String>> genderList : interactionGender.entrySet()) {
+            if (genderList.getKey().equals(gender)) {
+                for (String symtom : genderList.getValue()) {
+                    if (!interactions.containsValue())
+                }
+
+            }
+        }
+
         JsonArray genderInteractionsArray = interactionGender.get(gender).getAsJsonArray();
         for (JsonElement value : genderInteractionsArray) {
             if (!interactions.containsKey(value.toString())) {
