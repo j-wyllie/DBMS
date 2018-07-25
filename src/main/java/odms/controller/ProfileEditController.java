@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
+import org.sonar.api.internal.google.common.io.Files;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -102,37 +103,29 @@ public class ProfileEditController extends CommonController {
      * @param event clicking on the choose file button.
      */
 
-    @FXML//TODO
-    private String handleChooseImageClicked(ActionEvent event) throws IOException{
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Images", "jpg", "png");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-
-            if (chooser.getSelectedFile().length() > 1000000) {
-                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
-                return chooser.getSelectedFile().getName();
-            }
-
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            pictureText.setText(chooser.getSelectedFile().getName());
-        }
-        if (chooser.getSelectedFile() == null) {
-            return null;
+    @FXML
+    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile == null) {
         } else {
-            //TODO how are photos being stored - Below is the class loader which may help with uploading images to storage.
-
-            ClassLoader classLoader = getClass().getClassLoader();
-            pictureDestination = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
-
-
-            copyFileUsingStream(chooser.getSelectedFile(), pictureDestination);
-
-            currentProfile.setPictureName(chooser.getSelectedFile().getName());
-            return chooser.getSelectedFile().getName();
+            String extension = Files.getFileExtension(chosenFile.toString());
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
+            } else {
+                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentProfile.getNhi() + ".jpg");
+            }
+                if(deleteFile.delete())
+                {
+                    System.out.println("Old file deleted successfully");
+                }
+                else
+                {
+                    System.out.println("Failed to delete the old file");
+                }
+            File pictureDestination = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentProfile.setPictureName(chosenFile.getName());
         }
     }
 

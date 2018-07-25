@@ -16,9 +16,11 @@ import odms.history.History;
 import odms.profile.Profile;
 import odms.history.History;
 import odms.user.User;
+import org.sonar.api.internal.google.common.io.Files;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -54,33 +56,30 @@ public class ClinicianProfileEditController extends CommonController{
      * @param event clicking on the choose file button.
      */
 
-    @FXML//TODO
-    private String handleChooseImageClicked(ActionEvent event){
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Images", "jpg", "png");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+    @FXML
+    private void clinicianChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile == null) {
 
-            if (chooser.getSelectedFile().length() > 1000000) {
-                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
-                return chooser.getSelectedFile().getName();
-            }
-
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            pictureText.setText(chooser.getSelectedFile().getName());
-        }
-
-        if (chooser.getSelectedFile() == null) {
-            return null;
         } else {
-            Image image = new Image(chooser.getSelectedFile().toURI().toString());
-            //TODO how are photos being stored
-            currentUser.setPictureFile(image);
-            currentUser.setPictureName(chooser.getSelectedFile().getName());
-            return chooser.getSelectedFile().getName();
+            String extension = Files.getFileExtension(chosenFile.toString());
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentUser.getStaffID() + ".png");
+            } else {
+                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentUser.getStaffID() + ".jpg");
+            }
+            if(deleteFile.delete())
+            {
+                System.out.println("Old file deleted successfully");
+            }
+            else
+            {
+                System.out.println("Failed to delete the old file");
+            }
+            File pictureDestination = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentUser.setPictureName(chosenFile.getName());
         }
     }
 

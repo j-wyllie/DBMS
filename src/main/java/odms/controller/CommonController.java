@@ -7,11 +7,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import odms.profile.Profile;
 import org.controlsfx.control.Notifications;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 
 class CommonController {
@@ -173,6 +178,34 @@ class CommonController {
 
         }
     }
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param pictureText user feedback text to update on profile picture edit
+     */
+
+    protected File chooseImage(Text pictureText) throws IOException{
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Images", "jpg", "png");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+
+            if (chooser.getSelectedFile().length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+                return chooser.getSelectedFile();
+            }
+
+            System.out.println("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+            pictureText.setText(chooser.getSelectedFile().getName());
+        }
+        return chooser.getSelectedFile();
+
+    }
+
 
     public void setEdited(Boolean edited) {
         isEdited = edited;

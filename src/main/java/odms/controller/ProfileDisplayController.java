@@ -1131,10 +1131,12 @@ public class ProfileDisplayController extends CommonController {
 
             //setting profile photo
             if (currentProfile.getPictureName() != null) {
-                //TODO this is where the image would be fetched from wherever it is stored, also this currently throws an error, photo does get displayed though
                 File image = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
                 if(!image.exists()){
-                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                    image = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".jpg");
+                    if(!image.exists()){
+                        image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                    }
                 }
                 profileImage.setImage(new Image(image.toURI().toURL().toString()));
             }

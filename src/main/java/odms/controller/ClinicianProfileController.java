@@ -1,7 +1,9 @@
 package odms.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -464,10 +467,19 @@ public class ClinicianProfileController extends CommonController {
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
 
-        //setting user photo
         if (currentUser.getPictureName() != null) {
-            //TODO this is where the image would be fetched from wherever it is stored, also this currently throws an error, photo does get displayed though
-            userImage.setImage(currentUser.getPictureFile());
+            File image = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + ".png");
+            if(!image.exists()){
+                image = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            try {
+                userImage.setImage(new Image(image.toURI().toURL().toString()));
+            } catch (MalformedURLException e){
+                System.out.println("Malformed URL Exception");
+            }
         }
 
     }
