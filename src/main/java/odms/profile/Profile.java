@@ -56,7 +56,7 @@ public class Profile implements Comparable<Profile> {
     private ArrayList<Procedure> procedures = new ArrayList<>();
 
     private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-    private ArrayList<Procedure> currentProcedures = new ArrayList<>();
+    private ArrayList<Procedure> previousProcedures = new ArrayList<>();
 
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
@@ -311,35 +311,22 @@ public class Profile implements Comparable<Profile> {
     public ArrayList<Procedure> getAllProcedures() { return procedures; }
 
     /**
-     * Gets all the previous procedures
-     * @return previous procedures
-     */
-    public ArrayList<Procedure> getPreviousProcedures() {
-        ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isBefore(LocalDate.now())) {
-                    prevProcedures.add(procedure);
-                }
-            }
-        }
-        return prevProcedures;
-    }
-
-    /**
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
-        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isAfter(LocalDate.now())) {
-                    pendingProcedures.add(procedure);
-                }
-            }
-        }
-        return pendingProcedures;
+    public ArrayList<Procedure> getPendingProcedures() { return this.pendingProcedures; }
+
+
+    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+        this.pendingProcedures = pendingProcedures;
+    }
+
+    public ArrayList<Procedure> getPreviousProcedures() {
+        return this.previousProcedures;
+    }
+
+    public void setPreviousProcedures(ArrayList<Procedure> previous) {
+        this.previousProcedures = previous;
     }
 
     /**
@@ -1080,18 +1067,6 @@ public class Profile implements Comparable<Profile> {
 
     public void setProcedures(ArrayList<Procedure> procedures) {
         this.procedures = procedures;
-    }
-
-    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
-        this.pendingProcedures = pendingProcedures;
-    }
-
-    public ArrayList<Procedure> getCurrentProcedures() {
-        return currentProcedures;
-    }
-
-    public void setCurrentProcedures(ArrayList<Procedure> currentProcedures) {
-        this.currentProcedures = currentProcedures;
     }
 
 

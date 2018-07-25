@@ -74,6 +74,15 @@ public class Condition {
         this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), null, isChronic);
     }
 
+    public Condition(int id, String name, LocalDate dateOfDiagnosis, boolean chronic, boolean cured, LocalDate curedDate) {
+        this.id = id;
+        this.name = name;
+        this.dateOfDiagnosis = dateOfDiagnosis;
+        this.isChronic = chronic;
+        this.isCured = cured;
+        this.dateCured = curedDate;
+    }
+
     // getters
     public int getId() { return this.id; }
     public String getName() { return this.name; }

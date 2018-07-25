@@ -10,10 +10,10 @@ public interface ProcedureDAO {
     /**
      * Get all procedures for the profile.
      * @param profile to get the conditions for.
-     * @param current procedures or false for past procedures.
+     * @param pending procedures or false for past procedures.
      * @return a list of past or current procedures.
      */
-    List<Procedure> getAll(Profile profile, Boolean current);
+    List<Procedure> getAll(Profile profile, Boolean pending);
 
     /**
      * Add a new procedure to a profile.

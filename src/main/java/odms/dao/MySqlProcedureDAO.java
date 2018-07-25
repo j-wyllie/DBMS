@@ -54,7 +54,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     private Procedure parseProcedure(ResultSet procedures) throws SQLException {
         int id = procedures.getInt("Id");
         String summary = procedures.getString("Summary");
-        LocalDate procedureDate = LocalDate.parse(procedures.getString("ProcedureDate"));
+        LocalDate procedureDate = procedures.getDate("ProcedureDate").toLocalDate();
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
 
@@ -162,13 +162,13 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(1, procedureId);
 
             ResultSet allOrgans = stmt.executeQuery();
-            conn.close();
 
             while (allOrgans.next()) {
                 String organName = allOrgans.getString("Organ");
-                OrganEnum organ = OrganEnum.valueOf(organName);
+                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
                 organs.add(organ);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

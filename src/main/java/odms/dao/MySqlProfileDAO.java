@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
+import odms.profile.Condition;
 import odms.profile.OrganConflictException;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -183,8 +184,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, false));
-        profile.setCurrentProcedures((ArrayList<Procedure>) database.getAll(profile, true));
+        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, true));
+        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile, false));
 
         return profile;
     }
@@ -192,7 +193,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
 
-        profile.setConditions(database.getAll(profile, true));
+        profile.setConditions(database.getAll(profile, false));
         return profile;
     }
 

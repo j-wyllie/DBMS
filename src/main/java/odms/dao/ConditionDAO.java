@@ -10,9 +10,9 @@ public interface ConditionDAO {
     /**
      * Get all conditions for the profile.
      * @param profile to get the conditions for.
-     * @param current conditions or false for past conditions.
+     * @param chronic true if the conditions required are chronic.
      */
-    ArrayList<Condition> getAll(Profile profile, Boolean current);
+    ArrayList<Condition> getAll(Profile profile, boolean chronic);
 
     /**
      * Add a new condition to a profile.

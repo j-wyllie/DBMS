@@ -16,11 +16,11 @@ public class MySqlConditionDAO implements ConditionDAO {
     /**
      * Get all conditions for the profile.
      * @param profile to get the conditions for.
-     * @param current conditions or false for past conditions.
+     * @param chronic true if the conditions required are chronic.
      */
     @Override
-    public ArrayList<Condition> getAll(Profile profile, Boolean current) {
-        String query = "select * from conditions where ProfileId = ? and Current = ?;";
+    public ArrayList<Condition> getAll(Profile profile, boolean chronic) {
+        String query = "select * from conditions where ProfileId = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         ArrayList<Condition> allConditions = new ArrayList<>();
 
@@ -28,7 +28,6 @@ public class MySqlConditionDAO implements ConditionDAO {
             Connection conn = connectionInstance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
-            stmt.setBoolean(2, current);
             ResultSet allConditionRows = stmt.executeQuery();
 
             while (allConditionRows.next()) {
@@ -51,12 +50,18 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @throws SQLException error.
      */
     private Condition parseCondition(ResultSet rs) throws SQLException {
+        int id = rs.getInt("Id");
         String name = rs.getString("Description");
-        LocalDate dateOfDiagnosis = LocalDate.parse(rs.getString("DiagnosisDate"));
-        LocalDate dateCured = LocalDate.parse(rs.getString("CuredDate"));
+        LocalDate dateOfDiagnosis = rs.getDate("DiagnosisDate").toLocalDate();
         boolean isChronic = rs.getBoolean("Chronic");
+        boolean isCured = rs.getBoolean("Past");
+        LocalDate dateCured = null;
+        if (!(rs.getDate("CuredDate") == null)) {
+             dateCured = rs.getDate("CuredDate").toLocalDate();
+        }
 
-        Condition condition = new Condition(name, dateOfDiagnosis, dateCured, isChronic);
+        System.out.print(isChronic);
+        Condition condition = new Condition(id, name, dateOfDiagnosis, isChronic, isCured, dateCured);
         return condition;
     }
 
