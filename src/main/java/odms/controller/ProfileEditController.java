@@ -85,6 +85,9 @@ public class ProfileEditController extends CommonController {
     private ComboBox comboRegion;
 
     @FXML
+    private ComboBox comboRegionOfDeath;
+
+    @FXML
     private TextField regionField;
 
     @FXML
@@ -106,7 +109,7 @@ public class ProfileEditController extends CommonController {
     private TextField preferredNameField;
 
     @FXML
-    private TextField countryOfDeathField;
+    private ComboBox comboCountryOfDeath;
 
     @FXML
     private TextField regionOfDeathField;
@@ -174,6 +177,13 @@ public class ProfileEditController extends CommonController {
                 saveCountry();
                 saveCity();
                 saveWeight();
+                try {
+                    saveCityOfDeath();
+                    saveRegionOfDeath();
+                    saveCountryOfDeath();
+                } catch (Exception e) {
+                    AlertController.guiPopup("Invalid Location Of Death");
+                }
 
                 // Medical Fields
                 saveAlcoholConsumption();
@@ -285,32 +295,44 @@ public class ProfileEditController extends CommonController {
      */
     private void saveCountryOfDeath() {
         //TODO waiting for the API from previous story to validate if this is a valid place
-        if (!countryOfDeathField.getText().isEmpty()) {
-            currentProfile.setCountryOfDeath(countryOfDeathField.getText());
-        }
+        currentProfile.setCountryOfDeath(comboCountryOfDeath.getValue().toString());
+
     }
 
     /**
      * Save Region of death field to profile.
      */
-    private void saveRegionOfDeath() {
+    private void saveRegionOfDeath() throws Exception{
         //TODO waiting for the API from previous story to validate if this is a valid place
         if (!regionOfDeathField.getText().isEmpty() && AddressIO
-                .checkValidCity(regionOfDeathField.getText() + " " + countryOfDeathField.getText(),
-                        regionField.getText())) {
+                .checkValidCity(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        regionField.getText()) && comboRegion.isDisabled()) {
             currentProfile.setRegionOfDeath(regionOfDeathField.getText());
+        } else if(!regionOfDeathField.getText().isEmpty() && !AddressIO
+                .checkValidCity(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        regionField.getText())){
+            throw new Exception();
+        }  else if(!comboRegionOfDeath.getValue().equals(null)&& !AddressIO
+                .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        cityField.getText())) {
+        } else {
+            throw new Exception();
         }
     }
 
     /**
      * Save City of death field to profile.
      */
-    private void saveCityOfDeath() {
+    private void saveCityOfDeath() throws Exception{
         //TODO waiting for the API from previous story to validate if this is a valid place
         if (!cityOfDeathField.getText().isEmpty() && AddressIO
-                .checkValidCity(cityOfDeathField.getText() + " " + countryOfDeathField.getText(),
+                .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
                         cityField.getText())) {
             currentProfile.setCityOfDeath(cityOfDeathField.getText());
+        } else if(!cityOfDeathField.getText().isEmpty() && !AddressIO
+                .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        cityField.getText()) && comboRegion.isDisabled()){
+            throw new Exception();
         }
     }
 
@@ -475,6 +497,29 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
+     * Ensures the correct input method for region is displayed, also populates region with NZ
+     * regions when NZ is selected as country
+     */
+    @FXML
+    private void refreshRegionOfDeathSelection() {
+        if (comboCountryOfDeath.getValue() != null) {
+            if (comboCountryOfDeath.getValue().toString().equals("New Zealand")) {
+                comboRegionOfDeath.setDisable(false);
+                regionOfDeathField.setDisable(true);
+                regionOfDeathField.setText("");
+                comboRegionOfDeath.getItems().setAll(NewZealandRegionsEnum.toArrayList());
+                comboRegionOfDeath.setValue(currentProfile.getRegion());
+            } else {
+                comboRegionOfDeath.setDisable(true);
+                regionOfDeathField.setDisable(false);
+            }
+        } else {
+            comboRegionOfDeath.setDisable(true);
+            regionOfDeathField.setDisable(false);
+        }
+    }
+
+    /**
      * Button handler to cancel the changes made to the fields.
      *
      * @param event clicking on the cancel (x) button.
@@ -605,17 +650,25 @@ public class ProfileEditController extends CommonController {
                     regionLabel.setText("Region of death: ");
 
                     //Only a clinician should be able to edit these -- not sure about this.
-//                    if (isClinician) {
-//                        comboCountry.setDisable(false);
-//                        regionField.setDisable(false);
-//                        comboRegion.setDisable(false);
-//                        cityField.setDisable(false);
-//                    } else {
-//                        comboCountry.setDisable(true);
-//                        regionField.setDisable(true);
-//                        comboRegion.setDisable(true);
-//                        cityField.setDisable(true);
-//                    }
+                    if (isClinician) {
+                    comboCountryOfDeath.setDisable(false);
+                    regionOfDeathField.setDisable(false);
+                    comboRegion.setDisable(true);
+                    cityOfDeathField.setDisable(false);
+                    comboCountry.setDisable(true);
+                    regionField.setDisable(true);
+                    comboRegion.setDisable(true);
+                    cityField.setDisable(true);
+                    } else {
+                        comboCountryOfDeath.setDisable(true);
+                        regionOfDeathField.setDisable(true);
+                        comboRegion.setDisable(true);
+                        cityOfDeathField.setDisable(true);
+                        comboCountry.setDisable(false);
+                        regionField.setDisable(false);
+                        comboRegion.setDisable(false);
+                        cityField.setDisable(false);
+                    }
 
                     if (currentProfile.getCountryOfDeath() == null) {
                         if (currentProfile.getCountry() != null) {
@@ -623,7 +676,7 @@ public class ProfileEditController extends CommonController {
                                     .getValidNameFromString(currentProfile.getCountry()));
                         }
                     } else {
-                        comboCountry.setValue(CountriesEnum
+                        comboCountryOfDeath.setValue(CountriesEnum
                                 .getValidNameFromString(currentProfile.getCountryOfDeath()));
                     }
 
@@ -727,8 +780,10 @@ public class ProfileEditController extends CommonController {
                 }
 
                 comboCountry.getItems().addAll(CountriesEnum.toArrayList());
+                comboCountryOfDeath.getItems().addAll(CountriesEnum.toArrayList());
 
                 refreshRegionSelection();
+                refreshRegionOfDeathSelection();
 
             } catch (Exception e) {
                 e.printStackTrace();
