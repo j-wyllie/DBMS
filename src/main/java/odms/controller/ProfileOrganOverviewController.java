@@ -140,7 +140,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding((ob) -> {
+        stage.setOnCloseRequest((ob) -> {
             populateOrganLists();
             refreshListViews();
         });

@@ -448,7 +448,7 @@ public class Profile implements Comparable<Profile> {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    private void addOrganReceived(OrganEnum organ) {
+    public void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -576,16 +576,24 @@ public class Profile implements Comparable<Profile> {
         if (this.organsReceived.contains(organ)) {
             this.organsReceived.remove(organ);
         }
+    }
 
-        this.organsRequired.add(organ);
+    public void removeOrganRequired(OrganEnum organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
     }
 
     public void removeOrganDonated(OrganEnum organ) {
         if (this.organsDonated.contains(organ)) {
             this.organsDonated.remove(organ);
         }
+    }
 
-        this.organsDonating.add(organ);
+    public void removeOrganDonating(OrganEnum organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
     }
 
 

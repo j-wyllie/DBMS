@@ -2,6 +2,7 @@ package odms.dao;
 
 import java.util.Set;
 import odms.enums.OrganEnum;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 import java.util.ArrayList;
@@ -43,8 +44,9 @@ public interface OrganDAO {
      * Adds an organ to a profiles organs to donate.
      * @param profile to donate.
      * @param organ to donate.
+     * @throws OrganConflictException error.
      */
-    void addDonating(Profile profile, OrganEnum organ);
+    void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException;
 
     /**
      * Adds a organ to a profiles required organs.

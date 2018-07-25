@@ -169,6 +169,7 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                         currentProfile.get().getOrgansDonated(),
                         organsAdded
                 );
+                organsAdded.removeAll(currentProfile.get().getOrgansDonated());
                 organsRemoved.forEach(organ -> {
                     database.removeDonation(currentProfile.get(), organ);
                 });
@@ -177,20 +178,25 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                 });
                 break;
             case DONATING:
-                try {
-                    currentProfile.get().setDonor(true);
+                currentProfile.get().setDonor(true);
 
-                    organsRemoved = findOrgansRemoved(
-                            currentProfile.get().getOrgansDonating(),
-                            organsAdded
-                    );
+                organsRemoved = findOrgansRemoved(
+                        currentProfile.get().getOrgansDonating(),
+                        organsAdded
+                );
 
-                    organsAdded.removeAll(currentProfile.get().getOrgansDonating());
-                    currentProfile.get().addOrgansDonating(organsAdded);
-                    currentProfile.get().removeOrgansDonating(organsRemoved);
-                } catch (OrganConflictException e) {
-                    AlertController.invalidOrgan(e.getOrgan());
-                }
+                organsAdded.removeAll(currentProfile.get().getOrgansDonating());
+                organsRemoved.forEach(organ -> {
+                    database.removeDonating(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    try {
+                        database.addDonating(currentProfile.get(), organ);
+                    } catch (OrganConflictException e) {
+                        AlertController.invalidOrgan(e.getOrgan());
+                    }
+                });
+
                 break;
             case REQUIRED:
                 currentProfile.get().setReceiver(true);
@@ -199,12 +205,15 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                         currentProfile.get().getOrgansRequired(),
                         organsAdded
                 );
-
-                currentProfile.get().addOrgansRequired(organsAdded);
-                currentProfile.get().removeOrgansRequired(organsRemoved);
+                organsAdded.removeAll(currentProfile.get().getOrgansRequired());
+                organsRemoved.forEach(organ -> {
+                    database.removeRequired(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    database.addRequired(currentProfile.get(), organ);
+                });
                 break;
         }
-
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
