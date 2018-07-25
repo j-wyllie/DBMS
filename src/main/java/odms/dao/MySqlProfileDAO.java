@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
 import odms.profile.Condition;
@@ -421,5 +422,109 @@ public class MySqlProfileDAO implements ProfileDAO {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Searches for a sublist of profiles based on criteria.
+     * @param searchString filter based on search field.
+     * @param ageSearchInt filter based on age.
+     * @param ageRangeSearchInt filter based on age range.
+     * @param region filter based on region.
+     * @param gender filter based on gender.
+     * @param type filter based on profile type.
+     * @param organs filter based on organs selected.
+     * @return a sublist of profiles.
+     */
+    @Override
+    public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
+            String region, String gender, String type, Set<OrganEnum> organs) {
+        String query = "select * from profiles where GivenNames like ? and LastNames like ?"
+                + " and Region like ? and Gender = ?";
+        if (ageSearchInt > 0) {
+            if (ageRangeSearchInt == 0) {
+                query += " and year(CURRENT_DATE) - year(Dob) = ?";
+            }
+            else {
+                query += " and year(CURRENT_DATE) - year(Dob) >= ? and year(CURRENT_DATE) - year(Dob) <= ?";
+            }
+        }
+        if (type.equalsIgnoreCase("donor")) {
+            query += " and IsDonor = ?";
+        }
+        if (type.equalsIgnoreCase("receiver")) {
+            query += " and IsReceiver = ?";
+        }
+        query += ";";
+
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        List<Profile> result = new ArrayList<>();
+
+        try {
+            Connection conn = connectionInstance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + searchString + "%");
+            stmt.setString(2, "%" + searchString + "%");
+            stmt.setString(3, "%" + region + "%");
+            stmt.setString(4,  gender);
+            int index = 5;
+            if (ageSearchInt > 0) {
+                if (ageRangeSearchInt == 0) {
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                }
+                else {
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageRangeSearchInt);
+                    index++;
+                }
+            }
+            if (type.equalsIgnoreCase("donor")) {
+                stmt.setBoolean(index, true);
+                index++;
+            }
+            if (type.equalsIgnoreCase("receiver")) {
+                stmt.setBoolean(index, true);
+                index++;
+            }
+
+            ResultSet allProfiles = stmt.executeQuery();
+
+            while (allProfiles.next()) {
+                Profile newProfile  = parseProfile(allProfiles);
+                result.add(newProfile);
+            }
+            conn.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * Gets the number of profiles in the database.
+     * @return the number of profiles.
+     */
+    @Override
+    public int size() {
+        String query = "select count(*) from profiles;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+            Statement stmt = conn.createStatement();
+
+            ResultSet result = stmt.executeQuery(query);
+
+            while (result.next()) {
+                return result.getInt(1);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

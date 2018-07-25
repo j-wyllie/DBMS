@@ -229,7 +229,7 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public void update(User user) {
         String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where"
+                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where "
                 + "UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -244,8 +244,9 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
             stmt.setString(7, user.getLastUpdated().toString());
-            stmt.setInt(8, user.getStaffID());
-            stmt.setBoolean(9, user.getDefault());
+            stmt.setBoolean(8, user.getDefault());
+            stmt.setInt(9, user.getStaffID());
+
 
             stmt.executeUpdate();
             conn.close();

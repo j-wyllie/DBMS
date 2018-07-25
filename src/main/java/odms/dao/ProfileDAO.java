@@ -1,6 +1,8 @@
 package odms.dao;
 
 import java.util.List;
+import java.util.Set;
+import odms.enums.OrganEnum;
 import odms.profile.Profile;
 
 public interface ProfileDAO {
@@ -48,4 +50,24 @@ public interface ProfileDAO {
      * @param profile to update.
      */
     void update(Profile profile);
+
+    /**
+     * Searches for a sublist of profiles based on criteria.
+     * @param searchString filter based on search field.
+     * @param ageSearchInt filter based on age.
+     * @param ageRangeSearchInt filter based on age range.
+     * @param region filter based on region.
+     * @param gender filter based on gender.
+     * @param type filter based on profile type.
+     * @param organs filter based on organs selected.
+     * @return a sublist of profiles.
+     */
+    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt, String region,
+            String gender, String type, Set<OrganEnum> organs);
+
+    /**
+     * Gets the number of profiles in the database.
+     * @return the number of profiles.
+     */
+    int size();
 }
