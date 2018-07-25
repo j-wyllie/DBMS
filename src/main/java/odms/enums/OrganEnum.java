@@ -22,13 +22,14 @@ public enum OrganEnum {
     SKIN("skin");
 
     private String name;
-    private LocalDate date = LocalDate.now();
+    private LocalDate dateOfRegistration = LocalDate.now();
 
     public String getName() {
         return name;
     }
 
-    public LocalDate getDate() { return date; }
+    public LocalDate getDate() { return dateOfRegistration; }
+    public void setDate(LocalDate date) { dateOfRegistration = date; }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.

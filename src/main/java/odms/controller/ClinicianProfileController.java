@@ -566,7 +566,10 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> closeStage(stage));
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                closeStage(stage);
+                refreshTable();
+            });
             openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -672,7 +675,7 @@ public class ClinicianProfileController extends CommonController {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         transplantListSearchField.setText("");
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
@@ -707,6 +710,7 @@ public class ClinicianProfileController extends CommonController {
             CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
+            t.setDaemon(true);
             t.start();
         }
     }

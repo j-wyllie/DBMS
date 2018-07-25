@@ -1,6 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.saveChanges;
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
@@ -132,7 +132,7 @@ public class ViewUsersController extends CommonController{
     }
 
     public void handleViewUsersSaveBtn(ActionEvent actionEvent) throws IOException{
-        if (saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             showNotification("Users File", actionEvent);
             UserDataIO.saveUsers(getUserDatabase());
         }
