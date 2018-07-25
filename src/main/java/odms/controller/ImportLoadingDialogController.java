@@ -77,7 +77,7 @@ public class ImportLoadingDialogController {
      * @param file the file being imported
      */
     @FXML
-    public void initialize(File file) {
+    public void initialize(File file, Stage parentStage) {
         if (currentUser != null) {
             profileImportTask = new ProfileImportTask(file);
 
@@ -86,8 +86,8 @@ public class ImportLoadingDialogController {
 
             buttonImportConfirm.setOnAction(event -> {
                 ProfileDatabase db = profileImportTask.getDb();
-                closeWindows(currentStage);
                 GuiMain.setCurrentDatabase(db);
+                closeWindows(parentStage);
             });
 
             buttonImportCancel.setOnAction(event -> {
