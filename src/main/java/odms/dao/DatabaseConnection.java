@@ -18,7 +18,7 @@ public class DatabaseConnection {
     private ComboPooledDataSource source;
 
     private String DEFAULT_CONFIG = "/config/db.config";
-    private String CONFIG;
+    private static String CONFIG;
 
     private String RESET_SQL = "/config/reset.sql";
     private String RESAMPLE_SQL = "/config/resample.sql";
@@ -61,7 +61,7 @@ public class DatabaseConnection {
 
             connectionSource = source;
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -95,7 +95,7 @@ public class DatabaseConnection {
      * Sets the config file location for the database.
      * @param path to the file.
      */
-    public void setConfig(String path) {
+    public static void setConfig(String path) {
         CONFIG = path;
     }
 
