@@ -57,7 +57,6 @@ public class MedicationDataIO {
 
     /**
      * Gets a list of active ingredients for the drug selected by the clinician user.
-     *
      * @param drugName represents the value to send in the HTTP GET request to the API.
      * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
@@ -138,9 +137,8 @@ public class MedicationDataIO {
 
     /**
      * Parse the list of results from the JSON in the HTTP response.
-     *
      * @param content represents the buffer holding the JSON response to parse.
-     **/
+     */
     private static ArrayList<String> parseJSON(StringBuffer content, boolean ingredients) {
         ArrayList<String> responseList = new ArrayList<>();
         JsonParser parser = new JsonParser();
@@ -192,7 +190,7 @@ public class MedicationDataIO {
      *                     which an interaction may occur.
      * @param interactionGender Map that contains genders as keys and a list of symptoms as values.
      * @param gender gender of profile request is made for.
-     * @return Map<String, String> keys are valid interactions and values are empty strings.
+     * @return a map where keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseGenderInteractionsJSON(Map<String, String> interactions,
                                                                    Map<String, List<String>>
@@ -216,7 +214,7 @@ public class MedicationDataIO {
      *                     which an interaction may occur.
      * @param interactionAge Map that contains age groups as keys and a list of symptoms as values.
      * @param age age of profile request is made for.
-     * @return Map<String, String> keys are valid interactions and values are empty strings.
+     * @return a map where keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseInteractionAgeJSON(Map<String, String> interactions,
                                                                Map<String, List<String>> interactionAge, int age) {
@@ -254,7 +252,7 @@ public class MedicationDataIO {
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
      *                     which an interaction may occur.
      * @param interactionDuration Map that contains time frames as keys and a list of symptoms as values.
-     * @return Map<String, String> keys are valid interactions and values are duration of time after which an
+     * @return a map where keys are valid interactions and values are duration of time after which an
      * interaction may occur.
      */
     private static Map<String, String> parseInteractionDurationJSON(Map<String, String> interactions,

@@ -1,9 +1,11 @@
 {
-  "deletedUsers": [],
+  "deletedUsers": [
+    2
+  ],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "John Smith",
+      "name": "Doc",
       "staffID": 0,
       "region": "Christchurch",
       "lastUpdated": {
@@ -13,15 +15,17 @@
           "day": 25
         },
         "time": {
-          "hour": 22,
+          "hour": 13,
           "minute": 42,
-          "second": 46,
-          "nano": 806000000
+          "second": 29,
+          "nano": 215000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-07-25T22:42:46.806",
-        "0 updated at 10:42 PM 25-07-2018"
+        "Account for Doccreated at 2018-07-25T13:42:29.203",
+        "Clinician updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -30,55 +34,19 @@
           "day": 25
         },
         "time": {
-          "hour": 22,
+          "hour": 13,
           "minute": 42,
-          "second": 46,
-          "nano": 806000000
+          "second": 29,
+          "nano": 203000000
         }
       },
-      "isDefault": false
+      "username": "Clinician",
+      "isDefault": true
     },
     "1": {
-      "userType": "CLINICIAN",
-      "name": "Matt Smith",
-      "staffID": 1,
-      "region": "Auckland",
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 25
-        },
-        "time": {
-          "hour": 22,
-          "minute": 42,
-          "second": 46,
-          "nano": 806000000
-        }
-      },
-      "updateActions": [
-        "Account for Matt Smithcreated at 2018-07-25T22:42:46.806",
-        "1 updated at 10:42 PM 25-07-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 25
-        },
-        "time": {
-          "hour": 22,
-          "minute": 42,
-          "second": 46,
-          "nano": 806000000
-        }
-      },
-      "isDefault": false
-    },
-    "2": {
       "userType": "ADMIN",
       "name": "admin",
-      "staffID": 2,
+      "staffID": 1,
       "lastUpdated": {
         "date": {
           "year": 2018,
@@ -86,16 +54,16 @@
           "day": 25
         },
         "time": {
-          "hour": 22,
-          "minute": 44,
-          "second": 8,
-          "nano": 62000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-07-25T22:44:08.032",
-        "admin updated at 10:44 PM 25-07-2018",
-        "2 updated at 10:44 PM 25-07-2018"
+        "ADMINaccount for admincreated at 2018-07-25T13:42:29.418",
+        "admin updated at 01:42 PM 25-07-2018",
+        "1 updated at 01:42 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -104,10 +72,10 @@
           "day": 25
         },
         "time": {
-          "hour": 22,
-          "minute": 44,
-          "second": 8,
-          "nano": 32000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
       "username": "admin",

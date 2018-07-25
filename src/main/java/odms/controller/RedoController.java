@@ -21,8 +21,8 @@ public class RedoController extends UndoRedoController{
     private static ArrayList<History> currentSessionHistory;
 
     /**
-     * Redoes an action
-     * @param currentDatabase
+     * Redoes an action.
+     * @param currentDatabase imported data.
      */
     public void redo(ProfileDatabase currentDatabase) {
         try {
@@ -51,9 +51,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a donation being done
-     * @param currentDatabase
-     * @param action
+     * Redoes a donation being done.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void addedDonated(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -62,9 +62,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a received organ being added
-     * @param currentDatabase
-     * @param action
+     * Redoes a received organ being added.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -73,10 +73,10 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a conditon being removed
-     * @param currentDatabase
-     * @param action
-     */
+     * Redoes a conditon being removed.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+    */
     public void removedCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int c = action.getHistoryDataIndex();
@@ -85,9 +85,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * redoes an condition being added
-     * @param currentDatabase
-     * @param action
+     * Redoes an condition being added.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void addCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -98,9 +98,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a drug being deleted
-     * @param currentDatabase
-     * @param action
+     * Redoes a drug being deleted.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void deleteDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -110,10 +110,10 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a drug being added to history
-     * @param currentDatabase
-     * @param action
-     */
+     * Redoes a drug being added to history.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+    */
     public void stopDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
@@ -127,9 +127,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a drug being added to current
-     * @param currentDatabase
-     * @param action
+     * Redoes a drug being added to current.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void renewDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -144,9 +144,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a drug being added
-     * @param currentDatabase
-     * @param action
+     * Redoes a drug being added.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void addDrug(ProfileDatabase currentDatabase, History action) throws IndexOutOfBoundsException{
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -162,8 +162,8 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a clinician being updated
-     * @param action
+     * Redoes a clinician being updated.
+     * @param action to be redone.
      */
     public void updated(History action) {
         int id = action.getHistoryId();
@@ -177,9 +177,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a profile being added
-     * @param currentDatabase
-     * @param action
+     * Redoes a profile being added.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void added(ProfileDatabase currentDatabase, History action) {
         int oldid = action.getHistoryId();
@@ -194,10 +194,10 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a profile being deleted
-     * @param currentDatabase
-     * @param action
-     */
+     * Redoes a profile being deleted.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+    */
     public void deleted(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         currentDatabase.deleteProfile(action.getHistoryId());
@@ -205,21 +205,21 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a organ being removed
-     * @param currentDatabase
-     * @param action
-     * @throws Exception
+     * Redoes a organ being removed.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+     * @throws Exception error.
      */
-    public void removed(ProfileDatabase currentDatabase, History action) throws Exception{
+    public void removed(ProfileDatabase currentDatabase, History action) throws Exception {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         profile.removeOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(action.getHistoryData().replace(' ','_').split(","))));
     }
 
     /**
-     * Redoes a organ being set
-     * @param currentDatabase
-     * @param action
-     * @throws OrganConflictException
+     * Redoes a organ being set.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+     * @throws OrganConflictException error.
      */
     public void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -228,9 +228,9 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes an organ being donated
-     * @param currentDatabase
-     * @param action
+     * Redoes an organ being donated.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
      */
     public void donate(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
@@ -238,10 +238,10 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a profile being updated
-     * @param currentDatabase
-     * @param action
-     */
+     * Redoes a profile being updated.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+    */
     public void update(ProfileDatabase currentDatabase, History action){
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String newInfo = action.getHistoryData().substring(action.getHistoryData().indexOf("new ")+4);
@@ -249,10 +249,10 @@ public class RedoController extends UndoRedoController{
     }
 
     /**
-     * Redoes a procedure being edited
-     * @param currentDatabase
-     * @param action
-     */
+     * Redoes a procedure being edited.
+     * @param currentDatabase imported data.
+     * @param action to be redone.
+    */
     public void edited(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int procedurePlace = action.getHistoryDataIndex();
