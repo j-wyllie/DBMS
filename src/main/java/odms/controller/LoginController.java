@@ -50,7 +50,7 @@ public class LoginController extends CommonController {
             String username = usernameField.getText();
             try {
                 currentUser = userDatabase.getUser(username);
-                System.out.println(currentUser.getUsername());
+
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -141,7 +141,6 @@ public class LoginController extends CommonController {
         String title = "Create Profile";
         showScene(event, scene, title, false);
     }
-
 
     @FXML
     private void onEnter(ActionEvent event) {
