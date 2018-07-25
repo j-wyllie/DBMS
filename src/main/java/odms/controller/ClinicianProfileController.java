@@ -566,7 +566,10 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> closeStage(stage));
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                closeStage(stage);
+                refreshTable();
+            });
             openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
