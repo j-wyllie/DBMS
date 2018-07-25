@@ -39,6 +39,7 @@ import javafx.stage.WindowEvent;
 import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.dao.DAOFactory;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -160,8 +161,8 @@ public class ClinicianProfileController extends CommonController {
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
 
     private Profile selectedDonor;
-    private RedoController redoController= new RedoController();
-    private UndoController undoController= new UndoController();
+    private RedoController redoController = new RedoController();
+    private UndoController undoController = new UndoController();
 
     private CommandGUI commandGUI;
 
@@ -382,15 +383,20 @@ public class ClinicianProfileController extends CommonController {
 
         searchTable.getItems().clear();
         profileSearchResults.clear();
-        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(
-                searchString,
-                ageSearchInt,
-                ageRangeSearchInt,
-                regionSearchString,
-                selectedGender,
-                selectedType,
-                new HashSet<>(selectedOrgans)
-        ));
+
+        try {
+            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
+                    searchString,
+                    ageSearchInt,
+                    ageRangeSearchInt,
+                    regionSearchString,
+                    selectedGender,
+                    selectedType,
+                    new HashSet<>(selectedOrgans)
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         updateTable(false, false);
         updateLabels();
     }
@@ -762,7 +768,7 @@ public class ClinicianProfileController extends CommonController {
             setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+            searchTable.setPlaceholder(new Label("There are " + DAOFactory.getProfileDao().size() + " profiles"));
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {

@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.cli.CommandUtils;
+import odms.dao.DAOFactory;
+import odms.dao.UserDAO;
 import odms.data.UserDataIO;
 import odms.history.History;
 import odms.profile.Profile;
@@ -75,7 +77,8 @@ public class ClinicianProfileEditController extends CommonController{
                 guiPopup("Error. Not all fields were updated.");
             }
 
-            UserDataIO.saveUsers(getUserDatabase(), "example/users.json");
+            UserDAO database = DAOFactory.getUserDao();
+            database.update(currentUser);
 
             openClinicianWindow(event);
         }
