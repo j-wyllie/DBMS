@@ -970,7 +970,8 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private void handleClearCache(ActionEvent event) {
-        if (AlertController.generalConfirmation("Are you sure you want to clear the cache?\nThis cannot be undone.\n\nNote: The cache contains temporary drug interaction data.")) {
+        if (AlertController.generalConfirmation("Are you sure you want to clear the cache?"
+                + "\nThis cannot be undone.")) {
             medicationInteractions.clear();
             if (!medicationInteractions.save()) {
                 AlertController.guiPopup("There was an error saving the cache.\nThe cache has been "

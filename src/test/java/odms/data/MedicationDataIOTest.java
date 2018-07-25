@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import odms.dao.DAOFactory;
+import odms.dao.JsonMedicationInteractionsDAO;
+import odms.dao.MedicationInteractionsDAO;
 import odms.medications.Interaction;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -32,19 +34,10 @@ public class MedicationDataIOTest {
     private String substring3;
     private String drugName;
     private String drugName2;
-    private Interaction interaction;
     private Object[] expectedList1;
     private Object[] expectedList2;
     private Object[] expectedList3;
     private String[] expectedList4;
-
-    private String TEST_DATA = "./src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json";
-    private Map<String, List<String>> ageEffects;
-    private Map<String, Integer> coexistingEffects;
-    private Map<String, List<String>> durationEffects;
-    private Map<String, List<String>> genderEffects;
-    private Interaction testGetInteractionExpected;
-    private StringBuffer interactionData;
 
     private String drugOne;
     private String drugTwo;
@@ -126,67 +119,7 @@ public class MedicationDataIOTest {
         interactions.put("cerebrovascular accident", "1 - 2 years");
         interactions.put("cholestasis", "not specified");
         interactions.put("drug eruption", "not specified");
-        interactions.put("hepatitis acute", "not specified");
-
-
-
-        // Read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(TEST_DATA));
-        interactionData = new StringBuffer();
-        interactionData.append(bufferedReader.readLine());
-
-        // Get the file as json object to parse into the variables.
-        JsonParser parser = new JsonParser();
-        JsonObject jsonData = (JsonObject) parser.parse(new FileReader(TEST_DATA));
-
-        // testGet() setup.
-        Gson gson = new Gson();
-
-        if (!(jsonData.get("age_interaction").isJsonNull())) {
-            ageEffects = new HashMap<>();
-            JsonObject age = jsonData.get("age_interaction").getAsJsonObject();
-            age.keySet().forEach(key -> {
-                ArrayList value = gson.fromJson(
-                        age.get(key).getAsJsonArray(),
-                        ArrayList.class
-                );
-                ageEffects.put(key, value);
-            });
-        }
-
-        if (!(jsonData.get("co_existing_conditions").isJsonNull())) {
-            coexistingEffects = new HashMap<>();
-            JsonObject coexisting = jsonData.get("co_existing_conditions").getAsJsonObject();
-            coexisting.keySet().forEach(key -> {
-                Integer value = gson.fromJson(coexisting.get(key), Integer.class);
-                coexistingEffects.put(key, value);
-            });
-        }
-
-        if (!(jsonData.get("duration_interaction").isJsonNull())) {
-            durationEffects = new HashMap<>();
-            JsonObject duration = jsonData.get("duration_interaction").getAsJsonObject();
-            duration.keySet().forEach(key -> {
-                ArrayList value = gson.fromJson(
-                        duration.get(key).getAsJsonArray(),
-                        ArrayList.class
-                );
-                durationEffects.put(key, value);
-            });
-        }
-
-        if (!(jsonData.get("gender_interaction").isJsonNull())) {
-            genderEffects = new HashMap<>();
-            JsonObject gender = jsonData.get("gender_interaction").getAsJsonObject();
-            gender.keySet().forEach(key -> {
-                ArrayList value = gson.fromJson(
-                        gender.get(key).getAsJsonArray(),
-                        ArrayList.class
-                );
-                genderEffects.put(key, value);
-            });
-        }
-    }
+        interactions.put("hepatitis acute", "not specified");    }
 
 
     @Test
@@ -199,13 +132,14 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetSuggestionList() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/data/medicationTestData/suggestionListSampleResponse.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/data/medicationTestData/suggestionListSampleResponse.json"));
         StringBuffer suggestionData = new StringBuffer();
         suggestionData.append(bufferedReader.readLine());
 
-
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(suggestionData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(suggestionData);
 
         //Test for substring with valid value.
         assertArrayEquals(expectedList2, getSuggestionList(substring3).toArray());
@@ -221,12 +155,14 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetActiveIngredients() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse1.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse1.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(ingredientData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(ingredientData);
 
         //Test for drug name with valid value.
         assertArrayEquals(expectedList3, getActiveIngredients(drugName).toArray());
@@ -235,70 +171,51 @@ public class MedicationDataIOTest {
     @Test
     public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(ingredientData);
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(ingredientData);
 
         //Test for drug name with valid value and it has a space in drug name.
         assertArrayEquals(expectedList4, getActiveIngredients(drugName2).toArray());
     }
 
     @Test
-    public void testGetDrugInteractions() throws Exception {
+    public void testGetDrugInteractions() throws IOException{
+        // Mock makeRequests method, returns json data of interactions in a stringBuffer.
+        // Read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                "./src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
+        StringBuffer interactionData = new StringBuffer();
+        interactionData.append(bufferedReader.readLine());
+        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
+                .toReturn(interactionData);
+
+        // Build valid interaction object, using api response data that we have stored locally.
+        MedicationInteractionsDAO medicalInteractions = DAOFactory.getMedicalInteractionsDao();
+        medicalInteractions.setLocation("./cache/test_medication_interactions.json");
+        Interaction interaction = medicalInteractions.get(drugOne, drugTwo);
+
         // Test valid request
-        Interaction interaction = new Interaction(drugOne, drugTwo, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
-        assertEquals(interactions, results);
-
-        // Test valid request with drug with space in name
-        interaction = new Interaction(drugOne, drugEight, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
-        results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
-        assertEquals(interactions, results);
-    }
-
-    @Test
-    public void testGetDrugInteractionsWithSpaceInName() throws Exception {
-        // Mock makeRequests method, returns json data of interactions in a stringBuffer
-        PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest")).toReturn(interactionData);
-
-        // Test valid request with drug with space in name
-        Interaction interaction = new Interaction(drugOne, drugEight, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
         Map<String, String> results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
         assertEquals(interactions, results);
     }
 
+
     @Test
-    public void testGetDrugInteractionsNullOrEmptyString() throws Exception {
+    public void testGetDrugInteractionsNullOrEmptyString() {
         //Test for null drug string
-        Interaction interaction = new Interaction(drugOne, drugSix, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
+        Map<String, List<String>> map = new HashMap<>();
+        Interaction interaction = new Interaction(drugOne, drugSix, map, new HashMap<>(), map, map);
         Map<String, String> results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for empty drug string
-        interaction = new Interaction(drugOne, drugSeven, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
-        results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
-        assertTrue(results.isEmpty());
-    }
-
-    @Test
-    public void testGetDrugInteractionsValidStringsWithNoInteractions() throws Exception {
-        // Test for two valid drugs, should return empty map.
-        Interaction interaction = new Interaction(drugOne, drugFive, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
-        Map<String, String> results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
-        assertTrue(results.isEmpty());
-
-        // Test for invalid drugs, should return empty map.
-        interaction = new Interaction(drugOne, drugFour, ageEffects,
-                coexistingEffects, durationEffects, genderEffects);
+        interaction = new Interaction(drugOne, drugSeven, map, new HashMap<>(), map, map);
         results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
         assertTrue(results.isEmpty());
     }

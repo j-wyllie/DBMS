@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
     }
 
     /**
-     * Loads the JSON interactions data the set location.
+     * Loads the JSON interactions data from the set location.
      */
     @Override
     public void load() {
@@ -92,9 +93,10 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
                 );
                 this.interactionMap.put(Integer.valueOf(key), value);
             });
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("The medication interactions JSON file could not be found.");
+        } catch (Exception e) {
+            System.out.println("There was an error opening the medication interactions JSON file.");
         }
     }
 
@@ -108,12 +110,10 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
             file = new File(this.path);
         }
 
-        try {
+        try (BufferedWriter writeFile = new BufferedWriter(new FileWriter(file))) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            BufferedWriter writeFile = new BufferedWriter(new FileWriter(file));
 
             writeFile.write(gson.toJson(interactionMap));
-            writeFile.close();
 
             System.out.println("Cache exported successfully!");
             return true;

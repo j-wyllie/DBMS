@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import odms.medications.Interaction;
 
 public class MedicationDataIO {
@@ -200,7 +202,7 @@ public class MedicationDataIO {
         for (Map.Entry<String, List<String>> genderList : interactionGender.entrySet()) {
             if (genderList.getKey().equals(gender)) {
                 for (String symptom : genderList.getValue()) {
-                    interactions.put(symptom, "");
+                    interactions.put(symptom, null);
                 }
             }
         }
@@ -228,7 +230,7 @@ public class MedicationDataIO {
             }
             if (ageList.getKey().equals("60+") && age >= 60) {
                 for (String symptom : ageList.getValue()) {
-                    interactions.put(symptom, "");
+                    interactions.put(symptom, null);
                 }
                 return interactions;
             } else if (!ageList.getKey().equals("60+")) {
@@ -237,7 +239,7 @@ public class MedicationDataIO {
                 upperBound = Integer.parseInt(ageGroupArray[1]);
                 if (age >= lowerBound && age <= upperBound) {
                     for (String symptom : ageList.getValue()) {
-                        interactions.put(symptom, "");
+                        interactions.put(symptom, null);
                     }
                 }
                 return interactions;
@@ -257,9 +259,11 @@ public class MedicationDataIO {
      */
     private static Map<String, String> parseInteractionDurationJSON(Map<String, String> interactions,
                                                                     Map<String, List<String>> interactionDuration) {
-        for (Entry<String, List<String>> durationList : interactionDuration.entrySet()) {
+        SortedMap<String, List<String>> sortedDurations = new TreeMap<>(interactionDuration);
+        for (Entry<String, List<String>> durationList : sortedDurations.entrySet()) {
             for (String symptom : durationList.getValue()) {
-                if (interactions.containsKey(symptom) && interactions.get(symptom).equals("")) {
+                if (interactions.containsKey(symptom) && (interactions.get(symptom) == null ||
+                        interactions.get(symptom).equalsIgnoreCase("not specified"))) {
                     interactions.put(symptom, durationList.getKey());
                 }
             }
@@ -268,7 +272,7 @@ public class MedicationDataIO {
         // If interaction did not have a duration and was not listed in 'not specified' JSON array, it is given the
         // value 'not specified'
         for (Map.Entry<String, String> entry : interactions.entrySet()) {
-            if (entry.getValue().equals("")) {
+            if (entry.getValue() == null) {
                 interactions.put(entry.getKey(), "not specified");
             }
         }
