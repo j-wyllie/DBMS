@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import odms.medications.Interaction;
 
 public class MedicationDataIO {
 
@@ -164,34 +165,10 @@ public class MedicationDataIO {
      * @return Map
      * @throws IOException creation of URL may cause IOException.
      */
-    public static Map<String, String> getDrugInteractions(String drug1, String drug2, String gender, int age) throws IOException {
+    public static Map<String, String> getDrugInteractions(Interaction interaction, String gender, int age) throws IOException {
         Map<String, String> interactions = new HashMap<>();
 
-        if (!(drug1 == null || drug1.equals("") || drug2 == null || drug2.equals(""))) {
-            drug1 = replaceSpace(drug1, true);
-            drug2 = replaceSpace(drug2, true);
-            String urlString = String
-                    .format(INTERACTIONURL, drug1, drug2);
-
-            //Reading the response from the connection.
-            StringBuffer response = makeRequest(urlString);
-            if (response == null) {
-                return  interactions;
-            } else if (response.toString().equals(SERVERERROR)) {
-                // Server is fussy about what order the drugs are in the url, if request fails will try again with drugs
-                // in different order.
-                urlString = String
-                        .format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drug2, drug1);
-                response = makeRequest(urlString);
-                if (response == null) {
-                    return interactions;
-                } else if (response.toString().equals(SERVERERROR)) {
-                    interactions.put("error", "error getting data");
-                    return interactions;
-                }
-            }
-            interactions = parseInteractionsJSON(response, gender, age);
-        }
+        interactions = parseInteractionsJSON(interaction, gender, age);
         return interactions;
     }
 
@@ -202,27 +179,26 @@ public class MedicationDataIO {
      * @return Map<String, String> keys are valid interactions and values are duration of time after which an
      * interaction may occur.
      */
-    private static Map<String, String> parseInteractionsJSON(StringBuffer content, String gender, int age) {
+    private static Map<String, String> parseInteractionsJSON(Interaction interaction, String gender, int age) {
         Map<String, String> interactions;
-        JsonParser parser = new JsonParser();
         interactions = new HashMap<>();
-        JsonObject results = parser.parse(content.toString()).getAsJsonObject();
-
-        JsonObject genderInteractions = results.get("gender_interaction").getAsJsonObject();
-        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
-            interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, "male"));
-            interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, "female"));
-        } else {
-            interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, gender));
-        }
-
-        JsonObject interactionAge = results.get("age_interaction").getAsJsonObject();
-        interactions = parseInteractionAgeJSON(interactions, interactionAge, age);
-
-        JsonObject interactionDuration = results.get("duration_interaction").getAsJsonObject();
-        interactions = parseInteractionDurationJSON(interactions, interactionDuration);
+//
+//        JsonObject genderInteractions = results.get("gender_interaction").getAsJsonObject();
+//        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
+//            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "male"));
+//            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "female"));
+//        } else {
+//            interactions.putAll(parseGenderInteractionsJSON(interactions, genderInteractions, gender));
+//        }
+//
+//        JsonObject interactionAge = results.get("age_interaction").getAsJsonObject();
+//        interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
+//
+//        JsonObject interactionDuration = results.get("duration_interaction").getAsJsonObject();
+//        interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
         return interactions;
     }
+
 
     /**
      * Parse JSON object that contains drug interactions based on male or female genders.

@@ -830,13 +830,13 @@ public class ProfileDisplayController extends CommonController {
             }
         }
 
-        try {
-
-            Interaction interaction = medicationInteractions.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
-
-            if (interaction != null) {
-                interaction.getAgeInteractions();
-
+//        try {
+//
+//            Interaction interaction = medicationInteractions.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
+//
+//            if (interaction != null) {
+//                MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(), currentProfile.getAge());
+//
 //                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
 //                tableViewDrugInteractions.setItems(interactions);
 //                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
@@ -846,44 +846,44 @@ public class ProfileDisplayController extends CommonController {
 //                        <Map.Entry<String, String>, String> param) ->
 //                        new SimpleStringProperty(param.getValue().getValue()));
 //                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
-            }
-
-
-            interactionsRaw = MedicationDataIO.getDrugInteractions(
-                    drugs.get(0).getDrugName(),
-                    drugs.get(1).getDrugName(),
-                    currentProfile.getGender(),
-                    currentProfile.getAge()
-            );
-
-            tableViewDrugInteractionsNames.getItems().clear();
-            tableViewDrugInteractions.getItems().clear();
-            ObservableList<String> drugsList = FXCollections.observableArrayList();
-            drugsList.add("Interactions between:");
-            drugsList.add(drugs.get(0).getDrugName());
-            drugsList.add(drugs.get(1).getDrugName());
-            tableViewDrugInteractionsNames.setItems(drugsList);
-            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
-
-            if (interactionsRaw.isEmpty()) {
-                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
-            } else if (interactionsRaw.containsKey("error")) {
-                tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
-            } else {
-                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-                tableViewDrugInteractions.setItems(interactions);
-                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
-                                                                 <Map.Entry<String, String>, String> param) ->
-                        new SimpleStringProperty(param.getValue().getKey()));
-                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
-                                                                 <Map.Entry<String, String>, String> param) ->
-                        new SimpleStringProperty(param.getValue().getValue()));
-                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
-            }
-        } catch (IOException e) {
-            tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
-        }
+//            }
+//
+//
+//            interactionsRaw = MedicationDataIO.getDrugInteractions(
+//                    drugs.get(0).getDrugName(),
+//                    drugs.get(1).getDrugName(),
+//                    currentProfile.getGender(),
+//                    currentProfile.getAge()
+//            );
+//
+//            tableViewDrugInteractionsNames.getItems().clear();
+//            tableViewDrugInteractions.getItems().clear();
+//            ObservableList<String> drugsList = FXCollections.observableArrayList();
+//            drugsList.add("Interactions between:");
+//            drugsList.add(drugs.get(0).getDrugName());
+//            drugsList.add(drugs.get(1).getDrugName());
+//            tableViewDrugInteractionsNames.setItems(drugsList);
+//            tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+//            tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
+//
+//            if (interactionsRaw.isEmpty()) {
+//                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
+//            } else if (interactionsRaw.containsKey("error")) {
+//                tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+//            } else {
+//                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+//                tableViewDrugInteractions.setItems(interactions);
+//                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+//                                                                 <Map.Entry<String, String>, String> param) ->
+//                        new SimpleStringProperty(param.getValue().getKey()));
+//                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+//                                                                 <Map.Entry<String, String>, String> param) ->
+//                        new SimpleStringProperty(param.getValue().getValue()));
+//                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+//            }
+//        } catch (IOException e) {
+//            tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+//        }
     }
 
     /**
