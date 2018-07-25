@@ -161,5 +161,4 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         });
         stage.show();
     }
-
 }

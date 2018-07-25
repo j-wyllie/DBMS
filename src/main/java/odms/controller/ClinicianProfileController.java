@@ -675,7 +675,7 @@ public class ClinicianProfileController extends CommonController {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         transplantListSearchField.setText("");
         try {
             makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());

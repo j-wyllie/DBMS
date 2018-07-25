@@ -29,7 +29,7 @@ public enum OrganEnum {
     }
 
     public LocalDate getDate() { return dateOfRegistration; }
-    public void setDate(LocalDate date) { dateOfRegistration = date; } //I don't think we need a setter.
+    public void setDate(LocalDate date) { dateOfRegistration = date; }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.
