@@ -22,7 +22,7 @@ public class MySqlProcedureDAOtest {
      */
     @Before
     public void setUp() {
-        DatabaseConnection.setConfig("/config/db_test.config");
+        DatabaseConnection.setConfig("/src/config/db_test.config");
         mySqlProcedureDAO = new MySqlProcedureDAO();
         testProfile0.setId(243);
     }
@@ -76,6 +76,6 @@ public class MySqlProcedureDAOtest {
      */
     @After
     public void cleanUp() {
-        DatabaseConnection.setConfig("/config/db.config");
+        DatabaseConnection.setConfig("/src/config/db.config");
     }
 }

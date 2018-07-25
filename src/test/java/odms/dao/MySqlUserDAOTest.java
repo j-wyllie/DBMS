@@ -24,7 +24,8 @@ public class MySqlUserDAOTest {
      */
     @Before
     public void setUp() {
-        DatabaseConnection.setConfig("/config/db_test.config");
+        DatabaseConnection.setConfig("/src/config/db_test.config");
+
         MySqlUserDAO = new MySqlUserDAO();
     }
 
@@ -32,9 +33,9 @@ public class MySqlUserDAOTest {
      * Tests adding and getting a user by id
      */
     @Test
-    public void testAddGet() {
+    public void testAddGet() throws UserNotFoundException {
         testUser0.setStaffID(40);
-        MySqlUserDAO.add(testUser0);
+        MySqlUserDAO.add(testUser1);
 
         User outUser = MySqlUserDAO.get(40);
         Assert.assertEquals(testUser0, outUser);
@@ -69,6 +70,6 @@ public class MySqlUserDAOTest {
      */
     @After
     public void cleanUp() {
-        DatabaseConnection.setConfig("/config/db.config");
+        DatabaseConnection.setConfig("/src/config/db.config");
     }
 }

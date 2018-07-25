@@ -251,17 +251,62 @@ public class MySqlProfileDAO implements ProfileDAO {
             } catch (NullPointerException e) {
                 stmt.setNull(16, Types.INTEGER);
             }
-            stmt.setString(17, profile.getAddress());
-            stmt.setInt(18, Integer.valueOf(profile.getStreetNumber()));
-            stmt.setString(19, profile.getStreetName());
-            stmt.setString(20, profile.getNeighbourhood());
-            stmt.setString(21, profile.getCity());
-            stmt.setInt(22, Integer.valueOf(profile.getZipCode()));
-            stmt.setString(23, profile.getRegion());
-            stmt.setString(24, profile.getCountry());
-            stmt.setString(25, profile.getBirthCountry());
-            stmt.setString(26, profile.getPhone());
-            stmt.setString(27, profile.getEmail());
+            if (profile.getAddress() != null) {
+                stmt.setString(17, profile.getAddress());
+            } else {
+                stmt.setNull(17, Types.VARCHAR);
+            }
+            if (profile.getStreetNumber() != null) {
+                stmt.setString(18, (profile.getStreetNumber()));
+            } else {
+                stmt.setNull(18, Types.VARCHAR);
+            }
+            if (profile.getStreetName() != null) {
+                stmt.setString(19, profile.getStreetName());
+            } else {
+                stmt.setNull(19, Types.VARCHAR);
+            }
+            if (profile.getNeighbourhood() != null) {
+                stmt.setString(20, profile.getNeighbourhood());
+            } else {
+                stmt.setNull(20, Types.VARCHAR);
+            }
+            if (profile.getCity() != null) {
+                stmt.setString(21, profile.getCity());
+            } else {
+                stmt.setNull(21, Types.VARCHAR);
+            }
+            if (profile.getZipCode() != null) {
+                stmt.setInt(22, Integer.valueOf(profile.getZipCode()));
+            } else {
+                stmt.setNull(22, Types.INTEGER);
+            }
+            if (profile.getRegion() != null) {
+                stmt.setString(23, profile.getRegion());
+            } else {
+                stmt.setNull(23, Types.VARCHAR);
+            }
+            if (profile.getCountry() != null) {
+                stmt.setString(24, profile.getCountry());
+            } else {
+                stmt.setNull(24, Types.VARCHAR);
+            }
+            if (profile.getBirthCountry() != null) {
+                stmt.setString(25, profile.getBirthCountry());
+            } else {
+                stmt.setNull(25, Types.VARCHAR);
+            }
+            if (profile.getPhone() != null) {
+                stmt.setString(26, profile.getPhone());
+            } else {
+                stmt.setNull(26, Types.VARCHAR);
+            }
+            if (profile.getEmail() != null) {
+                stmt.setString(27, profile.getEmail());
+            } else {
+                stmt.setNull(27, Types.VARCHAR);
+            }
+
             stmt.setString(28, LocalDateTime.now().toString());
             stmt.setString(29, LocalDateTime.now().toString());
 

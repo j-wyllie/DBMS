@@ -162,7 +162,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(8, LocalDateTime.now().toString());
             stmt.setBoolean(9, user.getDefault());
 
-            stmt.executeUpdate();
+            System.out.println(stmt.executeUpdate());
             conn.close();
         }
         catch (SQLException e) {

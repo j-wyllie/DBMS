@@ -21,7 +21,7 @@ public class MySqlProfileDAOTest {
      */
     @Before
     public void setUp() {
-        DatabaseConnection.setConfig("/config/db_test.config");
+        DatabaseConnection.setConfig("/src/config/db_test.config");
         mySqlProfileDAO = new MySqlProfileDAO();
     }
 
@@ -66,6 +66,6 @@ public class MySqlProfileDAOTest {
      */
     @After
     public void cleanUp() {
-        DatabaseConnection.setConfig("/config/db.config");
+        DatabaseConnection.setConfig("/src/config/db.config");
     }
 }
