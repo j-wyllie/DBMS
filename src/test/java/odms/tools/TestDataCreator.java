@@ -121,7 +121,6 @@ public class TestDataCreator {
 
             database.addProfile(profile);
         }
-
     }
 
     public ProfileDatabase getDatabase() {

@@ -5,23 +5,28 @@
       "userType": "CLINICIAN",
       "name": "John Smith",
       "staffID": 0,
+      "workAddress": "",
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 7
+          "day": 25
         },
         "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 37,
-          "nano": 523000000
+          "hour": 12,
+          "minute": 19,
+          "second": 10,
+          "nano": 734000000
         }
       },
       "updateActions": [
         "Account for John Smithcreated at 2018-07-07T14:04:37.522",
-        "0 updated at 02:04 PM 07-07-2018"
+        "0 updated at 02:04 PM 07-07-2018",
+        "John Smith updated at 12:19 PM 25-07-2018",
+        "0 updated at 12:19 PM 25-07-2018",
+        " updated at 12:19 PM 25-07-2018",
+        "Christchurch updated at 12:19 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -36,7 +41,8 @@
           "nano": 522000000
         }
       },
-      "isDefault": false
+      "isDefault": false,
+      "pictureName": "cobbles.jpg"
     },
     "1": {
       "userType": "CLINICIAN",

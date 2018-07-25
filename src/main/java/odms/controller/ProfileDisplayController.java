@@ -311,7 +311,9 @@ public class ProfileDisplayController extends CommonController {
     private UndoController undoController= new UndoController();
 
     /**
-     * initializes and refreshes the current and past conditions tables
+     * Initializes and refreshes the current and past conditions tables
+     * @param curConditions current conditions for the profile.
+     * @param pastConditions past conditions for the profile.
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
@@ -356,7 +358,7 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * refreshes current and past conditions table with its up to date data
+     * Refreshes current and past conditions table with its up to date data
      */
     @FXML
     protected void refreshConditionTable() {
@@ -500,7 +502,7 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * forces the sort order of the conditions tables to default to the diagnoses date in Descending order
+     * Forces the sort order of the conditions tables to default to the diagnoses date in Descending order.
      */
     @FXML
     private void forceConditionSortOrder() {
@@ -519,7 +521,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleAddNewCondition(ActionEvent event) throws IOException {
+    private void handleAddNewCondition(ActionEvent event) {
         try {
             Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -546,11 +548,11 @@ public class ProfileDisplayController extends CommonController {
 
 
     /**
-     * Button handler to handle delete button clicked, only available to clinicians
+     * Button handler to handle delete button clicked, only available to clinicians.
      * @param event clicking on the button.
      */
     @FXML
-    private void handleDeleteCondition(ActionEvent event) throws IOException {
+    private void handleDeleteCondition(ActionEvent event) {
         ArrayList<Condition> conditions = convertConditionObservableToArray(
                 pastConditionsTable.getSelectionModel().getSelectedItems()
         );
@@ -572,6 +574,11 @@ public class ProfileDisplayController extends CommonController {
         refreshConditionTable();
     }
 
+    /**
+     * Button handler to handle the add new procedure button clicked. Opens the add procedure pop
+     * up.
+     * @param actionEvent clicking of the button.
+     */
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         try {
@@ -598,8 +605,8 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Removes the selected procedure and refreshes the table
-     * @param actionEvent
+     * Removes the selected procedure and refreshes the table.
+     * @param actionEvent clicking of the button.
      */
     @FXML
     public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
@@ -679,8 +686,8 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
+     * @throws IOException error.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
@@ -706,6 +713,7 @@ public class ProfileDisplayController extends CommonController {
     /**
      * Button handler to make fields editable.
      * @param event clicking on the edit button.
+     * @throws IOException error.
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
@@ -728,7 +736,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the save button
      */
     @FXML
-    private void handleSaveMedications(ActionEvent event) throws IOException {
+    private void handleSaveMedications(ActionEvent event) {
         if (saveChanges()) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getCurrentDatabase());
@@ -736,7 +744,7 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Button handler to view a drugs active ingredients
+     * Button handler to view a drugs active ingredients.
      * @param event clicking on the active ingredients button
      */
     @FXML
@@ -900,7 +908,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleMoveMedicationToCurrent(ActionEvent event)   {
+    private void handleMoveMedicationToCurrent(ActionEvent event) {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug : drugs) {
@@ -923,7 +931,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the delete button.
      */
     @FXML
-    private void handleDeleteMedication(ActionEvent event)  {
+    private void handleDeleteMedication(ActionEvent event) {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
@@ -949,9 +957,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Button handler to open medicationHistory scene
+     * Button handler to open medicationHistory scene.
      * @param event clicking on delete button.
-     * @throws IOException If MedicationHistory fxml is not found.
+     * @throws IOException if MedicationHistory fxml is not found.
      */
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
@@ -1024,7 +1032,7 @@ public class ProfileDisplayController extends CommonController {
      * @param currentProfile donors profile
      */
     @FXML
-    private void setPage(Profile currentProfile){
+    private void setPage(Profile currentProfile) {
         makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
 
         refreshProcedureTable();
@@ -1304,7 +1312,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Initializes and refreshes the previous and pending procedure tables
+     * Initializes and refreshes the previous and pending procedure tables.
+     * @param previousProcedures previous procedures for the profile.
+     * @param pendingProcedures pending procedures for the profile.
      */
     @FXML
     private void makeProcedureTable(ArrayList<Procedure> previousProcedures, ArrayList<Procedure> pendingProcedures) {
@@ -1324,31 +1334,25 @@ public class ProfileDisplayController extends CommonController {
         }
         pendingProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
+
             }
         });
         previousProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
             }
         });
     }
 
     /**
-     * Creates a new edit procedure window
+     * Creates a new edit procedure window.
+     * @param selectedProcedure procedure to display in the window.
      */
     @FXML
-    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
+    public void createNewProcedureWindow(Procedure selectedProcedure) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
@@ -1423,6 +1427,9 @@ public class ProfileDisplayController extends CommonController {
         return currentProfile;
     }
 
+    /**
+     * Displays FXML on the organs tab.
+     */
     @FXML
     private void onTabOrgansSelected() {
         profileOrganOverviewController.currentProfile.bind(currentProfileBound);
@@ -1455,9 +1462,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * sets the profile if it is being opened by a clinician
-     * If opened by clinician, set appropriate boolean and profile
-     * @param profile to be used
+     * Sets the profile if it is being opened by a clinician.
+     * If opened by clinician, set appropriate boolean and profile.
+     * @param profile to be used.
      */
     public void setProfileViaClinician(Profile profile) {
         isOpenedByClinician = true;
@@ -1465,9 +1472,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * sets the donor if it was logged in by a user
-     * If logged in normally, sets profile
-     * @param profile to be used
+     * Sets the donor if it was logged in by a user.
+     * If logged in normally, sets profile.
+     * @param profile to be used.
      */
     public void setProfile(Profile profile) {
         currentProfile = profile;
