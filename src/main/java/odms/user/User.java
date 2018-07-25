@@ -3,6 +3,10 @@ package odms.user;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+import odms.enums.CountriesEnum;
 
 public class User {
 
@@ -17,6 +21,8 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
+
+    public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
     /**
      * Logs which property was updated and the time it was updated.

@@ -1,6 +1,7 @@
 package odms.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -139,7 +140,7 @@ class CommonController {
      * @param editedField String of which is the thing edited.
      */
     @FXML
-    protected void showNotification(String editedField, ActionEvent event) {
+    void showNotification(String editedField, Event event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));

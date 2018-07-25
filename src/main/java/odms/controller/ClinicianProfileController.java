@@ -39,11 +39,13 @@ import javafx.stage.WindowEvent;
 import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.enums.CountriesEnum;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.table.TableFilter;
 
 public class ClinicianProfileController extends CommonController {
@@ -154,6 +156,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TextField transplantListSearchField;
+
+    @FXML
+    private CheckListView<String> countriesCheckListView;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
@@ -765,6 +770,8 @@ public class ClinicianProfileController extends CommonController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            setupCountriesComboView();
         }
     }
 
@@ -804,5 +811,22 @@ public class ClinicianProfileController extends CommonController {
                 stage.close();
             }
         }
+    }
+
+    private void setupCountriesComboView() {
+        countriesCheckListView.getItems().setAll(CountriesEnum.toArrayList());
+        if (User.allowedCountriesIndices.isEmpty()) {
+            countriesCheckListView.getCheckModel().check(0);
+        } else {
+            for (int i : User.allowedCountriesIndices) {
+                countriesCheckListView.getCheckModel()
+                        .check(User.allowedCountriesIndices.get(i));
+            }
+        }
+    }
+
+    public void handleSaveCountriesBtnPressed(MouseEvent mouseEvent) {
+        User.allowedCountriesIndices = countriesCheckListView.getCheckModel().getCheckedIndices();
+        showNotification("Allowed Countries", mouseEvent);
     }
 }
