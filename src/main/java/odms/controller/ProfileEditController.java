@@ -20,15 +20,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.data.AddressIO;
 import odms.data.ProfileDataIO;
+import odms.enums.NewZealandRegionsEnum;
 import odms.history.History;
 import odms.profile.Profile;
 import odms.enums.CountriesEnum;
 
 public class ProfileEditController extends CommonController {
-
-    //TODO do we want regions as enum? Or stored somewhere else at least
-    public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
     private Profile currentProfile;
 
@@ -287,7 +286,7 @@ public class ProfileEditController extends CommonController {
      */
     private void saveRegionOfDeath() {
         //TODO waiting for the API from previous story to validate if this is a valid place
-        if (!regionOfDeathField.getText().isEmpty()) {
+        if (!regionOfDeathField.getText().isEmpty()&& AddressIO.checkValidCity(regionOfDeathField.getText()+" "+countryOfDeathField.getText(),regionField.getText())) {
             currentProfile.setRegionOfDeath(regionOfDeathField.getText());
         }
     }
@@ -297,7 +296,7 @@ public class ProfileEditController extends CommonController {
      */
     private void saveCityOfDeath() {
         //TODO waiting for the API from previous story to validate if this is a valid place
-        if (!cityOfDeathField.getText().isEmpty()) {
+        if (!cityOfDeathField.getText().isEmpty() && AddressIO.checkValidCity(cityOfDeathField.getText()+" "+countryOfDeathField.getText(),cityField.getText())) {
             currentProfile.setCityOfDeath(cityOfDeathField.getText());
         }
     }
@@ -450,7 +449,7 @@ public class ProfileEditController extends CommonController {
             if (comboCountry.getValue().toString().equals("New Zealand")) {
                 comboRegion.setDisable(false);
                 regionField.setDisable(true);
-                comboRegion.getItems().setAll(regionsNZ);
+                comboRegion.getItems().setAll(NewZealandRegionsEnum.toArrayList());
             } else {
                 comboRegion.setDisable(true);
                 regionField.setDisable(false);

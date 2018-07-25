@@ -1,5 +1,9 @@
 package odms.enums;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
 public enum NewZealandRegionsEnum {
     NORTHLAND("Northland"),
     AUCKLAND("Auckland"),
@@ -26,5 +30,20 @@ public enum NewZealandRegionsEnum {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Generate an ArrayList of strings of country names.
+     * @return the array list of countries
+     */
+    public static List<String> toArrayList() {
+        ArrayList<NewZealandRegionsEnum> regions = new ArrayList<>(EnumSet.allOf(NewZealandRegionsEnum.class));
+        ArrayList<String> regionStrings = new ArrayList<>();
+
+        for (NewZealandRegionsEnum region : regions) {
+            regionStrings.add(region.getName());
+        }
+
+        return regionStrings;
     }
 }
