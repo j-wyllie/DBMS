@@ -17,11 +17,11 @@ public class DatabaseConnection {
     private static DataSource connectionSource;
     private ComboPooledDataSource source;
 
-    private String DEFAULT_CONFIG = "/config/db.config";
+    private String DEFAULT_CONFIG = "/src/config/db.config";
     private static String CONFIG;
 
-    private String RESET_SQL = "/config/reset.sql";
-    private String RESAMPLE_SQL = "/config/resample.sql";
+    private String RESET_SQL = "/src/config/reset.sql";
+    private String RESAMPLE_SQL = "/src/config/resample.sql";
 
     /**
      * Constructor to create the singleton database connection class.
