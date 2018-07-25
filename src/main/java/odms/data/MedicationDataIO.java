@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import odms.medications.Interaction;
 
 public class MedicationDataIO {
@@ -159,28 +160,13 @@ public class MedicationDataIO {
     /**
      * Get Map of interactions between two drugs. The values of each key is the time frame after taking both drugs in
      * which the interaction may occur. Age and gender is used to get the most relevant interactions for a profile.
-     * @param drug1 Name of first drug.
-     * @param drug2 Name of second drug.
+     * @param interaction The interaction object that contains the symptoms needed to build the
+     * valid interactions for the requested age and gender.
      * @param gender gender of profile request is made for.
      * @param age age of profile request is made for.
-     * @return Map
-     * @throws IOException creation of URL may cause IOException.
+     * @return Map keys are symptoms and values are duration.
      */
-    public static Map<String, String> getDrugInteractions(Interaction interaction, String gender, int age) throws IOException {
-        Map<String, String> interactions;
-
-        interactions = parseInteractionsJSON(interaction, gender, age);
-        return interactions;
-    }
-
-    /**
-     * Parse the JSON object returned from the HTTP response for drug interactions. Returns Map of valid interactions
-     * for profile and the duration after which an interaction may occur.
-     * @param content JSON text to be parsed.
-     * @return Map<String, String> keys are valid interactions and values are duration of time after which an
-     * interaction may occur.
-     */
-    private static Map<String, String> parseInteractionsJSON(Interaction interaction, String gender, int age) {
+    public static Map<String, String> getDrugInteractions(Interaction interaction, String gender, int age) {
         Map<String, String> interactions;
         interactions = new HashMap<>();
 
@@ -191,10 +177,8 @@ public class MedicationDataIO {
             interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), gender));
         }
 
-        JsonObject interactionAge = results.get("age_interaction").getAsJsonObject();
         interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
 
-        JsonObject interactionDuration = results.get("duration_interaction").getAsJsonObject();
         interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
         return interactions;
     }
@@ -204,7 +188,7 @@ public class MedicationDataIO {
      * Parse JSON object that contains drug interactions based on male or female genders.
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
      *                     which an interaction may occur.
-     * @param interactionGender Interaction object that contains
+     * @param interactionGender Map that contains genders as keys and a list of symptoms as values.
      * @param gender gender of profile request is made for.
      * @return Map<String, String> keys are valid interactions and values are empty strings.
      */
@@ -215,19 +199,12 @@ public class MedicationDataIO {
 
         for (Map.Entry<String, List<String>> genderList : interactionGender.entrySet()) {
             if (genderList.getKey().equals(gender)) {
-                for (String symtom : genderList.getValue()) {
-                    if (!interactions.containsValue())
+                for (String symptom : genderList.getValue()) {
+                    interactions.put(symptom, "");
                 }
-
             }
         }
 
-        JsonArray genderInteractionsArray = interactionGender.get(gender).getAsJsonArray();
-        for (JsonElement value : genderInteractionsArray) {
-            if (!interactions.containsKey(value.toString())) {
-                interactions.put(value.toString().replace("\"", ""), "");
-            }
-        }
         return interactions;
     }
 
@@ -235,42 +212,38 @@ public class MedicationDataIO {
      *
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
      *                     which an interaction may occur.
-     * @param interactionAge JSON object that contains arrays of interactions, each array represents the age group in
-     *                       which interactions may occur.
+     * @param interactionAge Map that contains age groups as keys and a list of symptoms as values.
      * @param age age of profile request is made for.
      * @return Map<String, String> keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseInteractionAgeJSON(Map<String, String> interactions,
-                                                               JsonObject interactionAge, int age) {
-        String ageGroup;
+                                                               Map<String, List<String>> interactionAge, int age) {
         int lowerBound;
         int upperBound;
         String[] ageGroupArray;
-        JsonArray interactionArray;
 
-        for (Map.Entry<String, JsonElement> entry : interactionAge.entrySet()) {
-            ageGroup = entry.getKey();
-            if (ageGroup.equals("nan")) {
-                return interactions;
-            } else if (ageGroup.equals("60+") && age >= 60) {
-                interactionArray = entry.getValue().getAsJsonArray();
-                for (JsonElement value : interactionArray) {
-                    interactions.put(value.toString().replace("\"", ""), "");
+        for (Map.Entry<String, List<String>> ageList : interactionAge.entrySet()) {
+            if (ageList.getKey().equals("nan")) {
+                continue;
+            }
+            if (ageList.getKey().equals("60+") && age >= 60) {
+                for (String symptom : ageList.getValue()) {
+                    interactions.put(symptom, "");
                 }
                 return interactions;
-            } else if (!ageGroup.equals("60+")) {
-                ageGroupArray = ageGroup.split("-");
+            } else if (!ageList.getKey().equals("60+")) {
+                ageGroupArray = ageList.getKey().split("-");
                 lowerBound = Integer.parseInt(ageGroupArray[0]);
                 upperBound = Integer.parseInt(ageGroupArray[1]);
                 if (age >= lowerBound && age <= upperBound) {
-                    interactionArray = entry.getValue().getAsJsonArray();
-                    for (JsonElement value : interactionArray) {
-                        interactions.put(value.toString().replace("\"", ""), "");
+                    for (String symptom : ageList.getValue()) {
+                        interactions.put(symptom, "");
                     }
-                    return interactions;
                 }
+                return interactions;
             }
         }
+
         return interactions;
     }
 
@@ -278,19 +251,16 @@ public class MedicationDataIO {
      * Parse JSON object that contains drug interactions based on time of taking the drugs.
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
      *                     which an interaction may occur.
-     * @param interactionDuration JSON object that contains arrays of interactions, each array represents the time frame
-     *                            in which the interaction may occur.
+     * @param interactionDuration Map that contains time frames as keys and a list of symptoms as values.
      * @return Map<String, String> keys are valid interactions and values are duration of time after which an
      * interaction may occur.
      */
     private static Map<String, String> parseInteractionDurationJSON(Map<String, String> interactions,
-                                                                    JsonObject interactionDuration) {
-        for (Map.Entry<String, JsonElement> entry : interactionDuration.entrySet()) {
-            JsonArray interactionArray = entry.getValue().getAsJsonArray();
-            for (JsonElement value : interactionArray) {
-                if (interactions.containsKey(value.toString().replace("\"", "")) &&
-                        interactions.get(value.toString().replace("\"", "")).equals("")) {
-                    interactions.put(value.toString().replace("\"", ""), entry.getKey());
+                                                                    Map<String, List<String>> interactionDuration) {
+        for (Entry<String, List<String>> durationList : interactionDuration.entrySet()) {
+            for (String symptom : durationList.getValue()) {
+                if (interactions.containsKey(symptom) && interactions.get(symptom).equals("")) {
+                    interactions.put(symptom, durationList.getKey());
                 }
             }
         }
@@ -302,6 +272,7 @@ public class MedicationDataIO {
                 interactions.put(entry.getKey(), "not specified");
             }
         }
+
         return interactions;
     }
 }

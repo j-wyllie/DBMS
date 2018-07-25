@@ -59,8 +59,12 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
             }
         }
         Interaction newInteraction = add(drugA, drugB);
-        if ((newInteraction != null)) {
-            interactionMap.put(interactionMap.size(), newInteraction);
+        if (newInteraction != null) {
+            if (newInteraction.getDrugA() != null) {
+                interactionMap.put(interactionMap.size(), newInteraction);
+                save();
+            }
+
         }
         return newInteraction;
     }
@@ -134,23 +138,27 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
             StringBuffer response = getResponse(drugA, drugB);
 
             if (response != null) {
-                JsonParser parser = new JsonParser();
-                JsonObject results = parser.parse(response.toString()).getAsJsonObject();
+                if (response.toString().equals(SERVER_ERROR)) {
+                    interaction = new Interaction(null, null,null, null, null, null);
+                } else {
+                    JsonParser parser = new JsonParser();
+                    JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
-                Map<String, List<String>> ageEffects = parseListInteractions(results
-                        .get("age_interaction"));
+                    Map<String, List<String>> ageEffects = parseListInteractions(results
+                            .get("age_interaction"));
 
-                Map<String, Integer>  coexistingConditions = parseAtomicInteractions(results
-                        .get("co_existing_conditions"));
+                    Map<String, Integer>  coexistingConditions = parseAtomicInteractions(results
+                            .get("co_existing_conditions"));
 
-                Map<String, List<String>> durationInteractions = parseListInteractions(results
-                        .get("duration_interaction"));
+                    Map<String, List<String>> durationInteractions = parseListInteractions(results
+                            .get("duration_interaction"));
 
-                Map<String, List<String>> genderInteractions = parseListInteractions(results
-                        .get("gender_interaction"));
+                    Map<String, List<String>> genderInteractions = parseListInteractions(results
+                            .get("gender_interaction"));
 
-                interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
-                        durationInteractions, genderInteractions);
+                    interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
+                            durationInteractions, genderInteractions);
+                }
             }
         }
         return interaction;
@@ -179,8 +187,10 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
             // try again with drugs in different order.
             urlString = String.format(INTERACTION_URL, drugB, drugA);
             response = MedicationDataIO.makeRequest(urlString);
-            if (response == null || response.toString().equals(SERVER_ERROR)) {
+            if (response == null) {
                 return null;
+            } else if (response.toString().equals(SERVER_ERROR)) {
+                return response;
             }
         }
         return response;
@@ -217,7 +227,7 @@ public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO
      * @return a key/value mapping of the interaction data.
      */
     public Map<String, Integer> parseAtomicInteractions(JsonElement element) {
-        if (element.isJsonNull()) {
+        if (element == null || element.isJsonNull()) {
             return null;
         }
         JsonObject interactionObj = element.getAsJsonObject();
