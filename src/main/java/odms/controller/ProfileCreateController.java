@@ -7,6 +7,8 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,13 +44,12 @@ public class ProfileCreateController extends CommonController {
         }
         if (surnamesField.getText().isEmpty()) {
             return "Please enter Surname(s)";
-
         }
         if (dobDatePicker.getEditor().getText().isEmpty()) {
             return "Please enter a Date of Birth";
         }
-        if (nhiNumberField.getText().isEmpty()) {
-            return "Please enter an NHI number";
+        if (!nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$")) {
+            return "Please enter a valid NHI (e.g. ABC1234)";
         } else {
             return "";
         }
@@ -56,8 +57,12 @@ public class ProfileCreateController extends CommonController {
 
     public void initialize() {
         nhiNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nhiNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+            String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(newValue);
+
+            if (!m.matches() && !m.hitEnd()) {
+                nhiNumberField.setText(oldValue);
             }
         });
     }
