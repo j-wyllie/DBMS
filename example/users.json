@@ -1,11 +1,12 @@
 {
-  "deletedUsers": [],
+  "deletedUsers": [
+    2
+  ],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "John Smith",
+      "name": "Doc",
       "staffID": 0,
-      "workAddress": "",
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
@@ -14,77 +15,38 @@
           "day": 25
         },
         "time": {
-          "hour": 12,
-          "minute": 19,
-          "second": 10,
-          "nano": 734000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 215000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-07-07T14:04:37.522",
-        "0 updated at 02:04 PM 07-07-2018",
-        "John Smith updated at 12:19 PM 25-07-2018",
-        "0 updated at 12:19 PM 25-07-2018",
-        " updated at 12:19 PM 25-07-2018",
-        "Christchurch updated at 12:19 PM 25-07-2018"
+        "Account for Doccreated at 2018-07-25T13:42:29.203",
+        "Clinician updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 7
+          "day": 25
         },
         "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 37,
-          "nano": 522000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 203000000
         }
       },
-      "isDefault": false,
-      "pictureName": "cobbles.jpg"
+      "username": "Clinician",
+      "isDefault": true
     },
     "1": {
-      "userType": "CLINICIAN",
-      "name": "Matt Smith",
-      "staffID": 1,
-      "region": "Auckland",
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 7
-        },
-        "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 37,
-          "nano": 523000000
-        }
-      },
-      "updateActions": [
-        "Account for Matt Smithcreated at 2018-07-07T14:04:37.522",
-        "1 updated at 02:04 PM 07-07-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 7
-        },
-        "time": {
-          "hour": 14,
-          "minute": 4,
-          "second": 37,
-          "nano": 522000000
-        }
-      },
-      "isDefault": false
-    },
-    "2": {
       "userType": "ADMIN",
       "name": "admin",
-      "staffID": 2,
+      "staffID": 1,
       "lastUpdated": {
         "date": {
           "year": 2018,
@@ -92,16 +54,16 @@
           "day": 25
         },
         "time": {
-          "hour": 10,
-          "minute": 56,
-          "second": 11,
-          "nano": 849000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-07-25T10:56:11.837",
-        "admin updated at 10:56 AM 25-07-2018",
-        "2 updated at 10:56 AM 25-07-2018"
+        "ADMINaccount for admincreated at 2018-07-25T13:42:29.418",
+        "admin updated at 01:42 PM 25-07-2018",
+        "1 updated at 01:42 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -110,10 +72,10 @@
           "day": 25
         },
         "time": {
-          "hour": 10,
-          "minute": 56,
-          "second": 11,
-          "nano": 836000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
       "username": "admin",

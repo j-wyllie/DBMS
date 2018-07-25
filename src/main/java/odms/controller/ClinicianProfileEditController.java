@@ -102,7 +102,7 @@ public class ClinicianProfileEditController extends CommonController{
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean error = false;
 
-        if (saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             History action = new History("Clinician",currentUser.getStaffID(),"updated",
                                     "previous "+ currentUser.getAttributesSummary() + " new "+
                                             currentUser.getAttributesSummary(),-1,LocalDateTime.now());

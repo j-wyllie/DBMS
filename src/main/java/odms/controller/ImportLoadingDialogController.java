@@ -199,7 +199,7 @@ public class ImportLoadingDialogController {
         }
 
         /**
-         * Rquired by javafx
+         * Required by javafx
          *
          * @return value property
          */

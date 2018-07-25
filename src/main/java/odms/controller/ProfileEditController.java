@@ -1,5 +1,6 @@
 package odms.controller;
 
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -149,7 +150,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        if (AlertController.saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             try {
                 // History Generation
                 History action = new History("Profile" , currentProfile.getId() ,"update",
