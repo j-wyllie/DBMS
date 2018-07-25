@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import odms.dao.DAOFactory;
 import odms.user.User;
 import odms.user.UserType;
+import org.apache.commons.lang3.StringUtils;
 
 public class UserCreateController extends CommonController {
 
@@ -65,7 +66,8 @@ public class UserCreateController extends CommonController {
      */
     private boolean checkValidEntries() {
         if (userNameField.getText().equals("") || userUsernameField.getText().equals("") ||
-                userRegionField.getText().equals("") || userPasswordField.getText().equals("")) {
+                userRegionField.getText().equals("") || userPasswordField.getText().equals("") ||
+                StringUtils.isNumeric(userUsernameField.getText())) {
             return false;
         } else {
             return true;

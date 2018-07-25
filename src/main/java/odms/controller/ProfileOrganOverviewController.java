@@ -3,6 +3,7 @@ package odms.controller;
 import static odms.controller.ProfileOrganEditController.setWindowType;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,8 +13,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.enums.OrganEnum;
 import odms.enums.OrganSelectEnum;
 
 public class ProfileOrganOverviewController extends ProfileOrganCommonController {
@@ -21,7 +26,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
-    private ObservableList<String> observableListReceiving = FXCollections.observableArrayList();
+    private ObservableList<OrganEnum> observableListReceiving = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> listViewDonated;
@@ -30,13 +35,19 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     private ListView<String> listViewDonating;
 
     @FXML
-    private ListView<String> listViewReceiving;
+    private TableView tableViewReceiving;
+
+    @FXML
+    private TableColumn tableColumnOrgan;
+
+    @FXML
+    private TableColumn tableColumnDate;
 
     /**
      * Override the Cell Formatting for colour highlighting.
      */
     class HighlightedCell extends ListCell<String> {
-        private final String highlight = "cell-highlighted";
+        private static final String HIGHLIGHT = "cell-highlighted";
 
         @Override
         protected void updateItem(String item, boolean empty) {
@@ -45,28 +56,33 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
             // Handle null item case
             if (item == null) {
                 setText("");
-                getStyleClass().remove(highlight);
+                getStyleClass().remove(HIGHLIGHT);
                 return;
             }
 
             setText(item);
 
             if (checkList.contains(item)) {
-                getStyleClass().add(highlight);
+                getStyleClass().add(HIGHLIGHT);
 
             } else {
-                getStyleClass().remove(highlight);
+                getStyleClass().remove(HIGHLIGHT);
             }
         }
     }
 
+    @FXML
     public void initialize() {
         listViewDonating.setCellFactory(param -> new HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new HighlightedCell());
-
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
-        listViewReceiving.setItems(observableListReceiving);
+
+        tableViewReceiving.setItems(observableListReceiving);
+        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
+        tableColumnDate.setCellValueFactory(new PropertyValueFactory<OrganEnum, LocalDate>("date"));
+        tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
+        tableViewReceiving.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
     }
 
     @FXML
@@ -93,8 +109,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     public void populateOrganLists() {
         populateOrganList(observableListDonated, currentProfile.get().getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.get().getOrgansDonating());
-        populateOrganList(observableListReceiving, currentProfile.get().getOrgansRequired());
-
+        populateOrganReceivingList(observableListReceiving, currentProfile.get().getOrgansRequired());
         checkList.clear();
 
         for (String organ : observableListDonating) {
@@ -112,7 +127,7 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
 
         listViewDonated.refresh();
         listViewDonating.refresh();
-        listViewReceiving.refresh();
+        tableViewReceiving.refresh();
     }
 
     /**
@@ -140,11 +155,10 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnCloseRequest((ob) -> {
+        stage.setOnCloseRequest(ob -> {
             populateOrganLists();
             refreshListViews();
         });
         stage.show();
     }
-
 }

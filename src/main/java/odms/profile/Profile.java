@@ -383,6 +383,7 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
+        organ.setDate(LocalDate.now());
         this.organsRequired.add(organ);
     }
 
@@ -396,6 +397,7 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
+            organ.setDate(LocalDate.now());
             History action = new History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             HistoryController.updateHistory(action);
