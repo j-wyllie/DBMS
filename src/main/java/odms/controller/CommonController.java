@@ -23,6 +23,8 @@ class CommonController {
 
     private static boolean isEdited = false;
 
+    protected File localPath = new File(System.getProperty("user.dir"));
+
     /**
      * Scene change to log in view.
      * @param event clicking on the logout button.
@@ -176,6 +178,20 @@ class CommonController {
              try { if (os != null) os.close();
                 } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
 
+        }
+    }
+
+    /**
+     * returns a string that is the file extension of given file
+     *
+     * @param file File to retrieve extension from
+     */
+    protected String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf('.') + 1);
+        } catch (Exception e) {
+            return "";
         }
     }
 

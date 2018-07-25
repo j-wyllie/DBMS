@@ -7,15 +7,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.data.UserDataIO;
 import odms.history.History;
-import odms.profile.Profile;
-import odms.history.History;
 import odms.user.User;
+import org.sonar.api.internal.apachecommons.io.FilenameUtils;
 import org.sonar.api.internal.google.common.io.Files;
 
 import javax.swing.*;
@@ -62,12 +59,12 @@ public class ClinicianProfileEditController extends CommonController{
         if (chosenFile == null) {
 
         } else {
-            String extension = Files.getFileExtension(chosenFile.toString());
+            String extension = getFileExtension(chosenFile);
             File deleteFile;
             if(extension == "jpg") {
-                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentUser.getStaffID() + ".png");
+                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".png");
             } else {
-                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentUser.getStaffID() + ".jpg");
+                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".jpg");
             }
             if(deleteFile.delete())
             {
@@ -77,7 +74,7 @@ public class ClinicianProfileEditController extends CommonController{
             {
                 System.out.println("Failed to delete the old file");
             }
-            File pictureDestination = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + "." + extension);
+            File pictureDestination = new File(localPath + "\\" + currentUser.getStaffID().toString() + "." + extension);
             copyFileUsingStream(chosenFile, pictureDestination);
             currentUser.setPictureName(chosenFile.getName());
         }

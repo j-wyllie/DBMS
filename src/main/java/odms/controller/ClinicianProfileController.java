@@ -468,9 +468,9 @@ public class ClinicianProfileController extends CommonController {
         );
 
         if (currentUser.getPictureName() != null) {
-            File image = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + ".png");
+            File image = new File(localPath + "\\" + currentUser.getStaffID() + ".png");
             if(!image.exists()){
-                image = new File(new File("."),"src/main/resources/profile_images/" + currentUser.getStaffID() + ".jpg");
+                image = new File(localPath + "\\" + currentUser.getStaffID() + ".jpg");
                 if(!image.exists()){
                     image = new File(new File("."),"src/main/resources/profile_images/default.png");
                 }

@@ -12,22 +12,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
-import org.sonar.api.internal.google.common.io.Files;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
-    private File pictureDestination;
 
     private RedoController redoController= new RedoController();
     private UndoController undoController= new UndoController();
@@ -106,14 +100,13 @@ public class ProfileEditController extends CommonController {
     @FXML
     private void handleChooseImageClicked(ActionEvent event) throws IOException{
         File chosenFile = chooseImage(pictureText);
-        if (chosenFile == null) {
-        } else {
-            String extension = Files.getFileExtension(chosenFile.toString());
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile);
             File deleteFile;
             if(extension == "jpg") {
-                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
             } else {
-                deleteFile = new File(new File("."), "src/main/resources/profile_images/" + currentProfile.getNhi() + ".jpg");
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
             }
                 if(deleteFile.delete())
                 {
@@ -123,12 +116,11 @@ public class ProfileEditController extends CommonController {
                 {
                     System.out.println("Failed to delete the old file");
                 }
-            File pictureDestination = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + "." + extension);
+            File pictureDestination = new File(localPath + "\\" + currentProfile.getNhi() + "." + extension);
             copyFileUsingStream(chosenFile, pictureDestination);
             currentProfile.setPictureName(chosenFile.getName());
         }
     }
-
 
     /**
      * Button handler to undo last action.

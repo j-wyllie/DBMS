@@ -1131,9 +1131,9 @@ public class ProfileDisplayController extends CommonController {
 
             //setting profile photo
             if (currentProfile.getPictureName() != null) {
-                File image = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".png");
+                File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
                 if(!image.exists()){
-                    image = new File(new File("."),"src/main/resources/profile_images/" + currentProfile.getNhi() + ".jpg");
+                    image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
                     if(!image.exists()){
                         image = new File(new File("."),"src/main/resources/profile_images/default.png");
                     }
