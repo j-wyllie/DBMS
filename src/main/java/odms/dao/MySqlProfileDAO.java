@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -207,8 +208,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     public void add(Profile profile) {
         String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
                 + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
-                + " BloodPressureSystolic, BloodPressureDiastolic, Address, Region, Phone, Email, Created, LastUpdated) values (?, ?, ?,"
-                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
+                + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -222,26 +224,51 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
             stmt.setString(7, profile.getDateOfBirth().toString());
-            stmt.setString(8, profile.getDateOfDeath().toString());
+            if (profile.getDateOfDeath() == null) {
+                stmt.setString(8, null);
+            }
+            else {
+                stmt.setString(8, profile.getDateOfDeath().toString());
+            }
             stmt.setString(9, profile.getGender());
             stmt.setDouble(10, profile.getHeight());
             stmt.setDouble(11, profile.getWeight());
             stmt.setString(12, profile.getBloodType());
-            stmt.setBoolean(13, profile.getIsSmoker());
+            if (profile.getIsSmoker() == null) {
+                stmt.setBoolean(13, false);
+            }
+            else {
+                stmt.setBoolean(13, profile.getIsSmoker());
+            }
             stmt.setString(14, profile.getAlcoholConsumption());
-            stmt.setInt(15, profile.getBloodPressureSystolic());
-            stmt.setInt(16, profile.getBloodPressureDiastolic());
+            try {
+                stmt.setInt(15, profile.getBloodPressureSystolic());
+            } catch (NullPointerException e) {
+                stmt.setNull(15, Types.INTEGER);
+            }
+            try {
+                stmt.setInt(16, profile.getBloodPressureDiastolic());
+            } catch (NullPointerException e) {
+                stmt.setNull(16, Types.INTEGER);
+            }
             stmt.setString(17, profile.getAddress());
-            stmt.setString(18, profile.getRegion());
-            stmt.setString(19, profile.getPhone());
-            stmt.setString(20, profile.getEmail());
-            stmt.setString(21, LocalDateTime.now().toString());
-            stmt.setString(22, LocalDateTime.now().toString());
+            stmt.setInt(18, Integer.valueOf(profile.getStreetNumber()));
+            stmt.setString(19, profile.getStreetName());
+            stmt.setString(20, profile.getNeighbourhood());
+            stmt.setString(21, profile.getCity());
+            stmt.setInt(22, Integer.valueOf(profile.getZipCode()));
+            stmt.setString(23, profile.getRegion());
+            stmt.setString(24, profile.getCountry());
+            stmt.setString(25, profile.getBirthCountry());
+            stmt.setString(26, profile.getPhone());
+            stmt.setString(27, profile.getEmail());
+            stmt.setString(28, LocalDateTime.now().toString());
+            stmt.setString(29, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
         }
-        catch (SQLException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -306,7 +333,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?,"
+                + "BloodPressureSystolic = ?, Address = ?, "
                 + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 

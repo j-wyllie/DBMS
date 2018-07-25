@@ -2,6 +2,7 @@ package odms.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -15,8 +16,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import odms.dao.DAOFactory;
+import odms.dao.ProfileDAO;
 import odms.data.ProfileDatabase;
 import odms.data.ProfileImportTask;
+import odms.profile.Profile;
 import odms.user.User;
 
 public class ImportLoadingDialogController {
@@ -85,8 +89,12 @@ public class ImportLoadingDialogController {
                 event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
-                ProfileDatabase db = profileImportTask.getDb();
-                GuiMain.setCurrentDatabase(db);
+                List<Profile> profiles = profileImportTask.getDb();
+                ProfileDAO database = DAOFactory.getProfileDao();
+
+                profiles.forEach(profile -> {
+                    database.add(profile);
+                });
                 closeWindows(parentStage);
             });
 
