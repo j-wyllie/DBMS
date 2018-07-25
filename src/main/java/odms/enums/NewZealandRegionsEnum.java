@@ -20,7 +20,8 @@ public enum NewZealandRegionsEnum {
     WEST_COAST("West Coast"),
     CANTERBURY("Canterbury"),
     OTAGO("Otago"),
-    SOUTHLAND("Southland");
+    SOUTHLAND("Southland"),
+    CHATHAM_ISLANDS("Chatham Islands");
 
     private String name;
 

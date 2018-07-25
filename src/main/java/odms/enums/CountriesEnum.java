@@ -1,6 +1,7 @@
 package odms.enums;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -272,5 +273,23 @@ public enum CountriesEnum {
         }
 
         return countryStrings;
+    }
+
+    private static List<String> getValuesAsStrings() {
+        List<String> countries = new ArrayList<>();
+        for (CountriesEnum num : CountriesEnum.values()) {
+            countries.add(num.toString());
+        }
+        return countries;
+    }
+
+    public static String getValidNameFromString(String string) {
+        if (CountriesEnum.toArrayList().contains(string)) {
+            return string;
+        } else if (getValuesAsStrings().contains(string)) {
+            return CountriesEnum.valueOf(string).getName();
+        } else {
+            return "New Zealand";
+        }
     }
 }

@@ -5,10 +5,9 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.data.AddressIO;
 import odms.data.ProfileDataIO;
+import odms.data.ProfileDatabase;
 import odms.enums.NewZealandRegionsEnum;
 import odms.history.History;
 import odms.profile.Profile;
@@ -226,8 +226,10 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveNhiNumber() throws IllegalArgumentException {
-        if (nhiNumberField.getText().isEmpty()) {
-            throw new IllegalArgumentException("NHI field cannot be blank");
+        System.out.println(GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText()));
+        if ((!nhiNumberField.getText().equals(currentProfile.getNhi()) && (!nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$") ||
+                GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
+            throw new IllegalArgumentException("NHI must be valid");
         }
         currentProfile.setNhi(nhiNumberField.getText());
     }
@@ -511,8 +513,12 @@ public class ProfileEditController extends CommonController {
         });
 
         nhiNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nhiNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+            String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(newValue);
+
+            if (!m.matches() && !m.hitEnd()) {
+                nhiNumberField.setText(oldValue);
             }
         });
 
@@ -550,10 +556,10 @@ public class ProfileEditController extends CommonController {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
                 if (currentProfile.getHeight() != 0.0){
-                    heightField.setText(String.valueOf(currentProfile.getHeight()));
+                    heightField.setText(String.valueOf(currentProfile.getHeight()/100));
                 }
                 if (currentProfile.getWeight() != 0.0) {
-                    weightField.setText(String.valueOf(currentProfile.getWeight()));
+                    weightField.setText(String.valueOf(currentProfile.getWeight()/100));
                 }
                 if (currentProfile.getPhone() != null) {
                     phoneField.setText(currentProfile.getPhone());
@@ -661,7 +667,7 @@ public class ProfileEditController extends CommonController {
                         cityField.setText(currentProfile.getCity());
                     }
                     if (currentProfile.getCountry() != null) {
-                        comboCountry.setValue(currentProfile.getCountry());
+                        comboCountry.setValue(CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
                     }
                     if (currentProfile.getRegion() != null) {
                         if (currentProfile.getCountry() != null) {
