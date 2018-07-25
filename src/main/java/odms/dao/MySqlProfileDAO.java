@@ -132,7 +132,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         Double weight = profiles.getDouble("Weight");
         String bloodType = profiles.getString("BloodType");
         Boolean isSmoker = profiles.getBoolean("IsSmoker");
-        String alcoholConsump = profiles.getString("AlcoholConsumption");
+        String alcoholConsumption = profiles.getString("AlcoholConsumption");
         int bpSystolic = profiles.getInt("BloodPressureSystolic");
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
@@ -148,7 +148,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
-                gender, height, weight, bloodType, isSmoker, alcoholConsump, bpSystolic, bpDiastolic,
+                gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
                 address, region, phone, email, created, updated);
 
         try {
