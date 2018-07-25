@@ -24,19 +24,19 @@ public class AddressIOTest {
     }
     @Test
     public void addressValidRegionTest() {
-        assert(AddressIO.checkValidRegion("15 Riccarton Road", "Canterbury"));
+        assert(AddressIO.checkValidRegion("15 Riccarton Road", "Canterbury", ""));
     }
     @Test
     public void addressInvalidRegionTest() {
-        assertFalse(AddressIO.checkValidRegion("1600 Amphitheatre Parkway", "Canterbury"));
+        assertFalse(AddressIO.checkValidRegion("1600 Amphitheatre Parkway", "Canterbury", ""));
     }
     @Test
     public void addressValidCityTest() {
-        assert(AddressIO.checkValidCity("15 Riccarton Road", "Christchurch"));
+        assert(AddressIO.checkValidCity("15 Riccarton Road", "Christchurch", ""));
     }
     @Test
     public void addressInvalidCityTest() {
-        assertFalse(AddressIO.checkValidCity("1600 Amphitheatre Parkway", "Christchurch"));
+        assertFalse(AddressIO.checkValidCity("1600 Amphitheatre Parkway", "Christchurch", ""));
     }
 
 }

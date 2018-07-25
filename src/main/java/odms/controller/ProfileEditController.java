@@ -305,16 +305,17 @@ public class ProfileEditController extends CommonController {
     private void saveRegionOfDeath() throws Exception{
         //TODO waiting for the API from previous story to validate if this is a valid place
         if (!regionOfDeathField.getText().isEmpty() && AddressIO
-                .checkValidCity(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
-                        regionField.getText()) && comboRegion.isDisabled()) {
+                .checkValidRegion(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        regionOfDeathField.getText(),comboCountryOfDeath.getValue().toString()) && comboRegion.isDisabled()) {
             currentProfile.setRegionOfDeath(regionOfDeathField.getText());
         } else if(!regionOfDeathField.getText().isEmpty() && !AddressIO
-                .checkValidCity(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
-                        regionField.getText())){
+                .checkValidRegion(regionOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
+                        regionOfDeathField.getText(),comboCountryOfDeath.getValue().toString())){
             throw new Exception();
-        }  else if(!comboRegionOfDeath.getValue().equals(null)&& !AddressIO
-                .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
-                        cityField.getText())) {
+        }  else if(!comboRegionOfDeath.getValue().equals(null)&& AddressIO
+                .checkValidRegion(comboRegionOfDeath.getValue().toString() + " " + comboCountryOfDeath.getValue().toString(),
+                        comboRegionOfDeath.getValue().toString(),comboCountryOfDeath.getValue().toString())) {
+            currentProfile.setRegionOfDeath(comboRegionOfDeath.getValue().toString());
         } else {
             throw new Exception();
         }
@@ -327,11 +328,11 @@ public class ProfileEditController extends CommonController {
         //TODO waiting for the API from previous story to validate if this is a valid place
         if (!cityOfDeathField.getText().isEmpty() && AddressIO
                 .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
-                        cityField.getText())) {
+                        cityOfDeathField.getText(),comboCountryOfDeath.getValue().toString())) {
             currentProfile.setCityOfDeath(cityOfDeathField.getText());
         } else if(!cityOfDeathField.getText().isEmpty() && !AddressIO
                 .checkValidCity(cityOfDeathField.getText() + " " + comboCountryOfDeath.getValue().toString(),
-                        cityField.getText()) && comboRegion.isDisabled()){
+                        cityOfDeathField.getText(),comboCountryOfDeath.getValue().toString())){
             throw new Exception();
         }
     }
@@ -686,6 +687,7 @@ public class ProfileEditController extends CommonController {
                         }
                     } else {
                         cityField.setText(currentProfile.getCityOfDeath());
+                        cityOfDeathField.setText(currentProfile.getCityOfDeath());
                     }
 
                     if (currentProfile.getRegionOfDeath() == null) {
@@ -695,15 +697,18 @@ public class ProfileEditController extends CommonController {
                                     comboRegion.setDisable(false);
                                     regionField.setDisable(true);
                                     comboRegion.setValue(currentProfile.getRegion());
+                                    comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                                 } else {
                                     comboRegion.setDisable(true);
                                     regionField.setDisable(false);
                                     regionField.setText(currentProfile.getRegion());
+                                    regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                                 }
                             } else {
                                 comboRegion.setDisable(true);
                                 regionField.setDisable(false);
                                 regionField.setText(currentProfile.getRegion());
+                                regionOfDeathField.setText(currentProfile.getRegion());
                             }
                         }
                     } else {
@@ -712,11 +717,13 @@ public class ProfileEditController extends CommonController {
                                 comboRegion.setDisable(false);
                                 regionField.setDisable(true);
                                 comboRegion.setValue(currentProfile.getRegionOfDeath());
+                                comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                             }
                         } else {
                             comboRegion.setDisable(true);
                             regionField.setDisable(false);
                             regionField.setText(currentProfile.getRegionOfDeath());
+                            regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                         }
                     }
 

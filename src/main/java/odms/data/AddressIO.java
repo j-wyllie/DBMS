@@ -22,7 +22,7 @@ public class AddressIO {
 
     public static boolean checkValidCountry(String address, List<CountriesEnum> validCountries) {
         try {
-            String jsonString = getGeocodeLocation(address).toString();
+            String jsonString = getGeocodeLocation(address,"").toString();
             for(CountriesEnum c: validCountries) {
                 if(jsonString.contains(c.name())) {
                     return true;
@@ -35,10 +35,12 @@ public class AddressIO {
         }
     }
 
-    public static boolean checkValidRegion(String address, String region) {
+    public static boolean checkValidRegion(String address, String region, String country) {
         try {
-            String jsonString = getGeocodeLocation(address).toString();
+            String jsonString = getGeocodeLocation(address, country.replace(" ","+")).toString();
+            System.out.println(region);
             if(jsonString.contains(region)) {
+                System.out.println("A");
                 return true;
             }
             return false;
@@ -48,9 +50,9 @@ public class AddressIO {
         }
     }
 
-    public static boolean checkValidCity(String address, String city) {
+    public static boolean checkValidCity(String address, String city, String country) {
         try {
-            String jsonString = getGeocodeLocation(address).toString();
+            String jsonString = getGeocodeLocation(address, country.replace(" ","+")).toString();
             if(jsonString.contains(city)) {
                 return true;
             }
@@ -61,13 +63,15 @@ public class AddressIO {
         }
     }
 
-    public static JsonObject getGeocodeLocation(String address) throws IOException{
+    public static JsonObject getGeocodeLocation(String address, String country) throws IOException{
         // TODO either use one key or come up with a way to use a few
         key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
+
         String query = API_URL +
                 "geocode/json?address=" +
                 address.replace(" ","+") +
-                "&key=" + key;
+                "&components=country:"+country+"&key=" + key;
+        System.out.println(query);
         URL url = new URL(query);
         URLConnection request = url.openConnection();
         request.connect();
