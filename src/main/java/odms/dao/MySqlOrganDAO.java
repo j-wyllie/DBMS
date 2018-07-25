@@ -1,9 +1,11 @@
 package odms.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.HashSet;
@@ -20,7 +22,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonations(Profile profile) {
-        return getOrgans( profile, "select Organ from organs where ProfileId = ? and Donated = ?");
+        return getOrgans( profile, "select * from organs where ProfileId = ? and Donated = ?");
 
     }
 
@@ -30,7 +32,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonating(Profile profile) {
-        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Donating = ?");
+        return getOrgans(profile, "select * from organs where ProfileId = ? and Donating = ?");
     }
 
     /**
@@ -55,6 +57,7 @@ public class MySqlOrganDAO implements OrganDAO {
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
                 OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
+                organ.setDate(allOrganRows.getDate("DateRegistered").toLocalDate());
                 allOrgans.add(organ);
             }
             conn.close();
@@ -72,7 +75,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getRequired(Profile profile) {
-        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Required = ?");
+        return getOrgans(profile, "select * from organs where ProfileId = ? and Required = ?");
     }
 
     /**
@@ -81,7 +84,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getReceived(Profile profile) {
-        return getOrgans(profile, "select Organ from organs where ProfileId = ? and Received = ?");
+        return getOrgans(profile, "select * from organs where ProfileId = ? and Received = ?");
     }
 
     /**
@@ -92,8 +95,8 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
         profile.addOrganDonated(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received) "
-                + "values (?, ?, ?, ?, ?, ?);";
+        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+                + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -106,6 +109,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, false);
+            stmt.setDate(7, Date.valueOf(LocalDate.now()));
 
             stmt.executeUpdate();
             conn.close();
@@ -125,8 +129,8 @@ public class MySqlOrganDAO implements OrganDAO {
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
         profile.addOrganDonating(organ);
 
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received) "
-                + "values (?, ?, ?, ?, ?, ?);";
+        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+                + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -139,6 +143,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, true);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, false);
+            stmt.setDate(7, Date.valueOf(LocalDate.now()));
 
             stmt.executeUpdate();
             conn.close();
@@ -156,8 +161,8 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
         profile.addOrganRequired(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received) "
-                + "values (?, ?, ?, ?, ?, ?);";
+        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+                + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -170,6 +175,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, true);
             stmt.setBoolean(6, false);
+            stmt.setDate(7, Date.valueOf(LocalDate.now()));
 
             stmt.executeUpdate();
             conn.close();
@@ -187,8 +193,8 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
         profile.addOrganReceived(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received) "
-                + "values (?, ?, ?, ?, ?, ?);";
+        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+                + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -201,6 +207,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, true);
+            stmt.setDate(7, Date.valueOf(LocalDate.now()));
 
             stmt.executeUpdate();
             conn.close();
