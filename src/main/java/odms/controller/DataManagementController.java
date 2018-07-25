@@ -69,7 +69,7 @@ public class DataManagementController {
         ImportLoadingDialogController controller = fxmlLoader.getController();
         controller.setCurrentUser(currentUser);
 
-        controller.initialize(file);
+        controller.initialize(file, (Stage) dataManagementAp.getScene().getWindow());
 
         Stage stage = new Stage();
         controller.setCurrentStage(stage);
