@@ -119,6 +119,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws SQLException error.
      */
     private Profile parseProfile(ResultSet profiles) throws SQLException {
+        System.out.println(profiles.getInt("ProfileId"));
         int id = profiles.getInt("ProfileId");
         String nhi = profiles.getString("NHI");
         String username = profiles.getString("Username");
@@ -512,11 +513,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where GivenNames like ? OR LastNames like ?"
                 + " or Region like ? and Gender = ?";
         if (ageSearchInt > 0) {
-            if (ageRangeSearchInt == 0) {
-                query += " and year(CURRENT_DATE) - year(Dob) = ?";
+            if (ageRangeSearchInt == -999) {
+                query += " and (year(CURRENT_DATE) - year(Dob)) = ?";
             }
             else {
-                query += " and year(CURRENT_DATE) - year(Dob) >= ? and year(CURRENT_DATE) - year(Dob) <= ?";
+                query += " and (year(CURRENT_DATE) - year(Dob)) >= ? and (year(CURRENT_DATE) - year(Dob)) <= ?";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
@@ -532,7 +533,8 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         Connection conn = connectionInstance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
+        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
 
 
         try {
@@ -543,7 +545,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             int index = 5;
             if (ageSearchInt > 0) {
-                if (ageRangeSearchInt == 0) {
+                if (ageRangeSearchInt == -999) {
                     stmt.setInt(index, ageSearchInt);
                     index++;
                 }
@@ -566,10 +568,24 @@ public class MySqlProfileDAO implements ProfileDAO {
             ResultSet allProfiles = stmt.executeQuery();
             System.out.println(stmt.toString());
             System.out.println(allProfiles);
-            while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
-                result.add(newProfile);
+            int size = 0;
+            allProfiles.last();
+            size = allProfiles.getRow();
+            allProfiles.beforeFirst();
+
+            if (size > 250) {
+                for (int i = 0; i <250; i++) {
+                    allProfiles.next();
+                    Profile newProfile  = parseProfile(allProfiles);
+                    result.add(newProfile);
+                }
+            } else {
+                while (allProfiles.next()) {
+                    Profile newProfile  = parseProfile(allProfiles);
+                    result.add(newProfile);
+                }
             }
+
         }
         catch (Exception e) {
             e.printStackTrace();
