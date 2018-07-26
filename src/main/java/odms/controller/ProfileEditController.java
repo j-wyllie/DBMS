@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
@@ -18,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import odms.dao.CountryDAO;
+import odms.dao.DAOFactory;
 import odms.data.AddressIO;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
@@ -25,6 +28,7 @@ import odms.enums.NewZealandRegionsEnum;
 import odms.history.History;
 import odms.profile.Profile;
 import odms.enums.CountriesEnum;
+import odms.user.User;
 
 
 public class ProfileEditController extends CommonController {
@@ -200,7 +204,12 @@ public class ProfileEditController extends CommonController {
                 saveLastNames();
 
                 // Optional General Fields
-                saveAddress();
+                try {
+                    saveAddress();
+                    saveCountry();
+                }  catch (Exception e) {
+                    AlertController.guiPopup("Invalid address.");
+                }
                 saveDateOfDeath();
                 saveEmail();
                 saveGender();
@@ -209,13 +218,14 @@ public class ProfileEditController extends CommonController {
                 savePreferredGender();
                 savePreferredName();
                 saveRegion();
-                saveCountry();
                 saveCity();
                 saveWeight();
                 try {
-                    saveCityOfDeath();
-                    saveRegionOfDeath();
-                    saveCountryOfDeath();
+                    if(!dodDatePicker.getEditor().getText().isEmpty()) {
+                        saveCityOfDeath();
+                        saveRegionOfDeath();
+                        saveCountryOfDeath();
+                    }
                 } catch (Exception e) {
                     AlertController.guiPopup("Invalid Location Of Death");
                 }
@@ -299,9 +309,11 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    private void saveAddress() {
-        if (!addressField.getText().isEmpty()) {
+    private void saveAddress() throws Exception{
+        if (!addressField.getText().isEmpty() && AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())) {
             currentProfile.setAddress(addressField.getText());
+        } else if(!addressField.getText().isEmpty() && !AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())){
+            throw new Exception();
         }
     }
 
@@ -599,6 +611,14 @@ public class ProfileEditController extends CommonController {
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
         // TODO investigate abstracting copy paste listeners to common function.
+        comboCountry.setVisible(true);
+        comboRegion.setVisible(true);
+        regionField.setVisible(true);
+        cityField.setVisible(true);
+        comboCountryOfDeath.setVisible(false);
+        comboRegionOfDeath.setVisible(false);
+        regionOfDeathField.setVisible(false);
+        cityOfDeathField.setVisible(false);
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 heightField.setText(newValue.replaceAll("[^\\d]", ""));
@@ -695,6 +715,14 @@ public class ProfileEditController extends CommonController {
                     regionField.setDisable(true);
                     comboRegion.setDisable(true);
                     cityField.setDisable(true);
+                    comboCountry.setVisible(false);
+                    comboRegion.setVisible(false);
+                    regionField.setVisible(false);
+                    cityField.setVisible(false);
+                    comboCountryOfDeath.setVisible(true);
+                    comboRegionOfDeath.setVisible(true);
+                    regionOfDeathField.setVisible(true);
+                    cityOfDeathField.setVisible(true);
                     } else {
                         comboCountryOfDeath.setDisable(true);
                         regionOfDeathField.setDisable(true);
@@ -730,18 +758,24 @@ public class ProfileEditController extends CommonController {
                             if (currentProfile.getCountry() != null) {
                                 if (currentProfile.getCountry().equals("New Zealand")) {
                                     comboRegion.setDisable(false);
+                                    comboRegionOfDeath.setDisable(false);
                                     regionField.setDisable(true);
+                                    regionOfDeathField.setDisable(true);
                                     comboRegion.setValue(currentProfile.getRegion());
                                     comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                                 } else {
                                     comboRegion.setDisable(true);
+                                    comboRegionOfDeath.setDisable(true);
                                     regionField.setDisable(false);
+                                    regionOfDeathField.setDisable(false);
                                     regionField.setText(currentProfile.getRegion());
                                     regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                                 }
                             } else {
                                 comboRegion.setDisable(true);
+                                comboRegionOfDeath.setDisable(true);
                                 regionField.setDisable(false);
+                                regionOfDeathField.setDisable(false);
                                 regionField.setText(currentProfile.getRegion());
                                 regionOfDeathField.setText(currentProfile.getRegion());
                             }
@@ -750,17 +784,22 @@ public class ProfileEditController extends CommonController {
                         if (currentProfile.getCountry() != null) {
                             if (currentProfile.getCountry().equals("New Zealand")) {
                                 comboRegion.setDisable(false);
+                                comboRegionOfDeath.setDisable(false);
                                 regionField.setDisable(true);
+                                regionOfDeathField.setDisable(true);
                                 comboRegion.setValue(currentProfile.getRegionOfDeath());
                                 comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                             }
                         } else {
                             comboRegion.setDisable(true);
+                            comboRegionOfDeath.setDisable(true);
                             regionField.setDisable(false);
+                            regionOfDeathField.setDisable(false);
                             regionField.setText(currentProfile.getRegionOfDeath());
                             regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                         }
                     }
+
 
 
                 } else {
@@ -821,8 +860,16 @@ public class ProfileEditController extends CommonController {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
 
-                comboCountry.getItems().addAll(CountriesEnum.toArrayList());
-                comboCountryOfDeath.getItems().addAll(CountriesEnum.toArrayList());
+                CountryDAO database = DAOFactory.getCountryDAO();
+                int index = 0;
+                for (String country : database.getAll(true)) {
+                    User.allowedCountriesIndices.add(index);
+                    index++;
+                }
+
+                List<String> validCountries = database.getAll(true);
+                comboCountry.getItems().addAll(validCountries);
+                comboCountryOfDeath.getItems().addAll(validCountries);
 
                 refreshRegionSelection();
                 refreshRegionOfDeathSelection();
