@@ -20,7 +20,6 @@ public class User {
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
     private String pictureName;
-    private Image pictureFile;
 
 
     /**
@@ -245,13 +244,5 @@ public class User {
 
     public void setPictureName(String pictureName) {
         this.pictureName = pictureName;
-    }
-
-    public Image getPictureFile() {
-        return pictureFile;
-    }
-
-    public void setPictureFile(Image pictureFile) {
-        this.pictureFile = pictureFile;
     }
 }

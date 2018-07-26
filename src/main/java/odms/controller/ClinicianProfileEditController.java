@@ -56,15 +56,15 @@ public class ClinicianProfileEditController extends CommonController{
     @FXML
     private void clinicianChooseImageClicked(ActionEvent event) throws IOException{
         File chosenFile = chooseImage(pictureText);
-        if (chosenFile == null) {
-
-        } else {
+        if (chosenFile != null) {
             String extension = getFileExtension(chosenFile).toLowerCase();
             File deleteFile;
             if(extension == "jpg") {
-                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".jpg");
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".jpg");
             } else {
-                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".png");
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".png");
             }
             if(deleteFile.delete())
             {
@@ -74,7 +74,8 @@ public class ClinicianProfileEditController extends CommonController{
             {
                 System.out.println("Failed to delete the old file");
             }
-            File pictureDestination = new File(localPath + "\\" + currentUser.getStaffID().toString() + "." + extension);
+            File pictureDestination = new File(localPath + "\\" +
+                    currentUser.getStaffID().toString() + "." + extension);
             copyFileUsingStream(chosenFile, pictureDestination);
             currentUser.setPictureName(chosenFile.getName());
         }

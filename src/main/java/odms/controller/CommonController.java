@@ -161,6 +161,13 @@ class CommonController {
                 .show();
     }
 
+
+    /**
+     * Copies a file from source to dest
+     *
+     * @param source File source in local directory
+     * @param dest File destination in local directory
+     */
     protected static void copyFileUsingStream(File source, File dest) throws IOException {
         InputStream is = null;
         OutputStream os = null;
@@ -174,7 +181,7 @@ class CommonController {
             }
         } finally {
              try { if (is != null) is.close();
-                } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}//closes quietly
+                } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}
              try { if (os != null) os.close();
                 } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
 
