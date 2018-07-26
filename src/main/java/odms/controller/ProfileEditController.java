@@ -167,6 +167,7 @@ public class ProfileEditController extends CommonController {
                 // Optional General Fields
                 try {
                     saveAddress();
+                    saveCountry();
                 }  catch (Exception e) {
                     AlertController.guiPopup("Invalid address.");
                 }
@@ -178,7 +179,6 @@ public class ProfileEditController extends CommonController {
                 savePreferredGender();
                 savePreferredName();
                 saveRegion();
-                saveCountry();
                 saveCity();
                 saveWeight();
                 try {
