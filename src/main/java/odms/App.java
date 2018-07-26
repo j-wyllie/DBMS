@@ -62,8 +62,7 @@ public class App {
         return userDb;
     }
 
-    public void setCurrentDatabase(ProfileDatabase profileDb) {
-        profileDb = profileDb;
+    public static void setCurrentDatabase(ProfileDatabase profileDb2) {
+        profileDb = profileDb2;
     }
-
 }

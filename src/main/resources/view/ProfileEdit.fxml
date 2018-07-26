@@ -25,6 +25,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ProfileEditController">
     <children>
@@ -53,8 +54,8 @@
                                             </columnConstraints>
                                             <rowConstraints>
                                                 <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="192.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="224.0" minHeight="10.0" prefHeight="190.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="203.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="224.0" minHeight="10.0" prefHeight="208.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="143.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
                                                 <TilePane prefHeight="355.0" prefWidth="421.0" style="-fx-background-color: #e3e3e5;" GridPane.rowSpan="2">
@@ -65,19 +66,19 @@
                                                         <GridPane focusTraversable="true" prefHeight="312.0" prefWidth="422.0">
                                                             <columnConstraints>
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="153.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                             </columnConstraints>
                                                             <rowConstraints>
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints maxHeight="50.0" minHeight="13.0" prefHeight="40.0" />
+                                                                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
                                                             </rowConstraints>
                                                             <children>
                                                                 <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
@@ -143,23 +144,15 @@
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                <Label fx:id="countryLabel" prefHeight="50.0" prefWidth="108.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country : " GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" right="50.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <ComboBox fx:id="comboCountry" maxWidth="1.7976931348623157E308" onAction="#refreshRegionSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                   <GridPane.margin>
-                                                      <Insets left="30.0" right="50.0" />
-                                                   </GridPane.margin>
-                                                </ComboBox>
-                                                                <ComboBox fx:id="comboCountryOfDeath" maxWidth="1.7976931348623157E308" onAction="#refreshRegionSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                <Label fx:id="countryLabel" prefHeight="50.0" prefWidth="108.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country : " GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                    <font>
+                                                                        <Font size="22.0" />
+                                                                    </font>
+                                                                    <GridPane.margin>
+                                                                        <Insets left="20.0" right="50.0" />
+                                                                    </GridPane.margin>
+                                                                </Label>
+                                                                <ComboBox fx:id="comboCountry" maxWidth="1.7976931348623157E308" onAction="#refreshRegionSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                                     <opaqueInsets>
                                                                         <Insets />
                                                                     </opaqueInsets>
@@ -167,14 +160,22 @@
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </ComboBox>
-                                                <ComboBox fx:id="comboRegion" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                                                <opaqueInsets>
-                                                                    <Insets />
-                                                                </opaqueInsets>
-                                                                <GridPane.margin>
-                                                                    <Insets left="30.0" />
-                                                                </GridPane.margin>
-                                                            </ComboBox>
+                                                                <ComboBox fx:id="comboCountryOfDeath" maxWidth="1.7976931348623157E308" onAction="#refreshRegionOfDeathSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                                    <opaqueInsets>
+                                                                        <Insets />
+                                                                    </opaqueInsets>
+                                                                    <GridPane.margin>
+                                                                        <Insets left="30.0" right="50.0" />
+                                                                    </GridPane.margin>
+                                                                </ComboBox>
+                                                                <ComboBox fx:id="comboRegion" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                    <opaqueInsets>
+                                                                        <Insets />
+                                                                    </opaqueInsets>
+                                                                    <GridPane.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </GridPane.margin>
+                                                                </ComboBox>
                                                                 <ComboBox fx:id="comboRegionOfDeath" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                     <opaqueInsets>
                                                                         <Insets />
@@ -183,33 +184,54 @@
                                                                         <Insets left="30.0" />
                                                                     </GridPane.margin>
                                                                 </ComboBox>
-                                                <TextField fx:id="regionField" onKeyTyped="#editTrueKey" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets right="50.0" />
-                                                   </GridPane.margin></TextField>
-                                                                <TextField fx:id="regionOfDeathField" onKeyTyped="#editTrueKey" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                <TextField fx:id="regionField" onKeyTyped="#editTrueKey" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                     <GridPane.margin>
                                                                         <Insets right="50.0" />
                                                                     </GridPane.margin></TextField>
-                                                <Label fx:id="cityLabel" prefHeight="30.0" prefWidth="94.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                   <font>
-                                                      <Font size="22.0" />
-                                                   </font>
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <TextField fx:id="cityField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                   <GridPane.margin>
-                                                      <Insets left="30.0" right="50.0" />
-                                                   </GridPane.margin>
-                                                </TextField>
+                                                                <TextField fx:id="regionOfDeathField" onKeyTyped="#editTrueKey" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                    <GridPane.margin>
+                                                                        <Insets right="50.0" />
+                                                                    </GridPane.margin></TextField>
+                                                                <Label fx:id="cityLabel" prefHeight="30.0" prefWidth="94.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                                    <font>
+                                                                        <Font size="22.0" />
+                                                                    </font>
+                                                                    <GridPane.margin>
+                                                                        <Insets left="20.0" />
+                                                                    </GridPane.margin>
+                                                                </Label>
+                                                                <TextField fx:id="cityField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                                    <GridPane.margin>
+                                                                        <Insets left="30.0" right="50.0" />
+                                                                    </GridPane.margin>
+                                                                </TextField>
                                                                 <TextField fx:id="cityOfDeathField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                                     <GridPane.margin>
                                                                         <Insets left="30.0" right="50.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
+                                                                <Label fx:id="regionLabel1" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Photo :" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                                    <font>
+                                                                        <Font size="22.0" />
+                                                                    </font>
+                                                                    <GridPane.margin>
+                                                                        <Insets left="20.0" right="70.0" />
+                                                                    </GridPane.margin>
+                                                                </Label>
+                                                                <Button mnemonicParsing="false" onAction="#handleChooseImageClicked" text="Choose Photo" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                                    <GridPane.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </GridPane.margin>
+                                                                </Button>
+                                                                <Text fx:id="pictureText" fill="BLUE" strokeType="OUTSIDE" strokeWidth="0.0" text="No Photo Selected" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                                                    <GridPane.margin>
+                                                                        <Insets left="20.0" />
+                                                                    </GridPane.margin>
+                                                                </Text>
                                                             </children>
+                                                            <TilePane.margin>
+                                                                <Insets top="30.0" />
+                                                            </TilePane.margin>
                                                         </GridPane>
                                                     </children>
                                                 </TilePane>
@@ -227,7 +249,7 @@
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                             </columnConstraints>
                                                             <rowConstraints>
                                                                 <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />

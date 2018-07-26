@@ -1,7 +1,9 @@
 package odms.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,15 +33,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
 import odms.enums.CountriesEnum;
+import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -48,9 +52,13 @@ import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.table.TableFilter;
 
+import static odms.App.getProfileDb;
+
 public class ClinicianProfileController extends CommonController {
 
     private User currentUser;
+
+    private ProfileDatabase profileDb = getProfileDb();
 
     @FXML
     private Label clinicianFullName;
@@ -160,6 +168,9 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private CheckListView<String> countriesCheckListView;
 
+    @FXML
+    private ImageView userImage;
+
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
@@ -187,6 +198,8 @@ public class ClinicianProfileController extends CommonController {
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
 
+    Thread t;
+
     /**
      * Scene change to log in view.
      *
@@ -205,7 +218,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -220,7 +233,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -464,6 +477,22 @@ public class ClinicianProfileController extends CommonController {
                 regionLabel.getText() +
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
+
+        if (currentUser.getPictureName() != null) {
+            File image = new File(localPath + "\\" + currentUser.getStaffID() + ".png");
+            if(!image.exists()){
+                image = new File(localPath + "\\" + currentUser.getStaffID() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            try {
+                userImage.setImage(new Image(image.toURI().toURL().toString()));
+            } catch (MalformedURLException e){
+                System.out.println("Malformed URL Exception");
+            }
+        }
+
     }
 
     /**
@@ -571,7 +600,10 @@ public class ClinicianProfileController extends CommonController {
             stage.setTitle(selectedDonor.getFullName() + "'s Profile");
             stage.setScene(scene);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> closeStage(stage));
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                closeStage(stage);
+                refreshTable();
+            });
             openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -677,10 +709,10 @@ public class ClinicianProfileController extends CommonController {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         transplantListSearchField.setText("");
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(profileDb.getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -709,7 +741,7 @@ public class ClinicianProfileController extends CommonController {
             System.setOut(commandGUI.getOut());
 
             // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            CommandLine commandLine = new CommandLine(profileDb, commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
             t.setDaemon(true);
@@ -722,7 +754,9 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     public void initialize() {
+        profileDb = getProfileDb();
         if (currentUser != null) {
+
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -762,11 +796,11 @@ public class ClinicianProfileController extends CommonController {
 
             setClinicianDetails();
             setupAdmin();
-            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            makeSearchTable(profileDb.getProfiles(false));
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+            searchTable.setPlaceholder(new Label("There are " + profileDb.getProfiles(false).size() + " profiles"));
             try {
-                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+                makeTransplantWaitingList(profileDb.getAllOrgansRequired());
             } catch (Exception e) {
                 e.printStackTrace();
             }

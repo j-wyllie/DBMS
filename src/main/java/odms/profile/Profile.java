@@ -1,5 +1,14 @@
 package odms.profile;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.image.Image;
+import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
+
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -72,6 +81,7 @@ public class Profile implements Comparable<Profile> {
     private String phone;
     private String mobilePhone;
     private String email;
+    private String pictureName;
 
     private String nhi;
     private LocalDateTime timeOfCreation;
@@ -387,6 +397,7 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
+        organ.setDate(LocalDate.now());
         this.organsRequired.add(organ);
     }
 
@@ -400,6 +411,7 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
+            organ.setDate(LocalDate.now());
             History action = new History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             HistoryController.updateHistory(action);
@@ -1194,5 +1206,13 @@ public class Profile implements Comparable<Profile> {
 
     public void setNeighbourhood(String neighbourhood) {
         this.neighbourhood = neighbourhood;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 }

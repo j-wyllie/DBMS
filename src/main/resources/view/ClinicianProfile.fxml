@@ -38,6 +38,7 @@
 
         <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
             <Tab closable="false" text="General">
+                <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
                         <GridPane layoutX="6.0" layoutY="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="tab-background" stylesheets="@../styles/Profile.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="1.0">
@@ -125,49 +126,57 @@
                                         <Label fx:id="regionLabel" prefHeight="51.0" prefWidth="1140.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region : " GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
-                                            </GridPane.margin>
-                                            <font>
-                                                <Font size="22.0" />
-                                            </font>
-                                        </Label>
+                                             </GridPane.margin>
+                                             <font>
+                                                <Font name="Arial Bold" size="25.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="20.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="7">
+                                            <image>
+                                                <Image url="@../profile_images/default.png" />
+                                            </image>
+                                        </ImageView>
                                         <CheckListView fx:id="countriesCheckListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowSpan="7" GridPane.vgrow="ALWAYS">
-                                 <GridPane.margin>
-                                    <Insets left="10.0" right="10.0" top="10.0" />
-                                 </GridPane.margin></CheckListView>
-                              <Button fx:id="saveCountriesBtn" mnemonicParsing="false" onMouseClicked="#handleSaveCountriesBtnPressed" prefHeight="26.0" prefWidth="129.0" text="Save Countries" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
-                                 <GridPane.margin>
-                                    <Insets right="10.0" />
-                                 </GridPane.margin>
-                              </Button>
-
-                                    </children>
-                                </GridPane>
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </GridPane>
-                    </children>
-                </AnchorPane>
-            </Tab>
-            <Tab fx:id="consoleTab" text="Console">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../styles/ClinicianProfile.css">
-                        <children>
-                            <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                <children>
-                                    <TextArea fx:id="displayTextArea" prefHeight="516.0" prefWidth="1202.0" styleClass="textArea-cli" GridPane.columnSpan="2" GridPane.rowSpan="3" />
-                                </children>
-                                <padding>
+                                            <GridPane.margin>
+                                                <Insets left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin></CheckListView>
+                                        <Button fx:id="saveCountriesBtn" mnemonicParsing="false" onMouseClicked="#handleSaveCountriesBtnPressed" prefHeight="26.0" prefWidth="129.0" text="Save Countries" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+                                            <GridPane.margin>
+                                                <Insets right="10.0" />
+                                            </GridPane.margin>
+                                        </Button>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab fx:id="consoleTab" text="Console">
+                      <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../styles/ClinicianProfile.css">
+                              <children>
+                                  <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+                                      <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                      <children>
+                                          <TextArea fx:id="displayTextArea" prefHeight="516.0" prefWidth="1202.0" styleClass="textArea-cli" GridPane.columnSpan="2" GridPane.rowSpan="3" />
+                                      </children>
+                                 <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                 </padding>
                             </GridPane>

@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.App.getProfileDb;
 
 public class ProcedureEditController {
     @FXML
@@ -81,21 +81,21 @@ public class ProcedureEditController {
     }
 
     public void handleUndoButtonClicked(ActionEvent actionEvent) {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(getProfileDb());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText("Organs Affected: " +" "+currentProcedure.getOrgansAffected().toString());
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+        ProfileDataIO.saveData(getProfileDb(), "example/example.json");
     }
 
     public void handleRedoButtonClicked(ActionEvent actionEvent) {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(getProfileDb());
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText("Date " +" "+currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText("Description: " +" "+currentProcedure.getLongDescription());
         procedureOrgansLabel.setText("Donations Affected: " +" "+currentProcedure.getOrgansAffected().toString());
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+        ProfileDataIO.saveData(getProfileDb(), "example/example.json");
     }
 
     public void handleEditButtonClicked(ActionEvent actionEvent) {
@@ -143,7 +143,7 @@ public class ProcedureEditController {
                 currentProcedure.getLongDescription()+")"+" NEWORGANS"+currentProcedure.getOrgansAffected();
         action.setHistoryData(oldValues+newValues);
         HistoryController.updateHistory(action);
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+        ProfileDataIO.saveData(getProfileDb(), "example/example.json");
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);

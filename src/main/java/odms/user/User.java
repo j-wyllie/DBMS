@@ -1,5 +1,7 @@
 package odms.user;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
+    private String pictureName;
+
 
     public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
@@ -45,6 +49,22 @@ public class User {
         this.userType = userType;
         setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
+    }
+
+    /**
+     *
+     * @param userType type of user
+     * @param name name of user
+     * @param region users region
+     * @param username username of the user
+     * @param password users password
+     */
+    public User(UserType userType, String name, String region, String username, String password) {
+        this.userType = userType;
+        this.name = name;
+        this.region = region;
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -222,5 +242,13 @@ public class User {
 
     public boolean getDefault() {
         return isDefault;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 }
