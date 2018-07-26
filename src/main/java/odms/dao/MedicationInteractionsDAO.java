@@ -1,47 +1,42 @@
 package odms.dao;
 
-import odms.medications.Drug;
+import java.io.IOException;
+import java.util.Map;
+import odms.medications.Interaction;
 
 public interface MedicationInteractionsDAO {
 
     /**
-     * Get all interactions between two drugs stored in the database.
-     * @param drugA of the interactions.
-     * @param drugB of the interactions
+     * Get all interaction data stored in the cache.
+     * @return all interactions data.
      */
-    void get(Drug drugA, Drug drugB);
+    Map<Integer, Interaction> getAll();
+    /**
+     * Get the interactions between two medications.
+     * @param drugA is a interacting medication.
+     * @param drugB is another interacting medications.
+     * @return the interaction.
+     */
+    Interaction get(String drugA, String drugB) throws IOException;
 
     /**
-     * Add a new interaction between two drugs in the database.
-     * @param drugA to interact.
-     * @param drugB to interact.
-     * @param symptom of the drug interactions.
-     * @param duration of the drug interactions.
+     * Loads the JSON interactions data the set location.
      */
-    void add(Drug drugA, Drug drugB, String symptom, String duration);
+    void load();
 
     /**
-     * Remove all interactions between two drugs.
-     * @param drugA of the interactions to remove.
-     * @param drugB of the interactions to remove.
+     * Saves the JSON interactions data to the set location.
      */
-    void removeAll(Drug drugA, Drug drugB);
+    boolean save();
 
     /**
-     * Remove a particular interaction between two drugs.
-     * @param drugA of the interaction to remove.
-     * @param drugB of the interaction to remove.
-     * @param symptom of the interaction to remove.
-     * @param duration of the interaction to remove.
+     * Clear all cached medication interaction data.
      */
-    void remove(Drug drugA, Drug drugB, String symptom, String duration);
+    void clear();
 
     /**
-     * Update a particular interaction between two drugs.
-     * @param drugA of the interaction to update.
-     * @param drugB of the interaction to update.
-     * @param symptom of the interaction to update.
-     * @param duration of the interaction to update.
+     * Sets the location of the cached medication interactions.
+     * @param path to the location.
      */
-    void update(Drug drugA, Drug drugB, String symptom, String duration);
+    void setLocation(String path);
 }

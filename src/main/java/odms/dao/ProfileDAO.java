@@ -2,6 +2,7 @@ package odms.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
@@ -71,4 +72,17 @@ public interface ProfileDAO {
      * @return the number of profiles.
      */
     int size() throws SQLException;
+
+    /**
+     * Gets all profiles that require organs.
+     * @return a list of entries for the waiting list.
+     */
+    List<Entry<Profile, OrganEnum>> getAllReceiving();
+
+    /**
+     * Filter the waiting list by a search string.
+     * @param searchString to filter by.
+     * @return a sublist of the waiting list.
+     */
+    List<Entry<Profile, OrganEnum>> searchReceiving(String searchString);
 }

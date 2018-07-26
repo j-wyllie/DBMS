@@ -10,13 +10,14 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import odms.enums.OrganEnum;
 import odms.medications.Drug;
-import odms.profile.Condition;
 import odms.profile.OrganConflictException;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -454,7 +455,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
         String query = "select * from profiles where GivenNames like ? OR LastNames like ?"
-                + " and Region like ? and Gender = ?";
+                + " or Region like ? and Gender = ?";
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == 0) {
                 query += " and year(CURRENT_DATE) - year(Dob) = ?";
@@ -551,5 +552,41 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.close();
         }
         return 0;
+    }
+
+    @Override
+    public List<Entry<Profile, OrganEnum>> getAllReceiving() {
+        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId;";
+        return getReceivers(query);
+    }
+
+    @Override
+    public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
+        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
+                + "where GivenNames like '%" + searchString + "%' or LastNames like '%" + searchString
+                + "%' or Region like '%" + searchString + "%' or Organ like '%" + searchString + "%';";
+        return getReceivers(query);
+    }
+
+    private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
+
+        try {
+            Connection conn = instance.getConnection();
+            Statement stmt = conn.createStatement();
+
+            ResultSet result = stmt.executeQuery(query);
+
+            while (result.next()) {
+                Profile profile = parseProfile(result);
+                OrganEnum organ = OrganEnum.valueOf(result.getString("Organ").toUpperCase().replace(" ", "_"));
+                receivers.add(new SimpleEntry<>(profile, organ));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return receivers;
     }
 }

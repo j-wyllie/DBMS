@@ -55,7 +55,6 @@ public class LoginController extends CommonController {
                 UserDAO database = DAOFactory.getUserDao();
                 currentUser = database.get(username);
 
-                System.out.println(currentUser.getUsername());
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -148,7 +147,6 @@ public class LoginController extends CommonController {
         String title = "Create Profile";
         showScene(event, scene, title, false);
     }
-
 
     @FXML
     private void onEnter(ActionEvent event) {
