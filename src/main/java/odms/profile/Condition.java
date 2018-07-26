@@ -81,6 +81,8 @@ public class Condition {
         this.isChronic = chronic;
         this.isCured = cured;
         this.dateCured = curedDate;
+
+        if (isChronic) {this.chronicText = "CHRONIC";}
     }
 
     // getters
