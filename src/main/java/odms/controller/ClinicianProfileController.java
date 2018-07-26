@@ -36,9 +36,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -46,9 +46,13 @@ import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
+import static odms.App.getProfileDb;
+
 public class ClinicianProfileController extends CommonController {
 
     private User currentUser;
+
+    private ProfileDatabase profileDb = getProfileDb();
 
     @FXML
     private Label clinicianFullName;
@@ -182,6 +186,8 @@ public class ClinicianProfileController extends CommonController {
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
 
+    Thread t;
+
     /**
      * Scene change to log in view.
      *
@@ -200,7 +206,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -215,7 +221,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -678,7 +684,7 @@ public class ClinicianProfileController extends CommonController {
     public void refreshTable() {
         transplantListSearchField.setText("");
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(profileDb.getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -707,7 +713,7 @@ public class ClinicianProfileController extends CommonController {
             System.setOut(commandGUI.getOut());
 
             // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            CommandLine commandLine = new CommandLine(profileDb, commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
             t.setDaemon(true);
@@ -720,7 +726,9 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     public void initialize() {
+        profileDb = getProfileDb();
         if (currentUser != null) {
+
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -760,11 +768,11 @@ public class ClinicianProfileController extends CommonController {
 
             setClinicianDetails();
             setupAdmin();
-            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            makeSearchTable(profileDb.getProfiles(false));
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+            searchTable.setPlaceholder(new Label("There are " + profileDb.getProfiles(false).size() + " profiles"));
             try {
-                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+                makeTransplantWaitingList(profileDb.getAllOrgansRequired());
             } catch (Exception e) {
                 e.printStackTrace();
             }
