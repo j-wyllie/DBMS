@@ -96,7 +96,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
-        System.out.println("REEE");
+
         try {
             while(rs.next()) {
                 profile = parseProfile(rs);
@@ -566,8 +566,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
 
             ResultSet allProfiles = stmt.executeQuery();
-            System.out.println(stmt.toString());
-            System.out.println(allProfiles);
             int size = 0;
             allProfiles.last();
             size = allProfiles.getRow();
