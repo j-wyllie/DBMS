@@ -2,6 +2,8 @@ package odms.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import odms.enums.OrganEnum;
 
 /**
@@ -10,6 +12,7 @@ import odms.enums.OrganEnum;
 public class Procedure {
     private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
+    private int procedureId;
     private String summary;
     private LocalDate date;
     private String longDescription;
@@ -33,6 +36,15 @@ public class Procedure {
         this.longDescription = longDescription;
     }
 
+    public Procedure(int id, String summary, LocalDate date, String longDescription, List<OrganEnum> organs) {
+        this.procedureId = id;
+        this.summary = summary;
+        this.date = date;
+        this.longDescription = longDescription;
+        this.organsAffected = new ArrayList<>(organs);
+    }
+
+
     public Procedure(String summary, LocalDate date) {
         this(summary, date, "");
     }
@@ -45,6 +57,7 @@ public class Procedure {
         }
     }
 
+    public int getId() { return this.procedureId; }
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }

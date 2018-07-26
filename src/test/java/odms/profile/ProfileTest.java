@@ -68,7 +68,7 @@ public class ProfileTest {
         profileAttr.add("weight=\"72.0\"");
         profileAttr.add("blood-type=\"O+\"");
         profileAttr.add("address=\"Riccarton\"");
-        profileAttr.add("region=\"Christchurch\"");
+        profileAttr.add("region=\"Canterbury\"");
 
         Profile testProfile = new Profile(profileAttr);
 
@@ -495,8 +495,8 @@ public class ProfileTest {
         testProfile.addProcedure(procedure1);
         testProfile.addProcedure(procedure2);
 
-        assertEquals(testProfile.getPreviousProcedures().contains(procedure1), true);
-        assertEquals(testProfile.getPreviousProcedures().size(), 1);
+        assertEquals(testProfile.getPreviousProcedures().contains(procedure1), false);
+        assertEquals(testProfile.getPreviousProcedures().size(), 0);
     }
 
     /**
@@ -515,9 +515,11 @@ public class ProfileTest {
         testProfile.addProcedure(procedure1);
         testProfile.addProcedure(procedure2);
 
+        testProfile.setPendingProcedures(testProfile.getAllProcedures());
+
         assertEquals(testProfile.getPendingProcedures().contains(procedure0), true);
         assertEquals(testProfile.getPendingProcedures().contains(procedure2), true);
-        assertEquals(testProfile.getPendingProcedures().size(), 2);
+        assertEquals(testProfile.getPendingProcedures().size(), 3);
     }
 
     /**

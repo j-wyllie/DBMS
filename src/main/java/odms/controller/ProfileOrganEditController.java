@@ -21,6 +21,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.OrganDAO;
 import odms.enums.OrganEnum;
 import odms.enums.OrganSelectEnum;
 import odms.profile.OrganConflictException;
@@ -154,6 +156,8 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
      * Save the changes made in the current view and close the window.
      */
     public void onBtnSaveClicked() {
+        OrganDAO database = DAOFactory.getOrganDao();
+
         HashSet<OrganEnum> organsAdded = ProfileOrganEditController.observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
@@ -165,25 +169,34 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                         currentProfile.get().getOrgansDonated(),
                         organsAdded
                 );
-
-                currentProfile.get().addOrgansDonated(organsAdded);
-                currentProfile.get().removeOrgansDonated(organsRemoved);
+                organsAdded.removeAll(currentProfile.get().getOrgansDonated());
+                organsRemoved.forEach(organ -> {
+                    database.removeDonation(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    database.addDonation(currentProfile.get(), organ);
+                });
                 break;
             case DONATING:
-                try {
-                    currentProfile.get().setDonor(true);
+                currentProfile.get().setDonor(true);
 
-                    organsRemoved = findOrgansRemoved(
-                            currentProfile.get().getOrgansDonating(),
-                            organsAdded
-                    );
+                organsRemoved = findOrgansRemoved(
+                        currentProfile.get().getOrgansDonating(),
+                        organsAdded
+                );
 
-                    organsAdded.removeAll(currentProfile.get().getOrgansDonating());
-                    currentProfile.get().addOrgansDonating(organsAdded);
-                    currentProfile.get().removeOrgansDonating(organsRemoved);
-                } catch (OrganConflictException e) {
-                    AlertController.invalidOrgan(e.getOrgan());
-                }
+                organsAdded.removeAll(currentProfile.get().getOrgansDonating());
+                organsRemoved.forEach(organ -> {
+                    database.removeDonating(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    try {
+                        database.addDonating(currentProfile.get(), organ);
+                    } catch (OrganConflictException e) {
+                        AlertController.invalidOrgan(e.getOrgan());
+                    }
+                });
+
                 break;
             case REQUIRED:
                 currentProfile.get().setReceiver(true);
@@ -192,12 +205,15 @@ public class ProfileOrganEditController extends ProfileOrganCommonController {
                         currentProfile.get().getOrgansRequired(),
                         organsAdded
                 );
-
-                currentProfile.get().addOrgansRequired(organsAdded);
-                currentProfile.get().removeOrgansRequired(organsRemoved);
+                organsAdded.removeAll(currentProfile.get().getOrgansRequired());
+                organsRemoved.forEach(organ -> {
+                    database.removeRequired(currentProfile.get(), organ);
+                });
+                organsAdded.forEach(organ -> {
+                    database.addRequired(currentProfile.get(), organ);
+                });
                 break;
         }
-
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }

@@ -14,15 +14,28 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javafx.beans.property.SimpleStringProperty;
+import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
+import odms.enums.CountriesEnum;
+import odms.enums.OrganEnum;
+import odms.history.History;
+import odms.medications.Drug;
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
+    //TODO do we want regions as enum? Or stored somewhere else at least
+    public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
+
     private Boolean donor = false;
     private Boolean receiver = false;
 
+    private String username;
     private String givenNames;
     private String lastNames;
     private String preferredName;
@@ -36,6 +49,10 @@ public class Profile implements Comparable<Profile> {
 
     private String address;
 
+    private String countryOfDeath;
+    private String regionOfDeath;
+    private String cityOfDeath;
+
     private String streetNumber;
     private String streetName;
     private String neighbourhood;
@@ -44,7 +61,6 @@ public class Profile implements Comparable<Profile> {
     private String zipCode;
     private String country;
     private String birthCountry;
-
 
     private Boolean isSmoker;
     private String alcoholConsumption;
@@ -55,6 +71,9 @@ public class Profile implements Comparable<Profile> {
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
+
+    private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+    private ArrayList<Procedure> previousProcedures = new ArrayList<>();
 
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
@@ -129,6 +148,36 @@ public class Profile implements Comparable<Profile> {
         );
     }
 
+    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+            Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
+            int bpSystolic, int bpDiastolic, String address, String region, String phone,
+            String email, LocalDateTime created, LocalDateTime updated) {
+        this.id = profileId;
+        this.nhi = nhi;
+        this.username = username;
+        this.donor = isDonor;
+        this.receiver = isReceiver;
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.dateOfDeath = dod;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.isSmoker = isSmoker;
+        this.alcoholConsumption = alcoholConsumption;
+        this.bloodPressureSystolic = bpSystolic;
+        this.bloodPressureDiastolic = bpDiastolic;
+        this.address = address;
+        this.region = region;
+        this.phone = phone;
+        this.email = email;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+    }
+
     /**
      * Compares the profile object to another profile object. Result is determined by lexicographical order of profile
      * full name.
@@ -196,6 +245,9 @@ public class Profile implements Comparable<Profile> {
                         Integer.valueOf(dates[0])
                 );
                 setDateOfDeath(date);
+                setCountryOfDeath(getCountry());
+                setCityOfDeath(getCity());
+                setRegionOfDeath(getRegion());
             }
         } else if (attrName.equals(Attribute.GENDER.getText())) {
             setGender(value.toLowerCase());
@@ -224,7 +276,20 @@ public class Profile implements Comparable<Profile> {
             setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
             setAddress(value);
+        }
+        else if (attrName.equals(Attribute.COUNTRY.getText())) {
+            if (!CountriesEnum.toArrayList().contains(value)) {
+                throw new IllegalArgumentException("Must be a valid country!");
+            }
+            setCountry(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
+            if (getCountry() != null) {
+                if (getCountry().toLowerCase().equals(CountriesEnum.NZ.getName().toLowerCase()) || getCountry().toLowerCase().equals(CountriesEnum.NZ.toString().toLowerCase())) {
+                    if (!regionsNZ.contains(value.toString())) {
+                        throw new IllegalArgumentException("Must be a region within New Zealand");
+                    }
+                }
+            }
             setRegion(value);
         } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
@@ -280,35 +345,22 @@ public class Profile implements Comparable<Profile> {
     public ArrayList<Procedure> getAllProcedures() { return procedures; }
 
     /**
-     * Gets all the previous procedures
-     * @return previous procedures
-     */
-    public ArrayList<Procedure> getPreviousProcedures() {
-        ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isBefore(LocalDate.now())) {
-                    prevProcedures.add(procedure);
-                }
-            }
-        }
-        return prevProcedures;
-    }
-
-    /**
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
-        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isAfter(LocalDate.now())) {
-                    pendingProcedures.add(procedure);
-                }
-            }
-        }
-        return pendingProcedures;
+    public ArrayList<Procedure> getPendingProcedures() { return this.pendingProcedures; }
+
+
+    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+        this.pendingProcedures = pendingProcedures;
+    }
+
+    public ArrayList<Procedure> getPreviousProcedures() {
+        return this.previousProcedures;
+    }
+
+    public void setPreviousProcedures(ArrayList<Procedure> previous) {
+        this.previousProcedures = previous;
     }
 
     /**
@@ -335,6 +387,7 @@ public class Profile implements Comparable<Profile> {
         summary = summary +"," +("blood-type=" + bloodType);
         summary = summary +"," +("address=" + address);
         summary = summary +"," +("region=" + region);
+        summary = summary +"," +("country=" + country);
         summary = summary +"," +("isSmoker=" + isSmoker);
         summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
         summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
@@ -419,7 +472,7 @@ public class Profile implements Comparable<Profile> {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    private void addOrganReceived(OrganEnum organ) {
+    public void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -547,16 +600,24 @@ public class Profile implements Comparable<Profile> {
         if (this.organsReceived.contains(organ)) {
             this.organsReceived.remove(organ);
         }
+    }
 
-        this.organsRequired.add(organ);
+    public void removeOrganRequired(OrganEnum organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
     }
 
     public void removeOrganDonated(OrganEnum organ) {
         if (this.organsDonated.contains(organ)) {
             this.organsDonated.remove(organ);
         }
+    }
 
-        this.organsDonating.add(organ);
+    public void removeOrganDonating(OrganEnum organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
     }
 
 
@@ -693,9 +754,6 @@ public class Profile implements Comparable<Profile> {
             medicationTimestamps.add(data);
             generateUpdateInfo(drug.getDrugName());
         }
-
-
-
     }
 
     /**
@@ -942,7 +1000,10 @@ public class Profile implements Comparable<Profile> {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                "Invalid blood type selected.\n" +
+                bloodType + " is not a valid blood type."
+            );
         }
     }
 
@@ -1039,6 +1100,23 @@ public class Profile implements Comparable<Profile> {
     // TODO access to this array should be restricted, this makes it public and redundant.
     public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
+    }
+
+    public void setProcedures(ArrayList<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+
+    public void setConditions(ArrayList<Condition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public void setCurrentMedications(ArrayList<Drug> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    public void setHistoryOfMedication(ArrayList<Drug> historyOfMedication) {
+        this.historyOfMedication = historyOfMedication;
     }
 
     public String getPhone() {
@@ -1147,6 +1225,30 @@ public class Profile implements Comparable<Profile> {
         this.mobilePhone = mobilePhone;
     }
 
+    public String getCountryOfDeath() {
+        return countryOfDeath;
+    }
+
+    public void setCountryOfDeath(String countryOfDeath) {
+        this.countryOfDeath = countryOfDeath;
+    }
+
+    public String getRegionOfDeath() {
+        return regionOfDeath;
+    }
+
+    public void setRegionOfDeath(String regionOfDeath) {
+        this.regionOfDeath = regionOfDeath;
+    }
+
+    public String getCityOfDeath() {
+        return cityOfDeath;
+    }
+
+    public void setCityOfDeath(String cityOfDeath) {
+        this.cityOfDeath = cityOfDeath;
+    }
+
     public String getNeighbourhood() {
         return neighbourhood;
     }
@@ -1154,6 +1256,12 @@ public class Profile implements Comparable<Profile> {
     public void setNeighbourhood(String neighbourhood) {
         this.neighbourhood = neighbourhood;
     }
+
+    public String getUsername() { return username; }
+
+    public int getBloodPressureSystolic() { return this.bloodPressureSystolic; }
+
+    public int getBloodPressureDiastolic() { return this.bloodPressureDiastolic; }
 
     public String getPictureName() {
         return pictureName;

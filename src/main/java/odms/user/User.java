@@ -5,6 +5,10 @@ import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+import odms.enums.CountriesEnum;
 
 public class User {
 
@@ -21,6 +25,8 @@ public class User {
     private boolean isDefault = false;
     private String pictureName;
 
+
+    public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
     /**
      * Logs which property was updated and the time it was updated.
@@ -39,7 +45,7 @@ public class User {
      * @param userType type of user.
      * @param attrArray array containing users attributes.
      */
-    public User(UserType userType, ArrayList<String> attrArray){
+    public User(UserType userType, ArrayList<String> attrArray) {
         this.userType = userType;
         setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
@@ -67,13 +73,33 @@ public class User {
      * @param name user name.
      * @param region user region.
      */
-    public User(UserType userType, String name, String region){
+    public User(UserType userType, String name, String region) {
         this.timeOfCreation = LocalDateTime.now();
         this.userType = userType;
         this.name = name;
         this.region = region;
         timeOfCreation = LocalDateTime.now();
         this.updateActions.add("Account for " + name + "created at " + LocalDateTime.now());
+    }
+
+    /**
+     * user constructor.
+     * @param userType type of user.
+     * @param name user name.
+     * @param region user region.
+     */
+    public User(int userId, String username, String password, String name, UserType userType,
+            String address, String region, LocalDateTime created, LocalDateTime updated) {
+        this.staffID = userId;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.userType = userType;
+        this.workAddress = address;
+        this.region = region;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+        this.updateActions.add(name + " logged on at " + LocalDateTime.now());
     }
 
     /**
@@ -167,7 +193,7 @@ public class User {
     }
 
 
-    public void setWorkAddress(String address){
+    public void setWorkAddress(String address) {
         this.workAddress = address;
         generateUpdateInfo(workAddress);
     }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
@@ -15,7 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 public class ProfileImportTask extends Task<Void> {
 
     private File file;
-    private ProfileDatabase db;
+    private List<Profile> db;
 
     public ProfileImportTask(File file) {
         this.file = file;
@@ -38,8 +40,8 @@ public class ProfileImportTask extends Task<Void> {
      * @param csv the csv file that is being loaded
      * @return ProfileDatabase the updated profile database.
      */
-    private ProfileDatabase loadDataFromCSV(File csv) throws InvalidFileException {
-        ProfileDatabase profileDb = new ProfileDatabase();
+    private List<Profile> loadDataFromCSV(File csv) throws InvalidFileException {
+        List<Profile> profileDb = new ArrayList<>();
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
             Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
@@ -60,7 +62,7 @@ public class ProfileImportTask extends Task<Void> {
      * @param csvLength the length of the csv.
      * @return a profile database to be saved as the new database.
      */
-    private ProfileDatabase parseCsvRecord(ProfileDatabase profileDb, CSVParser csvParser,
+    private List<Profile> parseCsvRecord(List<Profile> profileDb, CSVParser csvParser,
             Integer csvLength) {
         int progressCount = 0;
         int successCount = 0;
@@ -73,10 +75,11 @@ public class ProfileImportTask extends Task<Void> {
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
-                    profileDb.addProfile(profile);
+
+                    profileDb.add(profile);
                     successCount++;
 
-                } catch (NHIConflictException e) {
+                } catch (Exception e) {
                     failedCount++;
                 }
             } else {
@@ -165,7 +168,7 @@ public class ProfileImportTask extends Task<Void> {
         return m.find();
     }
 
-    public ProfileDatabase getDb() {
+    public List<Profile> getDb() {
         return db;
     }
 }

@@ -1,5 +1,13 @@
 package odms.controller;
 
+import static odms.controller.AlertController.generalConfirmation;
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,20 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.data.UserDataIO;
+import odms.dao.DAOFactory;
+import odms.dao.UserDAO;
 import odms.history.History;
 import odms.user.User;
-import org.sonar.api.internal.apachecommons.io.FilenameUtils;
-import org.sonar.api.internal.google.common.io.Files;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getUserDatabase;
 
 public class ClinicianProfileEditController extends CommonController{
     private static User currentUser;
@@ -117,7 +115,12 @@ public class ClinicianProfileEditController extends CommonController{
                 guiPopup("Error. Not all fields were updated.");
             }
 
-            UserDataIO.saveUsers(getUserDatabase(), "example/users.json");
+            UserDAO database = DAOFactory.getUserDao();
+            try {
+                database.update(currentUser);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             openClinicianWindow(event);
         }

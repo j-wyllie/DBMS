@@ -21,7 +21,7 @@ import java.util.Map;
 import odms.data.MedicationDataIO;
 import odms.medications.Interaction;
 
-public class  JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
+public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 
     private Map<Integer, Interaction> interactionMap = new HashMap<>();
     private String defaultPath = "cache/medication_interactions.json";

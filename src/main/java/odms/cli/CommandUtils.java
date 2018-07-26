@@ -7,8 +7,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.dao.CommonDAO;
 import odms.dao.DAOFactory;
-import odms.dao.ReadOnlyDAO;
+import odms.dao.UserDAO;
 
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
@@ -715,7 +716,7 @@ public class CommandUtils {
     public static void executeDatabaseRead(String input) {
         String query = input.substring(input.indexOf(' '));
 
-        ReadOnlyDAO accessObject = DAOFactory.getReadOnlyDao();
+        CommonDAO accessObject = DAOFactory.getCommonDao();
         accessObject.queryDatabase(query);
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class Drug {
 
+    private int drugId;
     private String drugName;
     private List<String> activeIngredients = new ArrayList<>();
 
@@ -15,9 +16,14 @@ public class Drug {
         this.drugName = drugName;
     }
 
+    public Drug(int id, String drugName){
+        this.drugId = id;
+        this.drugName = drugName;
+    }
+
     /**
      * Sets the active ingredients of a drug to an array list of ingredients.
-     * @param activeIngredients active ingredients to be set
+     * @param activeIngredients active ingredients to be set.
      */
     public void setActiveIngredients(List<String> activeIngredients){
         this.activeIngredients = activeIngredients;
@@ -30,4 +36,6 @@ public class Drug {
     public List<String> getActiveIngredients(){
         return this.activeIngredients;
     }
+
+    public int getId() { return this.drugId; }
 }

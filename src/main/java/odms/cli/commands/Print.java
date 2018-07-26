@@ -212,6 +212,10 @@ public class Print extends CommandUtils {
             System.out.println("Region: " + profile.getRegion());
         }
 
+        if (profile.getCountry() != null) {
+            System.out.println("Country: " + profile.getCountry());
+        }
+
         if (profile.getOrgansDonating().size() > 0) {
             System.out.println("Organs Donating: " + OrganEnum.organSetToString(profile.getOrgansDonating()));
         }
@@ -245,7 +249,6 @@ public class Print extends CommandUtils {
         if (user.getUsername() != null) {
             System.out.println("Username: " + user.getUsername());
         }
-
 
         if (user.getRegion() != null) {
             System.out.println("Region: " + user.getRegion());
