@@ -852,11 +852,12 @@ public class ClinicianProfileController extends CommonController {
     private void setupCountriesComboView() {
         CountryDAO database = DAOFactory.getCountryDAO();
         int index = 0;
+        List<Integer> indices = new ArrayList<>();
         for (String country : database.getAll(true)) {
-            User.allowedCountriesIndices.add(index);
+            indices.add(index);
             index++;
         }
-
+        User.allowedCountriesIndices = FXCollections.observableArrayList(indices);
         countriesCheckListView.getItems().setAll(database.getAll());
         if (User.allowedCountriesIndices.isEmpty()) {
             countriesCheckListView.getCheckModel().check(0);

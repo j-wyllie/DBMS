@@ -17,4 +17,12 @@ public class DAOFactory {
     public static CountryDAO getCountryDAO() {
         return new MySqlCountryDAO();
     }
+
+    /**
+     * Gives the data access object class for the medical interactions.
+     * @return dao for the data IO type.
+     */
+    public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
+
+
 }
