@@ -1,8 +1,8 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
@@ -705,7 +705,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked() {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(getProfileDb());
     }
 
     /**
@@ -713,7 +713,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked() {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(getProfileDb());
     }
 
     /**
@@ -745,7 +745,7 @@ public class ProfileDisplayController extends CommonController {
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (generalConfirmation("Do you wish to save your changes?")) {
             showNotification("Medications Tab", event);
-            ProfileDataIO.saveData(getCurrentDatabase());
+            ProfileDataIO.saveData(getProfileDb());
         }
     }
 
@@ -1108,10 +1108,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getPreferredGender() != null) {
                 labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
-            if (currentProfile.getHeight() != 0.0) {
+            if (currentProfile.getHeight() != null) {
                 heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
             }
-            if (currentProfile.getWeight() != 0.0) {
+            if (currentProfile.getWeight() != null) {
                 weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
             if (currentProfile.getPhone() != null) {

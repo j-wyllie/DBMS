@@ -1,8 +1,8 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,7 +130,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(getProfileDb());
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(getProfileDb());
     }
 
     /**
@@ -180,7 +180,7 @@ public class ProfileEditController extends CommonController {
                 saveBloodType();
                 saveIsSmoker();
 
-                ProfileDataIO.saveData(getCurrentDatabase());
+                ProfileDataIO.saveData(getProfileDb());
                 showNotification("Profile", event);
                 closeEditWindow(event);
 
