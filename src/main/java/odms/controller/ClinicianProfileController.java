@@ -1,7 +1,9 @@
 package odms.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,6 +33,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -158,6 +162,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TextField transplantListSearchField;
+
+    @FXML
+    private ImageView userImage;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
@@ -465,6 +472,22 @@ public class ClinicianProfileController extends CommonController {
                 regionLabel.getText() +
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
+
+        if (currentUser.getPictureName() != null) {
+            File image = new File(localPath + "\\" + currentUser.getStaffID() + ".png");
+            if(!image.exists()){
+                image = new File(localPath + "\\" + currentUser.getStaffID() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            try {
+                userImage.setImage(new Image(image.toURI().toURL().toString()));
+            } catch (MalformedURLException e){
+                System.out.println("Malformed URL Exception");
+            }
+        }
+
     }
 
     /**

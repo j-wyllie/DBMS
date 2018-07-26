@@ -4,6 +4,7 @@ import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
@@ -11,15 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
+
 
 public class ProfileEditController extends CommonController {
 
@@ -88,6 +87,41 @@ public class ProfileEditController extends CommonController {
 
     @FXML
     private ComboBox comboGender;
+
+    @FXML
+    private Text pictureText;
+
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+
+    @FXML
+    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
+            }
+                if(deleteFile.delete())
+                {
+                    System.out.println("Old file deleted successfully");
+                }
+                else
+                {
+                    System.out.println("Failed to delete the old file");
+                }
+            File pictureDestination = new File(localPath + "\\" + currentProfile.getNhi() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentProfile.setPictureName(chosenFile.getName());
+        }
+    }
 
     /**
      * Button handler to undo last action.
