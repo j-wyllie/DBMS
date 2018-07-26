@@ -41,7 +41,6 @@ import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
 import odms.dao.DAOFactory;
-import odms.dao.ProfileDAO;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -397,7 +396,7 @@ public class ClinicianProfileController extends CommonController {
      * Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable(List<Profile> donors) {
+    private void makeSearchTable(ArrayList<Profile> donors) {
         labelResultCount.setText(0 + " results found");
         searchTable.getItems().clear();
 
@@ -513,18 +512,24 @@ public class ClinicianProfileController extends CommonController {
      * @param searchString string from the search text field in the GUI.
      */
     private void searchTransplantWaitingList(String searchString) {
-        List<Entry<Profile, OrganEnum>> results = new ArrayList<>();
-
-        ProfileDAO database = DAOFactory.getProfileDao();
+        List<Profile> results;
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
         if (!searchString.equals("")) {
-            results = database.searchReceiving(searchString);
+            results = GuiMain.getCurrentDatabase().searchProfilesName(GuiMain.getCurrentDatabase()
+                    .getReceivers(true), searchString);
 
+            for (Map.Entry<Profile, OrganEnum> p: GuiMain.getCurrentDatabase()
+                    .getAllOrgansRequired()) {
+                if (results.contains(p.getKey())) {
+                    receivers.add(p);
+                }
+            }
         } else {
-            results = database.getAllReceiving();
+            receivers = GuiMain.getCurrentDatabase().getAllOrgansRequired();
         }
 
-        makeTransplantWaitingList(results);
+        makeTransplantWaitingList(receivers);
     }
 
     /**
@@ -593,7 +598,7 @@ public class ClinicianProfileController extends CommonController {
     public void refreshTable() {
         transplantListSearchField.setText("");
         try {
-            makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
+            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -661,19 +666,17 @@ public class ClinicianProfileController extends CommonController {
 
             TableFilter filter = new TableFilter<>(transplantTable);
 
-            ProfileDAO database = DAOFactory.getProfileDao();
-
             setClinicianDetails();
             setupAdmin();
-            makeSearchTable(database.getAll());
+            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             searchTable.getItems().clear();
             try {
-                searchTable.setPlaceholder(new Label("There are " + database.size() + " profiles"));
+                searchTable.setPlaceholder(new Label("There are " + DAOFactory.getProfileDao().size() + " profiles"));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             try {
-                makeTransplantWaitingList(database.getAllReceiving());
+                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {
                 e.printStackTrace();
             }
