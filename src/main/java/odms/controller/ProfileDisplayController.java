@@ -55,6 +55,7 @@ import odms.dao.DAOFactory;
 import odms.dao.MedicationInteractionsDAO;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
+import odms.enums.CountriesEnum;
 import odms.history.History;
 import odms.medications.Drug;
 import odms.medications.Interaction;
@@ -124,6 +125,12 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label regionLabel;
+
+    @FXML
+    private Label countryLabel;
+
+    @FXML
+    private Label cityLabel;
 
     @FXML
     private Label bloodTypeLabel;
@@ -1120,9 +1127,6 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getAddress() != null) {
                 addressLabel.setText(addressLabel.getText() + currentProfile.getAddress());
             }
-            if (currentProfile.getRegion() != null) {
-                regionLabel.setText(regionLabel.getText() + currentProfile.getRegion());
-            }
             if (currentProfile.getAlcoholConsumption() != null) {
                 alcoholConsumptionLabel.setText(
                         alcoholConsumptionLabel.getText() +
@@ -1147,6 +1151,57 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getIsSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
             }
+
+
+
+            //Profile is dead
+            if (currentProfile.getDateOfDeath() != null) {
+
+                if (currentProfile.getCountryOfDeath() == null ) {
+                    if (currentProfile.getCountry() != null) {
+                        currentProfile.setCountryOfDeath(currentProfile.getCountry());
+                        countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    } else {
+                        countryLabel.setText("Country of Death : ");
+                    }
+                } else {
+                    countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+                }
+
+                if (currentProfile.getCityOfDeath() == null) {
+                    if (currentProfile.getCity() != null) {
+                        currentProfile.setCityOfDeath(currentProfile.getCity());
+                        cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
+                    }
+                } else {
+                    cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
+                }
+
+                if (currentProfile.getRegionOfDeath() == null) {
+                    if (currentProfile.getRegion() != null) {
+                        currentProfile.setRegionOfDeath(currentProfile.getRegion());
+                        regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
+                    }
+                } else {
+                    regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
+                }
+
+            } else {
+                //Profile is alive
+
+                if (currentProfile.getRegion() != null) {
+                    regionLabel.setText("Region : " + currentProfile.getRegion());
+                }
+                if (currentProfile.getCountry() != null) {
+                    countryLabel.setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                }
+                if (currentProfile.getCity() != null) {
+                    cityLabel.setText("City : " + currentProfile.getCity());
+                }
+
+            }
+
+
 
             //setting profile photo
             if (currentProfile.getPictureName() != null) {

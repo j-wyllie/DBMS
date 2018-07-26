@@ -104,12 +104,6 @@ public class ProfileCreateController extends CommonController {
 
                 appStage.setScene(scene);
                 appStage.show();
-            } catch (NumberFormatException e) {
-                if (nhiNumberField.getText().length() > 9) {
-                    invalidEntry("Entered NHI number is too long.\nPlease enter up to 9 digits");
-                } else {
-                    invalidEntry("Invalid NHI number entered");
-                }
             } catch (IllegalArgumentException e) {
                 //show error window.
                 invalidEntry();

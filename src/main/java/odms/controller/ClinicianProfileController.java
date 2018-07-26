@@ -43,6 +43,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.dao.CountryDAO;
+import odms.dao.DAOFactory;
+import odms.enums.CountriesEnum;
 import odms.dao.DAOFactory;
 import odms.data.ProfileDatabase;
 import odms.data.ProfileDatabase;
@@ -51,6 +54,7 @@ import odms.profile.Profile;
 import odms.user.User;
 import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.table.TableFilter;
 
 import static odms.App.getProfileDb;
@@ -165,6 +169,9 @@ public class ClinicianProfileController extends CommonController {
 
     @FXML
     private TextField transplantListSearchField;
+
+    @FXML
+    private CheckListView<String> countriesCheckListView;
 
     @FXML
     private ImageView userImage;
@@ -713,6 +720,8 @@ public class ClinicianProfileController extends CommonController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            setupCountriesComboView();
         }
     }
 
@@ -808,5 +817,41 @@ public class ClinicianProfileController extends CommonController {
         }
         updateTable(false, false);
         updateLabels();
+    }
+
+    private void setupCountriesComboView() {
+        CountryDAO database = DAOFactory.getCountryDAO();
+        int index = 0;
+        List<Integer> indices = new ArrayList<>();
+        for (String country : database.getAll(true)) {
+            indices.add(index);
+            index++;
+        }
+        User.allowedCountriesIndices = FXCollections.observableArrayList(indices);
+        countriesCheckListView.getItems().setAll(database.getAll());
+        if (User.allowedCountriesIndices.isEmpty()) {
+            countriesCheckListView.getCheckModel().check(0);
+        } else {
+            for (int i : User.allowedCountriesIndices) {
+                countriesCheckListView.getCheckModel()
+                        .check(User.allowedCountriesIndices.get(i));
+            }
+        }
+    }
+
+    public void handleSaveCountriesBtnPressed(MouseEvent mouseEvent) {
+        CountryDAO database = DAOFactory.getCountryDAO();
+
+        User.allowedCountriesIndices = countriesCheckListView.getCheckModel().getCheckedIndices();
+        int index = 0;
+        for (CountriesEnum country : CountriesEnum.values()) {
+            if (User.allowedCountriesIndices.contains(index)) {
+                database.update(country, true);
+            }
+            else {
+                database.update(country, false);
+            }
+        }
+        showNotification("Allowed Countries", mouseEvent);
     }
 }

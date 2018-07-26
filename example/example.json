@@ -216,8 +216,8 @@
         "KIDNEY"
       ],
       "organsDonated": [
-        "LIVER",
-        "HEART"
+        "HEART",
+        "LIVER"
       ],
       "organsRequired": [
         "CORNEA",
@@ -372,33 +372,68 @@
       "medicationTimestamps": []
     },
     "6": {
+      "regionsNZ": [
+        "Northland",
+        "Auckland",
+        "Waikato",
+        "Bay of Plenty",
+        "Gisborne",
+        "Hawke\u0027s Bay",
+        "Taranaki",
+        "Manawatu-Wanganui",
+        "Wellington",
+        "Tasman",
+        "Nelson",
+        "Marlborough",
+        "West Coast",
+        "Canterbury",
+        "Otago",
+        "Southland"
+      ],
       "donor": false,
       "receiver": false,
-      "givenNames": "Jack Hay",
-      "lastNames": "jack",
+      "givenNames": "AA",
+      "lastNames": "AA",
+      "preferredName": "",
       "dateOfBirth": {
-        "year": 1997,
-        "month": 11,
-        "day": 11
+        "year": 2016,
+        "month": 7,
+        "day": 5
       },
       "height": 0.0,
       "weight": 0.0,
+      "city": "jjjjjjjj",
+      "region": "",
+      "isSmoker": false,
       "chronicDiseases": [],
       "updateActions": [
-        "given-names updated at 01:25 AM 26-07-2018",
-        "last-names updated at 01:25 AM 26-07-2018",
-        "nhi updated at 01:25 AM 26-07-2018",
-        "dob updated at 01:25 AM 26-07-2018"
+        "given-names updated at 01:57 PM 26-07-2018",
+        "last-names updated at 01:57 PM 26-07-2018",
+        "nhi updated at 01:57 PM 26-07-2018",
+        "dob updated at 01:57 PM 26-07-2018",
+        "dob updated at 02:06 PM 26-07-2018",
+        "given-names updated at 02:06 PM 26-07-2018",
+        "nhi updated at 02:06 PM 26-07-2018",
+        "last-names updated at 02:06 PM 26-07-2018",
+        "height updated at 02:06 PM 26-07-2018",
+        "region updated at 02:06 PM 26-07-2018",
+        "weight updated at 02:06 PM 26-07-2018",
+        "dob updated at 02:10 PM 26-07-2018",
+        "given-names updated at 02:10 PM 26-07-2018",
+        "nhi updated at 02:10 PM 26-07-2018",
+        "last-names updated at 02:10 PM 26-07-2018",
+        "height updated at 02:10 PM 26-07-2018",
+        "region updated at 02:10 PM 26-07-2018",
+        "weight updated at 02:10 PM 26-07-2018"
       ],
       "procedures": [],
-      "pendingProcedures": [],
-      "previousProcedures": [],
       "organsDonating": [],
       "organsDonated": [],
       "organsRequired": [],
       "organsReceived": [],
       "conditions": [],
-      "nhi": "ASC1111",
+      "pictureName": "Screenshot from 2018-05-31 15-08-32.png",
+      "nhi": "AAA4444",
       "timeOfCreation": {
         "date": {
           "year": 2018,
@@ -406,10 +441,10 @@
           "day": 26
         },
         "time": {
-          "hour": 1,
-          "minute": 25,
-          "second": 11,
-          "nano": 389000000
+          "hour": 13,
+          "minute": 57,
+          "second": 49,
+          "nano": 548000000
         }
       },
       "lastUpdated": {
@@ -419,10 +454,10 @@
           "day": 26
         },
         "time": {
-          "hour": 1,
-          "minute": 25,
-          "second": 11,
-          "nano": 389000000
+          "hour": 14,
+          "minute": 10,
+          "second": 23,
+          "nano": 799000000
         }
       },
       "id": 6,

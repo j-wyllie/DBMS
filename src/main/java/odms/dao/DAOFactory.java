@@ -47,8 +47,18 @@ public class DAOFactory {
     public static OrganDAO getOrganDao() { return new MySqlOrganDAO(); }
 
     /**
+     * Gives the data access object class for the Countries enum.
+     * @return dao for particular database type.
+     */
+    public static CountryDAO getCountryDAO() {
+        return new MySqlCountryDAO();
+    }
+
+    /**
      * Gives the data access object class for the medical interactions.
      * @return dao for the data IO type.
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
+
+
 }

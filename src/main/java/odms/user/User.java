@@ -5,6 +5,10 @@ import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+import odms.enums.CountriesEnum;
 
 public class User {
 
@@ -21,6 +25,8 @@ public class User {
     private boolean isDefault = false;
     private String pictureName;
 
+
+    public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
     /**
      * Logs which property was updated and the time it was updated.

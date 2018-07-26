@@ -116,7 +116,7 @@ public class Help {
         System.out.println("\n-------------------------------------------------------------------");
         System.out.println("-Profile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
-            + " address, region, nhi");
+            + " address, region, country, nhi");
 
         System.out.println("\n-User attributes:");
         System.out.println("name, password, username, workAddress, staffID, region");

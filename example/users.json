@@ -1,10 +1,13 @@
 {
-  "deletedUsers": [],
+  "deletedUsers": [
+    2
+  ],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "John Smith",
+      "name": "Doc",
       "staffID": 0,
+      "workAddress": "",
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
@@ -14,68 +17,94 @@
         },
         "time": {
           "hour": 14,
-          "minute": 18,
-          "second": 35,
-          "nano": 311000000
+          "minute": 45,
+          "second": 58,
+          "nano": 447000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-07-26T14:18:35.311",
-        "0 updated at 02:18 PM 26-07-2018"
+        "Account for Doccreated at 2018-07-25T13:42:29.203",
+        "Clinician updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018",
+        "0 updated at 01:42 PM 25-07-2018",
+        "Doc updated at 01:10 PM 26-07-2018",
+        "0 updated at 01:10 PM 26-07-2018",
+        " updated at 01:10 PM 26-07-2018",
+        "Christchurch updated at 01:10 PM 26-07-2018",
+        "Doc updated at 01:10 PM 26-07-2018",
+        "0 updated at 01:10 PM 26-07-2018",
+        " updated at 01:10 PM 26-07-2018",
+        "Christchurch updated at 01:10 PM 26-07-2018",
+        "Doc updated at 01:10 PM 26-07-2018",
+        "0 updated at 01:10 PM 26-07-2018",
+        " updated at 01:10 PM 26-07-2018",
+        "Christchurch updated at 01:10 PM 26-07-2018",
+        "Doc updated at 01:11 PM 26-07-2018",
+        "0 updated at 01:11 PM 26-07-2018",
+        " updated at 01:11 PM 26-07-2018",
+        "Christchurch updated at 01:11 PM 26-07-2018",
+        "Doc updated at 02:45 PM 26-07-2018",
+        "0 updated at 02:45 PM 26-07-2018",
+        " updated at 02:45 PM 26-07-2018",
+        "Christchurch updated at 02:45 PM 26-07-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 26
+          "day": 25
         },
         "time": {
-          "hour": 14,
-          "minute": 18,
-          "second": 35,
-          "nano": 311000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 203000000
         }
       },
-      "isDefault": false
+      "username": "Clinician",
+      "isDefault": true,
+      "pictureName": "CheekyElon.jpg"
     },
     "1": {
-      "userType": "CLINICIAN",
-      "name": "Matt Smith",
+      "userType": "ADMIN",
+      "name": "admin",
       "staffID": 1,
-      "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 26
+          "day": 25
         },
         "time": {
-          "hour": 14,
-          "minute": 18,
-          "second": 35,
-          "nano": 311000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-07-26T14:18:35.311",
-        "1 updated at 02:18 PM 26-07-2018"
+        "ADMINaccount for admincreated at 2018-07-25T13:42:29.418",
+        "admin updated at 01:42 PM 25-07-2018",
+        "1 updated at 01:42 PM 25-07-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 26
+          "day": 25
         },
         "time": {
-          "hour": 14,
-          "minute": 18,
-          "second": 35,
-          "nano": 311000000
+          "hour": 13,
+          "minute": 42,
+          "second": 29,
+          "nano": 418000000
         }
       },
-      "isDefault": false
+      "username": "admin",
+      "password": "admin",
+      "isDefault": true
     }
   },
-  "lastID": 1,
+  "lastID": 2,
   "path": "example/users.json"
 }
