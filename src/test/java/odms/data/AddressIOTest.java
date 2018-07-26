@@ -16,11 +16,11 @@ public class AddressIOTest {
     }
     @Test
     public void addressValidCountryTest() {
-        assert(AddressIO.checkValidCountry("1600 Amphitheatre Parkway", validCountries));
+        assert(AddressIO.checkValidCountry("1600 Amphitheatre Pkwy", "USA"));
     }
     @Test
     public void addressInvalidCountryTest() {
-        assertFalse(AddressIO.checkValidCountry("15 Riccarton Road", validCountries));
+        assertFalse(AddressIO.checkValidCountry("2 Riccarton Road", "USA"));
     }
     @Test
     public void addressValidRegionTest() {
