@@ -20,13 +20,14 @@ public class AddressIO {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean checkValidCountry(String address, List<CountriesEnum> validCountries) {
+    public static boolean checkValidCountry(String address, String country) {
         try {
-            String jsonString = getGeocodeLocation(address,"").toString();
-            for(CountriesEnum c: validCountries) {
-                if(jsonString.contains(c.name())) {
-                    return true;
-                }
+            address = address.toLowerCase();
+            address = address.replace("road","rd");
+            address = address.replace("street","st");
+            String jsonString = getGeocodeLocation(address,country.replace(" ","+")).toString();
+            if(jsonString.toLowerCase().contains(address.toLowerCase())) {
+                return true;
             }
             return false;
         } catch (Exception e) {

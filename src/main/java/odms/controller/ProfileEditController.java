@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
@@ -18,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import odms.dao.CountryDAO;
+import odms.dao.DAOFactory;
 import odms.data.AddressIO;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
@@ -25,6 +28,7 @@ import odms.enums.NewZealandRegionsEnum;
 import odms.history.History;
 import odms.profile.Profile;
 import odms.enums.CountriesEnum;
+import odms.user.User;
 
 
 public class ProfileEditController extends CommonController {
@@ -200,7 +204,11 @@ public class ProfileEditController extends CommonController {
                 saveLastNames();
 
                 // Optional General Fields
-                saveAddress();
+                try {
+                    saveAddress();
+                }  catch (Exception e) {
+                    AlertController.guiPopup("Invalid address.");
+                }
                 saveDateOfDeath();
                 saveEmail();
                 saveGender();
@@ -301,9 +309,11 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    private void saveAddress() {
-        if (!addressField.getText().isEmpty()) {
+    private void saveAddress() throws Exception{
+        if (!addressField.getText().isEmpty() && AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())) {
             currentProfile.setAddress(addressField.getText());
+        } else if(!addressField.getText().isEmpty() && !AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())){
+            throw new Exception();
         }
     }
 
@@ -850,8 +860,16 @@ public class ProfileEditController extends CommonController {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
 
-                comboCountry.getItems().addAll(CountriesEnum.toArrayList());
-                comboCountryOfDeath.getItems().addAll(CountriesEnum.toArrayList());
+                CountryDAO database = DAOFactory.getCountryDAO();
+                int index = 0;
+                for (String country : database.getAll(true)) {
+                    User.allowedCountriesIndices.add(index);
+                    index++;
+                }
+
+                List<String> validCountries = database.getAll(true);
+                comboCountry.getItems().addAll(validCountries);
+                comboCountryOfDeath.getItems().addAll(validCountries);
 
                 refreshRegionSelection();
                 refreshRegionOfDeathSelection();

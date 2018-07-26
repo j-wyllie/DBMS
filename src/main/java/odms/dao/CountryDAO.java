@@ -9,12 +9,20 @@ public interface CountryDAO {
      * Gets all countries from the database.
      * @return a list of countries.
      */
-    List<CountriesEnum> getAll();
+    List<String> getAll();
 
     /**
      * Gets all valid or invalid countries from the database.
      * @param valid true if valid countries are required.
      * @return a list of countries.
      */
-    List<CountriesEnum> getAll(boolean valid);
+    List<String> getAll(boolean valid);
+
+    /**
+     * Updates a country to valid or invalid.
+     * @param country to update.
+     * @param valid state to update.
+     */
+    void update(CountriesEnum country, boolean valid);
+
 }
