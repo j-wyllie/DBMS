@@ -363,7 +363,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @param profile to remove.
      */
     @Override
-    public void remove(Profile profile) throws SQLException {
+    public void remove(Profile profile) throws OrganConflictException, SQLException {
         String query = "delete from profiles where ProfileId = ?;";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -373,6 +373,11 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             stmt.setInt(1, profile.getId());
 
+            removeOrgans(profile);
+            removeMedications(profile);
+            removeProcedures(profile);
+            removeConditions(profile);
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -381,6 +386,56 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.close();
             stmt.close();
         }
+    }
+
+    private void removeOrgans(Profile profile) throws OrganConflictException {
+        OrganDAO database = DAOFactory.getOrganDao();
+
+        profile.getOrgansDonating().forEach(organ -> {
+            database.removeDonating(profile, organ);
+        });
+        profile.getOrgansDonated().forEach(organ -> {
+            database.removeDonation(profile, organ);
+        });
+        profile.getOrgansReceived().forEach(organ -> {
+            database.removeReceived(profile, organ);
+        });
+        profile.getOrgansRequired().forEach(organ -> {
+            database.removeRequired(profile, organ);
+        });
+    }
+
+    private void removeMedications(Profile profile) {
+        MedicationDAO database = DAOFactory.getMedicationDao();
+
+        profile.getCurrentMedications().forEach(medication -> {
+            database.remove(medication);
+        });
+        profile.getHistoryOfMedication().forEach(medication -> {
+            database.remove(medication);
+        });
+    }
+
+    private void removeProcedures(Profile profile) {
+        ProcedureDAO database = DAOFactory.getProcedureDao();
+
+        profile.getPendingProcedures().forEach(procedure -> {
+            database.remove(procedure);
+        });
+        profile.getPreviousProcedures().forEach(procedure -> {
+            database.remove(procedure);
+        });
+    }
+
+    private void removeConditions(Profile profile) {
+        ConditionDAO database = DAOFactory.getConditionDao();
+
+        profile.getCurrentConditions().forEach(condition -> {
+            database.remove(condition);
+        });
+        profile.getCuredConditions().forEach(condition -> {
+            database.remove(condition);
+        });
     }
 
     /**

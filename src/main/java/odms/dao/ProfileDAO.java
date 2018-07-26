@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import odms.enums.OrganEnum;
+import odms.profile.OrganConflictException;
 import odms.profile.Profile;
 
 public interface ProfileDAO {
@@ -45,7 +46,7 @@ public interface ProfileDAO {
      * Removes a profile from the database.
      * @param profile to remove.
      */
-    void remove(Profile profile) throws SQLException;
+    void remove(Profile profile) throws OrganConflictException, SQLException;
 
     /**
      * Updates a profiles information in the database.
