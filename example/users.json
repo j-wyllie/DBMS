@@ -13,15 +13,15 @@
           "day": 26
         },
         "time": {
-          "hour": 0,
-          "minute": 58,
-          "second": 1,
-          "nano": 792000000
+          "hour": 13,
+          "minute": 56,
+          "second": 43,
+          "nano": 684000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-07-26T00:58:01.792",
-        "0 updated at 12:58 AM 26-07-2018"
+        "Account for John Smithcreated at 2018-07-26T13:56:43.684",
+        "0 updated at 01:56 PM 26-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -30,10 +30,10 @@
           "day": 26
         },
         "time": {
-          "hour": 0,
-          "minute": 58,
-          "second": 1,
-          "nano": 792000000
+          "hour": 13,
+          "minute": 56,
+          "second": 43,
+          "nano": 684000000
         }
       },
       "isDefault": false
@@ -50,15 +50,15 @@
           "day": 26
         },
         "time": {
-          "hour": 0,
-          "minute": 58,
-          "second": 1,
-          "nano": 792000000
+          "hour": 13,
+          "minute": 56,
+          "second": 43,
+          "nano": 684000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-07-26T00:58:01.792",
-        "1 updated at 12:58 AM 26-07-2018"
+        "Account for Matt Smithcreated at 2018-07-26T13:56:43.684",
+        "1 updated at 01:56 PM 26-07-2018"
       ],
       "timeOfCreation": {
         "date": {
@@ -67,54 +67,15 @@
           "day": 26
         },
         "time": {
-          "hour": 0,
-          "minute": 58,
-          "second": 1,
-          "nano": 792000000
+          "hour": 13,
+          "minute": 56,
+          "second": 43,
+          "nano": 684000000
         }
       },
       "isDefault": false
-    },
-    "2": {
-      "userType": "ADMIN",
-      "name": "admin",
-      "staffID": 2,
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 26
-        },
-        "time": {
-          "hour": 1,
-          "minute": 0,
-          "second": 3,
-          "nano": 91000000
-        }
-      },
-      "updateActions": [
-        "ADMINaccount for admincreated at 2018-07-26T01:00:03.082",
-        "admin updated at 01:00 AM 26-07-2018",
-        "2 updated at 01:00 AM 26-07-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 7,
-          "day": 26
-        },
-        "time": {
-          "hour": 1,
-          "minute": 0,
-          "second": 3,
-          "nano": 82000000
-        }
-      },
-      "username": "admin",
-      "password": "admin",
-      "isDefault": true
     }
   },
-  "lastID": 2,
+  "lastID": 1,
   "path": "example/users.json"
 }
