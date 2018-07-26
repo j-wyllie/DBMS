@@ -1,7 +1,9 @@
 package odms.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,14 +33,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import odms.user.User;
@@ -46,9 +50,13 @@ import odms.user.UserType;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.table.TableFilter;
 
+import static odms.App.getProfileDb;
+
 public class ClinicianProfileController extends CommonController {
 
     private User currentUser;
+
+    private ProfileDatabase profileDb = getProfileDb();
 
     @FXML
     private Label clinicianFullName;
@@ -152,6 +160,12 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private Button buttonShowNext;
 
+    @FXML
+    private TextField transplantListSearchField;
+
+    @FXML
+    private ImageView userImage;
+
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
@@ -179,6 +193,8 @@ public class ClinicianProfileController extends CommonController {
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
 
+    Thread t;
+
     /**
      * Scene change to log in view.
      *
@@ -197,7 +213,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -212,7 +228,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(profileDb);
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -242,6 +258,9 @@ public class ClinicianProfileController extends CommonController {
         stage.show();
     }
 
+    /**
+     * Dynamic update of the age range label.
+     */
     @FXML
     private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
@@ -253,7 +272,7 @@ public class ClinicianProfileController extends CommonController {
             ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
-        updateLabels();
+        performSearchFromFilters();
     }
 
 
@@ -286,7 +305,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonorsMouse(MouseEvent event) {
-        updateLabels();
+        performSearchFromFilters();
     }
 
     /**
@@ -295,7 +314,7 @@ public class ClinicianProfileController extends CommonController {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        updateLabels();
+        performSearchFromFilters();
     }
 
     /**
@@ -303,8 +322,7 @@ public class ClinicianProfileController extends CommonController {
      */
     private void updateLabels() {
         labelToManyResults.setVisible(false);
-
-        updateSearchTable();
+        int size = donorObservableList.size();
 
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
@@ -324,7 +342,11 @@ public class ClinicianProfileController extends CommonController {
                     buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
-                    buttonShowNext.setText("Show next 25 results");
+                    if ((profileSearchResults.size() - size) < (PAGESIZE)) {
+                        buttonShowNext.setText("Show next " + (profileSearchResults.size() - size) + " results");
+                    } else {
+                        buttonShowNext.setText("Show next 25 results");
+                    }
                     buttonShowAll.setVisible(true);
                     buttonShowNext.setVisible(true);
                 }
@@ -335,7 +357,7 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
-    private void updateSearchTable() {
+    private void performSearchFromFilters() {
         String selectedGender = null;
         String selectedType = null;
         ObservableList<OrganEnum> selectedOrgans;
@@ -372,8 +394,8 @@ public class ClinicianProfileController extends CommonController {
         }
 
         searchTable.getItems().clear();
-        donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
+        profileSearchResults.clear();
+        profileSearchResults.addAll(GuiMain.getCurrentDatabase().searchProfiles(
                 searchString,
                 ageSearchInt,
                 ageRangeSearchInt,
@@ -383,6 +405,7 @@ public class ClinicianProfileController extends CommonController {
                 new HashSet<>(selectedOrgans)
         ));
         updateTable(false, false);
+        updateLabels();
     }
 
     /**
@@ -412,9 +435,6 @@ public class ClinicianProfileController extends CommonController {
             } else if (showNext) {
                 if (profileSearchResults.size() > (size + PAGESIZE)) {
                     donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
-                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() < PAGESIZE) {
-                        buttonShowNext.setText("Show next " + profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size()).size() + " results");
-                    }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                     buttonShowNext.setVisible(false);
@@ -452,6 +472,22 @@ public class ClinicianProfileController extends CommonController {
                 regionLabel.getText() +
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
+
+        if (currentUser.getPictureName() != null) {
+            File image = new File(localPath + "\\" + currentUser.getStaffID() + ".png");
+            if(!image.exists()){
+                image = new File(localPath + "\\" + currentUser.getStaffID() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            try {
+                userImage.setImage(new Image(image.toURI().toURL().toString()));
+            } catch (MalformedURLException e){
+                System.out.println("Malformed URL Exception");
+            }
+        }
+
     }
 
     /**
@@ -467,7 +503,7 @@ public class ClinicianProfileController extends CommonController {
 
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
@@ -482,13 +518,11 @@ public class ClinicianProfileController extends CommonController {
         });
 
         genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
-        genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateLabels();
-        });
+
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
 
         addTooltipToRow();
@@ -519,25 +553,22 @@ public class ClinicianProfileController extends CommonController {
     /**
      * Limits the characters entered in textfield to only digits and maxLength
      * @param maxLength that can be entered in the textfield
-     * @return
+     * @return an event handler.
      */
     public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
-        return new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= maxLength) {
+        return e -> {
+            TextField txt_TextField = (TextField) e.getSource();
+            if (txt_TextField.getText().length() >= maxLength) {
+                e.consume();
+            }
+            if (e.getCharacter().matches("[0-9.]")){
+                if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
+                    e.consume();
+                } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
                     e.consume();
                 }
-                if (e.getCharacter().matches("[0-9.]")){
-                    if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
-                        e.consume();
-                    } else if (txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")) {
-                        e.consume();
-                    }
-                } else {
-                    e.consume();
-                }
+            } else {
+                e.consume();
             }
         };
     }
@@ -566,11 +597,48 @@ public class ClinicianProfileController extends CommonController {
             stage.show();
             stage.setOnCloseRequest((WindowEvent event) -> {
                 closeStage(stage);
+                refreshTable();
             });
             openProfileStages.add(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Whenever a character is entered or removed in the transplant waiting list search field this
+     * calls the searchTransplantWaitingList method.
+     * @param e KeyEvent key being pressed.
+     */
+    @FXML
+    public void handleSearchTransplantWaitingList(KeyEvent e) {
+        searchTransplantWaitingList(transplantListSearchField.getText());
+    }
+
+    /**
+     * Searches the transplant waiting list using the string entered in the transplant waiting list
+     * search field in the GUI.
+     * @param searchString string from the search text field in the GUI.
+     */
+    private void searchTransplantWaitingList(String searchString) {
+        List<Profile> results;
+        List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
+
+        if (!searchString.equals("")) {
+            results = GuiMain.getCurrentDatabase().searchProfilesName(GuiMain.getCurrentDatabase()
+                    .getReceivers(true), searchString);
+
+            for (Map.Entry<Profile, OrganEnum> p: GuiMain.getCurrentDatabase()
+                    .getAllOrgansRequired()) {
+                if (results.contains(p.getKey())) {
+                    receivers.add(p);
+                }
+            }
+        } else {
+            receivers = GuiMain.getCurrentDatabase().getAllOrgansRequired();
+        }
+
+        makeTransplantWaitingList(receivers);
     }
 
     /**
@@ -582,7 +650,6 @@ public class ClinicianProfileController extends CommonController {
     @FXML
     private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
-
         receiverObservableList = FXCollections.observableList(receivers);
         //transplantTable.setItems(receiverObservableList);
         //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
@@ -637,10 +704,10 @@ public class ClinicianProfileController extends CommonController {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
-        makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+    public void refreshTable() {
+        transplantListSearchField.setText("");
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(profileDb.getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -669,16 +736,22 @@ public class ClinicianProfileController extends CommonController {
             System.setOut(commandGUI.getOut());
 
             // Start the command line in an alternate thread
-            CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(), commandGUI.getOut());
+            CommandLine commandLine = new CommandLine(profileDb, commandGUI.getIn(), commandGUI.getOut());
             commandGUI.initHistory(commandLine);
             Thread t = new Thread(commandLine);
+            t.setDaemon(true);
             t.start();
         }
     }
 
+    /**
+     * Initialises the controller for the current view.
+     */
     @FXML
     public void initialize() {
+        profileDb = getProfileDb();
         if (currentUser != null) {
+
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -704,13 +777,13 @@ public class ClinicianProfileController extends CommonController {
 
             typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
 
             genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
 
@@ -718,11 +791,11 @@ public class ClinicianProfileController extends CommonController {
 
             setClinicianDetails();
             setupAdmin();
-            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
+            makeSearchTable(profileDb.getProfiles(false));
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label("There are " + GuiMain.getCurrentDatabase().getProfiles(false).size() + " profiles"));
+            searchTable.setPlaceholder(new Label("There are " + profileDb.getProfiles(false).size() + " profiles"));
             try {
-                makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+                makeTransplantWaitingList(profileDb.getAllOrgansRequired());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -735,6 +808,7 @@ public class ClinicianProfileController extends CommonController {
 
     /**
      * Checks if there are unsaved changes in any open window.
+     * @param currentStage viewing.
      * @return true if there are unsaved changes.
      */
     public static boolean checkUnsavedChanges(Stage currentStage) {
@@ -747,6 +821,10 @@ public class ClinicianProfileController extends CommonController {
         return isEdited(currentStage);
     }
 
+    /**
+     * Closes the current stage.
+     * @param stage viewing.
+     */
     private void closeStage(Stage stage) {
         openProfileStages.remove(stage);
     }

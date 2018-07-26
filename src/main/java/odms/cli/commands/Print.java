@@ -31,7 +31,7 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles in the Database
+     * Print all clinicians in the Database
      *
      * @param currentDatabase Database reference
      */
@@ -51,7 +51,7 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles in the Database
+     * Print all users in the Database
      *
      * @param currentDatabase Database reference
      */
@@ -94,7 +94,7 @@ public class Print extends CommandUtils {
      */
     public static void printProfileList(ArrayList<Profile> profileList) {
         for (Profile profile : profileList) {
-            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("NHI: " + profile.getNhi());
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Date/Time Created: " + profile.getTimeOfCreation());
@@ -124,7 +124,7 @@ public class Print extends CommandUtils {
      */
     public static void printProfileDonations(ArrayList<Profile> profileList) {
         for (Profile profile : profileList) {
-            System.out.println("IRD: " + profile.getIrdNumber());
+            System.out.println("NHI: " + profile.getNhi());
             System.out.println("Given Names: " + profile.getGivenNames());
             System.out.println("Last Names: " + profile.getLastNames());
             System.out.println("Organs Donated:" + profile.getOrgansDonated());
@@ -174,7 +174,7 @@ public class Print extends CommandUtils {
      * @param profile to be displayed
      */
     private static void printProfileAttributes(Profile profile) {
-        System.out.println("IRD: " + profile.getIrdNumber());
+        System.out.println("NHI: " + profile.getNhi());
         System.out.println("ODMS ID: " + profile.getId());
         System.out.println("Given Names: " + profile.getGivenNames());
         System.out.println("Last Names: " + profile.getLastNames());
@@ -192,11 +192,11 @@ public class Print extends CommandUtils {
             System.out.println("Gender: " + profile.getGender());
         }
 
-        if (profile.getHeight() != 0.0) {
+        if (profile.getHeight() != null) {
             System.out.println("Height: " + profile.getHeight() + "cm");
         }
 
-        if (profile.getWeight() != 0.0) {
+        if (profile.getWeight() != null) {
             System.out.println("Weight: " + profile.getWeight());
         }
 

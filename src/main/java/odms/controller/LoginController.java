@@ -3,7 +3,7 @@ package odms.controller;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.AlertController.invalidUsernameOrPassword;
-import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.App.getProfileDb;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import odms.user.User;
 
 public class LoginController extends CommonController {
 
-    private ProfileDatabase currentDatabase = getCurrentDatabase();
+    private ProfileDatabase currentDatabase = getProfileDb();
     private UserDatabase userDatabase = getUserDatabase();
     private static User currentUser;
 
@@ -50,7 +50,7 @@ public class LoginController extends CommonController {
             String username = usernameField.getText();
             try {
                 currentUser = userDatabase.getUser(username);
-                System.out.println(currentUser.getUsername());
+
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -141,7 +141,6 @@ public class LoginController extends CommonController {
         String title = "Create Profile";
         showScene(event, scene, title, false);
     }
-
 
     @FXML
     private void onEnter(ActionEvent event) {

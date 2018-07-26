@@ -59,7 +59,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobDatePicker").write("14/11/1997");
-        clickOn("#irdNumberField").write("88888888");
+        clickOn("#nhiNumberField").write("88888888");
         clickOn("#createAccountButton");
 
         Scene newScene= getTopScene();
@@ -92,7 +92,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14.11.1997");
-        clickOn("#irdNumberField").write("100132122");
+        clickOn("#nhiNumberField").write("100132122");
         clickOn("#createAccountButton");
 
         actualAlertDialog = getAlertDialogue();
@@ -100,17 +100,17 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         assertEquals("Date entered is not in the format dd-mm-yyyy.", dialogPane.getContentText());
         closeDialog(dialogPane);
 
-        //tests duplicate IRD number.
+        //tests duplicate NHI number.
         clickOn("#dobDatePicker").eraseText(10).write("14-11-1997");
         clickOn("#createAccountButton");
 
 //        actualAlertDialog = getTopModalStage();
 //        dialogPane = (DialogPane) actualAlertDialog.getScene().getRoot();
-//        assertEquals(dialogPane.getContentText(), "Please enter a valid IRD number.");
+//        assertEquals(dialogPane.getContentText(), "Please enter a valid NHI number.");
 //        closeDialogue(dialogPane);
 //
-//        //tests empty IRD field.
-//        clickOn("#irdField").eraseText(9);
+//        //tests empty NHI field.
+//        clickOn("#nhiField").eraseText(9);
 //        clickOn("#createAccountButton");
 //
 //        actualAlertDialog = getTopModalStage();

@@ -1,6 +1,6 @@
 package odms.cli;
 
-import odms.data.IrdNumberConflictException;
+import odms.data.NHIConflictException;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -48,13 +48,13 @@ public class CommandUtilsTest {
         donorOneAttr.add("given-names=\"John\"");
         donorOneAttr.add("last-names=\"Wayne\"");
         donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("ird=\"123456789\"");
+        donorOneAttr.add("nhi=\"123456789\"");
 
         ArrayList<String> donorTwoAttr = new ArrayList<>();
         donorTwoAttr.add("given-names=\"Sam\"");
         donorTwoAttr.add("last-names=\"Sick\"");
         donorTwoAttr.add("dob=\"17-01-1997\"");
-        donorTwoAttr.add("ird=\"123456878\"");
+        donorTwoAttr.add("nhi=\"123456878\"");
 
         try {
             profileOne = new Profile(donorOneAttr);
@@ -71,7 +71,7 @@ public class CommandUtilsTest {
         try {
             profileDb.addProfile(profileOne);
             profileDb.addProfile(profileTwo);
-        } catch (IrdNumberConflictException e) {
+        } catch (NHIConflictException e) {
             e.printStackTrace();
         }
 
@@ -92,19 +92,19 @@ public class CommandUtilsTest {
     @Test
     public void testCommandValidation() {
         // Command Strings
-        String createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" ird=\"123456789\"";
+        String createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" nhi=\"123456789\"";
         String createClinicianTestStr = "create-clinician name=\"Bob Ross\"";
         String viewDonorTestStr = "profile dob=\"03-03-1998\" > view";
-        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > donations";
+        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > organs";
         String viewDateCreatedTestStr = "profile dob=\"03-03-1998\" > date-created";
         String updateDonorTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
         String viewClinicianTestStr = "clinician name=\"Bob Ross\" > view";
         String viewClinicianDateCreatedTestStr = "clinician dob=\"03-03-1998\" > date-created";
         String updateClinicianTestStr = "clinician name=\"Bob Ross\" region=\"Waikato\" > name=\"Johny Sinz\"";
         String printAllProfilesTestStr = "print all profiles";
-        String printDonorsTestStr = "print donors";
-        String printAllUsersTestStr = "print all users";
-        String printCliniciansTestStr = "print clinicians";
+        String printDonorsTestStr = "print all donors";
+        String printCliniciansTestStr = "print all clinicians";
+        String printUsersTestStr = "print all users";
         String helpTestStr = "help";
         String addOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
         String deleteOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
@@ -122,8 +122,8 @@ public class CommandUtilsTest {
         ArrayList<String> updateClinicianTest = new ArrayList<>(Arrays.asList(updateClinicianTestStr.split("\\s")));
         ArrayList<String> printAllProfilesTest = new ArrayList<>(Arrays.asList(printAllProfilesTestStr.split("\\s")));
         ArrayList<String> printDonorsTest = new ArrayList<>(Arrays.asList(printDonorsTestStr.split("\\s")));
-        ArrayList<String> printAllUsersTest = new ArrayList<>(Arrays.asList(printAllUsersTestStr.split("\\s")));
         ArrayList<String> printCliniciansTest = new ArrayList<>(Arrays.asList(printCliniciansTestStr.split("\\s")));
+        ArrayList<String> printUsersTest = new ArrayList<>(Arrays.asList(printUsersTestStr.split("\\s")));
         ArrayList<String> helpTest = new ArrayList<>(Arrays.asList(helpTestStr.split("\\s")));
         ArrayList<String> addOrganTest = new ArrayList<>(Arrays.asList(addOrganTestStr.split("\\s")));
         ArrayList<String> deleteOrganTest = new ArrayList<>(Arrays.asList(deleteOrganTestStr.split("\\s")));
@@ -132,13 +132,13 @@ public class CommandUtilsTest {
         // Check tokens validate appropriately
         assertEquals(Commands.PRINTALLPROFILES, validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
         assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest, printDonorsTestStr));
-        assertEquals(Commands.PRINTALLUSERS, validateCommandType(printAllUsersTest, printAllUsersTestStr));
-        assertEquals(Commands.PRINTCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLUSERS, validateCommandType(printUsersTest, printUsersTestStr));
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
         assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
         assertEquals(Commands.PROFILEDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
-        assertEquals(Commands.PROFILEDONATIONS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
+        assertEquals(Commands.PROFILEORGANS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
         assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
 
         assertEquals(Commands.CLINICIANCREATE, validateCommandType(createClinicianTest, createClinicianTestStr));
@@ -162,7 +162,7 @@ public class CommandUtilsTest {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
         String dob = "12-08-1989";
-        String irdNumber = "987654321";
+        String nhi = "987654321";
 
         LocalDate dobConverted = LocalDate.of(
                 Integer.valueOf(dob.split("-")[2]),
@@ -174,16 +174,16 @@ public class CommandUtilsTest {
                 "given-names=\"" + givenNames + "\" " +
                 "last-names=\"" + lastNames + "\" " +
                 "dob=\"" + dob + "\" " +
-                "ird=\"" + irdNumber + "\"";
+                "nhi=\"" + nhi + "\"";
 
         odms.cli.commands.Profile.createProfile(profileDb, createProfileStr);
 
-        Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
+        Profile profile = profileDb.searchNHI(nhi).get(0);
 
         assertEquals(profile.getGivenNames(), givenNames);
         assertEquals(profile.getLastNames(), lastNames);
         assertEquals(profile.getDateOfBirth(), dobConverted);
-        assertEquals(profile.getIrdNumber(), Integer.valueOf(irdNumber));
+        assertEquals(profile.getNhi(), nhi);
     }
 
     @Test
@@ -207,13 +207,13 @@ public class CommandUtilsTest {
 
     @Test
     public void testDeleteProfileCommand() {
-        String irdNumber = "123456789";
+        String nhi = "123456789";
         String deleteProfileStr = "profile " +
-            "ird=\"" + irdNumber + "\" "
+            "nhi=\"" + nhi + "\" "
             + "> delete";
         odms.cli.commands.Profile.deleteProfileBySearch(profileDb, deleteProfileStr);
 
-        assertEquals(profileDb.searchIRDNumber(123456789).size(), 0);
+        assertEquals(profileDb.searchNHI("123456789").size(), 0);
     }
 
     @Test
@@ -241,15 +241,15 @@ public class CommandUtilsTest {
     @Test
     public void testUpdateProfileCommand() {
         String givenNames = "Boaty McBoatface";
-        String irdNumber = "123456789";
+        String nhi = "123456789";
         String updateProfileStr = "profile " +
-            "ird=\"" + irdNumber + "\" "
+            "nhi=\"" + nhi + "\" "
             + "> "
             + "given-names=\"" + givenNames + "\"";
 
         odms.cli.commands.Profile.updateProfilesBySearch(profileDb, updateProfileStr);
 
-        Profile updatedProfile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
+        Profile updatedProfile = profileDb.searchNHI(nhi).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
 
@@ -281,11 +281,11 @@ public class CommandUtilsTest {
     
     @Test
     public void testProfileDateCreatedCommand() {
-        String irdNumber = "123456789";
+        String nhi = "123456789";
         String viewProfileDateStr = "profile " +
-            "ird=\"" + irdNumber + "\" "
+            "nhi=\"" + nhi + "\" "
             + "> date-created";
-        Profile profile = profileDb.searchIRDNumber(Integer.valueOf(irdNumber)).get(0);
+        Profile profile = profileDb.searchNHI(nhi).get(0);
         odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, viewProfileDateStr);
 
         assertTrue(

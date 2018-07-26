@@ -2,7 +2,7 @@ package odms.cli.commands;
 
 import odms.cli.CommandUtils;
 import odms.controller.HistoryController;
-import odms.data.IrdNumberConflictException;
+import odms.data.NHIConflictException;
 import odms.data.ProfileDatabase;
 import odms.history.History;
 
@@ -40,11 +40,11 @@ public class Profile extends CommandUtils {
         } catch (IllegalArgumentException e) {
             System.out.println("Please enter the required attributes correctly.");
 
-        } catch (IrdNumberConflictException e) {
-            Integer errorIrdNumber = e.getIrdNumber();
-            odms.profile.Profile errorProfile = currentDatabase.searchIRDNumber(errorIrdNumber).get(0);
+        } catch (NHIConflictException e) {
+            String errorNHI = e.getNHI();
+            odms.profile.Profile errorProfile = currentDatabase.searchNHI(errorNHI).get(0);
 
-            System.out.println("Error: IRD Number " + errorIrdNumber +
+            System.out.println("Error: NHI Number " + errorNHI +
                 " already in use by profile " +
                 errorProfile.getGivenNames() + " " +
                 errorProfile.getLastNames());
@@ -73,9 +73,9 @@ public class Profile extends CommandUtils {
                 ArrayList<odms.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<odms.profile.Profile> profileList = currentDatabase
-                    .searchIRDNumber(Integer.valueOf(attr));
+                    .searchNHI(attr);
 
                 deleteProfiles(profileList, currentDatabase);
             }
@@ -154,9 +154,9 @@ public class Profile extends CommandUtils {
                 ArrayList<odms.profile.Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<odms.profile.Profile> profileList = currentDatabase
-                    .searchIRDNumber(Integer.valueOf(attr));
+                    .searchNHI(attr);
 
                 updateProfileAttr(profileList, attrList);
             }
@@ -181,8 +181,8 @@ public class Profile extends CommandUtils {
                 Print.printProfileSearchResults(currentDatabase.searchGivenNames(attr));
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 Print.printProfileSearchResults(currentDatabase.searchLastNames(attr));
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                Print.printProfileSearchResults(currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+                Print.printProfileSearchResults(currentDatabase.searchNHI(attr));
             } else {
                 System.out.println(searchErrorText);
             }
@@ -219,10 +219,10 @@ public class Profile extends CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 ArrayList<odms.profile.Profile> profileList = currentDatabase
-                    .searchIRDNumber(Integer.valueOf(attr));
+                    .searchNHI(attr);
 
                 Print.printProfileList(profileList);
             } else {
@@ -258,9 +258,9 @@ public class Profile extends CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                profileList = currentDatabase.searchNHI(attr);
             } else {
                 System.out.println(searchErrorText);
             }

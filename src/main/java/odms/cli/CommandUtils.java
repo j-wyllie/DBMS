@@ -10,11 +10,9 @@ import java.util.Set;
 import odms.dao.DAOFactory;
 import odms.dao.ReadOnlyDAO;
 
-import odms.controller.HistoryController;
 import odms.data.ProfileDatabase;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
-import odms.user.User;
 
 public class CommandUtils {
 
@@ -25,7 +23,7 @@ public class CommandUtils {
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     protected static String searchErrorText = "Please enter only one search criteria\n "
-                                            + "Profiles: given-names, last-names, ird\n"
+                                            + "Profiles: given-names, last-names, nhi\n"
                                             + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
 
@@ -65,22 +63,18 @@ public class CommandUtils {
     static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
         switch (cmd.get(0).toLowerCase()) {
             case "print":
-                switch (cmd.get(1).toLowerCase()) {
-                    case "all":
-                        if (cmd.size() == 2) { return Commands.INVALID; }
-                        if (cmd.get(2).toLowerCase().equals("profiles")) {
-                            return Commands.PRINTALLPROFILES;
-                        } else if (cmd.get(2).toLowerCase().equals("users")) {
-                            return Commands.PRINTALLUSERS;
-                        } else {
-                            return Commands.INVALID;
-                        }
-                    case "donors":
-                        return Commands.PRINTDONORS;
-                    case "clinicians":
-                        return Commands.PRINTCLINICIANS;
+                if (cmd.size() == 2) { return Commands.INVALID; }
+                if (cmd.get(2).toLowerCase().equals("profiles")) {
+                    return Commands.PRINTALLPROFILES;
+                } else if (cmd.get(2).toLowerCase().equals("clinicians")) {
+                    return Commands.PRINTALLCLINICIANS;
+                } else if (cmd.get(2).toLowerCase().equals("users")) {
+                    return Commands.PRINTALLUSERS;
+                }else if (cmd.get(2).toLowerCase().equals("donors")) {
+                    return Commands.PRINTDONORS;
+                } else {
+                    return Commands.INVALID;
                 }
-                break;
             case "help":
                 return Commands.HELP;
             case "import":
@@ -95,10 +89,12 @@ public class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
+                break;
             case "create-clinician":
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.CLINICIANCREATE;
                 }
+                break;
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -106,8 +102,8 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations": // TODO is this meant to be donating or donated
-                            return Commands.PROFILEDONATIONS;
+                        case "organs":
+                            return Commands.PROFILEORGANS;
                         case "delete":
                             return Commands.PROFILEDELETE;
                     }
@@ -123,14 +119,14 @@ public class CommandUtils {
                             return Commands.ORGANREMOVE;
                         case "removereceive-organ":
                             return Commands.RECEIVEREMOVE;
-                        case "donate":
+                        case "donate-organ":
                             return Commands.ORGANDONATE;
                     }
-
                 } else if (rawInput.matches(cmdRegexProfileUpdate)
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
+                break;
             case "clinician":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -145,8 +141,11 @@ public class CommandUtils {
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
+                break;
             case "db-read":
                 return Commands.SQLREADONLY;
+            default:
+                return Commands.INVALID;
         }
         return Commands.INVALID;
     }
@@ -175,10 +174,10 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+                String attr_nhi = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+                ArrayList<Profile> profileList = currentDatabase.searchNHI(attr_nhi);
 
                 addOrgans(profileList, organList);
             }
@@ -212,10 +211,10 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addReceiverOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+                String attr_nhi = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+                ArrayList<Profile> profileList = currentDatabase.searchNHI(attr_nhi);
 
                 addReceiverOrgans(profileList, organList);
             }
@@ -251,9 +250,9 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<Profile> profileList = currentDatabase
-                    .searchIRDNumber(Integer.valueOf(attr));
+                    .searchNHI(attr);
 
                 removeOrgansDonating(profileList, organList);
             }
@@ -286,9 +285,9 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
             }
@@ -331,7 +330,7 @@ public class CommandUtils {
                     System.out.println(searchNotFoundText);
                 }
 
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 test(currentDatabase, expression, organList);
             } else {
                 System.out.println(searchErrorText);
@@ -347,7 +346,7 @@ public class CommandUtils {
         String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.indexOf(">") - 2);
-        ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+        ArrayList<Profile> profileList = currentDatabase.searchNHI(attr);
 
         addOrgans(profileList, organList);
     }
@@ -551,7 +550,7 @@ public class CommandUtils {
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 System.out.println(action);
-                String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
+                String old = action.substring(action.indexOf("nhi"), action.indexOf("new"));
                 profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
@@ -671,7 +670,7 @@ public class CommandUtils {
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    String newInfo = action.substring(action.indexOf("ird"));
+                    String newInfo = action.substring(action.indexOf("nhi"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
                 }  else if(action.contains("EDITED")){
                     int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));

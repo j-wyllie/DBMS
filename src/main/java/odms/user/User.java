@@ -1,5 +1,7 @@
 package odms.user;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,11 +19,13 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault = false;
+    private String pictureName;
+
 
     /**
-     * Logs which property was updated and the time it was updated
-     * Also changes the last updated property
-     * @param property the property that was updated
+     * Logs which property was updated and the time it was updated.
+     * Also changes the last updated property.
+     * @param property the property that was updated.
      */
     private void generateUpdateInfo(String property) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -31,9 +35,9 @@ public class User {
     }
 
     /**
-     * user constructor
-     * @param userType type of user
-     * @param attrArray array containing users attributes
+     * user constructor.
+     * @param userType type of user.
+     * @param attrArray array containing users attributes.
      */
     public User(UserType userType, ArrayList<String> attrArray){
         this.userType = userType;
@@ -42,10 +46,26 @@ public class User {
     }
 
     /**
-     * user constructor
+     *
      * @param userType type of user
-     * @param name user name
-     * @param region user region
+     * @param name name of user
+     * @param region users region
+     * @param username username of the user
+     * @param password users password
+     */
+    public User(UserType userType, String name, String region, String username, String password) {
+        this.userType = userType;
+        this.name = name;
+        this.region = region;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
+     * user constructor.
+     * @param userType type of user.
+     * @param name user name.
+     * @param region user region.
      */
     public User(UserType userType, String name, String region){
         this.timeOfCreation = LocalDateTime.now();
@@ -57,8 +77,8 @@ public class User {
     }
 
     /**
-     * Creates an administrator account
-     * @param userType the user type to be set
+     * Creates an administrator account.
+     * @param userType the user type to be set.
      * @param name the users name.
      */
     public User(UserType userType, String name) {
@@ -69,9 +89,9 @@ public class User {
     }
 
     /**
-     * Sets the attributes that are passed into the constructor
-     * @param attributes the attributes given in the constructor
-     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
+     * Sets the attributes that are passed into the constructor.
+     * @param attributes the attributes given in the constructor.
+     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
@@ -81,8 +101,8 @@ public class User {
     }
 
     /**
-     * sets a users specific given attribute
-     * @param parts a string containing the users new attribute to be set
+     * sets a users specific given attribute.
+     * @param parts a string containing the users new attribute to be set.
      * @throws IllegalArgumentException
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
@@ -113,8 +133,8 @@ public class User {
     }
 
     /**
-     * gets a attribute summary of the user
-     * @return attribute summary of the user
+     * gets a attribute summary of the user.
+     * @return attribute summary of the user.
      */
     public String getAttributesSummary() {
         String summary = "";
@@ -216,5 +236,13 @@ public class User {
 
     public boolean getDefault() {
         return isDefault;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 }

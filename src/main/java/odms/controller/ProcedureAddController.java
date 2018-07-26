@@ -1,8 +1,7 @@
 package odms.controller;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
+import static odms.App.getProfileDb;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
@@ -78,7 +77,7 @@ public class ProcedureAddController {
     private void addProcedure(Procedure procedure) {
         searchedDonor.addProcedure(procedure);
         controller.refreshProcedureTable();
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
+        ProfileDataIO.saveData(getProfileDb(), "example/example.json");
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
     }

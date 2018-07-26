@@ -7,21 +7,28 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import odms.profile.Profile;
 import org.controlsfx.control.Notifications;
 
-import java.io.IOException;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
 
 class CommonController {
 
     private static boolean isEdited = false;
 
+    protected File localPath = new File(System.getProperty("user.dir"));
+
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
+     * @throws IOException error.
      */
     @FXML
     public void showLoginScene(ActionEvent event) throws IOException {
@@ -36,23 +43,23 @@ class CommonController {
     }
 
     /**
-     * JavaFX Scene loader
-     * @param event the ActionEvent
-     * @param scene the fxml path
-     * @param title the window title
-     * @throws IOException if the path is invalid
+     * JavaFX Scene loader.
+     * @param event the ActionEvent.
+     * @param scene the fxml path.
+     * @param title the window title.
+     * @throws IOException if the path is invalid.
      */
     protected void showScene(ActionEvent event, String scene, String title) throws IOException {
         showScene(event, scene, title, false);
     }
 
     /**
-     * JavaFX Scene loader
-     * @param event the ActionEvent
-     * @param scene the fxml path
-     * @param title the window title
-     * @param resizeable if the window can be resized
-     * @throws IOException if the path is invalid
+     * JavaFX Scene loader.
+     * @param event the ActionEvent.
+     * @param scene the fxml path.
+     * @param title the window title.
+     * @param resizeable if the window can be resized.
+     * @throws IOException if the path is invalid.
      */
     protected void showScene(ActionEvent event, String scene, String title, Boolean resizeable)
         throws IOException {
@@ -71,7 +78,7 @@ class CommonController {
      * @param event Any key event within the text boxes.
      */
     @FXML
-    protected void editTrueKey(javafx.scene.input.KeyEvent event) throws IOException {
+    protected void editTrueKey(javafx.scene.input.KeyEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (!currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle() + " (*)");
@@ -94,7 +101,8 @@ class CommonController {
 
     /**
      * Changes the title of the parent window to include an astrix to indicate a value has been edited.
-     * @param event Any click event within the text boxes.
+     * @param event any click event within the text boxes.
+     * @param forOwner true if the parent window edited is the main stage.
      */
     @FXML
     protected void editTrueAction(ActionEvent event, boolean forOwner) {
@@ -124,16 +132,12 @@ class CommonController {
     }
 
     /**
-     * checks whether the window has been edited
-     * @param stage
+     * Checks whether the window has been edited
+     * @param stage the window.
      * @return true if window has unsaved changes.
      */
     protected static boolean isEdited(Stage stage) {
         return stage.getTitle().contains("(*)");
-//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
-//        CommonController controller = loader.getController();
-//        controller.toString();
-//        return controller.getEdited();
     }
 
     /**
@@ -142,7 +146,7 @@ class CommonController {
      * @param editedField String of which is the thing edited.
      */
     @FXML
-    protected void showNotification(String editedField, ActionEvent event) throws IOException {
+    protected void showNotification(String editedField, ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
@@ -156,6 +160,75 @@ class CommonController {
                 .owner(currentStage)
                 .show();
     }
+
+
+    /**
+     * Copies a file from source to dest
+     *
+     * @param source File source in local directory
+     * @param dest File destination in local directory
+     */
+    protected static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+         try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+             try { if (is != null) is.close();
+                } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}
+             try { if (os != null) os.close();
+                } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
+
+        }
+    }
+
+    /**
+     * returns a string that is the file extension of given file
+     *
+     * @param file File to retrieve extension from
+     */
+    protected String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf('.') + 1);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param pictureText user feedback text to update on profile picture edit
+     */
+
+    protected File chooseImage(Text pictureText) throws IOException{
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Images", "jpg", "png");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+
+            if (chooser.getSelectedFile().length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+                return null;
+            }
+
+            System.out.println("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+            pictureText.setText(chooser.getSelectedFile().getName());
+        }
+        return chooser.getSelectedFile();
+
+    }
+
 
     public void setEdited(Boolean edited) {
         isEdited = edited;

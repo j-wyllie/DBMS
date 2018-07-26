@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
-import odms.data.IrdNumberConflictException;
+import odms.data.NHIConflictException;
+import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.profile.Condition;
 import odms.enums.OrganEnum;
@@ -17,7 +18,7 @@ public class TestDataCreator {
     private List<OrganEnum> organs = Arrays.asList(OrganEnum.values());
 
     private List<String> names = Arrays.asList(
-        "Ash Ketchup",
+        "Ash Ketc-hup",
         "Basashi Tabetai",
         "Boaty McBoatFace",
         "Boobafina Otter",
@@ -70,7 +71,7 @@ public class TestDataCreator {
 
             generateProfiles();
 
-        } catch (IrdNumberConflictException e) {
+        } catch (NHIConflictException e) {
 
             e.printStackTrace();
 
@@ -80,16 +81,16 @@ public class TestDataCreator {
     /**
      * Generate profiles with random organ data and add them to the database.
      *
-     * @throws IrdNumberConflictException if there is a duplicate IRD number in the database
+     * @throws NHIConflictException if there is a duplicate NHI number in the database
      */
-    private void generateProfiles() throws IrdNumberConflictException {
-        List<Integer> irdNumbers = new ArrayList<>();
+    private void generateProfiles() throws NHIConflictException {
+        List<String> nhiNumbers = new ArrayList<>();
 
-        while (irdNumbers.size() < names.size()) {
-            Integer irdNumber = randInRange(100000000, 999999999);
+        while (nhiNumbers.size() < names.size()) {
+            Integer nhi = randInRange(100000000, 999999999);
 
-            if (!irdNumbers.contains(irdNumber)) {
-                irdNumbers.add(irdNumber);
+            if (!nhiNumbers.contains(nhi.toString())) {
+                nhiNumbers.add(nhi.toString());
             }
         }
 
@@ -99,7 +100,7 @@ public class TestDataCreator {
                     profileName[0],
                     profileName[1],
                     randomDOB(),
-                    irdNumbers.remove(0)
+                    nhiNumbers.remove(0)
             );
             addOrganDonations(profile);
             addOrganDonors(profile);
@@ -120,7 +121,6 @@ public class TestDataCreator {
 
             database.addProfile(profile);
         }
-
     }
 
     public ProfileDatabase getDatabase() {

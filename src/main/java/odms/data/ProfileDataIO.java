@@ -2,18 +2,30 @@ package odms.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.controller.HistoryController;
-
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Observable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableFloatValue;
+import javafx.beans.value.ObservableValue;
+import odms.controller.HistoryController;
+import odms.profile.Profile;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 public class ProfileDataIO extends CommonDataIO {
 
     private static final String defaultPath = "example/example.json";
     private static String history = "";
     private static int lastPosition = 1;
+    public static ObservableValue<Integer> observableLoadPercent;
 
     /**
      * Export full Profile Database object to the previously used path.
@@ -84,7 +96,7 @@ public class ProfileDataIO extends CommonDataIO {
      * @param path specified ProfileDatabase JSON to load
      * @return ProfileDatabase
      */
-    public static ProfileDatabase loadData(String path) {
+    public static ProfileDatabase loadDataFromJSON(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json","History.json"));
 
@@ -116,5 +128,4 @@ public class ProfileDataIO extends CommonDataIO {
     }
 
     public static String getHistory() { return history;}
-
 }
