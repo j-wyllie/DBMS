@@ -4,6 +4,9 @@ import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,13 +22,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.UserDAO;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 import odms.user.User;
 
 public class ViewUsersController extends CommonController{
 
-    private UserDatabase userDatabase = GuiMain.getUserDatabase();
     private User currentUser;
     private ObservableList<User> usersObservableList;
 
@@ -59,7 +63,7 @@ public class ViewUsersController extends CommonController{
                 new PropertyValueFactory<User, String>("userType")
         );
         staffIdCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("staffId")
+                new PropertyValueFactory<User, String>("staffID")
         );
 
         viewUsersTable.setItems(usersObservableList);
@@ -84,7 +88,12 @@ public class ViewUsersController extends CommonController{
      * Gets an observable list of users.
      */
     private void fetchData() {
-        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
+        UserDAO database = DAOFactory.getUserDao();
+        try {
+            usersObservableList = FXCollections.observableArrayList(database.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -98,7 +107,11 @@ public class ViewUsersController extends CommonController{
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = viewUsersTable.getSelectionModel().getSelectedItem();
-                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
+                try {
+                    DAOFactory.getUserDao().remove(user);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 refreshViewUsersTable();
                 editTrueStage((Stage) viewUsersTable.getScene().getWindow());
             }
@@ -129,12 +142,5 @@ public class ViewUsersController extends CommonController{
         stage.centerOnScreen();
         stage.setOnHiding((ob) -> refreshViewUsersTable());
         stage.show();
-    }
-
-    public void handleViewUsersSaveBtn(ActionEvent actionEvent) throws IOException{
-        if (generalConfirmation("Do you wish to save your changes?")) {
-            showNotification("Users File", actionEvent);
-            UserDataIO.saveUsers(getUserDatabase());
-        }
     }
 }

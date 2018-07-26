@@ -7,7 +7,6 @@ import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -63,8 +62,6 @@ import odms.medications.Interaction;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
-
-import javax.imageio.ImageIO;
 
 public class ProfileDisplayController extends CommonController {
 
@@ -1515,6 +1512,10 @@ public class ProfileDisplayController extends CommonController {
     private void onTabOrgansSelected() {
         profileOrganOverviewController.currentProfile.bind(currentProfileBound);
         profileOrganOverviewController.populateOrganLists();
+
+        if (isOpenedByClinician) {
+            profileOrganOverviewController.enableBtnEditReceiving();
+        }
     }
 
     /**

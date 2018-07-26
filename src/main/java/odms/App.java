@@ -11,6 +11,9 @@ import odms.cli.CommandLine;
 import odms.controller.GuiMain;
 import odms.controller.HistoryController;
 import odms.dao.DatabaseConnection;
+import odms.dao.CommonDAO;
+import odms.dao.DAOFactory;
+import odms.dao.DatabaseConnection;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
@@ -27,6 +30,7 @@ public class App {
     private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     public static void main(String[] args) {
+
         HistoryController.currentSessionHistory.add(null);
         try {
 

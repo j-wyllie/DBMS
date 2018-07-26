@@ -35,6 +35,7 @@ public class Profile implements Comparable<Profile> {
     private Boolean donor = false;
     private Boolean receiver = false;
 
+    private String username;
     private String givenNames;
     private String lastNames;
     private String preferredName;
@@ -70,6 +71,9 @@ public class Profile implements Comparable<Profile> {
     private ArrayList<String> updateActions = new ArrayList<>();
 
     private ArrayList<Procedure> procedures = new ArrayList<>();
+
+    private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
+    private ArrayList<Procedure> previousProcedures = new ArrayList<>();
 
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
@@ -142,6 +146,36 @@ public class Profile implements Comparable<Profile> {
                 dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 nhi
         );
+    }
+
+    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+            Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
+            int bpSystolic, int bpDiastolic, String address, String region, String phone,
+            String email, LocalDateTime created, LocalDateTime updated) {
+        this.id = profileId;
+        this.nhi = nhi;
+        this.username = username;
+        this.donor = isDonor;
+        this.receiver = isReceiver;
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.dateOfDeath = dod;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.isSmoker = isSmoker;
+        this.alcoholConsumption = alcoholConsumption;
+        this.bloodPressureSystolic = bpSystolic;
+        this.bloodPressureDiastolic = bpDiastolic;
+        this.address = address;
+        this.region = region;
+        this.phone = phone;
+        this.email = email;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
     }
 
     /**
@@ -311,35 +345,22 @@ public class Profile implements Comparable<Profile> {
     public ArrayList<Procedure> getAllProcedures() { return procedures; }
 
     /**
-     * Gets all the previous procedures
-     * @return previous procedures
-     */
-    public ArrayList<Procedure> getPreviousProcedures() {
-        ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isBefore(LocalDate.now())) {
-                    prevProcedures.add(procedure);
-                }
-            }
-        }
-        return prevProcedures;
-    }
-
-    /**
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
-        ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isAfter(LocalDate.now())) {
-                    pendingProcedures.add(procedure);
-                }
-            }
-        }
-        return pendingProcedures;
+    public ArrayList<Procedure> getPendingProcedures() { return this.pendingProcedures; }
+
+
+    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+        this.pendingProcedures = pendingProcedures;
+    }
+
+    public ArrayList<Procedure> getPreviousProcedures() {
+        return this.previousProcedures;
+    }
+
+    public void setPreviousProcedures(ArrayList<Procedure> previous) {
+        this.previousProcedures = previous;
     }
 
     /**
@@ -451,7 +472,7 @@ public class Profile implements Comparable<Profile> {
      * If the organ exists in the receiving set, remove it.
      * @param organ to be added
      */
-    private void addOrganReceived(OrganEnum organ) {
+    public void addOrganReceived(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
@@ -579,16 +600,24 @@ public class Profile implements Comparable<Profile> {
         if (this.organsReceived.contains(organ)) {
             this.organsReceived.remove(organ);
         }
+    }
 
-        this.organsRequired.add(organ);
+    public void removeOrganRequired(OrganEnum organ) {
+        if (this.organsRequired.contains(organ)) {
+            this.organsRequired.remove(organ);
+        }
     }
 
     public void removeOrganDonated(OrganEnum organ) {
         if (this.organsDonated.contains(organ)) {
             this.organsDonated.remove(organ);
         }
+    }
 
-        this.organsDonating.add(organ);
+    public void removeOrganDonating(OrganEnum organ) {
+        if (this.organsDonating.contains(organ)) {
+            this.organsDonating.remove(organ);
+        }
     }
 
 
@@ -971,7 +1000,10 @@ public class Profile implements Comparable<Profile> {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                "Invalid blood type selected.\n" +
+                bloodType + " is not a valid blood type."
+            );
         }
     }
 
@@ -1068,6 +1100,23 @@ public class Profile implements Comparable<Profile> {
     // TODO access to this array should be restricted, this makes it public and redundant.
     public void setChronicDiseases(HashSet<String> chronicDiseases) {
         this.chronicDiseases = chronicDiseases;
+    }
+
+    public void setProcedures(ArrayList<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+
+    public void setConditions(ArrayList<Condition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public void setCurrentMedications(ArrayList<Drug> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    public void setHistoryOfMedication(ArrayList<Drug> historyOfMedication) {
+        this.historyOfMedication = historyOfMedication;
     }
 
     public String getPhone() {
@@ -1207,6 +1256,12 @@ public class Profile implements Comparable<Profile> {
     public void setNeighbourhood(String neighbourhood) {
         this.neighbourhood = neighbourhood;
     }
+
+    public String getUsername() { return username; }
+
+    public int getBloodPressureSystolic() { return this.bloodPressureSystolic; }
+
+    public int getBloodPressureDiastolic() { return this.bloodPressureDiastolic; }
 
     public String getPictureName() {
         return pictureName;

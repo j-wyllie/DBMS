@@ -7,12 +7,16 @@ import static odms.App.getProfileDb;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.dao.DAOFactory;
+import odms.dao.ProfileDAO;
+import odms.dao.UserDAO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDatabase;
 import odms.profile.Profile;
@@ -49,7 +53,8 @@ public class LoginController extends CommonController {
 
             String username = usernameField.getText();
             try {
-                currentUser = userDatabase.getUser(username);
+                UserDAO database = DAOFactory.getUserDao();
+                currentUser = database.get(username);
 
                 if (currentUser.getPassword() != null && passwordField.getText().equals(currentUser.getPassword())) {
                     try {
@@ -74,8 +79,7 @@ public class LoginController extends CommonController {
                 }
             } catch (UserNotFoundException u) {
                 try {
-                    int userId = Integer.valueOf(usernameField.getText());
-                    if (userId == 0) {
+                    if (username.equals("0")) {
                         currentUser = userDatabase.getUser(0);
 
                         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -92,7 +96,8 @@ public class LoginController extends CommonController {
                         stage.show();
                         closeCurrentStage();
                     } else {
-                        Profile currentProfile = currentDatabase.getProfile(userId);
+                        ProfileDAO database = DAOFactory.getProfileDao();
+                        Profile currentProfile = database.get(username);
 
                         if (currentProfile != null) {
                             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -109,17 +114,21 @@ public class LoginController extends CommonController {
                             stage.show();
 
                             closeCurrentStage();
+
                         } else {
                             invalidUsername();
                         }
                     }
                 } catch (NumberFormatException e) {
                     invalidEntry();
+                    e.printStackTrace();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     invalidUsername();
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
