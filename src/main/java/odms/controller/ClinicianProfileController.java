@@ -703,7 +703,11 @@ public class ClinicianProfileController extends CommonController {
             makeSearchTable(profileDb.getProfiles(false));
             searchTable.getItems().clear();
             searchTable.setPlaceholder(new Label("There are " + profileDb.getProfiles(false).size() + " profiles"));
+            try {
                 searchTable.setPlaceholder(new Label("There are " + DAOFactory.getProfileDao().size() + " profiles"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             try {
                 makeTransplantWaitingList(profileDb.getAllOrgansRequired());
             } catch (Exception e) {
