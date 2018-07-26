@@ -1,6 +1,7 @@
 package odms.medications;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a drug with a name and a list of active ingredients.
@@ -9,7 +10,7 @@ public class Drug {
 
     private int drugId;
     private String drugName;
-    private ArrayList<String> activeIngredients = new ArrayList<>();
+    private List<String> activeIngredients = new ArrayList<>();
 
     public Drug(String drugName){
         this.drugName = drugName;
@@ -24,7 +25,7 @@ public class Drug {
      * Sets the active ingredients of a drug to an array list of ingredients.
      * @param activeIngredients active ingredients to be set.
      */
-    public void setActiveIngredients(ArrayList<String> activeIngredients){
+    public void setActiveIngredients(List<String> activeIngredients){
         this.activeIngredients = activeIngredients;
     }
 
@@ -32,7 +33,7 @@ public class Drug {
         return this.drugName;
     }
 
-    public ArrayList<String> getActiveIngredients(){
+    public List<String> getActiveIngredients(){
         return this.activeIngredients;
     }
 

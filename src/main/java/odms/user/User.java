@@ -42,6 +42,22 @@ public class User {
     }
 
     /**
+     *
+     * @param userType type of user
+     * @param name name of user
+     * @param region users region
+     * @param username username of the user
+     * @param password users password
+     */
+    public User(UserType userType, String name, String region, String username, String password) {
+        this.userType = userType;
+        this.name = name;
+        this.region = region;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
      * user constructor.
      * @param userType type of user.
      * @param name user name.

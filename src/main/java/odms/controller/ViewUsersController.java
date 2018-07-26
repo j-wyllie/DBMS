@@ -1,6 +1,6 @@
 package odms.controller;
 
-import static odms.controller.AlertController.saveChanges;
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
