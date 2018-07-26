@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -27,6 +28,9 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
     private ObservableList<OrganEnum> observableListReceiving = FXCollections.observableArrayList();
+
+    @FXML
+    private Button btnEditReceiving;
 
     @FXML
     private ListView<String> listViewDonated;
@@ -82,7 +86,11 @@ public class ProfileOrganOverviewController extends ProfileOrganCommonController
         tableColumnDate.setCellValueFactory(new PropertyValueFactory<OrganEnum, LocalDate>("date"));
         tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
         tableViewReceiving.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    }
 
+    @FXML
+    public void enableBtnEditReceiving() {
+        btnEditReceiving.setDisable(false);
     }
 
     @FXML
