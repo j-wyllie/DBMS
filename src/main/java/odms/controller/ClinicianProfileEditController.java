@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -78,7 +79,11 @@ public class ClinicianProfileEditController extends CommonController{
             }
 
             UserDAO database = DAOFactory.getUserDao();
-            database.update(currentUser);
+            try {
+                database.update(currentUser);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             openClinicianWindow(event);
         }

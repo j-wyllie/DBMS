@@ -20,25 +20,27 @@ public class MySqlUserDAO implements UserDAO {
      * @return ArrayList of all users in the database
      */
     @Override
-    public ArrayList<User> getAll() {
+    public ArrayList<User> getAll() throws SQLException {
         ArrayList<User> allUsers = new ArrayList<>();
 
         String query = "select * from users;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-
+        Connection conn = connectionInstance.getConnection();
+        Statement stmt = conn.createStatement();
         try {
-            Connection conn = connectionInstance.getConnection();
-            Statement stmt = conn.createStatement();
+
             ResultSet allUserRows = stmt.executeQuery(query);
 
             while (allUserRows.next()) {
                 User user = parseUser(allUserRows);
                 allUsers.add(user);
             }
-            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
         }
 
         return allUsers;
@@ -50,23 +52,25 @@ public class MySqlUserDAO implements UserDAO {
      * @return the specified user.
      * @throws UserNotFoundException error.
      */
-    public User get(int userId) throws UserNotFoundException {
+    public User get(int userId) throws UserNotFoundException, SQLException {
         String query = "select * from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user = null;
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
-            conn.close();
 
             user = parseUser(rs);
         }
         catch (SQLException e) {
             throw new UserNotFoundException("Not found", userId);
+        } finally {
+            conn.close();
+            stmt.close();
         }
 
         return user;
@@ -78,25 +82,27 @@ public class MySqlUserDAO implements UserDAO {
      * @return the specified user.
      * @throws UserNotFoundException error.
      */
-    public User get(String username) throws UserNotFoundException {
+    public User get(String username) throws UserNotFoundException, SQLException {
         String query = "select * from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user = null;
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
             user = parseUser(rs);
-            conn.close();
 
         }
         catch (SQLException e) {
             throw new UserNotFoundException("Not found", username);
+        } finally {
+            conn.close();
+            stmt.close();
         }
 
         return user;
@@ -143,15 +149,15 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to add.
      */
     @Override
-    public void add(User user) {
+    public void add(User user) throws SQLException {
         String query = "insert into users (Username, Password, Name, UserType, Address,"
                 + " Region, Created, LastUpdated, IsDefault) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
@@ -163,10 +169,12 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setBoolean(9, user.getDefault());
 
             System.out.println(stmt.executeUpdate());
-            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
         }
     }
 
@@ -176,14 +184,14 @@ public class MySqlUserDAO implements UserDAO {
      * @return true is the username does not already exist.
      */
     @Override
-    public boolean isUniqueUsername(String username) {
+    public boolean isUniqueUsername(String username) throws SQLException {
         String query = "select * from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
 
             ResultSet result = stmt.executeQuery();
@@ -191,10 +199,12 @@ public class MySqlUserDAO implements UserDAO {
             if (result.getFetchSize() == 0) {
                 return true;
             }
-            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return false;
     }
@@ -204,21 +214,23 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to remove.
      */
     @Override
-    public void remove(User user) {
+    public void remove(User user) throws SQLException {
         String query = "delete from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, user.getStaffID());
 
             stmt.executeUpdate();
-            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
         }
     }
 
@@ -227,16 +239,16 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to update.
      */
     @Override
-    public void update(User user) {
+    public void update(User user) throws SQLException {
         String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where "
                 + "UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
+        PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
@@ -249,10 +261,12 @@ public class MySqlUserDAO implements UserDAO {
 
 
             stmt.executeUpdate();
-            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
         }
     }
 }

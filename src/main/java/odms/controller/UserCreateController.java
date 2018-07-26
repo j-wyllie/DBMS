@@ -1,5 +1,6 @@
 package odms.controller;
 
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -33,7 +34,7 @@ public class UserCreateController extends CommonController {
     private Button userCreateAccountButton;
 
     @FXML
-    public void handleUserCreateAccountButtonClicked(ActionEvent event) {
+    public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
         if (checkValidEntries()) {
             if (checkUniqueUsername()) {
                 User user = new User(userTypeBox.getValue(), userNameField.getText(), userRegionField.getText());
@@ -56,7 +57,7 @@ public class UserCreateController extends CommonController {
      * checks that all fields have been filled out
      * @return a boolean signalling that all fields were filled it.
      */
-    private boolean checkUniqueUsername() {
+    private boolean checkUniqueUsername() throws SQLException {
         return DAOFactory.getUserDao().isUniqueUsername(userUsernameField.getText());
     }
 

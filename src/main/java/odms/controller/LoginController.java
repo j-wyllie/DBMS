@@ -7,6 +7,7 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -126,6 +127,8 @@ public class LoginController extends CommonController {
                     e.printStackTrace();
                     invalidUsername();
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

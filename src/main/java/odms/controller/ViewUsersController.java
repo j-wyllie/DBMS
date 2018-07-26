@@ -4,6 +4,7 @@ import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.GuiMain.getUserDatabase;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -88,7 +89,11 @@ public class ViewUsersController extends CommonController{
      */
     private void fetchData() {
         UserDAO database = DAOFactory.getUserDao();
-        usersObservableList = FXCollections.observableArrayList(database.getAll());
+        try {
+            usersObservableList = FXCollections.observableArrayList(database.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -102,7 +107,11 @@ public class ViewUsersController extends CommonController{
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = viewUsersTable.getSelectionModel().getSelectedItem();
-                DAOFactory.getUserDao().remove(user);
+                try {
+                    DAOFactory.getUserDao().remove(user);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 refreshViewUsersTable();
                 editTrueStage((Stage) viewUsersTable.getScene().getWindow());
             }
