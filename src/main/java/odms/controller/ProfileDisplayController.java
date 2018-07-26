@@ -1,12 +1,14 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +42,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -58,6 +62,8 @@ import odms.medications.Interaction;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
+
+import javax.imageio.ImageIO;
 
 public class ProfileDisplayController extends CommonController {
 
@@ -295,6 +301,9 @@ public class ProfileDisplayController extends CommonController {
 
     @FXML
     private Label labelPreferredName;
+
+    @FXML
+    private ImageView profileImage;
 
     /**
      * Called when there has been an edit to the current profile.
@@ -696,7 +705,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked() {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(getProfileDb());
     }
 
     /**
@@ -704,7 +713,7 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked() {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(getProfileDb());
     }
 
     /**
@@ -736,7 +745,7 @@ public class ProfileDisplayController extends CommonController {
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (generalConfirmation("Do you wish to save your changes?")) {
             showNotification("Medications Tab", event);
-            ProfileDataIO.saveData(getCurrentDatabase());
+            ProfileDataIO.saveData(getProfileDb());
         }
     }
 
@@ -1099,10 +1108,10 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getPreferredGender() != null) {
                 labelGenderPreferred.setText(labelGenderPreferred.getText() + currentProfile.getPreferredGender());
             }
-            if (currentProfile.getHeight() != 0.0) {
+            if (currentProfile.getHeight() != null) {
                 heightLabel.setText(heightLabel.getText() + currentProfile.getHeight() + "cm");
             }
-            if (currentProfile.getWeight() != 0.0) {
+            if (currentProfile.getWeight() != null) {
                 weightLabel.setText(weightLabel.getText() + currentProfile.getWeight() + "kg");
             }
             if (currentProfile.getPhone() != null) {
@@ -1140,6 +1149,18 @@ public class ProfileDisplayController extends CommonController {
             }
             if (currentProfile.getIsSmoker() != null) {
                 smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
+            }
+
+            //setting profile photo
+            if (currentProfile.getPictureName() != null) {
+                File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
+                if(!image.exists()){
+                    image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+                    if(!image.exists()){
+                        image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                    }
+                }
+                profileImage.setImage(new Image(image.toURI().toURL().toString()));
             }
 
             String history = ProfileDataIO.getHistory();

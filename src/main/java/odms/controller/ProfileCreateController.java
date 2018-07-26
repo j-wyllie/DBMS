@@ -1,5 +1,6 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidNhi;
@@ -24,7 +25,7 @@ import odms.profile.Profile;
 
 public class ProfileCreateController extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
+    private static ProfileDatabase currentDatabase = getProfileDb();
 
     @FXML
     private TextField givenNamesField;

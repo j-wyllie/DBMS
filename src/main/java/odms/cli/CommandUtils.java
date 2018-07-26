@@ -64,22 +64,18 @@ public class CommandUtils {
     static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
         switch (cmd.get(0).toLowerCase()) {
             case "print":
-                switch (cmd.get(1).toLowerCase()) {
-                    case "all":
-                        if (cmd.size() == 2) { return Commands.INVALID; }
-                        if (cmd.get(2).toLowerCase().equals("profiles")) {
-                            return Commands.PRINTALLPROFILES;
-                        } else if (cmd.get(2).toLowerCase().equals("users")) {
-                            return Commands.PRINTALLUSERS;
-                        } else {
-                            return Commands.INVALID;
-                        }
-                    case "donors":
-                        return Commands.PRINTDONORS;
-                    case "clinicians":
-                        return Commands.PRINTCLINICIANS;
+                if (cmd.size() == 2) { return Commands.INVALID; }
+                if (cmd.get(2).toLowerCase().equals("profiles")) {
+                    return Commands.PRINTALLPROFILES;
+                } else if (cmd.get(2).toLowerCase().equals("clinicians")) {
+                    return Commands.PRINTALLCLINICIANS;
+                } else if (cmd.get(2).toLowerCase().equals("users")) {
+                    return Commands.PRINTALLUSERS;
+                }else if (cmd.get(2).toLowerCase().equals("donors")) {
+                    return Commands.PRINTDONORS;
+                } else {
+                    return Commands.INVALID;
                 }
-                break;
             case "help":
                 return Commands.HELP;
             case "import":
@@ -94,10 +90,12 @@ public class CommandUtils {
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.PROFILECREATE;
                 }
+                break;
             case "create-clinician":
                 if (rawInput.matches(cmdRegexCreate)) {
                     return Commands.CLINICIANCREATE;
                 }
+                break;
             case "profile":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -105,8 +103,8 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations": // TODO is this meant to be donating or donated
-                            return Commands.PROFILEDONATIONS;
+                        case "organs":
+                            return Commands.PROFILEORGANS;
                         case "delete":
                             return Commands.PROFILEDELETE;
                     }
@@ -122,14 +120,14 @@ public class CommandUtils {
                             return Commands.ORGANREMOVE;
                         case "removereceive-organ":
                             return Commands.RECEIVEREMOVE;
-                        case "donate":
+                        case "donate-organ":
                             return Commands.ORGANDONATE;
                     }
-
                 } else if (rawInput.matches(cmdRegexProfileUpdate)
                     && cmd.get(0).equals("profile")) {
                     return Commands.PROFILEUPDATE;
                 }
+                break;
             case "clinician":
                 if (rawInput.matches(cmdRegexProfileView)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
@@ -144,8 +142,11 @@ public class CommandUtils {
                         && cmd.get(0).equals("clinician")) {
                     return Commands.CLINICIANUPDATE;
                 }
+                break;
             case "db-read":
                 return Commands.SQLREADONLY;
+            default:
+                return Commands.INVALID;
         }
         return Commands.INVALID;
     }

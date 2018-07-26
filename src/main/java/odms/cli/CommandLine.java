@@ -149,7 +149,7 @@ public class CommandLine implements Runnable{
                 Print.printAllProfiles(currentDatabase);
                 break;
 
-            case PRINTCLINICIANS:
+            case PRINTALLCLINICIANS:
                 // Print all clinicians (print all).
                 Print.printAllClinicians(currentDatabaseUsers);
                 break;
@@ -205,7 +205,7 @@ public class CommandLine implements Runnable{
                 System.out.println("Profile(s) successfully deleted.");
                 break;
 
-            case PROFILEDONATIONS:
+            case PROFILEORGANS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
                 Profile.viewDonationsBySearch(currentDatabase, rawInput);

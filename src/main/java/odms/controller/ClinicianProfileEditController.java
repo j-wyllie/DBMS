@@ -1,6 +1,13 @@
 package odms.controller;
 
+import static odms.controller.AlertController.generalConfirmation;
+import static odms.controller.AlertController.guiPopup;
+import static odms.controller.AlertController.profileCancelChanges;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,21 +15,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.dao.DAOFactory;
 import odms.dao.UserDAO;
-import odms.data.UserDataIO;
-import odms.history.History;
-import odms.profile.Profile;
 import odms.history.History;
 import odms.user.User;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import static odms.controller.AlertController.*;
-import static odms.controller.GuiMain.getUserDatabase;
 
 public class ClinicianProfileEditController extends CommonController{
     private static User currentUser;
@@ -42,6 +40,45 @@ public class ClinicianProfileEditController extends CommonController{
 
     @FXML
     private TextField regionField;
+
+    @FXML
+    private Text pictureText;
+
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+
+    @FXML
+    private void clinicianChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".png");
+            }
+            if(deleteFile.delete())
+            {
+                System.out.println("Old file deleted successfully");
+            }
+            else
+            {
+                System.out.println("Failed to delete the old file");
+            }
+            File pictureDestination = new File(localPath + "\\" +
+                    currentUser.getStaffID().toString() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentUser.setPictureName(chosenFile.getName());
+        }
+    }
+
 
     /**
      * Button handler to cancel the changes made to the fields.

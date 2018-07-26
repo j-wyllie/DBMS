@@ -1,9 +1,11 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -14,17 +16,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.dao.DAOFactory;
 import odms.dao.ProfileDAO;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.profile.Profile;
+
 
 public class ProfileEditController extends CommonController {
 
@@ -94,6 +94,41 @@ public class ProfileEditController extends CommonController {
     @FXML
     private ComboBox comboGender;
 
+    @FXML
+    private Text pictureText;
+
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+
+    @FXML
+    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
+            }
+                if(deleteFile.delete())
+                {
+                    System.out.println("Old file deleted successfully");
+                }
+                else
+                {
+                    System.out.println("Failed to delete the old file");
+                }
+            File pictureDestination = new File(localPath + "\\" + currentProfile.getNhi() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentProfile.setPictureName(chosenFile.getName());
+        }
+    }
+
     /**
      * Button handler to undo last action.
      *
@@ -101,7 +136,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        undoController.undo(getProfileDb());
     }
 
     /**
@@ -111,7 +146,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        redoController.redo(getProfileDb());
     }
 
     /**
@@ -153,6 +188,7 @@ public class ProfileEditController extends CommonController {
 
                 ProfileDAO database = DAOFactory.getProfileDao();
                 database.update(currentProfile);
+                ProfileDataIO.saveData(getProfileDb());
                 showNotification("Profile", event);
                 closeEditWindow(event);
 
@@ -199,10 +235,10 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveNhiNumber() throws IllegalArgumentException {
-        System.out.println(GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText()));
+        System.out.println(getCurrentDatabase().checkNHIExists(nhiNumberField.getText()));
         if ((!nhiNumberField.getText().equals(currentProfile.getNhi()) && (
                 !nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$") ||
-                        GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
+                        getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
             throw new IllegalArgumentException("NHI must be valid");
         }
         currentProfile.setNhi(nhiNumberField.getText());

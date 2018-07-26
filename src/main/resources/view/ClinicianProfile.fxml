@@ -143,6 +143,11 @@
                                                 <Insets left="20.0" />
                                              </GridPane.margin>
                                           </Label>
+                                          <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="7">
+                                             <image>
+                                                <Image url="@../profile_images/default.png" />
+                                             </image>
+                                          </ImageView>
                                        </children>
                                     </GridPane>
                                  </children>
