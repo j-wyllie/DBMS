@@ -7,14 +7,17 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.cli.CommandUtils;
 import odms.data.UserDataIO;
 import odms.history.History;
-import odms.profile.Profile;
-import odms.history.History;
 import odms.user.User;
+import org.sonar.api.internal.apachecommons.io.FilenameUtils;
+import org.sonar.api.internal.google.common.io.Files;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -40,6 +43,45 @@ public class ClinicianProfileEditController extends CommonController{
     @FXML
     private TextField regionField;
 
+    @FXML
+    private Text pictureText;
+
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+
+    @FXML
+    private void clinicianChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" +
+                        currentUser.getStaffID().toString() + ".png");
+            }
+            if(deleteFile.delete())
+            {
+                System.out.println("Old file deleted successfully");
+            }
+            else
+            {
+                System.out.println("Failed to delete the old file");
+            }
+            File pictureDestination = new File(localPath + "\\" +
+                    currentUser.getStaffID().toString() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentUser.setPictureName(chosenFile.getName());
+        }
+    }
+
+
     /**
      * Button handler to cancel the changes made to the fields.
      * @param event clicking on the cancel (x) button.
@@ -61,7 +103,7 @@ public class ClinicianProfileEditController extends CommonController{
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         boolean error = false;
 
-        if (saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             History action = new History("Clinician",currentUser.getStaffID(),"updated",
                                     "previous "+ currentUser.getAttributesSummary() + " new "+
                                             currentUser.getAttributesSummary(),-1,LocalDateTime.now());
