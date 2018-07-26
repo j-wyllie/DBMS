@@ -2,6 +2,7 @@ package odms.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
@@ -93,7 +94,11 @@ public class ImportLoadingDialogController {
                 ProfileDAO database = DAOFactory.getProfileDao();
 
                 profiles.forEach(profile -> {
-                    database.add(profile);
+                    try {
+                        database.add(profile);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 });
                 closeWindows(parentStage);
             });

@@ -2,6 +2,7 @@ package odms.controller;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -260,7 +261,6 @@ public class ClinicianProfileController extends CommonController {
             ageRangeField.setDisable(true);
             ageField.setPromptText("Age");
         }
-        performSearchFromFilters();
     }
 
 
@@ -284,25 +284,6 @@ public class ClinicianProfileController extends CommonController {
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
         labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
-    }
-
-    /**
-     * Mouse handler to update search table based on search results.
-     *
-     * @param event clicking the mouse
-     */
-    @FXML
-    private void handleSearchDonorsMouse(MouseEvent event) {
-        performSearchFromFilters();
-    }
-
-    /**
-     * Button handler to update donor table based on search results. Makes call to get fuzzy search results of profiles.
-     * @param event releasing a key on the keyboard.
-     */
-    @FXML
-    private void handleSearchDonors(KeyEvent event) {
-        performSearchFromFilters();
     }
 
     /**
@@ -340,65 +321,6 @@ public class ClinicianProfileController extends CommonController {
                 }
             }
         }
-    }
-
-    /**
-     * Clears the searchTable and updates with search results of profiles from the fuzzy search.
-     */
-    private void performSearchFromFilters() {
-        String selectedGender = null;
-        String selectedType = null;
-        ObservableList<OrganEnum> selectedOrgans;
-
-        selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
-
-        if (!typeCombobox.getSelectionModel().isEmpty()) {
-            selectedType = typeCombobox.getValue().toString();
-        }
-
-        if (!genderCombobox.getSelectionModel().isEmpty()) {
-            selectedGender = genderCombobox.getValue().toString();
-        }
-
-        String searchString = searchField.getText();
-        String regionSearchString = regionField.getText();
-
-        int ageSearchInt;
-        try {
-            ageSearchInt = Integer.parseInt(ageField.getText());
-        } catch (NumberFormatException e) {
-            ageSearchInt = -999;
-        }
-
-        int ageRangeSearchInt;
-        try {
-            if (ageRangeCheckbox.isSelected()) {
-                ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
-            } else {
-                ageRangeSearchInt = -999;
-            }
-        } catch (NumberFormatException e) {
-            ageRangeSearchInt = -999;
-        }
-
-        searchTable.getItems().clear();
-        profileSearchResults.clear();
-
-        try {
-            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
-                    searchString,
-                    ageSearchInt,
-                    ageRangeSearchInt,
-                    regionSearchString,
-                    selectedGender,
-                    selectedType,
-                    new HashSet<>(selectedOrgans)
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        updateTable(false, false);
-        updateLabels();
     }
 
     /**
@@ -492,14 +414,6 @@ public class ClinicianProfileController extends CommonController {
                     searchTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem());
             }
-        });
-
-        genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
-        });
-
-        organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
         });
 
         addTooltipToRow();
@@ -750,25 +664,17 @@ public class ClinicianProfileController extends CommonController {
             typeCombobox.getItems().addAll(typeStrings);
             typeCombobox.getSelectionModel().selectFirst();
 
-            typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    performSearchFromFilters();
-                }
-            });
-
-            genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    performSearchFromFilters();
-                }
-            });
-
             TableFilter filter = new TableFilter<>(transplantTable);
 
             setClinicianDetails();
             setupAdmin();
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label("There are " + DAOFactory.getProfileDao().size() + " profiles"));
+            try {
+                searchTable.setPlaceholder(new Label("There are " + DAOFactory.getProfileDao().size() + " profiles"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             try {
                 makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             } catch (Exception e) {
@@ -813,5 +719,61 @@ public class ClinicianProfileController extends CommonController {
                 stage.close();
             }
         }
+    }
+
+    public void handleSearchProfilesBtnClicked(ActionEvent actionEvent) {
+        String selectedGender = null;
+        String selectedType = null;
+        ObservableList<OrganEnum> selectedOrgans;
+
+        selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
+
+        if (!typeCombobox.getSelectionModel().isEmpty()) {
+            selectedType = typeCombobox.getValue().toString();
+        }
+
+        if (!genderCombobox.getSelectionModel().isEmpty()) {
+            selectedGender = genderCombobox.getValue().toString();
+        }
+
+        String searchString = searchField.getText();
+        String regionSearchString = regionField.getText();
+
+        int ageSearchInt;
+        try {
+            ageSearchInt = Integer.parseInt(ageField.getText());
+        } catch (NumberFormatException e) {
+            ageSearchInt = -999;
+        }
+
+        int ageRangeSearchInt;
+        try {
+            if (ageRangeCheckbox.isSelected()) {
+                ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
+            } else {
+                ageRangeSearchInt = -999;
+            }
+        } catch (NumberFormatException e) {
+            ageRangeSearchInt = -999;
+        }
+
+        searchTable.getItems().clear();
+        profileSearchResults.clear();
+
+        try {
+            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
+                    searchString,
+                    ageSearchInt,
+                    ageRangeSearchInt,
+                    regionSearchString,
+                    selectedGender,
+                    selectedType,
+                    new HashSet<>(selectedOrgans)
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        updateTable(false, false);
+        updateLabels();
     }
 }
