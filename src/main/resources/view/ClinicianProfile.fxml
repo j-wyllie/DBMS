@@ -23,7 +23,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 <?import org.controlsfx.control.CheckListView?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.controller.ClinicianProfileController">
     <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -134,7 +134,7 @@
                                                 <Insets left="20.0" />
                                              </GridPane.margin>
                                           </Label>
-                                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="7">
+                                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="6">
                                             <image>
                                                 <Image url="@../profile_images/default.png" />
                                             </image>
