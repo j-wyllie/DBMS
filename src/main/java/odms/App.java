@@ -1,15 +1,23 @@
 package odms;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.controller.GuiMain;
 import odms.controller.HistoryController;
+import odms.dao.DatabaseConnection;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 
 import java.io.File;
+import odms.enums.CountriesEnum;
 
 public class App {
     private static final String DONOR_DATABASE = "example/example.json";
