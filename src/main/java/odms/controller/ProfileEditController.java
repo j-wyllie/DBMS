@@ -165,7 +165,11 @@ public class ProfileEditController extends CommonController {
                 saveLastNames();
 
                 // Optional General Fields
-                saveAddress();
+                try {
+                    saveAddress();
+                }  catch (Exception e) {
+                    AlertController.guiPopup("Invalid address.");
+                }
                 saveDateOfDeath();
                 saveEmail();
                 saveGender();
@@ -266,9 +270,11 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    private void saveAddress() {
-        if (!addressField.getText().isEmpty()) {
+    private void saveAddress() throws Exception{
+        if (!addressField.getText().isEmpty() && AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())) {
             currentProfile.setAddress(addressField.getText());
+        } else if(!addressField.getText().isEmpty() && !AddressIO.checkValidCountry(addressField.getText(), comboCountry.getValue().toString())){
+            throw new Exception();
         }
     }
 
