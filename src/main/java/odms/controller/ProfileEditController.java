@@ -6,6 +6,7 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
@@ -19,6 +20,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.dao.CountryDAO;
+import odms.dao.DAOFactory;
 import odms.data.AddressIO;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
@@ -26,6 +29,7 @@ import odms.enums.NewZealandRegionsEnum;
 import odms.history.History;
 import odms.profile.Profile;
 import odms.enums.CountriesEnum;
+import odms.user.User;
 
 public class ProfileEditController extends CommonController {
 
@@ -786,8 +790,16 @@ public class ProfileEditController extends CommonController {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
                 }
 
-                comboCountry.getItems().addAll(CountriesEnum.toArrayList());
-                comboCountryOfDeath.getItems().addAll(CountriesEnum.toArrayList());
+                CountryDAO database = DAOFactory.getCountryDAO();
+                int index = 0;
+                for (String country : database.getAll(true)) {
+                    User.allowedCountriesIndices.add(index);
+                    index++;
+                }
+
+                List<String> validCountries = database.getAll(true);
+                comboCountry.getItems().addAll(validCountries);
+                comboCountryOfDeath.getItems().addAll(validCountries);
 
                 refreshRegionSelection();
                 refreshRegionOfDeathSelection();

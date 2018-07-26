@@ -39,6 +39,8 @@ import javafx.stage.WindowEvent;
 import odms.App;
 import odms.cli.CommandGUI;
 import odms.cli.CommandLine;
+import odms.dao.CountryDAO;
+import odms.dao.DAOFactory;
 import odms.enums.CountriesEnum;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
@@ -814,7 +816,14 @@ public class ClinicianProfileController extends CommonController {
     }
 
     private void setupCountriesComboView() {
-        countriesCheckListView.getItems().setAll(CountriesEnum.toArrayList());
+        CountryDAO database = DAOFactory.getCountryDAO();
+        int index = 0;
+        for (String country : database.getAll(true)) {
+            User.allowedCountriesIndices.add(index);
+            index++;
+        }
+
+        countriesCheckListView.getItems().setAll(database.getAll());
         if (User.allowedCountriesIndices.isEmpty()) {
             countriesCheckListView.getCheckModel().check(0);
         } else {
@@ -826,7 +835,18 @@ public class ClinicianProfileController extends CommonController {
     }
 
     public void handleSaveCountriesBtnPressed(MouseEvent mouseEvent) {
+        CountryDAO database = DAOFactory.getCountryDAO();
+
         User.allowedCountriesIndices = countriesCheckListView.getCheckModel().getCheckedIndices();
+        int index = 0;
+        for (CountriesEnum country : CountriesEnum.values()) {
+            if (User.allowedCountriesIndices.contains(index)) {
+                database.update(country, true);
+            }
+            else {
+                database.update(country, false);
+            }
+        }
         showNotification("Allowed Countries", mouseEvent);
     }
 }
