@@ -38,6 +38,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 result.add(procedure);
             }
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -84,6 +85,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.executeUpdate();
             //todo: return and update procedure id.
             conn.close();
+            stmt.close();
 
             for (OrganEnum organ : procedure.getOrgansAffected()) {
                 addAffectedOrgan(procedure, organ);
@@ -111,6 +113,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -138,6 +141,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
+
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -169,6 +174,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 organs.add(organ);
             }
             conn.close();
+            stmt.close();
+
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -195,6 +202,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
+
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -220,6 +229,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
+
         }
         catch (SQLException e) {
             e.printStackTrace();

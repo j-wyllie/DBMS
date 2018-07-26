@@ -28,6 +28,7 @@ public class MySqlCommonDAO implements CommonDAO {
 
                 outputResult(result);
                 connection.close();
+                stmt.close();
 
             } catch (SQLException e) {
                 System.out.println("Please enter a valid read-only query.");

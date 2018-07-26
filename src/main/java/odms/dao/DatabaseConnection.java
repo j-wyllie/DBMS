@@ -135,6 +135,7 @@ public class DatabaseConnection {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (Exception e) {
             e.printStackTrace();

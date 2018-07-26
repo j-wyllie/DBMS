@@ -38,6 +38,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
                 result.add(drug);
             }
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -80,6 +81,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -103,6 +105,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -130,6 +133,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

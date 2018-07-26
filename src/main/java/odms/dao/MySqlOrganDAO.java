@@ -113,6 +113,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -147,6 +148,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -179,6 +181,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -211,6 +214,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -284,6 +288,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

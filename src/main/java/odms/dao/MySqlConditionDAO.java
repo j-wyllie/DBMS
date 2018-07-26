@@ -35,6 +35,7 @@ public class MySqlConditionDAO implements ConditionDAO {
                 allConditions.add(condition);
             }
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -90,6 +91,7 @@ public class MySqlConditionDAO implements ConditionDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -113,6 +115,7 @@ public class MySqlConditionDAO implements ConditionDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -143,6 +146,7 @@ public class MySqlConditionDAO implements ConditionDAO {
 
             stmt.executeUpdate();
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
