@@ -1,88 +1,81 @@
 {
-  "deletedUsers": [
-    2
-  ],
+  "deletedUsers": [],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "Doc",
+      "name": "John Smith",
       "staffID": 0,
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 25
+          "day": 26
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 215000000
+          "hour": 14,
+          "minute": 18,
+          "second": 35,
+          "nano": 311000000
         }
       },
       "updateActions": [
-        "Account for Doccreated at 2018-07-25T13:42:29.203",
-        "Clinician updated at 01:42 PM 25-07-2018",
-        "0 updated at 01:42 PM 25-07-2018",
-        "0 updated at 01:42 PM 25-07-2018"
+        "Account for John Smithcreated at 2018-07-26T14:18:35.311",
+        "0 updated at 02:18 PM 26-07-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 25
+          "day": 26
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 203000000
+          "hour": 14,
+          "minute": 18,
+          "second": 35,
+          "nano": 311000000
         }
       },
-      "username": "Clinician",
-      "isDefault": true
+      "isDefault": false
     },
     "1": {
-      "userType": "ADMIN",
-      "name": "admin",
+      "userType": "CLINICIAN",
+      "name": "Matt Smith",
       "staffID": 1,
+      "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 25
+          "day": 26
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 418000000
+          "hour": 14,
+          "minute": 18,
+          "second": 35,
+          "nano": 311000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-07-25T13:42:29.418",
-        "admin updated at 01:42 PM 25-07-2018",
-        "1 updated at 01:42 PM 25-07-2018"
+        "Account for Matt Smithcreated at 2018-07-26T14:18:35.311",
+        "1 updated at 02:18 PM 26-07-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 7,
-          "day": 25
+          "day": 26
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 418000000
+          "hour": 14,
+          "minute": 18,
+          "second": 35,
+          "nano": 311000000
         }
       },
-      "username": "admin",
-      "password": "admin",
-      "isDefault": true
+      "isDefault": false
     }
   },
-  "lastID": 2,
+  "lastID": 1,
   "path": "example/users.json"
 }
