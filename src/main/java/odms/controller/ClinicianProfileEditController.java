@@ -59,12 +59,12 @@ public class ClinicianProfileEditController extends CommonController{
         if (chosenFile == null) {
 
         } else {
-            String extension = getFileExtension(chosenFile);
+            String extension = getFileExtension(chosenFile).toLowerCase();
             File deleteFile;
             if(extension == "jpg") {
-                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".png");
-            } else {
                 deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" + currentUser.getStaffID().toString() + ".png");
             }
             if(deleteFile.delete())
             {

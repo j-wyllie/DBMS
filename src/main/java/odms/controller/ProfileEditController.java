@@ -102,12 +102,12 @@ public class ProfileEditController extends CommonController {
     private void handleChooseImageClicked(ActionEvent event) throws IOException{
         File chosenFile = chooseImage(pictureText);
         if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile);
+            String extension = getFileExtension(chosenFile).toLowerCase();
             File deleteFile;
             if(extension == "jpg") {
-                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
-            } else {
                 deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+            } else {
+                deleteFile = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
             }
                 if(deleteFile.delete())
                 {

@@ -211,7 +211,7 @@ class CommonController {
 
             if (chooser.getSelectedFile().length() > 1000000) {
                 pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
-                return chooser.getSelectedFile();
+                return null;
             }
 
             System.out.println("You chose to open this file: " +
