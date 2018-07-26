@@ -12,8 +12,8 @@ import odms.enums.CountriesEnum;
 public class MySqlCountryDAO implements CountryDAO {
 
     @Override
-    public List<CountriesEnum> getAll() {
-        List<CountriesEnum> countries = new ArrayList<>();
+    public List<String> getAll() {
+        List<String> countries = new ArrayList<>();
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "select * from countries;";
         try {
@@ -23,21 +23,21 @@ public class MySqlCountryDAO implements CountryDAO {
             ResultSet result = stmt.executeQuery(query);
 
             while (result.next()) {
-                countries.add(CountriesEnum.valueOf(result.getString("Name")));
+                countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
             }
 
             stmt.close();
             connection.close();
 
         } catch (SQLException e) {
-            System.out.println("Please enter a valid read-only query.");
+            e.printStackTrace();
         }
         return countries;
     }
 
     @Override
-    public List<CountriesEnum> getAll(boolean valid) {
-        List<CountriesEnum> countries = new ArrayList<>();
+    public List<String> getAll(boolean valid) {
+        List<String> countries = new ArrayList<>();
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "select * from countries where Valid = ?;";
         try {
@@ -49,15 +49,36 @@ public class MySqlCountryDAO implements CountryDAO {
             ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
-                countries.add(CountriesEnum.valueOf(result.getString("Name")));
+                countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
             }
 
             stmt.close();
             connection.close();
 
         } catch (SQLException e) {
-            System.out.println("Please enter a valid read-only query.");
+            e.printStackTrace();
         }
         return countries;
+    }
+
+    @Override
+    public void update(CountriesEnum country, boolean valid) {
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        String query = "update countries set Valid = ? where Name = ?;";
+        try {
+            Connection connection = connectionInstance.getConnection();
+
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setBoolean(1, valid);
+            stmt.setString(2, country.toString());
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
