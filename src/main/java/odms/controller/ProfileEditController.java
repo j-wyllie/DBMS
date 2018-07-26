@@ -6,6 +6,9 @@ import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,8 +30,8 @@ public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
 
-    private RedoController redoController= new RedoController();
-    private UndoController undoController= new UndoController();
+    private RedoController redoController = new RedoController();
+    private UndoController undoController = new UndoController();
     @FXML
     private Label donorFullNameLabel;
 
@@ -192,11 +195,15 @@ public class ProfileEditController extends CommonController {
 
     /**
      * Save NHI Number field to profile.
+     *
      * @throws IllegalArgumentException if the field is empty
      */
     private void saveNhiNumber() throws IllegalArgumentException {
-        if (nhiNumberField.getText().isEmpty()) {
-            throw new IllegalArgumentException("NHI field cannot be blank");
+        System.out.println(GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText()));
+        if ((!nhiNumberField.getText().equals(currentProfile.getNhi()) && (
+                !nhiNumberField.getText().matches("^[A-HJ-NP-Z]{3}\\d{4}$") ||
+                        GuiMain.getCurrentDatabase().checkNHIExists(nhiNumberField.getText())))) {
+            throw new IllegalArgumentException("NHI must be valid");
         }
         currentProfile.setNhi(nhiNumberField.getText());
     }
@@ -405,8 +412,12 @@ public class ProfileEditController extends CommonController {
         });
 
         nhiNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nhiNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+            String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(newValue);
+
+            if (!m.matches() && !m.hitEnd()) {
+                nhiNumberField.setText(oldValue);
             }
         });
 
@@ -443,11 +454,11 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getDateOfDeath() != null) {
                     dodDatePicker.setValue(currentProfile.getDateOfDeath());
                 }
-                if (currentProfile.getHeight() != 0.0){
-                    heightField.setText(String.valueOf(currentProfile.getHeight()));
+                if (currentProfile.getHeight() != 0.0) {
+                    heightField.setText(String.valueOf(currentProfile.getHeight() / 100));
                 }
                 if (currentProfile.getWeight() != 0.0) {
-                    weightField.setText(String.valueOf(currentProfile.getWeight()));
+                    weightField.setText(String.valueOf(currentProfile.getWeight() / 100));
                 }
                 if (currentProfile.getPhone() != null) {
                     phoneField.setText(currentProfile.getPhone());
@@ -493,7 +504,8 @@ public class ProfileEditController extends CommonController {
                 }
 
                 comboGenderPref.setEditable(true);
-                comboGenderPref.getItems().addAll("Male", "Female", "Non binary"); //TODO Add database call for all preferred genders.
+                comboGenderPref.getItems().addAll("Male", "Female",
+                        "Non binary"); //TODO Add database call for all preferred genders.
 
                 if (currentProfile.getPreferredGender() != null) {
                     comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());

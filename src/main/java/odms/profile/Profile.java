@@ -968,7 +968,10 @@ public class Profile implements Comparable<Profile> {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                "Invalid blood type selected.\n" +
+                bloodType + " is not a valid blood type."
+            );
         }
     }
 

@@ -51,7 +51,7 @@ public class ProfileDatabase {
      * @param nhiNumber the number to be checked
      * @return boolean of whether or not it exists already.
      */
-    private boolean checkNHIExists(String nhiNumber) {
+    public boolean checkNHIExists(String nhiNumber) {
         Set<String> nhiNumbers = new HashSet<>();
 
         profileDb.forEach((id, profile) -> nhiNumbers.add(profile.getNhi()));
