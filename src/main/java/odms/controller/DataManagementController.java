@@ -1,18 +1,18 @@
 package odms.controller;
 
+import java.io.File;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.App;
 import odms.data.ProfileDataIO;
 import odms.user.User;
-
-import java.io.File;
-import java.io.IOException;
 
 public class DataManagementController {
 
@@ -23,60 +23,83 @@ public class DataManagementController {
 
     /**
      * Opens a file chooser and imports the selected files.
+     * Lets the user choose from JSON and CSV files.
      * @param actionEvent
      */
-    public void handleImportSavedDataClicked(ActionEvent actionEvent) {
+    public void handleImportExistingDataClicked(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON file(*.json)",
-                "*.json");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Data Files (*.json;*.csv)",
+                "*.json", "*.csv"
+        );
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
+        handleFile(file);
+    }
+
+    /**
+     * Checks that a file is not null and if there are unsaved changes
+     * Then calls the function to import the data from the file
+     * @param file The file that is trying to be imported
+     */
+    private void handleFile(File file) throws IOException {
         if (file != null) { // Check that the user actually selected a file
             if (ClinicianProfileController.checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
                 if (AlertController.unsavedChangesImport()) {
-                    importAndCloseWindows(stage, file);
+                    handleInputType(file);
                 }
             } else {
-                importAndCloseWindows(stage, file);
+                handleInputType(file);
             }
         }
     }
 
     /**
-     * Imports new json file.
+     * Loads the ImportLoadingDialog pane to import the data from the csv file
+     * @param file the csv file to be imported
+     * @throws IOException thrown if the data in the file can not be imported
+     */
+    private void importCSV(File file) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ImportLoadingDialog.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        ImportLoadingDialogController controller = fxmlLoader.getController();
+        controller.setCurrentUser(currentUser);
+
+        controller.initialize(file, (Stage) dataManagementAp.getScene().getWindow());
+
+        Stage stage = new Stage();
+        controller.setCurrentStage(stage);
+        controller.setOnCloseRequest();
+        stage.setTitle("Import data");
+        stage.initOwner(dataManagementAp.getScene().getWindow());
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Imports new json or csv file.
      * Closes all open windows and re-initializes the admin view.
-     * @param stage Stage to be close
      * @param file file to be set as database
      */
-    private void importAndCloseWindows(Stage stage, File file) {
-        App.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
-
-        ClinicianProfileController.closeAllOpenProfiles();
-        stage.close();
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-        try {
-            Scene scene = new Scene(fxmlLoader.load());
-
-            ClinicianProfileController controller = fxmlLoader.getController();
-            controller.setCurrentUser(currentUser);
-            controller.initialize();
-
-            stage = new Stage();
-            stage.setTitle("Admin");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void handleInputType(File file) throws IOException {
+        if (file.getName().toLowerCase().contains(".json")) {
+            GuiMain.setCurrentDatabase(ProfileDataIO.loadDataFromJSON(file.getPath()));
+        } else if (file.getName().toLowerCase().contains(".csv")) {
+            importCSV(file);
         }
     }
 
-
+    /**
+     * Sets the current user in the program
+     * @param currentUser the current user
+     */
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }

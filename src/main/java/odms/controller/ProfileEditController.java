@@ -1,6 +1,6 @@
 package odms.controller;
 
-import static odms.App.getProfileDb;
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class ProfileEditController extends CommonController {
     private TextField lastNamesField;
 
     @FXML
-    private TextField irdNumberField;
+    private TextField nhiNumberField;
 
     @FXML
     private DatePicker dobDatePicker;
@@ -115,7 +115,7 @@ public class ProfileEditController extends CommonController {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        if (AlertController.saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             try {
                 // History Generation
                 History action = new History("Profile" , currentProfile.getId() ,"update",
@@ -124,7 +124,7 @@ public class ProfileEditController extends CommonController {
                 // Required General Fields
                 saveDateOfBirth();
                 saveGivenNames();
-                saveIrdNumber();
+                saveNhiNumber();
                 saveLastNames();
 
                 // Optional General Fields
@@ -186,14 +186,14 @@ public class ProfileEditController extends CommonController {
     }
 
     /**
-     * Save IRD Number field to profile.
+     * Save NHI Number field to profile.
      * @throws IllegalArgumentException if the field is empty
      */
-    private void saveIrdNumber() throws IllegalArgumentException {
-        if (irdNumberField.getText().isEmpty()) {
-            throw new IllegalArgumentException("IRD Number field cannot be blank");
+    private void saveNhiNumber() throws IllegalArgumentException {
+        if (nhiNumberField.getText().isEmpty()) {
+            throw new IllegalArgumentException("NHI field cannot be blank");
         }
-        currentProfile.setIrdNumber(Integer.valueOf(irdNumberField.getText()));
+        currentProfile.setNhi(nhiNumberField.getText());
     }
 
     /**
@@ -399,9 +399,9 @@ public class ProfileEditController extends CommonController {
             }
         });
 
-        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+        nhiNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+                nhiNumberField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
 
@@ -429,8 +429,8 @@ public class ProfileEditController extends CommonController {
                 if (currentProfile.getPreferredName() != null) {
                     preferredNameField.setText(currentProfile.getPreferredName());
                 }
-                if (currentProfile.getIrdNumber() != null) {
-                    irdNumberField.setText(currentProfile.getIrdNumber().toString());
+                if (currentProfile.getNhi() != null) {
+                    nhiNumberField.setText(currentProfile.getNhi());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
                     dobDatePicker.setValue(currentProfile.getDateOfBirth());

@@ -1,8 +1,8 @@
 package odms.controller;
 
+import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.saveChanges;
-import static odms.App.getProfileDb;
+import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 
@@ -48,10 +48,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import odms.dao.DAOFactory;
+import odms.dao.MedicationInteractionsDAO;
 import odms.data.MedicationDataIO;
 import odms.data.ProfileDataIO;
 import odms.history.History;
 import odms.medications.Drug;
+import odms.medications.Interaction;
 import odms.profile.Condition;
 import odms.profile.Procedure;
 import odms.profile.Profile;
@@ -66,6 +69,7 @@ public class ProfileDisplayController extends CommonController {
     private ContextMenu suggestionMenu = new ContextMenu();
     private ObservableList<Condition> curConditionsObservableList;
     private ObservableList<Condition> pastConditionsObservableList;
+    private MedicationInteractionsDAO medicationInteractions;
 
     protected ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
 
@@ -89,7 +93,7 @@ public class ProfileDisplayController extends CommonController {
     private Label lastNamesLabel;
 
     @FXML
-    private Label irdLabel;
+    private Label nhiLabel;
 
     @FXML
     private Label dobLabel;
@@ -200,6 +204,9 @@ public class ProfileDisplayController extends CommonController {
     private Button buttonSaveMedications;
 
     @FXML
+    private Button buttonClearCache;
+
+    @FXML
     private TextField textFieldMedicationSearch;
 
     @FXML
@@ -301,7 +308,9 @@ public class ProfileDisplayController extends CommonController {
     private UndoController undoController= new UndoController();
 
     /**
-     * initializes and refreshes the current and past conditions tables
+     * Initializes and refreshes the current and past conditions tables
+     * @param curConditions current conditions for the profile.
+     * @param pastConditions past conditions for the profile.
      */
     @FXML
     private void makeTable(ArrayList<Condition> curConditions, ArrayList<Condition> pastConditions){
@@ -346,7 +355,7 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * refreshes current and past conditions table with its up to date data
+     * Refreshes current and past conditions table with its up to date data
      */
     @FXML
     protected void refreshConditionTable() {
@@ -490,7 +499,7 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * forces the sort order of the conditions tables to default to the diagnoses date in Descending order
+     * Forces the sort order of the conditions tables to default to the diagnoses date in Descending order.
      */
     @FXML
     private void forceConditionSortOrder() {
@@ -509,7 +518,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleAddNewCondition(ActionEvent event) throws IOException {
+    private void handleAddNewCondition(ActionEvent event) {
         try {
             Node source = (Node) event.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -536,11 +545,11 @@ public class ProfileDisplayController extends CommonController {
 
 
     /**
-     * Button handler to handle delete button clicked, only available to clinicians
+     * Button handler to handle delete button clicked, only available to clinicians.
      * @param event clicking on the button.
      */
     @FXML
-    private void handleDeleteCondition(ActionEvent event) throws IOException {
+    private void handleDeleteCondition(ActionEvent event) {
         ArrayList<Condition> conditions = convertConditionObservableToArray(
                 pastConditionsTable.getSelectionModel().getSelectedItems()
         );
@@ -562,6 +571,11 @@ public class ProfileDisplayController extends CommonController {
         refreshConditionTable();
     }
 
+    /**
+     * Button handler to handle the add new procedure button clicked. Opens the add procedure pop
+     * up.
+     * @param actionEvent clicking of the button.
+     */
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         try {
@@ -588,8 +602,8 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Removes the selected procedure and refreshes the table
-     * @param actionEvent
+     * Removes the selected procedure and refreshes the table.
+     * @param actionEvent clicking of the button.
      */
     @FXML
     public void handleDeleteProcedureButtonClicked(ActionEvent actionEvent) {
@@ -669,8 +683,8 @@ public class ProfileDisplayController extends CommonController {
 
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
+     * @throws IOException error.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
@@ -696,6 +710,7 @@ public class ProfileDisplayController extends CommonController {
     /**
      * Button handler to make fields editable.
      * @param event clicking on the edit button.
+     * @throws IOException error.
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
@@ -719,14 +734,14 @@ public class ProfileDisplayController extends CommonController {
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
-        if (saveChanges()) {
+        if (generalConfirmation("Do you wish to save your changes?")) {
             showNotification("Medications Tab", event);
             ProfileDataIO.saveData(getProfileDb());
         }
     }
 
     /**
-     * Button handler to view a drugs active ingredients
+     * Button handler to view a drugs active ingredients.
      * @param event clicking on the active ingredients button
      */
     @FXML
@@ -824,13 +839,6 @@ public class ProfileDisplayController extends CommonController {
         }
 
         try {
-            interactionsRaw = MedicationDataIO.getDrugInteractions(
-                    drugs.get(0).getDrugName(),
-                    drugs.get(1).getDrugName(),
-                    currentProfile.getGender(),
-                    currentProfile.getAge()
-            );
-
             tableViewDrugInteractionsNames.getItems().clear();
             tableViewDrugInteractions.getItems().clear();
             ObservableList<String> drugsList = FXCollections.observableArrayList();
@@ -841,20 +849,27 @@ public class ProfileDisplayController extends CommonController {
             tableColumnDrugInteractions.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
             tableViewDrugInteractionsNames.getColumns().setAll(tableColumnDrugInteractions);
 
-            if (interactionsRaw.isEmpty()) {
-                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
-            } else if (interactionsRaw.containsKey("error")) {
-                tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+            Interaction interaction = medicationInteractions.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());;
+
+            if (interaction != null) {
+                if (interaction.getDrugA() != null) {
+                    interactionsRaw = MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(), currentProfile.getAge());
+
+                    interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+                    tableViewDrugInteractions.setItems(interactions);
+                    tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
+                            <Map.Entry<String, String>, String> param) ->
+                            new SimpleStringProperty(param.getValue().getKey()));
+                    tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
+                            <Map.Entry<String, String>, String> param) ->
+                            new SimpleStringProperty(param.getValue().getValue()));
+                    tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+                } else {
+                    tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
+                }
+
             } else {
-                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
-                tableViewDrugInteractions.setItems(interactions);
-                tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
-                                                                 <Map.Entry<String, String>, String> param) ->
-                        new SimpleStringProperty(param.getValue().getKey()));
-                tableColumnDuration.setCellValueFactory((TableColumn.CellDataFeatures
-                                                                 <Map.Entry<String, String>, String> param) ->
-                        new SimpleStringProperty(param.getValue().getValue()));
-                tableViewDrugInteractions.getColumns().setAll(tableColumnSymptoms, tableColumnDuration);
+                tableViewDrugInteractions.setPlaceholder(new Label("There are no interactions for these drugs"));
             }
         } catch (IOException e) {
             tableViewDrugInteractions.setPlaceholder(new Label("There was an error getting interaction data"));
@@ -890,7 +905,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the add button.
      */
     @FXML
-    private void handleMoveMedicationToCurrent(ActionEvent event)   {
+    private void handleMoveMedicationToCurrent(ActionEvent event) {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems());
 
         for (Drug drug : drugs) {
@@ -913,7 +928,7 @@ public class ProfileDisplayController extends CommonController {
      * @param event clicking on the delete button.
      */
     @FXML
-    private void handleDeleteMedication(ActionEvent event)  {
+    private void handleDeleteMedication(ActionEvent event) {
         ArrayList<Drug> drugs = convertObservableToArray(tableViewCurrentMedications.getSelectionModel().getSelectedItems());
         drugs.addAll(convertObservableToArray(tableViewHistoricMedications.getSelectionModel().getSelectedItems()));
 
@@ -939,9 +954,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * Button handler to open medicationHistory scene
+     * Button handler to open medicationHistory scene.
      * @param event clicking on delete button.
-     * @throws IOException If MedicationHistory fxml is not found.
+     * @throws IOException if MedicationHistory fxml is not found.
      */
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
@@ -959,6 +974,22 @@ public class ProfileDisplayController extends CommonController {
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.show();
+    }
+
+    /**
+     * Clears the cache and handles the messages.
+     * @param event
+     */
+    @FXML
+    private void handleClearCache(ActionEvent event) {
+        if (AlertController.generalConfirmation("Are you sure you want to clear the cache?"
+                + "\nThis cannot be undone.")) {
+            medicationInteractions.clear();
+            if (!medicationInteractions.save()) {
+                AlertController.guiPopup("There was an error saving the cache.\nThe cache has been "
+                        + "cleared, but could not be saved.");
+            }
+        }
     }
 
     /**
@@ -1014,7 +1045,7 @@ public class ProfileDisplayController extends CommonController {
      * @param currentProfile donors profile
      */
     @FXML
-    private void setPage(Profile currentProfile){
+    private void setPage(Profile currentProfile) {
         makeProcedureTable(currentProfile.getPreviousProcedures(), currentProfile.getPendingProcedures());
 
         refreshProcedureTable();
@@ -1051,8 +1082,8 @@ public class ProfileDisplayController extends CommonController {
             if (currentProfile.getLastNames() != null) {
                 lastNamesLabel.setText(lastNamesLabel.getText() + currentProfile.getLastNames());
             }
-            if (currentProfile.getIrdNumber() != null) {
-                irdLabel.setText(irdLabel.getText() + currentProfile.getIrdNumber());
+            if (currentProfile.getNhi() != null) {
+                nhiLabel.setText(nhiLabel.getText() + currentProfile.getNhi());
             }
             if (currentProfile.getDateOfBirth() != null) {
                 dobLabel.setText(dobLabel.getText() + currentProfile.getDateOfBirth()
@@ -1254,6 +1285,7 @@ public class ProfileDisplayController extends CommonController {
             tableViewDrugInteractionsNames.setVisible(true);
             tableViewDrugInteractions.setVisible(true);
             buttonViewMedicationHistory.setVisible(true);
+            buttonClearCache.setVisible(true);
 
             logoutButton.setVisible(false);
         } else {
@@ -1280,11 +1312,14 @@ public class ProfileDisplayController extends CommonController {
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
             buttonViewMedicationHistory.setVisible(false);
+            buttonClearCache.setVisible(false);
         }
     }
 
     /**
-     * Initializes and refreshes the previous and pending procedure tables
+     * Initializes and refreshes the previous and pending procedure tables.
+     * @param previousProcedures previous procedures for the profile.
+     * @param pendingProcedures pending procedures for the profile.
      */
     @FXML
     private void makeProcedureTable(ArrayList<Procedure> previousProcedures, ArrayList<Procedure> pendingProcedures) {
@@ -1304,31 +1339,25 @@ public class ProfileDisplayController extends CommonController {
         }
         pendingProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem());
+
             }
         });
         previousProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel().getSelectedItem());
             }
         });
     }
 
     /**
-     * Creates a new edit procedure window
+     * Creates a new edit procedure window.
+     * @param selectedProcedure procedure to display in the window.
      */
     @FXML
-    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
+    public void createNewProcedureWindow(Procedure selectedProcedure) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
@@ -1403,6 +1432,9 @@ public class ProfileDisplayController extends CommonController {
         return currentProfile;
     }
 
+    /**
+     * Displays FXML on the organs tab.
+     */
     @FXML
     private void onTabOrgansSelected() {
         profileOrganOverviewController.currentProfile.bind(currentProfileBound);
@@ -1429,15 +1461,18 @@ public class ProfileDisplayController extends CommonController {
 
         curChronicColumn.setSortable(false);
 
+        medicationInteractions = DAOFactory.getMedicalInteractionsDao();
+        medicationInteractions.load();
+
         refreshPageElements();
 
         disableTableHeaderReorder();
     }
 
     /**
-     * sets the profile if it is being opened by a clinician
-     * If opened by clinician, set appropriate boolean and profile
-     * @param profile to be used
+     * Sets the profile if it is being opened by a clinician.
+     * If opened by clinician, set appropriate boolean and profile.
+     * @param profile to be used.
      */
     public void setProfileViaClinician(Profile profile) {
         isOpenedByClinician = true;
@@ -1445,9 +1480,9 @@ public class ProfileDisplayController extends CommonController {
     }
 
     /**
-     * sets the donor if it was logged in by a user
-     * If logged in normally, sets profile
-     * @param profile to be used
+     * Sets the donor if it was logged in by a user.
+     * If logged in normally, sets profile.
+     * @param profile to be used.
      */
     public void setProfile(Profile profile) {
         currentProfile = profile;

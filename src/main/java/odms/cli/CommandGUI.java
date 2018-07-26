@@ -41,7 +41,7 @@ public class CommandGUI {
     /**
      * Sets key listeners for command line history
      *
-     * @param commandLine
+     * @param commandLine the command line.
      */
     public void initHistory(CommandLine commandLine) {
         displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {

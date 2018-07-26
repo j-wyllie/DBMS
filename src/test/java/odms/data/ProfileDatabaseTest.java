@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
+import java.util.HashSet;
 import odms.enums.OrganEnum;
 import odms.profile.Profile;
 import org.junit.Before;
@@ -21,6 +21,8 @@ public class ProfileDatabaseTest {
     private Profile profileThree;
     private Profile profileFour;
     private Profile profileFive;
+    private HashSet<OrganEnum> organs = new HashSet<>();
+
 
     @Before
     public void setup() {
@@ -31,31 +33,31 @@ public class ProfileDatabaseTest {
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
-        profileOneAttr.add("ird=\"123456879\"");
+        profileOneAttr.add("nhi=\"123456879\"");
 
         ArrayList<String> profileTwoAttr = new ArrayList<>();
         profileTwoAttr.add("given-names=\"Sam\"");
         profileTwoAttr.add("last-names=\"Sick\"");
         profileTwoAttr.add("dob=\"17-01-1997\"");
-        profileTwoAttr.add("ird=\"123456878\"");
+        profileTwoAttr.add("nhi=\"123456878\"");
 
         ArrayList<String> profileThreeAttr = new ArrayList<>();
         profileThreeAttr.add("given-names=\"Sam\"");
         profileThreeAttr.add("last-names=\"Vladko\"");
         profileThreeAttr.add("dob=\"17-01-1997\"");
-        profileThreeAttr.add("ird=\"123456877\"");
+        profileThreeAttr.add("nhi=\"123456877\"");
 
         ArrayList<String> profileFourAttr = new ArrayList<>();
         profileFourAttr.add("given-names=\"Reece\"");
         profileFourAttr.add("last-names=\"Smith\"");
         profileFourAttr.add("dob=\"17-01-1997\"");
-        profileFourAttr.add("ird=\"123456876\"");
+        profileFourAttr.add("nhi=\"123456876\"");
 
         ArrayList<String> profileFiveAttr = new ArrayList<>();
         profileFiveAttr.add("given-names=\"Zu\"");
         profileFiveAttr.add("last-names=\"Tiu\"");
         profileFiveAttr.add("dob=\"17-01-1997\"");
-        profileFiveAttr.add("ird=\"123456875\"");
+        profileFiveAttr.add("nhi=\"123456875\"");
 
         try {
             profileOne = new Profile(profileOneAttr);
@@ -170,9 +172,9 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testCheckIRDNumberExists() throws IrdNumberConflictException {
-        thrown.expect(IrdNumberConflictException.class);
-        thrown.expectMessage("IRD number already in use");
+    public void testCheckNHINumberExists() throws NHIConflictException {
+        thrown.expect(NHIConflictException.class);
+        thrown.expectMessage("NHI already in use");
 
         profileDb.addProfile(profileOne);
         profileDb.addProfile(profileOne);
@@ -187,7 +189,7 @@ public class ProfileDatabaseTest {
 
         try {
             // No profiles in db, so no results
-            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,7 +210,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Top result should be profile Sam Sick, next result Sam Vladko. No other results.
-            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Sam Sick",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 2);
             assertEquals(profileTwo, testResults.get(0));
             assertEquals(profileThree, testResults.get(1));
@@ -231,7 +233,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain no results because no names start with 'a'
-            testResults = profileDb.searchProfiles("a",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("a",-999, -999,"","","any", organs);
             assertTrue(testResults.size() == 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,7 +254,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("s",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("s",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileFour);
             assertEquals(testResults.get(1), profileTwo);
@@ -276,7 +278,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain Zu Tiu, but no other profiles.
-            testResults = profileDb.searchProfiles("Tiu",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("Tiu",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 1);
             assertEquals(testResults.get(0), profileFive);
         } catch (Exception e) {
@@ -298,7 +300,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain sam sick, reece smith then sam vladko
-            testResults = profileDb.searchProfiles("sam",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("sam",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 3);
             assertEquals(testResults.get(0), profileTwo);
             assertEquals(testResults.get(1), profileThree);
@@ -323,7 +325,7 @@ public class ProfileDatabaseTest {
             profileDb.addProfile(profileFive);
 
             // Should contain Zu Tiu only, because the preferred name will be matched.
-            testResults = profileDb.searchProfiles("dragon",-999, -999,"","","",null);
+            testResults = profileDb.searchProfiles("dragon",-999, -999,"","","any",organs);
             assertTrue(testResults.size() == 1);
             assertEquals(testResults.get(0), profileFive);
         } catch (Exception e) {

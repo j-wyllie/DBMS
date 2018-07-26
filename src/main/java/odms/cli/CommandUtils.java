@@ -23,7 +23,7 @@ public class CommandUtils {
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     protected static String searchErrorText = "Please enter only one search criteria\n "
-                                            + "Profiles: given-names, last-names, ird\n"
+                                            + "Profiles: given-names, last-names, nhi\n"
                                             + "Users: name, staffID";
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
 
@@ -174,10 +174,10 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+                String attr_nhi = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+                ArrayList<Profile> profileList = currentDatabase.searchNHI(attr_nhi);
 
                 addOrgans(profileList, organList);
             }
@@ -211,10 +211,10 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 addReceiverOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
-                String attr_ird = expression.substring(expression.indexOf("\"") + 1,
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+                String attr_nhi = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
-                ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr_ird));
+                ArrayList<Profile> profileList = currentDatabase.searchNHI(attr_nhi);
 
                 addReceiverOrgans(profileList, organList);
             }
@@ -250,9 +250,9 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<Profile> profileList = currentDatabase
-                    .searchIRDNumber(Integer.valueOf(attr));
+                    .searchNHI(attr);
 
                 removeOrgansDonating(profileList, organList);
             }
@@ -285,9 +285,9 @@ public class CommandUtils {
                 ArrayList<Profile> profileList = currentDatabase.searchLastNames(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 ArrayList<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
             }
@@ -330,7 +330,7 @@ public class CommandUtils {
                     System.out.println(searchNotFoundText);
                 }
 
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 test(currentDatabase, expression, organList);
             } else {
                 System.out.println(searchErrorText);
@@ -346,7 +346,7 @@ public class CommandUtils {
         String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
             expression.indexOf(">") - 2);
-        ArrayList<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+        ArrayList<Profile> profileList = currentDatabase.searchNHI(attr);
 
         addOrgans(profileList, organList);
     }
@@ -550,7 +550,7 @@ public class CommandUtils {
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                 Profile profile = currentDatabase.getProfile(id);
                 System.out.println(action);
-                String old = action.substring(action.indexOf("ird"), action.indexOf("new"));
+                String old = action.substring(action.indexOf("nhi"), action.indexOf("new"));
                 profile.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))));
                 if (historyPosition != 0) {
                     historyPosition -= 1;
@@ -670,7 +670,7 @@ public class CommandUtils {
                     int id = Integer.parseInt(
                         action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);
-                    String newInfo = action.substring(action.indexOf("ird"));
+                    String newInfo = action.substring(action.indexOf("nhi"));
                     profile.setExtraAttributes(new ArrayList<>(Arrays.asList(newInfo.split(","))));
                 }  else if(action.contains("EDITED")){
                     int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));

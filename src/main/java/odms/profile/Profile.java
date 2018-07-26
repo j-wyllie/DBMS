@@ -2,6 +2,7 @@ package odms.profile;
 
 import javafx.beans.property.SimpleStringProperty;
 import odms.controller.HistoryController;
+import odms.enums.BloodTypeEnum;
 import odms.enums.OrganEnum;
 import odms.history.History;
 import odms.medications.Drug;
@@ -10,14 +11,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import odms.controller.HistoryController;
-import odms.enums.OrganEnum;
-import odms.history.History;
-import odms.medications.Drug;
+import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
@@ -34,8 +31,18 @@ public class Profile implements Comparable<Profile> {
     private Double height = 0.0;
     private Double weight = 0.0;
     private String bloodType;
+
     private String address;
+
+    private String streetNumber;
+    private String streetName;
+    private String neighbourhood;
+    private String city;
     private String region;
+    private String zipCode;
+    private String country;
+    private String birthCountry;
+
 
     private Boolean isSmoker;
     private String alcoholConsumption;
@@ -55,9 +62,10 @@ public class Profile implements Comparable<Profile> {
     private ArrayList<Condition> conditions = new ArrayList<>();
 
     private String phone;
+    private String mobilePhone;
     private String email;
 
-    private Integer irdNumber;
+    private String nhi;
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
 
@@ -76,7 +84,7 @@ public class Profile implements Comparable<Profile> {
         setExtraAttributes(attributes);
         procedures = new ArrayList<>();
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getIrdNumber() == null) {
+        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null || getNhi() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
@@ -87,15 +95,15 @@ public class Profile implements Comparable<Profile> {
      * @param givenNames Profile's given names as String
      * @param lastNames Profile's last names as String
      * @param dob Profile's date of birth as a string
-     * @param irdNumber Profile's IRD number as Integer
+     * @param nhi Profile's NHI number as Integer
      */
-    public Profile(String givenNames, String lastNames, String dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, String dob, String nhi) {
 
         // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
         attr.add("given-names=\"" + givenNames + "\"");
         attr.add("last-names=\"" + lastNames + "\"");
-        attr.add("ird=\"" + irdNumber + "\"");
+        attr.add("nhi=\"" + nhi + "\"");
         attr.add("dob=\"" + dob + "\"");
         this.setReceiver(false);
         setExtraAttributes(attr);
@@ -103,18 +111,18 @@ public class Profile implements Comparable<Profile> {
         if (getGivenNames() == null ||
                 getLastNames() == null ||
                 getDateOfBirth() == null ||
-                getIrdNumber() == null) {
+                getNhi() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
     }
 
-    public Profile(String givenNames, String lastNames, LocalDate dob, Integer irdNumber) {
+    public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
         this(
                 givenNames,
                 lastNames,
                 dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                irdNumber
+                nhi
         );
     }
 
@@ -215,11 +223,11 @@ public class Profile implements Comparable<Profile> {
             setAddress(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
             setRegion(value);
-        } else if (attrName.equals(Attribute.IRD.getText())) {
+        } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
-                setIrdNumber(Integer.valueOf(value));
+                setNhi(value);
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid IRD number entered");
+                throw new IllegalArgumentException("Invalid NHI number entered");
             }
         } else if (attrName.equals("isSmoker")) {
             setIsSmoker(Boolean.valueOf(value));
@@ -312,7 +320,7 @@ public class Profile implements Comparable<Profile> {
     // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("ird=" + irdNumber);
+        summary = summary +("nhi=" + nhi);
         summary = summary +"," +("given-names=" + givenNames);
         summary = summary +"," +("last-names=" + lastNames);
         summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -354,6 +362,7 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
+        organ.setDate(LocalDate.now());
         this.organsRequired.add(organ);
     }
 
@@ -367,6 +376,7 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
+            organ.setDate(LocalDate.now());
             History action = new History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             HistoryController.updateHistory(action);
@@ -840,6 +850,17 @@ public class Profile implements Comparable<Profile> {
         return givenNames + " " + lastNames;
     }
 
+    /**
+     * This method is used to populate a column in the search table, intelliJ thinks it is un-used.
+     */
+    public String getFullPreferredName() {
+        if (preferredName == null || preferredName.equals("")) {
+            return givenNames + " " + lastNames;
+        } else {
+            return givenNames + " \"" + preferredName + "\" " + lastNames;
+        }
+    }
+
     public void setGivenNames(String givenNames) {
         generateUpdateInfo("given-names");
         this.givenNames = givenNames;
@@ -881,9 +902,14 @@ public class Profile implements Comparable<Profile> {
         return gender;
     }
 
-    public void setGender(String gender) {
-        generateUpdateInfo("gender");
-        this.gender = gender;
+    public void setGender(String gender) throws IllegalArgumentException {
+        String newGender = gender.toLowerCase().trim();
+        if (newGender.equals("male") || newGender.equals("female")) {
+            generateUpdateInfo("gender");
+            this.gender = newGender;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Double getHeight() {
@@ -908,10 +934,12 @@ public class Profile implements Comparable<Profile> {
         return bloodType;
     }
 
-    public void setBloodType(String bloodType) {
-        if (bloodType != null) {
+    public void setBloodType(String bloodType) throws IllegalArgumentException {
+        if (bloodType != null && BloodTypeEnum.toArrayList().contains(bloodType)) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -931,15 +959,6 @@ public class Profile implements Comparable<Profile> {
     public void setRegion(String region) {
         generateUpdateInfo("region");
         this.region = region;
-    }
-
-    public Integer getIrdNumber() {
-        return irdNumber;
-    }
-
-    public void setIrdNumber(Integer irdNumber) {
-        generateUpdateInfo("ird");
-        this.irdNumber = irdNumber;
     }
 
     public Boolean getDonor() {
@@ -1031,8 +1050,13 @@ public class Profile implements Comparable<Profile> {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String email) throws IllegalArgumentException {
+        EmailValidator validator = EmailValidator.getInstance();
+        if (validator.isValid(email)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void setAllConditions(ArrayList<Condition> conditions) {
@@ -1053,5 +1077,78 @@ public class Profile implements Comparable<Profile> {
 
     public void setPreferredName(String preferredName) {
         this.preferredName = preferredName;
+    }
+
+    public String getNhi() {
+        return nhi;
+    }
+
+    public void setNhi(String nhi) {
+        generateUpdateInfo("nhi");
+        this.nhi = nhi;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getBirthCountry() {
+        return birthCountry;
+    }
+
+    public void setBirthCountry(String birthCountry) {
+        this.birthCountry = birthCountry;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getNeighbourhood() {
+        return neighbourhood;
+    }
+
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
     }
 }

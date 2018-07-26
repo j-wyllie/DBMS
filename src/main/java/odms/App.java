@@ -2,13 +2,10 @@ package odms;
 
 import javafx.application.Application;
 import odms.cli.CommandLine;
-import odms.cli.CommandUtils;
 import odms.controller.GuiMain;
 import odms.controller.HistoryController;
 import odms.data.ProfileDataIO;
 import odms.data.ProfileDatabase;
-import odms.data.UserDataIO;
-import odms.data.UserDatabase;
 import odms.data.UserDataIO;
 import odms.data.UserDatabase;
 
@@ -18,7 +15,7 @@ public class App {
     private static final String DONOR_DATABASE = "example/example.json";
     private static final String USER_DATABASE = "example/users.json";
 
-    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+    private static ProfileDatabase profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
     private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     public static void main(String[] args) {
@@ -35,8 +32,9 @@ public class App {
             File profileDbFile = new File(DONOR_DATABASE);
             if (!profileDbFile.isFile()) {
                 profileDb = new ProfileDatabase();
+                ProfileDataIO.saveData(profileDb, DONOR_DATABASE);
             } else {
-                profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+                profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
             }
 
             if (args == null || args.length == 0) {

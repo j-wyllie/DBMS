@@ -20,11 +20,11 @@
       "updateActions": [
         "given-names updated at 09:59 AM 07-05-2018",
         "last-names updated at 09:59 AM 07-05-2018",
-        "ird updated at 09:59 AM 07-05-2018",
+        "nhi updated at 09:59 AM 07-05-2018",
         "dob updated at 09:59 AM 07-05-2018",
         "given-names updated at 01:05 PM 18-05-2018",
         "last-names updated at 01:05 PM 18-05-2018",
-        "ird updated at 01:05 PM 18-05-2018",
+        "nhi updated at 01:05 PM 18-05-2018",
         "dob updated at 01:05 PM 18-05-2018",
         "gender updated at 01:05 PM 18-05-2018",
         "address updated at 01:05 PM 18-05-2018",
@@ -50,7 +50,7 @@
       "conditions": [],
       "phone": "",
       "email": "",
-      "irdNumber": 177076084,
+      "nhiNumber": "177076084",
       "timeOfCreation": {
         "date": {
           "year": 2018,
