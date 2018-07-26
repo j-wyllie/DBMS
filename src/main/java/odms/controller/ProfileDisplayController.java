@@ -1,8 +1,8 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.data.MedicationDataIO.getActiveIngredients;
 import static odms.data.MedicationDataIO.getSuggestionList;
 

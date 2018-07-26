@@ -1,5 +1,6 @@
 package odms.controller;
 
+import static odms.App.getProfileDb;
 import static odms.controller.AlertController.generalConfirmation;
 import static odms.controller.AlertController.profileCancelChanges;
 
