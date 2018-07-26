@@ -178,9 +178,11 @@ public class ProfileEditController extends CommonController {
                 saveCity();
                 saveWeight();
                 try {
-                    saveCityOfDeath();
-                    saveRegionOfDeath();
-                    saveCountryOfDeath();
+                    if(!dodDatePicker.getEditor().getText().isEmpty()) {
+                        saveCityOfDeath();
+                        saveRegionOfDeath();
+                        saveCountryOfDeath();
+                    }
                 } catch (Exception e) {
                     AlertController.guiPopup("Invalid Location Of Death");
                 }
@@ -564,6 +566,14 @@ public class ProfileEditController extends CommonController {
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
         // TODO investigate abstracting copy paste listeners to common function.
+        comboCountry.setVisible(true);
+        comboRegion.setVisible(true);
+        regionField.setVisible(true);
+        cityField.setVisible(true);
+        comboCountryOfDeath.setVisible(false);
+        comboRegionOfDeath.setVisible(false);
+        regionOfDeathField.setVisible(false);
+        cityOfDeathField.setVisible(false);
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 heightField.setText(newValue.replaceAll("[^\\d]", ""));
@@ -660,6 +670,14 @@ public class ProfileEditController extends CommonController {
                     regionField.setDisable(true);
                     comboRegion.setDisable(true);
                     cityField.setDisable(true);
+                    comboCountry.setVisible(false);
+                    comboRegion.setVisible(false);
+                    regionField.setVisible(false);
+                    cityField.setVisible(false);
+                    comboCountryOfDeath.setVisible(true);
+                    comboRegionOfDeath.setVisible(true);
+                    regionOfDeathField.setVisible(true);
+                    cityOfDeathField.setVisible(true);
                     } else {
                         comboCountryOfDeath.setDisable(true);
                         regionOfDeathField.setDisable(true);
@@ -695,18 +713,24 @@ public class ProfileEditController extends CommonController {
                             if (currentProfile.getCountry() != null) {
                                 if (currentProfile.getCountry().equals("New Zealand")) {
                                     comboRegion.setDisable(false);
+                                    comboRegionOfDeath.setDisable(false);
                                     regionField.setDisable(true);
+                                    regionOfDeathField.setDisable(true);
                                     comboRegion.setValue(currentProfile.getRegion());
                                     comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                                 } else {
                                     comboRegion.setDisable(true);
+                                    comboRegionOfDeath.setDisable(true);
                                     regionField.setDisable(false);
+                                    regionOfDeathField.setDisable(false);
                                     regionField.setText(currentProfile.getRegion());
                                     regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                                 }
                             } else {
                                 comboRegion.setDisable(true);
+                                comboRegionOfDeath.setDisable(true);
                                 regionField.setDisable(false);
+                                regionOfDeathField.setDisable(false);
                                 regionField.setText(currentProfile.getRegion());
                                 regionOfDeathField.setText(currentProfile.getRegion());
                             }
@@ -715,17 +739,22 @@ public class ProfileEditController extends CommonController {
                         if (currentProfile.getCountry() != null) {
                             if (currentProfile.getCountry().equals("New Zealand")) {
                                 comboRegion.setDisable(false);
+                                comboRegionOfDeath.setDisable(false);
                                 regionField.setDisable(true);
+                                regionOfDeathField.setDisable(true);
                                 comboRegion.setValue(currentProfile.getRegionOfDeath());
                                 comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
                             }
                         } else {
                             comboRegion.setDisable(true);
+                            comboRegionOfDeath.setDisable(true);
                             regionField.setDisable(false);
+                            regionOfDeathField.setDisable(false);
                             regionField.setText(currentProfile.getRegionOfDeath());
                             regionOfDeathField.setText(currentProfile.getRegionOfDeath());
                         }
                     }
+
 
 
                 } else {
