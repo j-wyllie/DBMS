@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import odms.model.data.NHIConflictException;
 import odms.view.profile.ProfileCreateAccountView;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -75,7 +76,7 @@ public class ProfileCreateController extends CommonController {
             } catch (IllegalArgumentException e) {
                 //show error window.
                 AlertController.invalidEntry();
-            } catch (IrdNumberConflictException e) {
+            } catch (NHIConflictException e) {
                 invalidIrd();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
