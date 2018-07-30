@@ -1,19 +1,26 @@
 package odms.controller.database;
 
+import static java.lang.System.getProperty;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-
-import javax.sql.DataSource;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
+import javax.sql.DataSource;
 
-import static java.lang.System.getProperty;
-
-public final class DatabaseConnection {
+public class DatabaseConnection {
 
     private static DataSource connectionSource;
     private ComboPooledDataSource source;
+
+    private String DEFAULT_CONFIG = "/src/config/db.config";
+    private static String CONFIG;
+
+    private String RESET_SQL = "/src/config/reset.sql";
+    private String RESAMPLE_SQL = "/src/config/resample.sql";
 
     /**
      * Constructor to create the singleton database connection class.
@@ -22,9 +29,13 @@ public final class DatabaseConnection {
         try {
             source = new ComboPooledDataSource();
 
+            if (CONFIG == null) {
+                CONFIG = DEFAULT_CONFIG;
+            }
+
             // load in config file
             Properties prop = new Properties();
-            prop.load(new FileInputStream(getProperty("user.dir") + "/config/db.config"));
+            prop.load(new FileInputStream(getProperty("user.dir") + CONFIG));
 
             // set config string
             String host = prop.getProperty("host");
@@ -36,7 +47,8 @@ public final class DatabaseConnection {
             // init
             try {
                 source.setDriverClass(driver);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
             source.setJdbcUrl(host + '/' + database);
@@ -47,14 +59,22 @@ public final class DatabaseConnection {
             source.setMaxPoolSize(50);
 
             connectionSource = source;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
+     * Helper to hold the instance of the singleton database
+     * connection class.
+     */
+    private static class DatabaseConnectionHelper {
+        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
+    }
+
+    /**
      * Supplys the instance of the singleton database connection class.
-     *
      * @return the instance of the class.
      */
     public static DatabaseConnection getInstance() {
@@ -63,19 +83,61 @@ public final class DatabaseConnection {
 
     /**
      * Returns a connection from the database connection pool.
-     *
      * @return a connection.
-     * @throws SQLException
+     * @throws SQLException error.
      */
     public static Connection getConnection() throws SQLException {
         return connectionSource.getConnection();
     }
 
     /**
-     * Helper to hold the instance of the singleton database connection class.
+     * Sets the config file location for the database.
+     * @param path to the file.
      */
-    private static class DatabaseConnectionHelper {
+    public static void setConfig(String path) {
+        CONFIG = path;
+    }
 
-        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
+    /**
+     * Resets the current in use database to the standard set of tables.
+     */
+    public void reset() {
+        executeQuery(RESET_SQL);
+    }
+
+    /**
+     * Resamples the current in use database with the default data.
+     */
+    public void resample() {
+        executeQuery(RESAMPLE_SQL);
+    }
+
+    /**
+     * Executes the sql statements in the file at the location passed in.
+     * @param filePath the location of the file.
+     */
+    private void executeQuery(String filePath) {
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(getProperty("user.dir") + filePath));
+            StringBuffer buffer = new StringBuffer();
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                buffer.append(line);
+            }
+            in.close();
+
+            DatabaseConnection instance = DatabaseConnection.getInstance();
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(buffer.toString());
+
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 import java.io.IOException;
 import java.util.Map;

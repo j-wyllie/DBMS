@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 import java.util.ArrayList;
 import odms.model.profile.Condition;

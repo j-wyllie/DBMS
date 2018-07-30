@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 import java.util.Set;
 import odms.model.enums.OrganEnum;

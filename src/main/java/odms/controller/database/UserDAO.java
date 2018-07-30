@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

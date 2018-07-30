@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 import static java.time.LocalDateTime.now;
 
@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;

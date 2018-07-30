@@ -1,4 +1,4 @@
-package odms.dao;
+package odms.controller.database;
 
 public interface CommonDAO {
 
