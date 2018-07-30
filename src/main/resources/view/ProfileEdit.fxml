@@ -435,8 +435,8 @@
                                                                         prefWidth="700.0"
                                                                         styleClass="detail-text"
                                                                         stylesheets="@../styles/Profile.css"
-                                                                        text="IRD : "
-                                                                        fx:id="irdLabel">
+                                                                        text="Nhi : "
+                                                                        fx:id="NhiLabel">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0"/>
                                                                     </GridPane.margin>
@@ -449,7 +449,7 @@
                                                                         GridPane.rowIndex="4"
                                                                         layoutX="210.0"
                                                                         layoutY="115.0"
-                                                                        fx:id="irdNumberField">
+                                                                        fx:id="nhiField">
                                                                     <GridPane.margin>
                                                                         <Insets right="20.0"/>
                                                                     </GridPane.margin>

@@ -60,7 +60,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobDatePicker").write("14/11/1997");
-        clickOn("#irdNumberField").write("88888888");
+        clickOn("#nhiField").write("88888888");
         clickOn("#createAccountButton");
 
         Scene newScene = getTopScene();
@@ -92,7 +92,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
         clickOn("#givenNamesField").write("Jack Travis");
         clickOn("#surnamesField").write("Hay");
         clickOn("#dobField").write("14.11.1997");
-        clickOn("#irdNumberField").write("100132122");
+        clickOn("#nhiField").write("ABC1324");
         clickOn("#createAccountButton");
 
         actualAlertDialog = getAlertDialogue();
@@ -110,7 +110,7 @@ public class LoginCreateAccountGUITest extends TestFxMethods {
 //        closeDialogue(dialogPane);
 //
 //        //tests empty IRD field.
-//        clickOn("#irdField").eraseText(9);
+//        clickOn("#nhiField").eraseText(9);
 //        clickOn("#createAccountButton");
 //
 //        actualAlertDialog = getTopModalStage();

@@ -38,7 +38,7 @@ public class ProfileMedicalViewTODO extends CommonView {
             bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());
         }
         if (currentProfile.getHeight() != 0.0 && currentProfile.getWeight() != 0.0) {
-            bmiLabel.setText(bmiLabel.getText() + currentProfile.getBMI());
+            bmiLabel.setText(bmiLabel.getText() + currentProfile.getBmi());
         }
         if (currentProfile.getIsSmoker() != null) {
             smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());

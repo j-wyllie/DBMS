@@ -1,6 +1,7 @@
 package odms.controller.data;
 
 import java.util.List;
+import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
 import odms.model.profile.Profile;
 import org.junit.Before;
@@ -32,31 +33,31 @@ public class ProfileDatabaseTest {
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
-        profileOneAttr.add("ird=\"123456879\"");
+        profileOneAttr.add("nhi=\"123456879\"");
 
         List<String> profileTwoAttr = new ArrayList<>();
         profileTwoAttr.add("given-names=\"Sam\"");
         profileTwoAttr.add("last-names=\"Sick\"");
         profileTwoAttr.add("dob=\"17-01-1997\"");
-        profileTwoAttr.add("ird=\"123456878\"");
+        profileTwoAttr.add("nhi=\"123456878\"");
 
         List<String> profileThreeAttr = new ArrayList<>();
         profileThreeAttr.add("given-names=\"Sam\"");
         profileThreeAttr.add("last-names=\"Vladko\"");
         profileThreeAttr.add("dob=\"17-01-1997\"");
-        profileThreeAttr.add("ird=\"123456877\"");
+        profileThreeAttr.add("nhi=\"123456877\"");
 
         List<String> profileFourAttr = new ArrayList<>();
         profileFourAttr.add("given-names=\"Reece\"");
         profileFourAttr.add("last-names=\"Smith\"");
         profileFourAttr.add("dob=\"17-01-1997\"");
-        profileFourAttr.add("ird=\"123456876\"");
+        profileFourAttr.add("nhi=\"123456876\"");
 
         List<String> profileFiveAttr = new ArrayList<>();
         profileFiveAttr.add("given-names=\"Zu\"");
         profileFiveAttr.add("last-names=\"Tiu\"");
         profileFiveAttr.add("dob=\"17-01-1997\"");
-        profileFiveAttr.add("ird=\"123456875\"");
+        profileFiveAttr.add("nhi=\"123456875\"");
 
         try {
             profileOne = new Profile(profileOneAttr);
@@ -168,8 +169,8 @@ public class ProfileDatabaseTest {
     }
 
     @Test
-    public void testCheckIRDNumberExists() throws IrdNumberConflictException {
-        thrown.expect(IrdNumberConflictException.class);
+    public void testCheckNhiExists() throws NHIConflictException {
+        thrown.expect(NHIConflictException.class);
         thrown.expectMessage("IRD number already in use");
 
         profileDb.addProfile(profileOne);

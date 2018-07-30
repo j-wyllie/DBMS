@@ -94,7 +94,7 @@ public class Profile implements Comparable<Profile> {
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public Profile(ArrayList<String> attributes) throws IllegalArgumentException {
+    public Profile(List<String> attributes) throws IllegalArgumentException {
         setExtraAttributes(attributes);
         procedures = new ArrayList<>();
 
@@ -185,7 +185,7 @@ public class Profile implements Comparable<Profile> {
      * @param attributes the attributes given in the constructor
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
+    private void setExtraAttributes(List<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
             if (parts.length==1) {
@@ -315,22 +315,6 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Add a procedure to the current profile
-     * @param procedure the procedure to add
-     */
-    public void addProcedure(Procedure procedure) {
-        if (procedures == null) {
-            procedures = new ArrayList<>();
-        }
-        procedures.add(procedure); }
-
-    /**
-     * Remove a procedure from the current profile
-     * @param procedure the procedure to remove
-     */
-    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
-
-    /**
      * Gets all of the profiles procedures
      * @return all procedures
      */
@@ -353,15 +337,6 @@ public class Profile implements Comparable<Profile> {
 
     public void setPreviousProcedures(ArrayList<Procedure> previous) {
         this.previousProcedures = previous;
-    }
-
-    /**
-     * Given a procedure, will return whether the procedure has past
-     * @param procedure the procedure to check
-     * @return whether the procedure has past
-     */
-    public boolean isPreviousProcedure(Procedure procedure) {
-        return procedure.getDate().isBefore(LocalDate.now());
     }
 
     // TODO abstract printing method to console tools
@@ -524,70 +499,6 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-    /**
-     * Remove a set of organs from the list of organs that the profile has donated
-     * @param organs a set of organs to remove from the list
-     */
-    public void removeOrgansDonated(Set<OrganEnum> organs) {
-        generateUpdateInfo("organsDonated");
-
-        for (OrganEnum organ : organs) {
-            this.organsDonated.remove(organ);
-            History action = new History(
-                    "Profile ",
-                    this.getId(),
-                    "removed donated",
-                    organ.getNamePlain(),
-                    -1,
-                    LocalDateTime.now()
-            );
-            HistoryController.updateHistory(action);
-        }
-    }
-
-    /**
-     * Remove a set of organs from the list of organs that the use wants to donate
-     * @param organs a set of organs to be removed
-     */
-    public void removeOrgansDonating(Set<OrganEnum> organs) {
-        generateUpdateInfo("organsDonating");
-
-        for (OrganEnum organ : organs) {
-            this.organsDonating.remove(organ);
-            History action = new History(
-                    "Profile ",
-                    this.getId(),
-                    "removed",
-                    organ.getNamePlain(),
-                    -1,
-                    LocalDateTime.now()
-            );
-            HistoryController.updateHistory(action);
-        }
-    }
-
-    /**
-     * Remove a set of organs from the list of organs required.
-     * @param organs a set of organs to be removed
-     */
-    public void removeOrgansRequired(Set<OrganEnum> organs) {
-        generateUpdateInfo("organsReceiving");
-
-        for (OrganEnum organ : organs) {
-            this.organsRequired.remove(organ);
-            History action = new History(
-                    "Profile ",
-                    this.getId(),
-                    "removed required",
-                    organ.getNamePlain(),
-                    -1,
-                    LocalDateTime.now()
-            );
-
-            HistoryController.updateHistory(action);
-        }
-    }
-
     public void removeOrganReceived(OrganEnum organ) {
         if (this.organsReceived.contains(organ)) {
             this.organsReceived.remove(organ);
@@ -612,21 +523,12 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-
     public void setReceiver(boolean receiver) {
         this.receiver = receiver;
     }
 
     public boolean isReceiver() {
         return receiver;
-    }
-
-    /**
-     * Calculates and returns the profiles bmi
-     * @return BMI
-     */
-    public Double calculateBMI() {
-        return this.weight / ((this.height) * (this.height));
     }
 
     /**
@@ -658,122 +560,6 @@ public class Profile implements Comparable<Profile> {
         lastUpdated = currentTime;
         String output = property + " updated at " + currentTime.format(DateTimeFormatter.ofPattern("hh:mm a dd-MM-yyyy"));
         updateActions.add(output);
-    }
-
-    /**
-     * adds a drug to the list of current medications a donor is on.
-     * @param drug the drug to be added
-     */
-    public void addDrug(Drug drug){
-        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
-        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
-        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        currentMedications.add(drug);
-        String data ="Profile " +
-                this.getId() +
-                " added drug " +
-                drug.getDrugName() +
-                " index of " +
-                currentMedications.indexOf(drug) +
-                " at " +
-                currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-        medicationTimestamps.add(data);
-        generateUpdateInfo(drug.getDrugName());
-    }
-
-    /**
-     * deletes a drug from the list of current medications if it was added by accident.
-     * @param drug the drug to be deleted.
-     */
-    public void deleteDrug(Drug drug) {
-        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
-        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
-        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        String data = "Profile " +
-                this.getId() +
-                " removed drug " +
-                drug.getDrugName() +
-                " index of "+
-                currentMedications.indexOf(drug) +
-                " at " +
-                currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-        if (currentMedications.contains(drug)) {
-            currentMedications.remove(drug);
-            medicationTimestamps.add(data);
-            generateUpdateInfo(drug.getDrugName());
-        } else if (historyOfMedication.contains(drug)) {
-            historyOfMedication.remove(drug);
-            data = "Profile " +
-                    this.getId() +
-                    " removed drug from history"  +
-                    " index of " +
-                    currentMedications.indexOf(drug) +
-                    " at " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-            medicationTimestamps.add(data);
-        }
-    }
-
-    /**
-     * Moves the drug to the history of drugs the donor has taken.
-     * @param drug the drug to be moved to the history
-     */
-    public void moveDrugToHistory(Drug drug){
-        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
-        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
-        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (currentMedications.contains(drug)) {
-            currentMedications.remove(drug);
-            historyOfMedication.add(drug);
-            String data = "Profile " +
-                    this.getId() +
-                    " stopped " +
-                    drug.getDrugName() +
-                    " index of "+
-                    historyOfMedication.indexOf(drug) +
-                    " at " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-            medicationTimestamps.add(data);
-            generateUpdateInfo(drug.getDrugName());
-        }
-    }
-
-    /**
-     * Moves the drug to the list of current drugs the donor is taking.
-     * @param drug the drug to be moved to the current drug list
-     */
-    public void moveDrugToCurrent(Drug drug){
-        if (currentMedications == null) { currentMedications = new ArrayList<>(); }
-        if (medicationTimestamps == null) { medicationTimestamps = new ArrayList<>(); }
-        if (historyOfMedication == null) { historyOfMedication = new ArrayList<>(); }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (historyOfMedication.contains(drug)) {
-            historyOfMedication.remove(drug);
-            currentMedications.add(drug);
-            String data = "Profile " +
-                    this.getId()  +
-                    " started using " +
-                    drug.getDrugName() +
-                    " index of " +
-                    currentMedications.indexOf(drug) +
-                    " again at " +
-                    currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-            medicationTimestamps.add(data);
-            generateUpdateInfo(drug.getDrugName());
-        }
-
     }
 
     public ArrayList<Drug> getCurrentMedications() {
@@ -852,44 +638,6 @@ public class Profile implements Comparable<Profile> {
     public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
         return organsRequired.containsAll(organs);
     }
-
-    /**
-     * adds a condition from the user
-     * @param condition to be added
-     */
-    public void addCondition(Condition condition) {
-        this.conditions.add(condition);
-    }
-
-    /**
-     * removes a condition from the user
-     * @param condition to be removed
-     */
-    public void removeCondition(Condition condition) {
-        this.conditions.remove(condition);
-    }
-
-    /**
-     * Returns the string value to populate the Donor/Receiver column in the clinician search table.
-     * @return a string depicting whether to profile is a donor, receiver, or both.
-     */
-    public SimpleStringProperty donorReceiverProperty() {
-        SimpleStringProperty result = new SimpleStringProperty();
-        if (!(donor == null) && donor) {
-            if (!(receiver == null) && receiver) {
-                result.setValue("Donor/Receiver");
-            }
-            else {
-                result.setValue("Donor");
-            }
-        }
-        else if (!(receiver == null) && receiver) {
-            result.setValue("Receiver");
-
-        }
-        return result;
-    }
-
 
     public LocalDateTime getTimeOfCreation() {
         return this.timeOfCreation;
@@ -1261,5 +1009,19 @@ public class Profile implements Comparable<Profile> {
 
     public void setPictureName(String pictureName) {
         this.pictureName = pictureName;
+    }
+
+    /**
+     * Calculates and returns the profiles bmi
+     *
+     * @return BMI
+     */
+    public Double getBmi() {
+        return weight / Math.pow(height, 2);
+    }
+
+    public void setLastUpdated() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        lastUpdated = currentTime;
     }
 }

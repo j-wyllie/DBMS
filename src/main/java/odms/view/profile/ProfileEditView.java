@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
-import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -29,7 +28,7 @@ public class ProfileEditView extends CommonView {
     private TextField lastNamesField;
 
     @FXML
-    private TextField irdNumberField;
+    private TextField nhiField;
 
     @FXML
     private DatePicker dobDatePicker;
@@ -163,9 +162,9 @@ public class ProfileEditView extends CommonView {
             }
         });
 
-        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+        nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+                nhiField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
 
@@ -193,8 +192,8 @@ public class ProfileEditView extends CommonView {
                 if (currentProfile.getPreferredName() != null) {
                     preferredNameField.setText(currentProfile.getPreferredName());
                 }
-                if (currentProfile.getIrdNumber() != null) {
-                    irdNumberField.setText(currentProfile.getIrdNumber().toString());
+                if (currentProfile.getNhi() != null) {
+                    nhiField.setText(currentProfile.getNhi());
                 }
                 if (currentProfile.getDateOfBirth() != null) {
                     dobDatePicker.setValue(currentProfile.getDateOfBirth());
@@ -280,12 +279,12 @@ public class ProfileEditView extends CommonView {
         givenNamesField.setText(s);
     }
 
-    public String getIRDNumberField() {
-        return irdNumberField.getText();
+    public String getNhiField() {
+        return nhiField.getText();
     }
 
-    public void getIRDNumberField(String s) {
-        irdNumberField.setText(s);
+    public void setNhiField(String s) {
+        nhiField.setText(s);
     }
 
     public String getLastNamesField() {
@@ -358,10 +357,6 @@ public class ProfileEditView extends CommonView {
 
     public void setDODDatePicker(LocalDate l) {
         dodDatePicker.setValue(l);
-    }
-
-    public void setIRDNumberField(String s) {
-       irdNumberField.setText(s);
     }
 
     public void setEmailField(String s) {

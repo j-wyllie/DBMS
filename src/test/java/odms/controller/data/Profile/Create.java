@@ -30,7 +30,7 @@ public class Create {
         view.setGivenNamesFieldValue("John");
         view.setsurnamesFieldValue("Smith");
         view.setdobDatePickerValue(LocalDate.now());
-        view.setirdNumberFieldValue("123456789");
+        view.setNhiField("ABC1234");
         controller.createAccount();
     }
 

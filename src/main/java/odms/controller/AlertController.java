@@ -84,7 +84,7 @@ public class AlertController {
     /**
      * Creates a popup when the NHI number entered was invalid
      */
-    static void invalidNhi() {
+    public static void invalidNhi() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Please enter a valid NHI number.",

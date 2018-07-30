@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static odms.controller.AlertController.invalidDate;
+import static odms.controller.AlertController.invalidNhi;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileCreateController extends CommonController {
@@ -35,7 +36,7 @@ public class ProfileCreateController extends CommonController {
         if (view.getdobDatePickerValue().equals(null)) {
             return "Please enter a Date of Birth";
         }
-        if (view.getirdNumberFieldValue().isEmpty()) {
+        if (view.getNhiField().isEmpty()) {
             return "Please enter an IRD number";
         } else {
             return "";
@@ -58,24 +59,24 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = view.getGivenNamesFieldValue();
                 String surnames = view.getsurnamesFieldValue();
                 LocalDate dob = view.getdobDatePickerValue();
-                String nhi = view.getNhiFieldValue();
+                String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
                 return currentDatabase.getProfile(newProfile.getId());
             } catch (NumberFormatException e) {
-                if (view.getirdNumberFieldValue().length() > 9) {
+                if (view.getNhiField().length() > 9) {
                     AlertController.invalidEntry(
                             "Entered IRD number is too long.\nPlease enter up to 9 digits");
                 } else {
-                    AlertController.invalidEntry("Invalid IRD number entered");
+                    AlertController.invalidEntry("Invalid NHI number entered");
                 }
             } catch (IllegalArgumentException e) {
                 //show error window.
                 AlertController.invalidEntry();
             } catch (NHIConflictException e) {
-                invalidIrd();
+                invalidNhi();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
             }

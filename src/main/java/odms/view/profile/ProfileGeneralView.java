@@ -22,8 +22,6 @@ public class ProfileGeneralView extends CommonView {
     @FXML
     private Label lastNamesLabel;
     @FXML
-    private Label irdLabel;
-    @FXML
     private Label dobLabel;
     @FXML
     private Label dodLabel;
@@ -39,6 +37,8 @@ public class ProfileGeneralView extends CommonView {
     private Label labelPreferredName;
     @FXML
     private Label ageLabel;
+    @FXML
+    private Label nhiLabel;
 
     private Profile currentProfile;
     // init controller corresponding to this view
@@ -55,9 +55,9 @@ public class ProfileGeneralView extends CommonView {
         if (currentProfile.getLastNames() != null) {
             lastNamesLabel.setText(currentProfile.getLastNames());
         }
-//        if (currentProfile.get().getIrdNumber() != null) {
-//            irdLabel.setText(currentProfile.get().getIrdNumber().toString());
-//        }
+        if (currentProfile.getNhi() != null) {
+            nhiLabel.setText(currentProfile.getNhi());
+        }
         if (currentProfile.getDateOfBirth() != null) {
             dobLabel.setText(currentProfile.getDateOfBirth()
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));

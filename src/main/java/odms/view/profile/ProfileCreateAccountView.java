@@ -22,7 +22,7 @@ public class ProfileCreateAccountView extends CommonView {
     private DatePicker dobDatePicker;
 
     @FXML
-    private TextField irdNumberField;
+    private TextField nhiField;
 
     private ProfileCreateController controller = new ProfileCreateController(this);
 
@@ -55,9 +55,9 @@ public class ProfileCreateAccountView extends CommonView {
     }
 
     public void initialize() {
-        irdNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+        nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                irdNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+                nhiField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
     }
@@ -74,8 +74,8 @@ public class ProfileCreateAccountView extends CommonView {
         return dobDatePicker.getValue();
     }
 
-    public String getirdNumberFieldValue() {
-        return irdNumberField.getText();
+    public String getNhiField() {
+        return nhiField.getText();
     }
 
     public void setGivenNamesFieldValue(String s) {
@@ -86,8 +86,8 @@ public class ProfileCreateAccountView extends CommonView {
         surnamesField.setText(s);
     }
 
-    public void setirdNumberFieldValue(String s) {
-        irdNumberField.setText(s);
+    public void setNhiField(String s) {
+        nhiField.setText(s);
     }
 
     public void setdobDatePickerValue(LocalDate l) {

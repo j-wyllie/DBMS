@@ -40,7 +40,7 @@ public class ProfileEditController extends CommonController {
                 // Required General Fields
                 saveDateOfBirth();
                 saveGivenNames();
-                saveIrdNumber();
+                saveNhi();
                 saveLastNames();
 
                 // Optional General Fields
@@ -106,11 +106,11 @@ public class ProfileEditController extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveIrdNumber() throws IllegalArgumentException {
-        if (view.getIRDNumberField().isEmpty()) {
-            throw new IllegalArgumentException("IRD Number field cannot be blank");
+    public void saveNhi() throws IllegalArgumentException {
+        if (view.getNhiField().isEmpty()) {
+            throw new IllegalArgumentException("NHI Number field cannot be blank");
         }
-        currentProfile.setIrdNumber(Integer.valueOf(view.getIRDNumberField()));
+        currentProfile.setNhi(view.getNhiField());
     }
 
     /**

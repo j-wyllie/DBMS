@@ -162,11 +162,11 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             profile.setAddress(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
             profile.setRegion(value);
-        } else if (attrName.equals(Attribute.IRD.getText())) {
+        } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
-                profile.setIrdNumber(Integer.valueOf(value));
+                profile.setNhi(value);
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid IRD number entered");
+                throw new IllegalArgumentException("Invalid NHI entered");
             }
         } else if (attrName.equals("isSmoker")) {
             profile.setIsSmoker(Boolean.valueOf(value));

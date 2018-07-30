@@ -4,7 +4,6 @@ import odms.controller.profile.ProfileEditController;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileEditView;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -24,7 +23,7 @@ public class Edit {
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
-        profileOneAttr.add("ird=\"123456879\"");
+        profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         view = new ProfileEditView();
         view.initialize(currentProfile);
@@ -120,9 +119,9 @@ public class Edit {
     }
 
     @Test
-    public void testSaveIRDNullValue() {
+    public void testSaveNHINullValue() {
         try {
-            controller.saveIrdNumber();
+            controller.saveNhi();
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(true);
@@ -130,12 +129,12 @@ public class Edit {
     }
 
     @Test
-    public void testSaveIRDCorrectValue() {
+    public void testSaveNHICorrectValue() {
         try {
-            Integer oldValue = currentProfile.getIrdNumber();
-            view.setIRDNumberField("587095144");
-            controller.saveIrdNumber();
-            assertNotEquals(oldValue, currentProfile.getIrdNumber());
+            String oldValue = currentProfile.getNhi();
+            view.setNhiField("587095144");
+            controller.saveNhi();
+            assertNotEquals(oldValue, currentProfile.getNhi());
         } catch (IllegalArgumentException e) {
             fail();
         }

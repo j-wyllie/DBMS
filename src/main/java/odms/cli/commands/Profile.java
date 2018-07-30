@@ -78,7 +78,7 @@ public class Profile extends CommandUtils {
                         .searchLastNames(attr);
 
                 deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
                         .searchNHI(attr);
 
@@ -163,7 +163,7 @@ public class Profile extends CommandUtils {
                         .searchLastNames(attr);
 
                 updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
                         .searchNHI(attr);
 
@@ -190,7 +190,7 @@ public class Profile extends CommandUtils {
                 Print.printProfileSearchResults(currentDatabase.searchGivenNames(attr));
             } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
                 Print.printProfileSearchResults(currentDatabase.searchLastNames(attr));
-            } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 Print.printProfileSearchResults(
                         currentDatabase.searchNHI(attr));
             } else {
@@ -231,7 +231,7 @@ public class Profile extends CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
                         .searchNHI(attr);
@@ -270,7 +270,7 @@ public class Profile extends CommandUtils {
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
+        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 profileList = currentDatabase.searchNHI(attr);
             } else {

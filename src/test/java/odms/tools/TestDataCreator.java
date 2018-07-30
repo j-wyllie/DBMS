@@ -1,22 +1,23 @@
 package odms.tools;
 
-import odms.controller.data.IrdNumberConflictException;
-import odms.controller.profile.ProfileUndoRedoCLIServiceController;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Random;
+import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Condition;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 
-import java.util.*;
-
 public class TestDataCreator {
-
     private ProfileDatabase database;
     private List<OrganEnum> organs = Arrays.asList(OrganEnum.values());
 
     private List<String> names = Arrays.asList(
-            "Ash Ketchup",
+            "Ash Ketc-hup",
             "Basashi Tabetai",
             "Boaty McBoatFace",
             "Boobafina Otter",
@@ -69,7 +70,7 @@ public class TestDataCreator {
 
             generateProfiles();
 
-        } catch (IrdNumberConflictException e) {
+        } catch (NHIConflictException e) {
 
             e.printStackTrace();
 
@@ -79,16 +80,16 @@ public class TestDataCreator {
     /**
      * Generate profiles with random organ data and add them to the database.
      *
-     * @throws IrdNumberConflictException if there is a duplicate IRD number in the database
+     * @throws NHIConflictException if there is a duplicate NHI number in the database
      */
-    private void generateProfiles() throws IrdNumberConflictException {
-        List<Integer> irdNumbers = new ArrayList<>();
+    private void generateProfiles() throws NHIConflictException {
+        List<String> nhiNumbers = new ArrayList<>();
 
-        while (irdNumbers.size() < names.size()) {
-            Integer irdNumber = randInRange(100000000, 999999999);
+        while (nhiNumbers.size() < names.size()) {
+            Integer nhi = randInRange(100000000, 999999999);
 
-            if (!irdNumbers.contains(irdNumber)) {
-                irdNumbers.add(irdNumber);
+            if (!nhiNumbers.contains(nhi.toString())) {
+                nhiNumbers.add(nhi.toString());
             }
         }
 
@@ -98,7 +99,7 @@ public class TestDataCreator {
                     profileName[0],
                     profileName[1],
                     randomDOB(),
-                    irdNumbers.remove(0)
+                    nhiNumbers.remove(0)
             );
             addOrganDonations(profile);
             addOrganDonors(profile);
@@ -119,7 +120,6 @@ public class TestDataCreator {
 
             database.addProfile(profile);
         }
-
     }
 
     public ProfileDatabase getDatabase() {
@@ -127,7 +127,8 @@ public class TestDataCreator {
     }
 
     /**
-     * Select a random number of organs to add as previously donated organs to the profile.
+     * Select a random number of organs to add as previously donated organs to
+     * the profile.
      *
      * @param profile the profile in which to add the organs
      */
@@ -137,7 +138,7 @@ public class TestDataCreator {
         if (numberDonations > 0) {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonations; i++) {
-                ProfileUndoRedoCLIServiceController.addOrganDonated(organs.get(i), profile);
+                profile.addOrganDonated(organs.get(i));
             }
         }
     }
@@ -148,9 +149,8 @@ public class TestDataCreator {
      * @param profile the profile that the diseases will be given
      */
     private void addConditions(Profile profile) {
-        ProfileUndoRedoCLIServiceController.addCondition(new Condition("Heart Disease", "01-04-2018", true), profile);
-        ProfileUndoRedoCLIServiceController.addCondition(
-                new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false), profile);
+        profile.getAllConditions().add(new Condition("Heart Disease", "01-04-2018", true));
+        profile.getAllConditions().add(new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
     }
 
     /**
@@ -165,7 +165,7 @@ public class TestDataCreator {
             profile.setDonor(true);
             for (Integer i = 0; i < numberDonating; i++) {
                 try {
-                    ProfileUndoRedoCLIServiceController.addOrganDonating(organs.get(i), profile);
+                    profile.addOrganDonating(organs.get(i));
                 } catch (OrganConflictException e) {
                     // As is test data, no action required.
                 }
@@ -184,7 +184,7 @@ public class TestDataCreator {
         if (numberReceiving > 0) {
             profile.setReceiver(true);
             for (Integer i = 0; i < numberReceiving; i++) {
-                ProfileUndoRedoCLIServiceController.addOrganRequired(organs.get(i), profile);
+                profile.addOrganRequired(organs.get(i));
             }
         }
     }
