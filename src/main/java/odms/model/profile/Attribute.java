@@ -11,15 +11,16 @@ public enum Attribute {
     BLOODTYPE("blood-type"),
     ADDRESS("address"),
     REGION("region"),
-    IRD("ird");
+    COUNTRY("country"),
+    NHI("nhi");
 
     private String text;
 
-    Attribute(String text) {
-        this.text = text;
-    }
-
     public String getText() {
         return text;
+    }
+
+    Attribute(String text) {
+        this.text = text;
     }
 }

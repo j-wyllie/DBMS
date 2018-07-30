@@ -3,14 +3,14 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.enums.OrganEnum;
+import odms.model.enums.OrganEnum;
 
 public class AlertController {
 
     /**
      * Creates a generic popup when details are entered incorrectly.
      */
-    static void invalidEntry() {
+    public static void invalidEntry() {
         invalidEntry("Please enter your details correctly.");
     }
 
@@ -18,7 +18,7 @@ public class AlertController {
      * Creates a message based popup when the details are entered incorrectly.
      * @param message the message to be displayed
      */
-    static void invalidEntry(String message) {
+    public static void invalidEntry(String message) {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 message,
@@ -52,7 +52,7 @@ public class AlertController {
     /**
      * Creates a popup when the username entered was invalid
      */
-    static void invalidUsername() {
+    public static void invalidUsername() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Please enter a valid username.",
@@ -68,7 +68,7 @@ public class AlertController {
     /**
      * Creates a popup when the username or password entered was invalid.
      */
-    static void invalidUsernameOrPassword() {
+    public static void invalidUsernameOrPassword() {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 "Incorrect username or password.",
@@ -100,7 +100,7 @@ public class AlertController {
     /**
      * Creates a popup when the date entered is an incorrect format
      */
-    static void invalidDate() {
+    public static void invalidDate() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Date entered is not in the format dd-mm-yyyy.",
@@ -200,7 +200,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean deleteUserConfirmation() {
+    public static boolean deleteUserConfirmation() {
         Alert cancelAlert = new Alert(
                 AlertType.CONFIRMATION,
                 "Are you sure you want to delete this user?",

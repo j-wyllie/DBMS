@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public enum OrganEnum {
     BONE("bone"),
@@ -23,10 +22,26 @@ public enum OrganEnum {
     SKIN("skin");
 
     private String name;
-    private LocalDate date = LocalDate.now();
+    private LocalDate dateOfRegistration = LocalDate.now();
 
-    OrganEnum(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() { return dateOfRegistration; }
+    public void setDate(LocalDate date) { dateOfRegistration = date; }
+
+    /**
+     * Correctly space and case the name of the organ for display/printing purposes.
+     *
+     * @return corrected organ String
+     */
+    public String getNamePlain() {
+        ArrayList<String> organNamePlain = new ArrayList<>();
+        for (String organTerm : getName().split("-")) {
+            organNamePlain.add(Character.toUpperCase(organTerm.charAt(0)) + organTerm.substring(1));
+        }
+        return String.join(" ", organNamePlain);
     }
 
     /**
@@ -52,8 +67,8 @@ public enum OrganEnum {
      * @param organStrings List of Organ Strings
      * @return HashSet of Organs
      */
-    public static Set<OrganEnum> stringListToOrganSet(List<String> organStrings) {
-        Set<OrganEnum> organs = new HashSet<>();
+    public static HashSet<OrganEnum> stringListToOrganSet(List<String> organStrings) {
+        HashSet<OrganEnum> organs = new HashSet<>();
 
         for (String organ : organStrings) {
             organs.add(valueOf(organ.toUpperCase()));
@@ -64,11 +79,10 @@ public enum OrganEnum {
 
     /**
      * Take a HashSet of Organ objects and return a sorted comma delimited string
-     *
      * @param organs Organ HashSet to be converted
      * @return comma delimited string
      */
-    public static String organSetToString(Set<OrganEnum> organs) {
+    public static String organSetToString(HashSet<OrganEnum> organs) {
         List<String> organsList = new ArrayList<>();
 
         for (OrganEnum organ : organs) {
@@ -80,25 +94,7 @@ public enum OrganEnum {
         return String.join(", ", organsList);
     }
 
-    public String getName() {
-        return name;
+    OrganEnum(String name) {
+        this.name = name;
     }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    /**
-     * Correctly space and case the name of the organ for display/printing purposes.
-     *
-     * @return corrected organ String
-     */
-    public String getNamePlain() {
-        ArrayList<String> organNamePlain = new ArrayList<>();
-        for (String organTerm : getName().split("-")) {
-            organNamePlain.add(Character.toUpperCase(organTerm.charAt(0)) + organTerm.substring(1));
-        }
-        return String.join(" ", organNamePlain);
-    }
-
 }

@@ -59,9 +59,9 @@ public class ProfileCreateController extends CommonController {
                 String givenNames = view.getGivenNamesFieldValue();
                 String surnames = view.getsurnamesFieldValue();
                 LocalDate dob = view.getdobDatePickerValue();
-                Integer ird = Integer.valueOf(view.getirdNumberFieldValue());
+                String nhi = view.getNhiFieldValue();
 
-                Profile newProfile = new Profile(givenNames, surnames, dob, ird);
+                Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
                 return currentDatabase.getProfile(newProfile.getId());

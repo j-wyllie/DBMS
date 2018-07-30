@@ -2,9 +2,9 @@ package odms.cli.commands;
 
 import java.util.List;
 import odms.cli.CommandUtils;
-import odms.controller.data.IrdNumberConflictException;
 import odms.controller.history.HistoryController;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
+import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
 import odms.model.history.History;
 
@@ -42,12 +42,12 @@ public class Profile extends CommandUtils {
         } catch (IllegalArgumentException e) {
             System.out.println("Please enter the required attributes correctly.");
 
-        } catch (IrdNumberConflictException e) {
-            Integer errorIrdNumber = e.getIrdNumber();
+        } catch (NHIConflictException e) {
+            String errorNhiNumber = e.getNHI();
             odms.model.profile.Profile errorProfile = currentDatabase
-                    .searchIRDNumber(errorIrdNumber).get(0);
+                    .searchNHI(errorNhiNumber).get(0);
 
-            System.out.println("Error: IRD Number " + errorIrdNumber +
+            System.out.println("Error: NHI " + errorNhiNumber +
                     " already in use by profile " +
                     errorProfile.getGivenNames() + " " +
                     errorProfile.getLastNames());
@@ -80,7 +80,7 @@ public class Profile extends CommandUtils {
                 deleteProfiles(profileList, currentDatabase);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 deleteProfiles(profileList, currentDatabase);
             }
@@ -165,7 +165,7 @@ public class Profile extends CommandUtils {
                 updateProfileAttr(profileList, attrList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 updateProfileAttr(profileList, attrList);
             }
@@ -192,7 +192,7 @@ public class Profile extends CommandUtils {
                 Print.printProfileSearchResults(currentDatabase.searchLastNames(attr));
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 Print.printProfileSearchResults(
-                        currentDatabase.searchIRDNumber(Integer.valueOf(attr)));
+                        currentDatabase.searchNHI(attr));
             } else {
                 System.out.println(searchErrorText);
             }
@@ -234,7 +234,7 @@ public class Profile extends CommandUtils {
         } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
                 List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 Print.printProfileList(profileList);
             } else {
@@ -272,7 +272,7 @@ public class Profile extends CommandUtils {
             }
         } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
             if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+                profileList = currentDatabase.searchNHI(attr);
             } else {
                 System.out.println(searchErrorText);
             }

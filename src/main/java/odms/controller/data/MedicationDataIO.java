@@ -92,7 +92,7 @@ public final class MedicationDataIO {
      *                      or not.
      * @return drug name with space replaced with correct replacement.
      */
-    private static String replaceSpace(String drug, Boolean isInteraction) {
+    public static String replaceSpace(String drug, Boolean isInteraction) {
         if (!isInteraction) {
             return drug.replace(" ", "%20");
         } else {
@@ -107,7 +107,7 @@ public final class MedicationDataIO {
      * @param urlString represents the address the HTTP GET request is made to.
      * @throws IOException URL and HttpURLConnection may cause IOExceptions.
      */
-    private static StringBuffer makeRequest(String urlString) throws IOException {
+    public static StringBuffer makeRequest(String urlString) throws IOException {
         URL url = new URL(urlString);
         StringBuffer responseContent;
         //Creating the connection to the API server.

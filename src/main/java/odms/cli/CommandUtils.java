@@ -182,7 +182,7 @@ public class CommandUtils {
                 String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
                 List<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attrIrd));
+                        .searchNHI(attrIrd);
 
                 addOrgans(profileList, organList);
             }
@@ -220,8 +220,7 @@ public class CommandUtils {
                 String attrIrd = expression.substring(expression.indexOf("\"") + 1,
                         expression.indexOf(">") - 2);
                 List<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attrIrd));
-
+                        .searchNHI(attrIrd);
                 addReceiverOrgans(profileList, organList);
             }
 
@@ -258,7 +257,7 @@ public class CommandUtils {
                 removeOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 List<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 removeOrgansDonating(profileList, organList);
             }
@@ -293,7 +292,7 @@ public class CommandUtils {
                 removeReceiverOrgansDonating(profileList, organList);
             } else if (expression.substring(8, 8 + "ird".length()).equals("ird")) {
                 List<Profile> profileList = currentDatabase
-                        .searchIRDNumber(Integer.valueOf(attr));
+                        .searchNHI(attr);
 
                 removeReceiverOrgansDonating(profileList, organList);
             }
@@ -352,7 +351,7 @@ public class CommandUtils {
             String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
-        List<Profile> profileList = currentDatabase.searchIRDNumber(Integer.valueOf(attr));
+        List<Profile> profileList = currentDatabase.searchNHI(attr);
 
         addOrgans(profileList, organList);
     }
