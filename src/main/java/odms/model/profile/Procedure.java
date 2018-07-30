@@ -15,7 +15,7 @@ public class Procedure {
     private String summary;
     private LocalDate date;
     private String longDescription;
-    private ArrayList<OrganEnum> organsAffected = new ArrayList<>();
+    private List<OrganEnum> organsAffected = new ArrayList<>();
     private String affectsOrgansText = "Affects Donations";
 
     public Procedure(String summary, String date, String longDescription) {
@@ -60,13 +60,13 @@ public class Procedure {
     public String getSummary() { return summary; }
     public LocalDate getDate() { return date; }
     public String getLongDescription() { return this.longDescription; }
-    public ArrayList<OrganEnum> getOrgansAffected() { return organsAffected; }
+    public List<OrganEnum> getOrgansAffected() { return organsAffected; }
     public String getAffectsOrgansText() { return affectsOrgansText; }
 
     public void setSummary(String summary) { this.summary = summary; }
     public void setDate(LocalDate date) { this.date = date; }
     public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
-    public void setOrgansAffected(ArrayList<OrganEnum> organs) { this.organsAffected = organs; }
+    public void setOrgansAffected(List<OrganEnum> organs) { this.organsAffected = organs; }
 
     /**
      * Adds an organ to the list of affected organs for this procedure

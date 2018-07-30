@@ -118,7 +118,7 @@ public class AlertController {
      * Creates a popup with a personalized message from the controller
      * @param message the message to be displayed
      */
-    static void guiPopup(String message) {
+    public static void guiPopup(String message) {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             message,
@@ -134,7 +134,7 @@ public class AlertController {
     /**
      * Creates a popup with a personalized message from the controller
      */
-    static void uniqueUsername() {
+    public static void uniqueUsername() {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 "Please enter a unique username",
@@ -186,7 +186,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean profileCancelChanges() {
+    public static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to cancel your changes?",
@@ -237,7 +237,7 @@ public class AlertController {
      *
      * @return true or false on whether the changes were confirmed
      */
-    static boolean unsavedChangesImport() {
+    public static boolean unsavedChangesImport() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "You have unsaved changes.\n" +

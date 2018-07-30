@@ -4,7 +4,6 @@ import odms.model.data.NHIConflictException;
 import odms.view.profile.ProfileCreateAccountView;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
-import odms.controller.data.IrdNumberConflictException;
 import odms.controller.data.ProfileDataIO;
 import odms.model.data.ProfileDatabase;
 import odms.model.profile.Profile;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static odms.controller.AlertController.invalidDate;
-import static odms.controller.AlertController.invalidIrd;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileCreateController extends CommonController {
