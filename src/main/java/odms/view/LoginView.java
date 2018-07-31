@@ -14,24 +14,17 @@ import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.user.ClinicianProfileView;
-
 import java.io.IOException;
-
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.AlertController.invalidUsernameOrPassword;
-import static odms.controller.GuiMain.getCurrentDatabase;
-import static odms.controller.GuiMain.getUserDatabase;
 
 public class LoginView extends CommonController {
 
     private static User currentUser;
-    private ProfileDatabase currentDatabase = getCurrentDatabase();
-    private UserDatabase userDatabase = getUserDatabase();
+
     /**
      * TextField to input username.
      */
@@ -88,24 +81,6 @@ public class LoginView extends CommonController {
                 }
             } catch (UserNotFoundException u) {
                 try {
-                    if (username == "0") {
-                        currentUser = userDatabase.getUser(0);
-
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader
-                                .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-                        scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileView v = fxmlLoader.getController();
-                        v.setCurrentUser(currentUser);
-                        v.initialize();
-
-                        Stage stage = new Stage();
-                        stage.setTitle(currentUser.getUserType().getName());
-                        stage.setScene(scene);
-                        stage.show();
-                        closeCurrentStage();
-                    } else {
                         ProfileDAO database = DAOFactory.getProfileDao();
                         Profile currentProfile = database.get(username);
 
@@ -125,9 +100,6 @@ public class LoginView extends CommonController {
                             stage.show();
 
                             closeCurrentStage();
-                        } else {
-                            invalidUsername();
-                        }
                     }
                 } catch (NumberFormatException e) {
                     AlertController.invalidEntry();
