@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import odms.controller.GuiMain;
+import odms.controller.database.DAOFactory;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
@@ -86,13 +87,12 @@ public class UserSearchView extends CommonView {
 
         donorObservableList = FXCollections.observableArrayList(donors);
         searchTable.setItems(donorObservableList);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
-        searchTable.getColumns()
-                .setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
+        searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
@@ -102,16 +102,15 @@ public class UserSearchView extends CommonView {
         });
 
         genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
-        genderCombobox.addEventHandler(ComboBox.ON_SHOWING, event -> {
-            updateLabels();
-        });
+
         organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            updateLabels();
+            performSearchFromFilters();
         });
 
         addTooltipToRow();
+
     }
 
     /**
@@ -191,7 +190,7 @@ public class UserSearchView extends CommonView {
      */
     @FXML
     private void handleSearchDonors(KeyEvent event) {
-        updateLabels();
+        performSearchFromFilters();
     }
 
     /**
@@ -199,8 +198,6 @@ public class UserSearchView extends CommonView {
      */
     private void updateLabels() {
         labelToManyResults.setVisible(false);
-
-        updateSearchTable();
 
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
@@ -231,7 +228,7 @@ public class UserSearchView extends CommonView {
     /**
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
-    private void updateSearchTable() {
+    private void performSearchFromFilters() {
         String selectedGender = null;
         String selectedType = null;
         ObservableList<OrganEnum> selectedOrgans;
@@ -268,17 +265,24 @@ public class UserSearchView extends CommonView {
         }
 
         searchTable.getItems().clear();
-        donorObservableList.clear();
-        donorObservableList.addAll(GuiMain.getCurrentDatabase().searchProfiles(
-                searchString,
-                ageSearchInt,
-                ageRangeSearchInt,
-                regionSearchString,
-                selectedGender,
-                selectedType,
-                new HashSet<>(selectedOrgans)
-        ));
+        profileSearchResults.clear();
+
+        try {
+            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
+                    searchString,
+                    ageSearchInt,
+                    ageRangeSearchInt,
+                    regionSearchString,
+                    selectedGender,
+                    selectedType,
+                    new HashSet<>(selectedOrgans)
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         updateTable(false, false);
+        updateLabels();
+
     }
 
     /**
@@ -392,13 +396,13 @@ public class UserSearchView extends CommonView {
 
             typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
 
             genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
-                    updateSearchTable();
+                    performSearchFromFilters();
                 }
             });
             makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
@@ -409,4 +413,7 @@ public class UserSearchView extends CommonView {
         }
     }
 
+    public void handleSearchProfilesBtnClicked(ActionEvent actionEvent) {
+        performSearchFromFilters();
+    }
 }
