@@ -3,7 +3,6 @@ package odms.controller.database;
 import static java.lang.System.getProperty;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,11 +15,11 @@ public class DatabaseConnection {
     private static DataSource connectionSource;
     private ComboPooledDataSource source;
 
-    private String DEFAULT_CONFIG = "/src/config/db.config";
+    private String DEFAULT_CONFIG = "/config/db.config";
     private static String CONFIG;
 
-    private String RESET_SQL = "/src/config/reset.sql";
-    private String RESAMPLE_SQL = "/src/config/resample.sql";
+    private String RESET_SQL = "/config/reset.sql";
+    private String RESAMPLE_SQL = "/config/resample.sql";
 
     /**
      * Constructor to create the singleton database connection class.
@@ -35,7 +34,7 @@ public class DatabaseConnection {
 
             // load in config file
             Properties prop = new Properties();
-            prop.load(new FileInputStream(getProperty("user.dir") + CONFIG));
+            prop.load(ClassLoader.class.getResourceAsStream(CONFIG));
 
             // set config string
             String host = prop.getProperty("host");

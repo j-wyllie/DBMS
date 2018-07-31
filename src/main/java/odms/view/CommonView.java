@@ -1,6 +1,11 @@
 package odms.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.event.ActionEvent;
@@ -11,10 +16,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
@@ -26,6 +34,7 @@ import org.controlsfx.control.Notifications;
 public class CommonView {
     private static boolean isEdited = false;
 
+    protected static File LOCALPATH = new File(System.getProperty("user.dir"));
 
     /**
      * Scene change to log in view.
@@ -239,6 +248,72 @@ public class CommonView {
             parentView.addToOpenProfileStages(stage);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * File picker to choose only supported image types.
+     *
+     * @param pictureText user feedback text to update on profile picture edit
+     */
+
+    protected File chooseImage(Text pictureText) throws IOException{
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Images", "jpg", "png");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+
+            if (chooser.getSelectedFile().length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+                return null;
+            }
+
+            System.out.println("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+            pictureText.setText(chooser.getSelectedFile().getName());
+        }
+        return chooser.getSelectedFile();
+    }
+
+    /**
+     * returns a string that is the file extension of given file
+     *
+     * @param file File to retrieve extension from
+     */
+    protected String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf('.') + 1);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     * Copies a file from source to dest
+     *
+     * @param source File source in local directory
+     * @param dest File destination in local directory
+     */
+    protected static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            try { if (is != null) is.close();
+            } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}
+            try { if (os != null) os.close();
+            } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
+
         }
     }
 }

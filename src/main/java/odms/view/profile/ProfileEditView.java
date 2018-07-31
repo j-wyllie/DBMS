@@ -1,11 +1,14 @@
 package odms.view.profile;
 
+import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
+import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -70,10 +73,32 @@ public class ProfileEditView extends CommonView {
     private TextField preferredNameField;
 
     @FXML
-    private ComboBox comboGenderPref;
+    private ComboBox<String> comboGenderPref;
 
     @FXML
     private ComboBox comboGender;
+
+    @FXML
+    private ComboBox comboCountryOfDeath;
+
+    @FXML
+    private TextField regionOfDeathField;
+
+    @FXML
+    private ComboBox<String> comboRegion;
+
+    @FXML
+    private ComboBox<String> comboRegionOfDeath;
+
+    @FXML
+    private ComboBox comboCountry;
+
+    @FXML
+    private Text pictureText;
+
+
+    private Profile currentProfile;
+
 
     private ProfileEditController controller = new ProfileEditController(this);
 
@@ -149,10 +174,87 @@ public class ProfileEditView extends CommonView {
     }
 
     /**
+     * File picker to choose only supported image types.
+     *
+     * @param event clicking on the choose file button.
+     */
+    @FXML
+    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+        File chosenFile = chooseImage(pictureText);
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if(extension == "jpg") {
+                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
+            } else {
+                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
+            }
+            if(deleteFile.delete())
+            {
+                System.out.println("Old file deleted successfully");
+            }
+            else
+            {
+                System.out.println("Failed to delete the old file");
+            }
+            File pictureDestination = new File(LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
+            copyFileUsingStream(chosenFile, pictureDestination);
+            currentProfile.setPictureName(chosenFile.getName());
+        }
+    }
+
+    /**
+     * Ensures the correct input method for region is displayed, also populates region with NZ
+     * regions when NZ is selected as country
+     */
+    @FXML
+    private void refreshRegionSelection() {
+        if (comboCountry.getValue() != null) {
+            if (comboCountry.getValue().toString().equals("New Zealand")) {
+                comboRegion.setDisable(false);
+                regionField.setDisable(true);
+                regionField.setText("");
+                comboRegion.getItems().setAll(NewZealandRegionsEnum.toArrayList());
+                comboRegion.setValue(currentProfile.getRegion());
+            } else {
+                comboRegion.setDisable(true);
+                regionField.setDisable(false);
+            }
+        } else {
+            comboRegion.setDisable(true);
+            regionField.setDisable(false);
+        }
+    }
+
+    /**
+     * Ensures the correct input method for region is displayed, also populates region with NZ
+     * regions when NZ is selected as country
+     */
+    @FXML
+    private void refreshRegionOfDeathSelection() {
+        if (comboCountryOfDeath.getValue() != null) {
+            if (comboCountryOfDeath.getValue().toString().equals("New Zealand")) {
+                comboRegionOfDeath.setDisable(false);
+                regionOfDeathField.setDisable(true);
+                regionOfDeathField.setText("");
+                comboRegionOfDeath.getItems().setAll(NewZealandRegionsEnum.toArrayList());
+                comboRegionOfDeath.setValue(currentProfile.getRegion());
+            } else {
+                comboRegionOfDeath.setDisable(true);
+                regionOfDeathField.setDisable(false);
+            }
+        } else {
+            comboRegionOfDeath.setDisable(true);
+            regionOfDeathField.setDisable(false);
+        }
+    }
+
+
+    /**
      * Sets the current profile attributes to the labels on start up.
      */
     @FXML
-    public void initialize(Profile currentProfile) {
+    public void initialize(Profile p) {
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
         // TODO investigate abstracting copy paste listeners to common function.
@@ -174,88 +276,89 @@ public class ProfileEditView extends CommonView {
             }
         });
 
-        if (currentProfile != null) {
+        if (p != null) {
             try {
-                donorFullNameLabel.setText(currentProfile.getFullName());
+                currentProfile = p;
+                donorFullNameLabel.setText(p.getFullName());
 
                 donorStatusLabel.setText("Donor Status: Unregistered");
 
-                if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+                if (p.getDonor() != null && p.getDonor()) {
                     donorStatusLabel.setText("Donor Status: Registered");
                 }
-                if (currentProfile.getGivenNames() != null) {
-                    givenNamesField.setText(currentProfile.getGivenNames());
+                if (p.getGivenNames() != null) {
+                    givenNamesField.setText(p.getGivenNames());
                 }
-                if (currentProfile.getLastNames() != null) {
-                    lastNamesField.setText(currentProfile.getLastNames());
+                if (p.getLastNames() != null) {
+                    lastNamesField.setText(p.getLastNames());
                 }
-                if (currentProfile.getPreferredName() != null) {
-                    preferredNameField.setText(currentProfile.getPreferredName());
+                if (p.getPreferredName() != null) {
+                    preferredNameField.setText(p.getPreferredName());
                 }
-                if (currentProfile.getNhi() != null) {
-                    nhiField.setText(currentProfile.getNhi());
+                if (p.getNhi() != null) {
+                    nhiField.setText(p.getNhi());
                 }
-                if (currentProfile.getDateOfBirth() != null) {
-                    dobDatePicker.setValue(currentProfile.getDateOfBirth());
+                if (p.getDateOfBirth() != null) {
+                    dobDatePicker.setValue(p.getDateOfBirth());
                 }
-                if (currentProfile.getDateOfDeath() != null) {
-                    dodDatePicker.setValue(currentProfile.getDateOfDeath());
+                if (p.getDateOfDeath() != null) {
+                    dodDatePicker.setValue(p.getDateOfDeath());
                 }
-                if (currentProfile.getHeight() != 0.0) {
-                    heightField.setText(String.valueOf(currentProfile.getHeight()));
+                if (p.getHeight() != 0.0) {
+                    heightField.setText(String.valueOf(p.getHeight()));
                 }
-                if (currentProfile.getWeight() != 0.0) {
-                    weightField.setText(String.valueOf(currentProfile.getWeight()));
+                if (p.getWeight() != 0.0) {
+                    weightField.setText(String.valueOf(p.getWeight()));
                 }
-                if (currentProfile.getPhone() != null) {
-                    phoneField.setText(currentProfile.getPhone());
+                if (p.getPhone() != null) {
+                    phoneField.setText(p.getPhone());
                 }
-                if (currentProfile.getEmail() != null) {
-                    emailField.setText(currentProfile.getEmail());
+                if (p.getEmail() != null) {
+                    emailField.setText(p.getEmail());
                 }
-                if (currentProfile.getAddress() != null) {
-                    addressField.setText(currentProfile.getAddress());
+                if (p.getAddress() != null) {
+                    addressField.setText(p.getAddress());
                 }
-                if (currentProfile.getRegion() != null) {
-                    regionField.setText(currentProfile.getRegion());
+                if (p.getRegion() != null) {
+                    regionField.setText(p.getRegion());
                 }
-                if (currentProfile.getBloodPressure() != null) {
-                    bloodPressureField.setText(currentProfile.getBloodPressure());
+                if (p.getBloodPressure() != null) {
+                    bloodPressureField.setText(p.getBloodPressure());
                 }
-                if (currentProfile.getBloodType() != null) {
-                    bloodTypeField.setText(currentProfile.getBloodType());
+                if (p.getBloodType() != null) {
+                    bloodTypeField.setText(p.getBloodType());
                 }
-                if (currentProfile.getIsSmoker() == null || !currentProfile.getIsSmoker()) {
+                if (p.getIsSmoker() == null || !p.getIsSmoker()) {
                     isSmokerRadioButton.setSelected(false);
                 } else {
                     isSmokerRadioButton.setSelected(true);
                 }
-                if (currentProfile.getAlcoholConsumption() != null) {
-                    alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+                if (p.getAlcoholConsumption() != null) {
+                    alcoholConsumptionField.setText(p.getAlcoholConsumption());
                 }
 
                 comboGender.setEditable(false);
                 comboGender.getItems().addAll("Male", "Female");
-                if (currentProfile.getGender() != null) {
-                    if (currentProfile.getGender().toLowerCase().equals("male")) {
+                if (p.getGender() != null) {
+                    if (p.getGender().toLowerCase().equals("male")) {
                         comboGender.getSelectionModel().selectFirst();
-                    } else if (currentProfile.getGender().toLowerCase().equals("female")) {
+                    } else if (p.getGender().toLowerCase().equals("female")) {
                         comboGender.getSelectionModel().select(1);
                     } else {
                         comboGender.setValue("");
                     }
                 }
 
-                if (currentProfile.getGender() != null) {
-                    comboGender.getEditor().setText(currentProfile.getGender());
+                if (p.getGender() != null) {
+                    comboGender.getEditor().setText(p.getGender());
                 }
 
                 comboGenderPref.setEditable(true);
                 comboGenderPref.getItems().addAll("Male", "Female",
                         "Non binary"); //TODO Add database call for all preferred genders.
 
-                if (currentProfile.getPreferredGender() != null) {
-                    comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
+                if (p.getPreferredGender() != null) {
+                    comboGenderPref.getEditor().setText(p.getPreferredGender());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -406,6 +509,5 @@ public class ProfileEditView extends CommonView {
     public void setIsSmokerRadioButton(boolean b) {
         isSmokerRadioButton.setSelected(b);
     }
-
 
 }
