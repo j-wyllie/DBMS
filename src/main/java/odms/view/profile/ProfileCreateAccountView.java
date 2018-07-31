@@ -3,13 +3,19 @@ package odms.view.profile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import odms.controller.profile.ProfileCreateController;
+import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProfileCreateAccountView extends CommonView {
     @FXML
@@ -34,12 +40,19 @@ public class ProfileCreateAccountView extends CommonView {
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(
-                getClass().getResource("/view/ProfileDisplay.fxml"));
-        ProfileDisplayControllerTODO v = fxmlLoader.getController();
-        v.initialize(controller.createAccount());
-        changeScene(event, "/view/ProfileDisplay.fxml");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
+        Scene scene = new Scene(loader.load());
+        ProfileDisplayControllerTODO v = loader.getController();
+        Profile profile = controller.createAccount();
+        if(profile != null) {
+            v.setProfile(profile);
+            v.initialize(profile);
+            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            appStage.setScene(scene);
+            appStage.show();
+        }
+
+
     }
 
     /**
@@ -56,10 +69,15 @@ public class ProfileCreateAccountView extends CommonView {
 
     public void initialize() {
         nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nhiField.setText(newValue.replaceAll("[^\\d]", ""));
+            String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(newValue);
+
+            if (!m.matches() && !m.hitEnd()) {
+                nhiField.setText(oldValue);
             }
         });
+
     }
 
     public String getGivenNamesFieldValue() {

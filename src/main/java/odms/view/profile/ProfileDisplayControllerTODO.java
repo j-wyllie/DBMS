@@ -78,7 +78,6 @@ public class ProfileDisplayControllerTODO extends CommonController {
      */
     @FXML
     private void setPage(Profile currentProfile) {
-
         try {
             donorFullNameLabel.setText(currentProfile.getFullName());
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");

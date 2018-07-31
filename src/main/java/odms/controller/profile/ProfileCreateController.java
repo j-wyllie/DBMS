@@ -33,11 +33,15 @@ public class ProfileCreateController extends CommonController {
             return "Please enter Surname(s)";
 
         }
-        if (view.getdobDatePickerValue().equals(null)) {
+        try {
+            if (view.getdobDatePickerValue().equals(null)) {
+                return "Please enter a Date of Birth";
+            }
+        } catch (NullPointerException e) {
             return "Please enter a Date of Birth";
         }
         if (view.getNhiField().isEmpty()) {
-            return "Please enter an IRD number";
+            return "Please enter an NHI number";
         } else {
             return "";
         }
