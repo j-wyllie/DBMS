@@ -1,16 +1,11 @@
 package odms.view.user;
 
-import static odms.view.user.ClinicianProfileView.closeAllOpenProfiles;
-
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
@@ -26,8 +21,9 @@ import odms.controller.profile.ProfileImportTask;
 import odms.controller.user.ImportLoadingDialogController;
 import odms.model.profile.Profile;
 import odms.model.user.User;
+import odms.view.CommonView;
 
-public class ImportLoadingDialogView {
+public class ImportLoadingDialogView extends CommonView {
 
     private ProfileImportTask profileImportTask;
 
@@ -161,24 +157,7 @@ public class ImportLoadingDialogView {
     private void closeWindows(Stage stage) {
         closeAllOpenProfiles();
         stage.close();
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-        try {
-            Scene scene = new Scene(fxmlLoader.load());
-
-            ClinicianProfileView controller = fxmlLoader.getController();
-            controller.setCurrentUser(currentUser);
-            controller.initialize();
-
-            stage = new Stage();
-            stage.setTitle("Admin");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createNewAdminWindow(currentUser);
     }
 
     /**

@@ -27,6 +27,7 @@ import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.view.user.ClinicianProfileView;
 import org.controlsfx.control.Notifications;
@@ -72,6 +73,26 @@ public class CommonView {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
+        }
+    }
+
+    protected void createNewAdminWindow(User currentUser) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+
+            ClinicianProfileView controller = fxmlLoader.getController();
+            controller.setCurrentUser(currentUser);
+            controller.initialize();
+
+            Stage stage = new Stage();
+            stage.setTitle("Admin");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

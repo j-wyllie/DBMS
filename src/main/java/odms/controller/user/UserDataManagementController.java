@@ -2,17 +2,11 @@ package odms.controller.user;
 
 import static odms.view.CommonView.checkUnsavedChanges;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.model.user.User;
-import odms.view.user.ClinicianProfileView;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,38 +22,6 @@ public class UserDataManagementController {
     }
 
     private Stage currentStage;
-
-    /**
-     * Imports new json file. Closes all open windows and re-initializes the admin view.
-     *
-     * @param stage Stage to be close
-     * @param file  file to be set as database
-     */
-    public void importAndCloseWindows(Stage stage, File file, User currentUser) {
-        GuiMain.setCurrentDatabase(ProfileDataIO.loadData(file.getPath()));
-
-        ClinicianProfileView.closeAllOpenProfiles();
-        stage.close();
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
-
-        try {
-            Scene scene = new Scene(fxmlLoader.load());
-
-            ClinicianProfileView v = fxmlLoader.getController();
-            v.setCurrentUser(currentUser);
-            v.initialize();
-
-            stage = new Stage();
-            stage.setTitle("Admin");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Loads the ImportLoadingDialog pane to import the data from the csv file
@@ -85,7 +47,6 @@ public class UserDataManagementController {
         stage.setScene(scene);
         stage.show();
     }
-
 
     /**
      * Checks that a file is not null and if there are unsaved changes
