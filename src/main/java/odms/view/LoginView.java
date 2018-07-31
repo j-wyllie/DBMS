@@ -1,11 +1,15 @@
 package odms.view;
 
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
+import odms.controller.database.UserDAO;
 import odms.view.profile.ProfileDisplayControllerTODO;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -57,8 +61,8 @@ public class LoginView extends CommonController {
 
             String username = usernameField.getText();
             try {
-                currentUser = userDatabase.getUser(username);
-                System.out.println(currentUser.getUsername());
+                UserDAO database = DAOFactory.getUserDao();
+                currentUser = database.get(username);
                 if (currentUser.getPassword() != null && passwordField.getText()
                         .equals(currentUser.getPassword())) {
                     try {
@@ -84,8 +88,7 @@ public class LoginView extends CommonController {
                 }
             } catch (UserNotFoundException u) {
                 try {
-                    int userId = Integer.valueOf(usernameField.getText());
-                    if (userId == 0) {
+                    if (username == "0") {
                         currentUser = userDatabase.getUser(0);
 
                         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -103,7 +106,8 @@ public class LoginView extends CommonController {
                         stage.show();
                         closeCurrentStage();
                     } else {
-                        Profile currentProfile = currentDatabase.getProfile(userId);
+                        ProfileDAO database = DAOFactory.getProfileDao();
+                        Profile currentProfile = database.get(username);
 
                         if (currentProfile != null) {
                             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -132,6 +136,8 @@ public class LoginView extends CommonController {
                     e.printStackTrace();
                     invalidUsername();
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
