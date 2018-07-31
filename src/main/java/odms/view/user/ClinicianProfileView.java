@@ -7,6 +7,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import odms.controller.user.UserDataManagementController;
 import odms.controller.user.UserProfileController;
@@ -18,8 +19,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class ClinicianProfileView extends CommonView {
-    private static Collection<Stage> openProfileStages = new ArrayList<>();
     private User currentUser;
+
+    @FXML
+    private static AnchorPane clinicianAp;
+
     @FXML
     private Label clinicianFullName;
 
@@ -45,33 +49,6 @@ public class ClinicianProfileView extends CommonView {
 
     private UserProfileController userProfileController = new UserProfileController(this);
 
-
-    /**
-     * Checks if there are unsaved changes in any open window.
-     *
-     * @return true if there are unsaved changes.
-     */
-    public static boolean checkUnsavedChanges(Stage currentStage) {
-        for (Stage stage : openProfileStages) {
-            //todo maybe need to move isEdited from common controller to common view?
-            if (isEdited(stage) && stage.isShowing()) {
-                return true;
-            }
-        }
-
-        return isEdited(currentStage);
-    }
-
-    /**
-     * closes all open profile windows that the user has opened.
-     */
-    public static void closeAllOpenProfiles() {
-        for (Stage stage : openProfileStages) {
-            if (stage.isShowing()) {
-                stage.close();
-            }
-        }
-    }
 
     /**
      * Scene change to log in view.

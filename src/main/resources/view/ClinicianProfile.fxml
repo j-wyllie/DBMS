@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 <?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" style="-:: #1fa98c;" prefHeight="700.0"
-    prefWidth="1200.0" xmlns="http://javafx.com/javafx/8"
+    prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" fx:id="clinicianAp"
     fx:controller="odms.view.user.ClinicianProfileView">
     <GridPane style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
         AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"

@@ -1,6 +1,7 @@
 package odms.view.user;
 
 import java.io.File;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
@@ -12,40 +13,33 @@ import odms.model.user.User;
 
 public class UserDataManagementTabView {
 
-    private User currentUser;
+    public User currentUser;
 
-    private UserDataManagementController userDataManagementController = new UserDataManagementController(this);
+    private UserDataManagementController controller = new UserDataManagementController(this);
 
     @FXML
     private AnchorPane dataManagementAp;
 
     /**
      * Opens a file chooser and imports the selected files.
-     *
+     * Lets the user choose from JSON and CSV files.
      * @param actionEvent
      */
-    public void handleImportSavedDataClicked(ActionEvent actionEvent) {
+    public void handleImportExistingDataClicked(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON file(*.json)",
-                "*.json");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Data Files (*.csv)",
+                "*.csv"
+        );
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) dataManagementAp.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
-        if (file != null) { // Check that the user actually selected a file
-            if (ClinicianProfileView
-                    .checkUnsavedChanges((Stage) dataManagementAp.getScene().getWindow())) {
-                if (AlertController.unsavedChangesImport()) {
-                    userDataManagementController.importAndCloseWindows(stage, file, currentUser);
-                }
-            } else {
-                userDataManagementController.importAndCloseWindows(stage, file, currentUser);
-            }
-        }
+        controller.handleFile(file, (Stage) dataManagementAp.getScene().getWindow());
     }
 
-    public void initialize(User currentUser) {
-        this.currentUser = currentUser;
+    public void initialize(User user) {
+        currentUser = user;
     }
 }

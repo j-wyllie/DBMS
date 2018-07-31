@@ -36,6 +36,9 @@ public class CommonView {
 
     protected static File LOCALPATH = new File(System.getProperty("user.dir"));
 
+    protected static Collection<Stage> openProfileStages = new ArrayList<>();
+
+
     /**
      * Scene change to log in view.
      *
@@ -80,10 +83,6 @@ public class CommonView {
      */
     protected static boolean isEdited(Stage stage) {
         return stage.getTitle().contains("(*)");
-//        FXMLLoader loader = (FXMLLoader) stage.getScene().getUserData();
-//        CommonController controller = loader.getController();
-//        controller.toString();
-//        return controller.getEdited();
     }
 
     /**
@@ -314,6 +313,33 @@ public class CommonView {
             try { if (os != null) os.close();
             } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
 
+        }
+    }
+
+    /**
+     * Checks if there are unsaved changes in any open window.
+     *
+     * @return true if there are unsaved changes.
+     */
+    public static boolean checkUnsavedChanges(Stage currentStage) {
+        for (Stage stage : openProfileStages) {
+            //todo maybe need to move isEdited from common controller to common view?
+            if (isEdited(stage) && stage.isShowing()) {
+                return true;
+            }
+        }
+
+        return isEdited(currentStage);
+    }
+
+    /**
+     * closes all open profile windows that the user has opened.
+     */
+    public static void closeAllOpenProfiles() {
+        for (Stage stage : openProfileStages) {
+            if (stage.isShowing()) {
+                stage.close();
+            }
         }
     }
 }
