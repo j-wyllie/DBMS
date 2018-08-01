@@ -78,6 +78,8 @@ public class ProfileMedicationsView extends CommonView {
     private Button buttonShowDrugInteractions;
     @FXML
     private Button buttonViewActiveIngredients;
+    @FXML
+    private Button buttonClearCache;
 
     private ProfileMedicationsController controller = new ProfileMedicationsController(this);
     private Profile currentProfile;
@@ -213,6 +215,17 @@ public class ProfileMedicationsView extends CommonView {
                     .setPlaceholder(new Label("There was an error getting interaction data"));
         }
     }
+
+
+    /**
+     * Clears the cache and handles the messages.
+     * @param event
+     */
+    @FXML
+    private void handleClearCache(ActionEvent event) {
+        controller.clearCache();
+    }
+
 
     /**
      * Button handler to remove medications from the current medications and move them to historic.

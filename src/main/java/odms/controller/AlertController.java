@@ -169,7 +169,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm the action they want to perform.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean generalConfirmation(String message) {
+    public static boolean generalConfirmation(String message) {
         Alert confirmAlert = new Alert(
                 AlertType.CONFIRMATION,
                 message,
