@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.controller.database.CommonDAO;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ReadOnlyDAO;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.ProfileUndoRedoCLIServiceController;
 import odms.model.data.ProfileDatabase;
@@ -734,7 +734,7 @@ public class CommandUtils {
     public static void executeDatabaseRead(String input) {
         String query = input.substring(input.indexOf(' '));
 
-        ReadOnlyDAO accessObject = DAOFactory.getReadOnlyDao();
+        CommonDAO accessObject = DAOFactory.getCommonDao();
         accessObject.queryDatabase(query);
     }
 

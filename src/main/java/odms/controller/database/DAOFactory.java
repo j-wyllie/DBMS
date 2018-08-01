@@ -60,14 +60,4 @@ public class DAOFactory {
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
 
-    /**
-     * Gives the data access object class.
-     *
-     * @return database for particular database type.
-     */
-    public static ReadOnlyDAO getReadOnlyDao() {
-        return new MySqlDAO();
-    }
-
-
 }
