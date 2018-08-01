@@ -66,6 +66,16 @@ public class ProfileEditController extends CommonController {
                 saveBloodType();
                 saveIsSmoker();
 
+                try {
+                    if(view.getDODDatePicker() != null) {
+                        saveCityOfDeath();
+                        saveRegionOfDeath();
+                        saveCountryOfDeath();
+                    }
+                } catch (Exception e) {
+                    AlertController.guiPopup("Invalid Location Of Death");
+                }
+
                 ProfileDAO database = DAOFactory.getProfileDao();
                 database.update(currentProfile);
                 ProfileDataIO.saveData(getProfileDb());
@@ -84,6 +94,54 @@ public class ProfileEditController extends CommonController {
             }
         }
     }
+
+    /**
+     * Save Region of death field to profile.
+     */
+    private void saveRegionOfDeath() throws Exception{
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        if (!view.getRegionOfDeathField().isEmpty() && AddressIO
+                .checkValidRegion(view.getRegionOfDeathField()+ " " + view.getComboCountryOfDeath(),
+                        view.getRegionOfDeathField(), view.getComboCountryOfDeath()) && view.getComboRegion().isDisabled()) {
+            currentProfile.setRegionOfDeath(view.getRegionOfDeathField());
+        } else if(!view.getRegionOfDeathField().isEmpty() && !AddressIO
+                .checkValidRegion(view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                        view.getRegionOfDeathField(),view.getComboCountryOfDeath())) {
+            throw new Exception();
+        }  else if(!view.getComboRegionOfDeath().isEmpty() && AddressIO
+                .checkValidRegion(view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                        view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
+            currentProfile.setRegionOfDeath(view.getComboRegionOfDeath()) ;
+        } else {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * Save City of death field to profile.
+     */
+    private void saveCityOfDeath() throws Exception{
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        if (!view.getCityOfDeathField().isEmpty() && AddressIO
+                .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
+                        view.getCityOfDeathField(), view.getComboCountryOfDeath())) {
+            currentProfile.setCityOfDeath(view.getCityOfDeathField());
+        } else if(!view.getCityOfDeathField().isEmpty() && !AddressIO
+                .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
+                        view.getCityOfDeathField(), view.getComboCountryOfDeath())){
+            throw new Exception();
+        }
+    }
+
+
+    /**
+     * Save Country of death field to profile.
+     */
+    private void saveCountryOfDeath() {
+        //TODO waiting for the API from previous story to validate if this is a valid place
+        currentProfile.setCountryOfDeath(view.getComboCountryOfDeath());
+    }
+
 
     /**
      * Save Date of Birth field to profile.

@@ -105,6 +105,8 @@ public class ProfileEditView extends CommonView {
     @FXML
     private Text pictureText;
 
+    @FXML
+    private TextField cityOfDeathField;
 
     private Profile currentProfile;
 
@@ -514,8 +516,8 @@ public class ProfileEditView extends CommonView {
         isSmokerRadioButton.setSelected(b);
     }
 
-    public ComboBox getComboCountryOfDeath() {
-        return comboCountryOfDeath;
+    public String getComboCountryOfDeath() {
+        return comboCountryOfDeath.getValue().toString();
     }
 
     public void setComboCountryOfDeath(ComboBox comboCountryOfDeath) {
@@ -538,8 +540,8 @@ public class ProfileEditView extends CommonView {
         this.comboRegion = comboRegion;
     }
 
-    public ComboBox<String> getComboRegionOfDeath() {
-        return comboRegionOfDeath;
+    public String getComboRegionOfDeath() {
+        return comboRegionOfDeath.getValue();
     }
 
     public void setComboRegionOfDeath(ComboBox<String> comboRegionOfDeath) {
@@ -554,4 +556,11 @@ public class ProfileEditView extends CommonView {
         this.comboCountry = comboCountry;
     }
 
+    public String getCityOfDeathField() {
+        return cityOfDeathField.getText();
+    }
+
+    public void setCityOfDeathField(TextField cityOfDeathField) {
+        this.cityOfDeathField = cityOfDeathField;
+    }
 }
