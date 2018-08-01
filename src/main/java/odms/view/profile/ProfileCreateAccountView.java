@@ -3,13 +3,9 @@ package odms.view.profile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.controller.profile.ProfileCreateController;
-import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -46,8 +42,8 @@ public class ProfileCreateAccountView extends CommonView {
         System.out.println(controller.createAccount());
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
-        ProfileDisplayControllerTODO v = fxmlLoader.getController();
-        v.initialize(controller.createAccount());
+        ProfileDisplayViewTODO view = fxmlLoader.getController();
+        view.initialize(controller.createAccount());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
