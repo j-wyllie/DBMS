@@ -112,4 +112,8 @@ public class ProfileGeneralView extends CommonView {
         currentProfile = p;
         setUpDetails();
     }
+
+    public void handleEditButtonClicked(ActionEvent actionEvent) throws IOException {
+        openProfileEditWindow(currentProfile, actionEvent);
+    }
 }
