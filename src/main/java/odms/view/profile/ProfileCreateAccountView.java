@@ -27,16 +27,19 @@ public class ProfileCreateAccountView extends CommonView {
     private ProfileCreateController controller = new ProfileCreateController(this);
 
     /**
-     * Scene change to profile profile view if all required fields are filled in.
+     * Scene change to profile view if all required fields are filled in.
      *
      * @param event clicking on the create new account button.
      * @throws IOException throws IOException
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
+        if(controller.createAccount() == null) {
+            return;
+        }
+        System.out.println(controller.createAccount());
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(
-                getClass().getResource("/view/ProfileDisplay.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
         ProfileDisplayControllerTODO v = fxmlLoader.getController();
         v.initialize(controller.createAccount());
         changeScene(event, "/view/ProfileDisplay.fxml");
