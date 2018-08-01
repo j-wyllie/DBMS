@@ -6,7 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
@@ -133,28 +137,16 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        if (AlertController.saveChanges()) {
             try {
                 controller.save();
                 showNotification("profile", event);
-                closeEditWindow(event);
+                closeWindow(event);
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
                                 "Changes not saved."
                 );
-            }
         }
-    }
-
-    /**
-     * closes the edit donor window and reopens the donor.
-     *
-     * @param event either the cancel button event or the save button event
-     */
-    @FXML
-    private void closeEditWindow(ActionEvent event) throws IOException {
-        closeWindow(event);
     }
 
     /**
@@ -169,13 +161,11 @@ public class ProfileEditView extends CommonView {
     }
 
     private void closeWindow(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(
-                getClass().getResource("/view/ProfileDisplay.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+
         ProfileDisplayViewTODO v = fxmlLoader.getController();
-        v.setProfile(controller.close());
-        v.initialize(controller.close());
+        v.initialize(currentProfile);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(scene);
         appStage.show();
@@ -192,12 +182,12 @@ public class ProfileEditView extends CommonView {
         if (chosenFile != null) {
             String extension = getFileExtension(chosenFile).toLowerCase();
             File deleteFile;
-            if(extension == "jpg") {
+            if ("jpg".equalsIgnoreCase(extension)) {
                 deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
             } else {
                 deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
             }
-            if(deleteFile.delete())
+            if (deleteFile.delete())
             {
                 System.out.println("Old file deleted successfully");
             }
@@ -264,118 +254,131 @@ public class ProfileEditView extends CommonView {
     @FXML
     public void initialize(Profile p, Boolean isOpenedByClinician) {
         this.isOpenedByClinician = isOpenedByClinician;
-        this.controller.setCurrentProfile(p);
+        this.controller.setCurrentProfile(currentProfile);
 
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
+        setListeners();
 
-        // TODO investigate abstracting copy paste listeners to common function.
-        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                heightField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        if (currentProfile != null) {
+            this.currentProfile = p;
 
-        nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nhiField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                weightField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        if (p != null) {
             try {
-                currentProfile = p;
-                donorFullNameLabel.setText(p.getFullName());
-
-                donorStatusLabel.setText("Donor Status: Unregistered");
-
-                if (p.getDonor() != null && p.getDonor()) {
-                    donorStatusLabel.setText("Donor Status: Registered");
-                }
-                if (p.getGivenNames() != null) {
-                    givenNamesField.setText(p.getGivenNames());
-                }
-                if (p.getLastNames() != null) {
-                    lastNamesField.setText(p.getLastNames());
-                }
-                if (p.getPreferredName() != null) {
-                    preferredNameField.setText(p.getPreferredName());
-                }
-                if (p.getNhi() != null) {
-                    nhiField.setText(p.getNhi());
-                }
-                if (p.getDateOfBirth() != null) {
-                    dobDatePicker.setValue(p.getDateOfBirth());
-                }
-                if (p.getDateOfDeath() != null) {
-                    dodDatePicker.setValue(p.getDateOfDeath());
-                }
-                if (p.getHeight() != 0.0) {
-                    heightField.setText(String.valueOf(p.getHeight()));
-                }
-                if (p.getWeight() != 0.0) {
-                    weightField.setText(String.valueOf(p.getWeight()));
-                }
-                if (p.getPhone() != null) {
-                    phoneField.setText(p.getPhone());
-                }
-                if (p.getEmail() != null) {
-                    emailField.setText(p.getEmail());
-                }
-                if (p.getAddress() != null) {
-                    addressField.setText(p.getAddress());
-                }
-                if (p.getRegion() != null) {
-                    regionField.setText(p.getRegion());
-                }
-                if (p.getBloodPressure() != null) {
-                    bloodPressureField.setText(p.getBloodPressure());
-                }
-                if (p.getBloodType() != null) {
-                    bloodTypeField.setText(p.getBloodType());
-                }
-                if (p.getIsSmoker() == null || !p.getIsSmoker()) {
-                    isSmokerRadioButton.setSelected(false);
-                } else {
-                    isSmokerRadioButton.setSelected(true);
-                }
-                if (p.getAlcoholConsumption() != null) {
-                    alcoholConsumptionField.setText(p.getAlcoholConsumption());
-                }
-
-                comboGender.setEditable(false);
-                comboGender.getItems().addAll("Male", "Female");
-                if (p.getGender() != null) {
-                    if (p.getGender().toLowerCase().equals("male")) {
-                        comboGender.getSelectionModel().selectFirst();
-                    } else if (p.getGender().toLowerCase().equals("female")) {
-                        comboGender.getSelectionModel().select(1);
-                    } else {
-                        comboGender.setValue("");
-                    }
-                }
-
-                if (p.getGender() != null) {
-                    comboGender.getEditor().setText(p.getGender());
-                }
-
-                comboGenderPref.setEditable(true);
-                comboGenderPref.getItems().addAll("Male", "Female",
-                        "Non binary"); //TODO Add database call for all preferred genders.
-
-                if (p.getPreferredGender() != null) {
-                    comboGenderPref.getEditor().setText(p.getPreferredGender());
-                }
+                populateFields();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Populates all the fields in the window.
+     */
+    private void populateFields() {
+        donorFullNameLabel.setText(currentProfile.getFullName());
+
+        donorStatusLabel.setText("Donor Status: Unregistered");
+
+        if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+            donorStatusLabel.setText("Donor Status: Registered");
+        }
+        if (currentProfile.getGivenNames() != null) {
+            givenNamesField.setText(currentProfile.getGivenNames());
+        }
+        if (currentProfile.getLastNames() != null) {
+            lastNamesField.setText(currentProfile.getLastNames());
+        }
+        if (currentProfile.getPreferredName() != null) {
+            preferredNameField.setText(currentProfile.getPreferredName());
+        }
+        if (currentProfile.getNhi() != null) {
+            nhiField.setText(currentProfile.getNhi());
+        }
+        if (currentProfile.getDateOfBirth() != null) {
+            dobDatePicker.setValue(currentProfile.getDateOfBirth());
+        }
+        if (currentProfile.getDateOfDeath() != null) {
+            dodDatePicker.setValue(currentProfile.getDateOfDeath());
+        }
+        if (currentProfile.getHeight() != 0.0) {
+            heightField.setText(String.valueOf(currentProfile.getHeight()));
+        }
+        if (currentProfile.getWeight() != 0.0) {
+            weightField.setText(String.valueOf(currentProfile.getWeight()));
+        }
+        if (currentProfile.getPhone() != null) {
+            phoneField.setText(currentProfile.getPhone());
+        }
+        if (currentProfile.getEmail() != null) {
+            emailField.setText(currentProfile.getEmail());
+        }
+        if (currentProfile.getAddress() != null) {
+            addressField.setText(currentProfile.getAddress());
+        }
+        if (currentProfile.getRegion() != null) {
+            regionField.setText(currentProfile.getRegion());
+        }
+        if (currentProfile.getBloodPressure() != null) {
+            bloodPressureField.setText(currentProfile.getBloodPressure());
+        }
+        if (currentProfile.getBloodType() != null) {
+            bloodTypeField.setText(currentProfile.getBloodType());
+        }
+        if (currentProfile.getIsSmoker() == null || !currentProfile.getIsSmoker()) {
+            isSmokerRadioButton.setSelected(false);
+        } else {
+            isSmokerRadioButton.setSelected(true);
+        }
+        if (currentProfile.getAlcoholConsumption() != null) {
+            alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
+        }
+
+        comboGender.setEditable(false);
+        comboGender.getItems().addAll("Male", "Female");
+        if (currentProfile.getGender() != null) {
+            if (currentProfile.getGender().equalsIgnoreCase("male")) {
+                comboGender.getSelectionModel().selectFirst();
+            } else if (currentProfile.getGender().equalsIgnoreCase("female")) {
+                comboGender.getSelectionModel().select(1);
+            } else {
+                comboGender.setValue("");
+            }
+        }
+
+        if (currentProfile.getGender() != null) {
+            comboGender.getEditor().setText(currentProfile.getGender());
+        }
+
+        comboGenderPref.setEditable(true);
+        comboGenderPref.getItems().addAll("Male", "Female",
+                "Non binary"); //TODO Add database call for all preferred genders.
+
+        if (currentProfile.getPreferredGender() != null) {
+            comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
+        }
+    }
+
+    private void setListeners() {
+        String anyDigit = "//d*";
+        String notAnyDigit = "[^\\d]";
+        // TODO investigate abstracting copy paste listeners to common function.
+        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                heightField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                nhiField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                weightField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
     }
 
     public LocalDate getdobDatePicker(){

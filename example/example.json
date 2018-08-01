@@ -1,1 +1,84 @@
-{}
+{
+  "profileDb": {
+    "0": {
+      "regionsNZ": [
+        "Northland",
+        "Auckland",
+        "Waikato",
+        "Bay of Plenty",
+        "Gisborne",
+        "Hawke\u0027s Bay",
+        "Taranaki",
+        "Manawatu-Wanganui",
+        "Wellington",
+        "Tasman",
+        "Nelson",
+        "Marlborough",
+        "West Coast",
+        "Canterbury",
+        "Otago",
+        "Southland"
+      ],
+      "donor": false,
+      "receiver": false,
+      "givenNames": "df",
+      "lastNames": "df",
+      "dateOfBirth": {
+        "year": 2018,
+        "month": 7,
+        "day": 31
+      },
+      "height": 0.0,
+      "weight": 0.0,
+      "chronicDiseases": [],
+      "updateActions": [
+        "given-names updated at 12:45 PM 01-08-2018",
+        "last-names updated at 12:45 PM 01-08-2018",
+        "nhi updated at 12:45 PM 01-08-2018",
+        "dob updated at 12:45 PM 01-08-2018"
+      ],
+      "procedures": [],
+      "pendingProcedures": [],
+      "previousProcedures": [],
+      "organsDonating": [],
+      "organsDonated": [],
+      "organsRequired": [],
+      "organsReceived": [],
+      "conditions": [],
+      "nhi": "ABC123",
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 1
+        },
+        "time": {
+          "hour": 12,
+          "minute": 45,
+          "second": 14,
+          "nano": 820000000
+        }
+      },
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 1
+        },
+        "time": {
+          "hour": 12,
+          "minute": 45,
+          "second": 14,
+          "nano": 820000000
+        }
+      },
+      "id": 0,
+      "currentMedications": [],
+      "historyOfMedication": [],
+      "medicationTimestamps": []
+    }
+  },
+  "deletedProfiles": [],
+  "lastID": 0,
+  "path": "example/example.json"
+}

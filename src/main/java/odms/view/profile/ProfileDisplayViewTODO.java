@@ -48,7 +48,6 @@ public class ProfileDisplayViewTODO extends CommonView {
     @FXML
     private Tab tabProcedures;
 
-    private ObjectProperty<Profile> currentProfileBound = new SimpleObjectProperty<>();
     private Boolean isOpenedByClinician = false;
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -121,7 +120,7 @@ public class ProfileDisplayViewTODO extends CommonView {
 
     @FXML
     public void onTabGeneralSelected() {
-        if (currentProfileBound.get() != null) {
+        if (currentProfile != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileGeneralTab.fxml"));
             try {
                 tabGeneral.setContent(loader.load());
@@ -208,14 +207,14 @@ public class ProfileDisplayViewTODO extends CommonView {
 
     /**
      * Sets the current donor attributes to the labels on start up.
+     *
+     * @param profile to be used
      */
     @FXML
     public void initialize(Profile profile) {
-        if (currentProfile != null) {
-            currentProfileBound.set(profile);
-            setPage(profile);
-            onTabGeneralSelected();
-        }
+        currentProfile = profile;
+        setPage(profile);
+        onTabGeneralSelected();
     }
 
 
@@ -227,15 +226,6 @@ public class ProfileDisplayViewTODO extends CommonView {
      */
     public void setProfileViaClinician(Profile profile) {
         isOpenedByClinician = true;
-        currentProfile = profile;
-    }
-
-    /**
-     * sets the donor if it was logged in by a user If logged in normally, sets profile
-     *
-     * @param profile to be used
-     */
-    public void setProfile(Profile profile) {
         currentProfile = profile;
     }
 }
