@@ -19,14 +19,11 @@ This will bring you into the application which can be terminated at any time by 
 `quit` command.
 
 ## Usage Links
----
 - [User Manual](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Command-Line)
 
 ## Team Links
----
 - [Members](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home#members)
 - [Weekly Stand Ups](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home#weekly-stand-ups)
 
 ## Third Party Libraries
----
 - [Libraries](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Design-decisions/Libraries)
