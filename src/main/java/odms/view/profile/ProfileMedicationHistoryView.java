@@ -12,10 +12,8 @@ import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ProfileMedicationHistoryView extends CommonView {
-    //todo
-    private Profile profile;
 
-    private ObservableList<String> observableListMedHistory;
+    private Profile profile;
 
     @FXML
     private ListView<String> viewMedicationHistory;
@@ -29,7 +27,7 @@ public class ProfileMedicationHistoryView extends CommonView {
     @FXML
     public void initialize() {
 
-        observableListMedHistory = FXCollections.observableArrayList();
+        ObservableList<String> observableListMedHistory = FXCollections.observableArrayList();
         if (profile != null) {
             observableListMedHistory.addAll(profile.getMedicationTimestamps());
             viewMedicationHistory.setItems(observableListMedHistory);
