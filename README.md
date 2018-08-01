@@ -1,15 +1,32 @@
-# SENG302 Project Template
+# SENG302 Team 200: Human Farm
 
-Basic Maven project with required Maven reporting setup and basic GitLab CI.
+## Compiling
+This project uses maven to compile the project.
 
-It is a requirement that your product should be completely built to a deliverable form using the Maven package goal.
+From a terminal window, change directory to the project root directory and execute the following:
 
-Remember to set up your GitLab CI server (refer to the student guide for instructions).
+    mvn -B clean site package
 
-# Basic Project Structure
- - `src/` Your application source
- - `doc/` User and design documentation
- - `doc/examples/` Demo example files for use with your application
- - 
+This will download any required dependencies and compile the program to the `target` folder.
 
- 
+## Running
+To run the application once compiled, change terminal directory to the target folder and execute 
+the following:
+
+    java -jar odms-0.x.jar
+
+This will bring you into the application which can be terminated at any time by executing the 
+`quit` command.
+
+## Usage Links
+---
+- [User Manual](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Command-Line)
+
+## Team Links
+---
+- [Members](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home#members)
+- [Weekly Stand Ups](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home#weekly-stand-ups)
+
+## Third Party Libraries
+---
+- [Libraries](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Design-decisions/Libraries)
