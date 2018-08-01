@@ -24,26 +24,26 @@ public class ProfileCreateController extends CommonController {
         view = v;
     }
 
-    private String checkDetailsEntered() {
-        //todo rework this to not return strings (potentially by including alert controller calls in here
+    private boolean checkDetailsEntered() {
         if (view.getGivenNamesFieldValue().isEmpty()) {
-            return "Please enter Given Name(s)";
+            AlertController.invalidEntry("Please enter Given Name(s)");
+            return false;
         }
-        if (view.getsurnamesFieldValue().isEmpty()) {
-            return "Please enter Surname(s)";
 
+        if (view.getsurnamesFieldValue().isEmpty()) {
+            AlertController.invalidEntry("Please enter Surname(s)");
+            return false;
         }
-        try {
-            if (view.getdobDatePickerValue().equals(null)) {
-                return "Please enter a Date of Birth";
-            }
-        } catch (NullPointerException e) {
-            return "Please enter a Date of Birth";
+
+        if (view.getdobDatePickerValue() == null) {
+            AlertController.invalidEntry("Please enter a Date of Birth");
+            return false;
         }
         if (view.getNhiField().isEmpty()) {
-            return "Please enter an NHI number";
+            AlertController.invalidEntry("Please enter an IRD number");
+            return false;
         } else {
-            return "";
+            return true;
         }
     }
 
@@ -54,11 +54,8 @@ public class ProfileCreateController extends CommonController {
      */
     public Profile createAccount() throws IOException {
         //todo rework this method potentially
-        String detailsCheckString = checkDetailsEntered();
 
-        if (!detailsCheckString.equals("")) {
-            AlertController.invalidEntry(detailsCheckString);
-        } else {
+        if (checkDetailsEntered()) {
             try {
                 String givenNames = view.getGivenNamesFieldValue();
                 String surnames = view.getsurnamesFieldValue();
