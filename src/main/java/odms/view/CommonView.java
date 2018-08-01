@@ -26,9 +26,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.controller.GuiMain;
 import odms.controller.history.RedoController;
 import odms.controller.history.UndoController;
+import odms.controller.profile.ProfileEditController;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.view.profile.ProfileEditView;
 import odms.view.user.ClinicianProfileView;
 import org.controlsfx.control.Notifications;
 
@@ -108,22 +110,18 @@ public class CommonView {
 
     /**
      * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
      */
     @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        ProfileEditController controller = fxmlLoader.getController();
-//        controller.setCurrentProfile(currentProfile);
-//        controller.setIsClinician(isOpenedByClinician);
-//        controller.initialize();
-//
-//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//
-//        appStage.setScene(scene);
-//        appStage.show();
+    public void openProfileEditWindow(Profile currentProfile, ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        ProfileEditView controller = fxmlLoader.getController();
+        controller.initialize(currentProfile);
+
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        appStage.setScene(scene);
+        appStage.show();
     }
 
     /**

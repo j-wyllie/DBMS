@@ -1,6 +1,8 @@
 package odms.view.profile;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import odms.controller.profile.ProfileGeneralTabController;
@@ -98,5 +100,9 @@ public class ProfileGeneralView extends CommonView {
     public void initialize(Profile p) {
         currentProfile = p;
         setUpDetails();
+    }
+
+    public void handleEditButtonClicked(ActionEvent actionEvent) throws IOException {
+        openProfileEditWindow(currentProfile, actionEvent);
     }
 }

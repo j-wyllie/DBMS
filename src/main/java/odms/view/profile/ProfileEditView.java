@@ -257,6 +257,7 @@ public class ProfileEditView extends CommonView {
     public void initialize(Profile p) {
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
+
         // TODO investigate abstracting copy paste listeners to common function.
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
