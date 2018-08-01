@@ -103,7 +103,7 @@ public class ProfileGeneralView extends CommonView {
     }
 
     @FXML
-    private  void handleEditButtonClicked(ActionEvent event) throws IOException {
+    private void handleEditButtonClicked(ActionEvent event) throws IOException {
         handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician);
     }
 
@@ -111,9 +111,5 @@ public class ProfileGeneralView extends CommonView {
         this.isOpenedByClinician = isOpenedByClinician;
         currentProfile = p;
         setUpDetails();
-    }
-
-    public void handleEditButtonClicked(ActionEvent actionEvent) throws IOException {
-        openProfileEditWindow(currentProfile, actionEvent);
     }
 }
