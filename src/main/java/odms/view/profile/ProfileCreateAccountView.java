@@ -3,13 +3,9 @@ package odms.view.profile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import odms.controller.profile.ProfileCreateController;
-import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -33,25 +29,22 @@ public class ProfileCreateAccountView extends CommonView {
     private ProfileCreateController controller = new ProfileCreateController(this);
 
     /**
-     * Scene change to profile profile view if all required fields are filled in.
+     * Scene change to profile view if all required fields are filled in.
      *
      * @param event clicking on the create new account button.
      * @throws IOException throws IOException
      */
     @FXML
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
-        Scene scene = new Scene(loader.load());
-        ProfileDisplayViewTODO v = loader.getController();
-        Profile profile = controller.createAccount();
-        if(profile != null) {
-            v.initialize(profile);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(scene);
-            appStage.show();
+        if(controller.createAccount() == null) {
+            return;
         }
-
-
+        System.out.println(controller.createAccount());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
+        ProfileDisplayViewTODO view = fxmlLoader.getController();
+        view.initialize(controller.createAccount());
+        changeScene(event, "/view/ProfileDisplay.fxml");
     }
 
     /**

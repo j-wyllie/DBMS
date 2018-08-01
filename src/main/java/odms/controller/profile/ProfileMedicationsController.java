@@ -1,13 +1,18 @@
 package odms.controller.profile;
 
+import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.MedicationDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.MedicationInteractionsDAO;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.medications.Drug;
+import odms.model.medications.Interaction;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileMedicationsView;
 
@@ -20,10 +25,15 @@ import java.util.Map;
 import static odms.controller.data.MedicationDataIO.getActiveIngredients;
 
 public class ProfileMedicationsController extends CommonController {
+
     ProfileMedicationsView view;
+    private MedicationInteractionsDAO cache;
 
     public ProfileMedicationsController(ProfileMedicationsView profileMedicationsView) {
         view = profileMedicationsView;
+        cache = DAOFactory.getMedicalInteractionsDao();
+        cache.load();
+
     }
 
     /**
@@ -212,17 +222,33 @@ public class ProfileMedicationsController extends CommonController {
     }
 
     public Map<String, String> getRawInteractions() throws IOException {
-        Map<String, String> interactionsRaw;
+        Map<String, String> interactionsRaw = new HashMap<>();
         Profile currentProfile = view.getCurrentProfile();
         ArrayList<Drug> drugs = getDrugsList();
-        interactionsRaw = MedicationDataIO.getDrugInteractions(
-                drugs.get(0).getDrugName(),
-                drugs.get(1).getDrugName(),
-                currentProfile.getGender(),
-                currentProfile.getAge()
-        );
+
+        Interaction interaction = cache.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
+
+        if (!(interaction == null)) {
+            interactionsRaw = MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(),
+                    currentProfile.getAge());
+        }
         return interactionsRaw;
     }
+
+    /**
+     * Clears the cache and handles the messages.
+     */
+    public void clearCache() {
+        if (AlertController.generalConfirmation("Are you sure you want to clear the cache?"
+                + "\nThis cannot be undone.")) {
+            cache.clear();
+            if (!cache.save()) {
+                AlertController.guiPopup("There was an error saving the cache.\nThe cache has been "
+                        + "cleared, but could not be saved.");
+            }
+        }
+    }
+
 
     public ObservableList<String> getObservableDrugsList() {
         ArrayList<Drug> drugs = getDrugsList();

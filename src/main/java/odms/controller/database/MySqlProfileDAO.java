@@ -119,7 +119,6 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws SQLException error.
      */
     private Profile parseProfile(ResultSet profiles) throws SQLException {
-        System.out.println(profiles.getInt("ProfileId"));
         int id = profiles.getInt("ProfileId");
         String nhi = profiles.getString("NHI");
         String username = profiles.getString("Username");

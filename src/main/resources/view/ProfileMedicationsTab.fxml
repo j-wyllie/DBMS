@@ -247,7 +247,7 @@
                     <Insets/>
                 </GridPane.margin>
             </Button>
-
+            <Button fx:id="buttonClearCache" mnemonicParsing="false" onAction="#handleClearCache" text="Clear Cache" GridPane.columnIndex="5" />
         </GridPane>
         <GridPane GridPane.columnIndex="1"
             GridPane.rowIndex="2">
