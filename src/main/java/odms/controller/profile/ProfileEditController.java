@@ -30,7 +30,7 @@ public class ProfileEditController extends CommonController {
      *
      */
     @FXML
-    public void save() throws IOException {
+    public void save() {
         if (AlertController.saveChanges()) {
             try {
                 // history Generation
@@ -83,7 +83,7 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     public void saveDateOfBirth() throws IllegalArgumentException {
-        if (view.getdobDatePicker().equals(null)) {
+        if (view.getdobDatePicker() == null) {
             throw new IllegalArgumentException("Date of Birth field cannot be blank");
         }
         currentProfile.setDateOfBirth(view.getdobDatePicker());
@@ -286,6 +286,7 @@ public class ProfileEditController extends CommonController {
 
     public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
+        System.out.println(currentProfile);
     }
 
     public void setIsClinician(Boolean bool) {

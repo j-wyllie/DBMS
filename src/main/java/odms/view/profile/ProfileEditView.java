@@ -254,6 +254,7 @@ public class ProfileEditView extends CommonView {
     @FXML
     public void initialize(Profile p, Boolean isOpenedByClinician) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentProfile = p;
         this.controller.setCurrentProfile(currentProfile);
 
         // Restrict entry on these fields to numbers only.
@@ -261,8 +262,6 @@ public class ProfileEditView extends CommonView {
         setListeners();
 
         if (currentProfile != null) {
-            this.currentProfile = p;
-
             try {
                 populateFields();
             } catch (Exception e) {
