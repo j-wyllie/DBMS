@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
+import odms.model.enums.CountriesEnum;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
@@ -107,6 +108,20 @@ public class ProfileEditView extends CommonView {
 
     @FXML
     private TextField cityOfDeathField;
+
+    @FXML
+    private Label cityLabel;
+
+    @FXML
+    private Label countryLabel;
+
+    @FXML
+    private Label regionLabel;
+
+    @FXML
+    private TextField cityField;
+
+
 
     private Profile currentProfile;
 
@@ -342,6 +357,148 @@ public class ProfileEditView extends CommonView {
         if (currentProfile.getPreferredGender() != null) {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
         }
+        setupDeathFields();
+    }
+
+    private void setupDeathFields() {
+        if (currentProfile.getDateOfDeath() != null) {
+            //Profile is dead
+
+            cityLabel.setText("City of death : ");
+            countryLabel.setText("Country of death: ");
+            regionLabel.setText("Region of death: ");
+
+            //Only a clinician should be able to edit these -- not sure about this.
+            if (isOpenedByClinician) {
+                comboCountryOfDeath.setDisable(false);
+                regionOfDeathField.setDisable(false);
+                comboRegion.setDisable(true);
+                cityOfDeathField.setDisable(false);
+                comboCountry.setDisable(true);
+                regionField.setDisable(true);
+                comboRegion.setDisable(true);
+                cityField.setDisable(true);
+                comboCountry.setVisible(false);
+                comboRegion.setVisible(false);
+                regionField.setVisible(false);
+                cityField.setVisible(false);
+                comboCountryOfDeath.setVisible(true);
+                comboRegionOfDeath.setVisible(true);
+                regionOfDeathField.setVisible(true);
+                cityOfDeathField.setVisible(true);
+            } else {
+                comboCountryOfDeath.setDisable(true);
+                regionOfDeathField.setDisable(true);
+                comboRegion.setDisable(true);
+                cityOfDeathField.setDisable(true);
+                comboCountry.setDisable(false);
+                regionField.setDisable(false);
+                comboRegion.setDisable(false);
+                cityField.setDisable(false);
+            }
+
+            if (currentProfile.getCountryOfDeath() == null) {
+                if (currentProfile.getCountry() != null) {
+                    comboCountry.setValue(CountriesEnum
+                            .getValidNameFromString(currentProfile.getCountry()));
+                }
+            } else {
+                comboCountryOfDeath.setValue(CountriesEnum
+                        .getValidNameFromString(currentProfile.getCountryOfDeath()));
+            }
+
+            if (currentProfile.getCityOfDeath() == null) {
+                if (currentProfile.getCity() != null) {
+                    cityField.setText(currentProfile.getCity());
+                }
+            } else {
+                cityField.setText(currentProfile.getCityOfDeath());
+                cityOfDeathField.setText(currentProfile.getCityOfDeath());
+            }
+
+            if (currentProfile.getRegionOfDeath() == null) {
+                if (currentProfile.getRegion() != null) {
+                    if (currentProfile.getCountry() != null) {
+                        if (currentProfile.getCountry().equals("New Zealand")) {
+                            comboRegion.setDisable(false);
+                            comboRegionOfDeath.setDisable(false);
+                            regionField.setDisable(true);
+                            regionOfDeathField.setDisable(true);
+                            comboRegion.setValue(currentProfile.getRegion());
+                            comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
+                        } else {
+                            comboRegion.setDisable(true);
+                            comboRegionOfDeath.setDisable(true);
+                            regionField.setDisable(false);
+                            regionOfDeathField.setDisable(false);
+                            regionField.setText(currentProfile.getRegion());
+                            regionOfDeathField.setText(currentProfile.getRegionOfDeath());
+                        }
+                    } else {
+                        comboRegion.setDisable(true);
+                        comboRegionOfDeath.setDisable(true);
+                        regionField.setDisable(false);
+                        regionOfDeathField.setDisable(false);
+                        regionField.setText(currentProfile.getRegion());
+                        regionOfDeathField.setText(currentProfile.getRegion());
+                    }
+                }
+            } else {
+                if (currentProfile.getCountry() != null) {
+                    if (currentProfile.getCountry().equals("New Zealand")) {
+                        comboRegion.setDisable(false);
+                        comboRegionOfDeath.setDisable(false);
+                        regionField.setDisable(true);
+                        regionOfDeathField.setDisable(true);
+                        comboRegion.setValue(currentProfile.getRegionOfDeath());
+                        comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
+                    }
+                } else {
+                    comboRegion.setDisable(true);
+                    comboRegionOfDeath.setDisable(true);
+                    regionField.setDisable(false);
+                    regionOfDeathField.setDisable(false);
+                    regionField.setText(currentProfile.getRegionOfDeath());
+                    regionOfDeathField.setText(currentProfile.getRegionOfDeath());
+                }
+            }
+
+
+
+        } else {
+            //profile is alive
+            cityLabel.setText("City : ");
+            countryLabel.setText("Country : ");
+            regionLabel.setText("Region : ");
+
+            if (currentProfile.getCity() != null) {
+                cityField.setText(currentProfile.getCity());
+            }
+            if (currentProfile.getCountry() != null) {
+                comboCountry.setValue(
+                        CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+            }
+            if (currentProfile.getRegion() != null) {
+                if (currentProfile.getCountry() != null) {
+                    if (currentProfile.getCountry().equals("New Zealand")) {
+                        comboRegion.setDisable(false);
+                        regionField.setDisable(true);
+                        comboRegion.setValue(currentProfile.getRegion());
+                    } else {
+                        comboRegion.setDisable(true);
+                        regionField.setDisable(false);
+                        regionField.setText(currentProfile.getRegion());
+                    }
+                } else {
+                    comboRegion.setDisable(true);
+                    regionField.setDisable(false);
+                    regionField.setText(currentProfile.getRegion());
+                }
+
+            }
+
+        }
+
     }
 
     private void setListeners() {

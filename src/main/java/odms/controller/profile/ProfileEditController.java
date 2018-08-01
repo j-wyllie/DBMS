@@ -1,7 +1,6 @@
 package odms.controller.profile;
 
 import static odms.App.getProfileDb;
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.File;
 import java.io.IOException;
