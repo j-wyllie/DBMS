@@ -3,12 +3,14 @@ package odms.controller.profile;
 import static odms.App.getProfileDb;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.data.AddressIO;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
@@ -21,7 +23,6 @@ public class ProfileEditController extends CommonController {
 
     private Profile currentProfile;
     private ProfileEditView view;
-
 
     private Boolean isClinician;
 
@@ -137,11 +138,16 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    public void saveAddress() {
-        if (!view.getAddressField().isEmpty()) {
+    public void saveAddress() throws Exception{
+        if (!view.getAddressField().isEmpty() && AddressIO
+                .checkValidCountry(view.getAddressField(), view.getComboCountry().getValue().toString())) {
             currentProfile.setAddress(view.getAddressField());
+        } else if(!view.getAddressField().isEmpty() && !AddressIO.checkValidCountry(view.getAddressField(),
+                view.getComboCountry().getValue().toString())){
+            throw new Exception();
         }
     }
+
 
     /**
      * Save Date of Death field to profile.
@@ -291,7 +297,44 @@ public class ProfileEditController extends CommonController {
         //}
     }
 
+    public File setImage(File chosenFile, File LOCALPATH) {
+        if (chosenFile != null) {
+            String extension = getFileExtension(chosenFile).toLowerCase();
+            File deleteFile;
+            if ("jpg".equalsIgnoreCase(extension)) {
+                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
+            } else {
+                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
+            }
+            if (deleteFile.delete())
+            {
+                System.out.println("Old file deleted successfully");
+            }
+            else
+            {
+                System.out.println("Failed to delete the old file");
+            }
+            File pictureDestination = new File(LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
+            currentProfile.setPictureName(chosenFile.getName());
+            return pictureDestination;
+        }
+        return null;
+    }
 
+
+    /**
+     * returns a string that is the file extension of given file
+     *
+     * @param file File to retrieve extension from
+     */
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf('.') + 1);
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
     public void setCurrentProfile(Profile donor) {
         currentProfile = donor;

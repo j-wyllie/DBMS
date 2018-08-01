@@ -54,7 +54,6 @@ public class ProfileGeneralView extends CommonView {
 
     private File localPath = new File(System.getProperty("user.dir"));
 
-
     public Label getEmailLabel() {
         return emailLabel;
     }

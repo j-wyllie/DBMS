@@ -181,26 +181,9 @@ public class ProfileEditView extends CommonView {
     @FXML
     private void handleChooseImageClicked(ActionEvent event) throws IOException{
         File chosenFile = chooseImage(pictureText);
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
-            }
-            if (deleteFile.delete())
-            {
-                System.out.println("Old file deleted successfully");
-            }
-            else
-            {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
-            copyFileUsingStream(chosenFile, pictureDestination);
-            currentProfile.setPictureName(chosenFile.getName());
-        }
+        File pictureDestination = controller.setImage(chosenFile, LOCALPATH);
+        copyFileUsingStream(chosenFile, pictureDestination);
+
     }
 
     /**
@@ -529,6 +512,46 @@ public class ProfileEditView extends CommonView {
 
     public void setIsSmokerRadioButton(boolean b) {
         isSmokerRadioButton.setSelected(b);
+    }
+
+    public ComboBox getComboCountryOfDeath() {
+        return comboCountryOfDeath;
+    }
+
+    public void setComboCountryOfDeath(ComboBox comboCountryOfDeath) {
+        this.comboCountryOfDeath = comboCountryOfDeath;
+    }
+
+    public String getRegionOfDeathField() {
+        return regionOfDeathField.getText();
+    }
+
+    public void setRegionOfDeathField(TextField regionOfDeathField) {
+        this.regionOfDeathField = regionOfDeathField;
+    }
+
+    public ComboBox<String> getComboRegion() {
+        return comboRegion;
+    }
+
+    public void setComboRegion(ComboBox<String> comboRegion) {
+        this.comboRegion = comboRegion;
+    }
+
+    public ComboBox<String> getComboRegionOfDeath() {
+        return comboRegionOfDeath;
+    }
+
+    public void setComboRegionOfDeath(ComboBox<String> comboRegionOfDeath) {
+        this.comboRegionOfDeath = comboRegionOfDeath;
+    }
+
+    public ComboBox getComboCountry() {
+        return comboCountry;
+    }
+
+    public void setComboCountry(ComboBox comboCountry) {
+        this.comboCountry = comboCountry;
     }
 
 }

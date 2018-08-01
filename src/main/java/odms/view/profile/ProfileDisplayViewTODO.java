@@ -1,13 +1,10 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import odms.controller.CommonController;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
@@ -18,6 +15,7 @@ import static odms.controller.AlertController.invalidUsername;
 public class ProfileDisplayViewTODO extends CommonView {
 
     private Profile currentProfile;
+
     /**
      * Text for showing recent edits.
      */
@@ -29,8 +27,6 @@ public class ProfileDisplayViewTODO extends CommonView {
     private Label donorStatusLabel;
     @FXML
     private Label userIdLabel;
-    @FXML
-    private Button logoutButton;
     @FXML
     private Label receiverStatusLabel;
     @FXML
@@ -49,6 +45,7 @@ public class ProfileDisplayViewTODO extends CommonView {
     private Tab tabProcedures;
 
     private Boolean isOpenedByClinician = false;
+
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
 
@@ -100,8 +97,6 @@ public class ProfileDisplayViewTODO extends CommonView {
             if (currentProfile.getReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
-
-
 
             if (currentProfile.getId() != null) {
                 userIdLabel

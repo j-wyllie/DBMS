@@ -317,20 +317,6 @@ public class CommonView {
     }
 
     /**
-     * returns a string that is the file extension of given file
-     *
-     * @param file File to retrieve extension from
-     */
-    protected String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    /**
      * Copies a file from source to dest
      *
      * @param source File source in local directory
@@ -375,7 +361,7 @@ public class CommonView {
     /**
      * closes all open profile windows that the user has opened.
      */
-    public static void closeAllOpenProfiles() {
+    protected static void closeAllOpenProfiles() {
         for (Stage stage : openProfileStages) {
             if (stage.isShowing()) {
                 stage.close();
