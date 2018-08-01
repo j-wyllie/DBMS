@@ -11,10 +11,11 @@ import odms.controller.CommonController;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
+import odms.view.CommonView;
 
 import static odms.controller.AlertController.invalidUsername;
 
-public class ProfileDisplayControllerTODO extends CommonController {
+public class ProfileDisplayViewTODO extends CommonView {
 
     private Profile currentProfile;
     /**
@@ -68,6 +69,8 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         //todo showLoginScene(event);
+        currentProfile = null;
+        changeScene(event, "/view/Login.fxml");
     }
 
 
@@ -119,11 +122,11 @@ public class ProfileDisplayControllerTODO extends CommonController {
     @FXML
     public void onTabGeneralSelected() {
         if (currentProfileBound.get() != null) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileGeneralTab.fxml"));;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileGeneralTab.fxml"));
             try {
                 tabGeneral.setContent(loader.load());
                 ProfileGeneralView profileGeneralView = loader.getController();
-                profileGeneralView.initialize(currentProfile);
+                profileGeneralView.initialize(currentProfile, isOpenedByClinician);
             } catch (IOException e){
                 System.out.println(e.getMessage());
             }

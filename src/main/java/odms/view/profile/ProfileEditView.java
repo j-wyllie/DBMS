@@ -101,6 +101,7 @@ public class ProfileEditView extends CommonView {
 
 
     private ProfileEditController controller = new ProfileEditController(this);
+    private Boolean isOpenedByClinician;
 
     /**
      * Button handler to undo last action.
@@ -168,7 +169,7 @@ public class ProfileEditView extends CommonView {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileDisplay.fxml"));
-        ProfileDisplayControllerTODO v = fxmlLoader.getController();
+        ProfileDisplayViewTODO v = fxmlLoader.getController();
         v.initialize(controller.close());
         changeScene(event, "/view/ProfileDisplay.fxml");
     }
@@ -254,7 +255,10 @@ public class ProfileEditView extends CommonView {
      * Sets the current profile attributes to the labels on start up.
      */
     @FXML
-    public void initialize(Profile p) {
+    public void initialize(Profile p, Boolean isOpenedByClinician) {
+        this.isOpenedByClinician = isOpenedByClinician;
+        this.controller.setCurrentProfile(p);
+
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
         // TODO investigate abstracting copy paste listeners to common function.
