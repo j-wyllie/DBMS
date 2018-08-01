@@ -55,7 +55,7 @@
             </font>
         </Text>
         <TableView GridPane.rowIndex="1"
-                onMouseReleased="#refreshPageElements"
+                onMouseReleased="#refreshButtonAvailability"
                 prefHeight="458.0" prefWidth="414.0"
                 fx:id="curConditionsTable">
             <columns>
@@ -77,7 +77,7 @@
         </TableView>
         <TableView GridPane.columnIndex="2"
                 GridPane.rowIndex="1"
-                onMouseReleased="#refreshPageElements" prefHeight="453.0"
+                onMouseReleased="#refreshButtonAvailability" prefHeight="453.0"
                 prefWidth="423.0"
                 fx:id="pastConditionsTable">
             <columns>

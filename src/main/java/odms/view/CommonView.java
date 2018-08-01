@@ -244,7 +244,6 @@ public class CommonView {
      */
     @FXML
     protected void showNotification(String editedField, ActionEvent event) throws IOException {
-        //todo modify this method by making it common view possibly
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
