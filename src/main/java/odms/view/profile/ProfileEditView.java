@@ -21,6 +21,8 @@ import odms.view.CommonView;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static odms.controller.AlertController.profileCancelChanges;
 
@@ -368,10 +370,15 @@ public class ProfileEditView extends CommonView {
         });
 
         nhiField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                nhiField.setText(newValue.replaceAll(notAnyDigit, ""));
+            String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(newValue);
+
+            if (!m.matches() && !m.hitEnd()) {
+                nhiField.setText(oldValue);
             }
         });
+
 
         weightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(anyDigit)) {

@@ -1,13 +1,17 @@
 package odms.controller.profile;
 
+import static odms.App.getProfileDb;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.ProfileDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.profile.Profile;
@@ -61,14 +65,17 @@ public class ProfileEditController extends CommonController {
                 saveBloodType();
                 saveIsSmoker();
 
-                ProfileDataIO.saveData(getCurrentDatabase());
+                ProfileDAO database = DAOFactory.getProfileDao();
+                database.update(currentProfile);
+                ProfileDataIO.saveData(getProfileDb());
+
                 // history Changes
                 action.setHistoryData(
                         action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
                 HistoryController.updateHistory(action);
 
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
                                 "Changes not saved."
@@ -85,6 +92,8 @@ public class ProfileEditController extends CommonController {
     public void saveDateOfBirth() throws IllegalArgumentException {
         if (view.getdobDatePicker() == null) {
             throw new IllegalArgumentException("Date of Birth field cannot be blank");
+        } else if(view.getdobDatePicker().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Date of Birth cannot be in the future");
         }
         currentProfile.setDateOfBirth(view.getdobDatePicker());
     }

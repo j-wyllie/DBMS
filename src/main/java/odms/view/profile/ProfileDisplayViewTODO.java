@@ -150,7 +150,7 @@ public class ProfileDisplayViewTODO extends CommonView {
         try {
             tabMedical.setContent(loader.load());
             ProfileMedicalViewTODO profileMedicalViewTODO = loader.getController();
-            profileMedicalViewTODO.initialize(currentProfile);
+            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }

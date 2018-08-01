@@ -257,7 +257,7 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleViewMedicationHistory(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileMedicationHistoryTab.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         ProfileMedicationHistoryView view = fxmlLoader.getController();
