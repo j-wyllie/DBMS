@@ -8,10 +8,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import odms.controller.CommonController;
 import odms.controller.condition.ConditionAddController;
 import odms.model.profile.Profile;
+import odms.view.CommonView;
 
-public class ProfileAddConditionView {
+public class ProfileAddConditionView extends CommonView {
     private Profile searchedDonor;
     private ProfileMedicalHistoryView parent;
     private ConditionAddController controller = new ConditionAddController(this);

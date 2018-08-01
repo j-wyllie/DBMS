@@ -69,7 +69,4 @@ public class ConditionAddController {
         }
         return condition;
     }
-
-    public void init(ProfileMedicalHistoryView profileMedicalHistoryView) {
-    }
 }

@@ -361,29 +361,8 @@ private void makeTable(ArrayList<Condition> curConditions,
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        try {
-            Node source = (Node) event.getSource();
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/AddCondition.fxml"));
-
-            Scene scene = new Scene(fxmlLoader.load());
-            //todo fix this by using the view? Don't know if this window is actually opened
-            ConditionAddController controller = fxmlLoader.<ConditionAddController>getController();
-            controller.init(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Add a condition");
-            stage.initOwner(source.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
-        }
-
-        refreshConditionTable();
+        ProfileAddConditionView addConditionView = new ProfileAddConditionView();
+        createPopup(event, "/view/AddCondition.fxml", "AddCondition");
     }
 
 
