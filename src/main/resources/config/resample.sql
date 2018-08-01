@@ -3,41 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Jul 23, 2018 at 03:28 AM
--- Server version: 5.6.40
--- PHP Version: 5.4.16
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `seng302-2018-team200-test`
---
-
---
--- Dumping data for table `procedures`
---
-
-INSERT INTO `procedures` (`Id`, `ProfileId`, `Summary`, `ProcedureDate`, `Pending`, `Previous`) VALUES
-  (1, 0, NULL, NULL, NULL, NULL),
-  (4, 4, 'calf muscel implants', '2019-03-05 00:00:00', NULL, NULL);
-
---
--- Dumping data for table `profiles`
---
-
--- phpMyAdmin SQL Dump
--- version 4.4.15.5
--- http://www.phpmyadmin.net
---
--- Host: csse-mysql2
--- Generation Time: Jul 24, 2018 at 09:06 AM
+-- Generation Time: Aug 01, 2018 at 02:02 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -55,27 +21,268 @@ SET time_zone = "+00:00";
 --
 
 --
+-- Dumping data for table `countries`
+--
+
+INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
+  (13, 'NZ', 1),
+  (14, 'AF', 1),
+  (15, 'AX', 1),
+  (16, 'AL', 1),
+  (17, 'DZ', 1),
+  (18, 'AS', 1),
+  (19, 'AD', 1),
+  (20, 'AO', 1),
+  (21, 'AI', 1),
+  (22, 'AQ', 1),
+  (23, 'AG', 1),
+  (24, 'AR', 1),
+  (25, 'AM', 1),
+  (26, 'AW', 1),
+  (27, 'AU', 1),
+  (28, 'AT', 1),
+  (29, 'AZ', 1),
+  (30, 'BS', 1),
+  (31, 'BH', 1),
+  (32, 'BD', 1),
+  (33, 'BB', 1),
+  (34, 'BY', 1),
+  (35, 'BE', 1),
+  (36, 'BZ', 1),
+  (37, 'BJ', 1),
+  (38, 'BM', 1),
+  (39, 'BT', 1),
+  (40, 'BO', 1),
+  (41, 'BA', 1),
+  (42, 'BW', 1),
+  (43, 'BV', 1),
+  (44, 'BR', 1),
+  (45, 'IO', 1),
+  (46, 'BN', 1),
+  (47, 'BG', 1),
+  (48, 'BF', 1),
+  (49, 'BI', 1),
+  (50, 'KH', 1),
+  (51, 'CM', 1),
+  (52, 'CA', 1),
+  (53, 'CV', 1),
+  (54, 'KY', 1),
+  (55, 'CF', 1),
+  (56, 'TD', 1),
+  (57, 'CL', 1),
+  (58, 'CN', 1),
+  (59, 'CX', 1),
+  (60, 'CC', 1),
+  (61, 'CO', 1),
+  (62, 'KM', 1),
+  (63, 'CG', 1),
+  (64, 'CD', 1),
+  (65, 'CK', 1),
+  (66, 'CR', 1),
+  (67, 'CI', 1),
+  (68, 'HR', 1),
+  (69, 'CU', 1),
+  (70, 'CY', 1),
+  (71, 'CZ', 1),
+  (72, 'DK', 1),
+  (73, 'DJ', 1),
+  (74, 'DM', 1),
+  (75, 'DO', 1),
+  (76, 'EC', 1),
+  (77, 'EG', 1),
+  (78, 'SV', 1),
+  (79, 'GQ', 1),
+  (80, 'ER', 1),
+  (81, 'EE', 1),
+  (82, 'ET', 1),
+  (83, 'FK', 1),
+  (84, 'FO', 1),
+  (85, 'FJ', 1),
+  (86, 'FI', 1),
+  (87, 'FR', 1),
+  (88, 'GF', 1),
+  (89, 'PF', 1),
+  (90, 'TF', 1),
+  (91, 'GA', 1),
+  (92, 'GM', 1),
+  (93, 'GE', 1),
+  (94, 'DE', 1),
+  (95, 'GH', 1),
+  (96, 'GI', 1),
+  (97, 'GR', 1),
+  (98, 'GL', 1),
+  (99, 'GD', 1),
+  (100, 'GP', 1),
+  (101, 'GU', 1),
+  (102, 'GT', 1),
+  (103, 'GG', 1),
+  (104, 'GN', 1),
+  (105, 'GW', 1),
+  (106, 'GY', 1),
+  (107, 'HT', 1),
+  (108, 'HM', 1),
+  (109, 'VA', 1),
+  (110, 'HN', 1),
+  (111, 'HK', 1),
+  (112, 'HU', 1),
+  (113, 'IS', 1),
+  (114, 'IN', 1),
+  (115, 'ID', 1),
+  (116, 'IR', 1),
+  (117, 'IQ', 1),
+  (118, 'IE', 1),
+  (119, 'IM', 1),
+  (120, 'IL', 1),
+  (121, 'IT', 1),
+  (122, 'JM', 1),
+  (123, 'JP', 1),
+  (124, 'JE', 1),
+  (125, 'JO', 1),
+  (126, 'KZ', 1),
+  (127, 'KE', 1),
+  (128, 'KI', 1),
+  (129, 'KP', 1),
+  (130, 'KR', 1),
+  (131, 'KW', 1),
+  (132, 'KG', 1),
+  (133, 'LA', 1),
+  (134, 'LV', 1),
+  (135, 'LB', 1),
+  (136, 'LS', 1),
+  (137, 'LR', 1),
+  (138, 'LY', 1),
+  (139, 'LI', 1),
+  (140, 'LT', 1),
+  (141, 'LU', 1),
+  (142, 'MO', 1),
+  (143, 'MK', 1),
+  (144, 'MG', 1),
+  (145, 'MW', 1),
+  (146, 'MY', 1),
+  (147, 'MV', 1),
+  (148, 'ML', 1),
+  (149, 'MT', 1),
+  (150, 'MH', 1),
+  (151, 'MQ', 1),
+  (152, 'MR', 1),
+  (153, 'MU', 1),
+  (154, 'YT', 1),
+  (155, 'MX', 1),
+  (156, 'FM', 1),
+  (157, 'MD', 1),
+  (158, 'MC', 1),
+  (159, 'MN', 1),
+  (160, 'MS', 1),
+  (161, 'MA', 1),
+  (162, 'MZ', 1),
+  (163, 'MM', 1),
+  (164, 'NA', 1),
+  (165, 'NR', 1),
+  (166, 'NP', 1),
+  (167, 'NL', 1),
+  (168, 'AN', 1),
+  (169, 'NC', 1),
+  (170, 'NI', 1),
+  (171, 'NE', 1),
+  (172, 'NG', 1),
+  (173, 'NU', 1),
+  (174, 'NF', 1),
+  (175, 'MP', 1),
+  (176, 'NO', 1),
+  (177, 'OM', 1),
+  (178, 'PK', 1),
+  (179, 'PW', 1),
+  (180, 'PS', 1),
+  (181, 'PA', 1),
+  (182, 'PG', 1),
+  (183, 'PY', 1),
+  (184, 'PE', 1),
+  (185, 'PH', 1),
+  (186, 'PN', 1),
+  (187, 'PL', 1),
+  (188, 'PT', 1),
+  (189, 'PR', 1),
+  (190, 'QA', 1),
+  (191, 'RE', 1),
+  (192, 'RO', 1),
+  (193, 'RU', 1),
+  (194, 'RW', 1),
+  (195, 'SH', 1),
+  (196, 'KN', 1),
+  (197, 'LC', 1),
+  (198, 'PM', 1),
+  (199, 'VC', 1),
+  (200, 'WS', 1),
+  (201, 'SM', 1),
+  (202, 'ST', 1),
+  (203, 'SA', 1),
+  (204, 'SN', 1),
+  (205, 'CS', 1),
+  (206, 'SC', 1),
+  (207, 'SL', 1),
+  (208, 'SG', 1),
+  (209, 'SK', 1),
+  (210, 'SI', 1),
+  (211, 'SB', 1),
+  (212, 'SO', 1),
+  (213, 'ZA', 1),
+  (214, 'GS', 1),
+  (215, 'ES', 1),
+  (216, 'LK', 1),
+  (217, 'SD', 1),
+  (218, 'SR', 1),
+  (219, 'SJ', 1),
+  (220, 'SZ', 1),
+  (221, 'SE', 1),
+  (222, 'CH', 1),
+  (223, 'SY', 1),
+  (224, 'TW', 1),
+  (225, 'TJ', 1),
+  (226, 'TZ', 1),
+  (227, 'TH', 1),
+  (228, 'TL', 1),
+  (229, 'TG', 1),
+  (230, 'TK', 1),
+  (231, 'TO', 1),
+  (232, 'TT', 1),
+  (233, 'TN', 1),
+  (234, 'TR', 1),
+  (235, 'TM', 1),
+  (236, 'TC', 1),
+  (237, 'TV', 1),
+  (238, 'UG', 1),
+  (239, 'UA', 1),
+  (240, 'AE', 1),
+  (241, 'GB', 1),
+  (242, 'US', 1),
+  (243, 'UM', 1),
+  (244, 'UY', 1),
+  (245, 'UZ', 1),
+  (246, 'VU', 1),
+  (247, 'VE', 1),
+  (248, 'VN', 1),
+  (249, 'VG', 1),
+  (250, 'VI', 1),
+  (251, 'WF', 1),
+  (252, 'EH', 1),
+  (253, 'YE', 1),
+  (254, 'ZM', 1),
+  (255, 'ZW', 1);
+
+--
+-- Dumping data for table `procedures`
+--
+
+INSERT INTO `procedures` (`Id`, `ProfileId`, `Summary`, `ProcedureDate`, `Pending`, `Previous`) VALUES
+  (4, 2, 'calf muscle implants', '2019-03-05 00:00:00', NULL, NULL);
+
+--
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`UserId`, `Username`, `Password`, `Name`, `UserType`, `Address`, `Region`, `Created`, `LastUpdated`, `IsDefault`) VALUES
   (1, 'admin', 'admin', 'admin', 'ADMIN', NULL, 'Canterbury', '2018-07-24 20:54:28', '2018-07-24 20:54:28', 1),
-  (3, 'brooker', '123', 'Brooke Rakowitz', 'CLINICIAN', NULL, 'Otago', '2018-07-24 20:56:45', '2018-07-24 20:56:45', 0);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-INSERT INTO `profiles` (`ProfileId`, `NHI`, `Username`, `IsDonor`, `IsReceiver`, `GivenNames`, `Lastnames`, `Dob`, `Dod`, `Gender`, `Height`, `Weight`, `BloodType`, `IsSmoker`, `AloholConsumption`, `BloodPressureSystolic`, `BloodPressureDiastolic`, `Address`, `Region`, `Phone`, `Email`, `Created`, `LastUpdated`) VALUES
-  (0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-  (2, '123445678', 'sp333d', 1, 1, 'Joshua', 'Wyllie', '1997-07-18 00:00:00', NULL, 'male', 183, 78, 'O', 0, '12', 140, 80, '163 waimairi road', 'canterbury', '0221379514', 'jwy31@uclive.com', NULL, NULL),
-  (3, '123445678', 'brroooook', 1, 1, 'Brooke', 'Rakowitz', '1998-01-12 00:00:00', NULL, 'female', 168, 60, 'O', 0, '12', 140, 80, '163 imaginary palce', 'canterbury', '1324321432', 'bra30@uclive.com', NULL, NULL),
-  (4, '123442348', 'JackONZ', 1, 1, 'Jack', 'Hay', '1997-08-12 00:00:00', NULL, 'female', 179, 1000, 'O', 0, '15', 140, 80, '1324 imaginary palce', 'canterbury', '13243324323', 'jha23@uclive.com', NULL, NULL),
-  (5, '134652348', 'AlexM', 1, 1, 'Alex', 'Miller', '1989-08-18 00:00:00', NULL, 'male', 190, 82, 'O', 0, '15', 140, 80, 'somewhere in japan', 'nipon', '13243332423', 'ami31@uclive.com', NULL, NULL),
-  (6, '134652348', 'MattyB', 1, 1, 'Matt', 'King', '1997-11-18 00:00:00', NULL, 'male', 180, 77, 'O', 0, '15', 140, 80, '3 noname road', 'canterbury', '1132832423', 'mki43@uclive.com', NULL, NULL),
-  (7, '134652348', 'UgandanKnuckles', 1, 1, 'Lachlan', 'Brewster', '1997-04-17 00:00:00', NULL, 'male', 179, 200, 'O', 0, 'all', 190, 110, '334 noname road', 'canterbury', '1133242213', 'lbr@uclive.com', NULL, NULL),
-  (8, '321432143', 'Xx_zac_xX', 1, 1, 'Zac', 'Brazendale', '1998-02-17 00:00:00', NULL, 'male', 179, 200, 'O', 0, 'all', 178, 79, '32 noname road', 'canterbury', '2343242213', 'zbr@uclive.com', NULL, NULL),
-  (9, '2147483647', 'mlg_LewisWhite', 1, 1, 'Lewis', 'White', '1997-08-23 00:00:00', NULL, 'male', 179, 35, 'O', 0, 'all', 130, 50, '3243 noname road', 'canterbury', '2332442213', 'lwh63@uclive.com', NULL, NULL);
+  (2, '0', '', 'Clinician', 'CLINICIAN', NULL, NULL, '2018-07-24 20:56:45', '2018-07-24 20:56:45', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

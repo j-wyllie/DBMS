@@ -225,7 +225,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
 
             stmt.setString(1, profile.getNhi());
-            stmt.setString(2, profile.getUsername());
+            stmt.setString(2, profile.getNhi());
             stmt.setBoolean(3, profile.getDonor());
             stmt.setBoolean(4, profile.getReceiver());
             stmt.setString(5, profile.getGivenNames());
@@ -457,7 +457,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
 
             stmt.setString(1, profile.getNhi());
-            stmt.setString(2, profile.getUsername());
+            stmt.setString(2, profile.getNhi());
             stmt.setBoolean(3, profile.getDonor());
             stmt.setBoolean(4, profile.getReceiver());
             stmt.setString(5, profile.getGivenNames());

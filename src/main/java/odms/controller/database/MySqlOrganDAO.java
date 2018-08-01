@@ -30,7 +30,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonating(Profile profile) {
-        return getOrgans(profile, "select * from organs where ProfileId = ? and Donating = ?");
+        return getOrgans(profile, "select * from organs where ProfileId = ? and ToDonate = ?");
     }
 
     /**

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Jul 23, 2018 at 03:23 AM
+-- Generation Time: Aug 01, 2018 at 01:59 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `seng302-2018-team200-test`
+-- Database: `seng302-2018-team200-prod`
 --
 
 -- --------------------------------------------------------
@@ -49,6 +49,19 @@ CREATE TABLE IF NOT EXISTS `conditions` (
   `Current` tinyint(1) DEFAULT NULL,
   `Past` tinyint(1) DEFAULT NULL,
   `CuredDate` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `countries`
+--
+
+DROP TABLE IF EXISTS `countries`;
+CREATE TABLE IF NOT EXISTS `countries` (
+  `Id` int(11) NOT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Valid` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -142,8 +155,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
-  `IsDonor` tinyint(1) DEFAULT NULL,
-  `IsReceiver` tinyint(1) DEFAULT NULL,
+  `IsDonor` tinyint(1) DEFAULT '0',
+  `IsReceiver` tinyint(1) DEFAULT '0',
   `GivenNames` varchar(50) DEFAULT NULL,
   `Lastnames` varchar(50) DEFAULT NULL,
   `Dob` datetime DEFAULT NULL,
@@ -152,16 +165,23 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Height` double DEFAULT NULL,
   `Weight` double DEFAULT NULL,
   `BloodType` varchar(5) DEFAULT NULL,
-  `IsSmoker` tinyint(1) DEFAULT NULL,
-  `AloholConsumption` varchar(50) DEFAULT NULL,
+  `IsSmoker` tinyint(1) DEFAULT '0',
+  `AlcoholConsumption` varchar(50) DEFAULT NULL,
   `BloodPressureSystolic` int(11) DEFAULT NULL,
   `BloodPressureDiastolic` int(11) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
+  `StreetNo` varchar(10) DEFAULT NULL,
+  `StreetName` varchar(50) DEFAULT NULL,
+  `Neighbourhood` varchar(50) DEFAULT NULL,
+  `City` varchar(50) DEFAULT NULL,
+  `ZipCode` int(11) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
+  `BirthCountry` varchar(50) DEFAULT NULL,
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
-  `Created` datetime DEFAULT NULL,
-  `LastUpdated` datetime DEFAULT NULL
+  `Created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -173,15 +193,15 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
-  `Username` varchar(50),
-  `Password` varchar(50),
+  `Username` varchar(50) DEFAULT NULL,
+  `Password` varchar(50) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
-  `Created` datetime DEFAULT now(),
-  `LastUpdated` datetime DEFAULT now(),
-  `IsDefault` BOOLEAN DEFAULT 0
+  `Created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `IsDefault` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -193,28 +213,34 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `affected_organs`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProcedureId` (`ProcedureId`);
+ADD KEY `ProcedureId` (`ProcedureId`);
 
 --
 -- Indexes for table `conditions`
 --
 ALTER TABLE `conditions`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+ADD KEY `ProfileId` (`ProfileId`);
+
+--
+-- Indexes for table `countries`
+--
+ALTER TABLE `countries`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `drugs`
 --
 ALTER TABLE `drugs`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `history`
 --
 ALTER TABLE `history`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `EntityId` (`EntityId`);
+ADD KEY `EntityId` (`EntityId`);
 
 --
 -- Indexes for table `medical_interactions`
@@ -227,14 +253,14 @@ ALTER TABLE `medical_interactions`
 --
 ALTER TABLE `organs`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `procedures`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `profiles`
@@ -251,46 +277,57 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-ALTER TABLE `users`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `profiles`
-  MODIFY `ProfileId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --
 ALTER TABLE `affected_organs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `conditions`
 --
 ALTER TABLE `conditions`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `countries`
+--
+ALTER TABLE `countries`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `medical_interactions`
 --
 ALTER TABLE `medical_interactions`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `organs`
 --
 ALTER TABLE `organs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `procedures`
 --
 ALTER TABLE `procedures`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `profiles`
+--
+ALTER TABLE `profiles`
+MODIFY `ProfileId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -318,7 +355,7 @@ ALTER TABLE `drugs`
 --
 ALTER TABLE `history`
   ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`),
-  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
+ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
 
 --
 -- Constraints for table `organs`
