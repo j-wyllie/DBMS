@@ -167,19 +167,23 @@ public class MedicationDataIO {
      * @return Map keys are symptoms and values are duration.
      */
     public static Map<String, String> getDrugInteractions(Interaction interaction, String gender, int age) {
-        Map<String, String> interactions;
-        interactions = new HashMap<>();
+        Map<String, String> interactions = new HashMap<>();
 
-        if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
-            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "male"));
-            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "female"));
-        } else {
-            interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), gender));
+        if (interaction.getDrugA() == null) {
+            interactions.put("error", null);
         }
+        else {
+            if (gender == null || !(gender.equals("male") || gender.equals("female"))) {
+                interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "male"));
+                interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), "female"));
+            } else {
+                interactions.putAll(parseGenderInteractionsJSON(interactions, interaction.getGenderInteractions(), gender));
+            }
 
-        interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
+            interactions = parseInteractionAgeJSON(interactions, interaction.getAgeInteractions(), age);
 
-        interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
+            interactions = parseInteractionDurationJSON(interactions, interaction.getDurationInteractions());
+        }
         return interactions;
     }
 
@@ -193,9 +197,7 @@ public class MedicationDataIO {
      * @return a map where keys are valid interactions and values are empty strings.
      */
     private static Map<String, String> parseGenderInteractionsJSON(Map<String, String> interactions,
-            Map<String, List<String>>
-                    interactionGender,
-            String gender) {
+            Map<String, List<String>> interactionGender, String gender) {
 
         for (Map.Entry<String, List<String>> genderList : interactionGender.entrySet()) {
             if (genderList.getKey().equals(gender)) {
@@ -204,7 +206,6 @@ public class MedicationDataIO {
                 }
             }
         }
-
         return interactions;
     }
 

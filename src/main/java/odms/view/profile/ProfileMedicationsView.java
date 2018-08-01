@@ -194,10 +194,10 @@ public class ProfileMedicationsView extends CommonView {
 
             if (interactionsRaw.isEmpty()) {
                 tableViewDrugInteractions
-                        .setPlaceholder(new Label("There are no interactions for these drugs"));
+                        .setPlaceholder(new Label("There are no interactions for these drugs."));
             } else if (interactionsRaw.containsKey("error")) {
                 tableViewDrugInteractions
-                        .setPlaceholder(new Label("There was an error getting interaction data"));
+                        .setPlaceholder(new Label("There was an error getting interaction data."));
             } else {
                 interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
                 tableViewDrugInteractions.setItems(interactions);
@@ -212,7 +212,7 @@ public class ProfileMedicationsView extends CommonView {
             }
         } catch (IOException e) {
             tableViewDrugInteractions
-                    .setPlaceholder(new Label("There was an error getting interaction data"));
+                    .setPlaceholder(new Label("There was an error getting interaction data."));
         }
     }
 

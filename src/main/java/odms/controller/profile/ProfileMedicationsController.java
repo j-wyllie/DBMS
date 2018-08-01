@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -221,14 +222,16 @@ public class ProfileMedicationsController extends CommonController {
     }
 
     public Map<String, String> getRawInteractions() throws IOException {
-        Map<String, String> interactionsRaw;
+        Map<String, String> interactionsRaw = new HashMap<>();
         Profile currentProfile = view.getCurrentProfile();
         ArrayList<Drug> drugs = getDrugsList();
 
         Interaction interaction = cache.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
-        interactionsRaw = MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(),
-                currentProfile.getAge());
 
+        if (!(interaction == null)) {
+            interactionsRaw = MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(),
+                    currentProfile.getAge());
+        }
         return interactionsRaw;
     }
 

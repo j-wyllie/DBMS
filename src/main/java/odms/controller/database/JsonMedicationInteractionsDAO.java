@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,7 +60,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             }
         }
         Interaction newInteraction = add(drugA, drugB);
-        if (newInteraction != null) {
+        if (newInteraction != null && newInteraction.getDrugA() != null) {
             if (newInteraction.getDrugA() != null) {
                 interactionMap.put(interactionMap.size(), newInteraction);
                 save();
@@ -137,16 +138,15 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             StringBuffer response = getResponse(drugA, drugB);
             if (response != null) {
                 if (response.toString().equals(SERVER_ERROR)) {
-                    interaction = new Interaction(null, null,null, null, null, null);
+                    interaction = new Interaction(null, null, null, null, null, null);
                 } else {
                     JsonParser parser = new JsonParser();
                     JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
-
                     Map<String, List<String>> ageEffects = parseListInteractions(results
                             .get("age_interaction"));
 
-                    Map<String, Integer>  coexistingConditions = parseAtomicInteractions(results
+                    Map<String, Integer> coexistingConditions = parseAtomicInteractions(results
                             .get("co_existing_conditions"));
 
                     Map<String, List<String>> durationInteractions = parseListInteractions(results
@@ -177,7 +177,6 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
         // Reading the response from the connection.
         StringBuffer response = MedicationDataIO.makeRequest(urlString);
-
         if (response == null) {
             return response;
         }
