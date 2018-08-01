@@ -4,8 +4,11 @@ import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.profile.ProfileEditController;
 import odms.model.enums.NewZealandRegionsEnum;
@@ -169,9 +172,13 @@ public class ProfileEditView extends CommonView {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileDisplay.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
         ProfileDisplayViewTODO v = fxmlLoader.getController();
+        v.setProfile(controller.close());
         v.initialize(controller.close());
-        changeScene(event, "/view/ProfileDisplay.fxml");
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setScene(scene);
+        appStage.show();
     }
 
     /**
