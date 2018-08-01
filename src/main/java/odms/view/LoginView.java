@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.database.UserDAO;
-import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.view.profile.ProfileDisplayViewTODO;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
@@ -90,7 +90,7 @@ public class LoginView extends CommonController {
                                     getClass().getResource("/view/ProfileDisplay.fxml"));
 
                             scene = new Scene(fxmlLoader.load());
-                            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
+                            ProfileDisplayViewTODO controller = fxmlLoader.getController();
                             controller.setProfile(currentProfile);
                             controller.initialize(currentProfile);
 

@@ -29,7 +29,7 @@ import odms.controller.history.UndoController;
 import odms.controller.profile.ProfileEditController;
 import odms.model.profile.Profile;
 import odms.model.user.User;
-import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.view.profile.ProfileDisplayViewTODO;
 import odms.view.profile.ProfileEditView;
 import odms.view.user.ClinicianProfileView;
 import org.controlsfx.control.Notifications;
@@ -110,18 +110,40 @@ public class CommonView {
 
     /**
      * Button handler to make fields editable.
+     *
+     * @param event clicking on the edit button.
      */
-    @FXML
-    public void openProfileEditWindow(Profile currentProfile, ActionEvent event) throws IOException {
+    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEditView controller = fxmlLoader.getController();
-        controller.initialize(currentProfile);
+        controller.initialize(currentProfile, isOpenedByClinician);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         appStage.setScene(scene);
         appStage.show();
+    }
+
+
+    /**
+     * Button handler to make fields editable.
+     *
+     * @param event clicking on the edit button.
+     */
+    @FXML
+    private void handleUserEditButtonClicked(ActionEvent event) throws IOException {
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load());
+//        ProfileEditController controller = fxmlLoader.getController();
+//        controller.setCurrentProfile(currentProfile);
+//        controller.setIsClinician(isOpenedByClinician);
+//        controller.initialize();
+//
+//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//
+//        appStage.setScene(scene);
+//        appStage.show();
     }
 
     /**
@@ -252,7 +274,7 @@ public class CommonView {
 
             Scene scene = new Scene(fxmlLoader.load());
             //todo replace with standardised method and view
-            ProfileDisplayControllerTODO controller = fxmlLoader.getController();
+            ProfileDisplayViewTODO controller = fxmlLoader.getController();
             controller.setProfileViaClinician(donor);
             controller.initialize(donor);
 

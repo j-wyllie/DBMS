@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import odms.controller.profile.ProfileGeneralTabController;
 import odms.model.profile.Profile;
@@ -11,6 +12,9 @@ import odms.view.CommonView;
 
 public class ProfileGeneralView extends CommonView {
 
+
+    @FXML
+    private Button editButton;
     @FXML
     private Label phoneLabel;
     @FXML
@@ -45,6 +49,7 @@ public class ProfileGeneralView extends CommonView {
     private Profile currentProfile;
     // init controller corresponding to this view
     private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
+    private Boolean isOpenedByClinician;
 
     private void setUpDetails() {
         if (currentProfile.getGivenNames() != null) {
@@ -97,7 +102,13 @@ public class ProfileGeneralView extends CommonView {
         }
     }
 
-    public void initialize(Profile p) {
+    @FXML
+    private  void handleEditButtonClicked(ActionEvent event) throws IOException {
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician);
+    }
+
+    public void initialize(Profile p, Boolean isOpenedByClinician) {
+        this.isOpenedByClinician = isOpenedByClinician;
         currentProfile = p;
         setUpDetails();
     }

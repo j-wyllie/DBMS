@@ -26,7 +26,7 @@ public class Edit {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         view = new ProfileEditView();
-        view.initialize(currentProfile);
+        view.initialize(currentProfile, false);
         controller = new ProfileEditController(view);
     }
 

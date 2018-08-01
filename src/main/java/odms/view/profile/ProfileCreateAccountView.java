@@ -42,7 +42,7 @@ public class ProfileCreateAccountView extends CommonView {
     private void handleCreateAccountButtonClicked(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(loader.load());
-        ProfileDisplayControllerTODO v = loader.getController();
+        ProfileDisplayViewTODO v = loader.getController();
         Profile profile = controller.createAccount();
         if(profile != null) {
             v.setProfile(profile);

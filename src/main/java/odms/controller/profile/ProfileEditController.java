@@ -140,7 +140,7 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if date is prior to birth date
      */
     public void saveDateOfDeath() throws IllegalArgumentException {
-        if (!view.getDODDatePicker().equals(null)) {
+        if (view.getDODDatePicker() != null) {
             currentProfile.setDateOfDeath(view.getDODDatePicker());
         }
     }

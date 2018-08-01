@@ -3,16 +3,15 @@ package odms.controller.procedure;
 import java.util.List;
 import javafx.collections.ObservableList;
 import odms.view.profile.ProfileAddProcedureView;
-import odms.view.profile.ProfileDisplayControllerTODO;
+import odms.view.profile.ProfileDisplayViewTODO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class ProcedureAddController {
 
-    private ProfileDisplayControllerTODO controller;
+    private ProfileDisplayViewTODO controller;
 
     private ObservableList<OrganEnum> donatedOrgans;
 
