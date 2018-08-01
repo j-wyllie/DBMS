@@ -186,7 +186,7 @@ public class ProfileDisplayViewTODO extends CommonView {
         try {
             tabMedicalHistory.setContent(loader.load());
             ProfileMedicalHistoryView profileMedicalHistoryView = loader.getController();
-            profileMedicalHistoryView.initialize(currentProfile);
+            profileMedicalHistoryView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }

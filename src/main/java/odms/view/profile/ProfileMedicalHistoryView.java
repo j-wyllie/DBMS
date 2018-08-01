@@ -70,24 +70,24 @@ public class ProfileMedicalHistoryView extends CommonView {
     private Button deleteConditionButton;
 
 
-    /**
- * initializes and refreshes the current and past conditions tables
- */
-@FXML
-private void makeTable(ArrayList<Condition> curConditions,
-        ArrayList<Condition> pastConditions) {
-    if (curConditions != null) {
-        curConditionsObservableList = FXCollections.observableArrayList(curConditions);
-    } else {
-        curConditionsObservableList = FXCollections.observableArrayList();
+        /**
+     * initializes and refreshes the current and past conditions tables
+     */
+    @FXML
+    private void makeTable(ArrayList<Condition> curConditions,
+            ArrayList<Condition> pastConditions) {
+        if (curConditions != null) {
+            curConditionsObservableList = FXCollections.observableArrayList(curConditions);
+        } else {
+            curConditionsObservableList = FXCollections.observableArrayList();
+        }
+        if (pastConditions != null) {
+            pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
+        } else {
+            pastConditionsObservableList = FXCollections.observableArrayList();
+        }
+        refreshConditionTable();
     }
-    if (pastConditions != null) {
-        pastConditionsObservableList = FXCollections.observableArrayList(pastConditions);
-    } else {
-        pastConditionsObservableList = FXCollections.observableArrayList();
-    }
-    refreshConditionTable();
-}
 
     /**
      * Disables the ability for the table headers to be reordered.
@@ -323,10 +323,10 @@ private void makeTable(ArrayList<Condition> curConditions,
      * Sets the conditions lists and populates the observable lists.
      */
     private void initializeConditionLists() {
-        if (curConditionsObservableList != null) {
+        if (curConditionsObservableList == null) {
             curConditionsObservableList = FXCollections.observableArrayList();
         }
-        if (pastConditionsObservableList != null) {
+        if (pastConditionsObservableList == null) {
             pastConditionsObservableList = FXCollections.observableArrayList();
         }
 
@@ -361,8 +361,9 @@ private void makeTable(ArrayList<Condition> curConditions,
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        ProfileAddConditionView addConditionView = new ProfileAddConditionView();
         createPopup(event, "/view/AddCondition.fxml", "AddCondition");
+        ProfileAddConditionView addConditionView = new ProfileAddConditionView();
+        addConditionView.setup(this, currentProfile);
     }
 
 
@@ -398,25 +399,6 @@ private void makeTable(ArrayList<Condition> curConditions,
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         controller.toggleCured();
         refreshConditionTable();
-    }
-
-    // TODO: do we need this?? why are there 2 initalisation function?
-    private void init(Profile profile, Boolean c) {
-
-        makeTable(controller.getCurrentConditions(), controller.getCuredConditions());
-        refreshConditionTable();
-        isOpenedByClinician = c;
-        currentProfile = profile;
-        curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
-
-        curChronicColumn.setSortable(false);
-
-        refreshPageElements();
-
-        disableTableHeaderReorder();
     }
 
         public Profile getCurrentProfile() {
@@ -484,10 +466,16 @@ private void makeTable(ArrayList<Condition> curConditions,
         }
     }
 
-    public void initialize(Profile p) {
+    public void initialize(Profile p, boolean isOpenedByClinician) {
         currentProfile = p;
+
+         this.isOpenedByClinician = isOpenedByClinician;
+
         curConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pastConditionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        refreshConditionTable();
+        refreshPageElements();
 
         curChronicColumn.setSortable(false);
 
