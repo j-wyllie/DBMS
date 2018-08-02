@@ -85,8 +85,8 @@ public class Profile implements Comparable<Profile> {
 
     private Integer id;
 
-    private ArrayList<Drug> currentMedications = new ArrayList<>();
-    private ArrayList<Drug> historyOfMedication = new ArrayList<>();
+    private List<Drug> currentMedications = new ArrayList<>();
+    private List<Drug> historyOfMedication = new ArrayList<>();
     private ArrayList<String> medicationTimestamps = new ArrayList<>();
 
     /**
@@ -562,11 +562,9 @@ public class Profile implements Comparable<Profile> {
         updateActions.add(output);
     }
 
-    public ArrayList<Drug> getCurrentMedications() {
-        return currentMedications;
-    }
+    public List<Drug> getCurrentMedications() { return currentMedications; }
 
-    public ArrayList<Drug> getHistoryOfMedication() {
+    public List<Drug> getHistoryOfMedication() {
         return historyOfMedication;
     }
 
@@ -851,11 +849,11 @@ public class Profile implements Comparable<Profile> {
         this.conditions = conditions;
     }
 
-    public void setCurrentMedications(ArrayList<Drug> currentMedications) {
+    public void setCurrentMedications(List<Drug> currentMedications) {
         this.currentMedications = currentMedications;
     }
 
-    public void setHistoryOfMedication(ArrayList<Drug> historyOfMedication) {
+    public void setHistoryOfMedication(List<Drug> historyOfMedication) {
         this.historyOfMedication = historyOfMedication;
     }
 

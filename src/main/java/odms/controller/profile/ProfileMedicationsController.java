@@ -26,14 +26,35 @@ import static odms.controller.data.MedicationDataIO.getActiveIngredients;
 
 public class ProfileMedicationsController extends CommonController {
 
-    ProfileMedicationsView view;
+    private ProfileMedicationsView view;
     private MedicationInteractionsDAO cache;
 
+    /**
+     * Constructor for ProfileMedicationsController class. Takes a view as a param since the
+     * controller and view classes are linked.
+     * @param profileMedicationsView instance of profileMedicationsView class
+     */
     public ProfileMedicationsController(ProfileMedicationsView profileMedicationsView) {
         view = profileMedicationsView;
         cache = DAOFactory.getMedicalInteractionsDao();
         cache.load();
+    }
 
+    public void getDrugs() {
+        view.getCurrentProfile().setCurrentMedications(DAOFactory.getMedicationDao().getAll(view.getCurrentProfile(), true));
+        view.getCurrentProfile().setHistoryOfMedication(DAOFactory.getMedicationDao().getAll(view.getCurrentProfile(), false));
+    }
+
+    /**
+     * Saves the current and past medications for a profile.
+     */
+    public void saveDrugs() {
+        for (Drug drug : view.getCurrentProfile().getCurrentMedications()) {
+            DAOFactory.getMedicationDao().add(drug, view.getCurrentProfile(), true);
+        }
+        for (Drug drug : view.getCurrentProfile().getHistoryOfMedication()) {
+            DAOFactory.getMedicationDao().add(drug, view.getCurrentProfile(), false);
+        }
     }
 
     /**
@@ -263,7 +284,6 @@ public class ProfileMedicationsController extends CommonController {
      * Button handler to remove medications from the current medications and move them to historic.
      *
      */
-    @FXML
     public void moveToHistory() {
         Profile currentProfile = view.getCurrentProfile();
         ArrayList<Drug> drugs = convertObservableToArray(
@@ -288,7 +308,6 @@ public class ProfileMedicationsController extends CommonController {
      * list of drugs.
      *
      */
-    @FXML
     public void moveToCurrent() {
         Profile currentProfile = view.getCurrentProfile();
         ArrayList<Drug> drugs = convertObservableToArray(

@@ -31,7 +31,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import odms.controller.data.ProfileDataIO;
-import odms.controller.medication.MedicationHistoryTODO;
 import odms.controller.profile.ProfileMedicationsController;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
@@ -90,15 +89,13 @@ public class ProfileMedicationsView extends CommonView {
 
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
-    private ObservableList<Map.Entry<String, String>> interactions;
     private ContextMenu suggestionMenu = new ContextMenu();
 
     /**
-     * Refresh the current and historic medication tables with the most up to date data
+     * Refresh the current and historic medication tables with the most up to date data.
      */
     @FXML
     private void refreshMedicationsTable() {
-
         tableViewCurrentMedications.getItems().clear();
         if (currentProfile.getCurrentMedications() != null) {
             currentMedication.addAll(currentProfile.getCurrentMedications());
@@ -129,9 +126,10 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (saveChanges()) {
+            ProfileDataIO.saveData(getCurrentDatabase());
+            controller.saveDrugs();
             //todo sort out show notification
             showNotification("Medications Tab", event);
-            ProfileDataIO.saveData(getCurrentDatabase());
         }
     }
 
@@ -189,6 +187,7 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private void handleShowInteractions(ActionEvent event) {
         try {
+            tableViewDrugInteractions.getItems().clear();
             Map<String, String> interactionsRaw = controller.getRawInteractions();
             ObservableList<String> drugsList = controller.getObservableDrugsList();
             tableViewDrugInteractionsNames.setItems(drugsList);
@@ -203,7 +202,8 @@ public class ProfileMedicationsView extends CommonView {
                 tableViewDrugInteractions
                         .setPlaceholder(new Label("There was an error getting interaction data."));
             } else {
-                interactions = FXCollections.observableArrayList(interactionsRaw.entrySet());
+                ObservableList<Map.Entry<String, String>> interactions = FXCollections
+                        .observableArrayList(interactionsRaw.entrySet());
                 tableViewDrugInteractions.setItems(interactions);
                 tableColumnSymptoms.setCellValueFactory((TableColumn.CellDataFeatures
                         <Map.Entry<String, String>, String> param) ->
@@ -347,7 +347,8 @@ public class ProfileMedicationsView extends CommonView {
         hideItems();
         tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        setMedicationSearchFieldListener(); //todo where would this go?
+        controller.getDrugs();
+        setMedicationSearchFieldListener();
     }
 
     public Profile getCurrentProfile() {
@@ -415,7 +416,7 @@ public class ProfileMedicationsView extends CommonView {
     }
 
     /**
-     * hides items that shouldn't be visible to either a donor or clinician
+     * hides items that shouldn't be visible to either a donor or clinician.
      */
     @FXML
     private void hideItems() {
