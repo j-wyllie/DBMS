@@ -1,6 +1,7 @@
 package odms.view.profile;
 
 import java.io.File;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,10 +15,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
+import odms.controller.database.CountryDAO;
+import odms.controller.database.DAOFactory;
 import odms.controller.profile.ProfileEditController;
 import odms.model.enums.CountriesEnum;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -498,6 +502,21 @@ public class ProfileEditView extends CommonView {
             }
 
         }
+
+        CountryDAO database = DAOFactory.getCountryDAO();
+        int index = 0;
+        for (String country : database.getAll(true)) {
+            User.allowedCountriesIndices.add(index);
+            index++;
+        }
+
+        List<String> validCountries = database.getAll(true);
+        comboCountry.getItems().addAll(validCountries);
+        comboCountryOfDeath.getItems().addAll(validCountries);
+
+        refreshRegionSelection();
+        refreshRegionOfDeathSelection();
+
 
     }
 

@@ -3,6 +3,8 @@ package odms.model.user;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class User {
 
@@ -17,6 +19,8 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault;
+
+    public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
     /**
      * user constructor
