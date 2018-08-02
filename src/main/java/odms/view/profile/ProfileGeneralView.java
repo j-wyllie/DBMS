@@ -147,7 +147,7 @@ public class ProfileGeneralView extends CommonView {
     }
 
     public void setLabelGenderPreferred(String string) {
-        this.labelGenderPreferred.setText(genderLabel.getText() + string);
+        this.labelGenderPreferred.setText(labelGenderPreferred.getText() + string);
     }
 
     public Label getLabelPreferredName() {
@@ -216,52 +216,6 @@ public class ProfileGeneralView extends CommonView {
     private void setUpDetails() {
         controller.setCurrentProfile(currentProfile);
         controller.setLabels();
-
-        //Profile is dead
-        if (currentProfile.getDateOfDeath() != null) {
-
-            if (currentProfile.getCountryOfDeath() == null ) {
-                if (currentProfile.getCountry() != null) {
-                    currentProfile.setCountryOfDeath(currentProfile.getCountry());
-                    countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
-                } else {
-                    countryLabel.setText("Country of Death : ");
-                }
-            } else {
-                countryLabel.setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
-            }
-
-            if (currentProfile.getCityOfDeath() == null) {
-                if (currentProfile.getCity() != null) {
-                    currentProfile.setCityOfDeath(currentProfile.getCity());
-                    cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
-                }
-            } else {
-                cityLabel.setText("City of Death : " + currentProfile.getCityOfDeath());
-            }
-
-            if (currentProfile.getRegionOfDeath() == null) {
-                if (currentProfile.getRegion() != null) {
-                    currentProfile.setRegionOfDeath(currentProfile.getRegion());
-                    regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
-                }
-            } else {
-                regionLabel.setText("Region of Death : " + currentProfile.getRegionOfDeath());
-            }
-
-        } else {
-            //Profile is alive
-
-            if (currentProfile.getRegion() != null) {
-                regionLabel.setText("Region : " + currentProfile.getRegion());
-            }
-            if (currentProfile.getCountry() != null) {
-                countryLabel.setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
-            }
-            if (currentProfile.getCity() != null) {
-                cityLabel.setText("City : " + currentProfile.getCity());
-            }
-        }
     }
 
     @FXML

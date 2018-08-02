@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import odms.model.enums.CountriesEnum;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileGeneralView;
 
@@ -47,8 +48,10 @@ public class ProfileGeneralTabController {
         if (currentProfile.getGender() != null) {
             view.setGenderLabel(currentProfile.getGender());
         }
-        if (currentProfile.getPreferredGender() != null) {
+        if (currentProfile.getPreferredGender() != null && !currentProfile.getPreferredGender().equals("")) {
             view.setLabelGenderPreferred(currentProfile.getPreferredGender());
+        } else {
+            view.setLabelGenderPreferred(currentProfile.getGender());
         }
         if (currentProfile.getHeight() != 0.0) {
             view.setHeightLabel(currentProfile.getHeight() + "cm");
@@ -76,6 +79,52 @@ public class ProfileGeneralTabController {
             view.setProfileImage();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+        }
+
+        //Profile is dead
+        if (currentProfile.getDateOfDeath() != null) {
+
+            if (currentProfile.getCountryOfDeath() == null ) {
+                if (currentProfile.getCountry() != null) {
+                    currentProfile.setCountryOfDeath(currentProfile.getCountry());
+                    view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                } else {
+                    view.getCountryLabel().setText("Country of Death : ");
+                }
+            } else {
+                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+            }
+
+            if (currentProfile.getCityOfDeath() == null) {
+                if (currentProfile.getCity() != null) {
+                    currentProfile.setCityOfDeath(currentProfile.getCity());
+                    view.getCityLabel().setText("City of Death : " + currentProfile.getCityOfDeath());
+                }
+            } else {
+                view.getCityLabel().setText("City of Death : " + currentProfile.getCityOfDeath());
+            }
+
+            if (currentProfile.getRegionOfDeath() == null) {
+                if (currentProfile.getRegion() != null) {
+                    currentProfile.setRegionOfDeath(currentProfile.getRegion());
+                    view.getRegionLabel().setText("Region of Death : " + currentProfile.getRegionOfDeath());
+                }
+            } else {
+                view.getRegionLabel().setText("Region of Death : " + currentProfile.getRegionOfDeath());
+            }
+
+        } else {
+            //Profile is alive
+
+            if (currentProfile.getRegion() != null) {
+                view.getRegionLabel().setText("Region : " + currentProfile.getRegion());
+            }
+            if (currentProfile.getCountry() != null) {
+                view.getCountryLabel().setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+            }
+            if (currentProfile.getCity() != null) {
+                view.getCityLabel().setText("City : " + currentProfile.getCity());
+            }
         }
     }
 

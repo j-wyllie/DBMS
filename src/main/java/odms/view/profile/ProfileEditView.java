@@ -125,8 +125,6 @@ public class ProfileEditView extends CommonView {
     @FXML
     private TextField cityField;
 
-
-
     private Profile currentProfile;
 
 
@@ -238,7 +236,6 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void refreshRegionOfDeathSelection() {
-        System.out.println(2);
         if (comboCountryOfDeath.getValue() != null) {
             if (comboCountryOfDeath.getValue().toString().equals("New Zealand")) {
                 comboRegionOfDeath.setDisable(false);
@@ -420,7 +417,6 @@ public class ProfileEditView extends CommonView {
                 comboRegionOfDeath.setDisable(false);
 
             } else {
-                System.out.println(1);
                 comboCountryOfDeath.setDisable(true);
                 regionOfDeathField.setDisable(true);
                 comboRegionOfDeath.setDisable(true);
@@ -474,8 +470,6 @@ public class ProfileEditView extends CommonView {
                     //comboRegionOfDeath.clearSelection()
                 }
             }
-
-
 
         } else {
             //profile is alive
@@ -651,10 +645,6 @@ public class ProfileEditView extends CommonView {
         dodDatePicker.setValue(l);
     }
 
-    public void setEmailField(String s) {
-        emailField.setText(s);
-    }
-
     public void setComboGender(Object o) {
         comboGender.setValue(o);
     }
@@ -665,22 +655,6 @@ public class ProfileEditView extends CommonView {
 
     public void setPhoneField(String s) {
         phoneField.setText(s);
-    }
-
-    public void setComboGenderPref(String s) {
-        comboGenderPref.getEditor().setText(s);
-    }
-
-    public void setPreferredNameField(String s) {
-        preferredNameField.setText(s);
-    }
-
-    public void setRegionField(String s) {
-        regionField.setText(s);
-    }
-
-    public void setWeightField(String s) {
-        weightField.setText(s);
     }
 
     public void setAlcoholConsumptionField(String s) {
@@ -703,56 +677,28 @@ public class ProfileEditView extends CommonView {
         return comboCountryOfDeath.getValue().toString();
     }
 
-    public void setComboCountryOfDeath(ComboBox comboCountryOfDeath) {
-        this.comboCountryOfDeath = comboCountryOfDeath;
-    }
-
     public String getRegionOfDeathField() {
         return regionOfDeathField.getText();
-    }
-
-    public void setRegionOfDeathField(TextField regionOfDeathField) {
-        this.regionOfDeathField = regionOfDeathField;
     }
 
     public ComboBox<String> getComboRegion() {
         return comboRegion;
     }
 
-    public void setComboRegion(ComboBox<String> comboRegion) {
-        this.comboRegion = comboRegion;
-    }
-
     public String getComboRegionOfDeath() {
         return comboRegionOfDeath.getValue();
-    }
-
-    public void setComboRegionOfDeath(ComboBox<String> comboRegionOfDeath) {
-        this.comboRegionOfDeath = comboRegionOfDeath;
     }
 
     public ComboBox getComboCountry() {
         return comboCountry;
     }
 
-    public void setComboCountry(ComboBox comboCountry) {
-        this.comboCountry = comboCountry;
-    }
-
     public String getCityOfDeathField() {
         return cityOfDeathField.getText();
     }
-
-    public void setCityOfDeathField(TextField cityOfDeathField) {
-        this.cityOfDeathField = cityOfDeathField;
-    }
-
 
     public String getCityField() {
         return cityField.getText();
     }
 
-    public void setCityField(String string) {
-        this.cityField.setText(string);
-    }
 }
