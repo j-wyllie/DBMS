@@ -314,10 +314,10 @@ public class ProfileEditView extends CommonView {
             dodDatePicker.setValue(currentProfile.getDateOfDeath());
         }
         if (currentProfile.getHeight() != 0.0) {
-            heightField.setText(String.valueOf(currentProfile.getHeight()));
+            heightField.setText(String.valueOf(currentProfile.getHeight() / 100));
         }
         if (currentProfile.getWeight() != 0.0) {
-            weightField.setText(String.valueOf(currentProfile.getWeight()));
+            weightField.setText(String.valueOf(currentProfile.getWeight() / 100));
         }
         if (currentProfile.getPhone() != null) {
             phoneField.setText(currentProfile.getPhone());

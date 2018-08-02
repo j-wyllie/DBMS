@@ -54,6 +54,11 @@ public class ProfileGeneralView extends CommonView {
 
     private File localPath = new File(System.getProperty("user.dir"));
 
+    private Profile currentProfile;
+    // init controller corresponding to this view
+    private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
+    private Boolean isOpenedByClinician;
+
     public Label getEmailLabel() {
         return emailLabel;
     }
@@ -207,11 +212,6 @@ public class ProfileGeneralView extends CommonView {
             profileImage.setImage(new Image(image.toURI().toURL().toString()));
         }
     }
-
-    private Profile currentProfile;
-    // init controller corresponding to this view
-    private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
-    private Boolean isOpenedByClinician;
 
     private void setUpDetails() {
         controller.setCurrentProfile(currentProfile);
