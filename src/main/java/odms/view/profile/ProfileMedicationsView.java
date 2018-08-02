@@ -37,8 +37,10 @@ import odms.model.medications.Drug;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
+/**
+ * View that contains FXML elements and input handlers for the Medications view.
+ */
 public class ProfileMedicationsView extends CommonView {
-    //todo split FXML
 
     @FXML
     private Button buttonAddMedication;
@@ -81,14 +83,15 @@ public class ProfileMedicationsView extends CommonView {
     @FXML
     private Button buttonClearCache;
 
+    // init controller corresponding to this view
     private ProfileMedicationsController controller = new ProfileMedicationsController(this);
     private Profile currentProfile;
-    // init controller corresponding to this view
+    private Boolean isOpenedByClinician;
+
     private ObservableList<Drug> currentMedication = FXCollections.observableArrayList();
     private ObservableList<Drug> historicMedication = FXCollections.observableArrayList();
     private ObservableList<Map.Entry<String, String>> interactions;
     private ContextMenu suggestionMenu = new ContextMenu();
-    private Boolean isOpenedByClinician;
 
     /**
      * Refresh the current and historic medication tables with the most up to date data
@@ -121,6 +124,7 @@ public class ProfileMedicationsView extends CommonView {
      * program changes to the medications will also be saved.
      *
      * @param event clicking on the save button
+     * @throws IOException Notification could cause an exception
      */
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
@@ -219,7 +223,7 @@ public class ProfileMedicationsView extends CommonView {
 
     /**
      * Clears the cache and handles the messages.
-     * @param event
+     * @param event clicking on the clear cache button.
      */
     @FXML
     private void handleClearCache(ActionEvent event) {
@@ -332,6 +336,11 @@ public class ProfileMedicationsView extends CommonView {
         });
     }
 
+    /**
+     * init the medications view.
+     * @param p current profile object
+     * @param b boolean that will be true if scene was opened by a clinician/admin user
+     */
     public void initialize(Profile p, Boolean b) {
         isOpenedByClinician = b;
         currentProfile = p;
@@ -361,21 +370,14 @@ public class ProfileMedicationsView extends CommonView {
         return tableViewHistoricMedications.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Refreshes button elements, from disabled to not disabled, depending on how many drugs are
+     * selected.
+     */
     public void refreshPageElements() {
         ArrayList<Drug> drugs = controller.convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems()
         );
-        ArrayList<Drug> allDrugs = controller.convertObservableToArray(
-                tableViewCurrentMedications.getSelectionModel().getSelectedItems()
-        );
-        allDrugs.addAll(controller.convertObservableToArray(
-                tableViewCurrentMedications.getSelectionModel().getSelectedItems())
-        );
-
-        buttonMedicationHistoricToCurrent.setDisable(false);
-        buttonMedicationCurrentToHistoric.setDisable(false);
-        buttonDeleteMedication.setDisable(false);
-        buttonShowDrugInteractions.setDisable(false);
 
         if (drugs.size() != 2) {
             if (drugs.size() == 1) {
@@ -383,17 +385,31 @@ public class ProfileMedicationsView extends CommonView {
                 if (toAdd != null) {
                     drugs.add(toAdd);
                 }
-            } else if (drugs.size() == 0) {
+            } else if (drugs.isEmpty()) {
                 drugs = controller.convertObservableToArray(
                         tableViewHistoricMedications.getSelectionModel().getSelectedItems());
             }
 
-            if (drugs.size() != 2) {
+            if (drugs.isEmpty()) {
+                buttonMedicationHistoricToCurrent.setDisable(true);
+                buttonMedicationCurrentToHistoric.setDisable(true);
+                buttonDeleteMedication.setDisable(true);
                 buttonShowDrugInteractions.setDisable(true);
-                return;
+                buttonViewActiveIngredients.setDisable(true);
+            } else if (drugs.size() == 1) {
+                buttonMedicationHistoricToCurrent.setDisable(false);
+                buttonMedicationCurrentToHistoric.setDisable(false);
+                buttonDeleteMedication.setDisable(false);
+                buttonShowDrugInteractions.setDisable(true);
+                buttonViewActiveIngredients.setDisable(false);
             }
-        } else {
+        }
+        if (drugs.size() == 2) {
+            buttonMedicationHistoricToCurrent.setDisable(false);
+            buttonMedicationCurrentToHistoric.setDisable(false);
+            buttonDeleteMedication.setDisable(false);
             buttonShowDrugInteractions.setDisable(false);
+            buttonViewActiveIngredients.setDisable(false);
         }
 
     }
@@ -417,6 +433,11 @@ public class ProfileMedicationsView extends CommonView {
             tableViewDrugInteractionsNames.setVisible(true);
             tableViewDrugInteractions.setVisible(true);
             buttonClearCache.setVisible(true);
+            buttonMedicationHistoricToCurrent.setDisable(true);
+            buttonMedicationCurrentToHistoric.setDisable(true);
+            buttonDeleteMedication.setDisable(true);
+            buttonShowDrugInteractions.setDisable(true);
+            buttonViewActiveIngredients.setDisable(true);
         } else {
             // user is a standard profile, limit functionality
             buttonSaveMedications.setVisible(false);
