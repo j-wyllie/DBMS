@@ -70,7 +70,6 @@ public class ProfileOrgansView extends CommonView {
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
      * conflicting organs.
-     * <p>
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
@@ -113,10 +112,10 @@ public class ProfileOrgansView extends CommonView {
         setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
-        //todo replace with view
+
         ProfileOrganEditView view = fxmlLoader.getController();
         view.setWindowType(windowType);
-        //controller.initialize(); don't think we need this
+        view.initialize(currentProfile);
 
         Stage stage = new Stage();
         stage.setTitle(selectType.toString());
