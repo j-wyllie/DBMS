@@ -217,9 +217,11 @@ public class ProfileEditView extends CommonView {
             if (comboCountry.getValue().toString().equals("New Zealand")) {
                 comboRegion.setDisable(false);
                 regionField.setDisable(true);
-                regionField.setText("");
+                regionField.clear();
                 comboRegion.getItems().setAll(NewZealandRegionsEnum.toArrayList());
-                comboRegion.setValue(currentProfile.getRegion());
+                if (currentProfile.getRegion() != null) {
+                    comboRegion.setValue(currentProfile.getRegion());
+                }
             } else {
                 comboRegion.setDisable(true);
                 regionField.setDisable(false);
@@ -236,13 +238,20 @@ public class ProfileEditView extends CommonView {
      */
     @FXML
     private void refreshRegionOfDeathSelection() {
+        System.out.println(2);
         if (comboCountryOfDeath.getValue() != null) {
             if (comboCountryOfDeath.getValue().toString().equals("New Zealand")) {
                 comboRegionOfDeath.setDisable(false);
                 regionOfDeathField.setDisable(true);
-                regionOfDeathField.setText("");
+                regionOfDeathField.clear();
                 comboRegionOfDeath.getItems().setAll(NewZealandRegionsEnum.toArrayList());
-                comboRegionOfDeath.setValue(currentProfile.getRegion());
+                if (currentProfile.getRegionOfDeath() != null) {
+                    comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
+                } else {
+                    if (currentProfile.getRegion() != null) {
+                        comboRegionOfDeath.setValue(currentProfile.getRegion());
+                    }
+                }
             } else {
                 comboRegionOfDeath.setDisable(true);
                 regionOfDeathField.setDisable(false);
@@ -367,42 +376,58 @@ public class ProfileEditView extends CommonView {
     }
 
     private void setupDeathFields() {
-        if (currentProfile.getDateOfDeath() != null) {
-            //Profile is dead
 
-            cityLabel.setText("City of death : ");
-            countryLabel.setText("Country of death: ");
-            regionLabel.setText("Region of death: ");
+        //city and region should be displayed same regardless
+        if (currentProfile.getCity() != null) {
+            cityField.setText(currentProfile.getCity());
+        }
+        if (currentProfile.getCountry() != null) {
+            comboCountry.setValue(
+                    CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+        }
+        if (currentProfile.getRegion() != null) {
+            if (currentProfile.getCountry() != null) {
+                if (currentProfile.getCountry().equals("New Zealand")) {
+                    comboRegion.setDisable(false);
+                    regionField.setDisable(true);
+                    comboRegion.setValue(currentProfile.getRegion());
+                } else {
+                    comboRegion.setDisable(true);
+                    regionField.setDisable(false);
+                    regionField.setText(currentProfile.getRegion());
+                }
+            } else {
+                comboRegion.setDisable(true);
+                regionField.setDisable(false);
+                regionField.setText(currentProfile.getRegion());
+            }
+        }
+
+        comboRegion.setDisable(false);
+        comboCountry.setDisable(false);
+        regionField.setDisable(false);
+        cityField.setDisable(false);
+
+
+        //Profile is dead
+        if (currentProfile.getDateOfDeath() != null) {
 
             //Only a clinician should be able to edit these -- not sure about this.
             if (isOpenedByClinician) {
                 comboCountryOfDeath.setDisable(false);
-                regionOfDeathField.setDisable(false);
-                comboRegion.setDisable(true);
                 cityOfDeathField.setDisable(false);
-                comboCountry.setDisable(true);
-                regionField.setDisable(true);
-                comboRegion.setDisable(true);
-                cityField.setDisable(true);
-                comboCountry.setVisible(false);
-                comboRegion.setVisible(false);
-                regionField.setVisible(false);
-                cityField.setVisible(false);
-                comboCountryOfDeath.setVisible(true);
-                comboRegionOfDeath.setVisible(true);
-                regionOfDeathField.setVisible(true);
-                cityOfDeathField.setVisible(true);
+                regionOfDeathField.setDisable(false);
+                comboRegionOfDeath.setDisable(false);
+
             } else {
+                System.out.println(1);
                 comboCountryOfDeath.setDisable(true);
                 regionOfDeathField.setDisable(true);
-                comboRegion.setDisable(true);
+                comboRegionOfDeath.setDisable(true);
                 cityOfDeathField.setDisable(true);
-                comboCountry.setDisable(false);
-                regionField.setDisable(false);
-                comboRegion.setDisable(false);
-                cityField.setDisable(false);
             }
 
+            //country
             if (currentProfile.getCountryOfDeath() == null) {
                 if (currentProfile.getCountry() != null) {
                     comboCountry.setValue(CountriesEnum
@@ -413,59 +438,40 @@ public class ProfileEditView extends CommonView {
                         .getValidNameFromString(currentProfile.getCountryOfDeath()));
             }
 
+            //city
             if (currentProfile.getCityOfDeath() == null) {
                 if (currentProfile.getCity() != null) {
                     cityField.setText(currentProfile.getCity());
                 }
             } else {
-                cityField.setText(currentProfile.getCityOfDeath());
                 cityOfDeathField.setText(currentProfile.getCityOfDeath());
             }
 
+            //region
             if (currentProfile.getRegionOfDeath() == null) {
                 if (currentProfile.getRegion() != null) {
                     if (currentProfile.getCountry() != null) {
                         if (currentProfile.getCountry().equals("New Zealand")) {
-                            comboRegion.setDisable(false);
-                            comboRegionOfDeath.setDisable(false);
-                            regionField.setDisable(true);
-                            regionOfDeathField.setDisable(true);
-                            comboRegion.setValue(currentProfile.getRegion());
                             comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
+                            regionOfDeathField.clear();
                         } else {
-                            comboRegion.setDisable(true);
-                            comboRegionOfDeath.setDisable(true);
-                            regionField.setDisable(false);
-                            regionOfDeathField.setDisable(false);
-                            regionField.setText(currentProfile.getRegion());
                             regionOfDeathField.setText(currentProfile.getRegionOfDeath());
+                            //comboRegionOfDeath.clearSelection()
                         }
                     } else {
-                        comboRegion.setDisable(true);
-                        comboRegionOfDeath.setDisable(true);
-                        regionField.setDisable(false);
-                        regionOfDeathField.setDisable(false);
-                        regionField.setText(currentProfile.getRegion());
                         regionOfDeathField.setText(currentProfile.getRegion());
+                        //comboRegionOfDeath.clearSelection()
                     }
                 }
             } else {
                 if (currentProfile.getCountry() != null) {
                     if (currentProfile.getCountry().equals("New Zealand")) {
-                        comboRegion.setDisable(false);
-                        comboRegionOfDeath.setDisable(false);
-                        regionField.setDisable(true);
-                        regionOfDeathField.setDisable(true);
-                        comboRegion.setValue(currentProfile.getRegionOfDeath());
                         comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
+                        regionOfDeathField.clear();
                     }
                 } else {
-                    comboRegion.setDisable(true);
-                    comboRegionOfDeath.setDisable(true);
-                    regionField.setDisable(false);
-                    regionOfDeathField.setDisable(false);
-                    regionField.setText(currentProfile.getRegionOfDeath());
                     regionOfDeathField.setText(currentProfile.getRegionOfDeath());
+                    //comboRegionOfDeath.clearSelection()
                 }
             }
 
@@ -473,39 +479,36 @@ public class ProfileEditView extends CommonView {
 
         } else {
             //profile is alive
-            cityLabel.setText("City : ");
-            countryLabel.setText("Country : ");
-            regionLabel.setText("Region : ");
 
-            if (currentProfile.getCity() != null) {
-                cityField.setText(currentProfile.getCity());
-            }
-            if (currentProfile.getCountry() != null) {
-                comboCountry.setValue(
-                        CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
-
-            }
-            if (currentProfile.getRegion() != null) {
-                if (currentProfile.getCountry() != null) {
-                    if (currentProfile.getCountry().equals("New Zealand")) {
-                        comboRegion.setDisable(false);
-                        regionField.setDisable(true);
-                        comboRegion.setValue(currentProfile.getRegion());
-                    } else {
-                        comboRegion.setDisable(true);
-                        regionField.setDisable(false);
-                        regionField.setText(currentProfile.getRegion());
-                    }
-                } else {
-                    comboRegion.setDisable(true);
-                    regionField.setDisable(false);
-                    regionField.setText(currentProfile.getRegion());
-                }
-
-            }
+//            if (currentProfile.getCity() != null) {
+//                cityField.setText(currentProfile.getCity());
+//            }
+//            if (currentProfile.getCountry() != null) {
+//                comboCountry.setValue(
+//                        CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+//            }
+//            if (currentProfile.getRegion() != null) {
+//                if (currentProfile.getCountry() != null) {
+//                    if (currentProfile.getCountry().equals("New Zealand")) {
+//                        comboRegion.setDisable(false);
+//                        regionField.setDisable(true);
+//                        comboRegion.setValue(currentProfile.getRegion());
+//                    } else {
+//                        comboRegion.setDisable(true);
+//                        regionField.setDisable(false);
+//                        regionField.setText(currentProfile.getRegion());
+//                    }
+//                } else {
+//                    comboRegion.setDisable(true);
+//                    regionField.setDisable(false);
+//                    regionField.setText(currentProfile.getRegion());
+//                }
+//
+//            }
 
         }
 
+        //Populating combo box values
         CountryDAO database = DAOFactory.getCountryDAO();
         int index = 0;
         for (String country : database.getAll(true)) {
@@ -518,8 +521,9 @@ public class ProfileEditView extends CommonView {
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         refreshRegionSelection();
-        refreshRegionOfDeathSelection();
-
+        if (currentProfile.getDateOfDeath() != null) {
+            refreshRegionOfDeathSelection();
+        }
 
     }
 
