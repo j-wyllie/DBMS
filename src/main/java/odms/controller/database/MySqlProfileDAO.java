@@ -535,7 +535,6 @@ public class MySqlProfileDAO implements ProfileDAO {
         PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
-
         try {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");

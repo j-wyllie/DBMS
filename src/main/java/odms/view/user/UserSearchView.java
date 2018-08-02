@@ -177,27 +177,6 @@ public class UserSearchView extends CommonView {
     }
 
     /**
-     * Mouse handler to update search table based on search results.
-     *
-     * @param event clicking the mouse
-     */
-    @FXML
-    private void handleSearchDonorsMouse(MouseEvent event) {
-        updateLabels();
-    }
-
-    /**
-     * Button handler to update donor table based on search results. Makes call to get fuzzy search
-     * results of profiles.
-     *
-     * @param event releasing a key on the keyboard.
-     */
-    @FXML
-    private void handleSearchDonors(KeyEvent event) {
-        performSearchFromFilters();
-    }
-
-    /**
      * updates the display labels and button status in the search tab.
      */
     private void updateLabels() {
@@ -409,6 +388,4 @@ public class UserSearchView extends CommonView {
     public void handleSearchProfilesBtnClicked(ActionEvent actionEvent) {
         performSearchFromFilters();
     }
-
-
 }
