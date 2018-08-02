@@ -137,8 +137,8 @@ public class ProfileDisplayViewTODO extends CommonView {
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
-        ProfileOrgansView profileOrgansView = loader.getController();
-        profileOrgansView.initialize(currentProfile);
+        OrgansView organsView = loader.getController();
+        organsView.initialize(currentProfile);
     }
 
     @FXML

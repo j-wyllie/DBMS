@@ -7,13 +7,13 @@ import odms.controller.CommonController;
 import odms.controller.history.HistoryController;
 import odms.model.enums.OrganEnum;
 import odms.model.history.History;
-import odms.view.profile.ProfileOrganRemovalView;
+import odms.view.profile.OrganRemovalView;
 
-public class ProfileOrganRemovalController extends CommonController {
-    ProfileOrganRemovalView view;
+public class OrganRemovalController extends CommonController {
+    OrganRemovalView view;
 
-    public ProfileOrganRemovalController(ProfileOrganRemovalView v) {
-        view = v;
+    public OrganRemovalController(OrganRemovalView view) {
+        this.view = view;
     }
 
     /**
@@ -40,6 +40,8 @@ public class ProfileOrganRemovalController extends CommonController {
                 );
                 removeOrgansRequired(organsRequired);
                 break;
+            default:
+                // noop
         }
     }
 

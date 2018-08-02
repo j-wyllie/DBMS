@@ -1,23 +1,21 @@
 package odms.view.profile;
 
-
 import java.util.Collections;
 import java.util.Set;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
 
+/**
+ * Organ common support functions.
+ */
 public class OrganCommonView {
-    protected ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
-
-    private ObservableList<String> observableListOrgansAvailable;
+    protected ObservableList<String> observableListOrgansAvailable;
 
     /**
      * Populate the ListView with the organs that are available and that are not in the
      * required list.
+     * @param removeStrings organ strings to remove
      */
     protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
         observableListOrgansAvailable = FXCollections.observableArrayList();
@@ -31,7 +29,10 @@ public class OrganCommonView {
      * @param destinationList list to populate
      * @param organs source list of organs to populate from
      */
-    protected void populateOrganList(ObservableList<String> destinationList, Set<OrganEnum> organs) {
+    protected void populateOrganList(
+        ObservableList<String> destinationList,
+        Set<OrganEnum> organs) {
+
         destinationList.clear();
 
         if (organs != null) {
@@ -48,8 +49,10 @@ public class OrganCommonView {
      * @param destinationList list to populate
      * @param organs source list of organs to populate from
      */
-    protected void populateOrganReceivingList(ObservableList<OrganEnum> destinationList,
-            Set<OrganEnum> organs) {
+    protected void populateOrganReceivingList(
+        ObservableList<OrganEnum> destinationList,
+        Set<OrganEnum> organs) {
+
         destinationList.clear();
         destinationList.addAll(organs);
         Collections.sort(destinationList);

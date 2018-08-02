@@ -11,11 +11,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.controller.profile.ProfileOrganRemovalController;
+import odms.controller.profile.OrganRemovalController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
-public class ProfileOrganRemovalView extends CommonView {
+/**
+ * Control the organ removal view for selecting reasoning behind removing an organ from a profile.
+ */
+public class OrganRemovalView extends CommonView {
     @FXML
     private Label dynamicLabel;
 
@@ -34,11 +37,11 @@ public class ProfileOrganRemovalView extends CommonView {
 
     private Profile currentProfile;
 
-    private ProfileOrganEditView profileOrganEditView;
+    private OrganEditView organEditView;
 
     private String currentOrgan;
 
-    ProfileOrganRemovalController controller = new ProfileOrganRemovalController(this);
+    private OrganRemovalController controller = new OrganRemovalController(this);
 
     /**
      * Confirms the changes made to the organs required and stores the reason given for this
@@ -49,7 +52,6 @@ public class ProfileOrganRemovalView extends CommonView {
     @FXML
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        String selection = reasonSelector.getSelectionModel().getSelectedItem();
         controller.confirm();
         appStage.close();
     }
@@ -58,18 +60,18 @@ public class ProfileOrganRemovalView extends CommonView {
      * Removes the selected organ from the observable list of required organs displayed.
      */
     public void removeOrgan() {
-        profileOrganEditView.observableListOrgansSelected.remove(currentOrgan);
-        profileOrganEditView.observableListOrgansAvailable.add(currentOrgan);
+        organEditView.observableListOrgansSelected.remove(currentOrgan);
+        organEditView.observableListOrgansAvailable.add(currentOrgan);
     }
 
     /**
      * Removes all organs from the observable list of required organs displayed.
      */
     public void removeAllOrgans() {
-        profileOrganEditView.observableListOrgansAvailable.addAll(
-                profileOrganEditView.observableListOrgansSelected
+        organEditView.observableListOrgansAvailable.addAll(
+                organEditView.observableListOrgansSelected
         );
-        profileOrganEditView.observableListOrgansSelected.clear();
+        organEditView.observableListOrgansSelected.clear();
     }
 
     /**
@@ -117,11 +119,14 @@ public class ProfileOrganRemovalView extends CommonView {
     /**
      * Sets the current profile and organ to be processed on start up. Also configures components of
      * the window.
+     *
+     * @param organ the organ being removed.
+     * @param profile the profile the organ is being removed from.
+     * @param view the source view.
      */
-    @FXML
-    public void initialize(String organ, Profile profile, ProfileOrganEditView v) {
+    public void initialize(String organ, Profile profile, OrganEditView view) {
         currentProfile = profile;
-        profileOrganEditView = v;
+        organEditView = view;
         currentOrgan = organ;
         organLabel.setText(organLabel.getText() + organ);
         reasonSelector.getItems().addAll(

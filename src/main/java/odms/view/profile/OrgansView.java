@@ -11,7 +11,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.profile.ProfileOrganEditController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-public class ProfileOrgansView extends CommonView {
+public class OrgansView extends CommonView {
     private Profile currentProfile;
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
@@ -43,8 +42,8 @@ public class ProfileOrgansView extends CommonView {
 
     public void initialize(Profile p) {
         currentProfile = p;
-        listViewDonating.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
+        listViewDonating.setCellFactory(param -> new OrgansView.HighlightedCell());
+        listViewReceiving.setCellFactory(param -> new OrgansView.HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
@@ -113,7 +112,7 @@ public class ProfileOrgansView extends CommonView {
 
         Scene scene = new Scene(fxmlLoader.load());
 
-        ProfileOrganEditView view = fxmlLoader.getController();
+        OrganEditView view = fxmlLoader.getController();
         view.setWindowType(windowType);
         view.initialize(currentProfile);
 
