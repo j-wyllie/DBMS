@@ -102,7 +102,6 @@ public class ProfileEditController extends CommonController {
      * Save Region of death field to profile.
      */
     private void saveRegionOfDeath() throws Exception{
-        //TODO waiting for the API from previous story to validate if this is a valid place
         if (!view.getRegionOfDeathField().isEmpty() && AddressIO
                 .checkValidRegion(view.getRegionOfDeathField()+ " " + view.getComboCountryOfDeath(),
                         view.getRegionOfDeathField(), view.getComboCountryOfDeath()) && view.getComboRegion().isDisabled()) {
@@ -124,7 +123,6 @@ public class ProfileEditController extends CommonController {
      * Save City of death field to profile.
      */
     private void saveCityOfDeath() throws Exception{
-        //TODO waiting for the API from previous story to validate if this is a valid place
         if (!view.getCityOfDeathField().isEmpty() && AddressIO
                 .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getCityOfDeathField(), view.getComboCountryOfDeath())) {
@@ -141,7 +139,6 @@ public class ProfileEditController extends CommonController {
      * Save Country of death field to profile.
      */
     private void saveCountryOfDeath() {
-        //TODO waiting for the API from previous story to validate if this is a valid place
         currentProfile.setCountryOfDeath(view.getComboCountryOfDeath());
     }
 

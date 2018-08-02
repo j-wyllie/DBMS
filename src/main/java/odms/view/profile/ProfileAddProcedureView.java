@@ -22,6 +22,7 @@ import odms.model.profile.Profile;
 
 public class ProfileAddProcedureView {
 
+    private static ProfileProceduresView parentView;
     private static Profile searchedDonor;
 
     private ProcedureAddController controller = new ProcedureAddController(this);
@@ -36,26 +37,26 @@ public class ProfileAddProcedureView {
     private TextField descriptionField;
 
     @FXML
-    private static Label warningLabel;
+    private Label warningLabel;
 
     @FXML
     private Button addButton;
 
     @FXML
-    private static ListView<OrganEnum> affectedOrgansListView;
+    private ListView<OrganEnum> affectedOrgansListView;
 
-    private static ObservableList<OrganEnum> donatedOrgans;
+    private ObservableList<OrganEnum> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         try {
             controller.add();
-            //todo controller.refreshProcedureTable();
+            parentView.refreshProcedureTable();
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
-
         } catch (Exception e) {
+            e.printStackTrace();
             warningLabel.setVisible(true);
         }
     }
@@ -67,17 +68,19 @@ public class ProfileAddProcedureView {
 
     /**
      * Run whenever this view is called
-     *
-     * @param p
      */
     @FXML
-    public static void initialize(Profile p) {
+    public void initialize() {
         warningLabel.setVisible(false);
-        searchedDonor = p;
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         donatedOrgans = FXCollections
-                .observableArrayList(p.getOrgansDonated());
+                .observableArrayList(searchedDonor.getOrgansDonated());
         affectedOrgansListView.setItems(donatedOrgans);
+    }
+
+    public void setup(ProfileProceduresView parentView, Profile currentProfile) {
+        this.parentView = parentView;
+        searchedDonor = currentProfile;
     }
 
     public Profile getSearchedDonor() {

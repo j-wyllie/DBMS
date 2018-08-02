@@ -55,6 +55,8 @@ public class ProfileProceduresView extends CommonView {
 
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
+        ProfileAddProcedureView profileAddProcedureView = new ProfileAddProcedureView();
+        profileAddProcedureView.setup(this, currentProfile.get());
         createPopup(actionEvent, "/view/ProcedureAdd.fxml", "Add Procedure");
     }
 
