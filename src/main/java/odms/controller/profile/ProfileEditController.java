@@ -65,6 +65,10 @@ public class ProfileEditController extends CommonController {
                 saveBloodType();
                 saveIsSmoker();
 
+                saveCity();
+                saveCountry();
+                saveRegion();
+
                 try {
                     if(view.getDODDatePicker() != null) {
                         saveCityOfDeath();
@@ -280,8 +284,14 @@ public class ProfileEditController extends CommonController {
      * Save Region field to profile.
      */
     public void saveRegion() {
-        if (!view.getRegionField().isEmpty()) {
-            currentProfile.setRegion(view.getRegionField());
+        if (!view.getComboRegion().isDisabled()) {
+            if (view.getComboRegion().getValue() != null) {
+                currentProfile.setRegion((String) view.getComboRegion().getValue());
+            }
+        } else {
+            if (view.getRegionField() != null) {
+                currentProfile.setRegion(view.getRegionField());
+            }
         }
     }
 
@@ -338,6 +348,25 @@ public class ProfileEditController extends CommonController {
         // TODO this should be a checkbox and not a radio button.
         currentProfile.setIsSmoker(view.getIsSmokerRadioButton());
     }
+
+    /**
+     * Save Country field to profile.
+     */
+    private void saveCountry() {
+        if (view.getComboCountry() != null) {
+            currentProfile.setCountry(view.getComboCountry().toString());
+        }
+    }
+
+    /**
+     * Save City field to profile.
+     */
+    private void saveCity() {
+        if (view.getCityField() != null) {
+            currentProfile.setCity(view.getCityField());
+        }
+    }
+
 
     /**
      * closes the edit donor window and reopens the donor.

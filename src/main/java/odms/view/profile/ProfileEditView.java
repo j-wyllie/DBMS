@@ -270,10 +270,12 @@ public class ProfileEditView extends CommonView {
         if (currentProfile != null) {
             try {
                 populateFields();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
     }
 
     /**
@@ -481,6 +483,7 @@ public class ProfileEditView extends CommonView {
             if (currentProfile.getCountry() != null) {
                 comboCountry.setValue(
                         CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+
             }
             if (currentProfile.getRegion() != null) {
                 if (currentProfile.getCountry() != null) {
@@ -738,5 +741,14 @@ public class ProfileEditView extends CommonView {
 
     public void setCityOfDeathField(TextField cityOfDeathField) {
         this.cityOfDeathField = cityOfDeathField;
+    }
+
+
+    public String getCityField() {
+        return cityField.getText();
+    }
+
+    public void setCityField(String string) {
+        this.cityField.setText(string);
     }
 }
