@@ -1,5 +1,6 @@
 package odms.view.user;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,8 +10,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import odms.controller.GuiMain;
-import odms.controller.database.DAOFactory;
+import odms.controller.user.UserSearchController;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
@@ -30,6 +32,8 @@ public class UserSearchView extends CommonView {
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
+
+    private UserSearchController controller = new UserSearchController(this);
 
     @FXML
     private TextField ageField;
@@ -229,57 +233,10 @@ public class UserSearchView extends CommonView {
      * Clears the searchTable and updates with search results of profiles from the fuzzy search.
      */
     private void performSearchFromFilters() {
-        String selectedGender = null;
-        String selectedType = null;
-        ObservableList<OrganEnum> selectedOrgans;
+        profileSearchResults = controller.performSearch(organsCombobox.getCheckModel().getCheckedItems(),
+                typeCombobox.getValue().toString(), genderCombobox.getValue().toString(), searchField.getText(), regionField.getText(),
+                ageField.getText(), ageRangeField.getText(), ageRangeCheckbox.isSelected());
 
-        selectedOrgans = organsCombobox.getCheckModel().getCheckedItems();
-
-        if (!typeCombobox.getSelectionModel().isEmpty()) {
-            selectedType = typeCombobox.getValue().toString();
-        }
-
-        if (!genderCombobox.getSelectionModel().isEmpty()) {
-            selectedGender = genderCombobox.getValue().toString();
-        }
-
-        String searchString = searchField.getText();
-        String regionSearchString = regionField.getText();
-
-        int ageSearchInt;
-        try {
-            ageSearchInt = Integer.parseInt(ageField.getText());
-        } catch (NumberFormatException e) {
-            ageSearchInt = -999;
-        }
-
-        int ageRangeSearchInt;
-        try {
-            if (ageRangeCheckbox.isSelected()) {
-                ageRangeSearchInt = Integer.parseInt(ageRangeField.getText());
-            } else {
-                ageRangeSearchInt = -999;
-            }
-        } catch (NumberFormatException e) {
-            ageRangeSearchInt = -999;
-        }
-
-        searchTable.getItems().clear();
-        profileSearchResults.clear();
-
-        try {
-            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
-                    searchString,
-                    ageSearchInt,
-                    ageRangeSearchInt,
-                    regionSearchString,
-                    selectedGender,
-                    selectedType,
-                    new HashSet<>(selectedOrgans)
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         updateTable(false, false);
         updateLabels();
 
@@ -411,9 +368,47 @@ public class UserSearchView extends CommonView {
                     "There are " + GuiMain.getCurrentDatabase().getProfiles(false).size()
                             + " profiles"));
         }
+
+        setPauseTransitions();
+    }
+
+    /**
+     * Sets a pause transition for searchField, ageField, ageRangeField and regionField.
+     */
+    private void setPauseTransitions() {
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
+                performSearchFromFilters();
+            });
+            pauseTransition.playFromStart();
+        });
+
+        ageField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
+                performSearchFromFilters();
+            });
+            pauseTransition.playFromStart();
+        });
+
+        ageRangeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
+                performSearchFromFilters();
+            });
+            pauseTransition.playFromStart();
+        });
+
+        regionField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> {
+                performSearchFromFilters();
+            });
+            pauseTransition.playFromStart();
+        });
     }
 
     public void handleSearchProfilesBtnClicked(ActionEvent actionEvent) {
         performSearchFromFilters();
     }
+
+
 }
