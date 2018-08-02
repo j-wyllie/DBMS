@@ -421,7 +421,6 @@ public class ProfileEditController extends CommonController {
 
     public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
-        System.out.println(currentProfile);
     }
 
     public void setIsClinician(Boolean bool) {

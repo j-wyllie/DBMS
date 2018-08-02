@@ -22,12 +22,20 @@ public class ProcedureAddController {
     }
 
     public void add() throws IllegalArgumentException {
+        Procedure procedure = parseProcedure();
+        procedure.setOrgansAffected(view.getAffectedOrgansListView());
+        addProcedure(procedure);
+    }
+
+    private Procedure parseProcedure() {
         String summary = view.getSummaryField();
         LocalDate dateOfProcedure = view.getDateOfProcedureDatePicker();
         String longDescription = view.getDescriptionField();
 
         Procedure procedure;
-        LocalDate dob = controller.getCurrentProfile().getDateOfBirth();
+
+        // validate procedure
+        LocalDate dob = view.getSearchedDonor().getDateOfBirth();
         if (dob.isAfter(dateOfProcedure)) {
             throw new IllegalArgumentException();
         }
@@ -38,9 +46,7 @@ public class ProcedureAddController {
             procedure = new Procedure(summary, dateOfProcedure, longDescription);
         }
 
-        procedure.setOrgansAffected(view.getAffectedOrgansListView());
-
-        addProcedure(procedure);
+        return procedure;
     }
 
     /**

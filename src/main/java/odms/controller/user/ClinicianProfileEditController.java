@@ -1,9 +1,12 @@
 package odms.controller.user;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.user.User;
@@ -32,5 +35,10 @@ public class ClinicianProfileEditController extends CommonController {
         currentUser.setWorkAddress(view.getAddressField());
         currentUser.setRegion(view.getRegionField());
         HistoryController.updateHistory(action);
+        try {
+            DAOFactory.getUserDao().update(currentUser);
+        } catch (SQLException e) {
+            AlertController.invalidEntry("Database could not update the user.");
+        }
     }
 }

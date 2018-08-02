@@ -25,9 +25,8 @@ import odms.controller.profile.ProfileOrganEditController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
-import odms.view.CommonView;
 
-public class ProfileOrganEditView extends CommonView {
+public class ProfileOrganEditView extends OrganCommonView {
     protected ObservableList<String> observableListOrgansAvailable;
     private Profile currentProfile;
     private ProfileOrganEditController controller = new ProfileOrganEditController(this);
@@ -69,7 +68,7 @@ public class ProfileOrganEditView extends CommonView {
     public void setWindowType(OrganSelectEnum windowType) {
         this.windowType = windowType;
     }
-    public OrganSelectEnum getWindowType() {
+    private OrganSelectEnum getWindowType() {
         return windowType;
     }
     public void initialize(Profile p) {
