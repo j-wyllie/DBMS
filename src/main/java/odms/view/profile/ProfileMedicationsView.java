@@ -416,9 +416,7 @@ public class ProfileMedicationsView extends CommonView {
             tableViewActiveIngredients.setVisible(true);
             tableViewDrugInteractionsNames.setVisible(true);
             tableViewDrugInteractions.setVisible(true);
-            //todo work out medication history
-            //buttonViewMedicationHistory.setVisible(true);
-            //logoutButton.setVisible(false);
+            buttonClearCache.setVisible(true);
         } else {
             // user is a standard profile, limit functionality
             buttonSaveMedications.setVisible(false);
@@ -432,7 +430,7 @@ public class ProfileMedicationsView extends CommonView {
             tableViewActiveIngredients.setVisible(false);
             tableViewDrugInteractionsNames.setVisible(false);
             tableViewDrugInteractions.setVisible(false);
-            //buttonViewMedicationHistory.setVisible(false);
+            buttonClearCache.setVisible(false);
         }
     }
 

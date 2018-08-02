@@ -188,7 +188,7 @@ public class ProfileEditView extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         ProfileDisplayViewTODO v = fxmlLoader.getController();
-        v.initialize(currentProfile);
+        v.initialize(currentProfile, isOpenedByClinician);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(scene);
         appStage.show();
