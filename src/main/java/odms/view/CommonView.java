@@ -272,10 +272,8 @@ public class CommonView {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            //todo replace with standardised method and view
             ProfileDisplayViewTODO controller = fxmlLoader.getController();
-            controller.setProfileViaClinician(donor);
-            controller.initialize(donor);
+            controller.initialize(donor, true);
 
             Stage stage = new Stage();
             stage.setTitle(donor.getFullName() + "'s profile");

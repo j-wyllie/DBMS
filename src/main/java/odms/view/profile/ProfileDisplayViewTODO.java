@@ -43,6 +43,8 @@ public class ProfileDisplayViewTODO extends CommonView {
     private Tab tabHistory;
     @FXML
     private Tab tabProcedures;
+    @FXML
+    private Button logoutButton;
 
     private Boolean isOpenedByClinician = false;
 
@@ -199,28 +201,19 @@ public class ProfileDisplayViewTODO extends CommonView {
         }
     }
 
-
     /**
      * Sets the current donor attributes to the labels on start up.
      *
      * @param profile to be used
+     * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      */
-    @FXML
-    public void initialize(Profile profile) {
+    public void initialize(Profile profile, Boolean isOpenedByClinician) {
+        this.isOpenedByClinician = isOpenedByClinician;
+        if (isOpenedByClinician) {
+            logoutButton.setVisible(false);
+        }
         currentProfile = profile;
         setPage(profile);
         onTabGeneralSelected();
-    }
-
-
-    /**
-     * sets the profile if it is being opened by a clinician If opened by clinician, set appropriate
-     * boolean and profile
-     *
-     * @param profile to be used
-     */
-    public void setProfileViaClinician(Profile profile) {
-        isOpenedByClinician = true;
-        currentProfile = profile;
     }
 }
