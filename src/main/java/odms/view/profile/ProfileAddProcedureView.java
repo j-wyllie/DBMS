@@ -22,11 +22,6 @@ import odms.model.profile.Profile;
 
 public class ProfileAddProcedureView {
 
-//    public ProfileAddProcedureView(ProfileProceduresView parentView, Profile currentProfile) {
-//        this.parentView = parentView;
-//        searchedDonor = currentProfile;
-//    }
-
     private static ProfileProceduresView parentView;
     private static Profile searchedDonor;
 
