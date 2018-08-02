@@ -171,9 +171,9 @@ public class ProfileMedicationsController extends CommonController {
     }
 
     public Drug getSelectedDrug() {
-        Drug drug = view.getSelectedHistoricDrug();
+        Drug drug = view.getSelectedCurrentDrug();
         if (drug == null) {
-            drug = view.getSelectedCurrentDrug();
+            drug = view.getSelectedHistoricDrug();
         }
         if (drug == null) {
             return null;
