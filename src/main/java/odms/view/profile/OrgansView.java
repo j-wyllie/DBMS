@@ -15,6 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.controller.database.DAOFactory;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
@@ -66,22 +67,22 @@ public class OrgansView extends CommonView {
         listViewDonating.setCellFactory(param -> new OrgansView.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrgansView.HighlightedCell());
 
+        listViewDonated.setItems(observableListDonated);
+        listViewDonating.setItems(observableListDonating);
+        listViewReceiving.setItems(observableListReceiving);
+
         if(!isClinician) {
-            if (listViewDonating.getItems().size() == 0) {
+            if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
                 visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
             } else {
                 visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, true);
             }
-            if (listViewReceiving.getItems().size() == 0) {
+            if (DAOFactory.getOrganDao().getRequired(currentProfile).isEmpty()) {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
             } else {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
             }
         }
-
-        listViewDonated.setItems(observableListDonated);
-        listViewDonating.setItems(observableListDonating);
-        listViewReceiving.setItems(observableListReceiving);
 
         populateOrganLists();
     }
@@ -100,7 +101,6 @@ public class OrgansView extends CommonView {
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
     }
-
 
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
