@@ -1,6 +1,5 @@
 package odms.controller.database;
 
-import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 import static java.time.LocalDateTime.now;
 
 import com.google.gson.Gson;
@@ -8,8 +7,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.MalformedJsonException;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,8 +50,8 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             if (value.getDrugA().equalsIgnoreCase(drugA)
                     && value.getDrugB().equalsIgnoreCase(drugB)) {
 
-                if (value.getDateTimeExpired().isBefore(now())
-                    || value.getDateTimeExpired().isEqual(now())) {
+                if (value.getDateTimeExpired().isBefore(now()) ||
+                        value.getDateTimeExpired().isEqual(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
                     interactionMap.replace((Integer) interactionKey, value);
                 }
@@ -67,7 +64,6 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 interactionMap.put(interactionMap.size(), newInteraction);
                 save();
             }
-
         }
         return newInteraction;
     }
@@ -162,8 +158,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                         interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
                                 durationInteractions, genderInteractions);
                     } catch (Exception e) {
-                        System.out.println(e);
-                        printStackTrace();
+                        return null;
                     }
                 }
             }

@@ -249,9 +249,11 @@ public class ProfileMedicationsController extends CommonController {
 
         Interaction interaction = cache.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
 
-        if (!(interaction == null)) {
+        if (interaction != null) {
             interactionsRaw = MedicationDataIO.getDrugInteractions(interaction, currentProfile.getGender(),
                     currentProfile.getAge());
+        } else {
+            interactionsRaw.put("error", null);
         }
         return interactionsRaw;
     }
