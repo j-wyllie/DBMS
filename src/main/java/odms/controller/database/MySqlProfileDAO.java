@@ -132,7 +132,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         LocalDate dod = null;
         if (!(profiles.getDate("Dod") == null)) {
-            dob = profiles.getDate("Dod").toLocalDate();
+            dod = profiles.getDate("Dod").toLocalDate();
         }
         String gender = profiles.getString("Gender");
         Double height = profiles.getDouble("Height");
@@ -510,13 +510,17 @@ public class MySqlProfileDAO implements ProfileDAO {
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
         String query = "select * from profiles where (GivenNames like ? OR LastNames like ?)"
-                + " and Region like ? and Gender = ?";
+                + " and Region like ?";
+        if (!gender.equals("any")) {
+            query += " and Gender = ?";
+        }
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
-                query += " and (year(CURRENT_DATE) - year(Dob)) = ?";
+                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) = ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) = ?))";
             }
             else {
-                query += " and (year(CURRENT_DATE) - year(Dob)) >= ? and (year(CURRENT_DATE) - year(Dob)) <= ?";
+                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) >= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) >= ?))"
+                        + " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) <= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
@@ -539,16 +543,26 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
             stmt.setString(3, "%" + region + "%");
-            stmt.setString(4,  gender);
 
-            int index = 5;
+            int index = 4;
+            if (!gender.equals("any")) {
+                stmt.setString(4, gender);
+                index++;
+            }
+
             if (ageSearchInt > 0) {
                 if (ageRangeSearchInt == -999) {
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
                     stmt.setInt(index, ageSearchInt);
                     index++;
                 }
                 else {
                     stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageRangeSearchInt);
                     index++;
                     stmt.setInt(index, ageRangeSearchInt);
                     index++;
@@ -562,6 +576,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 stmt.setBoolean(index, true);
                 index++;
             }
+
+            System.out.println(stmt);
 
             ResultSet allProfiles = stmt.executeQuery();
             int size = 0;
@@ -581,6 +597,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
+            System.out.println(stmt);
+
         }
         catch (Exception e) {
             e.printStackTrace();
