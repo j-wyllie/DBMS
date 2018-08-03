@@ -509,8 +509,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
-        String query = "select * from profiles where GivenNames like ? OR LastNames like ?"
-                + " or Region like ? and Gender = ?";
+        String query = "select * from profiles where (GivenNames like ? OR LastNames like ?)"
+                + " and Region like ? and Gender = ?";
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
                 query += " and (year(CURRENT_DATE) - year(Dob)) = ?";
@@ -534,7 +534,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
-
 
         try {
             stmt.setString(1, "%" + searchString + "%");
@@ -582,7 +581,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
-
         }
         catch (Exception e) {
             e.printStackTrace();
