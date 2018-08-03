@@ -7,8 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.model.enums.OrganEnum;
@@ -37,17 +41,48 @@ public class OrgansView extends CommonView {
 
     @FXML
     private ListView<String> listViewReceiving;
+    @FXML
+    private Label donatingLabel;
+
+    @FXML
+    private Button donatingButton;
+
+    @FXML
+    private Label receivingLabel;
+
+    @FXML
+    private Button receivingButton;
+
+    @FXML
+    private GridPane organGridPane;
+
+
+
 
     private static OrganSelectEnum windowType;
 
-    public void initialize(Profile p) {
+    public void initialize(Profile p, Boolean isClinician) {
         currentProfile = p;
         listViewDonating.setCellFactory(param -> new OrgansView.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrgansView.HighlightedCell());
 
+        if(!isClinician) {
+            if (listViewDonating.getItems().size() == 0) {
+                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
+            } else {
+                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, true);
+            }
+            if (listViewReceiving.getItems().size() == 0) {
+                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
+            } else {
+                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
+            }
+        }
+
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+
         populateOrganLists();
     }
 
@@ -65,6 +100,7 @@ public class OrgansView extends CommonView {
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
     }
+
 
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
@@ -86,8 +122,29 @@ public class OrgansView extends CommonView {
     }
 
     /**
-     * Refresh the ListViews to reflect changes made from the edit pane.
+     * Removes a specific list from view.
+     *
+     * @param list List to set invisible
+     * @param label Label to set invisible.
+     * @param button Button to set invisible.
      */
+
+    private void visibilityLists(ListView<String> list, Label label, Button button, Integer column, Boolean bool){
+        if(!bool) {
+            ColumnConstraints zero_width = new ColumnConstraints();
+            zero_width.setPrefWidth(0);
+            organGridPane.getColumnConstraints().set(column, zero_width);
+        }
+
+        list.setVisible(bool);
+        label.setVisible(bool);
+        button.setVisible(bool);
+    }
+
+
+        /**
+         * Refresh the ListViews to reflect changes made from the edit pane.
+         */
     private void refreshListViews() {
         populateOrganLists();
 

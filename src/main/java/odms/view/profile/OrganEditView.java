@@ -48,6 +48,7 @@ public class OrganEditView extends OrganCommonView {
     @FXML
     private Label lblSelected;
 
+
     private OrganSelectEnum windowType;
 
     /**
