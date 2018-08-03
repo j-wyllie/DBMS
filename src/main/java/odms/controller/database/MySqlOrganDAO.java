@@ -93,7 +93,7 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
         profile.addOrganDonated(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -128,7 +128,7 @@ public class MySqlOrganDAO implements OrganDAO {
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
         profile.addOrganDonating(organ);
 
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -161,7 +161,7 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
         profile.addOrganRequired(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -194,7 +194,7 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
         profile.addOrganReceived(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, Donating, Required, Received, DateRegistered) "
+        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -238,7 +238,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void removeDonating(Profile profile, OrganEnum organ) {
-        String query = "delete from organs where ProfileId = ? and Organ = ? and Donating = ?;";
+        String query = "delete from organs where ProfileId = ? and Organ = ? and toDonate = ?;";
         profile.removeOrganDonating(organ);
         removeOrgan(profile, organ, query);
     }
