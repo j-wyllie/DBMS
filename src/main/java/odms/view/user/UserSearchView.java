@@ -384,8 +384,4 @@ public class UserSearchView extends CommonView {
             pauseTransition.playFromStart();
         });
     }
-
-    public void handleSearchProfilesBtnClicked(ActionEvent actionEvent) {
-        performSearchFromFilters();
-    }
 }
