@@ -184,8 +184,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setMedications(Profile profile) {
         MedicationDAO database = DAOFactory.getMedicationDao();
 
-        profile.setCurrentMedications((ArrayList<Drug>) database.getAll(profile, true));
-        profile.setHistoryOfMedication((ArrayList<Drug>) database.getAll(profile, false));
+        profile.setCurrentMedications(database.getAll(profile, true));
+        profile.setHistoryOfMedication(database.getAll(profile, false));
 
         return profile;
     }

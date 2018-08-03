@@ -1,41 +1,36 @@
 package odms.model.medications;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Creates a drug with a name and a list of active ingredients.
  */
 public class Drug {
 
-    private int drugId;
+    private Integer drugId;
     private String drugName;
-    private List<String> activeIngredients = new ArrayList<>();
 
-    public Drug(String drugName){
-        this.drugName = drugName;
-    }
-
-    public Drug(int id, String drugName){
-        this.drugId = id;
+    /**
+     * Constructor for dug class.
+     * @param drugName name of the drug
+     */
+    public Drug(String drugName) {
         this.drugName = drugName;
     }
 
     /**
-     * Sets the active ingredients of a drug to an array list of ingredients.
-     * @param activeIngredients active ingredients to be set.
+     * Constructor for dug class.
+     * @param id id value of the drug object, provided by the database
+     * @param drugName name of the drug
      */
-    public void setActiveIngredients(List<String> activeIngredients){
-        this.activeIngredients = activeIngredients;
+    public Drug(int id, String drugName) {
+        this.drugId = id;
+        this.drugName = drugName;
     }
 
-    public String getDrugName(){
+    public String getDrugName() {
         return this.drugName;
     }
 
-    public List<String> getActiveIngredients(){
-        return this.activeIngredients;
+    public Integer getId() {
+        return this.drugId;
     }
-
-    public int getId() { return this.drugId; }
 }

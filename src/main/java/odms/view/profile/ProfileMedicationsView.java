@@ -331,8 +331,8 @@ public class ProfileMedicationsView extends CommonView {
                     controller.addDrug(new Drug(medicationName));
                 }
                 textFieldMedicationSearch.clear();
+                refreshMedicationsTable();
             }
-            refreshMedicationsTable();
         });
     }
 
@@ -347,8 +347,8 @@ public class ProfileMedicationsView extends CommonView {
         hideItems();
         tableViewCurrentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableViewHistoricMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        controller.getDrugs();
         setMedicationSearchFieldListener();
+        refreshMedicationsTable();
     }
 
     public Profile getCurrentProfile() {
