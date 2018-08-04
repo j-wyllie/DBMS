@@ -363,7 +363,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @param profile to remove.
      */
     @Override
-    public void remove(Profile profile) throws OrganConflictException, SQLException {
+    public void remove(Profile profile) throws SQLException {
         String query = "delete from profiles where ProfileId = ?;";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -388,7 +388,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
     }
 
-    private void removeOrgans(Profile profile) throws OrganConflictException {
+    private void removeOrgans(Profile profile) {
         OrganDAO database = DAOFactory.getOrganDao();
 
         profile.getOrgansDonating().forEach(organ -> {

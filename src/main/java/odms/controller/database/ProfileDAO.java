@@ -47,7 +47,7 @@ public interface ProfileDAO {
      * Removes a profile from the database.
      * @param profile to remove.
      */
-    void remove(Profile profile) throws OrganConflictException, SQLException;
+    void remove(Profile profile) throws SQLException;
 
     /**
      * Updates a profiles information in the database.
