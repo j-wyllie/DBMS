@@ -473,7 +473,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getDrug"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -495,7 +502,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/drug"
+                "$ref": "#/components/schemas/postDrug"
               }
             }
           }
@@ -524,7 +531,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/drug"
+                "$ref": "#/components/schemas/patchDrug"
               }
             }
           }
@@ -628,7 +635,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrgan"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -704,6 +718,68 @@
           }
         }
       },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Deletes an organ from a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "organ",
+            "description": "the name of the organ to remove",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "parameters": [
         {
           "in": "path",
@@ -712,6 +788,105 @@
           "description": "Id of the user.",
           "schema": {
             "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/procedures/{pId}/organs": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get a profiles affected organs of a procedure",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrgan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Add an organ to a procedure",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "removes an organ from a procedure",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "organ",
+            "description": "The organ to remove",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "pId",
+          "required": true,
+          "description": "Id of the procedure",
+          "schema": {
+            "$ref": "#/components/schemas/pId"
           }
         }
       ]
@@ -1217,7 +1392,7 @@
           }
         }
       },
-      "drug": {
+      "patchDrug": {
         "type": "object",
         "properties": {
           "name": {
@@ -1231,6 +1406,37 @@
           }
         }
       },
+      "postDrug": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          }
+        }
+      },
+      "getDrug": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "current": {
+              "type": "boolean"
+            },
+            "past": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
       "organ": {
         "type": "object",
         "properties": {
@@ -1239,9 +1445,46 @@
           }
         }
       },
+      "getOrgan": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "profileId": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "donated": {
+              "type": "boolean"
+            },
+            "donating": {
+              "type": "boolean"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "received": {
+              "type": "boolean"
+            },
+            "dateRegistered": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      },
       "id": {
         "type": "integer",
         "description": "National Health Index number"
+      },
+      "pId": {
+        "type": "integer",
+        "description": "the ID of a procedure"
       }
     }
   }
