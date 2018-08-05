@@ -247,6 +247,7 @@
           {
             "in": "query",
             "name": "userId",
+            "required": true,
             "description": "Id of the user",
             "schema": {
               "type": "integer"
@@ -286,6 +287,7 @@
           {
             "in": "query",
             "name": "profile Id",
+            "required": true,
             "description": "Id of the profile",
             "schema": {
               "type": "integer"
@@ -307,6 +309,150 @@
           }
         }
       }
+    },
+    "/profiles/count": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get the number of profiles in the database",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/conditions": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "gets all conditions of a profile.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "adds a condition to a profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addCondition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Changes the details of a condition for a profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchCondition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "deletes a condition from a profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "conditionId",
+            "required": true,
+            "description": "Id of the condition",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/countries": {
       "get": {
@@ -759,6 +905,59 @@
             "type": "boolean"
           }
         }
+      },
+      "addCondition": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "diagnosisDate": {
+            "type": "string"
+          },
+          "chronic": {
+            "type": "boolean"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          },
+          "dateCured": {
+            "type": "string"
+          }
+        }
+      },
+      "patchCondition": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "diagnosisDate": {
+            "type": "string"
+          },
+          "chronic": {
+            "type": "boolean"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          },
+          "dateCured": {
+            "type": "string"
+          },
+          "conditionId": {
+            "type": "integer"
+          }
+        }
+      },
+      "id": {
+        "type": "integer",
+        "description": "National Health Index number"
       }
     }
   }
