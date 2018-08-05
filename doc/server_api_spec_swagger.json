@@ -25,32 +25,6 @@
   ],
   "paths": {
     "/users": {
-      "post": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Creates a new user",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/postUser"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "get": {
         "tags": [
           "users"
@@ -82,6 +56,32 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Creates a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -716,12 +716,143 @@
         }
       ]
     },
+    "/profile/{id}/procedure": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Gets all the procedures for a profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "True to only get pending procedures, false for all procedures.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Adds a procedure to a profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/procedure"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Updates a procedure.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/procedure"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Deletes a procedure from a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "procedureId",
+            "description": "Id of the procedure",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
     "/countries": {
       "get": {
         "tags": [
           "countries"
         ],
-        "summary": "Gets all of the countries from the databse",
+        "summary": "Gets all of the countries from the database",
         "parameters": [
           {
             "in": "query",
@@ -1217,6 +1348,23 @@
           }
         }
       },
+      "procedure": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "procedureDate": {
+            "type": "string"
+          },
+          "procedureId": {
+            "type": "integer"
+          }
+        }
+      },
       "drug": {
         "type": "object",
         "properties": {
@@ -1241,7 +1389,7 @@
       },
       "id": {
         "type": "integer",
-        "description": "National Health Index number"
+        "description": "Profile Id"
       }
     }
   }
