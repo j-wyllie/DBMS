@@ -732,6 +732,68 @@
           }
         }
       },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Deletes an organ from a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "organ",
+            "description": "the name of the organ to remove",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "parameters": [
         {
           "in": "path",
@@ -852,68 +914,6 @@
             "description": "Id of the procedure",
             "schema": {
               "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "profiles"
-        ],
-        "summary": "Deletes an organ from a profile",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "donated",
-            "description": "if the organ has been donated",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "donating",
-            "description": "if the organ is to be donated",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "required",
-            "description": "if the organ is a required organ",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "received",
-            "description": "if the organ has been received",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "organ",
-            "description": "the name of the organ to remove",
-            "schema": {
-              "type": "string"
             }
           }
         ],
