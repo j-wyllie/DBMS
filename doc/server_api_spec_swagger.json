@@ -15,7 +15,7 @@
       "description": "Functionality related to clinician/admin accounts"
     },
     {
-      "name": "profile",
+      "name": "profiles",
       "description": "Functionality related to donor/receiver accounts"
     },
     {
@@ -137,6 +137,156 @@
             "in": "query",
             "name": "user Id",
             "description": "Id of the user",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profiles": {
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Creates a new profile (donor or receiver)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get select profiles from the database",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "description": "Username of the profile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "Id of the profile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "receiving",
+            "description": "True if you only want receivers.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Edits the basic attributes of a given profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "Id of the user",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Deletes a given profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profile Id",
+            "description": "Id of the profile",
             "schema": {
               "type": "integer"
             }
@@ -322,6 +472,280 @@
           },
           "isDefault": {
             "type": "boolean"
+          }
+        }
+      },
+      "postProfile": {
+        "type": "object",
+        "required": [
+          "nhi",
+          "username",
+          "givenNames",
+          "lastNames",
+          "dob"
+        ],
+        "properties": {
+          "nhi": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "isDonor": {
+            "type": "boolean"
+          },
+          "isReceiver": {
+            "type": "boolean"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "lastNames": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "dod": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "bloodType": {
+            "type": "string"
+          },
+          "isSmoker": {
+            "type": "boolean"
+          },
+          "alcoholConsumption": {
+            "type": "number"
+          },
+          "bloodPressureSystolic": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetNo": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "neighbourhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "integer"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "getProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nhi": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "isDonor": {
+            "type": "boolean"
+          },
+          "isReceiver": {
+            "type": "boolean"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "lastNames": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "dod": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "bloodType": {
+            "type": "string"
+          },
+          "isSmoker": {
+            "type": "boolean"
+          },
+          "alcoholConsumption": {
+            "type": "number"
+          },
+          "bloodPressureSystolic": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetNo": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "neighbourhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "integer"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string"
+          }
+        }
+      },
+      "patchProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nhi": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "isDonor": {
+            "type": "boolean"
+          },
+          "isReceiver": {
+            "type": "boolean"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "lastNames": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "dod": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "bloodType": {
+            "type": "string"
+          },
+          "isSmoker": {
+            "type": "boolean"
+          },
+          "alcoholConsumption": {
+            "type": "number"
+          },
+          "bloodPressureSystolic": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetNo": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "neighbourhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "integer"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string"
           }
         }
       },
