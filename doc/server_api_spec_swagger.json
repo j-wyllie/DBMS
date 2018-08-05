@@ -337,7 +337,7 @@
         "tags": [
           "profiles"
         ],
-        "summary": "gets all conditions of a profile.",
+        "summary": "Gets all conditions of a profile.",
         "responses": {
           "200": {
             "description": "OK"
@@ -357,7 +357,7 @@
         "tags": [
           "profiles"
         ],
-        "summary": "adds a condition to a profile.",
+        "summary": "Adds a condition to a profile.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -415,7 +415,7 @@
         "tags": [
           "profiles"
         ],
-        "summary": "deletes a condition from a profile.",
+        "summary": "Deletes a condition from a profile.",
         "parameters": [
           {
             "in": "query",
@@ -427,6 +427,268 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/{id}/drugs": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get current and past drugs for a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "current",
+            "required": false,
+            "description": "Optional parameter to define whether to get current or past drugs",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Add a drug to a profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/drug"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Update a drug",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/drug"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Delete a drug from a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "description": "ID of the drug to delete",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/{id}/organs": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get organs that are associated with a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Add an organ to the profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -952,6 +1214,28 @@
           },
           "conditionId": {
             "type": "integer"
+          }
+        }
+      },
+      "drug": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          }
+        }
+      },
+      "organ": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         }
       },
