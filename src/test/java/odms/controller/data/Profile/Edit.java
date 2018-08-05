@@ -147,6 +147,8 @@ public class Edit {
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -159,6 +161,8 @@ public class Edit {
             assertNotEquals(oldValue, currentProfile.getAddress());
         } catch (IllegalArgumentException e) {
             fail();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

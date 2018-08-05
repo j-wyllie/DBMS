@@ -1,91 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-        fx:controller="odms.view.profile.ProfileOrgansView">
-    <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
-        AnchorPane.rightAnchor="-1.0"
-        AnchorPane.topAnchor="-1.0" layoutX="91.0"
-        layoutY="74.0" maxHeight="1.7976931348623157E308"
-        maxWidth="1.7976931348623157E308">
-        <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0"
-                prefWidth="100.0"/>
-            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0"
-                prefWidth="100.0"/>
-            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0"
-                prefWidth="100.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="BOTTOM"
-                vgrow="NEVER"/>
-        </rowConstraints>
-        <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-        </padding>
-        <ListView GridPane.rowIndex="1" focusTraversable="false" mouseTransparent="true"
-            prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/Profile.css"
-            fx:id="listViewDonating">
-            <GridPane.margin>
-                <Insets right="5.0"/>
-            </GridPane.margin>
-        </ListView>
-        <Button GridPane.halignment="CENTER" GridPane.rowIndex="2"
-            maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-            onAction="#handleBtnDonatingClicked" text="Edit">
-            <GridPane.margin>
-                <Insets right="5.0"/>
-            </GridPane.margin>
-        </Button>
-        <Button GridPane.columnIndex="1" GridPane.halignment="CENTER"
-            GridPane.rowIndex="2" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-            onAction="#handleBtnRequiredClicked" text="Edit">
-            <GridPane.margin>
-                <Insets left="5.0" right="5.0"/>
-            </GridPane.margin>
-        </Button>
-        <Button GridPane.columnIndex="2" GridPane.halignment="CENTER"
-            GridPane.rowIndex="2" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-            onAction="#handleBtnDonatedClicked" text="Edit">
-            <GridPane.margin>
-                <Insets left="5.0"/>
-            </GridPane.margin>
-        </Button>
-        <ListView GridPane.columnIndex="2" GridPane.rowIndex="1" focusTraversable="false"
-            mouseTransparent="true" prefHeight="200.0" prefWidth="200.0"
-            fx:id="listViewDonated">
-            <GridPane.margin>
-                <Insets left="5.0"/>
-            </GridPane.margin>
-        </ListView>
-        <ListView GridPane.columnIndex="1" GridPane.rowIndex="1" focusTraversable="false"
-            mouseTransparent="true" prefHeight="200.0" prefWidth="200.0"
-            stylesheets="@../styles/Profile.css" fx:id="listViewReceiving">
-            <GridPane.margin>
-                <Insets left="5.0" right="5.0"/>
-            </GridPane.margin>
-        </ListView>
-        <Label styleClass="detail-text-header" stylesheets="@../styles/Profile.css"
-            text="Donating">
-            <GridPane.margin>
-                <Insets right="5.0"/>
-            </GridPane.margin>
-        </Label>
-        <Label GridPane.columnIndex="1" styleClass="detail-text-header"
-            stylesheets="@../styles/Profile.css" text="Receiving">
-            <GridPane.margin>
-                <Insets left="5.0" right="5.0"/>
-            </GridPane.margin>
-        </Label>
-        <Label GridPane.columnIndex="2" styleClass="detail-text-header"
-            stylesheets="@../styles/Profile.css" text="Donated">
-            <GridPane.margin>
-                <Insets left="5.0"/>
-            </GridPane.margin>
-        </Label>
-    </GridPane>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.OrgansView">
+   <children>
+       <GridPane fx:id="organGridPane" layoutX="91.0" layoutY="74.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+           <columnConstraints>
+               <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="BOTTOM" vgrow="NEVER" />
+           </rowConstraints>
+           <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+           </padding>
+          <children>
+              <ListView fx:id="listViewDonating" focusTraversable="false" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/Profile.css" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                      <Insets right="5.0" />
+                  </GridPane.margin>
+              </ListView>
+              <Button fx:id="donatingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBtnDonatingClicked" text="Edit" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                      <Insets right="5.0" />
+                  </GridPane.margin>
+              </Button>
+              <Button fx:id="receivingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBtnRequiredClicked" text="Edit" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                      <Insets left="5.0" right="5.0" />
+                  </GridPane.margin>
+              </Button>
+              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBtnDonatedClicked" text="Edit" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                      <Insets left="5.0" />
+                  </GridPane.margin>
+              </Button>
+              <ListView fx:id="listViewDonated" focusTraversable="false" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                      <Insets left="5.0" />
+                  </GridPane.margin>
+              </ListView>
+              <ListView fx:id="listViewReceiving" focusTraversable="false" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/Profile.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                      <Insets left="5.0" right="5.0" />
+                  </GridPane.margin>
+              </ListView>
+              <Label fx:id="donatingLabel" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Donating">
+                  <GridPane.margin>
+                      <Insets right="5.0" />
+                  </GridPane.margin>
+              </Label>
+              <Label fx:id="receivingLabel" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Receiving" GridPane.columnIndex="1">
+                  <GridPane.margin>
+                      <Insets left="5.0" right="5.0" />
+                  </GridPane.margin>
+              </Label>
+              <Label styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Donated" GridPane.columnIndex="2">
+                  <GridPane.margin>
+                      <Insets left="5.0" />
+                  </GridPane.margin>
+              </Label>
+          </children>
+       </GridPane>
+   </children>
 </AnchorPane>

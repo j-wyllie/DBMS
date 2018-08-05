@@ -1,5 +1,6 @@
 package odms.controller.condition;
 
+import odms.controller.CommonController;
 import odms.view.profile.ProfileAddConditionView;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
@@ -8,9 +9,8 @@ import odms.model.profile.Condition;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import odms.view.profile.ProfileMedicalHistoryView;
 
-public class ConditionAddController {
+public class ConditionAddController extends CommonController {
     private ProfileAddConditionView view;
 
     public ConditionAddController(ProfileAddConditionView v) {
@@ -18,7 +18,8 @@ public class ConditionAddController {
     }
 
     public void add() throws Exception {
-        Condition condition = checkIfValid();
+
+        Condition condition = parseCondition();
         view.getCurrentProfile().getAllConditions().add(condition);
         LocalDateTime currentTime = LocalDateTime.now();
         History action = new History("profile", view.getCurrentProfile().getId(),
@@ -44,29 +45,30 @@ public class ConditionAddController {
         return currentConditions;
     }
 
-    public Condition checkIfValid() {
+    public Condition parseCondition() {
+        Condition condition;
+
         String name = view.getNameFieldText();
         LocalDate dateDiagnosed = view.getDateDiagnosed();
         Boolean isChronic = view.getIsChronic();
-        LocalDate dateCured = view.getDateCured();
-        Condition condition;
         LocalDate dob = view.getCurrentProfile().getDateOfBirth();
-        if (dob.isAfter(dateDiagnosed) || dateDiagnosed.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
-        }
+
+        // create condition
         if (view.getIsCured()) {
-            if (dateCured.isAfter(LocalDate.now()) || dob.isAfter(dateCured) || dateDiagnosed
-                    .isAfter(dateCured)) {
-                throw new IllegalArgumentException();
-            } else {
-                condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
-            }
+            LocalDate dateCured = view.getDateCured();
+            condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
         } else {
             condition = new Condition(name, dateDiagnosed, isChronic);
+        }
+
+        // throw exception if not valid
+        if (dob.isAfter(dateDiagnosed) || dateDiagnosed.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
         }
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException();
         }
+
         return condition;
     }
 }

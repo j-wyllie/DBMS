@@ -8,14 +8,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.controller.CommonController;
 import odms.controller.condition.ConditionAddController;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ProfileAddConditionView extends CommonView {
-    private Profile searchedDonor;
-    private ProfileMedicalHistoryView parent;
+    private static Profile searchedDonor;
+    private static ProfileMedicalHistoryView parent;
     private ConditionAddController controller = new ConditionAddController(this);
 
     @FXML
@@ -47,6 +46,7 @@ public class ProfileAddConditionView extends CommonView {
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
+            e.printStackTrace();
             warningLabel.setVisible(true);
         }
     }
@@ -69,13 +69,17 @@ public class ProfileAddConditionView extends CommonView {
         }
     }
 
-    public void init(ProfileMedicalHistoryView view, Profile p) {
-        parent = view;
-        searchedDonor = p;
+    @FXML
+    public void initialize() {
         LocalDate now = LocalDate.now();
         dateDiagnosedDatePicker.setValue(now);
         dateCuredDatePicker.setValue(now);
         dateCuredDatePicker.setDisable(true);
+    }
+
+    public void setup(ProfileMedicalHistoryView view, Profile p) {
+        parent = view;
+        searchedDonor = p;
     }
 
     public Profile getCurrentProfile() {

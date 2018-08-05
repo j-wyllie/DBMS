@@ -213,7 +213,6 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Add an affected organ to a procedure for a profile.
-     *
      * @param procedure to add the organ to.
      * @param organ to add.
      */
@@ -222,5 +221,20 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         String query = "insert into affected_organs (ProcedureId, Organ) values (?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, procedure.getId());
+            stmt.setString(2, organ.getName());
+
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

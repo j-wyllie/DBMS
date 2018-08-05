@@ -1,5 +1,7 @@
 package odms.controller.profile;
 
+import odms.controller.database.DAOFactory;
+import odms.controller.database.MySqlProfileDAO;
 import odms.model.data.NHIConflictException;
 import odms.view.profile.ProfileCreateAccountView;
 import odms.controller.AlertController;
@@ -9,9 +11,11 @@ import odms.model.data.ProfileDatabase;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import static odms.controller.AlertController.invalidDate;
+import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidNhi;
 import static odms.controller.GuiMain.getCurrentDatabase;
 
@@ -26,26 +30,27 @@ public class ProfileCreateController extends CommonController {
 
     private boolean checkDetailsEntered() {
         if (view.getGivenNamesFieldValue().isEmpty()) {
-            AlertController.invalidEntry("Please enter Given Name(s)");
+            invalidEntry("Please enter Given Name(s)");
             return false;
         }
 
         if (view.getsurnamesFieldValue().isEmpty()) {
-            AlertController.invalidEntry("Please enter Surname(s)");
+            invalidEntry("Please enter Surname(s)");
             return false;
         }
 
         if (view.getdobDatePickerValue() == null) {
-            AlertController.invalidEntry("Please enter a Date of Birth");
+            invalidEntry("Please enter a Date of Birth");
             return false;
         }
         if (view.getNhiField().isEmpty()) {
-            AlertController.invalidEntry("Please enter an IRD number");
+            invalidEntry("Please enter an IRD number");
             return false;
         } else {
             return true;
         }
     }
+
 
 
     /**
@@ -65,21 +70,24 @@ public class ProfileCreateController extends CommonController {
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
                 currentDatabase.addProfile(newProfile);
                 ProfileDataIO.saveData(currentDatabase);
+                DAOFactory.getProfileDao().add(newProfile);
                 return currentDatabase.getProfile(newProfile.getId());
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {
-                    AlertController.invalidEntry(
+                    invalidEntry(
                             "Entered IRD number is too long.\nPlease enter up to 9 digits");
                 } else {
-                    AlertController.invalidEntry("Invalid NHI number entered");
+                    invalidEntry("Invalid NHI number entered");
                 }
             } catch (IllegalArgumentException e) {
                 //show error window.
-                AlertController.invalidEntry();
+                invalidEntry();
             } catch (NHIConflictException e) {
                 invalidNhi();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
+            } catch (SQLException e) {
+                invalidEntry("Database could not parse this profile");
             }
         }
         return null;

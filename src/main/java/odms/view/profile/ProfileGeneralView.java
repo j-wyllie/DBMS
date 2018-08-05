@@ -1,24 +1,22 @@
 package odms.view.profile;
 
+import java.io.File;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import odms.controller.profile.ProfileGeneralTabController;
+import odms.model.enums.CountriesEnum;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ProfileGeneralView extends CommonView {
 
-
-    @FXML
-    private Button editButton;
     @FXML
     private Label phoneLabel;
-    @FXML
-    private Label emailLabel;
     @FXML
     private Label addressLabel;
     @FXML
@@ -45,61 +43,179 @@ public class ProfileGeneralView extends CommonView {
     private Label ageLabel;
     @FXML
     private Label nhiLabel;
+    @FXML
+    private Label countryLabel;
+    @FXML
+    private Label cityLabel;
+    @FXML
+    private Label emailLabel;
+    @FXML
+    private ImageView profileImage;
+
+    private File localPath = new File(System.getProperty("user.dir"));
 
     private Profile currentProfile;
     // init controller corresponding to this view
     private ProfileGeneralTabController controller = new ProfileGeneralTabController(this);
     private Boolean isOpenedByClinician;
 
+    public Label getEmailLabel() {
+        return emailLabel;
+    }
+
+    public void setEmailLabel(String string) {
+        this.emailLabel.setText(emailLabel.getText() + string);
+    }
+
+    public Label getPhoneLabel() {
+        return phoneLabel;
+    }
+
+    public void setPhoneLabel(String string) {
+        phoneLabel.setText(phoneLabel.getText() + string);
+    }
+
+    public Label getAddressLabel() {
+        return addressLabel;
+    }
+
+    public void setAddressLabel(String string) {
+        this.addressLabel.setText(addressLabel.getText() + string);
+    }
+
+    public Label getRegionLabel() {
+        return regionLabel;
+    }
+
+    public void setRegionLabel(String string) {
+        this.regionLabel.setText(regionLabel.getText() + string);
+    }
+
+    public Label getGivenNamesLabel() {
+        return givenNamesLabel;
+    }
+
+    public void setGivenNamesLabel(String string) {
+        this.givenNamesLabel.setText(givenNamesLabel.getText() + string);
+    }
+
+    public Label getLastNamesLabel() {
+        return lastNamesLabel;
+    }
+
+    public void setLastNamesLabel(String string) {
+        this.lastNamesLabel.setText(lastNamesLabel.getText() + string);
+    }
+
+    public Label getDobLabel() {
+        return dobLabel;
+    }
+
+    public void setDobLabel(String string) {
+        this.dobLabel.setText(dobLabel.getText() + string);
+    }
+
+    public Label getDodLabel() {
+        return dodLabel;
+    }
+
+    public void setDodLabel(String string) {
+        this.dodLabel.setText(dodLabel.getText() + string);
+    }
+
+    public Label getGenderLabel() {
+        return genderLabel;
+    }
+
+    public void setGenderLabel(String string) {
+        this.genderLabel.setText(genderLabel.getText() + string);
+    }
+
+    public Label getHeightLabel() {
+        return heightLabel;
+    }
+
+    public void setHeightLabel(String string) {
+        this.heightLabel.setText(heightLabel.getText() + string);
+    }
+
+    public Label getWeightLabel() {
+        return weightLabel;
+    }
+
+    public void setWeightLabel(String string) {
+        this.weightLabel.setText(weightLabel.getText() + string);
+    }
+
+    public Label getLabelGenderPreferred() {
+        return labelGenderPreferred;
+    }
+
+    public void setLabelGenderPreferred(String string) {
+        this.labelGenderPreferred.setText(labelGenderPreferred.getText() + string);
+    }
+
+    public Label getLabelPreferredName() {
+        return labelPreferredName;
+    }
+
+    public void setLabelPreferredName(String string) {
+        this.labelPreferredName.setText(labelPreferredName.getText() + string);
+    }
+
+    public Label getAgeLabel() {
+        return ageLabel;
+    }
+
+    public void setAgeLabel(String string) {
+        this.ageLabel.setText(ageLabel.getText() + string);
+    }
+
+    public Label getNhiLabel() {
+        return nhiLabel;
+    }
+
+    public void setNhiLabel(String string) {
+        this.nhiLabel.setText(nhiLabel.getText() + string);
+    }
+
+    public Label getCountryLabel() {
+        return countryLabel;
+    }
+
+    public void setCountryLabel(String string) {
+        this.countryLabel.setText(countryLabel.getText() + string);
+    }
+
+    public Label getCityLabel() {
+        return cityLabel;
+    }
+
+    public void setCityLabel(String string) {
+        this.cityLabel.setText(cityLabel.getText() + string);
+    }
+
+    public ImageView getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage() throws MalformedURLException {
+        //setting profile photo
+        if (currentProfile.getPictureName() != null) {
+            File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
+            if(!image.exists()){
+                image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            profileImage.setImage(new Image(image.toURI().toURL().toString()));
+        }
+    }
+
     private void setUpDetails() {
-        if (currentProfile.getGivenNames() != null) {
-            givenNamesLabel.setText(currentProfile.getGivenNames());
-        }
-        if (currentProfile.getPreferredName() != null) {
-            labelPreferredName
-                    .setText(currentProfile.getPreferredName());
-        }
-        if (currentProfile.getLastNames() != null) {
-            lastNamesLabel.setText(currentProfile.getLastNames());
-        }
-        if (currentProfile.getNhi() != null) {
-            nhiLabel.setText(currentProfile.getNhi());
-        }
-        if (currentProfile.getDateOfBirth() != null) {
-            dobLabel.setText(currentProfile.getDateOfBirth()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }
-        if (currentProfile.getDateOfDeath() != null) {
-            dodLabel.setText(currentProfile.getDateOfDeath()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        }
-        if (currentProfile.getGender() != null) {
-            genderLabel.setText(currentProfile.getGender());
-        }
-        if (currentProfile.getPreferredGender() != null) {
-            labelGenderPreferred.setText(currentProfile.getPreferredGender());
-        }
-        if (currentProfile.getHeight() != 0.0) {
-            heightLabel.setText(currentProfile.getHeight() + "cm");
-        }
-        if (currentProfile.getWeight() != 0.0) {
-            weightLabel.setText(currentProfile.getWeight() + "kg");
-        }
-        if (currentProfile.getPhone() != null) {
-            phoneLabel.setText(currentProfile.getPhone());
-        }
-        if (currentProfile.getEmail() != null) {
-            emailLabel.setText(currentProfile.getEmail());
-        }
-        if (currentProfile.getAddress() != null) {
-            addressLabel.setText(currentProfile.getAddress());
-        }
-        if (currentProfile.getRegion() != null) {
-            regionLabel.setText(currentProfile.getRegion());
-        }
-        if (currentProfile.getDateOfBirth() != null) {
-            ageLabel.setText(Integer.toString(currentProfile.getAge()));
-        }
+        controller.setCurrentProfile(currentProfile);
+        controller.setLabels();
     }
 
     @FXML
@@ -112,4 +228,5 @@ public class ProfileGeneralView extends CommonView {
         currentProfile = p;
         setUpDetails();
     }
+
 }

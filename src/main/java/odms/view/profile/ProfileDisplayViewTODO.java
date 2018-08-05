@@ -1,13 +1,10 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import odms.controller.CommonController;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
@@ -18,6 +15,7 @@ import static odms.controller.AlertController.invalidUsername;
 public class ProfileDisplayViewTODO extends CommonView {
 
     private Profile currentProfile;
+
     /**
      * Text for showing recent edits.
      */
@@ -29,8 +27,6 @@ public class ProfileDisplayViewTODO extends CommonView {
     private Label donorStatusLabel;
     @FXML
     private Label userIdLabel;
-    @FXML
-    private Button logoutButton;
     @FXML
     private Label receiverStatusLabel;
     @FXML
@@ -47,8 +43,11 @@ public class ProfileDisplayViewTODO extends CommonView {
     private Tab tabHistory;
     @FXML
     private Tab tabProcedures;
+    @FXML
+    private Button logoutButton;
 
     private Boolean isOpenedByClinician = false;
+
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
 
@@ -101,8 +100,6 @@ public class ProfileDisplayViewTODO extends CommonView {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
-
-
             if (currentProfile.getId() != null) {
                 userIdLabel
                         .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
@@ -140,8 +137,8 @@ public class ProfileDisplayViewTODO extends CommonView {
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
-        ProfileOrgansView profileOrgansView = loader.getController();
-        profileOrgansView.initialize(currentProfile);
+        OrgansView organsView = loader.getController();
+        organsView.initialize(currentProfile, isOpenedByClinician);
     }
 
     @FXML
@@ -150,7 +147,7 @@ public class ProfileDisplayViewTODO extends CommonView {
         try {
             tabMedical.setContent(loader.load());
             ProfileMedicalViewTODO profileMedicalViewTODO = loader.getController();
-            profileMedicalViewTODO.initialize(currentProfile);
+            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -186,7 +183,7 @@ public class ProfileDisplayViewTODO extends CommonView {
         try {
             tabMedicalHistory.setContent(loader.load());
             ProfileMedicalHistoryView profileMedicalHistoryView = loader.getController();
-            profileMedicalHistoryView.initialize(currentProfile);
+            profileMedicalHistoryView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -204,28 +201,19 @@ public class ProfileDisplayViewTODO extends CommonView {
         }
     }
 
-
     /**
      * Sets the current donor attributes to the labels on start up.
      *
      * @param profile to be used
+     * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      */
-    @FXML
-    public void initialize(Profile profile) {
+    public void initialize(Profile profile, Boolean isOpenedByClinician) {
+        this.isOpenedByClinician = isOpenedByClinician;
+        if (isOpenedByClinician) {
+            logoutButton.setVisible(false);
+        }
         currentProfile = profile;
         setPage(profile);
         onTabGeneralSelected();
-    }
-
-
-    /**
-     * sets the profile if it is being opened by a clinician If opened by clinician, set appropriate
-     * boolean and profile
-     *
-     * @param profile to be used
-     */
-    public void setProfileViaClinician(Profile profile) {
-        isOpenedByClinician = true;
-        currentProfile = profile;
     }
 }

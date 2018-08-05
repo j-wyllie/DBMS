@@ -7,11 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.profile.ProfileOrganEditController;
+import odms.controller.database.DAOFactory;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
@@ -21,7 +25,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-public class ProfileOrgansView extends CommonView {
+public class OrgansView extends CommonView {
     private Profile currentProfile;
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
@@ -38,17 +42,48 @@ public class ProfileOrgansView extends CommonView {
 
     @FXML
     private ListView<String> listViewReceiving;
+    @FXML
+    private Label donatingLabel;
+
+    @FXML
+    private Button donatingButton;
+
+    @FXML
+    private Label receivingLabel;
+
+    @FXML
+    private Button receivingButton;
+
+    @FXML
+    private GridPane organGridPane;
+
+
+
 
     private static OrganSelectEnum windowType;
 
-    public void initialize(Profile p) {
+    public void initialize(Profile p, Boolean isClinician) {
         currentProfile = p;
-        listViewDonating.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new ProfileOrgansView.HighlightedCell());
+        listViewDonating.setCellFactory(param -> new OrgansView.HighlightedCell());
+        listViewReceiving.setCellFactory(param -> new OrgansView.HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+
+        if(!isClinician) {
+            if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
+                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
+            } else {
+                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, true);
+            }
+            if (DAOFactory.getOrganDao().getRequired(currentProfile).isEmpty()) {
+                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
+            } else {
+                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
+            }
+        }
+
         populateOrganLists();
     }
 
@@ -70,7 +105,6 @@ public class ProfileOrgansView extends CommonView {
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
      * conflicting organs.
-     * <p>
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
@@ -88,8 +122,29 @@ public class ProfileOrgansView extends CommonView {
     }
 
     /**
-     * Refresh the ListViews to reflect changes made from the edit pane.
+     * Removes a specific list from view.
+     *
+     * @param list List to set invisible
+     * @param label Label to set invisible.
+     * @param button Button to set invisible.
      */
+
+    private void visibilityLists(ListView<String> list, Label label, Button button, Integer column, Boolean bool){
+        if(!bool) {
+            ColumnConstraints zero_width = new ColumnConstraints();
+            zero_width.setPrefWidth(0);
+            organGridPane.getColumnConstraints().set(column, zero_width);
+        }
+
+        list.setVisible(bool);
+        label.setVisible(bool);
+        button.setVisible(bool);
+    }
+
+
+        /**
+         * Refresh the ListViews to reflect changes made from the edit pane.
+         */
     private void refreshListViews() {
         populateOrganLists();
 
@@ -113,10 +168,10 @@ public class ProfileOrgansView extends CommonView {
         setWindowType(selectType);
 
         Scene scene = new Scene(fxmlLoader.load());
-        //todo replace with view
-        ProfileOrganEditView view = fxmlLoader.getController();
+
+        OrganEditView view = fxmlLoader.getController();
         view.setWindowType(windowType);
-        //controller.initialize(); don't think we need this
+        view.initialize(currentProfile);
 
         Stage stage = new Stage();
         stage.setTitle(selectType.toString());

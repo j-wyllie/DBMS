@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,8 +50,8 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             if (value.getDrugA().equalsIgnoreCase(drugA)
                     && value.getDrugB().equalsIgnoreCase(drugB)) {
 
-                if (value.getDateTimeExpired().isBefore(now())
-                    || value.getDateTimeExpired().isEqual(now())) {
+                if (value.getDateTimeExpired().isBefore(now()) ||
+                        value.getDateTimeExpired().isEqual(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
                     interactionMap.replace((Integer) interactionKey, value);
                 }
@@ -65,7 +64,6 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 interactionMap.put(interactionMap.size(), newInteraction);
                 save();
             }
-
         }
         return newInteraction;
     }
@@ -140,23 +138,28 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 if (response.toString().equals(SERVER_ERROR)) {
                     interaction = new Interaction(null, null, null, null, null, null);
                 } else {
-                    JsonParser parser = new JsonParser();
-                    JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
-                    Map<String, List<String>> ageEffects = parseListInteractions(results
-                            .get("age_interaction"));
+                    try {
+                        JsonParser parser = new JsonParser();
+                        JsonObject results = parser.parse(response.toString()).getAsJsonObject();
 
-                    Map<String, Integer> coexistingConditions = parseAtomicInteractions(results
-                            .get("co_existing_conditions"));
+                        Map<String, List<String>> ageEffects = parseListInteractions(results
+                                .get("age_interaction"));
 
-                    Map<String, List<String>> durationInteractions = parseListInteractions(results
-                            .get("duration_interaction"));
+                        Map<String, Integer> coexistingConditions = parseAtomicInteractions(results
+                                .get("co_existing_conditions"));
 
-                    Map<String, List<String>> genderInteractions = parseListInteractions(results
-                            .get("gender_interaction"));
+                        Map<String, List<String>> durationInteractions = parseListInteractions(results
+                                .get("duration_interaction"));
 
-                    interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
-                            durationInteractions, genderInteractions);
+                        Map<String, List<String>> genderInteractions = parseListInteractions(results
+                                .get("gender_interaction"));
+
+                        interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
+                                durationInteractions, genderInteractions);
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
             }
         }

@@ -21,19 +21,20 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.controller.profile.ProfileOrganEditController;
+import odms.controller.profile.OrganEditController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
-import odms.view.CommonView;
 
-public class ProfileOrganEditView extends CommonView {
-    protected ObservableList<String> observableListOrgansAvailable;
-    private Profile currentProfile;
-    private ProfileOrganEditController controller = new ProfileOrganEditController(this);
-
+/**
+ * Control Organ view tab pane.
+ */
+public class OrganEditView extends OrganCommonView {
     protected ObservableList<String> observableListOrgansSelected = FXCollections
-            .observableArrayList();
+        .observableArrayList();
+    private Profile currentProfile;
+    private OrganEditController controller = new OrganEditController(this);
+
     @FXML
     private ListView<String> viewOrgansAvailable;
     @FXML
@@ -46,6 +47,7 @@ public class ProfileOrganEditView extends CommonView {
     private Label lblBanner;
     @FXML
     private Label lblSelected;
+
 
     private OrganSelectEnum windowType;
 
@@ -65,15 +67,21 @@ public class ProfileOrganEditView extends CommonView {
         return OrganEnum.stringListToOrganSet(correctedOrganStrings);
     }
 
-
     public void setWindowType(OrganSelectEnum windowType) {
         this.windowType = windowType;
     }
-    public OrganSelectEnum getWindowType() {
+
+    private OrganSelectEnum getWindowType() {
         return windowType;
     }
-    public void initialize(Profile p) {
-        currentProfile = p;
+
+    /**
+     * Initialize the current view instance and populate organ lists.
+     *
+     * @param profile the profile to set on view instance
+     */
+    public void initialize(Profile profile) {
+        currentProfile = profile;
         lblBanner.setText(getWindowType().toString());
 
         if (currentProfile != null) {
@@ -93,6 +101,8 @@ public class ProfileOrganEditView extends CommonView {
     /**
      * Populate the ListView with the organs that are available and that are not in the required
      * list.
+     *
+     * @param removeStrings organ strings to remove
      */
     protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
         observableListOrgansAvailable = FXCollections.observableArrayList();
@@ -137,21 +147,35 @@ public class ProfileOrganEditView extends CommonView {
                 lblSelected.setText("Required");
                 organs = currentProfile.getOrgansRequired();
                 break;
+            default:
+                // noop
         }
         populateOrganList(observableListOrgansSelected, organs);
     }
 
     /**
-     * Button to perform moving the organ from one ListView to the other ListView
+     * Button to perform moving the organ from one ListView to the other ListView.
+     *
+     * @param event the JavaFX event.
      */
     private void handleBtnOrganSwitchClicked(Event event) {
         switchOrgans(event);
     }
 
+    /**
+     * Handle switching organs between views.
+     *
+     * @param event the JavaFX event.
+     */
     private void handleListOrgansAvailableClick(MouseEvent event) {
         handleOrgansClick(event, viewOrgansSelected.getSelectionModel());
     }
 
+    /**
+     * Handle switching organs between views.
+     *
+     * @param event the JavaFX event.
+     */
     private void handleListOrgansRequiredClick(MouseEvent event) {
         handleOrgansClick(event, viewOrgansAvailable.getSelectionModel());
     }
@@ -197,6 +221,8 @@ public class ProfileOrganEditView extends CommonView {
             case REQUIRED:
                 controller.caseRequired();
                 break;
+            default:
+                // noop
         }
 
         Stage stage = (Stage) btnSave.getScene().getWindow();
@@ -204,7 +230,7 @@ public class ProfileOrganEditView extends CommonView {
     }
 
     /**
-     * Refresh the listViews
+     * Refresh the listViews.
      */
     private void refreshListViews() {
         Collections.sort(observableListOrgansSelected);
@@ -216,6 +242,8 @@ public class ProfileOrganEditView extends CommonView {
 
     /**
      * Take the selected organ from the ListView and move it to the other ListView.
+     *
+     * @param event the JavaFX event.
      */
     private void switchOrgans(Event event) {
         if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
@@ -235,6 +263,7 @@ public class ProfileOrganEditView extends CommonView {
     /**
      * Launch pane to add reasoning for organ removal.
      *
+     * @param event the JavaFX event
      * @param organ the organ to specify reason for
      */
     private void giveReasonForRemoval(Event event, String organ) {
@@ -243,9 +272,8 @@ public class ProfileOrganEditView extends CommonView {
 
         try {
             Scene scene = new Scene(fxmlLoader.load());
-            //todo replace with view
-//            ProfileOrganRemovalController controller = fxmlLoader.getController(); //don't think this is necessary
-//            controller.initialize(organ, this.currentProfile, this);
+            OrganRemovalView removalView = fxmlLoader.getController();
+            removalView.initialize(organ, this.currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);

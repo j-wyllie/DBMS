@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.controller.CommonController;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.profile.Condition;
@@ -111,7 +112,6 @@ public class ProfileConditionController {
                 } else {
                     condition.setChronicText("");
                 }
-
             }
         }
     }
@@ -130,7 +130,7 @@ public class ProfileConditionController {
                 if (!condition.getChronic()) {
                     condition.setIsCured(!condition.getCured());
                 } else {
-                    System.out.println("condition must be unmarked as Chronic before being Cured!");
+                    throw new IllegalArgumentException("Can not cure if Chronic");
                 }
 
                 if (condition.getCured()) {

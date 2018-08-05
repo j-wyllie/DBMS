@@ -244,7 +244,6 @@ public class CommonView {
      */
     @FXML
     protected void showNotification(String editedField, ActionEvent event) throws IOException {
-        //todo modify this method by making it common view possibly
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
@@ -273,10 +272,8 @@ public class CommonView {
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            //todo replace with standardised method and view
             ProfileDisplayViewTODO controller = fxmlLoader.getController();
-            controller.setProfileViaClinician(donor);
-            controller.initialize(donor);
+            controller.initialize(donor, true);
 
             Stage stage = new Stage();
             stage.setTitle(donor.getFullName() + "'s profile");
@@ -315,20 +312,6 @@ public class CommonView {
             pictureText.setText(chooser.getSelectedFile().getName());
         }
         return chooser.getSelectedFile();
-    }
-
-    /**
-     * returns a string that is the file extension of given file
-     *
-     * @param file File to retrieve extension from
-     */
-    protected String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return "";
-        }
     }
 
     /**
@@ -376,7 +359,7 @@ public class CommonView {
     /**
      * closes all open profile windows that the user has opened.
      */
-    public static void closeAllOpenProfiles() {
+    protected static void closeAllOpenProfiles() {
         for (Stage stage : openProfileStages) {
             if (stage.isShowing()) {
                 stage.close();
