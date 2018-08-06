@@ -2,12 +2,12 @@ package odms.controller.data.database;
 
 import odms.controller.database.DatabaseConnection;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
 
 public abstract class MySqlCommonTests {
 
-    @Before
-    public void configureDatabase() {
+    @BeforeClass
+    public static void configureDatabase() {
         DatabaseConnection.setConfig("/config/db_test.config");
     }
 
@@ -15,5 +15,6 @@ public abstract class MySqlCommonTests {
     public void resetDb() {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         instance.resetTestDb();
+        DatabaseConnection.setConfig("/config/db_test.config");
     }
 }
