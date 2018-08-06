@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MySqlProfileDaoTest {
+public class MySqlProfileDaoTest extends MySqlCommonTests {
     private MySqlProfileDAO mySqlProfileDAO;
 
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,
@@ -31,7 +31,6 @@ public class MySqlProfileDaoTest {
      */
     @Before
     public void setUp() {
-        DatabaseConnection.setConfig("/config/db_test.config");
         mySqlProfileDAO = new MySqlProfileDAO();
     }
 
@@ -65,14 +64,5 @@ public class MySqlProfileDaoTest {
         mySqlProfileDAO.add(testProfileLong0);
         boolean isUnique = mySqlProfileDAO.isUniqueUsername(testProfileLong0.getUsername());
         Assert.assertEquals(false, isUnique);
-    }
-
-    /**
-     * Sets the database back to the production database
-     */
-    @After
-    public void cleanUp() {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        connectionInstance.resetTestDb();
     }
 }

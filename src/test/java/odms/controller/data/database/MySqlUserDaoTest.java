@@ -16,29 +16,31 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MySqlUserDaoTest {
+public class MySqlUserDaoTest extends MySqlCommonTests {
     MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private User testUser0 = new User(1, "Username", "password", "Tim Hamblin", UserType.ADMIN, "69 Yeetville", "Yeetus",
             LocalDateTime.now(), LocalDateTime.now());
-    private User testUser1 = new User(UserType.ADMIN, "Brooke Radsfdsa", "Wellington");
+    private User testUser1 = new User(1, "Pleb", "password", "Brooke rasdasdk", UserType.ADMIN, "68 Yeetville", "Yeetskeet",
+            LocalDateTime.now(), LocalDateTime.now());
 
     @Before
-    public void setUp() {
-        DatabaseConnection.setConfig("/config/db_test.config");
+    public void setUp() throws SQLException, UserNotFoundException {
+        mySqlUserDAO.add(testUser0);
+        testUser0 = mySqlUserDAO.get("username");
+
+
     }
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
-        mySqlUserDAO.add(testUser0);
+        mySqlUserDAO.add(testUser1);
 
-        assertEquals(testUser0.getUsername(), mySqlUserDAO.get("Username").getUsername());
+        assertEquals(testUser1.getUsername(), mySqlUserDAO.get("Pleb").getUsername());
     }
 
     @Test (expected = UserNotFoundException.class)
     public void testGetInvalidUser() throws SQLException, UserNotFoundException {
-        mySqlUserDAO.add(testUser0);
-
         assertEquals(testUser0.getUsername(), mySqlUserDAO.get("Yeet").getUsername());
     }
 
@@ -46,21 +48,17 @@ public class MySqlUserDaoTest {
     public void testGetAll() throws SQLException {
         mySqlUserDAO.add(testUser1);
 
-        assertEquals(1, mySqlUserDAO.getAll().size());
+        assertEquals(2, mySqlUserDAO.getAll().size());
     }
 
     @Test
-    public void testRemove() throws SQLException, UserNotFoundException {
-        mySqlUserDAO.add(testUser0);
-        testUser0 = mySqlUserDAO.get("username");
+    public void testRemove() throws SQLException {
         mySqlUserDAO.remove(testUser0);
         assertEquals(0, mySqlUserDAO.getAll().size());
     }
 
     @Test
     public void testUpdate() throws SQLException, UserNotFoundException {
-        mySqlUserDAO.add(testUser0);
-        testUser0 = mySqlUserDAO.get("username");
         testUser0.setName("Nanny");
         mySqlUserDAO.update(testUser0);
 
@@ -69,22 +67,11 @@ public class MySqlUserDaoTest {
 
     @Test
     public void testIsUniqueUsernameFalse() throws SQLException {
-        mySqlUserDAO.add(testUser0);
         assertFalse(mySqlUserDAO.isUniqueUsername("ree"));
     }
 
     @Test
     public void testIsUniqueUsernameTrue() throws SQLException {
-        mySqlUserDAO.add(testUser0);
         assertTrue(mySqlUserDAO.isUniqueUsername("Username"));
-    }
-
-    /**
-     * Sets the database back to the production database
-     */
-    @After
-    public void cleanUp() {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        connectionInstance.resetTestDb();
     }
 }

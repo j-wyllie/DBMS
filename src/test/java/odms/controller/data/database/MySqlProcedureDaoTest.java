@@ -14,11 +14,10 @@ import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MySqlProcedureDaoTest {
+public class MySqlProcedureDaoTest extends MySqlCommonTests {
     private MySqlProcedureDAO mySqlProcedureDAO;
     private MySqlProfileDAO mySqlProfileDAO;
 
@@ -31,7 +30,6 @@ public class MySqlProcedureDaoTest {
      */
     @Before
     public void setUp() throws SQLException {
-        DatabaseConnection.setConfig("/config/db_test.config");
         mySqlProcedureDAO = new MySqlProcedureDAO();
         mySqlProfileDAO = new MySqlProfileDAO();
 
@@ -41,18 +39,12 @@ public class MySqlProcedureDaoTest {
 
     }
 
-    /**
-     * Tests adding and getting a procedure by id
-     */
     @Test
     public void testAddProcedure() {
         mySqlProcedureDAO.add(testProfile0, testProcedureNotPending);
         assertEquals(1, mySqlProcedureDAO.getAll(testProfile0, false).size());
     }
 
-    /**
-     * Tests adding an affected organ to a procedure
-     */
     @Test
     public void testAddAffectedOrgan() {
         Procedure procedure= mySqlProcedureDAO.getAll(testProfile0, true).get(0);
@@ -61,9 +53,6 @@ public class MySqlProcedureDaoTest {
         assertTrue(affectedOrgans.contains(OrganEnum.LIVER));
     }
 
-    /**
-     * Tests removing an affected organ to a procedure
-     */
     @Test
     public void testRemoveAffectedOrgans() {
         Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
@@ -74,9 +63,6 @@ public class MySqlProcedureDaoTest {
         assertEquals(0, affectedOrgans.size());
     }
 
-    /**
-     * Tests removing a procedure
-     */
     @Test
     public void testRemove() {
         mySqlProcedureDAO.remove(mySqlProcedureDAO.getAll(testProfile0, true).get(0));
@@ -92,14 +78,5 @@ public class MySqlProcedureDaoTest {
         mySqlProcedureDAO.update(testProcedure);
         assertEquals(testProcedure.getSummary(),
                 mySqlProcedureDAO.getAll(testProfile0, true).get(0).getSummary());
-    }
-
-    /**
-     * Sets the database back to the production database
-     */
-    @After
-    public void cleanUp() {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        connectionInstance.resetTestDb();
     }
 }
