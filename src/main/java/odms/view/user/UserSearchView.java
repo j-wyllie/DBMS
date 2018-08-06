@@ -83,7 +83,6 @@ public class UserSearchView extends CommonView {
     private Button buttonShowNext;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
-    private Profile selectedDonor;
 
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfileView parentView;
@@ -201,6 +200,8 @@ public class UserSearchView extends CommonView {
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
             labelResultCount.setText("0 results found");
+            searchTable.setPlaceholder(new Label(
+                    "0 profiles found"));
             buttonShowAll.setVisible(false);
             buttonShowNext.setVisible(false);
         } else {
