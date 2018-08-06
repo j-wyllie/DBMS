@@ -1,5 +1,6 @@
 package odms.controller.database;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -334,7 +335,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public boolean isUniqueUsername(String username) throws SQLException {
-        String query = "select * from profiles where Username = ?;";
+        String query = "select Username from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -342,13 +343,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             stmt.setString(1, username);
             ResultSet result = stmt.executeQuery();
-
             if (result.last()) {
                 result.beforeFirst();
                 return (result.next());
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();

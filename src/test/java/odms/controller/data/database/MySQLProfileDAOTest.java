@@ -60,12 +60,20 @@ public class MySQLProfileDAOTest {
         Assert.assertEquals(allProfiles.size(), 0);
     }
 
+    @Test
+    public void isUniqueUsername() throws SQLException {
+        mySqlProfileDAO.add(testProfileLong0);
+        System.out.println(testProfileLong0.getUsername());
+        boolean isUnique = mySqlProfileDAO.isUniqueUsername(testProfileLong0.getUsername());
+        Assert.assertEquals(false, isUnique);
+    }
+
     /**
      * Sets the database back to the production database
      */
-    @After
-    public void cleanUp() {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        connectionInstance.resetTestDb();
-    }
+//    @After
+//    public void cleanUp() {
+//        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+//        connectionInstance.resetTestDb();
+//    }
 }
