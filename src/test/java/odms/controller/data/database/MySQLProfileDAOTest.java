@@ -2,7 +2,6 @@ package odms.controller.data.database;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import odms.controller.database.DatabaseConnection;
 import odms.controller.database.MySqlProfileDAO;
@@ -27,44 +26,30 @@ public class MySQLProfileDAOTest {
         mySqlProfileDAO = new MySqlProfileDAO();
     }
 
-    /**
-     * Tests adding and getting a profile by id
-     */
     @Test
-    public void testAddGet() {
-        try {
-            mySqlProfileDAO.add(testProfile0);
-            Profile outProfile = mySqlProfileDAO.get("ABC1234");
-            Assert.assertEquals(testProfile0.getNhi(), outProfile.getNhi());
-        } catch (SQLException e) {
-            assert(false);
-        }
-
+    public void testAddGet() throws SQLException {
+        mySqlProfileDAO.add(testProfile0);
+        Profile outProfile = mySqlProfileDAO.get("ABC1234");
+        Assert.assertEquals(testProfile0.getNhi(), outProfile.getNhi());
     }
 
-//    /**
-//     * Tests adding multiple profiles and the getAll function
-//     */
-//    @Test
-//    public void testGetAll() {
-//        mySqlProfileDAO.add(testProfile0);
-//        List<Profile> allInProfiles = new ArrayList<>();
-//        allInProfiles.add(testProfile0);
-//        allInProfiles.add(testProfile1);
-//
-//        List<Profile> allOutProfiles = mySqlProfileDAO.getAll();
-//        Assert.assertEquals(allOutProfiles, allInProfiles);
-//    }
-//
-//    /**
-//     * Tests removing a profile
-//     */
-//    @Test
-//    public void testRemove() {
-//        mySqlProfileDAO.remove(testProfile0);
-//        List<Profile> allProfiles = mySqlProfileDAO.getAll();
-//        Assert.assertEquals(allProfiles.get(0), testProfile1);
-//    }
+    @Test
+    public void testGetAll() throws SQLException {
+        mySqlProfileDAO.add(testProfile0);
+        mySqlProfileDAO.add(testProfile1);
+
+        List<Profile> allOutProfiles = mySqlProfileDAO.getAll();
+        Assert.assertEquals(allOutProfiles.size(), 2);
+    }
+
+    @Test
+    public void testRemove() throws SQLException {
+        mySqlProfileDAO.add(testProfile0);
+        Profile testProfile0 = mySqlProfileDAO.get("ABC1234");
+        mySqlProfileDAO.remove(testProfile0);
+        List<Profile> allProfiles = mySqlProfileDAO.getAll();
+        Assert.assertEquals(allProfiles.size(), 0);
+    }
 
     /**
      * Sets the database back to the production database
