@@ -519,9 +519,12 @@ public class MySqlProfileDAO implements ProfileDAO {
                     index++;
                 }
                 else {
-                    query += " and o.Organ = '" + organ.getNamePlain() + "'";
+                    query += " and (o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 }
+            }
+            if (index > 0) {
+                query += ")";
             }
         }
         query += " where (p.GivenNames like ? OR p.LastNames like ?) and p.Region like ?";
@@ -592,10 +595,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 index++;
             }
 
-            System.out.println(stmt);
-
             ResultSet allProfiles = stmt.executeQuery();
-            int size = 0;
+            int size;
             allProfiles.last();
             size = allProfiles.getRow();
             allProfiles.beforeFirst();
@@ -612,8 +613,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
-            System.out.println(stmt);
-
         }
         catch (Exception e) {
             e.printStackTrace();

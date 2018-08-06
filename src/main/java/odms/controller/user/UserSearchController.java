@@ -61,8 +61,6 @@ public class UserSearchController {
         }
 
         return profileSearchResults;
-
-
     }
 
 

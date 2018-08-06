@@ -83,7 +83,7 @@ public class MySqlUserDAO implements UserDAO {
     public User get(String username) throws UserNotFoundException, SQLException {
         String query = "select * from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        User user = null;
+        User user;
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -164,10 +164,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(6, user.getRegion());
             stmt.setString(7, LocalDateTime.now().toString());
             stmt.setString(8, LocalDateTime.now().toString());
-            stmt.setBoolean(9, user.getDefault());
-
-            System.out.println(stmt.executeUpdate());
-        }
+            stmt.setBoolean(9, user.getDefault()); }
         catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -246,7 +243,6 @@ public class MySqlUserDAO implements UserDAO {
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
@@ -256,7 +252,6 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
             stmt.setInt(9, user.getStaffID());
-
 
             stmt.executeUpdate();
         }
