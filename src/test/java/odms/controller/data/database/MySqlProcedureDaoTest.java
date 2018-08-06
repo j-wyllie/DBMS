@@ -1,5 +1,6 @@
 package odms.controller.data.database;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
@@ -22,7 +23,8 @@ public class MySqlProcedureDaoTest {
     private MySqlProfileDAO mySqlProfileDAO;
 
     private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
-    private Procedure testProcedure0 = new Procedure("Head Amputation", LocalDate.of(2020, 2, 22), "Head will be removed from neck. Fatal Procedure");
+    private Procedure testProcedurePending = new Procedure("Head Amputation", LocalDate.of(2020, 2, 22), "Head will be removed from neck. Fatal Procedure");
+    private Procedure testProcedureNotPending = new Procedure("Head Amputation", LocalDate.of(2001, 2, 22), "Head will be removed from neck. Fatal Procedure");
 
     /**
      * Sets the Database to the test database and Initialises the DBO
@@ -35,6 +37,8 @@ public class MySqlProcedureDaoTest {
 
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
+        mySqlProcedureDAO.add(testProfile0, testProcedurePending);
+
     }
 
     /**
@@ -42,9 +46,8 @@ public class MySqlProcedureDaoTest {
      */
     @Test
     public void testAddProcedure() {
-        mySqlProcedureDAO.add(testProfile0, testProcedure0);
-
-        assertEquals(1, mySqlProcedureDAO.getAll(testProfile0, true).size());
+        mySqlProcedureDAO.add(testProfile0, testProcedureNotPending);
+        assertEquals(1, mySqlProcedureDAO.getAll(testProfile0, false).size());
     }
 
     /**
@@ -52,10 +55,10 @@ public class MySqlProcedureDaoTest {
      */
     @Test
     public void testAddAffectedOrgan() {
-        mySqlProcedureDAO.addAffectedOrgan(testProcedure0, OrganEnum.LIVER);
-        int procedureId = testProcedure0.getId();
-        List<OrganEnum> affectedOrgans = mySqlProcedureDAO.getAffectedOrgans(procedureId);
-        Assert.assertTrue(affectedOrgans.contains(OrganEnum.LIVER));
+        Procedure procedure= mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        mySqlProcedureDAO.addAffectedOrgan(procedure, OrganEnum.LIVER);
+        List<OrganEnum> affectedOrgans = mySqlProcedureDAO.getAffectedOrgans(procedure.getId());
+        assertTrue(affectedOrgans.contains(OrganEnum.LIVER));
     }
 
     /**
@@ -63,10 +66,12 @@ public class MySqlProcedureDaoTest {
      */
     @Test
     public void testRemoveAffectedOrgans() {
-        mySqlProcedureDAO.removeAffectedOrgan(testProcedure0, OrganEnum.LIVER);
-        int procedureId = testProcedure0.getId();
+        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        mySqlProcedureDAO.addAffectedOrgan(testProcedure, OrganEnum.LIVER);
+        mySqlProcedureDAO.removeAffectedOrgan(testProcedure, OrganEnum.LIVER);
+        int procedureId = testProcedure.getId();
         List<OrganEnum> affectedOrgans = mySqlProcedureDAO.getAffectedOrgans(procedureId);
-        Assert.assertTrue(affectedOrgans.isEmpty());
+        assertEquals(0, affectedOrgans.size());
     }
 
     /**
@@ -74,10 +79,19 @@ public class MySqlProcedureDaoTest {
      */
     @Test
     public void testRemove() {
-        mySqlProcedureDAO.remove(testProcedure0);
+        mySqlProcedureDAO.remove(mySqlProcedureDAO.getAll(testProfile0, true).get(0));
 
         List<Procedure> allProcedures = mySqlProcedureDAO.getAll(testProfile0, true);
-        Assert.assertTrue(allProcedures.isEmpty());
+        assertTrue(allProcedures.isEmpty());
+    }
+
+    @Test
+    public void testUpdate() {
+        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        testProcedure.setSummary("gg no re");
+        mySqlProcedureDAO.update(testProcedure);
+        assertEquals(testProcedure.getSummary(),
+                mySqlProcedureDAO.getAll(testProfile0, true).get(0).getSummary());
     }
 
     /**
@@ -85,6 +99,7 @@ public class MySqlProcedureDaoTest {
      */
     @After
     public void cleanUp() {
-        DatabaseConnection.setConfig("/src/config/db.config");
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        connectionInstance.resetTestDb();
     }
 }

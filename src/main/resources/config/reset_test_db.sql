@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 06, 2018 at 05:21 AM
+-- Generation Time: Aug 06, 2018 at 10:14 PM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Summary` varchar(100) DEFAULT NULL,
+  `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` tinyint(1) DEFAULT NULL,
   `Previous` tinyint(1) DEFAULT NULL
