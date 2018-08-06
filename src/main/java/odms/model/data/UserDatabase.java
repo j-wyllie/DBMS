@@ -11,7 +11,7 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 
 public class UserDatabase {
 

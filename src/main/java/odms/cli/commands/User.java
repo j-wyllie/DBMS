@@ -4,7 +4,7 @@ import odms.cli.CommandUtils;
 import odms.controller.history.HistoryController;
 import odms.model.data.UserDatabase;
 import odms.model.history.History;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

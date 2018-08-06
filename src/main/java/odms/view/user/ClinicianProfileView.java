@@ -1,9 +1,6 @@
 package odms.view.user;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -12,11 +9,10 @@ import javafx.stage.Stage;
 import odms.controller.user.UserDataManagementController;
 import odms.controller.user.UserProfileController;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 import odms.view.CommonView;
 
 import java.io.IOException;
-import java.util.*;
 
 public class ClinicianProfileView extends CommonView {
     private User currentUser;
