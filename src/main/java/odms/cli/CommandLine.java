@@ -186,17 +186,17 @@ public class CommandLine implements Runnable {
 //                    UserDataIO.saveUsers(currentDatabaseUsers, filepath);
 //                }
 //                break;
-
-            case IMPORT:
-                // Import a file of profiles.
-                if (input.size() == 2) {
-                    String filepath = input.get(1);
-                    currentDatabase = ProfileDataIO.loadData(filepath);
-                } else {
-                    System.out.println("Error: Invalid arguments. Expected: 1, " +
-                            "Found: " + (input.size() - 1));
-                }
-                break;
+//
+//            case IMPORT:
+//                // Import a file of profiles.
+//                if (input.size() == 2) {
+//                    String filepath = input.get(1);
+//                    currentDatabase = ProfileDataIO.loadData(filepath);
+//                } else {
+//                    System.out.println("Error: Invalid arguments. Expected: 1, " +
+//                            "Found: " + (input.size() - 1));
+//                }
+//                break;
 
             case PROFILECREATE:
                 // Create a new profile.
@@ -212,7 +212,7 @@ public class CommandLine implements Runnable {
             case PROFILEDELETE:
                 // Delete a profile.
                 Profile.deleteProfileBySearch(rawInput);
-                System.out.println("profile(s) successfully deleted.");
+                System.out.println("Profile(s) successfully deleted.");
                 break;
 
             case PROFILEDONATIONS:
@@ -295,6 +295,12 @@ public class CommandLine implements Runnable {
             case SQLREADONLY:
                 // Execute read-only query.
                 CommandUtils.executeDatabaseRead(rawInput);
+                break;
+
+            case RESET:
+                break;
+
+            case RESAMPLE:
                 break;
 //
 //            case UNDO:

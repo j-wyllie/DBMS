@@ -45,7 +45,9 @@ public enum Commands {
     ORGANDONATE,
 
     // Sql Commands
-    SQLREADONLY;
+    SQLREADONLY,
+    RESET,
+    RESAMPLE;
 
 
     public static ArgumentCompleter commandAutoCompletion() {
@@ -69,7 +71,9 @@ public enum Commands {
                 new StringsCompleter("print all users"),
                 new StringsCompleter("print clinicians"),
 
-                new StringsCompleter("db-read")
+                new StringsCompleter("db-read"),
+                new StringsCompleter("reset"),
+                new StringsCompleter("resample")
         );
     }
 }
