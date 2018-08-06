@@ -8,13 +8,13 @@ public abstract class MySqlCommonTests {
 
     @BeforeClass
     public static void configureDatabase() {
-        DatabaseConnection.setConfig("/config/db_test.config");
+        DatabaseConnection.setTestDb();
     }
 
     @After
     public void resetDb() {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         instance.resetTestDb();
-        DatabaseConnection.setConfig("/config/db_test.config");
+        DatabaseConnection.setTestDb();
     }
 }
