@@ -1,18 +1,25 @@
 package odms.view.user;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.user.UserSearchController;
@@ -21,8 +28,6 @@ import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
-
-import java.util.*;
 
 public class UserSearchView extends CommonView {
 
@@ -103,7 +108,10 @@ public class UserSearchView extends CommonView {
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
+        donorReceiverColumn.setCellValueFactory(p -> {
+            Profile x = p.getValue();
+            return controller.donorReceiverProperty(x);
+        });
         searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
