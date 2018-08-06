@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MySQLProfileDAOTest {
+public class MySqlProfileDaoTest {
     private MySqlProfileDAO mySqlProfileDAO;
 
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,
