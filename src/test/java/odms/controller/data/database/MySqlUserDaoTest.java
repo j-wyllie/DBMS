@@ -28,8 +28,6 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     public void setUp() throws SQLException, UserNotFoundException {
         mySqlUserDAO.add(testUser0);
         testUser0 = mySqlUserDAO.get("username");
-
-
     }
 
     @Test
