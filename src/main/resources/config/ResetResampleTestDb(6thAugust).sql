@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `affected_organs` (
   `Id` int(11) NOT NULL,
   `ProcedureId` int(11) NOT NULL,
   `Organ` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
