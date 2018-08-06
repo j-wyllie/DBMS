@@ -21,7 +21,6 @@ public class UserConsoleTabView {
         // Initialize command line GUI
         commandGUI = new CommandGUI(displayTextArea);
         controller.setupConsole(commandGUI);
-
     }
 
 }

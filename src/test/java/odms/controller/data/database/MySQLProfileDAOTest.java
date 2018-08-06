@@ -2,6 +2,7 @@ package odms.controller.data.database;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import odms.controller.database.DatabaseConnection;
 import odms.controller.database.MySqlProfileDAO;
@@ -14,6 +15,14 @@ import org.junit.Test;
 public class MySQLProfileDAOTest {
     private MySqlProfileDAO mySqlProfileDAO;
 
+    private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,
+    "Jack", "Hay", LocalDate.of(1997, 11, 14), null, "male",
+    180d, 81d, "O-", true, null, 133, 80, "123 fake street", "Canterbury", "314324134",
+    "jha56@uclive.ac.nz", LocalDateTime.now(), LocalDateTime.now());
+    private Profile testProfileLong1 = new Profile(1, "HSD7892", "FaZe_Josh", true, true,
+            "Josh", "Wyllie", LocalDate.of(1997, 7, 18), null, "male",
+            182d, 79d, "O+", false, null, 144, 85, "321 imaginary place", "Canterbury", "314352341",
+            "jwy31@uclive.ac.nz", LocalDateTime.now(), LocalDateTime.now());
     private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
     private Profile testProfile1 = new Profile("Jack", "Hay", LocalDate.of(1998, 2, 27), "CBA43211");
 
@@ -28,9 +37,9 @@ public class MySQLProfileDAOTest {
 
     @Test
     public void testAddGet() throws SQLException {
-        mySqlProfileDAO.add(testProfile0);
-        Profile outProfile = mySqlProfileDAO.get("ABC1234");
-        Assert.assertEquals(testProfile0.getNhi(), outProfile.getNhi());
+        mySqlProfileDAO.add(testProfileLong0);
+        Profile outProfile = mySqlProfileDAO.get("DSF5422");
+        Assert.assertEquals(testProfileLong0.getNhi(), outProfile.getNhi());
     }
 
     @Test
