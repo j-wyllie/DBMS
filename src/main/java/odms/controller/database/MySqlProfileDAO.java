@@ -343,8 +343,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, username);
             ResultSet result = stmt.executeQuery();
 
-            if (result.getFetchSize() == 0) {
-                return true;
+            if (result.last()) {
+                result.beforeFirst();
+                return (result.next());
             }
         }
         catch (SQLException e) {
