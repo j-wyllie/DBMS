@@ -51,8 +51,7 @@ public class CommandUtils {
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     /**
-     * Performs checks over the input to match a valid command
-     * <p>
+     * Performs checks over the input to match a valid command.
      * If nothing is matched than an invalid command has been used.
      *
      * @param cmd      the command being validated
