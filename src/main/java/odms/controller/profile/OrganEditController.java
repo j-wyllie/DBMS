@@ -1,17 +1,17 @@
 package odms.controller.profile;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.OrganDAO;
+import odms.controller.database.ProfileDAO;
 import odms.controller.history.HistoryController;
 import odms.model.enums.OrganEnum;
 import odms.model.history.History;
 import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
 import odms.view.profile.OrganEditView;
 
 /**
@@ -125,6 +125,7 @@ public class OrganEditController extends CommonController {
         } catch (OrganConflictException e) {
             AlertController.invalidOrgan(e.getOrgan());
         }
+        view.getCurrentProfile().updatedDonorStatus();
     }
 
     /**
@@ -202,6 +203,7 @@ public class OrganEditController extends CommonController {
         );
         addOrgansRequired(view.getOrgansAdded());
         removeOrgansRequired(organsRemoved);
+        view.getCurrentProfile().updatedReceiverStatus();
     }
 
     /**
@@ -278,5 +280,13 @@ public class OrganEditController extends CommonController {
         }
     }
 
+    public void saveOrgans() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        try {
+            database.update(view.getCurrentProfile());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

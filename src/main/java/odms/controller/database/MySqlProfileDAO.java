@@ -613,6 +613,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
+            System.out.println(stmt);
+
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -34,27 +34,6 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
     }
 
     /**
-     * Returns the string value to populate the Donor/Receiver column in the clinician search
-     * table.
-     *
-     * @return a string depicting whether to profile is a donor, receiver, or both.
-     */
-    public SimpleStringProperty donorReceiverProperty(Profile profile) {
-        SimpleStringProperty result = new SimpleStringProperty();
-        if ((profile.getDonor() != null) && profile.getDonor()) {
-            if ((profile.getReceiver() != null) && profile.getReceiver()) {
-                result.setValue("Donor/Receiver");
-            } else {
-                result.setValue("Donor");
-            }
-        } else if ((profile.getReceiver() != null) && profile.getReceiver()) {
-            result.setValue("Receiver");
-
-        }
-        return result;
-    }
-
-    /**
      * Logs which property was updated and the time it was updated Also changes the last updated
      * property
      *

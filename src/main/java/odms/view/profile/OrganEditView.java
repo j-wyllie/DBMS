@@ -224,7 +224,7 @@ public class OrganEditView extends OrganCommonView {
             default:
                 // noop
         }
-
+        controller.saveOrgans();
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
