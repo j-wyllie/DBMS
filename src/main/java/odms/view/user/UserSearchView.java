@@ -1,5 +1,6 @@
 package odms.view.user;
 
+import java.sql.SQLException;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import odms.controller.GuiMain;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.controller.user.UserSearchController;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -85,11 +88,16 @@ public class UserSearchView extends CommonView {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable(List<Profile> donors) {
-        labelResultCount.setText(0 + " results found");
+    private void makeSearchTable() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        try {
+            labelResultCount.setText(database.size() + " results found");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         searchTable.getItems().clear();
 
-        donorObservableList = FXCollections.observableArrayList(donors);
+        donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
@@ -341,11 +349,18 @@ public class UserSearchView extends CommonView {
                     performSearchFromFilters();
                 }
             });
-            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
-            searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label(
-                    "There are " + GuiMain.getCurrentDatabase().getProfiles(false).size()
-                            + " profiles"));
+
+            ProfileDAO database = DAOFactory.getProfileDao();
+
+            try {
+                makeSearchTable();
+                searchTable.getItems().clear();
+                searchTable.setPlaceholder(new Label(
+                        "There are " + database.size()
+                                + " profiles"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         setPauseTransitions();

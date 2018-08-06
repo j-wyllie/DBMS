@@ -509,8 +509,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
-        String query = "select distinct p.* from profiles p inner join organs o on p.ProfileId = o.ProfileId";
+        String query = "select distinct p.* from profiles p";
         if (organs.size() > 0) {
+            query += " join organs o on p.ProfileId = o.ProfileId";
             int index = 0;
             for (OrganEnum organ : organs) {
                 if (index > 0) {
