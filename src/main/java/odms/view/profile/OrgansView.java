@@ -108,6 +108,7 @@ public class OrgansView extends CommonView {
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
+        System.out.println(currentProfile.getOrgansDonating());
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());

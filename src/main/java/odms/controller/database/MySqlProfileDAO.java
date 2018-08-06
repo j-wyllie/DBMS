@@ -509,26 +509,40 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
-        String query = "select * from profiles where (GivenNames like ? OR LastNames like ?)"
-                + " and Region like ?";
+        String query = "select distinct p.* from profiles p inner join organs o on p.ProfileId = o.ProfileId";
+        if (organs.size() > 0) {
+            int index = 0;
+            for (OrganEnum organ : organs) {
+                if (index > 0) {
+                    query += " or o.Organ = '" + organ.getNamePlain() + "'";
+                    index++;
+                }
+                else {
+                    query += " and o.Organ = '" + organ.getNamePlain() + "'";
+                    index++;
+                }
+            }
+        }
+        query += " where (p.GivenNames like ? OR p.LastNames like ?) and p.Region like ?";
         if (!gender.equals("any")) {
-            query += " and Gender = ?";
+            query += " and p.Gender = ?";
         }
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
-                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) = ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) = ?))";
+                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
             }
             else {
-                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) >= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) >= ?))"
-                        + " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) <= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) <= ?))";
+                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
+                        + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
-            query += " and IsDonor = ?";
+            query += " and p.IsDonor = ?";
         }
         if (type.equalsIgnoreCase("receiver")) {
-            query += " and IsReceiver = ?";
+            query += " and p.IsReceiver = ?";
         }
+
         query += ";";
 
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
