@@ -1,5 +1,7 @@
 package odms.cli;
 
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
@@ -15,6 +17,7 @@ public class CommandGUI {
 
     private final PrintStream out;
     private final InputStream in;
+
     @FXML
     private TextArea displayTextArea;
 

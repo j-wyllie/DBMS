@@ -84,7 +84,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(3, procedure.getLongDescription());
             stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            stmt.executeUpdate();
+            System.out.println(stmt.executeUpdate());
             //todo: return and update procedure id.
             conn.close();
             stmt.close();

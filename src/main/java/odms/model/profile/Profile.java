@@ -779,10 +779,6 @@ public class Profile implements Comparable<Profile> {
         return receiver;
     }
 
-    public void setReceiver(Boolean receiver) {
-        this.receiver = receiver;
-    }
-
     public Integer getId() {
         return this.id;
     }
@@ -1025,5 +1021,21 @@ public class Profile implements Comparable<Profile> {
     public void setLastUpdated() {
         LocalDateTime currentTime = LocalDateTime.now();
         lastUpdated = currentTime;
+    }
+
+    public void updatedDonorStatus() {
+        if (organsDonating.size() > 0)  {
+            this.setDonor(true);
+        } else {
+            this.setDonor(false);
+        }
+    }
+
+    public void updatedReceiverStatus() {
+        if (organsRequired.size() > 0) {
+            this.setReceiver(true);
+        } else {
+            this.setReceiver(false);
+        }
     }
 }

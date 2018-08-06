@@ -8,11 +8,11 @@ public enum BloodTypeEnum {
     O_NEGATIVE("O-"),
     O_POSITIVE("O+"),
     A_NEGATIVE("A-"),
-    A_POSTIVE("A+"),
+    A_POSITIVE("A+"),
     B_NEGATIVE("B-"),
-    B_POSTIVE("B+"),
+    B_POSITIVE("B+"),
     AB_NEGATIVE("AB-"),
-    AB_POSTIVE("AB+");
+    AB_POSITIVE("AB+");
 
     private String name;
 

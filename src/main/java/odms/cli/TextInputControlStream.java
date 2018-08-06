@@ -124,7 +124,6 @@ class TextInputControlStream {
             }
         }
 
-
         private String getLastLine() {
             synchronized (this) {
                 return this.textInputControl

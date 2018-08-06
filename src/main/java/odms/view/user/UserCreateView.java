@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 import odms.view.CommonView;
 
 public class UserCreateView extends CommonView {

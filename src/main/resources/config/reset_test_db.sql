@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 01, 2018 at 01:59 AM
+-- Generation Time: Aug 06, 2018 at 05:21 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -17,8 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `seng302-2018-team200-prod`
+-- Database: `seng302-2018-team200-test`
 --
+CREATE DATABASE IF NOT EXISTS `seng302-2018-team200-test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `seng302-2018-team200-test`;
 
 -- --------------------------------------------------------
 
@@ -125,7 +127,8 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `Donated` tinyint(1) DEFAULT NULL,
   `ToDonate` tinyint(1) DEFAULT NULL,
   `Required` tinyint(1) DEFAULT NULL,
-  `Received` tinyint(1) DEFAULT NULL
+  `Received` tinyint(1) DEFAULT NULL,
+  `DateRegistered` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -213,14 +216,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `affected_organs`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `ProcedureId` (`ProcedureId`);
+  ADD KEY `ProcedureId` (`ProcedureId`);
 
 --
 -- Indexes for table `conditions`
 --
 ALTER TABLE `conditions`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `countries`
@@ -233,14 +236,14 @@ ALTER TABLE `countries`
 --
 ALTER TABLE `drugs`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `history`
 --
 ALTER TABLE `history`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `EntityId` (`EntityId`);
+  ADD KEY `EntityId` (`EntityId`);
 
 --
 -- Indexes for table `medical_interactions`
@@ -253,14 +256,14 @@ ALTER TABLE `medical_interactions`
 --
 ALTER TABLE `organs`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `procedures`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `profiles`
@@ -282,52 +285,52 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `affected_organs`
 --
 ALTER TABLE `affected_organs`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `conditions`
 --
 ALTER TABLE `conditions`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `countries`
 --
 ALTER TABLE `countries`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `medical_interactions`
 --
 ALTER TABLE `medical_interactions`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `organs`
 --
 ALTER TABLE `organs`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `procedures`
 --
 ALTER TABLE `procedures`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `profiles`
 --
 ALTER TABLE `profiles`
-MODIFY `ProfileId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ProfileId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -355,7 +358,7 @@ ALTER TABLE `drugs`
 --
 ALTER TABLE `history`
   ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`),
-ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
 
 --
 -- Constraints for table `organs`

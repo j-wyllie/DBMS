@@ -1,4 +1,4 @@
-package odms.model.user;
+package odms.model.enums;
 
 public enum UserType {
     ADMIN("administrator"),

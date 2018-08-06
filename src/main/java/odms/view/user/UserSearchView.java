@@ -1,25 +1,33 @@
 package odms.view.user;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-import odms.controller.GuiMain;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.controller.user.UserSearchController;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
-
-import java.util.*;
 
 public class UserSearchView extends CommonView {
 
@@ -75,7 +83,6 @@ public class UserSearchView extends CommonView {
     private Button buttonShowNext;
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
-    private Profile selectedDonor;
 
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfileView parentView;
@@ -85,17 +92,25 @@ public class UserSearchView extends CommonView {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable(List<Profile> donors) {
-        labelResultCount.setText(0 + " results found");
+    private void makeSearchTable() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        try {
+            labelResultCount.setText(database.size() + " results found");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         searchTable.getItems().clear();
 
-        donorObservableList = FXCollections.observableArrayList(donors);
+        donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        donorReceiverColumn.setCellValueFactory(new PropertyValueFactory<>("donorReceiver"));
+        donorReceiverColumn.setCellValueFactory(p -> {
+            Profile x = p.getValue();
+            return controller.donorReceiverProperty(x);
+        });
         searchTable.getColumns().setAll(fullNameColumn, donorReceiverColumn, ageColumn, genderColumn, regionColumn);
 
         searchTable.setOnMousePressed(event -> {
@@ -185,6 +200,8 @@ public class UserSearchView extends CommonView {
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
             labelResultCount.setText("0 results found");
+            searchTable.setPlaceholder(new Label(
+                    "0 profiles found"));
             buttonShowAll.setVisible(false);
             buttonShowNext.setVisible(false);
         } else {
@@ -341,11 +358,18 @@ public class UserSearchView extends CommonView {
                     performSearchFromFilters();
                 }
             });
-            makeSearchTable(GuiMain.getCurrentDatabase().getProfiles(false));
-            searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label(
-                    "There are " + GuiMain.getCurrentDatabase().getProfiles(false).size()
-                            + " profiles"));
+
+            ProfileDAO database = DAOFactory.getProfileDao();
+
+            try {
+                makeSearchTable();
+                searchTable.getItems().clear();
+                searchTable.setPlaceholder(new Label(
+                        "There are " + database.size()
+                                + " profiles"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         setPauseTransitions();

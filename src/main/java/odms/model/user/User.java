@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import odms.model.enums.UserType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -45,8 +46,8 @@ public class User {
      * user constructor.
      *
      * @param userType type of user
-     * @param name name of user
-     * @param region users region
+     * @param name     user name
+     * @param region   user region
      */
     public User(UserType userType, String name, String region) {
         this.timeOfCreation = LocalDateTime.now();

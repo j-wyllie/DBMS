@@ -3,6 +3,7 @@ package odms.controller.user;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import odms.controller.database.DAOFactory;
 import odms.model.enums.OrganEnum;
@@ -61,9 +62,27 @@ public class UserSearchController {
         }
 
         return profileSearchResults;
-
-
     }
 
+    /**
+     * Returns the string value to populate the Donor/Receiver column in the clinician search
+     * table.
+     *
+     * @return a string depicting whether to profile is a donor, receiver, or both.
+     */
+    public SimpleStringProperty donorReceiverProperty(Profile profile) {
+        SimpleStringProperty result = new SimpleStringProperty();
+        if ((profile.getDonor() != null) && profile.getDonor()) {
+            if ((profile.getReceiver() != null) && profile.getReceiver()) {
+                result.setValue("Donor/Receiver");
+            } else {
+                result.setValue("Donor");
+            }
+        } else if ((profile.getReceiver() != null) && profile.getReceiver()) {
+            result.setValue("Receiver");
+
+        }
+        return result;
+    }
 
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 
 public class MySqlUserDAO implements UserDAO {
 
@@ -53,7 +53,7 @@ public class MySqlUserDAO implements UserDAO {
     public User get(int userId) throws UserNotFoundException, SQLException {
         String query = "select * from users where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        User user = null;
+        User user;
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -83,7 +83,7 @@ public class MySqlUserDAO implements UserDAO {
     public User get(String username) throws UserNotFoundException, SQLException {
         String query = "select * from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        User user = null;
+        User user;
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -94,7 +94,6 @@ public class MySqlUserDAO implements UserDAO {
 
             rs.next();
             user = parseUser(rs);
-
         }
         catch (SQLException e) {
             throw new UserNotFoundException("Not found", username);
@@ -117,7 +116,7 @@ public class MySqlUserDAO implements UserDAO {
         String username = rs.getString("Username");
         String password = rs.getString("Password");
         String name = rs.getString("Name");
-        UserType userType = convertStringToUserType(rs.getString("UserType"));
+        UserType userType = UserType.valueOf(rs.getString("UserType"));
         String address = rs.getString("Address");
         String region = rs.getString("Region");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
@@ -126,20 +125,6 @@ public class MySqlUserDAO implements UserDAO {
         User user = new User(id, username, password, name, userType, address, region, created, updated);
 
         return user;
-    }
-
-    // ToDo: implement this with proper enum usage
-    private UserType convertStringToUserType(String name) {
-        switch (name) {
-            case "ADMIN":
-                return UserType.ADMIN;
-            case "CLINICIAN":
-                return UserType.CLINICIAN;
-            case "PROFILE":
-                return UserType.PROFILE;
-            default:
-                return UserType.PROFILE;
-        }
     }
 
     /**
@@ -165,9 +150,9 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, LocalDateTime.now().toString());
             stmt.setString(8, LocalDateTime.now().toString());
             stmt.setBoolean(9, user.getDefault());
-
-            System.out.println(stmt.executeUpdate());
+            stmt.execute();
         }
+
         catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -179,23 +164,22 @@ public class MySqlUserDAO implements UserDAO {
     /**
      * Checks if a username already exists in the database.
      * @param username to check.
-     * @return true is the username does not already exist.
+     * @return true if the username does not already exist.
      */
     @Override
     public boolean isUniqueUsername(String username) throws SQLException {
-        String query = "select * from users where Username = ?;";
+        String query = "select Username from users where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setString(1, username);
 
             ResultSet result = stmt.executeQuery();
-
-            if (result.getFetchSize() == 0) {
-                return true;
+            if (result.last()) {
+                result.beforeFirst();
+                return (result.next());
             }
         }
         catch (SQLException e) {
@@ -246,7 +230,6 @@ public class MySqlUserDAO implements UserDAO {
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
@@ -256,7 +239,6 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
             stmt.setInt(9, user.getStaffID());
-
 
             stmt.executeUpdate();
         }

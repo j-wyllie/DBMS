@@ -7,7 +7,7 @@ import odms.model.data.UserDatabase;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

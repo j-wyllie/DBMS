@@ -34,7 +34,6 @@ public class ProfileCreateAccountView extends CommonView {
 
     /**
      * Scene change to profile view if all required fields are filled in.
-     *
      * @param event clicking on the create new account button.
      * @throws IOException throws IOException
      */

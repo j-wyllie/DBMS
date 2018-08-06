@@ -1,5 +1,6 @@
 package odms.controller.database;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -334,22 +335,19 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public boolean isUniqueUsername(String username) throws SQLException {
-        String query = "select * from profiles where Username = ?;";
+        String query = "select Username from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setString(1, username);
-
             ResultSet result = stmt.executeQuery();
-
-            if (result.getFetchSize() == 0) {
-                return true;
+            if (result.last()) {
+                result.beforeFirst();
+                return (result.next());
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -509,26 +507,44 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
-        String query = "select * from profiles where (GivenNames like ? OR LastNames like ?)"
-                + " and Region like ?";
+        String query = "select distinct p.* from profiles p";
+        if (organs.size() > 0) {
+            query += " join organs o on p.ProfileId = o.ProfileId";
+            int index = 0;
+            for (OrganEnum organ : organs) {
+                if (index > 0) {
+                    query += " or o.Organ = '" + organ.getNamePlain() + "'";
+                    index++;
+                }
+                else {
+                    query += " and (o.Organ = '" + organ.getNamePlain() + "'";
+                    index++;
+                }
+            }
+            if (index > 0) {
+                query += ")";
+            }
+        }
+        query += " where (p.GivenNames like ? OR p.LastNames like ? OR CONCAT(p.GivenNames, ' ', p.LastNames) like ?) and p.Region like ?";
         if (!gender.equals("any")) {
-            query += " and Gender = ?";
+            query += " and p.Gender = ?";
         }
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
-                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) = ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) = ?))";
+                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
             }
             else {
-                query += " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) >= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) >= ?))"
-                        + " and (((floor(datediff(CURRENT_DATE, dob) / 365.25) <= ?) and Dod IS NULL) or (floor(datediff(Dod, Dob) / 365.25) <= ?))";
+                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
+                        + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
-            query += " and IsDonor = ?";
+            query += " and p.IsDonor = ?";
         }
         if (type.equalsIgnoreCase("receiver")) {
-            query += " and IsReceiver = ?";
+            query += " and p.IsReceiver = ?";
         }
+
         query += ";";
 
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
@@ -542,11 +558,12 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
-            stmt.setString(3, "%" + region + "%");
+            stmt.setString(3, "%" + searchString + "%");
+            stmt.setString(4, "%" + region + "%");
 
-            int index = 4;
+            int index = 5;
             if (!gender.equals("any")) {
-                stmt.setString(4, gender);
+                stmt.setString(index, gender);
                 index++;
             }
 
@@ -577,10 +594,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 index++;
             }
 
-            System.out.println(stmt);
-
             ResultSet allProfiles = stmt.executeQuery();
-            int size = 0;
+            int size;
             allProfiles.last();
             size = allProfiles.getRow();
             allProfiles.beforeFirst();
@@ -597,8 +612,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
-            System.out.println(stmt);
-
         }
         catch (Exception e) {
             e.printStackTrace();

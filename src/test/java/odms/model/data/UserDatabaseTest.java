@@ -3,7 +3,7 @@ package odms.model.data;
 import java.util.Collection;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 import org.junit.Before;
 import org.junit.Test;
 

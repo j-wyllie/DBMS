@@ -13,7 +13,7 @@ import odms.controller.user.UserNotFoundException;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
 import odms.model.user.User;
-import odms.model.user.UserType;
+import odms.model.enums.UserType;
 
 import java.io.IOException;
 
