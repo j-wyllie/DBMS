@@ -96,48 +96,35 @@ public class CommandUtilsTest {
         String createProfileTestStr = "create-profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" nhi=\"123456789\"";
         String createClinicianTestStr = "create-clinician name=\"Bob Ross\"";
         String viewDonorTestStr = "profile dob=\"03-03-1998\" > view";
-        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > donations";
+        String viewDonationsTestStr = "profile dob=\"03-03-1998\" > organs";
         String viewDateCreatedTestStr = "profile dob=\"03-03-1998\" > date-created";
         String updateDonorTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > height=\"169\" given-names=\"Abby Rose\"";
         String viewClinicianTestStr = "clinician name=\"Bob Ross\" > view";
         String viewClinicianDateCreatedTestStr = "clinician dob=\"03-03-1998\" > date-created";
         String updateClinicianTestStr = "clinician name=\"Bob Ross\" region=\"Waikato\" > name=\"Johny Sinz\"";
         String printAllProfilesTestStr = "print all profiles";
-        String printDonorsTestStr = "print donors";
-        String printAllUsersTestStr = "print all users";
-        String printCliniciansTestStr = "print clinicians";
+        String printDonorsTestStr = "print all donors";
+        String printCliniciansTestStr = "print all clinicians";
+        String printUsersTestStr = "print all users";
         String helpTestStr = "help";
         String addOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > add-organ=\"liver, kidney\"";
         String deleteOrganTestStr = "profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03-1998\" > remove-organ=\"liver, kidney\"";
         String invalidCommandTestStr = "This is not a command";
 
         // Command Arrays
-        ArrayList<String> createProfileTest = new ArrayList<>(
-                Arrays.asList(createProfileTestStr.split("\\s")));
-        ArrayList<String> viewDonorTest = new ArrayList<>(
-                Arrays.asList(viewDonorTestStr.split("\\s")));
-        ArrayList<String> viewDonationsTest = new ArrayList<>(
-                Arrays.asList(viewDonationsTestStr.split("\\s")));
-        ArrayList<String> viewDateCreatedTest = new ArrayList<>(
-                Arrays.asList(viewDateCreatedTestStr.split("\\s")));
-        ArrayList<String> updateDonorTest = new ArrayList<>(
-                Arrays.asList(updateDonorTestStr.split("\\s")));
-        ArrayList<String> createClinicianTest = new ArrayList<>(
-                Arrays.asList(createClinicianTestStr.split("\\s")));
-        ArrayList<String> viewClinicianTest = new ArrayList<>(
-                Arrays.asList(viewClinicianTestStr.split("\\s")));
-        ArrayList<String> viewClinicianDateCreatedTest = new ArrayList<>(
-                Arrays.asList(viewClinicianDateCreatedTestStr.split("\\s")));
-        ArrayList<String> updateClinicianTest = new ArrayList<>(
-                Arrays.asList(updateClinicianTestStr.split("\\s")));
-        ArrayList<String> printAllProfilesTest = new ArrayList<>(
-                Arrays.asList(printAllProfilesTestStr.split("\\s")));
-        ArrayList<String> printDonorsTest = new ArrayList<>(
-                Arrays.asList(printDonorsTestStr.split("\\s")));
-        ArrayList<String> printAllUsersTest = new ArrayList<>(
-                Arrays.asList(printAllUsersTestStr.split("\\s")));
-        ArrayList<String> printCliniciansTest = new ArrayList<>(
-                Arrays.asList(printCliniciansTestStr.split("\\s")));
+        ArrayList<String> createProfileTest = new ArrayList<>(Arrays.asList(createProfileTestStr.split("\\s")));
+        ArrayList<String> viewDonorTest = new ArrayList<>(Arrays.asList(viewDonorTestStr.split("\\s")));
+        ArrayList<String> viewDonationsTest = new ArrayList<>(Arrays.asList(viewDonationsTestStr.split("\\s")));
+        ArrayList<String> viewDateCreatedTest = new ArrayList<>(Arrays.asList(viewDateCreatedTestStr.split("\\s")));
+        ArrayList<String> updateDonorTest = new ArrayList<>(Arrays.asList(updateDonorTestStr.split("\\s")));
+        ArrayList<String> createClinicianTest = new ArrayList<>(Arrays.asList(createClinicianTestStr.split("\\s")));
+        ArrayList<String> viewClinicianTest = new ArrayList<>(Arrays.asList(viewClinicianTestStr.split("\\s")));
+        ArrayList<String> viewClinicianDateCreatedTest = new ArrayList<>(Arrays.asList(viewClinicianDateCreatedTestStr.split("\\s")));
+        ArrayList<String> updateClinicianTest = new ArrayList<>(Arrays.asList(updateClinicianTestStr.split("\\s")));
+        ArrayList<String> printAllProfilesTest = new ArrayList<>(Arrays.asList(printAllProfilesTestStr.split("\\s")));
+        ArrayList<String> printDonorsTest = new ArrayList<>(Arrays.asList(printDonorsTestStr.split("\\s")));
+        ArrayList<String> printCliniciansTest = new ArrayList<>(Arrays.asList(printCliniciansTestStr.split("\\s")));
+        ArrayList<String> printUsersTest = new ArrayList<>(Arrays.asList(printUsersTestStr.split("\\s")));
         ArrayList<String> helpTest = new ArrayList<>(Arrays.asList(helpTestStr.split("\\s")));
         ArrayList<String> addOrganTest = new ArrayList<>(
                 Arrays.asList(addOrganTestStr.split("\\s")));
@@ -147,24 +134,17 @@ public class CommandUtilsTest {
                 Arrays.asList(invalidCommandTestStr.split("\\s")));
 
         // Check tokens validate appropriately
-        assertEquals(Commands.PRINTALLPROFILES,
-                validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
-        assertEquals(Commands.PRINTDONORS,
-                validateCommandType(printDonorsTest, printDonorsTestStr));
-        assertEquals(Commands.PRINTALLUSERS,
-                validateCommandType(printAllUsersTest, printAllUsersTestStr));
-        assertEquals(Commands.PRINTCLINICIANS,
-                validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLPROFILES, validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
+        assertEquals(Commands.PRINTDONORS, validateCommandType(printDonorsTest, printDonorsTestStr));
+        assertEquals(Commands.PRINTALLCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
+        assertEquals(Commands.PRINTALLUSERS, validateCommandType(printUsersTest, printUsersTestStr));
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
         assertEquals(Commands.PROFILECREATE,
                 validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
-        assertEquals(Commands.PROFILEDATECREATED,
-                validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
-        assertEquals(Commands.PROFILEDONATIONS,
-                validateCommandType(viewDonationsTest, viewDonationsTestStr));
-        assertEquals(Commands.PROFILEUPDATE,
-                validateCommandType(updateDonorTest, updateDonorTestStr));
+        assertEquals(Commands.PROFILEDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
+        assertEquals(Commands.PROFILEORGANS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
+        assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
 
         assertEquals(Commands.CLINICIANCREATE,
                 validateCommandType(createClinicianTest, createClinicianTestStr));

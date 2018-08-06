@@ -16,10 +16,11 @@ public class App {
     private static final String DONOR_DATABASE = "example/example.json";
     private static final String USER_DATABASE = "example/users.json";
 
-    private static ProfileDatabase profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+    private static ProfileDatabase profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
     private static UserDatabase userDb = UserDataIO.loadData(USER_DATABASE);
 
     public static void main(String[] args) {
+
         HistoryController.currentSessionHistory.add(null);
         try {
 
@@ -33,8 +34,9 @@ public class App {
             File profileDbFile = new File(DONOR_DATABASE);
             if (!profileDbFile.isFile()) {
                 profileDb = new ProfileDatabase();
+                ProfileDataIO.saveData(profileDb, DONOR_DATABASE);
             } else {
-                profileDb = ProfileDataIO.loadData(DONOR_DATABASE);
+                profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
             }
 
             if (args == null || args.length == 0) {
@@ -62,8 +64,7 @@ public class App {
         return userDb;
     }
 
-    public void setCurrentDatabase(ProfileDatabase profileDb) {
-        this.profileDb = profileDb;
+    public static void setCurrentDatabase(ProfileDatabase profileDb) {
+        App.profileDb = profileDb;
     }
-
 }

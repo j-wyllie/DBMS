@@ -404,23 +404,6 @@ public class ProfileEditController extends CommonController {
         return null;
     }
 
-
-    /**
-     * returns a string that is the file extension of given file
-     *
-     * @param file File to retrieve extension from
-     */
-    private String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-
-
     public void setCurrentProfile(Profile donor) {
         currentProfile = donor;
     }

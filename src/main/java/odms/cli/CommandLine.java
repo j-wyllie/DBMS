@@ -33,9 +33,10 @@ public class CommandLine implements Runnable {
     private Terminal terminal;
 
     /**
-     * Create a standard input/output terminal
+     * Create a standard input/output terminal.
      *
-     * @param currentDatabase
+     * @param currentDatabase the current database.
+     * @param currentDatabaseUsers the current database users.
      */
     public CommandLine(ProfileDatabase currentDatabase, UserDatabase currentDatabaseUsers) {
         this.currentDatabase = currentDatabase;
@@ -57,11 +58,11 @@ public class CommandLine implements Runnable {
     }
 
     /**
-     * Create a virtual terminal command line
+     * Create a virtual terminal command line.
      *
-     * @param currentDatabase
-     * @param input
-     * @param output
+     * @param currentDatabase the current database.
+     * @param input input from the user.
+     * @param output output presented in the CLI.
      */
     public CommandLine(ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
         this.currentDatabase = currentDatabase;
@@ -86,7 +87,7 @@ public class CommandLine implements Runnable {
     }
 
     /**
-     * Run implementation so command line can be run in an alternate thread
+     * Run implementation so command line can be run in an alternate thread.
      */
     public void run() {
         initialiseConsole();
@@ -152,7 +153,7 @@ public class CommandLine implements Runnable {
                 Print.printAllProfiles(currentDatabase);
                 break;
 
-            case PRINTCLINICIANS:
+            case PRINTALLCLINICIANS:
                 // Print all clinicians (print all).
                 Print.printAllClinicians(currentDatabaseUsers);
                 break;
@@ -184,7 +185,7 @@ public class CommandLine implements Runnable {
                 // Import a file of profiles.
                 if (input.size() == 2) {
                     String filepath = input.get(1);
-                    currentDatabase = ProfileDataIO.loadData(filepath);
+                    currentDatabase = ProfileDataIO.loadDataFromJSON(filepath);
                 } else {
                     System.out.println("Error: Invalid arguments. Expected: 1, " +
                             "Found: " + (input.size() - 1));
@@ -208,7 +209,7 @@ public class CommandLine implements Runnable {
                 System.out.println("profile(s) successfully deleted.");
                 break;
 
-            case PROFILEDONATIONS:
+            case PROFILEORGANS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
                 Profile.viewDonationsBySearch(currentDatabase, rawInput);

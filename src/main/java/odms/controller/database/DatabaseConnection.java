@@ -46,8 +46,7 @@ public class DatabaseConnection {
             // init
             try {
                 source.setDriverClass(driver);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             source.setJdbcUrl(host + '/' + database);
@@ -58,18 +57,9 @@ public class DatabaseConnection {
             source.setMaxPoolSize(50);
 
             connectionSource = source;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Helper to hold the instance of the singleton database
-     * connection class.
-     */
-    private static class DatabaseConnectionHelper {
-        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 
     /**
@@ -134,9 +124,16 @@ public class DatabaseConnection {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Helper to hold the instance of the singleton database
+     * connection class.
+     */
+    private static class DatabaseConnectionHelper {
+        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 }

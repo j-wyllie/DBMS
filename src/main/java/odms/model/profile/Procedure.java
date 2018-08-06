@@ -11,7 +11,7 @@ import odms.model.enums.OrganEnum;
 public class Procedure {
     private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
-    private int procedureId;
+    private Integer procedureId;
     private String summary;
     private LocalDate date;
     private String longDescription;

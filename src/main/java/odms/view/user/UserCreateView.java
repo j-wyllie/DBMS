@@ -13,7 +13,7 @@ import odms.model.user.User;
 import odms.model.user.UserType;
 import odms.view.CommonView;
 
-public class UserCreateView extends CommonView{
+public class UserCreateView extends CommonView {
 
     @FXML
     private TextField userUsernameField;
@@ -37,8 +37,10 @@ public class UserCreateView extends CommonView{
     public void handleUserCreateAccountButtonClicked(ActionEvent event) {
         if (checkValidEntries()) {
             if (checkUniqueUsername()) {
-                User user = new User(userTypeBox.getValue(), userNameField.getText(),
-                        userRegionField.getText());
+                User user = new User(userTypeBox.getValue(),
+                        userNameField.getText(),
+                        userRegionField.getText()
+                );
                 user.setUsername(userUsernameField.getText());
                 user.setPassword(userPasswordField.getText());
                 GuiMain.getUserDatabase().addUser(user);

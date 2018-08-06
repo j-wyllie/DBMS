@@ -124,7 +124,7 @@ public class MedicationDataIO {
             }
             response.close();
             con.disconnect();
-        } else if (con.getResponseCode() < 600 && con.getResponseCode() > 499){
+        } else if (con.getResponseCode() < 600 && con.getResponseCode() > 499) {
             // If response was an internal server error, return SERVERERROR
             responseContent = new StringBuffer();
             return responseContent.append(SERVERERROR);
@@ -187,7 +187,6 @@ public class MedicationDataIO {
         return interactions;
     }
 
-
     /**
      * Parse JSON object that contains drug interactions based on male or female genders.
      * @param interactions Map of drug interactions, keys are valid interactions and values are duration of time after
@@ -206,6 +205,7 @@ public class MedicationDataIO {
                 }
             }
         }
+
         return interactions;
     }
 
@@ -219,8 +219,8 @@ public class MedicationDataIO {
      */
     private static Map<String, String> parseInteractionAgeJSON(Map<String, String> interactions,
             Map<String, List<String>> interactionAge, int age) {
-        int lowerBound;
-        int upperBound;
+        Integer lowerBound;
+        Integer upperBound;
         String[] ageGroupArray;
 
         for (Map.Entry<String, List<String>> ageList : interactionAge.entrySet()) {

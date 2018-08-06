@@ -59,7 +59,7 @@ The following attributes are available within ODMS:
 | `given-names` | All given (first) names | `given-names="Marion Mitchell"`        |
 | `last-names`  | All last (family) names | `last-names="Morrison"`                |
 | `dob`         | Date of birth           | `dob="dd-mm-yyyy"`                     |
-| `nhi`         | IRD number              | `nhi="123546789"`                      |
+| `nhi`         | NHI number              | `nhi="123546789"`                      |
 | `dod`         | Date of death           | `dod="dd-mm-yyyy"`                     |
 | `gender`      | Gender                  | `gender="Male"`                        |
 | `height`      | Height in centimetres   | `height="180"`                         |
@@ -91,11 +91,11 @@ Viewing a profile:
     
 This will result in a summary of all profiles that match the criteria:
 
-    IRD: 123456789
+    NHI: 123456789
     Given Names: Marion Mitchell
     Last Names: Morrison
     Date Of Birth: 01-08-1989
-    IRD: 123456789
+    NHI: 123456789
     Last updated at: 03:10 PM 08-03-2018
     
 Updating a profile:
@@ -129,7 +129,7 @@ The organs that are available to be added to a profile are:
 `connective-tissue`
 
 Please be explicit when adding organs that are available to be donated to a profile, explicitly use an
- IRD number for best accuracy.
+ NHI number for best accuracy.
 
     profile nhi="123456789" > add-organ="heart"
 

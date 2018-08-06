@@ -25,34 +25,43 @@ public class CommandUtils {
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                     + "[\"]))*";
+
     private static final String CMD_REGEX_PROFILE_VIEW =
             "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                     + "([a-z]+)([-]([a-z]+))?)";
+
     private static final String CMD_REGEX_PROFILE_UPDATE =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]([a-z]"
                     + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
                     + "[\"]))*";
+
     private static final String CMD_REGEX_ORGAN_UPDATE =
             "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+)"
                     + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)"
                     + "[\"]))*";
+
     public static ArrayList<String> currentSessionHistory = new ArrayList<>();
+
     public static int historyPosition;
+
     protected static ArrayList<Profile> deletedProfiles = new ArrayList<>();
+
     protected static String searchErrorText = "Please enter only one search criteria\n "
             + "Profiles: given-names, last-names, nhi\n"
             + "Users: name, staffID";
+
     protected static String searchNotFoundText = "There are no profiles that match this criteria.";
+
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     /**
      * Performs checks over the input to match a valid command
-     * <p>
+     *
      * If nothing is matched than an invalid command has been used.
      *
      * @param cmd      the command being validated
@@ -62,24 +71,18 @@ public class CommandUtils {
     static Commands validateCommandType(ArrayList<String> cmd, String rawInput) {
         switch (cmd.get(0).toLowerCase()) {
             case "print":
-                switch (cmd.get(1).toLowerCase()) {
-                    case "all":
-                        if (cmd.size() == 2) {
-                            return Commands.INVALID;
-                        }
-                        if (cmd.get(2).equalsIgnoreCase("profiles")) {
-                            return Commands.PRINTALLPROFILES;
-                        } else if (cmd.get(2).equalsIgnoreCase("users")) {
-                            return Commands.PRINTALLUSERS;
-                        } else {
-                            return Commands.INVALID;
-                        }
-                    case "donors":
-                        return Commands.PRINTDONORS;
-                    case "clinicians":
-                        return Commands.PRINTCLINICIANS;
+                if (cmd.size() == 2) { return Commands.INVALID;                 }
+                if (cmd.get(2).equalsIgnoreCase("profiles")) {
+                    return Commands.PRINTALLPROFILES;
+                } else if (cmd.get(2).equalsIgnoreCase("clinicians")) {
+                    return Commands.PRINTALLCLINICIANS;
+                } else if (cmd.get(2).toLowerCase().equals("users")) {
+                    return Commands.PRINTALLUSERS;
+                }else if (cmd.get(2).toLowerCase().equals("donors")) {
+                    return Commands.PRINTDONORS;
+                } else {
+                    return Commands.INVALID;
                 }
-                break;
             case "help":
                 return Commands.HELP;
             case "import":
@@ -107,8 +110,8 @@ public class CommandUtils {
                             return Commands.PROFILEVIEW;
                         case "date-created":
                             return Commands.PROFILEDATECREATED;
-                        case "donations":
-                            return Commands.PROFILEDONATIONS;
+                        case "organs":
+                            return Commands.PROFILEORGANS;
                         case "delete":
                             return Commands.PROFILEDELETE;
                     }
@@ -124,7 +127,7 @@ public class CommandUtils {
                             return Commands.ORGANREMOVE;
                         case "removereceive-organ":
                             return Commands.RECEIVEREMOVE;
-                        case "donate":
+                        case "donate-organ":
                             return Commands.ORGANDONATE;
                     }
 
@@ -150,6 +153,8 @@ public class CommandUtils {
                 break;
             case "db-read":
                 return Commands.SQLREADONLY;
+            default:
+                return Commands.INVALID;
         }
         return Commands.INVALID;
     }
@@ -348,7 +353,7 @@ public class CommandUtils {
 
     // TODO check what main purpose this serves and name appropriately
     private static void test(ProfileDatabase currentDatabase, String expression,
-            String[] organList) {
+        String[] organList) {
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.indexOf(">") - 2);
         List<Profile> profileList = currentDatabase.searchNHI(attr);

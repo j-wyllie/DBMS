@@ -32,7 +32,7 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles in the Database
+     * Print all clinicians in the Database
      *
      * @param currentDatabase Database reference
      */
@@ -51,7 +51,7 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles in the Database
+     * Print all users in the Database
      *
      * @param currentDatabase Database reference
      */
@@ -193,11 +193,11 @@ public class Print extends CommandUtils {
             System.out.println("Gender: " + profile.getGender());
         }
 
-        if (profile.getHeight() != 0.0) {
+        if (profile.getHeight() != null) {
             System.out.println("Height: " + profile.getHeight() + "cm");
         }
 
-        if (profile.getWeight() != 0.0) {
+        if (profile.getWeight() != null) {
             System.out.println("Weight: " + profile.getWeight());
         }
 
@@ -211,6 +211,10 @@ public class Print extends CommandUtils {
 
         if (profile.getRegion() != null) {
             System.out.println("Region: " + profile.getRegion());
+        }
+
+        if (profile.getCountry() != null) {
+            System.out.println("Country: " + profile.getCountry());
         }
 
         if (profile.getOrgansDonating().size() > 0) {

@@ -48,7 +48,6 @@ public class OrganEditView extends OrganCommonView {
     @FXML
     private Label lblSelected;
 
-
     private OrganSelectEnum windowType;
 
     /**
@@ -181,9 +180,9 @@ public class OrganEditView extends OrganCommonView {
     }
 
     /**
-     * Click Handler to handle Click actions on the ListViews. - A single click will clear the
-     * selection from the opposing ListView. - A double click will move the organ from the ListView
-     * to the opposing ListView.
+     * Click Handler to handle Click actions on the ListViews.
+     * - A single click will clear the selection from the opposing ListView.
+     * - A double click will move the organ from the ListView to the opposing ListView.
      *
      * @param event the MouseEvent
      * @param model the SelectionModel to operate against
@@ -224,7 +223,6 @@ public class OrganEditView extends OrganCommonView {
             default:
                 // noop
         }
-
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }

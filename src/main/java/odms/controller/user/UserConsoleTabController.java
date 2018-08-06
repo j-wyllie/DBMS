@@ -9,8 +9,8 @@ public class UserConsoleTabController {
 
     UserConsoleTabView view;
 
-    public UserConsoleTabController(UserConsoleTabView v) {
-        view = v;
+    public UserConsoleTabController(UserConsoleTabView view) {
+        this.view = view;
     }
 
     public void setupConsole(CommandGUI commandGUI) {
@@ -18,10 +18,14 @@ public class UserConsoleTabController {
         System.setOut(commandGUI.getOut());
 
         // Start the command line in an alternate thread
-        CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(),
-                commandGUI.getOut());
+        CommandLine commandLine = new CommandLine(
+                App.getProfileDb(),
+                commandGUI.getIn(),
+                commandGUI.getOut()
+        );
         commandGUI.initHistory(commandLine);
         Thread t = new Thread(commandLine);
+        t.setDaemon(true);
         t.start();
     }
 

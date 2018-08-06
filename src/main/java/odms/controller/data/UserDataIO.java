@@ -69,7 +69,7 @@ public class UserDataIO extends CommonDataIO {
      * Load the specified DonorDatabase JSON file instantiating a DonorDatabase Object.
      *
      * @param path The location of the saved file
-     * @return DonorDatabase
+     * @return UserDatabase
      */
     public static UserDatabase loadData(String path) {
         File file = new File(path);

@@ -56,12 +56,14 @@ public class LoginView extends CommonController {
             try {
                 UserDAO database = DAOFactory.getUserDao();
                 currentUser = database.get(username);
+
                 if (currentUser.getPassword() != null && passwordField.getText()
                         .equals(currentUser.getPassword())) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader
-                                .setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
+                        fxmlLoader.setLocation(getClass().getResource(
+                                "/view/ClinicianProfile.fxml")
+                        );
 
                         scene = new Scene(fxmlLoader.load());
                         ClinicianProfileView v = fxmlLoader.getController();

@@ -76,3 +76,12 @@
 .button-clinician-logout:pressed {
     -fx-background-color: #135c94;
 }
+
+.import-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #135c94;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(#71aee1, #135c94);
+}

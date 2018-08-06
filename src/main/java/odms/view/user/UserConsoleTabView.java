@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextFormatter;
 import odms.cli.CommandGUI;
 import odms.controller.user.UserConsoleTabController;
 import odms.model.user.User;
@@ -14,6 +15,7 @@ public class UserConsoleTabView {
     private UserConsoleTabController controller = new UserConsoleTabController(this);
 
     private CommandGUI commandGUI;
+
     @FXML
     private TextArea displayTextArea;
 

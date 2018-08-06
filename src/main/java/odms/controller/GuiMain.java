@@ -30,6 +30,7 @@ public class GuiMain extends Application {
     private static ProfileDatabase profileDb = App.getProfileDb();
     private static UserDatabase userDb = App.getUserDb();
 
+
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
      *

@@ -87,7 +87,7 @@ public class ProfileDataIO extends CommonDataIO {
      * @param path specified ProfileDatabase JSON to load
      * @return ProfileDatabase
      */
-    public static ProfileDatabase loadData(String path) {
+    public static ProfileDatabase loadDataFromJSON(String path) {
         File file = new File(path);
         File historyFile = new File(path.replace(".json", "history.json"));
 

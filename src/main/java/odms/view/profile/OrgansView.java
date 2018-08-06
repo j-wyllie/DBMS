@@ -180,6 +180,7 @@ public class OrgansView extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
+//        stage.setOnCloseRequest(ob -> {
         stage.setOnHiding((ob) -> {
             populateOrganLists();
             refreshListViews();

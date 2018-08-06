@@ -324,8 +324,9 @@ public class Profile implements Comparable<Profile> {
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() { return this.pendingProcedures; }
-
+    public ArrayList<Procedure> getPendingProcedures() {
+        return this.pendingProcedures;
+    }
 
     public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
         this.pendingProcedures = pendingProcedures;
@@ -342,25 +343,29 @@ public class Profile implements Comparable<Profile> {
     // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
-        summary = summary +("nhi=" + nhi);
-        summary = summary +"," +("given-names=" + givenNames);
-        summary = summary +"," +("last-names=" + lastNames);
-        summary = summary +"," +("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        if (dateOfDeath==null) { summary = summary +"," +("dod=" + null); }
-        else{summary = summary +"," +("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));}
-        summary = summary +"," +("gender=" + gender);
-        summary = summary +"," +("height=" + height);
-        summary = summary +"," +("weight=" + weight);
-        summary = summary +"," +("blood-type=" + bloodType);
-        summary = summary +"," +("address=" + address);
-        summary = summary +"," +("region=" + region);
+        summary = summary + ("nhi=" + nhi);
+        summary = summary + "," + ("given-names=" + givenNames);
+        summary = summary + "," + ("last-names=" + lastNames);
+        summary = summary + "," + ("dob=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        if (dateOfDeath == null) {
+            summary = summary + "," + ("dod=" + null);
+        }
+        else {
+            summary = summary + "," + ("dod=" + dateOfDeath.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }
+        summary = summary + "," + ("gender=" + gender);
+        summary = summary + "," + ("height=" + height);
+        summary = summary + "," + ("weight=" + weight);
+        summary = summary + "," + ("blood-type=" + bloodType);
+        summary = summary + "," + ("address=" + address);
+        summary = summary + "," + ("region=" + region);
         summary = summary +"," +("country=" + country);
-        summary = summary +"," +("isSmoker=" + isSmoker);
-        summary = summary +"," +("alcoholConsumption=" + alcoholConsumption);
-        summary = summary +"," +("bloodPressureSystolic=" + bloodPressureSystolic);
-        summary = summary +"," +("bloodPressureDiastolic=" + bloodPressureDiastolic);
-        summary = summary +"," +("phone=" + phone);
-        summary = summary +"," +("email=" + email);
+        summary = summary + "," + ("isSmoker=" + isSmoker);
+        summary = summary + "," + ("alcoholConsumption=" + alcoholConsumption);
+        summary = summary + "," + ("bloodPressureSystolic=" + bloodPressureSystolic);
+        summary = summary + "," + ("bloodPressureDiastolic=" + bloodPressureDiastolic);
+        summary = summary + "," + ("phone=" + phone);
+        summary = summary + "," + ("email=" + email);
         return summary;
     }
 
@@ -548,7 +553,6 @@ public class Profile implements Comparable<Profile> {
     public int getAge(){
         return calculateAge();
     }
-
 
     /**
      * Logs which property was updated and the time it was updated

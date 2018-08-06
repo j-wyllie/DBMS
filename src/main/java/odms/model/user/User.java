@@ -1,10 +1,16 @@
 package odms.model.user;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+import odms.model.enums.CountriesEnum;
 
 public class User {
 
@@ -19,6 +25,7 @@ public class User {
     private String username;
     private String password; //not being used yet, but will be in the future.
     private boolean isDefault;
+    private String pictureName;
 
     public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
 
@@ -35,11 +42,11 @@ public class User {
     }
 
     /**
-     * user constructor
+     * user constructor.
      *
      * @param userType type of user
-     * @param name     user name
-     * @param region   user region
+     * @param name name of user
+     * @param region users region
      */
     public User(UserType userType, String name, String region) {
         this.timeOfCreation = LocalDateTime.now();
@@ -116,10 +123,10 @@ public class User {
     }
 
     /**
-     * Sets the attributes that are passed into the constructor
+     * Sets the attributes that are passed into the constructor.
      *
-     * @param attributes the attributes given in the constructor
-     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
+     * @param attributes the attributes given in the constructor.
+     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
     public void setExtraAttributes(ArrayList<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
@@ -129,9 +136,9 @@ public class User {
     }
 
     /**
-     * sets a users specific given attribute
+     * sets a users specific given attribute.
      *
-     * @param parts a string containing the users new attribute to be set
+     * @param parts a string containing the users new attribute to be set.
      * @throws IllegalArgumentException
      */
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
@@ -264,5 +271,13 @@ public class User {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 }
