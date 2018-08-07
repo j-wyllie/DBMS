@@ -1,6 +1,10 @@
 package odms.cli.commands;
 
+import java.sql.SQLException;
+import java.util.List;
 import odms.cli.CommandUtils;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.UserDAO;
 import odms.controller.history.HistoryController;
 import odms.model.data.UserDatabase;
 import odms.model.history.History;
@@ -14,9 +18,8 @@ public class User extends CommandUtils {
 
 
     /**
-     * Add history for profile
-     *
-     * @param id profile ID
+     * Add history for profile.
+     * @param id profile id.
      */
     protected static void addClinicianHistory(Integer id) {
         History action = new History("user", id, "added", "", -1, LocalDateTime.now());
@@ -25,20 +28,17 @@ public class User extends CommandUtils {
 
     /**
      * Create clinician.
-     *
-     * @param currentDatabase Database reference
-     * @param rawInput        raw command input
-     * @return staffID the staff id of created clinician
+     * @param rawInput raw command input.
+     * @return staffID the staff id of created clinician.
      */
-    public static odms.model.user.User createClinician(UserDatabase currentDatabase,
-            String rawInput) {
-
+    public static odms.model.user.User createClinician(String rawInput) {
+        UserDAO database = DAOFactory.getUserDao();
         try {
             String[] attrList = rawInput.substring(16).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             UserType userType = UserType.CLINICIAN;
             odms.model.user.User newUser = new odms.model.user.User(userType, attrArray);
-            currentDatabase.addUser(newUser);
+            database.add(newUser);
             addClinicianHistory(newUser.getStaffID());
             System.out.println("Clinician created.");
             return newUser;
@@ -54,57 +54,30 @@ public class User extends CommandUtils {
 
     /**
      * Delete user from the database by search.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
+     * @param type of user.
      */
-    public static void deleteUserBySearch(UserDatabase currentDatabase, String expression,
-            String type) {
-        // Depending what type of user, the length to skip will change accordingly
-        Integer lengthToSkip = 10;   //for clinician
-        if (type.equals("clinician")) {
-            lengthToSkip = 10;
-        }
-        ArrayList<odms.model.user.User> userList;
-
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.lastIndexOf("\""));
-
-            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
-                userList = currentDatabase.searchNames(attr);
-
-                deleteUsers(userList, currentDatabase);
-            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
-                    .equals("staffID")) {
-                userList = currentDatabase
-                        .searchStaffID(Integer.valueOf(attr));
-
-                deleteUsers(userList, currentDatabase);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
+    public static void deleteUserBySearch(String expression, String type) {
+        List<odms.model.user.User> users = search(expression, type);
+        deleteUsers(users);
     }
 
     /**
      * Delete users.
-     *
-     * @param userList        list of users
-     * @param currentDatabase Database reference
+     * @param userList list of users.
      */
-    private static void deleteUsers(ArrayList<odms.model.user.User> userList,
-            UserDatabase currentDatabase) {
-        boolean result;
+    private static void deleteUsers(List<odms.model.user.User> userList) {
+        UserDAO database = DAOFactory.getUserDao();
         if (userList.size() > 0) {
             for (odms.model.user.User user : userList) {
-                result = currentDatabase.deleteUser(user.getStaffID());
-                if (result) {
-                    HistoryController.deletedUsers.add(user);
-                    HistoryController.updateHistory(new History("profile", user.getStaffID(),
-                            "deleted", "", -1, LocalDateTime.now()));
+                try {
+                    database.remove(user);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+                HistoryController.deletedUsers.add(user);
+                HistoryController.updateHistory(new History("profile", user.getStaffID(),
+                        "deleted", "", -1, LocalDateTime.now()));
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -113,12 +86,10 @@ public class User extends CommandUtils {
 
     /**
      * Update user attributes.
-     *
-     * @param userList List of users
-     * @param attrList Attributes to be updated and their values
+     * @param userList list of users.
+     * @param attrList attributes to be updated and their values.
      */
-    private static void updateUserAttr(ArrayList<odms.model.user.User> userList,
-            String[] attrList) {
+    private static void updateUserAttr(List<odms.model.user.User> userList, String[] attrList) {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             for (odms.model.user.User user : userList) {
@@ -136,115 +107,60 @@ public class User extends CommandUtils {
 
     /**
      * Update user attributes by search.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
+     * @param type of user.
      */
-    public static void updateUserBySearch(UserDatabase currentDatabase, String expression,
-            String type) {
-        // Depending what type of user, the length to skip will change accordingly
-        Integer lengthToSkip = 10;   //for clinician
-        if (type.equals("clinician")) {
-            lengthToSkip = 10;
-        }
-        ArrayList<odms.model.user.User> userList;
-
+    public static void updateUserBySearch(String expression, String type) {
+        List<odms.model.user.User> users = search(expression, type);
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
                 .trim()
                 .split("\"\\s");
-
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
-                userList = currentDatabase.searchNames(attr);
-
-                updateUserAttr(userList, attrList);
-            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
-                    .equals("staffID")) {
-                userList = currentDatabase
-                        .searchStaffID(Integer.valueOf(attr));
-
-                updateUserAttr(userList, attrList);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
+        updateUserAttr(users, attrList);
     }
 
     /**
-     * Displays users attributes via the search methods
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression being used for searching
+     * Displays users attributes via the search methods.
+     * @param expression search expression being used for searching.
+     * @param type of user.
      */
-    public static void viewAttrBySearch(UserDatabase currentDatabase, String expression,
-            String type) {
+    public static void viewAttrBySearch(String expression, String type) {
+        List<odms.model.user.User> users = search(expression, type);
+        Print.printUserSearchResults(users);
+    }
+
+    /**
+     * View date and time of profile creation.
+     * @param expression search expression.
+     * @param type of user.
+     */
+    public static void viewDateTimeCreatedBySearch(String expression, String type) {
+        List<odms.model.user.User> users = search(expression, type);
+        Print.printUserList(users);
+    }
+
+    private static List<odms.model.user.User> search(String expression, String type) {
         // Depending what type of user, the length to skip will change accordingly
         Integer lengthToSkip = 10;   //for clinician
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
 
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.lastIndexOf("\""));
-
-            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
-                Print.printUserSearchResults(currentDatabase.searchNames(attr));
-            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
-                    .equals("staffID")) {
-                Print.printUserSearchResults(currentDatabase.searchStaffID(Integer.valueOf(attr)));
-            } else {
-                System.out.println(searchErrorText);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
-    }
-
-    /**
-     * view date and time of profile creation.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
-     */
-    public static void viewDateTimeCreatedBySearch(UserDatabase currentDatabase, String expression,
-            String type) {
-        // Depending what type of user, the length to skip will change accordingly
-        Integer lengthToSkip = 10;   //for clinician
-        if (type.equals("clinician")) {
-            lengthToSkip = 10;
-        }
-        ArrayList<odms.model.user.User> userList;
-
+        UserDAO database = DAOFactory.getUserDao();
+        List<odms.model.user.User> users = new ArrayList<>();
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
-
-        if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                userList = currentDatabase.searchNames(attr);
-
-                Print.printUserList(userList);
+        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
+                users = database.search(attr);
+            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
+                    .equals("staffID")) {
+                users = database.search(Integer.valueOf(attr));
             } else {
                 System.out.println(searchErrorText);
             }
-        } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
-                .equals("staffID")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                userList = currentDatabase.searchStaffID(Integer.valueOf(attr));
-
-                Print.printUserList(userList);
-            } else {
-                System.out.println(searchErrorText);
-            }
-
         } else {
             System.out.println(searchErrorText);
         }
+        return users;
     }
 }

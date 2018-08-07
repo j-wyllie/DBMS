@@ -98,7 +98,7 @@ public class Print extends CommandUtils {
      * Display and print profile details in a list.
      * @param userlist List of profiles.
      */
-    public static void printUserList(ArrayList<User> userlist) {
+    public static void printUserList(List<User> userlist) {
         for (User user : userlist) {
             System.out.println("Staff ID: " + user.getStaffID());
             System.out.println("Name: " + user.getName());
@@ -147,7 +147,7 @@ public class Print extends CommandUtils {
      * search results have been found.
      * @param userlist results from searching.
      */
-    public static void printUserSearchResults(ArrayList<User> userlist) {
+    public static void printUserSearchResults(List<User> userlist) {
         if (userlist.size() > 0) {
             for (User user : userlist) {
                 printUserAttributesAttributes(user);
