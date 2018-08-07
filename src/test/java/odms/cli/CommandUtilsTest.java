@@ -49,7 +49,7 @@ public class CommandUtilsTest {
         donorOneAttr.add("given-names=\"John\"");
         donorOneAttr.add("last-names=\"Wayne\"");
         donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("nhi=\"123456789\"");
+        donorOneAttr.add("nhi=\"ABC1234\"");
 
         ArrayList<String> donorTwoAttr = new ArrayList<>();
         donorTwoAttr.add("given-names=\"Sam\"");
@@ -173,7 +173,7 @@ public class CommandUtilsTest {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
         String dob = "12-08-1989";
-        String nhi = "ABC1234";
+        String nhi = "AAA1234";
 
         LocalDate dobConverted = LocalDate.of(
                 Integer.valueOf(dob.split("-")[2]),

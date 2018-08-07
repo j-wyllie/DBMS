@@ -12,14 +12,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Create {
-    public ProfileCreateAccountView view;
-    public ProfileCreateController controller;
+    private ProfileCreateAccountView view;
+    private ProfileCreateController controller;
 
     @Before
     public void setup() {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
-                getClass().getResource("/view/ProfileCreate.fxml"));
+                getClass().getResource("view/ProfileCreate.fxml"));
+        System.out.println(fxmlLoader.getController().getClass());
         view = fxmlLoader.getController();
         System.out.println(view);
         controller = view.getController();
@@ -33,6 +34,4 @@ public class Create {
         view.setNhiField("ABC1234");
         controller.createAccount();
     }
-
-
 }

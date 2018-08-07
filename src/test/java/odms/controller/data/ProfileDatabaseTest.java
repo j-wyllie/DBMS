@@ -171,7 +171,7 @@ public class ProfileDatabaseTest {
     @Test
     public void testCheckNhiExists() throws NHIConflictException {
         thrown.expect(NHIConflictException.class);
-        thrown.expectMessage("IRD number already in use");
+        thrown.expectMessage("NHI already in use");
 
         profileDb.addProfile(profileOne);
         profileDb.addProfile(profileOne);
