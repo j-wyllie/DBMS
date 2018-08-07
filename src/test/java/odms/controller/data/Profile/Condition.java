@@ -1,9 +1,8 @@
 package odms.controller.data.Profile;
 
-import javafx.fxml.FXMLLoader;
-import odms.controller.profile.ProfileConditionController;
+import odms.controller.profile.ConditionGeneral;
 import odms.model.profile.Profile;
-import odms.view.profile.ProfileMedicalHistoryView;
+import odms.view.profile.ProfileMedicalHistory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,8 +12,8 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class Condition {
-    public ProfileMedicalHistoryView view;
-    public ProfileConditionController controller;
+    public ProfileMedicalHistory view;
+    public ConditionGeneral controller;
     public Profile currentProfile;
 
     @Before
@@ -25,7 +24,7 @@ public class Condition {
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
-        controller = new ProfileConditionController(view);
+        controller = new ConditionGeneral(view);
     }
 
     @Test

@@ -1,9 +1,8 @@
 package odms.cli.commands;
 
 import odms.cli.CommandUtils;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.model.data.UserDatabase;
-import odms.model.history.History;
 import odms.model.enums.UserType;
 
 import java.time.LocalDateTime;
@@ -19,8 +18,8 @@ public class User extends CommandUtils {
      * @param id profile ID
      */
     protected static void addClinicianHistory(Integer id) {
-        History action = new History("user", id, "added", "", -1, LocalDateTime.now());
-        HistoryController.updateHistory(action);
+        odms.model.history.History action = new odms.model.history.History("user", id, "added", "", -1, LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -101,8 +100,8 @@ public class User extends CommandUtils {
             for (odms.model.user.User user : userList) {
                 result = currentDatabase.deleteUser(user.getStaffID());
                 if (result) {
-                    HistoryController.deletedUsers.add(user);
-                    HistoryController.updateHistory(new History("profile", user.getStaffID(),
+                    CurrentHistory.deletedUsers.add(user);
+                    CurrentHistory.updateHistory(new odms.model.history.History("profile", user.getStaffID(),
                             "deleted", "", -1, LocalDateTime.now()));
                 }
             }
@@ -122,12 +121,12 @@ public class User extends CommandUtils {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             for (odms.model.user.User user : userList) {
-                History action = new History("user", user.getStaffID(), "update",
+                odms.model.history.History action = new odms.model.history.History("user", user.getStaffID(), "update",
                         user.getAttributesSummary(), -1, null);
                 user.setExtraAttributes(attrArray);
                 action.setHistoryData(action.getHistoryData() + user.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
-                HistoryController.updateHistory(action);
+                CurrentHistory.updateHistory(action);
             }
         } else {
             System.out.println(searchNotFoundText);

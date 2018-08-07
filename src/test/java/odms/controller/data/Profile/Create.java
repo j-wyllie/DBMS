@@ -1,19 +1,17 @@
 package odms.controller.data.Profile;
 
 import javafx.fxml.FXMLLoader;
-import odms.controller.profile.ProfileCreateController;
-import odms.model.profile.Profile;
-import odms.view.profile.ProfileCreateAccountView;
+import odms.controller.profile.ProfileCreate;
+import odms.view.profile.CreateAccount;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class Create {
-    public ProfileCreateAccountView view;
-    public ProfileCreateController controller;
+    public CreateAccount view;
+    public ProfileCreate controller;
 
     @Before
     public void setup() throws IOException{

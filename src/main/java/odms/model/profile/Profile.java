@@ -1,7 +1,6 @@
 package odms.model.profile;
 
 import java.util.Set;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,11 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.model.enums.BloodTypeEnum;
 import odms.model.enums.CountriesEnum;
 import odms.model.enums.OrganEnum;
-import odms.model.history.History;
 import odms.model.medications.Drug;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -406,9 +404,9 @@ public class Profile implements Comparable<Profile> {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
             organ.setDate(LocalDate.now());
-            History action = new History("Profile", this.getId(),"required organ",
+            odms.model.history.History action = new odms.model.history.History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -430,9 +428,9 @@ public class Profile implements Comparable<Profile> {
             }
             this.addOrganDonating(organ);
 
-            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),
+            odms.model.history.History action = new odms.model.history.History("Profile ", this.getId(),"set",organ.getNamePlain(),
                     -1,LocalDateTime.now());
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -461,9 +459,10 @@ public class Profile implements Comparable<Profile> {
         generateUpdateInfo("organsReceived");
 
         for (OrganEnum organ : organs) {
-            addOrganReceived(organ);History action = new History("Profile ", this.getId(),
+            addOrganReceived(organ);
+            odms.model.history.History action = new odms.model.history.History("Profile ", this.getId(),
                     "received",organ.getNamePlain(),-1,LocalDateTime.now());
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -493,7 +492,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
-            History action = new History(
+            odms.model.history.History action = new odms.model.history.History(
                     "Profile ",
                     this.getId(),
                     "donated",
@@ -501,7 +500,7 @@ public class Profile implements Comparable<Profile> {
                     -1,
                     LocalDateTime.now()
             );
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
