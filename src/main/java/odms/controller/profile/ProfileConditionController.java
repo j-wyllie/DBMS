@@ -101,8 +101,7 @@ public class ProfileConditionController {
      * Button handler to handle toggle chronic button clicked, only available to clinicians
      */
     @FXML
-    public void toggleChronic(Profile p) {
-        ArrayList<Condition> conditions = view.getSelectedConditions();
+    public void toggleChronic(Profile p, ArrayList<Condition> conditions) {
         for (Condition condition : conditions) {
             if (condition != null) {
 
@@ -123,8 +122,7 @@ public class ProfileConditionController {
      *
      */
     @FXML
-    public void toggleCured(Profile p) {
-        ArrayList<Condition> conditions = view.getSelectedConditions();
+    public void toggleCured(Profile p, ArrayList<Condition> conditions) {
         for (Condition condition : conditions) {
             if (condition != null) {
 

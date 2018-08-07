@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class Edit {
+    //todo Tests can't work using a view as it can't be loaded and can't set values for fxml elements if it hasn't been loaded
 
     public ProfileEditView view;
     public ProfileEditController controller;

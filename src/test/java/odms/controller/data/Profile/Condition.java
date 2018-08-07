@@ -34,6 +34,25 @@ public class Condition {
     }
 
     @Test
+    public void testGetCuredConditions() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
+        assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+    }
+
+    @Test
+    public void testGetCurrentConditionsEmptyList() {
+        assertEquals(controller.getCurrentConditions(currentProfile).size(), 0);
+    }
+
+    @Test
+    public void testGetCurrentConditions() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
+        assertEquals(controller.getCurrentConditions(currentProfile).size(), 1);
+    }
+
+    @Test
     public void testAddValidCondition() {
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
         assertEquals(currentProfile.getAllConditions().size(), 1);
@@ -49,6 +68,54 @@ public class Condition {
     public void testAddValidCuredCondition() {
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
         assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+    }
+
+    @Test
+    public void testRemoveValidCondition() {
+        odms.model.profile.Condition c = new odms.model.profile.Condition("", LocalDate.now(),false);
+        controller.addCondition(c, currentProfile);
+        int initial_size = currentProfile.getAllConditions().size();
+        controller.removeCondition(c, currentProfile);
+        assertNotEquals(initial_size, currentProfile.getAllConditions().size());
+    }
+
+    @Test
+    public void testToggleChronicTrueCondition() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
+        controller.toggleChronic(currentProfile, currentProfile.getAllConditions());
+        assert(currentProfile.getAllConditions().get(0).getChronic());
+    }
+
+    @Test
+    public void testToggleChronicFalseCondition() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),true), currentProfile);
+        controller.toggleChronic(currentProfile, currentProfile.getAllConditions());
+        assertFalse(currentProfile.getAllConditions().get(0).getChronic());
+    }
+
+    @Test
+    public void testToggleCuredTrueCondition() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
+        controller.toggleCured(currentProfile, currentProfile.getAllConditions());
+        assert(currentProfile.getAllConditions().get(0).getCured());
+    }
+
+    @Test
+    public void testToggleCuredFalseCondition() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),LocalDate.now(),false), currentProfile);
+        controller.toggleCured(currentProfile, currentProfile.getAllConditions());
+        assertFalse(currentProfile.getAllConditions().get(0).getCured());
+    }
+
+    @Test
+    public void testToggleCuredChronicCondition() {
+        controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),true), currentProfile);
+        try {
+            controller.toggleCured(currentProfile, currentProfile.getAllConditions());
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Can not cure if Chronic");
+        }
     }
 
 }

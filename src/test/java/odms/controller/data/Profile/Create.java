@@ -16,10 +16,11 @@ public class Create {
     public ProfileCreateController controller;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileCreate.fxml"));
+        fxmlLoader.load();
         view = fxmlLoader.getController();
         System.out.println(view);
         controller = view.getController();

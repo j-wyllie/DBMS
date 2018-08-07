@@ -333,7 +333,7 @@ public class ProfileMedicalHistoryView extends CommonView {
      */
     @FXML
     private void handleToggleChronicButtonClicked(ActionEvent event) {
-        controller.toggleChronic(currentProfile);
+        controller.toggleChronic(currentProfile,getSelectedConditions());
         refreshConditionTable();
     }
 
@@ -346,7 +346,7 @@ public class ProfileMedicalHistoryView extends CommonView {
     @FXML
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         try {
-            controller.toggleCured(currentProfile);
+            controller.toggleCured(currentProfile,getSelectedConditions());
         } catch (IllegalArgumentException e) {
             AlertController.invalidEntry(e.getMessage());
         }
