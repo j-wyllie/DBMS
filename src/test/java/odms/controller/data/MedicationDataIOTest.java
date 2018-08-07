@@ -47,7 +47,7 @@ public class MedicationDataIOTest {
         substring1 = "";
         substring2 = null;
         expectedList1 = Collections.emptyList().toArray();
-        path = "./src/test/java/odms/controller/data/medicationTestData/";
+        path = "./src/test/resources/medicationTestData/";
 
         //Test for substring with valid value.
         substring3 = "res";
