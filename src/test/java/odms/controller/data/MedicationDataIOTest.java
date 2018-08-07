@@ -38,18 +38,16 @@ public class MedicationDataIOTest {
     private String drugTwo;
     private String drugThree;
     private String drugFour;
-    private String drugFive;
-    private String drugSix;
-    private String drugSeven;
-    private String drugEight;
     private Map<String, String> interactions;
+    private String path;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         //Test for null or empty substrings.
         substring1 = "";
         substring2 = null;
         expectedList1 = Collections.emptyList().toArray();
+        path = "./src/test/java/odms/controller/data/medicationTestData/";
 
         //Test for substring with valid value.
         substring3 = "res";
@@ -87,12 +85,8 @@ public class MedicationDataIOTest {
         // Test values for drug interactions test.
         drugOne = "acetaminophen";
         drugTwo = "warfarin-sodium";
-        drugThree = "fake drug";
-        drugFour = "another fake drug";
-        drugFive = "maca";
-        drugSix = null;
-        drugSeven = "";
-        drugEight = "warfarin sodium";
+        drugThree = null;
+        drugFour = "";
         interactions = new HashMap<>();
 
         interactions.put("international normalised ratio increased", "1 - 2 years");
@@ -125,12 +119,15 @@ public class MedicationDataIOTest {
     }
 
     @Test
-    public void testValidStringGetSuggestionList() throws Exception {
+    public void testValidStringGetSuggestionList() throws IOException {
+        String line;
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "src/test/resources/medicationTestData/suggestionListSampleResponse.json"));
+                path + "suggestionListSampleResponse.json"));
         StringBuffer suggestionData = new StringBuffer();
-        suggestionData.append(bufferedReader.readLine());
+        while ((line = bufferedReader.readLine()) != null) {
+            suggestionData.append(line);
+        }
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
@@ -148,12 +145,15 @@ public class MedicationDataIOTest {
     }
 
     @Test
-    public void testValidStringGetActiveIngredients() throws Exception {
+    public void testValidStringGetActiveIngredients() throws IOException {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        String line;
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "src/test/resources/medicationTestData/activeIngredientSampleResponse1.json"));
+                path + "activeIngredientSampleResponse1.json"));
         StringBuffer ingredientData = new StringBuffer();
-        ingredientData.append(bufferedReader.readLine());
+        while ((line = bufferedReader.readLine()) != null) {
+            ingredientData.append(line);
+        }
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
@@ -164,12 +164,15 @@ public class MedicationDataIOTest {
     }
 
     @Test
-    public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws Exception {
+    public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws IOException {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        String line;
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
+                path + "activeIngredientSampleResponse2.json"));
         StringBuffer ingredientData = new StringBuffer();
-        ingredientData.append(bufferedReader.readLine());
+        while ((line = bufferedReader.readLine()) != null) {
+            ingredientData.append(line);
+        }
 
         // Mock makeRequests method, returns json data of interactions in a stringBuffer
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
@@ -183,10 +186,13 @@ public class MedicationDataIOTest {
     public void testGetDrugInteractions() throws IOException{
         // Mock makeRequests method, returns json data of interactions in a stringBuffer.
         // Read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
+        String line;
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
+                path + "drugInteractionsSampleResponse.json"));
         StringBuffer interactionData = new StringBuffer();
-        interactionData.append(bufferedReader.readLine());
+        while ((line = bufferedReader.readLine()) != null) {
+            interactionData.append(line);
+        }
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
                 .toReturn(interactionData);
 
@@ -205,12 +211,12 @@ public class MedicationDataIOTest {
     public void testGetDrugInteractionsNullOrEmptyString() {
         //Test for null drug string
         Map<String, List<String>> map = new HashMap<>();
-        Interaction interaction = new Interaction(drugOne, drugSix, map, new HashMap<>(), map, map);
+        Interaction interaction = new Interaction(drugOne, drugThree, map, new HashMap<>(), map, map);
         Map<String, String> results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
         assertTrue(results.isEmpty());
 
         // Test for empty drug string
-        interaction = new Interaction(drugOne, drugSeven, map, new HashMap<>(), map, map);
+        interaction = new Interaction(drugOne, drugFour, map, new HashMap<>(), map, map);
         results = MedicationDataIO.getDrugInteractions(interaction, "male", 29);
         assertTrue(results.isEmpty());
     }
