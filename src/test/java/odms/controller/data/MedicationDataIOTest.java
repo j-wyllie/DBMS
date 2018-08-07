@@ -128,7 +128,7 @@ public class MedicationDataIOTest {
     public void testValidStringGetSuggestionList() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "./src/test/java/odms/data/medicationTestData/suggestionListSampleResponse.json"));
+                "src/test/resources/medicationTestData/suggestionListSampleResponse.json"));
         StringBuffer suggestionData = new StringBuffer();
         suggestionData.append(bufferedReader.readLine());
 
@@ -151,7 +151,7 @@ public class MedicationDataIOTest {
     public void testValidStringGetActiveIngredients() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse1.json"));
+                "src/test/resources/medicationTestData/activeIngredientSampleResponse1.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
@@ -167,7 +167,7 @@ public class MedicationDataIOTest {
     public void testValidStringGetActiveIngredientsWithSpaceInDrugName() throws Exception {
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "./src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
+                "src/test/java/odms/data/medicationTestData/activeIngredientSampleResponse2.json"));
         StringBuffer ingredientData = new StringBuffer();
         ingredientData.append(bufferedReader.readLine());
 
@@ -184,7 +184,7 @@ public class MedicationDataIOTest {
         // Mock makeRequests method, returns json data of interactions in a stringBuffer.
         // Read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                "./src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
+                "src/test/java/odms/data/medicationTestData/drugInteractionsSampleResponse.json"));
         StringBuffer interactionData = new StringBuffer();
         interactionData.append(bufferedReader.readLine());
         PowerMockito.stub(PowerMockito.method(MedicationDataIO.class, "makeRequest"))
