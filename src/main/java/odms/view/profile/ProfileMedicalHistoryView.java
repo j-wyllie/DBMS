@@ -159,11 +159,11 @@ public class ProfileMedicalHistoryView extends CommonView {
                                     .getDateCured())
                             || t.getNewValue().isAfter(LocalDate.now()))) {
                         controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                         (t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
                         controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                     }
                     refreshConditionTable();
                 });
@@ -185,11 +185,11 @@ public class ProfileMedicalHistoryView extends CommonView {
                             || t.getNewValue().isAfter(LocalDate.now())) {
                     } else {
                         controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                         (t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())).setDateCured(t.getNewValue());
                         controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                     }
                     refreshConditionTable();
                 });
@@ -221,11 +221,11 @@ public class ProfileMedicalHistoryView extends CommonView {
                 (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (!t.getNewValue().isAfter(LocalDate.now())) {
                         controller.removeCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                         (t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())).setDateOfDiagnosis(t.getNewValue());
                         controller.addCondition(t.getTableView().getItems().get(
-                                t.getTablePosition().getRow()));
+                                t.getTablePosition().getRow()),currentProfile);
                     }
 
                     refreshConditionTable();
@@ -265,11 +265,11 @@ public class ProfileMedicalHistoryView extends CommonView {
         curDescriptionColumn.setOnEditCommit(
                 (EventHandler<CellEditEvent<Condition, String>>) t -> {
                     controller.removeCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
+                            t.getTablePosition().getRow()),currentProfile);
                     (t.getTableView().getItems().get(
                             t.getTablePosition().getRow())).setName(t.getNewValue());
                     controller.addCondition(t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()));
+                            t.getTablePosition().getRow()),currentProfile);
                 });
     }
 
@@ -278,11 +278,11 @@ public class ProfileMedicalHistoryView extends CommonView {
      */
     private void refreshConditionLists() {
 
-        if (controller.getCurrentConditions() != null) {
-            curConditionsObservableList.setAll(controller.getCurrentConditions());
+        if (controller.getCurrentConditions(currentProfile) != null) {
+            curConditionsObservableList.setAll(controller.getCurrentConditions(currentProfile));
         }
-        if (controller.getCuredConditions() != null) {
-            pastConditionsObservableList.setAll(controller.getCuredConditions());
+        if (controller.getCuredConditions(currentProfile) != null) {
+            pastConditionsObservableList.setAll(controller.getCuredConditions(currentProfile));
         }
     }
 
@@ -322,7 +322,7 @@ public class ProfileMedicalHistoryView extends CommonView {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        controller.delete();
+        controller.delete(currentProfile);
         refreshConditionTable();
     }
 
@@ -333,7 +333,7 @@ public class ProfileMedicalHistoryView extends CommonView {
      */
     @FXML
     private void handleToggleChronicButtonClicked(ActionEvent event) {
-        controller.toggleChronic();
+        controller.toggleChronic(currentProfile);
         refreshConditionTable();
     }
 
@@ -346,7 +346,7 @@ public class ProfileMedicalHistoryView extends CommonView {
     @FXML
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         try {
-            controller.toggleCured();
+            controller.toggleCured(currentProfile);
         } catch (IllegalArgumentException e) {
             AlertController.invalidEntry(e.getMessage());
         }

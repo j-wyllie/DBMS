@@ -22,6 +22,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 public class Profile implements Comparable<Profile> {
 
     //TODO do we want regions as enum? Or stored somewhere else at least
+    //TODO merge must have taken all the old useless methods need to get rid of them
     public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
     private Boolean donor = false;

@@ -10,6 +10,7 @@ import odms.controller.CommonController;
 import odms.controller.history.HistoryController;
 import odms.model.history.History;
 import odms.model.profile.Condition;
+import odms.model.profile.Profile;
 import odms.view.profile.ProfileMedicalHistoryView;
 
 public class ProfileConditionController {
@@ -25,9 +26,9 @@ public class ProfileConditionController {
      *
      * @return the cured conditions of the user
      */
-    public ArrayList<Condition> getCuredConditions() {
+    public ArrayList<Condition> getCuredConditions(Profile p) {
         ArrayList<Condition> curedConditions = new ArrayList<>();
-        for (Condition condition : view.getCurrentProfile().getAllConditions()) {
+        for (Condition condition : p.getAllConditions()) {
             if (condition.getCured()) {
                 curedConditions.add(condition);
             }
@@ -41,10 +42,10 @@ public class ProfileConditionController {
      *
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions() {
+    public ArrayList<Condition> getCurrentConditions(Profile p) {
         //todo potentially add parent controller for conditions
         ArrayList<Condition> currentConditions = new ArrayList<>();
-        for (Condition condition : view.getCurrentProfile().getAllConditions()) {
+        for (Condition condition : p.getAllConditions()) {
             if (!condition.getCured()) {
                 currentConditions.add(condition);
             }
@@ -59,8 +60,8 @@ public class ProfileConditionController {
      *
      * @param condition to be removed
      */
-    public void removeCondition(Condition condition) {
-        view.getCurrentProfile().getAllConditions().remove(condition);
+    public void removeCondition(Condition condition,Profile p) {
+        p.getAllConditions().remove(condition);
     }
 
     public ArrayList<Condition> convertConditionObservableToArray(
@@ -81,16 +82,16 @@ public class ProfileConditionController {
      *
      */
     @FXML
-    public void delete() throws IOException {
+    public void delete(Profile p) throws IOException {
         ArrayList<Condition> conditions = view.getSelectedConditions();
         for (Condition condition : conditions) {
             if (condition != null) {
-                removeCondition(condition);
+                removeCondition(condition,p);
                 LocalDateTime currentTime = LocalDateTime.now();
-                History action = new History("profile", view.getCurrentProfile().getId(),
+                History action = new History("profile", p.getId(),
                         " removed condition", "(" + condition.getName() +
                         "," + condition.getDateOfDiagnosis() + "," + condition.getChronic() + "," +
-                        condition.getDateCuredString() + ")", getCurrentConditions().indexOf(condition), currentTime);
+                        condition.getDateCuredString() + ")", getCurrentConditions(p).indexOf(condition), currentTime);
                 HistoryController.updateHistory(action);
             }
         }
@@ -100,7 +101,7 @@ public class ProfileConditionController {
      * Button handler to handle toggle chronic button clicked, only available to clinicians
      */
     @FXML
-    public void toggleChronic() {
+    public void toggleChronic(Profile p) {
         ArrayList<Condition> conditions = view.getSelectedConditions();
         for (Condition condition : conditions) {
             if (condition != null) {
@@ -122,7 +123,7 @@ public class ProfileConditionController {
      *
      */
     @FXML
-    public void toggleCured() {
+    public void toggleCured(Profile p) {
         ArrayList<Condition> conditions = view.getSelectedConditions();
         for (Condition condition : conditions) {
             if (condition != null) {
@@ -143,7 +144,7 @@ public class ProfileConditionController {
         }
     }
 
-    public void addCondition(Condition condition) {
-        view.getCurrentProfile().getAllConditions().add(condition);
+    public void addCondition(Condition condition,Profile p) {
+        p.getAllConditions().add(condition);
     }
 }
