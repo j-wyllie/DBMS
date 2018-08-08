@@ -21,19 +21,19 @@ public class MySqlCountryDAOTest extends MySqlCommonTests {
     public void testGetAll() {
         List<String> countries = mySqlCountryDAO.getAll();
         // Changes this if our list of countries changes
-        assertEquals(countries.size(), 243);
+        assertEquals(243, countries.size());
     }
 
     @Test
     public void testGetAllValid() {
         List<String> countries = mySqlCountryDAO.getAll(false);
-        assertEquals(countries.size(), 1);
+        assertEquals(1, countries.size());
     }
 
     @Test
     public void testUpdate() {
         mySqlCountryDAO.update(CountriesEnum.NZ, true);
         List<String> countries = mySqlCountryDAO.getAll(false);
-        assertEquals(countries.size(), 0);
+        assertEquals(0, countries.size());
     }
 }
