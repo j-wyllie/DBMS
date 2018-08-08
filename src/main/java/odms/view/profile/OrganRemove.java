@@ -52,7 +52,7 @@ public class OrganRemove extends CommonView {
     @FXML
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        controller.confirm();
+        controller.confirm(getCurrentProfile());
         appStage.close();
     }
 

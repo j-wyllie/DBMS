@@ -6,6 +6,7 @@ import java.util.Set;
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.Profile;
 import odms.view.profile.OrganRemove;
 
 public class OrganRemoval extends CommonController {
@@ -20,7 +21,7 @@ public class OrganRemoval extends CommonController {
      * change.
      *
      */
-    public void confirm() {
+    public void confirm(Profile p) {
         String selection = view.getSelection();
         switch (selection) {
             case "Error":
@@ -37,7 +38,7 @@ public class OrganRemoval extends CommonController {
                 Set<OrganEnum> organsRequired = new HashSet<>(
                         view.getCurrentProfile().getOrgansRequired()
                 );
-                removeOrgansRequired(organsRequired);
+                removeOrgansRequired(organsRequired, p);
                 break;
             default:
                 // noop
@@ -49,14 +50,14 @@ public class OrganRemoval extends CommonController {
      *
      * @param organs a set of organs to be removed
      */
-    public void removeOrgansRequired(Set<OrganEnum> organs) {
+    public void removeOrgansRequired(Set<OrganEnum> organs, Profile p) {
         //todo fix generate update info into simpler solution
         //generateUpdateInfo("organsReceiving");
         for (OrganEnum organ : organs) {
-            view.getCurrentProfile().getOrgansRequired().remove(organ);
+            p.getOrgansRequired().remove(organ);
             odms.model.history.History action = new odms.model.history.History(
                     "profile ",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                     "removed required",
                     organ.getNamePlain(),
                     -1,
