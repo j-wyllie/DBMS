@@ -374,7 +374,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ the profile wishes to donate
      */
     public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
-        if (this.organsReceived.contains(organ)) {
+        if (this.organsDonating.contains(organ)) {
             // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
                     "Profile has previously received " + organ,
