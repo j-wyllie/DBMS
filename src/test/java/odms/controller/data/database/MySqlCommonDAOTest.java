@@ -15,7 +15,13 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
     private PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
-    private String expectedOutput = "Please enter a valid read-only query.\n";
+    private String expectedBadOutput = "Please enter a valid read-only query.\n";
+    private String expectedGoodOutput =
+        "+-----------------+--------------------------------------------------------+----------+\n"
+        + "| Id              | Name                                                   | Valid    |\n"
+        + "+-----------------+--------------------------------------------------------+----------+\n"
+        + "| 13              | NZ                                                     | 1        |\n"
+        + "+-----------------+--------------------------------------------------------+----------+\n\n";
 
     @Before
     public void setup() {
@@ -29,9 +35,16 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testReadOnlyQuery() {
+    public void testNotReadOnlyQuery() {
         String query = "DROP TABLE countries";
         mySqlCommonDAO.queryDatabase(query);
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedBadOutput, outContent.toString());
+    }
+
+    @Test
+    public void testReadOnlyQuery() {
+        String query = "SELECT * FROM countries WHERE Name='NZ'";
+        mySqlCommonDAO.queryDatabase(query);
+        assertEquals(expectedGoodOutput, outContent.toString());
     }
 }
