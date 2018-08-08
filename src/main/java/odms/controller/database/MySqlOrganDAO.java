@@ -59,6 +59,7 @@ public class MySqlOrganDAO implements OrganDAO {
                 allOrgans.add(organ);
             }
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
