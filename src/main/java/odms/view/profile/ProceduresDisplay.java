@@ -159,11 +159,11 @@ public class ProceduresDisplay extends CommonView {
 
         pendingProcedureTable.getItems().clear();
         previousProcedureTable.getItems().clear();
-        if (controller.getPendingProcedures() != null) {
-            pendingProceduresObservableList.addAll(controller.getPendingProcedures());
+        if (controller.getPendingProcedures(getProfile()) != null) {
+            pendingProceduresObservableList.addAll(controller.getPendingProcedures(getProfile()));
         }
-        if (controller.getPreviousProcedures() != null) {
-            previousProceduresObservableList.addAll(controller.getPreviousProcedures());
+        if (controller.getPreviousProcedures(getProfile()) != null) {
+            previousProceduresObservableList.addAll(controller.getPreviousProcedures(getProfile()));
         } else {
             return;
         }
@@ -209,8 +209,8 @@ public class ProceduresDisplay extends CommonView {
 
     public void initialize(Profile p) {
         currentProfile.setValue(p);
-        makeProcedureTable(controller.getPreviousProcedures(),
-                controller.getPendingProcedures());
+        makeProcedureTable(controller.getPreviousProcedures(getProfile()),
+                controller.getPendingProcedures(getProfile()));
         refreshProcedureTable();
     }
 

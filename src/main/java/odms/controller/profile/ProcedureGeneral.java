@@ -46,7 +46,7 @@ public class ProcedureGeneral {
      *
      * @param procedure the procedure to remove
      */
-    private void removeProcedure(odms.model.profile.Procedure procedure, Profile profile) {
+    public void removeProcedure(odms.model.profile.Procedure procedure, Profile profile) {
         List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
         procedures.remove(procedure);
     }
@@ -56,8 +56,8 @@ public class ProcedureGeneral {
      *
      * @return previous procedures
      */
-    public List<odms.model.profile.Procedure> getPreviousProcedures() {
-        Profile profile = view.getProfile();
+    public List<odms.model.profile.Procedure> getPreviousProcedures(Profile p) {
+        Profile profile = p;
         ArrayList<odms.model.profile.Procedure> prevProcedures = new ArrayList<>();
         List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
@@ -75,8 +75,8 @@ public class ProcedureGeneral {
      *
      * @return pending procedures
      */
-    public List<odms.model.profile.Procedure> getPendingProcedures() {
-        Profile profile = view.getProfile();
+    public List<odms.model.profile.Procedure> getPendingProcedures(Profile p) {
+        Profile profile = p;
         List<odms.model.profile.Procedure> pendingProcedures = new ArrayList<>();
         List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
