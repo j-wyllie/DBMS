@@ -97,6 +97,7 @@ public class DatabaseConnection {
         source.setMinPoolSize(5);
         source.setAcquireIncrement(5);
         source.setMaxPoolSize(50);
+        source.setMaxIdleTime(3000);
 
         connectionSource = source;
     }
