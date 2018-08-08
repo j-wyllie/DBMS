@@ -2,6 +2,7 @@ package odms.controller.profile;
 
 import java.util.List;
 import javafx.collections.ObservableList;
+import odms.model.profile.Profile;
 import odms.view.profile.Display;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
@@ -20,10 +21,10 @@ public class ProcedureAdd {
         view = v;
     }
 
-    public void add() throws IllegalArgumentException {
+    public void add(Profile p) throws IllegalArgumentException {
         Procedure procedure = parseProcedure();
         procedure.setOrgansAffected(view.getAffectedOrgansListView());
-        addProcedure(procedure);
+        addProcedure(procedure, p);
     }
 
     private Procedure parseProcedure() {
@@ -53,8 +54,8 @@ public class ProcedureAdd {
      *
      * @param procedure
      */
-    private void addProcedure(Procedure procedure) {
-        List<Procedure> procedures = view.getSearchedDonor().getAllProcedures();
+    public void addProcedure(Procedure procedure, Profile p) {
+        List<Procedure> procedures = p.getAllProcedures();
         procedures.add(procedure);
     }
 

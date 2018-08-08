@@ -211,18 +211,18 @@ public class OrganEdit extends OrganCommon {
     public void onBtnSaveClicked() {
         switch (getWindowType()) {
             case DONATED:
-                controller.caseDonated();
+                controller.caseDonated(getCurrentProfile());
                 break;
             case DONATING:
-                controller.caseDonating();
+                controller.caseDonating(getCurrentProfile());
                 break;
             case REQUIRED:
-                controller.caseRequired();
+                controller.caseRequired(getCurrentProfile());
                 break;
             default:
                 // noop
         }
-        controller.saveOrgans();
+        controller.saveOrgans(getCurrentProfile());
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }

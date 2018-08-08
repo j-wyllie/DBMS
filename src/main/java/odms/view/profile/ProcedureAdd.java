@@ -49,7 +49,7 @@ public class ProcedureAdd {
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         try {
-            controller.add();
+            controller.add(getSearchedDonor());
             parentView.refreshProcedureTable();
             ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
             Stage stage = (Stage) addButton.getScene().getWindow();

@@ -11,6 +11,7 @@ import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.OrganConflictException;
+import odms.model.profile.Profile;
 
 /**
  * Control access for items around the organ lists.
@@ -41,14 +42,14 @@ public class OrganEdit extends CommonController {
     }
 
     // todo rename to something meaningful
-    public void caseDonated() {
+    public void caseDonated(Profile p) {
         Set<OrganEnum> organsRemoved;
         organsRemoved = findOrgansRemoved(
-                view.getCurrentProfile().getOrgansDonated(),
+                p.getOrgansDonated(),
                 view.getOrgansAdded()
         );
-        addOrgansDonated(view.getOrgansAdded());
-        removeOrgansDonated(organsRemoved);
+        addOrgansDonated(view.getOrgansAdded(),p);
+        removeOrgansDonated(organsRemoved, p);
     }
 
     /**
@@ -56,20 +57,20 @@ public class OrganEdit extends CommonController {
      *
      * @param organs a set of organsDonating that the profile has donated
      */
-    public void addOrgansDonated(Set<OrganEnum> organs) {
+    public void addOrgansDonated(Set<OrganEnum> organs, Profile p) {
         //todo fix generate update info
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("pastDonations",
-                view.getCurrentProfile());
+                p);
 
         for (OrganEnum organ : organs) {
             //todo might need to change to addOrganDonated
-            if(!DAOFactory.getOrganDao().getDonations(view.getCurrentProfile()).contains(organ)) {
-                DAOFactory.getOrganDao().addDonation(view.getCurrentProfile(), organ);
+            if(!DAOFactory.getOrganDao().getDonations(p).contains(organ)) {
+                DAOFactory.getOrganDao().addDonation(p, organ);
             }
-            view.getCurrentProfile().getOrgansDonated().add(organ);
+            p.getOrgansDonated().add(organ);
             odms.model.history.History action = new odms.model.history.History(
                     "profile ",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                     "donated",
                     organ.getNamePlain(),
                     -1,
@@ -84,19 +85,19 @@ public class OrganEdit extends CommonController {
      *
      * @param organs a set of organs to remove from the list
      */
-    public void removeOrgansDonated(Set<OrganEnum> organs) {
+    public void removeOrgansDonated(Set<OrganEnum> organs, Profile p) {
         //todo fix generate update info
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonated",
-                view.getCurrentProfile());
+                p);
 
         for (OrganEnum organ : organs) {
-            if(DAOFactory.getOrganDao().getDonations(view.getCurrentProfile()).contains(organ)) {
-                DAOFactory.getOrganDao().removeDonation(view.getCurrentProfile(), organ);
+            if(DAOFactory.getOrganDao().getDonations(p).contains(organ)) {
+                DAOFactory.getOrganDao().removeDonation(p, organ);
             }
-            view.getCurrentProfile().getOrgansDonated().remove(organ);
+            p.getOrgansDonated().remove(organ);
             odms.model.history.History action = new odms.model.history.History(
                     "profile ",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                     "removed donated",
                     organ.getNamePlain(),
                     -1,
@@ -107,23 +108,23 @@ public class OrganEdit extends CommonController {
     }
 
     // todo rename to something more meaningful
-    public void caseDonating() {
+    public void caseDonating(Profile p) {
         try {
             Set<OrganEnum> organsRemoved;
-            view.getCurrentProfile().setDonor(true);
+            p.setDonor(true);
 
             organsRemoved = findOrgansRemoved(
-                    view.getCurrentProfile().getOrgansDonating(),
+                    p.getOrgansDonating(),
                     view.getOrgansAdded()
             );
 
-            view.getOrgansAdded().removeAll(view.getCurrentProfile().getOrgansDonating());
-            addOrgansDonating(view.getOrgansAdded());
-            removeOrgansDonating(organsRemoved);
+            view.getOrgansAdded().removeAll(p.getOrgansDonating());
+            addOrgansDonating(view.getOrgansAdded(), p);
+            removeOrgansDonating(organsRemoved, p);
         } catch (OrganConflictException e) {
             AlertController.invalidOrgan(e.getOrgan());
         }
-        view.getCurrentProfile().updatedDonorStatus();
+        p.updatedDonorStatus();
     }
 
     /**
@@ -131,22 +132,22 @@ public class OrganEdit extends CommonController {
      *
      * @param organs a set of organs to be removed
      */
-    public void removeOrgansDonating(Set<OrganEnum> organs) {
+    public void removeOrgansDonating(Set<OrganEnum> organs, Profile p) {
         // todo generate update info
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsDonating",
-                view.getCurrentProfile()
+                p
         );
 
         for (OrganEnum organ : organs) {
-            if(DAOFactory.getOrganDao().getDonating(view.getCurrentProfile()).contains(organ)) {
-                DAOFactory.getOrganDao().removeDonating(view.getCurrentProfile(), organ);
+            if(DAOFactory.getOrganDao().getDonating(p).contains(organ)) {
+                DAOFactory.getOrganDao().removeDonating(p, organ);
             }
-            view.getCurrentProfile().getOrgansDonating().remove(organ);
-            DAOFactory.getOrganDao().removeDonating(view.getCurrentProfile(), organ);
+            p.getOrgansDonating().remove(organ);
+            DAOFactory.getOrganDao().removeDonating(p, organ);
             odms.model.history.History action = new odms.model.history.History(
                     "profile ",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                     "removed",
                     organ.getNamePlain(),
                     -1,
@@ -163,27 +164,27 @@ public class OrganEdit extends CommonController {
      * @throws IllegalArgumentException if a bad argument is used
      * @throws OrganConflictException   if there is a conflicting organ
      */
-    public void addOrgansDonating(Set<OrganEnum> organs)
+    public void addOrgansDonating(Set<OrganEnum> organs, Profile p)
             throws IllegalArgumentException, OrganConflictException {
         //todo
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsDonating",
-                view.getCurrentProfile()
+                p
         );
 
         for (OrganEnum organ : organs) {
-            if(!DAOFactory.getOrganDao().getDonating(view.getCurrentProfile()).contains(organ)) {
-                if(DAOFactory.getOrganDao().getReceived(view.getCurrentProfile()).contains(organ)){
+            if(!DAOFactory.getOrganDao().getDonating(p).contains(organ)) {
+                if(DAOFactory.getOrganDao().getReceived(p).contains(organ)){
                     // A donor cannot donate an organ they've received.
                     throw new OrganConflictException(
                             "profile has previously received " + organ,
                             organ
                     );
                 }
-                DAOFactory.getOrganDao().addDonating(view.getCurrentProfile(), organ);
+                DAOFactory.getOrganDao().addDonating(p, organ);
             }
 
-            odms.model.history.History action = new odms.model.history.History("profile ", view.getCurrentProfile().getId(), "set",
+            odms.model.history.History action = new odms.model.history.History("profile ", p.getId(), "set",
                     organ.getNamePlain(),
                     -1, LocalDateTime.now());
             CurrentHistory.updateHistory(action);
@@ -191,31 +192,17 @@ public class OrganEdit extends CommonController {
     }
 
     // TODO what does this even mean??
-    public void caseRequired() {
+    public void caseRequired(Profile p) {
         Set<OrganEnum> organsRemoved;
-        view.getCurrentProfile().setReceiver(true);
+        p.setReceiver(true);
 
         organsRemoved = findOrgansRemoved(
-                view.getCurrentProfile().getOrgansRequired(),
+                p.getOrgansRequired(),
                 view.getOrgansAdded()
         );
-        addOrgansRequired(view.getOrgansAdded());
-        removeOrgansRequired(organsRemoved);
-        view.getCurrentProfile().updatedReceiverStatus();
-    }
-
-    /**
-     * Add an organ to the organs required list.
-     *
-     * @param organ the organ the profile requires
-     */
-    public void addOrganRequired(OrganEnum organ) {
-        view.getCurrentProfile().setReceiver(true);
-        view.getCurrentProfile().getOrgansRequired().add(organ);
-        if(!DAOFactory.getOrganDao().getRequired(view.getCurrentProfile()).contains(organ)){
-            DAOFactory.getOrganDao().addRequired(view.getCurrentProfile(), organ);
-        }
-
+        addOrgansRequired(view.getOrgansAdded(), p);
+        removeOrgansRequired(organsRemoved, p);
+        p.updatedReceiverStatus();
     }
 
     /**
@@ -223,22 +210,24 @@ public class OrganEdit extends CommonController {
      *
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(Set<OrganEnum> organs) {
+    public void addOrgansRequired(Set<OrganEnum> organs, Profile p) {
         //todo
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsRequired",
-                view.getCurrentProfile()
+                p
         );
 
         for (OrganEnum organ : organs) {
-            if(!DAOFactory.getOrganDao().getRequired(view.getCurrentProfile()).contains(organ)){
-                DAOFactory.getOrganDao().addRequired(view.getCurrentProfile(), organ);
+            p.setReceiver(true);
+            p.getOrgansRequired().add(organ);
+            if(!DAOFactory.getOrganDao().getRequired(p).contains(organ)){
+                DAOFactory.getOrganDao().addRequired(p, organ);
             }
             //addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
             odms.model.history.History action = new odms.model.history.History(
                 "profile",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                 "required organ",
                 "" + organ.getNamePlain(),
                 -1,
@@ -253,21 +242,21 @@ public class OrganEdit extends CommonController {
      *
      * @param organs a set of organs to be removed
      */
-    public void removeOrgansRequired(Set<OrganEnum> organs) {
+    public void removeOrgansRequired(Set<OrganEnum> organs, Profile p) {
         //todo fix generate update info into simpler solution
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsReceiving",
-                view.getCurrentProfile()
+                p
         );
 
         for (OrganEnum organ : organs) {
-            if(DAOFactory.getOrganDao().getRequired(view.getCurrentProfile()).contains(organ)) {
-                DAOFactory.getOrganDao().removeRequired(view.getCurrentProfile(), organ);
+            if(DAOFactory.getOrganDao().getRequired(p).contains(organ)) {
+                DAOFactory.getOrganDao().removeRequired(p, organ);
             }
-            view.getCurrentProfile().getOrgansRequired().remove(organ);
+            p.getOrgansRequired().remove(organ);
             odms.model.history.History action = new odms.model.history.History(
                     "profile ",
-                    view.getCurrentProfile().getId(),
+                    p.getId(),
                     "removed required",
                     organ.getNamePlain(),
                     -1,
@@ -278,10 +267,10 @@ public class OrganEdit extends CommonController {
         }
     }
 
-    public void saveOrgans() {
+    public void saveOrgans(Profile p) {
         ProfileDAO database = DAOFactory.getProfileDao();
         try {
-            database.update(view.getCurrentProfile());
+            database.update(p);
         } catch (SQLException e) {
             e.printStackTrace();
         }
