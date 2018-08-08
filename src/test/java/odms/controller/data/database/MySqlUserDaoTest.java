@@ -46,13 +46,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     public void testGetAll() throws SQLException {
         mySqlUserDAO.add(testUser1);
 
-        assertEquals(2, mySqlUserDAO.getAll().size());
+        assertEquals(6, mySqlUserDAO.getAll().size());
     }
 
     @Test
     public void testRemove() throws SQLException {
         mySqlUserDAO.remove(testUser0);
-        assertEquals(0, mySqlUserDAO.getAll().size());
+        assertEquals(7, mySqlUserDAO.getAll().size());
     }
 
     @Test

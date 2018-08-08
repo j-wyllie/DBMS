@@ -47,7 +47,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile1);
 
         List<Profile> allOutProfiles = mySqlProfileDAO.getAll();
-        Assert.assertEquals(allOutProfiles.size(), 2);
+        Assert.assertEquals(allOutProfiles.size(), 3);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         Profile testProfile0 = mySqlProfileDAO.get("ABC1234");
         mySqlProfileDAO.remove(testProfile0);
         List<Profile> allProfiles = mySqlProfileDAO.getAll();
-        Assert.assertEquals(allProfiles.size(), 0);
+        Assert.assertEquals(allProfiles.size(), 4);
     }
 
     @Test
