@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
 import odms.model.user.UserType;
@@ -18,8 +19,8 @@ public class MySqlUserDAO implements UserDAO {
      * @return ArrayList of all users in the database
      */
     @Override
-    public ArrayList<User> getAll() throws SQLException {
-        ArrayList<User> allUsers = new ArrayList<>();
+    public List<User> getAll() throws SQLException {
+        List<User> allUsers = new ArrayList<>();
 
         String query = "select * from users;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
@@ -266,5 +267,71 @@ public class MySqlUserDAO implements UserDAO {
             conn.close();
             stmt.close();
         }
+    }
+
+    /**
+     * Searches the database for users based on their name.
+     * @param name of the user.
+     * @return a list of users with matching names.
+     * @throws SQLException error.
+     */
+    @Override
+    public List<User> search(String name) throws SQLException {
+        List<User> users = new ArrayList<>();
+
+        String query = "select * from users where Name = ?";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        Connection conn = connectionInstance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+
+            stmt.setString(1, name);
+            ResultSet allUserRows = stmt.executeQuery(query);
+
+            while (allUserRows.next()) {
+                User user = parseUser(allUserRows);
+                users.add(user);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return users;
+    }
+
+    /**
+     * Searches the database for users based on their name
+     * @param id of the user.
+     * @return the user with the matching id.
+     * @throws SQLException error.
+     */
+    @Override
+    public List<User> search(int id) throws SQLException {
+        List<User> users = new ArrayList<>();
+
+        String query = "select * from users where UserId = ?";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        Connection conn = connectionInstance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+
+            stmt.setInt(1, id);
+            ResultSet allUserRows = stmt.executeQuery(query);
+
+            while (allUserRows.next()) {
+                User user = parseUser(allUserRows);
+                users.add(user);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return users;
     }
 }

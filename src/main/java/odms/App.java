@@ -43,7 +43,7 @@ public class App {
             } else {
                 switch (args[0].toLowerCase()) {
                     case "-cmd":
-                        CommandLine commandLine = new CommandLine(profileDb, userDb);
+                        CommandLine commandLine = new CommandLine();
                         commandLine.initialiseConsole();
                         break;
                 }
@@ -61,9 +61,4 @@ public class App {
     public static UserDatabase getUserDb() {
         return userDb;
     }
-
-    public void setCurrentDatabase(ProfileDatabase profileDb) {
-        this.profileDb = profileDb;
-    }
-
 }

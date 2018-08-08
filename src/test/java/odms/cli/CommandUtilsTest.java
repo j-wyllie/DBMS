@@ -1,5 +1,9 @@
 package odms.cli;
 
+import java.sql.SQLException;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
+import odms.controller.database.UserDAO;
 import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
@@ -189,7 +193,7 @@ public class CommandUtilsTest {
     }
 
     @Test
-    public void testCreateProfileCommand() {
+    public void testCreateProfileCommand() throws SQLException {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
         String dob = "12-08-1989";
@@ -207,9 +211,12 @@ public class CommandUtilsTest {
                 "dob=\"" + dob + "\" " +
                 "nhi=\"" + nhi + "\"";
 
-        odms.cli.commands.Profile.createProfile(profileDb, createProfileStr);
 
-        Profile profile = profileDb.searchNHI(nhi).get(0);
+        odms.cli.commands.Profile.createProfile(createProfileStr);
+        ProfileDAO database = DAOFactory.getProfileDao();
+
+        Profile profile = database.search(nhi, 0, 0, null,
+                null, null, null).get(0);
 
         assertEquals(profile.getGivenNames(), givenNames);
         assertEquals(profile.getLastNames(), lastNames);
@@ -228,7 +235,7 @@ public class CommandUtilsTest {
                 "region=\"" + region + "\" " +
                 "workAddress=\"" + workAddress + "\" ";
 
-        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+        User user = odms.cli.commands.User.createClinician(createClinicianStr);
 
         assertEquals(user.getName(), name);
         assertEquals(user.getRegion(), region);
@@ -242,13 +249,13 @@ public class CommandUtilsTest {
         String deleteProfileStr = "profile " +
                 "nhi=\"" + nhi + "\" "
                 + "> delete";
-        odms.cli.commands.Profile.deleteProfileBySearch(profileDb, deleteProfileStr);
+        odms.cli.commands.Profile.deleteProfileBySearch(deleteProfileStr);
 
         assertEquals(profileDb.searchNHI("ABC1234").size(), 0);
     }
 
     @Test
-    public void testDeleteUserCommand() {
+    public void testDeleteUserCommand() throws SQLException {
         String name = "Bobby";
         String region = "John";
         String workAddress = "Christchurch";
@@ -258,19 +265,19 @@ public class CommandUtilsTest {
                 "region=\"" + region + "\" " +
                 "workAddress=\"" + workAddress + "\" ";
 
-        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+        User user = odms.cli.commands.User.createClinician(createClinicianStr);
 
         int staffID = user.getStaffID();
         String deleteProfileStr = "clinician " +
                 "staffID=\"" + staffID + "\" "
                 + "> delete";
-        odms.cli.commands.User.deleteUserBySearch(userDb, deleteProfileStr, "clinician");
-
-        assertEquals(0, userDb.searchStaffID(staffID).size());
+        odms.cli.commands.User.deleteUserBySearch(deleteProfileStr, "clinician");
+        UserDAO database = DAOFactory.getUserDao();
+        assertEquals(0, database.search(staffID).size());
     }
 
     @Test
-    public void testUpdateProfileCommand() {
+    public void testUpdateProfileCommand() throws SQLException {
         String givenNames = "Boaty McBoatface";
         String nhi = "ABC1234";
         String updateProfileStr = "profile " +
@@ -278,14 +285,16 @@ public class CommandUtilsTest {
                 + "> "
                 + "given-names=\"" + givenNames + "\"";
 
-        odms.cli.commands.Profile.updateProfilesBySearch(profileDb, updateProfileStr);
+        odms.cli.commands.Profile.updateProfilesBySearch(updateProfileStr);
+        ProfileDAO database = DAOFactory.getProfileDao();
 
-        Profile updatedProfile = profileDb.searchNHI(nhi).get(0);
+        Profile updatedProfile = database.search(nhi, 0, 0, null,
+                null, null, null).get(0);
         assertEquals(updatedProfile.getGivenNames(), givenNames);
     }
 
     @Test
-    public void testUpdateClinicianCommand() {
+    public void testUpdateClinicianCommand() throws SQLException {
         String name = "Bobby";
         String region = "Canterbury";
         String workAddress = "Christchurch";
@@ -295,7 +304,7 @@ public class CommandUtilsTest {
                 "region=\"" + region + "\" " +
                 "workAddress=\"" + workAddress + "\" ";
 
-        User user = odms.cli.commands.User.createClinician(userDb, createClinicianStr);
+        User user = odms.cli.commands.User.createClinician(createClinicianStr);
         int staffID = user.getStaffID();
 
         String newName = "Billy";
@@ -304,20 +313,25 @@ public class CommandUtilsTest {
                 + "> "
                 + "name=\"" + newName + "\"";
 
-        odms.cli.commands.User.updateUserBySearch(userDb, updateClinicianStr, "clinician");
+        odms.cli.commands.User.updateUserBySearch(updateClinicianStr, "clinician");
+        UserDAO database = DAOFactory.getUserDao();
 
-        User updatedUser = userDb.searchStaffID(staffID).get(0);
+        User updatedUser = database.search(staffID).get(0);
         assertEquals(updatedUser.getName(), newName);
     }
 
     @Test
-    public void testProfileDateCreatedCommand() {
+    public void testProfileDateCreatedCommand() throws SQLException {
         String nhi = "ABC1234";
         String viewProfileDateStr = "profile " +
                 "nhi=\"" + nhi + "\" "
                 + "> date-created";
-        Profile profile = profileDb.searchNHI(nhi).get(0);
-        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, viewProfileDateStr);
+
+        ProfileDAO database = DAOFactory.getProfileDao();
+
+        Profile profile = database.search(nhi, 0, 0, null, null,
+                null, null).get(0);
+        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(viewProfileDateStr);
 
         assertTrue(
                 result.toString().trim().split("\\r?\\n")[3]
@@ -337,7 +351,7 @@ public class CommandUtilsTest {
                 "region=\"" + region + "\" " +
                 "workAddress=\"" + workAddress + "\" ";
 
-        int staffID = odms.cli.commands.User.createClinician(userDb, createClinicianStr)
+        int staffID = odms.cli.commands.User.createClinician(createClinicianStr)
                 .getStaffID();
 
         String viewClincianDateStr = "clinician " +
@@ -346,7 +360,7 @@ public class CommandUtilsTest {
 
         User user = userDb.searchStaffID(staffID).get(0);
         odms.cli.commands.User
-                .viewDateTimeCreatedBySearch(userDb, viewClincianDateStr, "clinician");
+                .viewDateTimeCreatedBySearch(viewClincianDateStr, "clinician");
 
         assertTrue(
                 result.toString().trim().split("\\r?\\n")[4]

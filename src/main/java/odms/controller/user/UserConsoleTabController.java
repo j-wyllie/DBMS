@@ -18,8 +18,7 @@ public class UserConsoleTabController {
         System.setOut(commandGUI.getOut());
 
         // Start the command line in an alternate thread
-        CommandLine commandLine = new CommandLine(App.getProfileDb(), commandGUI.getIn(),
-                commandGUI.getOut());
+        CommandLine commandLine = new CommandLine(commandGUI.getIn(), commandGUI.getOut());
         commandGUI.initHistory(commandLine);
         Thread t = new Thread(commandLine);
         t.start();

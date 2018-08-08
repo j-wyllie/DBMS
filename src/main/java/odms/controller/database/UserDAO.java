@@ -2,6 +2,7 @@ package odms.controller.database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import odms.controller.user.UserNotFoundException;
 import odms.model.user.User;
 
@@ -10,7 +11,7 @@ public interface UserDAO {
     /**
      * Gets all users from the database.
      */
-    ArrayList<User> getAll() throws SQLException;
+    List<User> getAll() throws SQLException;
 
     /**
      * Gets a single user from the database by id.
@@ -53,4 +54,19 @@ public interface UserDAO {
      */
     void update(User user) throws SQLException;
 
+    /**
+     * Searches the database for users based on their id.
+     * @param name of the user.
+     * @return a list of users with matching names.
+     * @throws SQLException error.
+     */
+    List<User> search(String name) throws SQLException;
+
+    /**
+     * Searches the database for users based on their id.
+     * @param id of the user.
+     * @return the user with a matching id.
+     * @throws SQLException error.
+     */
+    List<User> search(int id) throws SQLException;
 }

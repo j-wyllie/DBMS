@@ -149,17 +149,21 @@ public class User extends CommandUtils {
         List<odms.model.user.User> users = new ArrayList<>();
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-            if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
-                users = database.search(attr);
-            } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
-                    .equals("staffID")) {
-                users = database.search(Integer.valueOf(attr));
+        try {
+            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+                if (expression.substring(lengthToSkip, lengthToSkip + "name".length()).equals("name")) {
+                    users = database.search(attr);
+                } else if (expression.substring(lengthToSkip, lengthToSkip + "staffID".length())
+                        .equals("staffID")) {
+                    users = database.search(Integer.valueOf(attr));
+                } else {
+                    System.out.println(searchErrorText);
+                }
             } else {
                 System.out.println(searchErrorText);
             }
-        } else {
-            System.out.println(searchErrorText);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return users;
     }
