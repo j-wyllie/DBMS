@@ -54,12 +54,12 @@ public class MySqlOrganDAO implements OrganDAO {
 
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
-                System.out.println(organName);
                 OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
                 organ.setDate(allOrganRows.getDate("DateRegistered").toLocalDate());
                 allOrgans.add(organ);
             }
             conn.close();
+            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

@@ -34,6 +34,4 @@ public class Create {
         view.setNhiField("ABC1234");
         controller.createAccount();
     }
-
-
 }
