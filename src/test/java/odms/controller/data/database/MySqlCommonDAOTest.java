@@ -22,14 +22,14 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
     private PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
-    private String expectedBadOutput = "Please enter a valid read-only query.\n";
-    private String expectedGoodOutput =
-            "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+\n"
-            + "| NHI                      | GivenNames                                             | Height                     | Weight                     | Gender                             | Lastnames                                              | Dod                     |\n"
-            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+\n"
-            + "| ABC1234                  | Joshua                                                 | 0.0                        | 0.0                        | null                               | Wyllie                                                 | null                    |\n"
-            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+\n"
-            + "\n";
+    private String expectedBadOutput = "Please enter a valid read-only query.";
+    private String expectedGoodOutput = String.format(
+            "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
+            + "| NHI                      | GivenNames                                             | Height                     | Weight                     | Gender                             | Lastnames                                              | Dod                     |%n"
+            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
+            + "| ABC1234                  | Joshua                                                 | 0.0                        | 0.0                        | null                               | Wyllie                                                 | null                    |%n"
+            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+"
+    );
 
     @Before
     public void setup() {
@@ -47,7 +47,7 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
     public void testNotReadOnlyQuery() {
         String query = "DROP TABLE countries";
         mySqlCommonDAO.queryDatabase(query);
-        assertEquals(expectedBadOutput, outContent.toString());
+        assertEquals(expectedBadOutput, outContent.toString().trim());
     }
 
     @Test
@@ -55,13 +55,13 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile0);
         String query = "SELECT NHI, GivenNames, Height, Weight, Gender, Lastnames, dod FROM profiles";
         mySqlCommonDAO.queryDatabase(query);
-        assertEquals(expectedGoodOutput, outContent.toString());
+        assertEquals(expectedGoodOutput, outContent.toString().trim());
     }
 
     @Test
     public void TestMalformedQuery() {
         String query = "SELECT * FROM tim_likes_cookies";
         mySqlCommonDAO.queryDatabase(query);
-        assertEquals(expectedBadOutput, outContent.toString());
+        assertEquals(expectedBadOutput, outContent.toString().trim());
     }
 }
