@@ -319,9 +319,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             stmt.executeUpdate();
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         finally {
             stmt.close();
             conn.close();

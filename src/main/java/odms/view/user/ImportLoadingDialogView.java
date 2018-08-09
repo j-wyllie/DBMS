@@ -92,16 +92,6 @@ public class ImportLoadingDialogView extends CommonView {
                     event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
-                List<Profile> profiles = profileImportTask.getDb();
-                ProfileDAO database = DAOFactory.getProfileDao();
-
-                profiles.forEach(profile -> {
-                    try {
-                        database.add(profile);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
                 closeWindows(parentStage);
             });
 
