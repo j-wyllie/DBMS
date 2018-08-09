@@ -2,11 +2,10 @@ package odms.cli.commands;
 
 import java.util.List;
 import odms.cli.CommandUtils;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
-import odms.model.history.History;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class Profile extends CommandUtils {
      * @param id profile ID
      */
     protected static void addProfileHistory(Integer id) {
-        History action = new History("profile", id, "added", "", -1, LocalDateTime.now());
-        HistoryController.updateHistory(action);
+        odms.model.history.History action = new odms.model.history.History("profile", id, "added", "", -1, LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -103,8 +102,8 @@ public class Profile extends CommandUtils {
             for (odms.model.profile.Profile profile : profileList) {
                 result = currentDatabase.deleteProfile(profile.getId());
                 if (result) {
-                    HistoryController.deletedProfiles.add(profile);
-                    HistoryController.updateHistory(new History("profile", profile.getId(),
+                    CurrentHistory.deletedProfiles.add(profile);
+                    CurrentHistory.updateHistory(new odms.model.history.History("profile", profile.getId(),
                             "deleted", "", -1, LocalDateTime.now()));
                 }
             }
@@ -124,12 +123,12 @@ public class Profile extends CommandUtils {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             for (odms.model.profile.Profile profile : profileList) {
-                History action = new History("profile", profile.getId(), "update",
+                odms.model.history.History action = new odms.model.history.History("profile", profile.getId(), "update",
                         profile.getAttributesSummary(), -1, null);
                 ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attrArray, profile);
                 action.setHistoryData(action.getHistoryData() + profile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
-                HistoryController.updateHistory(action);
+                CurrentHistory.updateHistory(action);
 
             }
         } else {

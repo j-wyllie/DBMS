@@ -2,7 +2,7 @@ package odms.controller.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.model.data.ProfileDatabase;
 
 import java.io.BufferedWriter;
@@ -46,16 +46,16 @@ public class ProfileDataIO extends CommonDataIO {
             writeFile.write(gson.toJson(profileDb));
             writeFile.close();
             if (history.equals("")) {
-                history = gson.toJson(HistoryController.getHistory());
-            } else if (HistoryController.getHistory().get(HistoryController.getPosition())
+                history = gson.toJson(CurrentHistory.getHistory());
+            } else if (CurrentHistory.getHistory().get(CurrentHistory.getPosition())
                     != null) {
                 history = history.substring(0, history.length() - 1);
 
-                for (int i = lastPosition; i < HistoryController.getPosition(); i++) {
+                for (int i = lastPosition; i < CurrentHistory.getPosition(); i++) {
                     history = history + "," + gson
-                            .toJson(HistoryController.getHistory().get(i).toString());
+                            .toJson(CurrentHistory.getHistory().get(i).toString());
                 }
-                lastPosition = HistoryController.getPosition();
+                lastPosition = CurrentHistory.getPosition();
             }
             writeHistoryFile.write(history);
             writeHistoryFile.close();
