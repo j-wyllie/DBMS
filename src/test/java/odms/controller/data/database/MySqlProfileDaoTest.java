@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import odms.controller.database.MySqlProfileDAO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +60,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile1);
 
         List<Profile> allOutProfiles = mySqlProfileDAO.getAll();
-        assertEquals(7, allOutProfiles.size());
+        assertEquals(2, allOutProfiles.size());
     }
 
     @Test
@@ -67,18 +69,18 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         Profile testProfile0 = mySqlProfileDAO.get("ABC1234");
         mySqlProfileDAO.remove(testProfile0);
         List<Profile> allProfiles = mySqlProfileDAO.getAll();
-        assertEquals(9, allProfiles.size());
+        assertEquals(0, allProfiles.size());
     }
 
     @Test
-    public void isUniqueUsername() throws SQLException {
+    public void testIsUniqueUsername() throws SQLException {
         mySqlProfileDAO.add(testProfileLong0);
         boolean isUnique = mySqlProfileDAO.isUniqueUsername(testProfileLong0.getUsername());
         assertEquals(false, isUnique);
     }
 
     @Test
-    public void update() throws SQLException {
+    public void testupdate() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
         testProfile0.setDateOfDeath(LocalDate.now());
@@ -88,7 +90,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     }
 
     @Test
-    public void search() throws SQLException, OrganConflictException {
+    public void testSearch() throws SQLException, OrganConflictException {
 
         mySqlProfileDAO.add(testProfileLong0);
         Profile newProfile = mySqlProfileDAO.get("DSF5422");
@@ -98,6 +100,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         organs.add(OrganEnum.LIVER);
         Profile receivedProfile = mySqlProfileDAO.search("Jack", 20, 20,
                 "canterbury", "male", "donor", organs).get(0);
+        assertEquals(newProfile.getUsername(), receivedProfile.getUsername());
     }
 
     @Test
@@ -107,7 +110,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testGetAllReceiving() throws SQLException, OrganConflictException {
+    public void testGetAllReceiving() throws SQLException {
         testProfile0.setReceiver(true);
         mySqlProfileDAO.add(testProfile0);
         Profile newProfile = mySqlProfileDAO.get("ABC1234");
@@ -116,4 +119,12 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         assertEquals(1, mySqlProfileDAO.getAllReceiving().size());
     }
 
+    @After
+    public void cleanup() throws SQLException {
+        ArrayList<Profile> profiles = (ArrayList<Profile>) mySqlProfileDAO.getAll();
+        for (Profile profile : profiles) {
+            mySqlProfileDAO.remove(profile);
+        }
+
+    }
 }

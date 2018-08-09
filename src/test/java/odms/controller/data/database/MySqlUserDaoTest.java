@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import odms.controller.database.DatabaseConnection;
 import odms.controller.database.MySqlUserDAO;
 import odms.controller.user.UserNotFoundException;
@@ -46,13 +47,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     public void testGetAll() throws SQLException {
         mySqlUserDAO.add(testUser1);
 
-        assertEquals(6, mySqlUserDAO.getAll().size());
+        assertEquals(2, mySqlUserDAO.getAll().size());
     }
 
     @Test
     public void testRemove() throws SQLException {
         mySqlUserDAO.remove(testUser0);
-        assertEquals(7, mySqlUserDAO.getAll().size());
+        assertEquals(0, mySqlUserDAO.getAll().size());
     }
 
     @Test
@@ -71,5 +72,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     @Test
     public void testIsUniqueUsernameTrue() throws SQLException {
         assertTrue(mySqlUserDAO.isUniqueUsername("Username"));
+    }
+
+    @After
+    public void cleanup() throws SQLException {
+        ArrayList<User> users = mySqlUserDAO.getAll();
+        for (User user : users) {
+            mySqlUserDAO.remove(user);
+        }
     }
 }
