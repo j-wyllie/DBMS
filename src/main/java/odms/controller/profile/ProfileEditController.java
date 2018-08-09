@@ -4,6 +4,7 @@ import static odms.App.getProfileDb;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
@@ -34,68 +35,61 @@ public class ProfileEditController extends CommonController {
      *
      */
     @FXML
-    public void save() {
+    public void save() throws IllegalArgumentException, SQLException {
         if (AlertController.saveChanges()) {
+            // history Generation
+            History action = new History("profile", currentProfile.getId(), "update",
+                    "previous " + currentProfile.getAttributesSummary(), -1, null);
+
+            // Required General Fields
+            saveDateOfBirth();
+            saveGivenNames();
+            saveNhi();
+            saveLastNames();
+
+            // Optional General Fields
+            saveAddress();
+            saveDateOfDeath();
+            saveEmail();
+            saveGender();
+            saveHeight();
+            savePhone();
+            savePreferredGender();
+            savePreferredName();
+            saveRegion();
+            saveWeight();
+
+            // Medical Fields
+            saveAlcoholConsumption();
+            saveBloodPressure();
+            saveBloodType();
+            saveIsSmoker();
+
+            saveCity();
+            saveCountry();
+            saveRegion();
+
             try {
-                // history Generation
-                History action = new History("profile", currentProfile.getId(), "update",
-                        "previous " + currentProfile.getAttributesSummary(), -1, null);
-
-                // Required General Fields
-                saveDateOfBirth();
-                saveGivenNames();
-                saveNhi();
-                saveLastNames();
-
-                // Optional General Fields
-                saveAddress();
-                saveDateOfDeath();
-                saveEmail();
-                saveGender();
-                saveHeight();
-                savePhone();
-                savePreferredGender();
-                savePreferredName();
-                saveRegion();
-                saveWeight();
-
-                // Medical Fields
-                saveAlcoholConsumption();
-                saveBloodPressure();
-                saveBloodType();
-                saveIsSmoker();
-
-                saveCity();
-                saveCountry();
-                saveRegion();
-
-                try {
-                    if(view.getDODDatePicker() != null) {
-                        saveCityOfDeath();
-                        saveRegionOfDeath();
-                        saveCountryOfDeath();
-                    }
-                } catch (Exception e) {
-                    AlertController.guiPopup("Invalid Location Of Death");
+                if(view.getDODDatePicker() != null) {
+                    saveCityOfDeath();
+                    saveRegionOfDeath();
+                    saveCountryOfDeath();
                 }
-
-                ProfileDAO database = DAOFactory.getProfileDao();
-                database.update(currentProfile);
-                ProfileDataIO.saveData(getProfileDb());
-
-                // history Changes
-                action.setHistoryData(
-                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-                action.setHistoryTimestamp(LocalDateTime.now());
-                HistoryController.updateHistory(action);
-
             } catch (Exception e) {
-                AlertController.invalidEntry(
-                        e.getMessage() + "\n" +
-                                "Changes not saved."
-                );
+                AlertController.guiPopup("Invalid Location Of Death");
             }
-        }
+
+            ProfileDAO database = DAOFactory.getProfileDao();
+            database.update(currentProfile);
+            ProfileDataIO.saveData(getProfileDb());
+
+            // history Changes
+            action.setHistoryData(
+                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+            action.setHistoryTimestamp(LocalDateTime.now());
+            HistoryController.updateHistory(action);
+
+            }
     }
 
     /**
@@ -175,9 +169,11 @@ public class ProfileEditController extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     public void saveNhi() throws IllegalArgumentException {
-        if (view.getNhiField().isEmpty()) {
-            throw new IllegalArgumentException("NHI Number field cannot be blank");
+        if ((!view.getNhiField().equals(currentProfile.getNhi()) && (
+                !view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$")))) {
+            throw new IllegalArgumentException("NHI must be valid");
         }
+
         currentProfile.setNhi(view.getNhiField());
     }
 
@@ -196,13 +192,13 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Address field to profile.
      */
-    public void saveAddress() throws Exception{
+    public void saveAddress() throws IllegalArgumentException{
         if (!view.getAddressField().isEmpty() && AddressIO
                 .checkValidCountry(view.getAddressField(), view.getComboCountry().getValue().toString())) {
             currentProfile.setAddress(view.getAddressField());
         } else if(!view.getAddressField().isEmpty() && !AddressIO.checkValidCountry(view.getAddressField(),
                 view.getComboCountry().getValue().toString())){
-            throw new Exception();
+            throw new IllegalArgumentException();
         }
     }
 

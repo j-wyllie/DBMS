@@ -1,6 +1,7 @@
 package odms.view.profile;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -162,12 +163,12 @@ public class ProfileEditView extends CommonView {
                 controller.save();
                 showNotification("profile", event);
                 closeWindow(event);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | SQLException e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
                                 "Changes not saved."
                 );
-        }
+            }
     }
 
     /**
