@@ -3,12 +3,12 @@ package odms.controller.profile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
-import odms.controller.database.MySqlProfileDAO;
 import odms.model.profile.Profile;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 public class ProfileImportTask extends Task<Void> {
 
     private File file;
-    private MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+    private List<Profile> db;
 
     public ProfileImportTask(File file) {
         this.file = file;
@@ -26,7 +26,7 @@ public class ProfileImportTask extends Task<Void> {
     @Override
     protected Void call() throws InvalidFileException {
         try {
-            loadDataFromCSV(this.file);
+            db = loadDataFromCSV(this.file);
         } catch (InvalidFileException e) {
             throw new InvalidFileException(e.getMessage(), e.getFile());
         }
@@ -38,43 +38,48 @@ public class ProfileImportTask extends Task<Void> {
      * Load the specified csv file instantiating a ProfileDatabase Object.
      *
      * @param csv the csv file that is being loaded
+     * @return ProfileDatabase the updated profile database.
      */
-    private void loadDataFromCSV(File csv) throws InvalidFileException {
+    private List<Profile> loadDataFromCSV(File csv) throws InvalidFileException {
+        List<Profile> profileDb = new ArrayList<>();
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
             Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
                     .getRecords().size();
 
-            parseCsvRecord(csvParser, csvLength);
+            profileDb = parseCsvRecord(profileDb, csvParser, csvLength);
         } catch (IOException | IllegalArgumentException e) {
             throw new InvalidFileException("CSV file could not be read.", csv);
         }
+        return profileDb;
     }
 
     /**
-     * Loops through the csv records and adds it to the profileDB if it is valid. Updates the counts
-     * of successful and failed imports.
+     * Loops through the csv records and adds it to the profileDB if it is valid.
+     * Updates the counts of successful and failed imports.
      *
      * @param csvParser the csv parser to parse each row.
      * @param csvLength the length of the csv.
-     * @return boolean - success or fail
+     * @return a profile database to be saved as the new database.
      */
-    private void parseCsvRecord(CSVParser csvParser,
+    private List<Profile> parseCsvRecord(List<Profile> profileDb, CSVParser csvParser,
             Integer csvLength) {
         int progressCount = 0;
         int successCount = 0;
         int failedCount = 0;
         for (CSVRecord csvRecord : csvParser) {
             if (Thread.currentThread().isInterrupted()) {
-                return;
+                return null;
             }
 
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
-                    mySqlProfileDAO.add(profile);
+
+                    profileDb.add(profile);
                     successCount++;
-                } catch (SQLException e) {
+
+                } catch (Exception e) {
                     failedCount++;
                 }
             } else {
@@ -85,11 +90,11 @@ public class ProfileImportTask extends Task<Void> {
             this.updateProgress(progressCount, csvLength);
             this.updateMessage(successCount + "," + failedCount + "," + progressCount);
         }
+        return profileDb;
     }
 
     /**
      * Converts a record in the csv to a profile object
-     *
      * @param csvRecord the record to be converted
      * @return the profile object
      */
@@ -155,11 +160,15 @@ public class ProfileImportTask extends Task<Void> {
      * @param nhi the nhi to check
      * @return true if valid and false if not valid
      */
-    private boolean isValidNHI(String nhi) {
+    protected boolean isValidNHI(String nhi) {
         String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
         Pattern r = Pattern.compile(pattern);
 
         Matcher m = r.matcher(nhi);
         return m.find();
+    }
+
+    public List<Profile> getDb() {
+        return db;
     }
 }
