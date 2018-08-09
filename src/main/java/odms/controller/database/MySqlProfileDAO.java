@@ -40,11 +40,10 @@ public class MySqlProfileDAO implements ProfileDAO {
             ResultSet allProfiles = stmt.executeQuery(query);
 
             while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
+                Profile newProfile = parseProfile(allProfiles);
                 result.add(newProfile);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -55,6 +54,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Get a single profile from the database.
+     *
      * @return a profile.
      */
     @Override
@@ -72,8 +72,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             rs.next();
             profile = parseProfile(rs);
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -85,6 +84,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Get a single profile from the database by username.
+     *
      * @param username of the profile.
      * @return a profile.
      */
@@ -99,11 +99,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         ResultSet rs = stmt.executeQuery();
 
         try {
-            while(rs.next()) {
+            while (rs.next()) {
                 profile = parseProfile(rs);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             stmt.close();
@@ -115,6 +114,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Parses the profile information from the rows returned from the database.
+     *
      * @param profiles the rows returned from the database.
      * @return a profile.
      * @throws SQLException error.
@@ -147,6 +147,15 @@ public class MySqlProfileDAO implements ProfileDAO {
         String region = profiles.getString("Region");
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String streetNo = profiles.getString("StreetNo");
+        String streetName = profiles.getString("StreetName");
+        String neighbourhood = profiles.getString("Neighbourhood");
+        String city = profiles.getString("City");
+        String zipCode = profiles.getString("ZipCode");
+        String country = profiles.getString("Country");
+        String birthCountry = profiles.getString("BirthCountry");
+
+
         LocalDateTime created = null;
         if (!(profiles.getTimestamp("Created") == null)) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -155,9 +164,12 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getTimestamp("Created") == null)) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
-        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
-                gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, created, updated);
+        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
+                dob, dod,
+                gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic,
+                bpDiastolic,
+                address, streetNo, streetName, neighbourhood, city, zipCode, region, country,
+                birthCountry, phone, email, created, updated);
 
         try {
             profile = setOrgans(profile);
@@ -209,6 +221,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Adds a new profile to the database.
+     *
      * @param profile to add.
      */
     @Override
@@ -233,8 +246,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(7, profile.getDateOfBirth().toString());
             if (profile.getDateOfDeath() == null) {
                 stmt.setString(8, null);
-            }
-            else {
+            } else {
                 stmt.setString(8, profile.getDateOfDeath().toString());
             }
             stmt.setString(9, profile.getGender());
@@ -243,8 +255,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(12, profile.getBloodType());
             if (profile.getIsSmoker() == null) {
                 stmt.setBoolean(13, false);
-            }
-            else {
+            } else {
                 stmt.setBoolean(13, profile.getIsSmoker());
             }
             stmt.setString(14, profile.getAlcoholConsumption());
@@ -318,11 +329,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(29, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             stmt.close();
             conn.close();
         }
@@ -330,6 +339,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Checks if a username already exists in the database.
+     *
      * @param username to check.
      * @return true is the username does not already exist.
      */
@@ -358,6 +368,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Removes a profile from the database.
+     *
      * @param profile to remove.
      */
     @Override
@@ -438,6 +449,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Updates a profiles information in the database.
+     *
      * @param profile to update.
      */
     @Override
@@ -462,8 +474,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
             if ((profile.getDateOfDeath() != null)) {
                 stmt.setDate(8, Date.valueOf(profile.getDateOfDeath()));
-            }
-            else {
+            } else {
                 stmt.setDate(8, null);
             }
             stmt.setString(9, profile.getGender());
@@ -484,8 +495,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             stmt.executeUpdate();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -495,6 +505,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Searches for a sublist of profiles based on criteria.
+     *
      * @param searchString filter based on search field.
      * @param ageSearchInt filter based on age.
      * @param ageRangeSearchInt filter based on age range.
@@ -515,8 +526,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 if (index > 0) {
                     query += " or o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
-                }
-                else {
+                } else {
                     query += " and (o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 }
@@ -532,10 +542,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
                 query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
-            }
-            else {
-                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
-                        + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
+            } else {
+                query +=
+                        " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
+                                + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
@@ -573,8 +583,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                     index++;
                     stmt.setInt(index, ageSearchInt);
                     index++;
-                }
-                else {
+                } else {
                     stmt.setInt(index, ageSearchInt);
                     index++;
                     stmt.setInt(index, ageSearchInt);
@@ -601,19 +610,18 @@ public class MySqlProfileDAO implements ProfileDAO {
             allProfiles.beforeFirst();
 
             if (size > 250) {
-                for (int i = 0; i <250; i++) {
+                for (int i = 0; i < 250; i++) {
                     allProfiles.next();
-                    Profile newProfile  = parseProfile(allProfiles);
+                    Profile newProfile = parseProfile(allProfiles);
                     result.add(newProfile);
                 }
             } else {
                 while (allProfiles.next()) {
-                    Profile newProfile  = parseProfile(allProfiles);
+                    Profile newProfile = parseProfile(allProfiles);
                     result.add(newProfile);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -625,6 +633,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Gets the number of profiles in the database.
+     *
      * @return the number of profiles.
      */
     @Override
@@ -634,7 +643,6 @@ public class MySqlProfileDAO implements ProfileDAO {
         Connection conn = instance.getConnection();
         Statement stmt = conn.createStatement();
         try {
-
 
             ResultSet result = stmt.executeQuery(query);
 
@@ -659,9 +667,12 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
-                + "where GivenNames like '%" + searchString + "%' or LastNames like '%" + searchString
-                + "%' or Region like '%" + searchString + "%' or Organ like '%" + searchString + "%';";
+        String query =
+                "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
+                        + "where GivenNames like '%" + searchString + "%' or LastNames like '%"
+                        + searchString
+                        + "%' or Region like '%" + searchString + "%' or Organ like '%"
+                        + searchString + "%';";
         return getReceivers(query);
     }
 
@@ -677,7 +688,8 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             while (result.next()) {
                 Profile profile = parseProfile(result);
-                OrganEnum organ = OrganEnum.valueOf(result.getString("Organ").toUpperCase().replace(" ", "_"));
+                OrganEnum organ = OrganEnum
+                        .valueOf(result.getString("Organ").toUpperCase().replace(" ", "_"));
                 receivers.add(new SimpleEntry<>(profile, organ));
             }
             conn.close();

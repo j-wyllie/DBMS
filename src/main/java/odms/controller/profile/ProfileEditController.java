@@ -76,7 +76,7 @@ public class ProfileEditController extends CommonController {
                     saveCountryOfDeath();
                 }
             } catch (Exception e) {
-                AlertController.guiPopup("Invalid Location Of Death");
+                throw new IllegalArgumentException("Invalid Region of Death");
             }
 
             ProfileDAO database = DAOFactory.getProfileDao();
@@ -95,7 +95,7 @@ public class ProfileEditController extends CommonController {
     /**
      * Save Region of death field to profile.
      */
-    private void saveRegionOfDeath() throws Exception{
+    private void saveRegionOfDeath() throws IllegalArgumentException {
         if (!view.getRegionOfDeathField().isEmpty() && AddressIO
                 .checkValidRegion(view.getRegionOfDeathField()+ " " + view.getComboCountryOfDeath(),
                         view.getRegionOfDeathField(), view.getComboCountryOfDeath()) && view.getComboRegion().isDisabled()) {
@@ -103,13 +103,13 @@ public class ProfileEditController extends CommonController {
         } else if(!view.getRegionOfDeathField().isEmpty() && !AddressIO
                 .checkValidRegion(view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getRegionOfDeathField(),view.getComboCountryOfDeath())) {
-            throw new Exception();
+            throw new IllegalArgumentException("Invalid Region of Death");
         }  else if(!view.getComboRegionOfDeath().isEmpty() && AddressIO
                 .checkValidRegion(view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
             currentProfile.setRegionOfDeath(view.getComboRegionOfDeath()) ;
         } else {
-            throw new Exception();
+            throw new IllegalArgumentException("Invalid Region of Death");
         }
     }
 
@@ -198,7 +198,7 @@ public class ProfileEditController extends CommonController {
             currentProfile.setAddress(view.getAddressField());
         } else if(!view.getAddressField().isEmpty() && !AddressIO.checkValidCountry(view.getAddressField(),
                 view.getComboCountry().getValue().toString())){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid address");
         }
     }
 

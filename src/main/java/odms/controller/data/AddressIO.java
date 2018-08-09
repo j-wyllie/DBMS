@@ -25,8 +25,10 @@ public class AddressIO {
             address = address.replace("street","st");
             String jsonString = getGeocodeLocation(address,country.replace(" ","+")).toString();
             if(jsonString.toLowerCase().contains(address.toLowerCase())) {
+                System.out.println("REEE");
                 return true;
             }
+            System.out.println("ROO");
             return false;
         } catch (Exception e) {
             System.out.println("Invalid Address");
