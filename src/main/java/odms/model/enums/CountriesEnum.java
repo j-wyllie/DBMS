@@ -232,6 +232,10 @@ public enum CountriesEnum {
         return countryStrings;
     }
 
+    /**
+     * Creates a list of the enum country values.
+     * @return list of country enum values.
+     */
     public static List<String> getValuesAsStrings() {
         List<String> countries = new ArrayList<>();
         for (CountriesEnum num : CountriesEnum.values()) {
@@ -240,6 +244,11 @@ public enum CountriesEnum {
         return countries;
     }
 
+    /**
+     * Gets the name of a country.
+     * @param string string of country to be converted.
+     * @return country name.
+     */
     public static String getValidNameFromString(String string) {
         if (CountriesEnum.toArrayList().contains(string)) {
             return string;
