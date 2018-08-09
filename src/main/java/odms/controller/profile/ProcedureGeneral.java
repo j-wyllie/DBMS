@@ -56,8 +56,7 @@ public class ProcedureGeneral {
      *
      * @return previous procedures
      */
-    public List<odms.model.profile.Procedure> getPreviousProcedures(Profile p) {
-        Profile profile = p;
+    public List<odms.model.profile.Procedure> getPreviousProcedures(Profile profile) {
         ArrayList<odms.model.profile.Procedure> prevProcedures = new ArrayList<>();
         List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
@@ -75,8 +74,7 @@ public class ProcedureGeneral {
      *
      * @return pending procedures
      */
-    public List<odms.model.profile.Procedure> getPendingProcedures(Profile p) {
-        Profile profile = p;
+    public List<odms.model.profile.Procedure> getPendingProcedures(Profile profile) {
         List<odms.model.profile.Procedure> pendingProcedures = new ArrayList<>();
         List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {

@@ -91,11 +91,11 @@ public class LoginView extends CommonController {
                     if (currentProfile != null) {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(
-                                getClass().getResource("/view/ProfileDisplay.fxml"));
+                            getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                            scene = new Scene(fxmlLoader.load());
-                            Display controller = fxmlLoader.getController();
-                            controller.initialize(currentProfile, false);
+                        scene = new Scene(fxmlLoader.load());
+                        Display controller = fxmlLoader.getController();
+                        controller.initialize(currentProfile, false);
 
                         Stage stage = new Stage();
                         stage.setTitle(currentProfile.getFullName() + "'s profile");

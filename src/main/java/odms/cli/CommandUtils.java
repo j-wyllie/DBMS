@@ -542,8 +542,7 @@ public class CommandUtils {
                                 action.indexOf("[") + 1,
                                 action.indexOf("]")).split(","))
                 );
-                UndoRedoCLIService
-                        .removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
+                UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -556,8 +555,7 @@ public class CommandUtils {
                                 action.indexOf("]")).split(","))
                 );
                 // TODO bug here for removing organs from wrong list based on command
-                UndoRedoCLIService
-                        .removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet), profile);
+                UndoRedoCLIService.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -567,8 +565,7 @@ public class CommandUtils {
                 Profile profile = currentDatabase.getProfile(id);
                 System.out.println(action);
                 String old = action.substring(action.indexOf("nhi"), action.indexOf("new"));
-                UndoRedoCLIService
-                        .setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))), profile);
+                UndoRedoCLIService.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))), profile);
                 if (historyPosition != 0) {
                     historyPosition -= 1;
                 }
@@ -664,8 +661,7 @@ public class CommandUtils {
                     List<String> organSet = new ArrayList<>(Arrays.asList(
                             action.substring(action.indexOf("[") + 1, action.indexOf("]"))
                                     .split(",")));
-                    UndoRedoCLIService
-                            .removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
+                    UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
                 } else if (action.contains("set")) {
                     int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
                     Profile profile = currentDatabase.getProfile(id);

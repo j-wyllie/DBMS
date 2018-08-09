@@ -110,8 +110,7 @@ public class Medications extends CommonController {
      * deletes a drug from the list of current medications if it was added by accident.
      *
      */
-    public void deleteDrug(Profile p, Drug d) {
-        Drug drug = d;
+    public void deleteDrug(Profile p, Drug drug) {
         LocalDateTime currentTime = LocalDateTime.now();
         Profile profile = p;
         deletedDrugs.add(drug);
@@ -149,9 +148,8 @@ public class Medications extends CommonController {
      *
      * @param drug the drug to be moved to the history
      */
-    public void moveDrugToHistory(Drug drug, Profile p) {
+    public void moveDrugToHistory(Drug drug, Profile profile) {
         LocalDateTime currentTime = LocalDateTime.now();
-        Profile profile = p;
         if (profile.getCurrentMedications().contains(drug)) {
             profile.getCurrentMedications().remove(drug);
             profile.getHistoryOfMedication().add(drug);
@@ -308,14 +306,13 @@ public class Medications extends CommonController {
      * Button handler to remove medications from the current medications and move them to historic.
      *
      */
-    public void moveToHistory(Profile p) {
-        Profile currentProfile = p;
+    public void moveToHistory(Profile currentProfile) {
         ArrayList<Drug> drugs = convertObservableToArray(
                 view.getSelectedCurrentDrugs());
 
         for (Drug drug : drugs) {
             if (drug != null) {
-                moveDrugToHistory(drug, p);
+                moveDrugToHistory(drug, currentProfile);
                 String data = currentProfile.getMedicationTimestamps()
                         .get(currentProfile.getMedicationTimestamps().size() - 1);
                 odms.model.history.History history = new odms.model.history.History("profile", currentProfile.getId(),
@@ -332,14 +329,13 @@ public class Medications extends CommonController {
      * list of drugs.
      *
      */
-    public void moveToCurrent(Profile p) {
-        Profile currentProfile = p;
+    public void moveToCurrent(Profile currentProfile) {
         ArrayList<Drug> drugs = convertObservableToArray(
                 view.getSelectedHistoricDrugs());
 
         for (Drug drug : drugs) {
             if (drug != null) {
-                moveDrugToCurrent(drug, p);
+                moveDrugToCurrent(drug, currentProfile);
                 String data = currentProfile.getMedicationTimestamps()
                         .get(currentProfile.getMedicationTimestamps().size() - 1);
                 odms.model.history.History history = new odms.model.history.History("profile", currentProfile.getId(),
