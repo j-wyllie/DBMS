@@ -77,7 +77,7 @@ public class ClinicianProfileView extends CommonView {
         try {
             consoleTab.setContent(loader.load());
             UserConsoleTabView userConsoleTabView = loader.getController();
-            userConsoleTabView.initialize();
+            // don't initialize as it will double print.
         } catch (IOException e){
             System.out.println(e.getMessage());
         }

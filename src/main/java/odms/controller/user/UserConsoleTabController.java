@@ -16,7 +16,7 @@ public class UserConsoleTabController {
     public void setupConsole(CommandGUI commandGUI) {
         System.setIn(commandGUI.getIn());
         System.setOut(commandGUI.getOut());
-
+        System.out.println("setup");
         // Start the command line in an alternate thread
         CommandLine commandLine = new CommandLine(commandGUI.getIn(), commandGUI.getOut());
         commandGUI.initHistory(commandLine);

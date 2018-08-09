@@ -18,6 +18,7 @@ public class UserConsoleTabView {
     private TextArea displayTextArea;
 
     public void initialize() {
+        System.out.println("init");
         // Initialize command line GUI
         commandGUI = new CommandGUI(displayTextArea);
         controller.setupConsole(commandGUI);
