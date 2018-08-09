@@ -195,7 +195,7 @@ public class ProfileDisplayViewTODO extends CommonView {
         try {
             tabProcedures.setContent(loader.load());
             ProfileProceduresView profileProceduresView = loader.getController();
-            profileProceduresView.initialize(currentProfile);
+            profileProceduresView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }

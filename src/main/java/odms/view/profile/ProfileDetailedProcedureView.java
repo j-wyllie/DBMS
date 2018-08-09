@@ -45,11 +45,16 @@ public class ProfileDetailedProcedureView extends CommonView {
 
     private Procedure currentProcedure;
     private ProcedureEditController controller = new ProcedureEditController(this);
-    private ObjectProperty<Profile> profile;
+    private Profile profile;
     private ProfileProceduresView parent;
 
-    @FXML
-    public void initialize(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
+    /**
+     * Init variables and populate text fields.
+     * @param selectedProcedure procedure object that is to be displayed
+     * @param currentProfile current profile being viewed
+     * @param p parent view/controller, will be a instance of ProfileProceduresView
+     */
+    public void initialize(Procedure selectedProcedure, Profile currentProfile,
             ProfileProceduresView p) {
         parent = p;
         profile = currentProfile;
@@ -75,7 +80,7 @@ public class ProfileDetailedProcedureView extends CommonView {
         try {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<OrganEnum> organsDonated = FXCollections
-                    .observableArrayList(profile.get().getOrgansDonated());
+                    .observableArrayList(profile.getOrgansDonated());
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
         } catch (NullPointerException e) {
@@ -132,7 +137,7 @@ public class ProfileDetailedProcedureView extends CommonView {
         parent.refreshProcedureTable();
     }
 
-    public Profile getProfile() {return profile.getValue();}
+    public Profile getProfile() {return profile;}
     public Procedure getCurrentProcedure() {return currentProcedure;}
     public String getDescEntry() {return descEntry.getText();}
     public String getSummaryEntry() {return summaryEntry.getText();}

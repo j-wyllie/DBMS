@@ -11,10 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javax.xml.bind.annotation.XmlAnyAttribute;
 import odms.controller.procedure.ProcedureController;
 import odms.controller.procedure.ProcedureEditController;
 import odms.model.profile.Procedure;
@@ -47,7 +50,14 @@ public class ProfileProceduresView extends CommonView {
     @FXML
     private TableColumn previousAffectsColumn;
 
-    public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
+    @FXML
+    private Button addNewProcedureButton;
+
+    @FXML
+    private Button deleteProcedureButton;
+
+    private Profile currentProfile;
+    private Boolean isOpenedByClinician;
     private ObservableList<Procedure> previousProceduresObservableList;
     private ObservableList<Procedure> pendingProceduresObservableList;
 
@@ -56,7 +66,7 @@ public class ProfileProceduresView extends CommonView {
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
         ProfileAddProcedureView profileAddProcedureView = new ProfileAddProcedureView();
-        profileAddProcedureView.setup(this, currentProfile.get());
+        profileAddProcedureView.setup(this, currentProfile);
         createPopup(actionEvent, "/view/ProcedureAdd.fxml", "Add Procedure");
     }
 
@@ -94,28 +104,30 @@ public class ProfileProceduresView extends CommonView {
         if (previousProcedures != null) {
             refreshProcedureTable();
         }
-        pendingProcedureTable.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
-                            .getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (isOpenedByClinician) {
+            pendingProcedureTable.setOnMousePressed(event -> {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                        pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                    try {
+                        createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
+                                .getSelectedItem());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-        previousProcedureTable.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
-                            .getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
+            });
+            previousProcedureTable.setOnMousePressed(event -> {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                        previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
+                    try {
+                        createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
+                                .getSelectedItem());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -124,13 +136,10 @@ public class ProfileProceduresView extends CommonView {
     @FXML
     public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
-
-            Scene scene = new Scene(fxmlLoader.load());
-            ProcedureEditController controller = fxmlLoader.<ProcedureEditController>getController();
-            ProfileDetailedProcedureView child = new ProfileDetailedProcedureView();
-            child.initialize(selectedProcedure, currentProfile, this);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProcedureEdit.fxml"));
+            Scene scene = new Scene(loader.load());
+            ProfileDetailedProcedureView profileDetailedProcedureView = loader.getController();
+            profileDetailedProcedureView.initialize(selectedProcedure, currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -153,8 +162,8 @@ public class ProfileProceduresView extends CommonView {
         }
 
         // update all procedures
-        if (currentProfile.getValue().getAllProcedures() != null) {
-            for (Procedure procedure : currentProfile.getValue().getAllProcedures()) {
+        if (currentProfile.getAllProcedures() != null) {
+            for (Procedure procedure : currentProfile.getAllProcedures()) {
                 procedure.update();
             }
         }
@@ -193,8 +202,13 @@ public class ProfileProceduresView extends CommonView {
      */
     @FXML
     private void forceSortProcedureOrder() {
+        pendingDateColumn.setSortType(SortType.DESCENDING);
+        previousDateColumn.setSortType(SortType.DESCENDING);
         previousProcedureTable.getSortOrder().clear();
         previousProcedureTable.getSortOrder().add(previousDateColumn);
+        pendingProcedureTable.getSortOrder().clear();
+        pendingProcedureTable.getSortOrder().add(pendingDateColumn);
+
     }
 
     public Procedure getSelectedPendingProcedure() {
@@ -206,17 +220,33 @@ public class ProfileProceduresView extends CommonView {
     }
 
     public Profile getProfile() {
-        return currentProfile.getValue();
+        return currentProfile;
     }
 
-    public void initialize(Profile p) {
-        currentProfile.setValue(p);
+    /**
+     * Init variables and procedure tables.
+     * @param p current profile being viewed
+     * @param isOpenedByClinician boolean is true if profile was opened by a clinician or admin
+     */
+    public void initialize(Profile p, Boolean isOpenedByClinician) {
+        currentProfile = p;
+        this.isOpenedByClinician = isOpenedByClinician;
         makeProcedureTable(controller.getPreviousProcedures(),
                 controller.getPendingProcedures());
         refreshProcedureTable();
+        setButtonVisibility();
     }
 
-
-
-
+    /**
+     * Makes the add and delete buttons visible is the profile is opened by a clinician or admin.
+     */
+    private void setButtonVisibility() {
+        if (!isOpenedByClinician) {
+            addNewProcedureButton.setVisible(false);
+            deleteProcedureButton.setVisible(false);
+        } else {
+            addNewProcedureButton.setVisible(true);
+            deleteProcedureButton.setVisible(true);
+        }
+    }
 }

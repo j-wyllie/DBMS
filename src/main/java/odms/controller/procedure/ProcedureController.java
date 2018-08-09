@@ -82,7 +82,8 @@ public class ProcedureController {
         List<Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
             for (Procedure procedure : procedures) {
-                if (procedure.getDate().isAfter(LocalDate.now())) {
+                if (procedure.getDate().isAfter(LocalDate.now()) ||
+                        procedure.getDate().isEqual(LocalDate.now())) {
                     pendingProcedures.add(procedure);
                 }
             }
