@@ -3,6 +3,7 @@ package odms.controller.data.Profile;
 import odms.controller.profile.ConditionGeneral;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileMedicalHistory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,26 +30,26 @@ public class Condition {
 
     @Test
     public void testGetCuredConditionsEmptyList() {
-        assertEquals(controller.getCuredConditions(currentProfile).size(), 0);
+        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 0);
     }
 
     @Test
     public void testGetCuredConditions() {
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
-        assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
     }
 
     @Test
     public void testGetCurrentConditionsEmptyList() {
-        assertEquals(controller.getCurrentConditions(currentProfile).size(), 0);
+        Assert.assertEquals(controller.getCurrentConditions(currentProfile).size(), 0);
     }
 
     @Test
     public void testGetCurrentConditions() {
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(),false), currentProfile);
-        assertEquals(controller.getCurrentConditions(currentProfile).size(), 1);
+        Assert.assertEquals(controller.getCurrentConditions(currentProfile).size(), 1);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class Condition {
     @Test
     public void testAddValidCuredCondition() {
         controller.addCondition(new odms.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
-        assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
     }
 
     @Test
