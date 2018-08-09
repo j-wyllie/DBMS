@@ -120,6 +120,7 @@ public class MedicationDataIOTest {
 
     @Test
     public void testValidStringGetSuggestionList() throws IOException {
+        System.out.println("Working dir is:" + System.getProperty("user.dir"));
         String line;
         // read json response into stringBuffer. Mocked makeRequest method will return the stringBuffer.
         BufferedReader bufferedReader = new BufferedReader(new FileReader(
