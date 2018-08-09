@@ -525,7 +525,11 @@ public class MySqlProfileDAO implements ProfileDAO {
                 query += ")";
             }
         }
-        query += " where (p.GivenNames like ? OR p.LastNames like ? OR CONCAT(p.GivenNames, ' ', p.LastNames) like ?) and p.Region like ?";
+        query += " where (p.GivenNames like ? OR p.LastNames like ? OR CONCAT(p.GivenNames, ' ', p.LastNames) like ?)";
+        System.out.println(region);
+        if(region != null && !region.equals("")){
+            query +=  "and p.Region like ?";
+        }
         if (!gender.equals("any")) {
             query += " and p.Gender = ?";
         }
@@ -559,9 +563,13 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
             stmt.setString(3, "%" + searchString + "%");
-            stmt.setString(4, "%" + region + "%");
+            int index = 4;
+            if(region != null && !region.equals("")){
+                stmt.setString(index, "%" + region + "%");
+                index++;
+            }
 
-            int index = 5;
+
             if (!gender.equals("any")) {
                 stmt.setString(index, gender);
                 index++;
@@ -595,6 +603,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
 
             ResultSet allProfiles = stmt.executeQuery();
+            System.out.println(stmt);
             int size;
             allProfiles.last();
             size = allProfiles.getRow();
