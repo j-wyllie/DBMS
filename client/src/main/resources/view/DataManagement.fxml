@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane fx:id="dataManagementAp" xmlns="http://javafx.com/javafx/8"
-    xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.UserDataManagementTabView">
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.DataManagement">
     <GridPane layoutX="4.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
         AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
         <columnConstraints>

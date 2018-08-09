@@ -60,7 +60,6 @@ public class MySqlConditionDAO implements ConditionDAO {
              dateCured = rs.getDate("CuredDate").toLocalDate();
         }
 
-        System.out.print(isChronic);
         Condition condition = new Condition(id, name, dateOfDiagnosis, isChronic, isCured, dateCured);
         return condition;
     }
@@ -73,7 +72,7 @@ public class MySqlConditionDAO implements ConditionDAO {
     @Override
     public void add(Profile profile, Condition condition) {
         String query = "insert into conditions (ProfileId, Description, DiagnosisDate, Chronic, "
-                + "Current, Past, DateCured) values (?, ?, ?, ?, ?, ?, ?);";
+                + "Current, Past, CuredDate) values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -128,7 +127,7 @@ public class MySqlConditionDAO implements ConditionDAO {
     @Override
     public void update(Condition condition) {
         String query = "update conditions set Description = ?, DiagnosisDate = ?, Chronic = ?, "
-                + "Current = ?, Past = ?, DateCured = ? where Id = ?";
+                + "Current = ?, Past = ?, CuredDate = ? where Id = ?";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {

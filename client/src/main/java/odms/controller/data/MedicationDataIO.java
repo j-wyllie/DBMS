@@ -48,7 +48,6 @@ public class MedicationDataIO {
             if (response == null || response.toString().equals(SERVERERROR)) {
                 return suggestionList;
             }
-
             //Parsing the list of suggestions from the response.
             suggestionList = parseJSON(response, false);
         }

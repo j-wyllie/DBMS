@@ -10,14 +10,15 @@ import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.database.UserDAO;
-import odms.view.profile.ProfileDisplayViewTODO;
+import odms.view.profile.Display;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
 import odms.model.profile.Profile;
 import odms.model.user.User;
-import odms.view.user.ClinicianProfileView;
+import odms.view.user.ClinicianProfile;
 import java.io.IOException;
+
 import static odms.controller.AlertController.invalidUsername;
 import static odms.controller.AlertController.invalidUsernameOrPassword;
 
@@ -66,7 +67,7 @@ public class LoginView extends CommonController {
                         );
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileView v = fxmlLoader.getController();
+                        ClinicianProfile v = fxmlLoader.getController();
                         v.setCurrentUser(currentUser);
                         v.initialize();
 
@@ -82,25 +83,28 @@ public class LoginView extends CommonController {
                     invalidUsernameOrPassword();
                 }
             } catch (UserNotFoundException u) {
+
                 try {
-                        ProfileDAO database = DAOFactory.getProfileDao();
-                        Profile currentProfile = database.get(username);
+                    ProfileDAO database = DAOFactory.getProfileDao();
+                    Profile currentProfile = database.get(username);
 
-                        if (currentProfile != null) {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(
-                                    getClass().getResource("/view/ProfileDisplay.fxml"));
+                    if (currentProfile != null) {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(
+                            getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                            scene = new Scene(fxmlLoader.load());
-                            ProfileDisplayViewTODO controller = fxmlLoader.getController();
-                            controller.initialize(currentProfile, false);
+                        scene = new Scene(fxmlLoader.load());
+                        Display controller = fxmlLoader.getController();
+                        controller.initialize(currentProfile, false);
 
-                            Stage stage = new Stage();
-                            stage.setTitle(currentProfile.getFullName() + "'s profile");
-                            stage.setScene(scene);
-                            stage.show();
+                        Stage stage = new Stage();
+                        stage.setTitle(currentProfile.getFullName() + "'s profile");
+                        stage.setScene(scene);
+                        stage.show();
 
-                            closeCurrentStage();
+                        closeCurrentStage();
+                    } else {
+                        AlertController.invalidUsername();
                     }
                 } catch (NumberFormatException e) {
                     AlertController.invalidEntry();
@@ -124,7 +128,6 @@ public class LoginView extends CommonController {
      * Scene change to create account view.
      *
      * @param event clicking on the create new account link.
-     * @throws IOException
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {

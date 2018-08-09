@@ -22,7 +22,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public List<Procedure> getAll(Profile profile, Boolean pending) {
-        String query = "select * from procedures where ProfileId = ? and Pending = ?;";
+        String query = "select Id, ProfileId, Summary, Description, ProcedureDate, Pending, Previous"
+                + " from procedures where ProfileId = ? and Pending = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Procedure> result = new ArrayList<>();
 
@@ -71,8 +72,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public void add(Profile profile, Procedure procedure) {
-        String query = "insert into procedures (ProfileId, Summary, Description, ProcedureDate) "
-                + "values (?, ?, ?, ?);";
+        String query = "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending) "
+                + "values (?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -84,11 +85,16 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(3, procedure.getLongDescription());
             stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            System.out.println(stmt.executeUpdate());
+            if (LocalDate.now().isBefore(procedure.getDate())) {
+                stmt.setInt(5, 1);
+            } else {
+                stmt.setInt(5, 0);
+            }
+
             //todo: return and update procedure id.
+            stmt.executeUpdate();
             conn.close();
             stmt.close();
-
             for (OrganEnum organ : procedure.getOrgansAffected()) {
                 addAffectedOrgan(procedure, organ);
             }

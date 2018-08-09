@@ -1,25 +1,26 @@
 package odms.controller.data.Profile;
 
 import javafx.fxml.FXMLLoader;
-import odms.controller.profile.ProfileCreateController;
-import odms.model.profile.Profile;
-import odms.view.profile.ProfileCreateAccountView;
+import odms.controller.profile.ProfileCreate;
+import odms.view.profile.CreateAccount;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
+@Ignore
 public class Create {
-    public ProfileCreateAccountView view;
-    public ProfileCreateController controller;
+    public CreateAccount view;
+    public ProfileCreate controller;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileCreate.fxml"));
+        fxmlLoader.load();
         view = fxmlLoader.getController();
         System.out.println(view);
         controller = view.getController();
@@ -33,6 +34,4 @@ public class Create {
         view.setNhiField("ABC1234");
         controller.createAccount();
     }
-
-
 }
