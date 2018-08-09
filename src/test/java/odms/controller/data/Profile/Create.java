@@ -4,11 +4,13 @@ import javafx.fxml.FXMLLoader;
 import odms.controller.profile.ProfileCreate;
 import odms.view.profile.CreateAccount;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
+@Ignore
 public class Create {
     public CreateAccount view;
     public ProfileCreate controller;
