@@ -23,9 +23,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>
+        <sonar.jacoco.reportPaths>
             ${project.basedir}/target/coverage-reports/jacoco-unit.exec
-        </sonar.jacoco.reportPath>
+        </sonar.jacoco.reportPaths>
     </properties>
 
     <dependencies>
@@ -212,20 +212,20 @@
         <!--</plugins>-->
     <!--</build>-->
 
-    <!--<profiles>-->
-        <!--<profile>-->
-            <!--<id>sonar</id>-->
-            <!--<activation>-->
-                <!--<activeByDefault>true</activeByDefault>-->
-            <!--</activation>-->
-            <!--<properties>-->
-                <!--&lt;!&ndash; Optional URL to server. Default value is http://localhost:9000 &ndash;&gt;-->
-                <!--<sonar.host.url>-->
-                    <!--http://csse-s302g2.canterbury.ac.nz:9000/-->
-                <!--</sonar.host.url>-->
-            <!--</properties>-->
-        <!--</profile>-->
-    <!--</profiles>-->
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Optional URL to server. Default value is http://localhost:9000 -->
+                <sonar.host.url>
+                    http://csse-s302g2.canterbury.ac.nz:9000/
+                </sonar.host.url>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
