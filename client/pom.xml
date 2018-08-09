@@ -182,6 +182,13 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>jacoco-site</id>
                         <phase>package</phase>
                         <goals>
@@ -206,6 +213,8 @@
                 <!--</sonar.host.url>-->
             <!--</properties>-->
         <!--</profile>-->
+
+
     <!--</profiles>-->
 
     <!--<reporting>-->

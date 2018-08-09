@@ -13,10 +13,14 @@ junit:
 recent-artifacts:
   stage: deploy
   script:
-    - mvn -B clean site package -Dprism.verbose=true -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dheadless.geometry=1920x1080-32
+    - mvn -B clean package -DskipTests
+    - mvn -B package
   artifacts:
     paths:
       - target/*.jar
+      - client/target/*.jar
+      - server/target/*.jar
+      - target/site/jacoco/*
     expire_in: 1 week
   except:
     - tags
@@ -24,10 +28,16 @@ recent-artifacts:
 release-artifacts:
   stage: deploy
   script:
-    - mvn -B clean site package -Dprism.verbose=true -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dheadless.geometry=1920x1080-32
+    - mvn -B clean site package -DskipTests
+    - mvn -B site sonar:sonar package
   artifacts:
     paths:
     - target/*.jar
-    - target/site/jacoco/*
+    - client/target/*.jar
+    - client/target/site/jacoco/*
+    - server/target/*.jar
+    - server/target/site/jacoco/*
+    - commons/target/site/jacoco/*
+
   only:
     - tags
