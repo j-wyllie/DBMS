@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 <?import org.controlsfx.control.CheckComboBox?>
 <AnchorPane xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml" fx:controller="odms.view.user.UserSearchView"
+        xmlns:fx="http://javafx.com/fxml" fx:controller="odms.view.user.Search"
         prefHeight="400.0" prefWidth="600.0">
     <GridPane layoutY="-14.0" prefHeight="538.0" prefWidth="1204.0" AnchorPane.bottomAnchor="-1.0"
         AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">

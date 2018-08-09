@@ -5,7 +5,7 @@ import odms.cli.CommandLine;
 import odms.controller.GuiMain;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.data.UserDataIO;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
 
@@ -21,7 +21,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        HistoryController.currentSessionHistory.add(null);
+        CurrentHistory.currentSessionHistory.add(null);
         try {
 
             File userDbFile = new File(USER_DATABASE);

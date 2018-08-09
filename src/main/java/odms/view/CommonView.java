@@ -24,14 +24,13 @@ import javafx.util.Duration;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.controller.GuiMain;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
-import odms.controller.profile.ProfileEditController;
+import odms.controller.history.Redo;
+import odms.controller.history.Undo;
 import odms.model.profile.Profile;
 import odms.model.user.User;
-import odms.view.profile.ProfileDisplayViewTODO;
-import odms.view.profile.ProfileEditView;
-import odms.view.user.ClinicianProfileView;
+import odms.view.profile.Display;
+import odms.view.profile.ProfileEdit;
+import odms.view.user.ClinicianProfile;
 import org.controlsfx.control.Notifications;
 
 public class CommonView {
@@ -85,7 +84,7 @@ public class CommonView {
         try {
             Scene scene = new Scene(fxmlLoader.load());
 
-            ClinicianProfileView controller = fxmlLoader.getController();
+            ClinicianProfile controller = fxmlLoader.getController();
             controller.setCurrentUser(currentUser);
             controller.initialize();
 
@@ -116,7 +115,7 @@ public class CommonView {
     protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        ProfileEditView controller = fxmlLoader.getController();
+        ProfileEdit controller = fxmlLoader.getController();
         controller.initialize(currentProfile, isOpenedByClinician);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -162,8 +161,8 @@ public class CommonView {
         redoController.redo(GuiMain.getCurrentDatabase());
     }
 
-    private RedoController redoController = new RedoController();
-    private UndoController undoController = new UndoController();
+    private Redo redoController = new Redo();
+    private Undo undoController = new Undo();
 
     public Boolean getEdited() {
         return isEdited;
@@ -266,13 +265,13 @@ public class CommonView {
      * @param parentView The parent view of the stage being created
      */
     @FXML
-    protected void createNewDonorWindow(Profile donor, ClinicianProfileView parentView) {
+    protected void createNewDonorWindow(Profile donor, ClinicianProfile parentView) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
-            ProfileDisplayViewTODO controller = fxmlLoader.getController();
+            Display controller = fxmlLoader.getController();
             controller.initialize(donor, true);
 
             Stage stage = new Stage();
