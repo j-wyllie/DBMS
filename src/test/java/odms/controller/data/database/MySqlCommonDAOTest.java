@@ -13,11 +13,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * MySqlCommonDao Tests.
+ */
 public class MySqlCommonDAOTest extends MySqlCommonTests {
     private MySqlCommonDAO mySqlCommonDAO;
     private MySqlProfileDAO mySqlProfileDAO;
 
-    private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
+    private Profile testProfile0 = new Profile(
+            "Joshua",
+            "Wyllie",
+            LocalDate.of(1997, 7, 18),
+            "ABC1234"
+    );
 
     private PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -53,7 +61,14 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
     @Test
     public void testReadOnlyQuery() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
-        String query = "SELECT NHI, GivenNames, Height, Weight, Gender, Lastnames, dod FROM profiles";
+        String query = "SELECT NHI, " +
+                "GivenNames, " +
+                "Height, " +
+                "Weight, " +
+                "Gender, " +
+                "Lastnames, " +
+                "dod " +
+                "FROM profiles";
         mySqlCommonDAO.queryDatabase(query);
         assertEquals(expectedGoodOutput, outContent.toString().trim());
     }
