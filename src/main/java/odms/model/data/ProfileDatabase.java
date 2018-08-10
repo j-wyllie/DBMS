@@ -507,7 +507,6 @@ public class ProfileDatabase {
         return profiles;
     }
 
-
     /**
      * Generates a collection of a profile and organ for each organ that a receiver requires
      *
@@ -526,5 +525,7 @@ public class ProfileDatabase {
         }
         return receivers;
     }
+
+
 
 }

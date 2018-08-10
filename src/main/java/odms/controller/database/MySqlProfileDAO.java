@@ -55,6 +55,35 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
+     * Gets all profiles from the database where the person is dead.
+     */
+    @Override
+    public List<Profile> getDead() throws SQLException {
+        String query = "SELECT DISTINCT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        List<Profile> result = new ArrayList<>();
+        Connection conn = connectionInstance.getConnection();
+        Statement stmt = conn.createStatement();
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery(query);
+            while (allProfiles.next()) {
+                Profile newProfile  = parseProfile(allProfiles);
+                if(!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());}
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return result;
+    }
+
+    /**
      * Get a single profile from the database.
      * @return a profile.
      */

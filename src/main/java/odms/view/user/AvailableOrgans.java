@@ -12,6 +12,7 @@ import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class AvailableOrgans extends CommonView {
@@ -19,13 +20,14 @@ public class AvailableOrgans extends CommonView {
     private TableView availableOrgansTable;
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
     private ClinicianProfile parentView;
+    private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
 
     public void initialize(User currentUser, ClinicianProfile p) {
         populateTable();
         parentView = p;
     }
 
-    public void populateTable() {
+    public void populateTable()  {
         availableOrgansTable.getColumns().clear();
         TableColumn<Map.Entry<Profile, OrganEnum>, String> organCol = new TableColumn<>(
                 "Organ");
@@ -58,7 +60,11 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.getColumns().add(donorIdCol);
         availableOrgansTable.getColumns().add(expiryProgressBarCol);
         availableOrgansTable.getItems().clear();
-        setList();
+        try {
+            setList();
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR");
+        }
         availableOrgansTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
@@ -68,8 +74,8 @@ public class AvailableOrgans extends CommonView {
         });
     }
 
-    public void setList() {
-        listOfAvailableOrgans = FXCollections.observableArrayList();
+    public void setList() throws SQLException{
+        listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
         availableOrgansTable.setItems(listOfAvailableOrgans);
     }
 }

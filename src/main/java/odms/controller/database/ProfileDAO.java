@@ -16,6 +16,8 @@ public interface ProfileDAO {
      */
     List<Profile> getAll() throws SQLException;
 
+    List<Profile> getDead() throws SQLException;
+
     /**
      * Get a single profile from the database by id.
      * @param profileId of the profile.
