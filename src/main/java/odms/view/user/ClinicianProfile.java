@@ -37,6 +37,8 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab transplantTab;
     @FXML
+    private Tab availableOrgansTab;
+    @FXML
     private odms.controller.user.DataManagement userDataManagementController;
     private UserGeneral userGeneralTabView = new UserGeneral();
     private ConsoleTab userConsoleTabView = new ConsoleTab();
@@ -113,6 +115,17 @@ public class ClinicianProfile extends CommonView {
             dataManagementTab.setContent(loader.load());
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void handleTabAvailableClicked() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserAvailableOrgansTab.fxml"));
+        try {
+            availableOrgansTab.setContent(loader.load());
+            AvailableOrgans availableOrgansTabView = loader.getController();
+            availableOrgansTabView.initialize(currentUser);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
