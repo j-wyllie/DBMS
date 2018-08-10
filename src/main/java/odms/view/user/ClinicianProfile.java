@@ -125,7 +125,7 @@ public class ClinicianProfile extends CommonView {
         try {
             availableOrgansTab.setContent(loader.load());
             AvailableOrgans availableOrgansTabView = loader.getController();
-            availableOrgansTabView.initialize(currentUser);
+            availableOrgansTabView.initialize(currentUser, this);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
