@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -119,10 +120,11 @@ public class ProfileImportTask extends Task<Void> {
                         return null;
                     }
 
-                    LocalDate dod = LocalDate.of(
+                    //todo set way to set time of death
+                    LocalDateTime dod = LocalDateTime.of(
                             Integer.valueOf(dodString[2]),
                             Integer.valueOf(dodString[0]),
-                            Integer.valueOf(dodString[1])
+                            Integer.valueOf(dodString[1]), 0,0
                     );
 
                     profile.setDateOfDeath(dod);

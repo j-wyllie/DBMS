@@ -83,10 +83,11 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     public void testupdate() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
-        testProfile0.setDateOfDeath(LocalDate.now());
+        //todo way to set time of death
+        testProfile0.setDateOfDeath(LocalDateTime.now());
         mySqlProfileDAO.update(testProfile0);
 
-        assertEquals(LocalDate.now(), mySqlProfileDAO.get("ABC1234").getDateOfDeath());
+        assertEquals(LocalDate.now(), LocalDate.from(mySqlProfileDAO.get("ABC1234").getDateOfDeath()));
     }
 
     @Test

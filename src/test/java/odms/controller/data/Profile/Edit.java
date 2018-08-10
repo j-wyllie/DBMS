@@ -111,7 +111,8 @@ public class Edit {
     @Test
     public void testSaveDateOfDeathCorrectValue() {
         try {
-            LocalDate oldValue = currentProfile.getDateOfDeath();
+            //todo way to set time of death
+            LocalDate oldValue = LocalDate.from(currentProfile.getDateOfDeath());
             view.setDODDatePicker(LocalDate.now());
             controller.saveDateOfDeath();
             assertNotEquals(oldValue, currentProfile.getDateOfDeath());
