@@ -29,8 +29,6 @@ public class Server {
                     System.out.println("Example to set a custom port.");
             }
         }
-
-        init();
         port(port);
         initExceptionHandler((e) -> System.out.println("Server init failed"));
         initRoutes();
@@ -38,7 +36,19 @@ public class Server {
     }
 
     private static void initRoutes() {
+        // user api endpoints.
+        path("/users", () -> {
 
+            get("", null);
+            post("", null);
+
+            path("/:id", () -> {
+                
+                get("", null);
+                patch("", null);
+                delete("", null);
+            });
+        });
     }
 
     private static void initControllers() {

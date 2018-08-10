@@ -29,17 +29,7 @@
         "tags": [
           "users"
         ],
-        "summary": "Get select users from the database",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "username",
-            "description": "Username of the user",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Gets all users from the database",
         "responses": {
           "200": {
             "description": "OK",
@@ -87,22 +77,41 @@
             "description": "Internal Server Error"
           }
         }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get select users from the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       },
       "patch": {
         "tags": [
           "users"
         ],
         "summary": "Edits the basic attributes of a given user.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "userId",
-            "description": "Id of the user",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -132,16 +141,6 @@
           "users"
         ],
         "summary": "Deletes a given user.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "user Id",
-            "description": "Id of the user",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -156,7 +155,18 @@
             "description": "Internal Server Error"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/profiles": {
       "get": {
