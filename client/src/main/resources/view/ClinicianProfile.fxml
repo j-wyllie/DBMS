@@ -39,6 +39,8 @@
             <Tab onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" fx:id="transplantTab"/>
             <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users"
                     fx:id="viewUsersTab"/>
+            <Tab onSelectionChanged="#handleTabAvailableClicked" text="Available Organs"
+                    fx:id="availableOrgansTab"/>
         </TabPane>
         <GridPane GridPane.columnSpan="2" stylesheets="@../styles/Common.css">
             <columnConstraints>
