@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" focusTraversable="true" prefHeight="270.0"
         prefWidth="369.0" xmlns="http://javafx.com/javafx/8.0.121"
-        fx:controller="odms.view.profile.ProfileAddConditionView">
+        fx:controller="odms.view.profile.ConditionAdd">
     <children>
         <Label layoutX="14.0" layoutY="14.0" text="Condition Details:"
                 fx:id="conditionDetailsLabel"/>
