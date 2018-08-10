@@ -395,7 +395,7 @@ public class ProfileEdit extends CommonView {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
         }
         setUpLocationFields();
-        controller.configureDeathFields();
+        controller.populateDeathFields();
     }
 
     private void setUpLocationFields() {
@@ -489,17 +489,9 @@ public class ProfileEdit extends CommonView {
                 comboRegionOfDeath.setDisable(false);
                 cityOfDeathField.setDisable(false);
 
-                controller.configureDeathFields();
+                controller.populateDeathFields();
             }
         });
-    }
-
-
-    /**
-     * Sets up death detail fields if the profile is dead..
-     */
-    private void setupDeathDetails() {
-
     }
 
     public void setComboCountryOfDeath(String country) {

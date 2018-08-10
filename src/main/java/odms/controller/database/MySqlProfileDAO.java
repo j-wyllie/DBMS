@@ -151,6 +151,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String city = profiles.getString("City");
         LocalDateTime created = null;
         if (!(profiles.getTimestamp("Created") == null)) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -161,7 +162,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
                 gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, country, created, updated);
+                address, region, phone, email, country, city, created, updated);
 
         try {
             profile = setOrgans(profile);
@@ -466,8 +467,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
             if (profile.getDateOfDeath() != null) {
                 stmt.setTimestamp(8, Timestamp.valueOf(profile.getDateOfDeath()));
-            }
-            else {
+            } else {
                 stmt.setDate(8, null);
             }
             stmt.setString(9, profile.getGender());
@@ -488,8 +488,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             stmt.executeUpdate();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();

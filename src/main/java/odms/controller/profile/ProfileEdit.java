@@ -40,6 +40,15 @@ public class ProfileEdit extends CommonController {
             odms.model.history.History action = new odms.model.history.History("profile", currentProfile.getId(), "update",
                     "previous " + currentProfile.getAttributesSummary(), -1, null);
 
+            try {
+                if (view.getDodDateTimePicker() != null) {
+                    saveCityOfDeath();
+                    saveRegionOfDeath();
+                    saveCountryOfDeath();
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Please enter valid death details.");
+            }
             // Required General Fields
             saveDateOfBirth();
             saveGivenNames();
@@ -67,16 +76,6 @@ public class ProfileEdit extends CommonController {
             saveCity();
             saveCountry();
             saveRegion();
-
-            try {
-                if(view.getDodDateTimePicker() != null) {
-                    saveCityOfDeath();
-                    saveRegionOfDeath();
-                    saveCountryOfDeath();
-                }
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Please enter valid death details.");
-            }
 
             ProfileDAO database = DAOFactory.getProfileDao();
             database.update(currentProfile);
@@ -120,7 +119,7 @@ public class ProfileEdit extends CommonController {
                 .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getCityOfDeathField(), view.getComboCountryOfDeath())) {
             currentProfile.setCityOfDeath(view.getCityOfDeathField());
-        } else if(!view.getCityOfDeathField().isEmpty() && !AddressIO
+        } else if (!view.getCityOfDeathField().isEmpty() && !AddressIO
                 .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getCityOfDeathField(), view.getComboCountryOfDeath())){
             throw new Exception();
@@ -209,7 +208,6 @@ public class ProfileEdit extends CommonController {
      */
     public void saveDateOfDeath() {
         if (view.getDodDateTimePicker() != null) {
-            //todo way to set time of death
             currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
         }
     }
@@ -408,15 +406,13 @@ public class ProfileEdit extends CommonController {
     /**
      * Populates the death fields.
      */
-    public void configureDeathFields() {
+    public void populateDeathFields() {
         if (currentProfile.getCountryOfDeath() == null) {
             if (currentProfile.getCountry() != null) {
                 view.setComboCountryOfDeath(currentProfile.getCountry());
-                System.out.println(currentProfile.getCountry());
             }
         } else {
             view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());
-            System.out.println("DEAD" + currentProfile.getCountryOfDeath());
         }
 
         //city
