@@ -1,18 +1,24 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.profileCancelChanges;
+
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -26,17 +32,11 @@ import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static odms.controller.AlertController.profileCancelChanges;
-
 /**
  * Profile edit window.
  */
 public class ProfileEdit extends CommonView {
+
     @FXML
     private Label donorFullNameLabel;
 
@@ -86,7 +86,7 @@ public class ProfileEdit extends CommonView {
     private TextField bloodPressureField;
 
     @FXML
-    private RadioButton isSmokerRadioButton;
+    private CheckBox isSmokerCheckBox;
 
     @FXML
     private TextField preferredNameField;
@@ -126,7 +126,8 @@ public class ProfileEdit extends CommonView {
     private static final String MAINCOUNTRY = "New Zealand";
 
 
-    private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(this);
+    private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(
+            this);
     private Boolean isOpenedByClinician;
 
     /**
@@ -157,16 +158,16 @@ public class ProfileEdit extends CommonView {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-            try {
-                controller.save();
-                showNotification("profile", event);
-                closeWindow(event);
-            } catch (IllegalArgumentException | SQLException e) {
-                AlertController.invalidEntry(
-                        e.getMessage() + "\n" +
-                                "Changes not saved."
-                );
-            }
+        try {
+            controller.save();
+            showNotification("profile", event);
+            closeWindow(event);
+        } catch (IllegalArgumentException | SQLException e) {
+            AlertController.invalidEntry(
+                    e.getMessage() + "\n" +
+                            "Changes not saved."
+            );
+        }
     }
 
     /**
@@ -177,12 +178,14 @@ public class ProfileEdit extends CommonView {
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        if (profileCancelChanges())
+        if (profileCancelChanges()) {
             closeWindow(event);
+        }
     }
 
     /**
      * Closes the edit window and opens the profile display.
+     *
      * @param event Action event when button is pressed.
      * @throws IOException Thrown when there is an error initializing a new window.
      */
@@ -267,6 +270,7 @@ public class ProfileEdit extends CommonView {
 
     /**
      * Sets the current profile attributes to the labels on start up.
+     *
      * @param p Current profile.
      * @param isOpenedByClinician Boolean, true if the window was opened by a clinician.
      */
@@ -363,9 +367,9 @@ public class ProfileEdit extends CommonView {
             bloodTypeField.setText(currentProfile.getBloodType());
         }
         if (currentProfile.getIsSmoker() == null || !currentProfile.getIsSmoker()) {
-            isSmokerRadioButton.setSelected(false);
+            isSmokerCheckBox.setSelected(false);
         } else {
-            isSmokerRadioButton.setSelected(true);
+            isSmokerCheckBox.setSelected(true);
         }
         if (currentProfile.getAlcoholConsumption() != null) {
             alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
@@ -399,7 +403,6 @@ public class ProfileEdit extends CommonView {
     }
 
     private void setUpLocationFields() {
-
         //city and region should be displayed same regardless
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
@@ -445,7 +448,7 @@ public class ProfileEdit extends CommonView {
 
         refreshRegionSelection();
         if (currentProfile.getDateOfDeath() != null) {
-            refreshRegionOfDeathSelection();
+
         }
     }
 
@@ -470,28 +473,30 @@ public class ProfileEdit extends CommonView {
             }
         });
 
-
         weightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(anyDigit)) {
                 weightField.setText(newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
-        dodDateTimePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                comboCountryOfDeath.setDisable(true);
-                regionOfDeathField.setDisable(true);
-                comboRegionOfDeath.setDisable(true);
-                cityOfDeathField.setDisable(true);
-            } else {
-                comboCountryOfDeath.setDisable(false);
-                regionOfDeathField.setDisable(false);
-                comboRegionOfDeath.setDisable(false);
-                cityOfDeathField.setDisable(false);
-
-                controller.populateDeathFields();
-            }
-        });
+        dodDateTimePicker.getEditor().textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue.isEmpty()) {
+                        comboCountryOfDeath.setDisable(true);
+                        regionOfDeathField.setDisable(true);
+                        comboRegionOfDeath.setDisable(true);
+                        cityOfDeathField.setDisable(true);
+                    } else {
+                        if (isOpenedByClinician) {
+                            comboCountryOfDeath.setDisable(false);
+                            regionOfDeathField.setDisable(false);
+                            comboRegionOfDeath.setDisable(false);
+                            cityOfDeathField.setDisable(false);
+                            refreshRegionOfDeathSelection();
+                            controller.populateDeathFields();
+                        }
+                    }
+                });
     }
 
     public void setComboCountryOfDeath(String country) {
@@ -517,11 +522,11 @@ public class ProfileEdit extends CommonView {
         regionOfDeathField.clear();
     }
 
-    public LocalDate getdobDatePicker(){
+    public LocalDate getdobDatePicker() {
         return dobDatePicker.getValue();
     }
 
-    public void setdobDatePicker(LocalDate date){
+    public void setdobDatePicker(LocalDate date) {
         dobDatePicker.setValue(date);
     }
 
@@ -605,8 +610,8 @@ public class ProfileEdit extends CommonView {
         return bloodTypeField.getText();
     }
 
-    public boolean getIsSmokerRadioButton() {
-        return isSmokerRadioButton.isSelected();
+    public boolean getIsSmokerCheckBox() {
+        return isSmokerCheckBox.isSelected();
     }
 
     public void setDODDatePicker(LocalDateTime l) {
@@ -637,8 +642,8 @@ public class ProfileEdit extends CommonView {
         bloodTypeField.setText(s);
     }
 
-    public void setIsSmokerRadioButton(boolean b) {
-        isSmokerRadioButton.setSelected(b);
+    public void setIsSmokerCheckBox(boolean b) {
+        isSmokerCheckBox.setSelected(b);
     }
 
     public String getComboCountryOfDeath() {

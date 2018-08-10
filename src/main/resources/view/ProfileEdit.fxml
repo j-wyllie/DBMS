@@ -3,10 +3,10 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -53,8 +53,8 @@
                             </GridPane.margin>
                             <GridPane focusTraversable="true" prefHeight="378.0" prefWidth="422.0">
                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="153.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="107.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="130.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
@@ -230,7 +230,7 @@
                                         <Insets left="20.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <Label layoutX="10.0" layoutY="275.0" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country :" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
+                                <Label layoutX="10.0" layoutY="275.0" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country :" GridPane.rowIndex="10">
                                     <font>
                                         <Font size="22.0" />
                                     </font>
@@ -246,12 +246,12 @@
                                         <Insets left="20.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <Label layoutX="30.0" layoutY="186.0" prefHeight="30.0" prefWidth="356.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Death details :" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+                                <Label layoutX="30.0" layoutY="186.0" prefHeight="30.0" prefWidth="142.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Death details :" GridPane.columnSpan="2" GridPane.rowIndex="8">
                                     <font>
                                         <Font size="22.0" />
                                     </font>
                                     <GridPane.margin>
-                                        <Insets left="50.0" />
+                                        <Insets left="20.0" />
                                     </GridPane.margin>
                                 </Label>
                             </GridPane>
@@ -547,7 +547,7 @@
                                         <Insets left="120.0" right="100.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <RadioButton fx:id="isSmokerRadioButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                <CheckBox fx:id="isSmokerCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                             </GridPane>
                         </TilePane>
                     </GridPane>

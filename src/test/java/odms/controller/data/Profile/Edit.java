@@ -378,7 +378,7 @@ public class Edit {
     public void testSaveisSmokerCorrectValue() {
         try {
             Boolean oldValue = currentProfile.getIsSmoker();
-            view.setIsSmokerRadioButton(true);
+            view.setIsSmokerCheckBox(true);
             controller.saveIsSmoker();
             assertNotEquals(oldValue, currentProfile.getIsSmoker());
         } catch (IllegalArgumentException e) {
