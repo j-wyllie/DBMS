@@ -1,8 +1,9 @@
 package server.controller;
 
-import spark.*;
+import spark.Request;
+import spark.Response;
 
-public class UserController {
+public class ProfileController {
 
     public static String getAll(Request req, Response res) {
         return "Unimplemented";
@@ -21,6 +22,10 @@ public class UserController {
     }
 
     public static String delete(Request req, Response res) {
+        return "Unimplemented";
+    }
+
+    public static String count(Request req, Response res) {
         return "Unimplemented";
     }
 }

@@ -1,18 +1,15 @@
 package server.controller;
 
-import spark.*;
+import spark.Request;
+import spark.Response;
 
-public class UserController {
+public class ConditionController {
 
     public static String getAll(Request req, Response res) {
         return "Unimplemented";
     }
 
-    public static String get(Request req, Response res) {
-        return "Unimplemented";
-    }
-
-    public static String create(Request req, Response res) {
+    public static String add(Request req, Response res) {
         return "Unimplemented";
     }
 
