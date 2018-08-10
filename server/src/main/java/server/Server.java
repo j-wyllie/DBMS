@@ -57,6 +57,16 @@ public class Server {
         // profile api routes.
         path("/profiles", () -> {
 
+            get("", null);
+            post("", null);
+
+            path("/:id", () -> {
+                get("", null);
+                patch("", null);
+                delete("", null);
+            });
+
+            get("/count", null);
         });
     }
 
