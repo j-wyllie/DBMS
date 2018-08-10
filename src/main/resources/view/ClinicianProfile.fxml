@@ -10,7 +10,7 @@
 <?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" style="-:: #1fa98c;" prefHeight="700.0"
     prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" fx:id="clinicianAp"
-    fx:controller="odms.view.user.ClinicianProfileView">
+    fx:controller="odms.view.user.ClinicianProfile">
     <GridPane style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
         AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"
         prefHeight="800.0" prefWidth="1200.0">
@@ -39,6 +39,8 @@
             <Tab onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" fx:id="transplantTab"/>
             <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users"
                     fx:id="viewUsersTab"/>
+            <Tab onSelectionChanged="#handleTabAvailableClicked" text="Available Organs"
+                    fx:id="availableOrgansTab"/>
         </TabPane>
         <GridPane GridPane.columnSpan="2" stylesheets="@../styles/Common.css">
             <columnConstraints>

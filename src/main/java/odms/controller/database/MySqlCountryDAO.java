@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import odms.model.enums.CountriesEnum;
 
@@ -80,5 +83,42 @@ public class MySqlCountryDAO implements CountryDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Method to be called to repopulate the countries table.
+     * @throws SQLException throws sql exception
+     */
+    public void populateCountriesTable() throws SQLException {
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        Connection connection = connectionInstance.getConnection();
+        PreparedStatement stmt = null;
+
+        String query = "TRUNCATE TABLE countries";
+        try {
+            stmt = connection.prepareStatement(query);
+            stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+            for (CountriesEnum country: CountriesEnum.values()) {
+                connection = connectionInstance.getConnection();
+
+                query = "insert into countries (Name) VALUES (?)";
+
+                stmt = connection.prepareStatement(query);
+
+                stmt.setString(1, country.toString());
+
+                stmt.executeUpdate();
+
+                stmt.close();
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

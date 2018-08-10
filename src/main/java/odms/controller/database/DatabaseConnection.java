@@ -14,9 +14,10 @@ import javax.sql.DataSource;
 public class DatabaseConnection {
 
     private static DataSource connectionSource;
-    private ComboPooledDataSource source;
+    private static ComboPooledDataSource source;
 
     private String DEFAULT_CONFIG = "/config/db.config";
+    private static String TEST_CONFIG = "/config/db_test.config";
     private static String CONFIG = null;
 
     private String RESET_SQL = "/config/reset.sql";
@@ -63,6 +64,42 @@ public class DatabaseConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setTestDb() {
+        CONFIG = TEST_CONFIG;
+        source = new ComboPooledDataSource();
+
+        // load in config file
+        Properties prop = new Properties();
+        try {
+            prop.load(ClassLoader.class.getResourceAsStream(TEST_CONFIG));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // set config string
+        String host = prop.getProperty("host");
+        String database = prop.getProperty("database");
+        String username = prop.getProperty("username");
+        String password = prop.getProperty("password");
+        String driver = prop.getProperty("driver");
+
+        // init
+        try {
+            source.setDriverClass(driver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        source.setJdbcUrl(host + '/' + database);
+        source.setUser(username);
+        source.setPassword(password);
+        source.setMinPoolSize(5);
+        source.setAcquireIncrement(5);
+        source.setMaxPoolSize(50);
+        source.setMaxIdleTime(3000);
+
+        connectionSource = source;
     }
 
     /**

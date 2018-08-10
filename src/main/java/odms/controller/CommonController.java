@@ -8,14 +8,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import odms.controller.history.RedoController;
-import odms.controller.history.UndoController;
+import odms.controller.history.Redo;
+import odms.controller.history.Undo;
 
 public class CommonController {
     //todo rework commoncontroller by cleaning up methods and removing or replacing them
 
-    private RedoController redoController = new RedoController();
-    private UndoController undoController = new UndoController();
+    private Redo redoController = new Redo();
+    private Undo undoController = new Undo();
 
     /**
      * JavaFX Scene loader
