@@ -19,6 +19,18 @@
       "description": "Functionality related to donor/receiver accounts"
     },
     {
+      "name": "conditions",
+      "description": "Functionality related to conditions of profiles"
+    },
+    {
+      "name": "procedures",
+      "description": "Functionality related to procedures of profiles"
+    },
+    {
+      "name": "drugs",
+      "description": "Functionality related to drugs of profiles"
+    },
+    {
       "name": "countries",
       "description": "Functionality related to countries"
     }
@@ -173,6 +185,61 @@
         "tags": [
           "profiles"
         ],
+        "summary": "Gets all profiles from the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Creates a new profile (donor or receiver)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profiles/{id}": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
         "summary": "Get select profiles from the database",
         "parameters": [
           {
@@ -222,48 +289,11 @@
           }
         }
       },
-      "post": {
-        "tags": [
-          "profiles"
-        ],
-        "summary": "Creates a new profile (donor or receiver)",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/postProfile"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "patch": {
         "tags": [
           "profiles"
         ],
         "summary": "Edits the basic attributes of a given profile.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "userId",
-            "required": true,
-            "description": "Id of the user",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -293,17 +323,6 @@
           "profiles"
         ],
         "summary": "Deletes a given profile.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "profile Id",
-            "required": true,
-            "description": "Id of the profile",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -318,7 +337,18 @@
             "description": "Internal Server Error"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/profiles/count": {
       "get": {
@@ -349,10 +379,10 @@
         }
       }
     },
-    "/profiles/{id}/conditions": {
+    "/conditions": {
       "get": {
         "tags": [
-          "profiles"
+          "conditions"
         ],
         "summary": "Gets all conditions of a profile.",
         "responses": {
@@ -379,7 +409,7 @@
       },
       "post": {
         "tags": [
-          "profiles"
+          "conditions"
         ],
         "summary": "Adds a condition to a profile.",
         "requestBody": {
@@ -405,10 +435,12 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/conditions/{id}": {
       "patch": {
         "tags": [
-          "profiles"
+          "conditions"
         ],
         "summary": "Changes the details of a condition for a profile.",
         "requestBody": {
@@ -437,7 +469,7 @@
       },
       "delete": {
         "tags": [
-          "profiles"
+          "conditions"
         ],
         "summary": "Deletes a condition from a profile.",
         "parameters": [
@@ -471,17 +503,17 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Id of the user.",
+          "description": "Id of the object.",
           "schema": {
             "$ref": "#/components/schemas/id"
           }
         }
       ]
     },
-    "/profiles/{id}/drugs": {
+    "/drugs": {
       "get": {
         "tags": [
-          "profiles"
+          "drugs"
         ],
         "summary": "Get current and past drugs for a profile",
         "parameters": [
@@ -519,7 +551,7 @@
       },
       "post": {
         "tags": [
-          "profiles"
+          "drugs"
         ],
         "summary": "Add a drug to a profile",
         "requestBody": {
@@ -545,10 +577,12 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/drugs/{id}": {
       "patch": {
         "tags": [
-          "profiles"
+          "drugs"
         ],
         "summary": "Update a drug",
         "requestBody": {
@@ -577,19 +611,9 @@
       },
       "delete": {
         "tags": [
-          "profiles"
+          "drugs"
         ],
         "summary": "Delete a drug from a profile",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "id",
-            "description": "ID of the drug to delete",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -610,17 +634,17 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Id of the user.",
+          "description": "Id of the object.",
           "schema": {
             "$ref": "#/components/schemas/id"
           }
         }
       ]
     },
-    "/profiles/{id}/organs": {
+    "/organs": {
       "get": {
         "tags": [
-          "profiles"
+          "organs"
         ],
         "summary": "Get organs that are associated with a profile",
         "parameters": [
@@ -681,7 +705,7 @@
       },
       "post": {
         "tags": [
-          "profiles"
+          "organs"
         ],
         "summary": "Add an organ to the profile",
         "parameters": [
@@ -738,57 +762,17 @@
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error'"
           }
         }
-      },
+      }
+    },
+    "/organs/{id}": {
       "delete": {
         "tags": [
-          "profiles"
+          "organs"
         ],
         "summary": "Deletes an organ from a profile",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "donated",
-            "description": "if the organ has been donated",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "donating",
-            "description": "if the organ is to be donated",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "required",
-            "description": "if the organ is a required organ",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "received",
-            "description": "if the organ has been received",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "organ",
-            "description": "the name of the organ to remove",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -809,17 +793,17 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Id of the user.",
+          "description": "Id of the object.",
           "schema": {
             "$ref": "#/components/schemas/id"
           }
         }
       ]
     },
-    "/profile/{id}/procedure": {
+    "/procedures": {
       "get": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Gets all the procedures for a profile.",
         "parameters": [
@@ -856,9 +840,19 @@
       },
       "post": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Adds a procedure to a profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "True to only get pending procedures, false for all procedures.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -882,10 +876,12 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/procedures/{id}": {
       "patch": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Updates a procedure.",
         "requestBody": {
@@ -914,19 +910,9 @@
       },
       "delete": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Deletes a procedure from a profile",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "procedureId",
-            "description": "Id of the procedure",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -947,17 +933,17 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Id of the user.",
+          "description": "Id of the object.",
           "schema": {
             "$ref": "#/components/schemas/id"
           }
         }
       ]
     },
-    "/procedures/{pId}/organs": {
+    "/procedures/{id}/organs": {
       "get": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Get a profiles affected organs of a procedure",
         "responses": {
@@ -984,7 +970,7 @@
       },
       "post": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "Add an organ to a procedure",
         "requestBody": {
@@ -1013,7 +999,7 @@
       },
       "delete": {
         "tags": [
-          "profiles"
+          "procedures"
         ],
         "summary": "removes an organ from a procedure",
         "parameters": [
@@ -1046,9 +1032,9 @@
           "in": "path",
           "name": "pId",
           "required": true,
-          "description": "Id of the procedure",
+          "description": "Id of the object",
           "schema": {
-            "$ref": "#/components/schemas/pId"
+            "$ref": "#/components/schemas/id"
           }
         }
       ]

@@ -36,18 +36,23 @@ public class Server {
     }
 
     private static void initRoutes() {
-        // user api endpoints.
+        // user api routes.
         path("/users", () -> {
 
             get("", null);
             post("", null);
 
             path("/:id", () -> {
-                
+
                 get("", null);
                 patch("", null);
                 delete("", null);
             });
+        });
+
+        // profile api routes.
+        path("/profiles", () -> {
+
         });
     }
 
