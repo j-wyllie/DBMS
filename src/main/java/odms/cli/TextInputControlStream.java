@@ -127,8 +127,10 @@ class TextInputControlStream {
 
         private String getLastLine() {
             synchronized (this) {
-                return this.textInputControl
+                String input = this.textInputControl
                         .getText(this.lastLineBreakIndex, this.textInputControl.getLength());
+                this.textInputControl.deleteText(this.lastLineBreakIndex, this.textInputControl.getLength());
+                return input;
             }
         }
 

@@ -5,15 +5,10 @@ import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.data.UserDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.OrganDAO;
 import odms.controller.database.ProfileDAO;
 import odms.controller.database.UserDAO;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -91,9 +86,7 @@ public class CommandLine implements Runnable {
     /**
      * Run implementation so command line can be run in an alternate thread
      */
-    public void run() {
-        initialiseConsole();
-    }
+    public void run() { initialiseConsole(); }
 
     /**
      * Initialise the commandline/console interface.
