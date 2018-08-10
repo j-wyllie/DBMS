@@ -17,11 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import odms.controller.profile.ProcedureGeneral;
-import odms.controller.profile.ProcedureEdit;
-import javax.xml.bind.annotation.XmlAnyAttribute;
-import odms.controller.procedure.ProcedureController;
-import odms.controller.procedure.ProcedureEditController;
-import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -137,8 +132,8 @@ public class ProceduresDisplay extends CommonView {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProcedureEdit.fxml"));
             Scene scene = new Scene(loader.load());
-            ProcedureEdit procedureEdit = loader.getController();
-            procedureEdit.initialize(selectedProcedure, currentProfile, this);
+            ProcedureDetailed procedureDetailed = loader.getController();
+            procedureDetailed.initialize(selectedProcedure, currentProfile, this);
 
             Stage stage = new Stage();
             stage.setScene(scene);
