@@ -164,7 +164,7 @@ public class ProfileEdit extends CommonView {
             } catch (IllegalArgumentException e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" +
-                                "Changes not saved."
+                                "Not all changes may have been saved."
                 );
         }
     }

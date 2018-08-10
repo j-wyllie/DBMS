@@ -42,11 +42,6 @@ public class OrganDisplay extends CommonView {
 
     @FXML
     private ListView<String> listViewReceiving;
-    @FXML
-    private Label donatingLabel;
-
-    @FXML
-    private Button donatingButton;
 
     @FXML
     private Label receivingLabel;
@@ -57,11 +52,19 @@ public class OrganDisplay extends CommonView {
     @FXML
     private GridPane organGridPane;
 
+    @FXML
+    private Button donatedButton;
 
-
+    @FXML
+    private Label donatedLabel;
 
     private static OrganSelectEnum windowType;
 
+    /**
+     * init organ display scene. Sets variables and object visibility status.
+     * @param p current profile being viewed
+     * @param isClinician boolean, is true if is profile was opened by clinician/admin user
+     */
     public void initialize(Profile p, Boolean isClinician) {
         currentProfile = p;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
@@ -72,16 +75,18 @@ public class OrganDisplay extends CommonView {
         listViewReceiving.setItems(observableListReceiving);
 
         if(!isClinician) {
-            if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
-                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
+            if (DAOFactory.getOrganDao().getDonations(currentProfile).isEmpty()) {
+                visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, false);
             } else {
-                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, true);
+                visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, true);
             }
             if (DAOFactory.getOrganDao().getRequired(currentProfile).isEmpty()) {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
             } else {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
             }
+            receivingButton.setVisible(false);
+            donatedButton.setVisible(false);
         }
 
         populateOrganLists();
