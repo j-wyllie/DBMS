@@ -405,13 +405,18 @@ public class ProfileEdit extends CommonController {
         return null;
     }
 
+    /**
+     * Populates the death fields.
+     */
     public void configureDeathFields() {
         if (currentProfile.getCountryOfDeath() == null) {
             if (currentProfile.getCountry() != null) {
                 view.setComboCountryOfDeath(currentProfile.getCountry());
+                System.out.println(currentProfile.getCountry());
             }
         } else {
             view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());
+            System.out.println("DEAD" + currentProfile.getCountryOfDeath());
         }
 
         //city

@@ -144,7 +144,7 @@ public class Profile implements Comparable<Profile> {
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
             int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, LocalDateTime created, LocalDateTime updated) {
+            String email,  String country, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -166,6 +166,7 @@ public class Profile implements Comparable<Profile> {
         this.region = region;
         this.phone = phone;
         this.email = email;
+        this.country = country;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
     }

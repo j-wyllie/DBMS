@@ -127,5 +127,6 @@ public class ProfileGeneral {
 
     public void setCurrentProfile(Profile currentProfile) {
         this.currentProfile = currentProfile;
+        System.out.println(this.currentProfile.getDateOfDeath());
     }
 }
