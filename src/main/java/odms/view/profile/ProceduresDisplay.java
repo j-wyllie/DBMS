@@ -133,7 +133,8 @@ public class ProceduresDisplay extends CommonView {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProcedureEdit.fxml"));
             Scene scene = new Scene(loader.load());
             ProcedureDetailed procedureDetailed = loader.getController();
-            procedureDetailed.initialize(selectedProcedure, currentProfile, this);
+            procedureDetailed.initialize(selectedProcedure, currentProfile, this,
+                    isOpenedByClinician);
 
             Stage stage = new Stage();
             stage.setScene(scene);

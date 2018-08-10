@@ -2,6 +2,7 @@ package odms.controller.profile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProcedureDAO;
 import odms.model.enums.OrganEnum;
@@ -95,5 +96,9 @@ public class ProcedureEdit {
         for (OrganEnum organEnum : organsToBeAdded) {
             procedureDAO.addAffectedOrgan(procedure, organEnum);
         }
+    }
+
+    public Set<OrganEnum> getDonatedOrgans() {
+        return view.getProfile().getOrgansDonated();
     }
 }
