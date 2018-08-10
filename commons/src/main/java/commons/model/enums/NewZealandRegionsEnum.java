@@ -1,4 +1,4 @@
-package server.model.enums;
+package commons.model.enums;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

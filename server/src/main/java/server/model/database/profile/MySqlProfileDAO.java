@@ -22,10 +22,10 @@ import server.model.database.condition.ConditionDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
-import server.model.enums.OrganEnum;
-import server.model.profile.OrganConflictException;
-import server.model.profile.Procedure;
-import server.model.profile.Profile;
+import commons.model.enums.OrganEnum;
+import commons.model.profile.OrganConflictException;
+import commons.model.profile.Procedure;
+import commons.model.profile.Profile;
 
 public class MySqlProfileDAO implements ProfileDAO {
 

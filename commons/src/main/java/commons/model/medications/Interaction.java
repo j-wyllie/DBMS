@@ -1,4 +1,4 @@
-package server.model.medications;
+package commons.model.medications;
 
 import java.time.LocalDateTime;
 import java.util.List;

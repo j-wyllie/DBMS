@@ -1,4 +1,4 @@
-package server.model.profile;
+package commons.model.profile;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;

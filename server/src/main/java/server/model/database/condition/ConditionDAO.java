@@ -1,8 +1,8 @@
 package server.model.database.condition;
 
 import java.util.ArrayList;
-import server.model.profile.Condition;
-import server.model.profile.Profile;
+import commons.model.profile.Condition;
+import commons.model.profile.Profile;
 
 public interface ConditionDAO {
 

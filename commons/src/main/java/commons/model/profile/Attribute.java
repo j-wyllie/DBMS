@@ -1,4 +1,4 @@
-package server.model.profile;
+package commons.model.profile;
 
 public enum Attribute {
     GIVENNAMES("given-names"),

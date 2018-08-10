@@ -1,8 +1,8 @@
 package server.model.history;
 
 import java.util.ArrayList;
-import server.model.profile.Profile;
-import server.model.user.User;
+import commons.model.profile.Profile;
+import commons.model.user.User;
 
 
 public final class CurrentHistory {

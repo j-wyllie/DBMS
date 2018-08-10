@@ -1,4 +1,4 @@
-package server.model.enums;
+package commons.model.enums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

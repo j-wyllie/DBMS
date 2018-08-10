@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import server.model.database.DatabaseConnection;
-import server.model.profile.Condition;
-import server.model.profile.Profile;
+import commons.model.profile.Condition;
+import commons.model.profile.Profile;
 
 public class MySqlConditionDAO implements ConditionDAO {
 

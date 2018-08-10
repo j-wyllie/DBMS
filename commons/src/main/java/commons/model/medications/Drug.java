@@ -1,4 +1,4 @@
-package server.model.medications;
+package commons.model.medications;
 
 /**
  * Creates a drug with a name and a list of active ingredients.

@@ -1,7 +1,7 @@
-package server.model.profile;
+package commons.model.profile;
 
 import java.util.Set;
-import server.model.enums.OrganEnum;
+import commons.model.enums.OrganEnum;
 
 public class OrganConflictException extends Exception {
 

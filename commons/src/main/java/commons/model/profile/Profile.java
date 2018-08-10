@@ -1,4 +1,4 @@
-package server.model.profile;
+package commons.model.profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,12 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.validator.routines.EmailValidator;
-import server.model.enums.BloodTypeEnum;
-import server.model.enums.CountriesEnum;
-import server.model.enums.OrganEnum;
+import commons.model.enums.BloodTypeEnum;
+import commons.model.enums.CountriesEnum;
+import commons.model.enums.OrganEnum;
 import server.model.history.CurrentHistory;
 import server.model.history.History;
-import server.model.medications.Drug;
+import commons.model.medications.Drug;
 
 public class Profile implements Comparable<Profile> {
 

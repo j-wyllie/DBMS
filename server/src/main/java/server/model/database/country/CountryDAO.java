@@ -1,7 +1,7 @@
 package server.model.database.country;
 
 import java.util.List;
-import server.model.enums.CountriesEnum;
+import commons.model.enums.CountriesEnum;
 
 public interface CountryDAO {
 

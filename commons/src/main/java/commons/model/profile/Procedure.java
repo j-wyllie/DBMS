@@ -1,9 +1,9 @@
-package server.model.profile;
+package commons.model.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import server.model.enums.OrganEnum;
+import commons.model.enums.OrganEnum;
 
 /**
  * A specific procedure for use in medication history

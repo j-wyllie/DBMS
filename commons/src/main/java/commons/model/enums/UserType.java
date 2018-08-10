@@ -1,4 +1,4 @@
-package server.model.enums;
+package commons.model.enums;
 
 public enum UserType {
     ADMIN("administrator"),

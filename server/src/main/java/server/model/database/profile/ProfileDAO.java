@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import server.model.enums.OrganEnum;
-import server.model.profile.Profile;
+import commons.model.enums.OrganEnum;
+import commons.model.profile.Profile;
 
 
 public interface ProfileDAO {

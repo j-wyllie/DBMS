@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import server.model.data.MedicationDataIO;
-import server.model.medications.Interaction;
+import commons.model.medications.Interaction;
 
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 

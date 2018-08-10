@@ -1,9 +1,9 @@
 package server.model.database.organ;
 
 import java.util.Set;
-import server.model.enums.OrganEnum;
-import server.model.profile.OrganConflictException;
-import server.model.profile.Profile;
+import commons.model.enums.OrganEnum;
+import commons.model.profile.OrganConflictException;
+import commons.model.profile.Profile;
 
 public interface OrganDAO {
 

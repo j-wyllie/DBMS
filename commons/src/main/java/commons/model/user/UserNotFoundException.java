@@ -1,4 +1,4 @@
-package server.model.user;
+package commons.model.user;
 
 public class UserNotFoundException extends Exception {
 

@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import server.model.database.DatabaseConnection;
-import server.model.enums.UserType;
-import server.model.user.User;
-import server.model.user.UserNotFoundException;
+import commons.model.enums.UserType;
+import commons.model.user.User;
+import commons.model.user.UserNotFoundException;
 
 public class MySqlUserDAO implements UserDAO {
 

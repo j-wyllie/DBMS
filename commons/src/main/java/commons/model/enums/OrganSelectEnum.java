@@ -1,4 +1,4 @@
-package server.model.enums;
+package commons.model.enums;
 
 /**
  * Constants for the different organ selection views

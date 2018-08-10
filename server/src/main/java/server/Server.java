@@ -1,8 +1,13 @@
 package server;
 
-import static spark.Spark.*;
+import static spark.Spark.delete;
+import static spark.Spark.get;
+import static spark.Spark.initExceptionHandler;
+import static spark.Spark.patch;
+import static spark.Spark.path;
+import static spark.Spark.port;
+import static spark.Spark.post;
 
-import org.sonar.api.user.User;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;

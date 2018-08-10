@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import server.model.medications.Interaction;
+import commons.model.medications.Interaction;
 
 public class MedicationDataIO {
 

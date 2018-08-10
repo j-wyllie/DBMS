@@ -1,11 +1,11 @@
-package server.model.user;
+package commons.model.user;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import server.model.enums.UserType;
+import commons.model.enums.UserType;
 
 public class User {
 

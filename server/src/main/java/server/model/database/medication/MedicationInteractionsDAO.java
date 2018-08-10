@@ -2,7 +2,7 @@ package server.model.database.medication;
 
 import java.io.IOException;
 import java.util.Map;
-import server.model.medications.Interaction;
+import commons.model.medications.Interaction;
 
 public interface MedicationInteractionsDAO {
 

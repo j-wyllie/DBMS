@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import server.model.database.DatabaseConnection;
-import server.model.enums.OrganEnum;
-import server.model.profile.OrganConflictException;
-import server.model.profile.Profile;
+import commons.model.enums.OrganEnum;
+import commons.model.profile.OrganConflictException;
+import commons.model.profile.Profile;
 
 public class MySqlOrganDAO implements OrganDAO {
 
