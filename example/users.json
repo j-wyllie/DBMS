@@ -196,8 +196,48 @@
       "username": "Jack1",
       "password": "Jack",
       "isDefault": false
+    },
+    "5": {
+      "userType": "CLINICIAN",
+      "name": "jim",
+      "staffID": 5,
+      "region": "jim",
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 9
+        },
+        "time": {
+          "hour": 12,
+          "minute": 2,
+          "second": 22,
+          "nano": 337000000
+        }
+      },
+      "updateActions": [
+        "Account for jimcreated at 2018-08-09T12:02:22.337",
+        "jim updated at 12:02 PM 09-08-2018",
+        "5 updated at 12:02 PM 09-08-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 9
+        },
+        "time": {
+          "hour": 12,
+          "minute": 2,
+          "second": 22,
+          "nano": 337000000
+        }
+      },
+      "username": "jim",
+      "password": "jim",
+      "isDefault": false
     }
   },
-  "lastID": 4,
+  "lastID": 5,
   "path": "example/users.json"
 }
