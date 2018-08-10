@@ -4,15 +4,14 @@ import static junit.framework.TestCase.assertEquals;
 
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
-import odms.controller.user.UserSearchController;
 import odms.model.profile.Profile;
-import odms.view.user.UserSearchView;
+import odms.view.user.Search;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SearchControllerTest {
-    UserSearchView view = new UserSearchView();
-    UserSearchController controller = new UserSearchController(view);
+    Search view = new Search();
+    odms.controller.user.Search controller = new odms.controller.user.Search(view);
     Profile testProfile;
     SimpleStringProperty expected = new SimpleStringProperty();
     @Before

@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.database.UserDAO;
-import odms.view.profile.ProfileDisplayViewTODO;
+import odms.view.profile.Display;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
 import odms.model.profile.Profile;
 import odms.model.user.User;
-import odms.view.user.ClinicianProfileView;
+import odms.view.user.ClinicianProfile;
 import java.io.IOException;
 
 import static odms.controller.AlertController.invalidUsername;
@@ -67,7 +67,7 @@ public class LoginView extends CommonController {
                         );
 
                         scene = new Scene(fxmlLoader.load());
-                        ClinicianProfileView v = fxmlLoader.getController();
+                        ClinicianProfile v = fxmlLoader.getController();
                         v.setCurrentUser(currentUser);
                         v.initialize();
 
@@ -91,10 +91,10 @@ public class LoginView extends CommonController {
                     if (currentProfile != null) {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(
-                                getClass().getResource("/view/ProfileDisplay.fxml"));
+                            getClass().getResource("/view/ProfileDisplay.fxml"));
 
                         scene = new Scene(fxmlLoader.load());
-                        ProfileDisplayViewTODO controller = fxmlLoader.getController();
+                        Display controller = fxmlLoader.getController();
                         controller.initialize(currentProfile, false);
 
                         Stage stage = new Stage();
