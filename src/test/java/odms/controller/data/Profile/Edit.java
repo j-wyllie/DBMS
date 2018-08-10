@@ -1,5 +1,6 @@
 package odms.controller.data.Profile;
 
+import java.time.LocalDateTime;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileEdit;
 import org.junit.Before;
@@ -113,7 +114,7 @@ public class Edit {
         try {
             //todo way to set time of death
             LocalDate oldValue = LocalDate.from(currentProfile.getDateOfDeath());
-            view.setDODDatePicker(LocalDate.now());
+            view.setDODDatePicker(LocalDateTime.now());
             controller.saveDateOfDeath();
             assertNotEquals(oldValue, currentProfile.getDateOfDeath());
         } catch (IllegalArgumentException e) {

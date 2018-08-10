@@ -171,7 +171,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     public Profile(int id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
-            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker,
             String alcoholConsumption, int bpSystolic, int bpDiastolic, String address,
             String streetNo, String streetName, String neighbourhood, String city, String zipCode,
@@ -186,6 +186,7 @@ public class Profile implements Comparable<Profile> {
         this.lastNames = lastNames;
         this.dateOfBirth = dob;
         this.dateOfDeath = dod;
+        this.birthCountry = birthCountry;
         this.gender = gender;
         this.height = height;
         this.weight = weight;

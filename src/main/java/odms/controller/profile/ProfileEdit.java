@@ -3,7 +3,6 @@ package odms.controller.profile;
 import static odms.App.getProfileDb;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +23,9 @@ public class ProfileEdit extends CommonController {
 
     private Boolean isClinician;
 
-   public ProfileEdit(odms.view.profile.ProfileEdit v) {
+    private static final String MAINCOUNTRY = "New Zealand";
+
+    public ProfileEdit(odms.view.profile.ProfileEdit v) {
        view = v;
    }
 
@@ -68,13 +69,13 @@ public class ProfileEdit extends CommonController {
             saveRegion();
 
             try {
-                if(view.getDODDatePicker() != null) {
+                if(view.getDodDateTimePicker() != null) {
                     saveCityOfDeath();
                     saveRegionOfDeath();
                     saveCountryOfDeath();
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid Region of Death");
+                throw new IllegalArgumentException("Please enter valid death details.");
             }
 
             ProfileDAO database = DAOFactory.getProfileDao();
@@ -206,10 +207,10 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if date is prior to birth date
      */
-    public void saveDateOfDeath() throws IllegalArgumentException {
-        if (view.getDODDatePicker() != null) {
+    public void saveDateOfDeath() {
+        if (view.getDodDateTimePicker() != null) {
             //todo way to set time of death
-            currentProfile.setDateOfDeath(LocalDateTime.from(view.getDODDatePicker()));
+            currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
         }
     }
 
@@ -359,13 +360,12 @@ public class ProfileEdit extends CommonController {
         }
     }
 
-
     /**
      * closes the edit donor window and reopens the donor.
      *
      */
     @FXML
-    public Profile close() throws IOException {
+    public Profile close() {
         //todo sort out a way to check this
         return currentProfile;
         //if (isClinician) {
@@ -375,6 +375,12 @@ public class ProfileEdit extends CommonController {
         //}
     }
 
+    /**
+     * Sets the image in the edit profile view.
+     * @param chosenFile file chosen.
+     * @param LOCALPATH local path of the chosen file.
+     * @return Picture destination.
+     */
     public File setImage(File chosenFile, File LOCALPATH) {
         if (chosenFile != null) {
             String extension = getFileExtension(chosenFile).toLowerCase();
@@ -397,6 +403,54 @@ public class ProfileEdit extends CommonController {
             return pictureDestination;
         }
         return null;
+    }
+
+    public void configureDeathFields() {
+        if (currentProfile.getCountryOfDeath() == null) {
+            if (currentProfile.getCountry() != null) {
+                view.setComboCountryOfDeath(currentProfile.getCountry());
+            }
+        } else {
+            view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());
+        }
+
+        //city
+        if (currentProfile.getCityOfDeath() == null) {
+            if (currentProfile.getCity() != null) {
+                view.setCityOfDeathField(currentProfile.getCity());
+                view.setCityOfDeathField(currentProfile.getCity());
+            }
+        } else {
+            view.setCityOfDeathField(currentProfile.getCity());
+        }
+
+        //region
+        if (currentProfile.getRegionOfDeath() == null) {
+            if (currentProfile.getRegion() != null) {
+                if (currentProfile.getCountry() != null) {
+                    if (currentProfile.getCountry().equals(MAINCOUNTRY)) {
+                        view.setComboRegionOfDeath(currentProfile.getRegionOfDeath());
+                        view.clearRegionOfDeathField();
+                    } else {
+                        view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
+                        //comboRegionOfDeath.clearSelection()
+                    }
+                } else {
+                    view.setRegionOfDeathField(currentProfile.getRegion());
+                    //comboRegionOfDeath.clearSelection()
+                }
+            }
+        } else {
+            if (currentProfile.getCountry() != null) {
+                if (currentProfile.getCountry().equals(MAINCOUNTRY)) {
+                    view.setComboRegionOfDeath(currentProfile.getRegionOfDeath());
+                    view.clearRegionOfDeathField();
+                }
+            } else {
+                view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
+                //comboRegionOfDeath.clearSelection()
+            }
+        }
     }
 
     public void setCurrentProfile(Profile donor) {
