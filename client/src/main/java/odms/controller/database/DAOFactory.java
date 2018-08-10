@@ -55,7 +55,7 @@ public class DAOFactory {
     }
 
     /**
-     * Gives the data access object class for the medical interactions.
+     * Gives the data access object class for the medication interactions.
      * @return dao for the data IO type.
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }

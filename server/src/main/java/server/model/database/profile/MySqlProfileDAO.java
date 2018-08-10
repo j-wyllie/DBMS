@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.profile;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -16,6 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import server.model.database.DAOFactory;
+import server.model.database.DatabaseConnection;
+import server.model.database.condition.ConditionDAO;
+import server.model.database.medication.MedicationDAO;
+import server.model.database.organ.OrganDAO;
+import server.model.database.procedure.ProcedureDAO;
 import server.model.enums.OrganEnum;
 import server.model.profile.OrganConflictException;
 import server.model.profile.Procedure;

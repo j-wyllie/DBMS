@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.medication;
 
 import static java.time.LocalDateTime.now;
 
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.model.data.MedicationDataIO;
 import server.model.medications.Interaction;
 
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {

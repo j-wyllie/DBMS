@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.country;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import odms.model.enums.CountriesEnum;
+import server.model.database.DatabaseConnection;
+import server.model.enums.CountriesEnum;
 
 public class MySqlCountryDAO implements CountryDAO {
 

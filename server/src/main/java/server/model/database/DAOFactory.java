@@ -1,5 +1,22 @@
 package server.model.database;
 
+import server.model.database.condition.ConditionDAO;
+import server.model.database.condition.MySqlConditionDAO;
+import server.model.database.country.CountryDAO;
+import server.model.database.country.MySqlCountryDAO;
+import server.model.database.medication.JsonMedicationInteractionsDAO;
+import server.model.database.medication.MedicationDAO;
+import server.model.database.medication.MedicationInteractionsDAO;
+import server.model.database.medication.MySqlMedicationDAO;
+import server.model.database.organ.MySqlOrganDAO;
+import server.model.database.organ.OrganDAO;
+import server.model.database.procedure.MySqlProcedureDAO;
+import server.model.database.procedure.ProcedureDAO;
+import server.model.database.profile.MySqlProfileDAO;
+import server.model.database.profile.ProfileDAO;
+import server.model.database.user.MySqlUserDAO;
+import server.model.database.user.UserDAO;
+
 public class DAOFactory {
 
     /**
@@ -55,7 +72,7 @@ public class DAOFactory {
     }
 
     /**
-     * Gives the data access object class for the medical interactions.
+     * Gives the data access object class for the medication interactions.
      * @return dao for the data IO type.
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }

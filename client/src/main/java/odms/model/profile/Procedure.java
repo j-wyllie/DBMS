@@ -6,7 +6,7 @@ import java.util.List;
 import odms.model.enums.OrganEnum;
 
 /**
- * A specific procedure for use in medical history
+ * A specific procedure for use in medication history
  */
 public class Procedure {
     private final String AFFECTED_ORGAN_TEXT = "Affects Donations";

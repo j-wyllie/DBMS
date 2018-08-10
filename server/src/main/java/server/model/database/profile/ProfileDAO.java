@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.profile;
 
 import java.sql.SQLException;
 import java.util.List;

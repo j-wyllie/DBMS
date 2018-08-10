@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 /**
- * A specific condition for use in medical history.
+ * A specific condition for use in medication history.
  */
 public class Condition {
     private int id;

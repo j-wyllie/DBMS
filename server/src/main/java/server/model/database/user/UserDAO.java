@@ -1,8 +1,8 @@
-package server.model.database;
+package server.model.database.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.sonar.api.database.model.User;
+import server.model.user.User;
 import server.model.user.UserNotFoundException;
 
 public interface UserDAO {

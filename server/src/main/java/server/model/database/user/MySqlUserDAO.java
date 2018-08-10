@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,9 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import odms.controller.user.UserNotFoundException;
-import odms.model.enums.UserType;
-import odms.model.user.User;
+import server.model.database.DatabaseConnection;
+import server.model.enums.UserType;
+import server.model.user.User;
+import server.model.user.UserNotFoundException;
 
 public class MySqlUserDAO implements UserDAO {
 

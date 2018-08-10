@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.country;
 
 import java.util.List;
 import server.model.enums.CountriesEnum;

@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.medication;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,8 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import odms.model.medications.Drug;
-import odms.model.profile.Profile;
+import server.model.database.DatabaseConnection;
+import server.model.medications.Drug;
+import server.model.profile.Profile;
 
 public class MySqlMedicationDAO implements MedicationDAO {
 

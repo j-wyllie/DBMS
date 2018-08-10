@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * A specific condition for use in medical history.
+ * A specific condition for use in medication history.
  */
 public class Condition {
     private int id;

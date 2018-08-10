@@ -10,8 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.validator.routines.EmailValidator;
+import server.model.enums.BloodTypeEnum;
 import server.model.enums.CountriesEnum;
 import server.model.enums.OrganEnum;
+import server.model.history.CurrentHistory;
 import server.model.history.History;
 import server.model.medications.Drug;
 
@@ -458,7 +460,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             addOrganReceived(organ);
-            odms.model.history.History action = new odms.model.history.History("Profile ", this.getId(),
+            History action = new History("Profile ", this.getId(),
                     "received",organ.getNamePlain(),-1,LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
@@ -490,7 +492,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "Profile ",
                     this.getId(),
                     "donated",

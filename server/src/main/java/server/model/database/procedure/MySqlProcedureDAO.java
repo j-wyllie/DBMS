@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.procedure;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import server.model.database.DatabaseConnection;
 import server.model.enums.OrganEnum;
 import server.model.profile.Procedure;
 import server.model.profile.Profile;

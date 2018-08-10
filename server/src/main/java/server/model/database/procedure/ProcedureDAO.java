@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.procedure;
 
 
 import java.util.List;

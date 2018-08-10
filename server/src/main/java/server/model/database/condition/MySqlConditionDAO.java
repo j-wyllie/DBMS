@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.condition;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import server.model.database.DatabaseConnection;
 import server.model.profile.Condition;
 import server.model.profile.Profile;
 

@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.medication;
 
 import java.util.List;
 import server.model.medications.Drug;

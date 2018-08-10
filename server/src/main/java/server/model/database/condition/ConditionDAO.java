@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.condition;
 
 import java.util.ArrayList;
 import server.model.profile.Condition;

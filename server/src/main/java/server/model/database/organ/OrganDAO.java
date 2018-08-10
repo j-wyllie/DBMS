@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.organ;
 
 import java.util.Set;
 import server.model.enums.OrganEnum;

@@ -1,4 +1,4 @@
-package server.model.database;
+package server.model.database.organ;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import server.model.database.DatabaseConnection;
+import server.model.enums.OrganEnum;
+import server.model.profile.OrganConflictException;
+import server.model.profile.Profile;
 
 public class MySqlOrganDAO implements OrganDAO {
 
