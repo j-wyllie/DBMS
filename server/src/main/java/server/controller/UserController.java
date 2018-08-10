@@ -7,7 +7,7 @@ public class UserController {
         return "Unimplemented";
     }
 
-    public static String getOneUsers(Request req, Response res) {
+    public static String getUser(Request req, Response res) {
         return "Unimplemented";
     }
 

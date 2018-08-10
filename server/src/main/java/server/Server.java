@@ -48,7 +48,7 @@ public class Server {
             post("", UserController::createUser);
 
             path("/:id", () -> {
-                get("", UserController::getOneUsers);
+                get("", UserController::getUser);
                 patch("", UserController::editUser);
                 delete("", UserController::deleteUser);
             });
