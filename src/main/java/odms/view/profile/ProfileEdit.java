@@ -334,7 +334,6 @@ public class ProfileEdit extends CommonView {
             dobDatePicker.setValue(currentProfile.getDateOfBirth());
         }
         if (currentProfile.getDateOfDeath() != null) {
-            //todo way to set time of death
             dodDateTimePicker.setDateTimeValue(LocalDateTime.from(currentProfile.getDateOfDeath()));
         } else {
             dodDateTimePicker.getEditor().clear();
