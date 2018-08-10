@@ -76,14 +76,72 @@ public class ProfileController {
     }
 
     public static String edit(Request req, Response res) {
-        return "Unimplemented";
+        Gson gson = new Gson();
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Profile profile = null;
+
+        try {
+            profile = gson.fromJson(req.body(), Profile.class);
+        } catch (Exception e) {
+            res.status(400);
+            return "Bad Request";
+        }
+
+        if (!(profile == null)) {
+            try {
+                database.update(profile);
+            } catch (SQLException e) {
+                res.status(500);
+                return "Internal Server Error";
+            }
+        }
+
+        res.status(200);
+        return "Profile Updated";
     }
 
     public static String delete(Request req, Response res) {
-        return "Unimplemented";
+        Gson gson = new Gson();
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Profile profile = null;
+
+        try {
+            profile = gson.fromJson(req.body(), Profile.class);
+        } catch (Exception e) {
+            res.status(400);
+            return "Bad Request";
+        }
+
+        if (!(profile == null)) {
+            try {
+                database.remove(profile);
+            } catch (SQLException e) {
+                res.status(500);
+                return "Internal Server Error";
+            }
+        }
+
+        res.status(200);
+        return "Profile Deleted";
     }
 
     public static String count(Request req, Response res) {
-        return "Unimplemented";
+        ProfileDAO database = DAOFactory.getProfileDao();
+        int count = 0;
+
+        try {
+            count = database.size();
+        } catch (SQLException e) {
+            res.status(500);
+            return "Internal Server Error";
+        }
+
+        Gson gson = new Gson();
+        String responseBody = gson.toJson(count);
+
+        res.type("application/json");
+        res.status(200);
+
+        return responseBody;
     }
 }
