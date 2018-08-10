@@ -1,5 +1,7 @@
 package server;
 
+import static spark.Spark.*;
+
 /**
  * Main entry point for server application.
  */
@@ -27,6 +29,20 @@ public class Server {
                     System.out.println("Example to set a custom port.");
             }
         }
+
+        init();
+        port(port);
+        initExceptionHandler((e) -> System.out.println("Server init failed"));
+        initRoutes();
+        initControllers();
+    }
+
+    private static void initRoutes() {
+
+    }
+
+    private static void initControllers() {
+
     }
 
 }
