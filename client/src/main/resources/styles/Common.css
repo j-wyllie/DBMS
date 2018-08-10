@@ -1,0 +1,87 @@
+.banner {
+    -fx-alignment: center;
+    -fx-font-size: 30px;
+    -fx-text-alignment: center;
+    -fx-text-fill: #fffbfb;
+}
+
+.banner-default {
+    -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+}
+
+.banner-admin {
+    -fx-background-color: linear-gradient(#e07173, #ae4446);
+}
+
+.banner-clinician {
+    -fx-background-color: linear-gradient(#71aee1, #135c94);
+}
+
+.button-logout {
+    -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+    -fx-background-radius: 4;
+    -fx-background-size: stretch;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fffbfb;
+    -fx-border-color: #1fa98c;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.button-logout:hover {
+    -fx-background-color: #46d4b6;
+}
+
+.button-logout:pressed {
+    -fx-background-color: #1fa98c;
+}
+
+.button-admin-logout {
+    -fx-background-color: linear-gradient(#e07173, #ae4446);
+    -fx-background-radius: 4;
+    -fx-background-size: stretch;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fffbfb;
+    -fx-border-color: #ae4446;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.button-admin-logout:hover {
+    -fx-background-color: #ed8385;
+}
+
+.button-admin-logout:pressed {
+    -fx-background-color: #ae4446;
+}
+
+.button-clinician-logout {
+    -fx-background-color: linear-gradient(#71aee1, #135c94);
+    -fx-background-radius: 4;
+    -fx-background-size: stretch;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fffbfb;
+    -fx-border-color: #135c94;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.button-clinician-logout:hover {
+    -fx-background-color: #71aee1;
+}
+
+.button-clinician-logout:pressed {
+    -fx-background-color: #135c94;
+}
+
+.import-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #135c94;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(#71aee1, #135c94);
+}

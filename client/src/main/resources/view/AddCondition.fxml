@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" focusTraversable="true" prefHeight="270.0"
+        prefWidth="369.0" xmlns="http://javafx.com/javafx/8.0.121"
+        fx:controller="odms.view.profile.ConditionAdd">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" text="Condition Details:"
+                fx:id="conditionDetailsLabel"/>
+        <TextField layoutX="12.0" layoutY="41.0" prefHeight="29.0" prefWidth="339.0"
+                promptText="Name" fx:id="nameField"/>
+        <DatePicker layoutX="14.0" layoutY="83.0" prefHeight="25.0" prefWidth="339.0"
+                promptText="Date Diagnosed" fx:id="dateDiagnosedDatePicker"/>
+        <CheckBox layoutX="14.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleChronicChecked"
+                text="Chronic" fx:id="chronicCheckBox"/>
+        <CheckBox layoutX="130.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleCuredChecked"
+                text="Cured" fx:id="curedCheckBox"/>
+        <DatePicker layoutX="12.0" layoutY="155.0" prefHeight="25.0" prefWidth="339.0"
+                promptText="Date Cured" fx:id="dateCuredDatePicker"/>
+        <Button layoutX="224.0" layoutY="214.0" mnemonicParsing="false" onAction="#handleAddButtonClicked"
+                prefHeight="42.0" prefWidth="127.0" text="Add" fx:id="addButton"/>
+        <Label alignment="CENTER" layoutX="14.0" layoutY="188.0" prefHeight="15.0"
+                prefWidth="339.0" text="Invalid Details" textAlignment="CENTER" textFill="RED"
+                visible="false" fx:id="warningLabel"/>
+    </children>
+</AnchorPane>
