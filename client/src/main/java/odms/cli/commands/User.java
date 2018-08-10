@@ -5,9 +5,7 @@ import java.util.List;
 import odms.cli.CommandUtils;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
-import odms.controller.history.HistoryController;
 import odms.controller.history.CurrentHistory;
-import odms.model.data.UserDatabase;
 import odms.model.enums.UserType;
 
 import java.time.LocalDateTime;
@@ -138,6 +136,12 @@ public class User extends CommandUtils {
         Print.printUserList(users);
     }
 
+    /**
+     * Gives a list of relevant users to be edited.
+     * @param expression to search by.
+     * @param type of user.
+     * @return a list of users.
+     */
     private static List<odms.model.user.User> search(String expression, String type) {
         // Depending what type of user, the length to skip will change accordingly
         Integer lengthToSkip = 10;   //for clinician

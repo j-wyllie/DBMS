@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.List;
 import odms.controller.database.DatabaseConnection;
 import odms.controller.database.MySqlUserDAO;
 import odms.controller.user.UserNotFoundException;
@@ -76,7 +77,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @After
     public void cleanup() throws SQLException {
-        ArrayList<User> users = mySqlUserDAO.getAll();
+        List<User> users = mySqlUserDAO.getAll();
         for (User user : users) {
             mySqlUserDAO.remove(user);
         }

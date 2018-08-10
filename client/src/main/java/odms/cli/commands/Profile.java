@@ -5,11 +5,9 @@ import java.util.List;
 import odms.cli.CommandUtils;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
-import odms.controller.history.HistoryController;
 import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.model.data.NHIConflictException;
-import odms.model.data.ProfileDatabase;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -149,6 +147,11 @@ public class Profile extends CommandUtils {
         Print.printProfileList(profiles);
     }
 
+    /**
+     * Returns a list of the relevant profiles that are to be edited.
+     * @param expression to search by.
+     * @return a list of profile objects.
+     */
     private static List<odms.model.profile.Profile> search(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
         List<odms.model.profile.Profile> profiles = new ArrayList<>();

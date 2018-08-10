@@ -6,6 +6,7 @@ import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.DatabaseConnection;
 import odms.controller.database.OrganDAO;
 import odms.controller.database.ProfileDAO;
 import odms.controller.database.UserDAO;
@@ -132,6 +133,7 @@ public class CommandLine implements Runnable {
      */
     private void processInput(ArrayList<String> input, String rawInput) throws SQLException {
         Commands inputCommand = validateCommandType(input, rawInput);
+        DatabaseConnection instance = DatabaseConnection.getInstance();
 
         switch (inputCommand) {
             case INVALID:
@@ -291,9 +293,11 @@ public class CommandLine implements Runnable {
                 break;
 
             case RESET:
+                instance.reset();
                 break;
 
             case RESAMPLE:
+                instance.resample();
                 break;
 //
 //            case UNDO:

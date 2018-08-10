@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import odms.controller.user.Console;
 import odms.controller.user.Display;
 import odms.model.user.User;
 import odms.model.enums.UserType;
@@ -73,7 +74,7 @@ public class ClinicianProfile extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
         try {
             consoleTab.setContent(loader.load());
-            UserConsoleTabView userConsoleTabView = loader.getController();
+            ConsoleTab console = loader.getController();
             // don't initialize as it will double print.
         } catch (IOException e){
             System.out.println(e.getMessage());
