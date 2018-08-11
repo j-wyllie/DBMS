@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import odms.commons.model.enums.OrganEnum;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.profile.Procedure;
 

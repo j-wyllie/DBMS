@@ -2,7 +2,8 @@ package odms.controller.profile;
 
 import java.util.List;
 import javafx.fxml.FXML;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import odms.view.profile.ProceduresDisplay;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class ProcedureGeneral {
      * @param procedure the procedure to check
      * @return whether the procedure has past
      */
-    public boolean isPreviousProcedure(odms.model.profile.Procedure procedure) {
+    public boolean isPreviousProcedure(Procedure procedure) {
         return procedure.getDate().isBefore(LocalDate.now());
     }
 
@@ -31,7 +32,7 @@ public class ProcedureGeneral {
     @FXML
     public void delete() {
 
-        odms.model.profile.Procedure procedure = view.getSelectedPendingProcedure();
+        Procedure procedure = view.getSelectedPendingProcedure();
         if (procedure == null) {
             procedure = view.getSelectedPreviousProcedure();
         }
@@ -46,8 +47,8 @@ public class ProcedureGeneral {
      *
      * @param procedure the procedure to remove
      */
-    public void removeProcedure(odms.model.profile.Procedure procedure, Profile profile) {
-        List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
+    public void removeProcedure(Procedure procedure, Profile profile) {
+        List<Procedure> procedures = profile.getAllProcedures();
         procedures.remove(procedure);
     }
 
@@ -56,11 +57,11 @@ public class ProcedureGeneral {
      *
      * @return previous procedures
      */
-    public List<odms.model.profile.Procedure> getPreviousProcedures(Profile profile) {
-        ArrayList<odms.model.profile.Procedure> prevProcedures = new ArrayList<>();
-        List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
+    public List<Procedure> getPreviousProcedures(Profile profile) {
+        ArrayList<Procedure> prevProcedures = new ArrayList<>();
+        List<Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
-            for (odms.model.profile.Procedure procedure : procedures) {
+            for (Procedure procedure : procedures) {
                 if (procedure.getDate().isBefore(LocalDate.now())) {
                     prevProcedures.add(procedure);
                 }
@@ -74,11 +75,11 @@ public class ProcedureGeneral {
      *
      * @return pending procedures
      */
-    public List<odms.model.profile.Procedure> getPendingProcedures(Profile profile) {
-        List<odms.model.profile.Procedure> pendingProcedures = new ArrayList<>();
-        List<odms.model.profile.Procedure> procedures = profile.getAllProcedures();
+    public List<Procedure> getPendingProcedures(Profile profile) {
+        List<Procedure> pendingProcedures = new ArrayList<>();
+        List<Procedure> procedures = profile.getAllProcedures();
         if (procedures != null) {
-            for (odms.model.profile.Procedure procedure : procedures) {
+            for (Procedure procedure : procedures) {
                 if (procedure.getDate().isAfter(LocalDate.now())) {
                     pendingProcedures.add(procedure);
                 }

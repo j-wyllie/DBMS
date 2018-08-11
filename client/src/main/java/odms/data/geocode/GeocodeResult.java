@@ -1,4 +1,4 @@
-package odms.data;
+package odms.data.geocode;
 
 import java.util.Collections;
 import java.util.List;

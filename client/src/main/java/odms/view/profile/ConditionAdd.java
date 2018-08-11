@@ -8,7 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ConditionAdd extends CommonView {

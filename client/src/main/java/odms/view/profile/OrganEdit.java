@@ -23,7 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 
 /**
  * Control Organ view tab pane.

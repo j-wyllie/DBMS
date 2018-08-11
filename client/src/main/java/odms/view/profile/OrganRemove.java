@@ -11,7 +11,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
+import odms.controller.profile.OrganRemoval;
 import odms.view.CommonView;
 
 /**
@@ -40,7 +41,7 @@ public class OrganRemove extends CommonView {
 
     private String currentOrgan;
 
-    private odms.controller.profile.OrganRemoval controller = new odms.controller.profile.OrganRemoval(this);
+    private OrganRemoval controller = new OrganRemoval(this);
 
     /**
      * Confirms the changes made to the organs required and stores the reason given for this

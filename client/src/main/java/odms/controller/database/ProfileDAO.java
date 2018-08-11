@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Profile;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.OrganConflictException;
+import odms.model.profile.Profile;
+
 
 public interface ProfileDAO {
 

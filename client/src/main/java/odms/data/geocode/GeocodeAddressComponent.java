@@ -1,4 +1,4 @@
-package odms.data;
+package odms.data.geocode;
 
 public class GeocodeAddressComponent {
     private final String longName;

@@ -2,10 +2,10 @@ package odms.controller.profile;
 
 import java.util.List;
 import javafx.collections.ObservableList;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import odms.view.profile.Display;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Procedure;
 
 import java.time.LocalDate;
 

@@ -6,11 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.ProcedureEdit;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.time.LocalDate;

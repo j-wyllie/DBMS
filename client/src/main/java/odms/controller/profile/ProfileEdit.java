@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
@@ -15,7 +16,6 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.history.History;
-import odms.model.profile.Profile;
 
 public class ProfileEdit extends CommonController {
 

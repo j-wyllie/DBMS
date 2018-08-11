@@ -1,9 +1,9 @@
 package odms.controller.database;
 
 import java.util.Set;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.OrganConflictException;
-import odms.commons.model.profile.Profile;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.OrganConflictException;
+import odms.model.profile.Profile;
 
 public interface OrganDAO {
 

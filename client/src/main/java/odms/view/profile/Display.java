@@ -5,9 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import odms.model.profile.Profile;
 
 import java.io.IOException;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 import static odms.controller.AlertController.invalidUsername;

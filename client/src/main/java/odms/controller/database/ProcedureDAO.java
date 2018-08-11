@@ -2,7 +2,7 @@ package odms.controller.database;
 
 
 import java.util.List;
-import odms.commons.model.enums.OrganEnum;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 

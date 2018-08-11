@@ -3,7 +3,7 @@ package odms.controller.database;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import odms.controller.user.UserNotFoundException;
-import odms.commons.model.user.User;
+import odms.model.user.User;
 
 public interface UserDAO {
 

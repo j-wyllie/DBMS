@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
 

@@ -15,9 +15,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.commons.model.profile.Profile;
 import odms.controller.data.ProfileDataIO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
 
 public class ProcedureAdd {
 

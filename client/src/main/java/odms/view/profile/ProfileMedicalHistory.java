@@ -21,12 +21,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.EditDateCell;
 import odms.controller.EditingConditionsCell;
 import odms.controller.profile.ConditionGeneral;
-import odms.model.profile.Condition;
-import odms.model.profile.Profile;
 import odms.view.CommonView;
 
 public class ProfileMedicalHistory extends CommonView {

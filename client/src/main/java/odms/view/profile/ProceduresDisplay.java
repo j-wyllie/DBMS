@@ -14,9 +14,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import odms.controller.profile.ProcedureGeneral;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import odms.controller.profile.ProcedureEdit;
-import odms.model.profile.Profile;
+import odms.controller.profile.ProcedureGeneral;
 import odms.view.CommonView;
 
 public class ProceduresDisplay extends CommonView {
@@ -46,8 +47,8 @@ public class ProceduresDisplay extends CommonView {
     private TableColumn previousAffectsColumn;
 
     public ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>();
-    private ObservableList<odms.model.profile.Procedure> previousProceduresObservableList;
-    private ObservableList<odms.model.profile.Procedure> pendingProceduresObservableList;
+    private ObservableList<Procedure> previousProceduresObservableList;
+    private ObservableList<Procedure> pendingProceduresObservableList;
 
     private ProcedureGeneral controller = new ProcedureGeneral(this);
 
@@ -73,8 +74,8 @@ public class ProceduresDisplay extends CommonView {
      * Initializes and refreshes the previous and pending procedure tables
      */
     @FXML
-    private void makeProcedureTable(List<odms.model.profile.Procedure> previousProcedures,
-            List<odms.model.profile.Procedure> pendingProcedures) {
+    private void makeProcedureTable(List<Procedure> previousProcedures,
+            List<Procedure> pendingProcedures) {
         pendingDateColumn.setComparator(pendingDateColumn.getComparator().reversed());
 
         if (previousProcedures != null) {
@@ -96,7 +97,7 @@ public class ProceduresDisplay extends CommonView {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
                 try {
-                    createNewProcedureWindow((odms.model.profile.Procedure) pendingProcedureTable.getSelectionModel()
+                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
                             .getSelectedItem());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -107,7 +108,7 @@ public class ProceduresDisplay extends CommonView {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
                 try {
-                    createNewProcedureWindow((odms.model.profile.Procedure) previousProcedureTable.getSelectionModel()
+                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
                             .getSelectedItem());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -120,7 +121,7 @@ public class ProceduresDisplay extends CommonView {
      * Creates a new edit procedure window
      */
     @FXML
-    public void createNewProcedureWindow(odms.model.profile.Procedure selectedProcedure) throws IOException {
+    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
@@ -152,7 +153,7 @@ public class ProceduresDisplay extends CommonView {
 
         // update all procedures
         if (currentProfile.getValue().getAllProcedures() != null) {
-            for (odms.model.profile.Procedure procedure : currentProfile.getValue().getAllProcedures()) {
+            for (Procedure procedure : currentProfile.getValue().getAllProcedures()) {
                 procedure.update();
             }
         }
@@ -195,12 +196,12 @@ public class ProceduresDisplay extends CommonView {
         previousProcedureTable.getSortOrder().add(previousDateColumn);
     }
 
-    public odms.model.profile.Procedure getSelectedPendingProcedure() {
-        return (odms.model.profile.Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
+    public Procedure getSelectedPendingProcedure() {
+        return (Procedure) pendingProcedureTable.getSelectionModel().getSelectedItem();
     }
 
-    public odms.model.profile.Procedure getSelectedPreviousProcedure() {
-        return (odms.model.profile.Procedure) previousProcedureTable.getSelectionModel().getSelectedItem();
+    public Procedure getSelectedPreviousProcedure() {
+        return (Procedure) previousProcedureTable.getSelectionModel().getSelectedItem();
     }
 
     public Profile getProfile() {
