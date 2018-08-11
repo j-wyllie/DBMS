@@ -379,7 +379,6 @@ public class MySqlProfileDAO implements ProfileDAO {
     /**
      * Rolls back a transaction and closes the connection.
      * @param conn connection with transaction to rollback.
-     * @throws SQLException thrown if it can't roll back.
      */
     public void rollbackTransaction(Connection conn) {
         try {
