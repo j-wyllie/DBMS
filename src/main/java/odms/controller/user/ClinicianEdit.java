@@ -38,6 +38,8 @@ public class ClinicianEdit extends CommonController {
             currentUser.setPictureName(ImageDataIO.deleteAndSaveImage(
                     view.getChosenFile(), currentUser.getStaffID().toString())
             );
+        } else if (view.getRemovePhoto()){
+            System.out.println("Remove the photo");
         }
 
         CurrentHistory.updateHistory(action);

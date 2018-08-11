@@ -1,11 +1,7 @@
 package odms.view;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.event.ActionEvent;
@@ -17,12 +13,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.controller.GuiMain;
 import odms.controller.history.Redo;
 import odms.controller.history.Undo;
@@ -315,25 +311,25 @@ public class CommonView {
      *
      * @param pictureText user feedback text to update on profile picture edit
      */
+    protected File chooseImage(Text pictureText, Stage stage) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Image File");
+        ExtensionFilter extFilter = new ExtensionFilter(
+                "Image Files (*.jpg;*.png)",
+                "*.jpg", "*.png"
+        );
+        chooser.getExtensionFilters().add(extFilter);
 
-    protected File chooseImage(Text pictureText) throws IOException{
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Images", "jpg", "png");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = chooser.showOpenDialog(stage);
 
-            if (chooser.getSelectedFile().length() > 1000000) {
-                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
-                return null;
-            }
-
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            pictureText.setText(chooser.getSelectedFile().getName());
+        if (file.length() > 1000000) {
+            pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+            return null;
         }
-        return chooser.getSelectedFile();
+
+        System.out.println("You chose to open this file: " + file.getName());
+        pictureText.setText(file.getName());
+        return file;
     }
 
     /**

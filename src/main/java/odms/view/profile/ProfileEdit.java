@@ -1,7 +1,13 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.profileCancelChanges;
+
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +21,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.data.ImageDataIO;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
 import odms.model.enums.CountriesEnum;
@@ -23,13 +28,6 @@ import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static odms.controller.AlertController.profileCancelChanges;
 
 public class ProfileEdit extends CommonView {
     @FXML
@@ -203,7 +201,8 @@ public class ProfileEdit extends CommonView {
      */
     @FXML
     private void handleChooseImageClicked() throws IOException {
-        this.chosenFile = chooseImage(pictureText);
+        Stage stage = (Stage) pictureText.getScene().getWindow();
+        this.chosenFile = chooseImage(pictureText, stage);
     }
 
     /**

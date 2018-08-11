@@ -2,31 +2,33 @@ package odms.view.user;
 
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.model.user.User;
-import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
-
-import static odms.controller.AlertController.saveChanges;
+import odms.model.user.User;
+import odms.view.CommonView;
 
 public class ClinicianEdit extends CommonView {
-    private static User currentUser;
+    private User currentUser;
 
     private odms.controller.user.ClinicianEdit controller = new odms.controller.user.ClinicianEdit(this);
+
+    @FXML
+    private TextField addressField;
 
     @FXML
     private Label clinicianFullName;
@@ -35,25 +37,30 @@ public class ClinicianEdit extends CommonView {
     private TextField givenNamesField;
 
     @FXML
-    private TextField staffIdField;
+    private Text pictureText;
 
     @FXML
-    private TextField addressField;
+    private TextField staffIdField;
 
     @FXML
     private TextField regionField;
 
     @FXML
-    private Text pictureText;
+    private Button removePhotoBtn;
 
     private File chosenFile;
+    private Boolean removePhoto = false;
 
     /**
      * File picker to choose only supported image types.
      */
     @FXML
-    private void handleChooseImageClicked() throws IOException {
-        this.chosenFile = chooseImage(pictureText);
+    private void handleChooseImageClicked() {
+        Stage stage = (Stage) clinicianFullName.getScene().getWindow();
+        this.chosenFile = chooseImage(pictureText, stage);
+        this.pictureText.setVisible(true);
+        this.removePhotoBtn.setVisible(false);
+        this.removePhoto = false;
     }
 
     /**
@@ -67,6 +74,15 @@ public class ClinicianEdit extends CommonView {
         if (cancelBool) {
             openClinicianWindow(event);
         }
+    }
+
+    @FXML
+    private void handleRemoveImageClicked() {
+        removePhoto = true;
+
+        pictureText.setText("Current photo will be removed");
+        pictureText.setVisible(true);
+        removePhotoBtn.setVisible(false);
     }
 
     /**
@@ -96,7 +112,7 @@ public class ClinicianEdit extends CommonView {
         }
     }
 
-    public void openClinicianWindow(ActionEvent event) throws IOException {
+    private void openClinicianWindow(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
@@ -135,6 +151,11 @@ public class ClinicianEdit extends CommonView {
             if (currentUser.getRegion() != null) {
                 regionField.setText(currentUser.getRegion());
             }
+
+            if (currentUser.getPictureName() != null && !currentUser.getPictureName().isEmpty()) {
+                removePhotoBtn.setVisible(true);
+                pictureText.setVisible(false);
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -142,6 +163,10 @@ public class ClinicianEdit extends CommonView {
 
     public File getChosenFile() {
         return chosenFile;
+    }
+
+    public Boolean getRemovePhoto() {
+        return removePhoto;
     }
 
     public User getUser() {
