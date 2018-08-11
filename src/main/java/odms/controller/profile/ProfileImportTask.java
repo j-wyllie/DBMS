@@ -16,18 +16,24 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+/**
+ * Task to import parse a csv file to a user object.
+ */
 public class ProfileImportTask extends Task<Void> {
 
     private File file;
     private MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+    private Connection conn;
+    private static final int VALID_DOD_LENGTH = 3;
+    private static final String DATE_SPLITTER = "/";
 
+
+    /**
+     * Gives a CSV file to the profile import task.
+     * @param file CSV file to be parsed.
+     */
     public ProfileImportTask(File file) {
         this.file = file;
-    }
-    Connection conn;
-
-    public Connection getConnection() {
-        return conn;
     }
 
     @Override
@@ -44,7 +50,8 @@ public class ProfileImportTask extends Task<Void> {
     /**
      * Load the specified csv file instantiating a ProfileDatabase Object.
      *
-     * @param csv the csv file that is being loaded
+     * @param csv the csv file that is being loaded.
+     * @throws InvalidFileException thrown when the CSV file could not be read.
      */
     private void loadDataFromCSV(File csv) throws InvalidFileException {
         try {
@@ -64,7 +71,7 @@ public class ProfileImportTask extends Task<Void> {
      *
      * @param csvParser the csv parser to parse each row.
      * @param csvLength the length of the csv.
-     * @return boolean - success or fail
+     * @throws SQLException thrown when a profile can't be added to the transaction.
      */
     private void parseCsvRecord(CSVParser csvParser,
             Integer csvLength) throws SQLException {
@@ -92,20 +99,22 @@ public class ProfileImportTask extends Task<Void> {
 
             progressCount++;
             this.updateProgress(progressCount, csvLength);
-            this.updateMessage(successCount + "," + failedCount + "," + progressCount);
+            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
         }
     }
 
     /**
-     * Converts a record in the csv to a profile object
+     * Converts a record in the csv to a profile object.
      *
-     * @param csvRecord the record to be converted
-     * @return the profile object
+     * @param csvRecord the record to be converted.
+     * @return the profile object.
      */
     private Profile csvToProfileConverter(CSVRecord csvRecord) {
-        if (isValidNHI(csvRecord.get("nhi"))) {
+
+        String nhi = csvRecord.get("nhi");
+        if (isValidNHI(nhi)) {
             try {
-                String[] dobString = csvRecord.get("date_of_birth").split("/");
+                String[] dobString = csvRecord.get("date_of_birth").split(DATE_SPLITTER);
                 LocalDate dob = LocalDate.of(
                         Integer.valueOf(dobString[2]),
                         Integer.valueOf(dobString[0]),
@@ -113,20 +122,21 @@ public class ProfileImportTask extends Task<Void> {
                 );
 
                 Profile profile = new Profile(csvRecord.get("first_names"),
-                        csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
+                        csvRecord.get("last_names"), dob, nhi);
 
-                if (!csvRecord.get("date_of_death").isEmpty()) {
-                    String[] dodString = csvRecord.get("date_of_death").split("/");
+                String dateOfDeath = csvRecord.get("date_of_death");
+                if (!dateOfDeath.isEmpty()) {
+                    String[] dodString = dateOfDeath.split(DATE_SPLITTER);
 
                     // If the dod is invalid then don't upload
-                    if (dodString.length != 3) {
+                    if (dodString.length != VALID_DOD_LENGTH) {
                         return null;
                     }
 
                     LocalDateTime dod = LocalDateTime.of(
                             Integer.valueOf(dodString[2]),
                             Integer.valueOf(dodString[0]),
-                            Integer.valueOf(dodString[1]), 0,0
+                            Integer.valueOf(dodString[1]), 0, 0
                     );
 
                     profile.setDateOfDeath(dod);
@@ -159,10 +169,10 @@ public class ProfileImportTask extends Task<Void> {
     }
 
     /**
-     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers)
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
      *
-     * @param nhi the nhi to check
-     * @return true if valid and false if not valid
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
      */
     private boolean isValidNHI(String nhi) {
         String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
@@ -170,5 +180,9 @@ public class ProfileImportTask extends Task<Void> {
 
         Matcher m = r.matcher(nhi);
         return m.find();
+    }
+
+    public Connection getConnection() {
+        return conn;
     }
 }
