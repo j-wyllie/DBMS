@@ -66,10 +66,20 @@ public class LoginView extends CommonController {
         }
     }
 
+    /**
+     * Load a profile from the database.
+     *
+     * @param username the username to load
+     * @return a profile object
+     * @throws SQLException if a SQL error occurs
+     */
     private Profile loadProfile(String username) throws SQLException {
         return DAOFactory.getProfileDao().get(username);
     }
 
+    /**
+     * Load the profile view.
+     */
     private void loadProfileView(Profile profile) {
         try {
             if (profile != null) {
@@ -102,6 +112,14 @@ public class LoginView extends CommonController {
         }
     }
 
+    /**
+     * Load a user from the database.
+     *
+     * @param username the username to load
+     * @return a user object
+     * @throws SQLException if a SQL error occurs
+     * @throws UserNotFoundException if a user cannot be found
+     */
     private User loadUser(String username) throws SQLException, UserNotFoundException {
         UserDAO database = DAOFactory.getUserDao();
         this.currentUser = database.get(username);
