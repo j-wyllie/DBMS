@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 11, 2018 at 01:47 AM
+-- Generation Time: Aug 11, 2018 at 02:25 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `seng302-2018-team200-test`
 --
+CREATE DATABASE IF NOT EXISTS `seng302-2018-team200-test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `seng302-2018-team200-test`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `affected_organs`
 --
 
+DROP TABLE IF EXISTS `affected_organs`;
 CREATE TABLE IF NOT EXISTS `affected_organs` (
   `Id` int(11) NOT NULL,
   `ProcedureId` int(11) NOT NULL,
@@ -38,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `affected_organs` (
 -- Table structure for table `conditions`
 --
 
+DROP TABLE IF EXISTS `conditions`;
 CREATE TABLE IF NOT EXISTS `conditions` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
@@ -55,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `conditions` (
 -- Table structure for table `countries`
 --
 
+DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `Id` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
@@ -67,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
 -- Table structure for table `drugs`
 --
 
+DROP TABLE IF EXISTS `drugs`;
 CREATE TABLE IF NOT EXISTS `drugs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
@@ -81,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `drugs` (
 -- Table structure for table `history`
 --
 
+DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `Id` int(11) NOT NULL,
   `EntityType` varchar(30) DEFAULT NULL,
@@ -97,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- Table structure for table `medical_interactions`
 --
 
+DROP TABLE IF EXISTS `medical_interactions`;
 CREATE TABLE IF NOT EXISTS `medical_interactions` (
   `Id` int(11) NOT NULL,
   `DrugA` varchar(50) DEFAULT NULL,
@@ -111,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `medical_interactions` (
 -- Table structure for table `organs`
 --
 
+DROP TABLE IF EXISTS `organs`;
 CREATE TABLE IF NOT EXISTS `organs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
@@ -128,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `organs` (
 -- Table structure for table `procedures`
 --
 
+DROP TABLE IF EXISTS `procedures`;
 CREATE TABLE IF NOT EXISTS `procedures` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
@@ -144,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 -- Table structure for table `profiles`
 --
 
+DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) DEFAULT NULL,
@@ -172,8 +183,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Country` varchar(50) DEFAULT NULL,
   `BirthCountry` varchar(50) DEFAULT NULL,
   `CountryOfDeath` varchar(30) DEFAULT NULL,
-  `CityofDeath` varchar(30) DEFAULT NULL,
-  `RegionofDeath` varchar(30) DEFAULT NULL,
+  `CityOfDeath` varchar(30) DEFAULT NULL,
+  `RegionOfDeath` varchar(30) DEFAULT NULL,
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -188,6 +199,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
   `Username` varchar(50) DEFAULT NULL,

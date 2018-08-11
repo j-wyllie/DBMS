@@ -54,7 +54,7 @@ public class ProfileEdit extends CommonController {
                     currentProfile.setCityOfDeath(null);
                 }
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(e.getMessage());
+                //throw new IllegalArgumentException(e.getMessage());
             }
             // Required General Fields
             saveDateOfBirth();
@@ -362,7 +362,7 @@ public class ProfileEdit extends CommonController {
      */
     private void saveCountry() {
         if (view.getComboCountry() != null) {
-            currentProfile.setCountry(view.getComboCountry().toString());
+            currentProfile.setCountry(view.getComboCountry().getValue().toString());
         }
     }
 
