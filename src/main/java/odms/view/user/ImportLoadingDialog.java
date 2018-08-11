@@ -109,6 +109,8 @@ public class ImportLoadingDialog extends CommonView {
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 
+            tableStatus.setSelectionModel(null);
+
             setupTable();
             updateProgress();
         }
