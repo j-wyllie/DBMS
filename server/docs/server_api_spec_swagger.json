@@ -379,7 +379,7 @@
         }
       }
     },
-    "/conditions": {
+    "/profiles/{id}/conditions": {
       "get": {
         "tags": [
           "conditions"
@@ -435,7 +435,18 @@
             "description": "Internal Server Error"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/conditions/{id}": {
       "patch": {
@@ -510,7 +521,7 @@
         }
       ]
     },
-    "/drugs": {
+    "/profiles/{id}/drugs": {
       "get": {
         "tags": [
           "drugs"
@@ -577,7 +588,18 @@
             "description": "Internal Server Error"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/drugs/{id}": {
       "patch": {
@@ -641,7 +663,7 @@
         }
       ]
     },
-    "/organs": {
+    "/profiles/{id}/organs": {
       "get": {
         "tags": [
           "organs"
@@ -765,7 +787,18 @@
             "description": "Internal Server Error'"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/organs/{id}": {
       "delete": {
@@ -800,7 +833,7 @@
         }
       ]
     },
-    "/procedures": {
+    "/profiles/{id}/procedures": {
       "get": {
         "tags": [
           "procedures"
@@ -876,7 +909,18 @@
             "description": "Internal Server Error"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
     },
     "/procedures/{id}": {
       "patch": {
@@ -943,7 +987,7 @@
     "/procedures/{id}/organs": {
       "get": {
         "tags": [
-          "procedures"
+          "organs"
         ],
         "summary": "Get a profiles affected organs of a procedure",
         "responses": {
@@ -970,7 +1014,7 @@
       },
       "post": {
         "tags": [
-          "procedures"
+          "organs"
         ],
         "summary": "Add an organ to a procedure",
         "requestBody": {
@@ -999,7 +1043,7 @@
       },
       "delete": {
         "tags": [
-          "procedures"
+          "organs"
         ],
         "summary": "removes an organ from a procedure",
         "parameters": [
@@ -1030,9 +1074,9 @@
       "parameters": [
         {
           "in": "path",
-          "name": "pId",
+          "name": "id",
           "required": true,
-          "description": "Id of the object",
+          "description": "Id of the object.",
           "schema": {
             "$ref": "#/components/schemas/id"
           }
@@ -1103,6 +1147,88 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/reset": {
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Force reset of database to original structure.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/resample": {
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Reload sample of data into reset database.",
+        "responses": {
+          "201": {
+            "description": "Sample of data has been reloaded."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs in a user of profile.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logInResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/email/password supplied"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs out user session given by auth token in header",
+        "security": [
+          {
+            "User": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -1727,6 +1853,19 @@
               "type": "string",
               "format": "date"
             }
+          }
+        }
+      },
+      "logInResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "the id of the logged in user"
+          },
+          "token": {
+            "type": "string",
+            "description": "a token to be used for future calls"
           }
         }
       },
