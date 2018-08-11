@@ -24,6 +24,11 @@ import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 
 public class MySqlProfileDAO implements ProfileDAO {
+    String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
+            + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
+            + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
+            + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
+            + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     /**
      * Gets all profiles from the database.
@@ -318,15 +323,10 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public void add(Profile profile) throws SQLException {
-        String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
-                + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
-                + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
-                + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
+        PreparedStatement stmt = conn.prepareStatement(insertQuery);
         try {
             stmt = prepareStatement(profile, stmt);
             stmt.executeUpdate();
@@ -338,26 +338,51 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
-     * Adds a new profile to the database.
-     * @param profiles to add.
+     * Adds a profile to a transaction.
+     * @param conn Connection to add to.
+     * @param profile Profile to add.
+     * @throws SQLException thrown if you can't add the profile.
      */
-    @Override
-    public void add(ArrayList<Profile> profiles) throws SQLException {
-        String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
-                + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
-                + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
-                + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public void addToTransaction(Connection conn, Profile profile) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(insertQuery);
+        stmt = prepareStatement(profile, stmt);
+        stmt.executeUpdate();
+    }
+
+    /**
+     * Gets a connection instance.
+     * @return The connection.
+     * @throws SQLException Thrown when connection can't be made.
+     */
+    public Connection getConnection() throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
         conn.setAutoCommit(false);
-        for (Profile profile : profiles) {
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt = prepareStatement(profile, stmt);
-            stmt.executeUpdate();
-        }
+        return conn;
+    }
+
+    /**
+     * Commits a transaction and closes the connection.
+     * @param conn Connection to close with the transaction.
+     * @throws SQLException Thrown when transaction can't be committed.
+     */
+    public void commitTransaction(Connection conn) throws SQLException {
         conn.commit();
         conn.close();
+    }
+
+    /**
+     * Rolls back a transaction and closes the connection.
+     * @param conn connection with transaction to rollback.
+     * @throws SQLException thrown if it can't roll back.
+     */
+    public void rollbackTransaction(Connection conn) {
+        try {
+            conn.rollback();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -718,4 +743,5 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         return receivers;
     }
+
 }

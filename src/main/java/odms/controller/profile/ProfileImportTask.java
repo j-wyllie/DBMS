@@ -3,6 +3,7 @@ package odms.controller.profile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -21,6 +22,11 @@ public class ProfileImportTask extends Task<Void> {
 
     public ProfileImportTask(File file) {
         this.file = file;
+    }
+    Connection conn;
+
+    public Connection getConnection() {
+        return conn;
     }
 
     @Override
@@ -46,7 +52,7 @@ public class ProfileImportTask extends Task<Void> {
                     .getRecords().size();
 
             parseCsvRecord(csvParser, csvLength);
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | SQLException e) {
             throw new InvalidFileException("CSV file could not be read.", csv);
         }
     }
@@ -60,10 +66,12 @@ public class ProfileImportTask extends Task<Void> {
      * @return boolean - success or fail
      */
     private void parseCsvRecord(CSVParser csvParser,
-            Integer csvLength) {
+            Integer csvLength) throws SQLException {
         int progressCount = 0;
         int successCount = 0;
         int failedCount = 0;
+        conn = mySqlProfileDAO.getConnection();
+
         for (CSVRecord csvRecord : csvParser) {
             if (Thread.currentThread().isInterrupted()) {
                 return;
@@ -72,7 +80,7 @@ public class ProfileImportTask extends Task<Void> {
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
-                    mySqlProfileDAO.add(profile);
+                    mySqlProfileDAO.addToTransaction(conn, profile);
                     successCount++;
                 } catch (SQLException e) {
                     failedCount++;

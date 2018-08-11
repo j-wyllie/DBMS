@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.MySqlProfileDAO;
 import odms.controller.database.ProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.model.profile.Profile;
@@ -91,11 +93,19 @@ public class ImportLoadingDialog extends CommonView {
                     event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
+                try {
+                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                    mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 closeWindows(parentStage);
             });
 
             buttonImportCancel.setOnAction(event -> {
                 importTask.interrupt();
+                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                    mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 
@@ -163,7 +173,11 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     public void setOnCloseRequest() {
-        this.currentStage.setOnCloseRequest((WindowEvent event) -> importTask.interrupt());
+        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
+            importTask.interrupt();
+            MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+            mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+        });
     }
 
     public class ImportResult {

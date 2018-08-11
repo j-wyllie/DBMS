@@ -38,12 +38,6 @@ public interface ProfileDAO {
     void add(Profile profile) throws SQLException;
 
     /**
-     * Adds a new profile to the database.
-     * @param profiles to add.
-     */
-    void add(ArrayList<Profile> profiles) throws SQLException;
-
-    /**
      * Checks if a username already exists in the database.
      * @param username to check.
      * @return true is the username does not already exist.

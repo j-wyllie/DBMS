@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
-  `NHI` varchar(20) DEFAULT NULL,
+  `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
