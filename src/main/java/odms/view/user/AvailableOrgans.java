@@ -1,6 +1,7 @@
 package odms.view.user;
 
-import java.util.Map.Entry;
+import java.sql.SQLException;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -10,21 +11,14 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
-import odms.controller.GuiMain;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
-import javafx.scene.control.ProgressBar;
-
-import java.sql.SQLException;
-import java.util.Map;
 
 public class AvailableOrgans extends CommonView {
     @FXML
@@ -51,12 +45,14 @@ public class AvailableOrgans extends CommonView {
         TableColumn<Map.Entry<Profile, OrganEnum>, String> dateOfDeathNameCol = new TableColumn<>(
                 "Date of Death");
         dateOfDeathNameCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getDateOfDeath().toString()));
+                cdf -> new SimpleStringProperty(
+                        cdf.getValue().getKey().getDateOfDeath().toString()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
                 "Countdown");
         countdownCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getRegion()));
+                cdf -> new SimpleStringProperty(
+                        ((odms.controller.user.AvailableOrgans.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey())))));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> donorIdCol = new TableColumn<>(
                 "Donor ID");
@@ -76,11 +72,14 @@ public class AvailableOrgans extends CommonView {
 //                .setCellFactory(ProgressBarTableCell.forTableColumn());
 
         // TODO yet to work out how to link anything up, bit confused
-        TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn("Expiry Progress Bar");
+        TableColumn<TestTask, Double> expiryProgressBarCol = new TableColumn("Expiry Progress Bar");
+
+        // "progress" is linked to the double value that populates the progress bar
         expiryProgressBarCol.setCellValueFactory(new PropertyValueFactory<>(
                 "progress"));
         expiryProgressBarCol
                 .setCellFactory(ProgressBarTableCell.forTableColumn());
+
 
         availableOrgansTable.getColumns().add(organCol);
         availableOrgansTable.getColumns().add(dateOfDeathNameCol);
@@ -121,33 +120,33 @@ public class AvailableOrgans extends CommonView {
 
 
 
-
-    // TODO not sure how to feed an organ into this task to use the organs expiry time as the rate etc
-    static class TestTask extends Task<Void> {
+    // TODO not sure how to feed an organ and profile into this task to use the organs expiry time as the rate etc
+    // static?
+    public class TestTask extends Task<Void> {
 
         private final int waitTime; // milliseconds
         private final int pauseTime; // milliseconds
 
         public static final int NUM_ITERATIONS = 100;
 
-        TestTask(int waitTime, int pauseTime, OrganEnum organ) {
+        TestTask(int waitTime, int pauseTime) {
             this.waitTime = waitTime;
             this.pauseTime = pauseTime;
+            //int test = odms.controller.user.AvailableOrgans.getExpiryTime(null, null);
         }
 
         @Override
         protected Void call() throws Exception {
 
-
             this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
-            //this.updateMessage("Waiting...");
+            this.updateMessage("Waiting...");
             Thread.sleep(waitTime);
-            //this.updateMessage("Running...");
+            this.updateMessage("Running...");
             for (int i = 0; i < NUM_ITERATIONS; i++) {
                 updateProgress((1.0 * i) / NUM_ITERATIONS, 1);
                 Thread.sleep(pauseTime);
             }
-            //this.updateMessage("Done");
+            this.updateMessage("Done");
             this.updateProgress(1, 1);
             return null;
         }
