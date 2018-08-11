@@ -87,7 +87,12 @@ public class Display extends CommonView {
     @FXML
     private void setPage(Profile currentProfile) {
         try {
-            donorFullNameLabel.setText(currentProfile.getFullName());
+            if (currentProfile.getPreferredName() != null) {
+                donorFullNameLabel.setText(currentProfile.getPreferredName());
+            } else {
+                donorFullNameLabel.setText(currentProfile.getFullName());
+            }
+
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 

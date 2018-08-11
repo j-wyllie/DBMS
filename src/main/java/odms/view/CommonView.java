@@ -271,7 +271,11 @@ public class CommonView {
             controller.initialize(donor, true);
 
             Stage stage = new Stage();
-            stage.setTitle(donor.getFullName() + "'s profile");
+            if (donor.getPreferredName() != null) {
+                stage.setTitle(donor.getPreferredName() + "'s profile");
+            } else {
+                stage.setTitle(donor.getFullName() + "'s profile");
+            }
             stage.setScene(scene);
             stage.show();
             stage.setOnCloseRequest((WindowEvent event) -> {
