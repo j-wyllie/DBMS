@@ -1,6 +1,7 @@
 package odms.controller.database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -35,6 +36,12 @@ public interface ProfileDAO {
      * @param profile to add.
      */
     void add(Profile profile) throws SQLException;
+
+    /**
+     * Adds a new profile to the database.
+     * @param profiles to add.
+     */
+    void add(ArrayList<Profile> profiles) throws SQLException;
 
     /**
      * Checks if a username already exists in the database.
