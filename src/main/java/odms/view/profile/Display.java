@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import odms.controller.data.ImageDataIO;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
@@ -208,19 +209,17 @@ public class Display extends CommonView {
         }
     }
 
-    public void setProfileImage() throws MalformedURLException {
-        //setting profile photo
-        File localPath = new File(System.getProperty("user.dir"));
-        if (currentProfile.getPictureName() != null) {
-            File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
-            if(!image.exists()){
-                image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
-                if(!image.exists()){
-                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
-                }
-            }
-            profileImage.setImage(new Image(image.toURI().toURL().toString()));
+    private void setProfileImage() throws MalformedURLException {
+        File image = ImageDataIO.getImagePath(currentProfile.getPictureName());
+
+        if (!image.exists()) {
+            image = new File(
+                    new File("."),
+                    "src/main/resources/profile_images/default.png"
+            );
         }
+
+        profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 
     /**

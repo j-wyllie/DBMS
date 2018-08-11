@@ -127,9 +127,10 @@ public class ProfileEdit extends CommonView {
 
     private Profile currentProfile;
 
-
     private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(this);
     private Boolean isOpenedByClinician;
+
+    private File chosenFile;
 
     /**
      * Button handler to undo last action.
@@ -197,9 +198,7 @@ public class ProfileEdit extends CommonView {
      */
     @FXML
     private void handleChooseImageClicked() throws IOException {
-        File chosenFile = chooseImage(pictureText);
-        ImageDataIO.deleteAndSaveImage(chosenFile, currentProfile.getNhi());
-        currentProfile.setPictureName(chosenFile.getName());
+        this.chosenFile = chooseImage(pictureText);
     }
 
     /**
@@ -569,6 +568,10 @@ public class ProfileEdit extends CommonView {
 
     public void setNhiField(String s) {
         nhiField.setText(s);
+    }
+
+    public File getChosenFile() {
+        return chosenFile;
     }
 
     public String getLastNamesField() {

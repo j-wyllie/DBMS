@@ -36,15 +36,22 @@ public class ProfileEdit extends CommonController {
     public void save() {
         if (AlertController.saveChanges()) {
             try {
-                // history Generation
-                odms.model.history.History action = new odms.model.history.History("profile", currentProfile.getId(), "update",
-                        "previous " + currentProfile.getAttributesSummary(), -1, null);
+                // History Generation
+                odms.model.history.History action = new odms.model.history.History(
+                        "profile",
+                        currentProfile.getId(),
+                        "update",
+                        "previous " + currentProfile.getAttributesSummary(),
+                        -1,
+                        null
+                );
 
                 // Required General Fields
+                saveChosenImage();
                 saveDateOfBirth();
                 saveGivenNames();
-                saveNhi();
                 saveLastNames();
+                saveNhi();
 
                 // Optional General Fields
                 saveAddress();
@@ -69,7 +76,7 @@ public class ProfileEdit extends CommonController {
                 saveRegion();
 
                 try {
-                    if(view.getDODDatePicker() != null) {
+                    if (view.getDODDatePicker() != null) {
                         saveCityOfDeath();
                         saveRegionOfDeath();
                         saveCountryOfDeath();
@@ -82,7 +89,7 @@ public class ProfileEdit extends CommonController {
                 database.update(currentProfile);
                 ProfileDataIO.saveData(getProfileDb());
 
-                // history Changes
+                // History Changes
                 action.setHistoryData(
                         action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
@@ -90,8 +97,7 @@ public class ProfileEdit extends CommonController {
 
             } catch (Exception e) {
                 AlertController.invalidEntry(
-                        e.getMessage() + "\n" +
-                                "Changes not saved."
+                        e.getMessage() + "\n" + "Changes not saved."
                 );
             }
         }
@@ -100,9 +106,9 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Region of death field to profile.
      */
-    private void saveRegionOfDeath() throws Exception{
+    private void saveRegionOfDeath() throws Exception {
         if (!view.getRegionOfDeathField().isEmpty() && AddressIO
-                .checkValidRegion(view.getRegionOfDeathField()+ " " + view.getComboCountryOfDeath(),
+                .checkValidRegion(view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
                         view.getRegionOfDeathField(), view.getComboCountryOfDeath()) && view.getComboRegion().isDisabled()) {
             currentProfile.setRegionOfDeath(view.getRegionOfDeathField());
         } else if(!view.getRegionOfDeathField().isEmpty() && !AddressIO
@@ -154,6 +160,20 @@ public class ProfileEdit extends CommonController {
             throw new IllegalArgumentException("Date of Birth cannot be in the future");
         }
         currentProfile.setDateOfBirth(view.getdobDatePicker());
+    }
+
+    /**
+     * Save Chosen Image.
+     *
+     * @throws IOException if there is a exception handling the file
+     */
+    public void saveChosenImage() throws IOException {
+        File chosenFile = view.getChosenFile();
+        if (chosenFile != null) {
+            currentProfile.setPictureName(
+                    ImageDataIO.deleteAndSaveImage(chosenFile, currentProfile.getNhi())
+            );
+        }
     }
 
     /**

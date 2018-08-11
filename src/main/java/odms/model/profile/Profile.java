@@ -1001,11 +1001,17 @@ public class Profile implements Comparable<Profile> {
         this.neighbourhood = neighbourhood;
     }
 
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public int getBloodPressureSystolic() { return this.bloodPressureSystolic; }
+    public int getBloodPressureSystolic() {
+        return this.bloodPressureSystolic;
+    }
 
-    public int getBloodPressureDiastolic() { return this.bloodPressureDiastolic; }
+    public int getBloodPressureDiastolic() {
+        return this.bloodPressureDiastolic;
+    }
 
     public String getPictureName() {
         return pictureName;

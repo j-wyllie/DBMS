@@ -63,11 +63,16 @@ public final class ImageDataIO {
      *
      * @param image the new image file
      * @param name the user or profile name
-     * @throws IOException if an IO operation fails.
+     * @return return the filename used when saving
+     * @throws IOException if an IO operation fails
      */
-    public static void deleteAndSaveImage(File image, String name) throws IOException {
+    public static String deleteAndSaveImage(File image, String name) throws IOException {
         deleteImage(name);
-        copyFileUsingStream(image, getSaveDestination(image, name));
+
+        File destination = getSaveDestination(image, name);
+        copyFileUsingStream(image, destination);
+
+        return destination.getName();
     }
 
     /**
@@ -110,7 +115,7 @@ public final class ImageDataIO {
      * @param imageName the chosen name
      * @return file path object
      */
-    private static File getImagePath(String imageName) {
+    public static File getImagePath(String imageName) {
         return new File(getPath() + File.separator + imageName);
     }
 
