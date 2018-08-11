@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.MySqlProfileDAO;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 import org.junit.Before;

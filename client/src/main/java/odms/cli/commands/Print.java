@@ -2,12 +2,12 @@ package odms.cli.commands;
 
 import java.util.List;
 import odms.cli.CommandUtils;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.model.user.User;
-import odms.model.enums.UserType;
+import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
+import odms.commons.model.enums.UserType;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

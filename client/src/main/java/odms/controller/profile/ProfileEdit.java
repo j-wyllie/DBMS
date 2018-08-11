@@ -14,6 +14,7 @@ import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
+import odms.history.History;
 import odms.model.profile.Profile;
 
 public class ProfileEdit extends CommonController {
@@ -36,7 +37,7 @@ public class ProfileEdit extends CommonController {
         if (AlertController.saveChanges()) {
             try {
                 // history Generation
-                odms.model.history.History action = new odms.model.history.History("profile", currentProfile.getId(), "update",
+                History action = new History("profile", currentProfile.getId(), "update",
                         "previous " + currentProfile.getAttributesSummary(), -1, null);
 
                 // Required General Fields

@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.controller.data.UserDataIO;
-import odms.model.data.UserDatabase;
-import odms.model.user.User;
+import odms.data.UserDatabase;
+import odms.commons.model.user.User;
 
 public class UsersList {
     private UserDatabase userDatabase = GuiMain.getUserDatabase();

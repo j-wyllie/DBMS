@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import odms.model.medications.Interaction;
+import odms.commons.model.medications.Interaction;
 
 public class MedicationDataIO {
 

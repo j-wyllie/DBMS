@@ -1,8 +1,8 @@
 package server.model.database.medication;
 
 import java.util.List;
-import commons.model.medications.Drug;
-import commons.model.profile.Profile;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.profile.Profile;
 
 public interface MedicationDAO {
 

@@ -7,8 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import odms.controller.user.Display;
-import odms.model.user.User;
-import odms.model.enums.UserType;
+import odms.commons.model.user.User;
+import odms.commons.model.enums.UserType;
 import odms.view.CommonView;
 
 import java.io.IOException;

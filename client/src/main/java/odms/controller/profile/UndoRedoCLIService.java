@@ -1,10 +1,10 @@
 package odms.controller.profile;
 
-import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
-import odms.model.profile.Condition;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
 
 import java.util.ArrayList;
 import java.util.Set;

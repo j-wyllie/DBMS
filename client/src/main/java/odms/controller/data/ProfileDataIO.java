@@ -2,13 +2,12 @@ package odms.controller.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.controller.history.CurrentHistory;
-import odms.model.data.ProfileDatabase;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import odms.controller.history.CurrentHistory;
+import odms.data.ProfileDatabase;
 
 public class ProfileDataIO extends CommonDataIO {
 

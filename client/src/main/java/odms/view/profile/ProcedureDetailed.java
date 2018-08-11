@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.ProcedureEdit;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
 import odms.view.CommonView;

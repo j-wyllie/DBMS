@@ -4,7 +4,6 @@ import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
 import server.model.database.country.CountryDAO;
 import server.model.database.country.MySqlCountryDAO;
-import server.model.database.medication.JsonMedicationInteractionsDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MedicationInteractionsDAO;
 import server.model.database.medication.MySqlMedicationDAO;
@@ -71,10 +70,10 @@ public class DAOFactory {
         return new MySqlCountryDAO();
     }
 
-    /**
-     * Gives the data access object class for the medication interactions.
-     * @return dao for the data IO type.
-     */
-    public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
+//    /**
+//     * Gives the data access object class for the medication interactions.
+//     * @return dao for the data IO type.
+//     */
+//    public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
 
 }

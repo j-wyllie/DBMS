@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import static org.junit.Assert.*;
 
 public class ProcedureAdd {
     public odms.view.profile.ProcedureAdd view;

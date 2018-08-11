@@ -1,11 +1,11 @@
 package odms.controller.profile;
 
 import odms.controller.database.DAOFactory;
-import odms.model.data.NHIConflictException;
+import odms.data.NHIConflictException;
 import odms.view.profile.CreateAccount;
 import odms.controller.CommonController;
 import odms.controller.data.ProfileDataIO;
-import odms.model.data.ProfileDatabase;
+import odms.data.ProfileDatabase;
 import odms.model.profile.Profile;
 
 import java.io.IOException;

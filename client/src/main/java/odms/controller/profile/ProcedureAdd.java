@@ -4,7 +4,7 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import odms.model.profile.Profile;
 import odms.view.profile.Display;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Procedure;
 
 import java.time.LocalDate;

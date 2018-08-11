@@ -1,8 +1,8 @@
 package odms.controller.data;
 
 import java.util.List;
-import odms.model.data.NHIConflictException;
-import odms.model.data.ProfileDatabase;
+import odms.data.NHIConflictException;
+import odms.data.ProfileDatabase;
 import odms.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Rule;

@@ -1,10 +1,10 @@
 package odms.cli;
 
-import odms.model.data.NHIConflictException;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
+import odms.data.NHIConflictException;
+import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.After;
 import org.junit.Before;

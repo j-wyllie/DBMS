@@ -1,6 +1,5 @@
 package odms.controller.database;
 
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -18,8 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;

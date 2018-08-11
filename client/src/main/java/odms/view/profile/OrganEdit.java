@@ -21,8 +21,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.model.enums.OrganEnum;
-import odms.model.enums.OrganSelectEnum;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 
 /**

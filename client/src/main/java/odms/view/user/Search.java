@@ -22,9 +22,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
@@ -34,7 +34,7 @@ public class Search extends CommonView {
     private static final int PAGESIZE = 25;
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
-    private odms.model.user.User currentUser;
+    private User currentUser;
 
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
@@ -288,7 +288,7 @@ public class Search extends CommonView {
         }
     }
 
-    public void setCurrentUser(odms.model.user.User currentUser) {
+    public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
 

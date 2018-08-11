@@ -12,9 +12,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import odms.controller.GuiMain;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.table.TableFilter;
 

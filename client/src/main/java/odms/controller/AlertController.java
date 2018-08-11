@@ -3,7 +3,7 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 
 public class AlertController {
 

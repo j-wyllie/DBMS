@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import odms.history.History;
 import odms.model.profile.Profile;
 import odms.view.profile.ProcedureDetailed;
 import odms.controller.history.CurrentHistory;
@@ -19,7 +20,7 @@ public class ProcedureEdit {
     public void save() throws IllegalArgumentException {
         Profile profile = view.getProfile();
         Procedure procedure = view.getCurrentProcedure();
-        odms.model.history.History action = new odms.model.history.History("profile ", profile.getId(), "EDITED",
+        History action = new History("profile ", profile.getId(), "EDITED",
                 "",
                 profile.getAllProcedures().indexOf(procedure),
                 LocalDateTime.now());

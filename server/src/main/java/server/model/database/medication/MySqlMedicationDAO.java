@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.profile.Profile;
 import server.model.database.DatabaseConnection;
-import commons.model.medications.Drug;
-import commons.model.profile.Profile;
 
 public class MySqlMedicationDAO implements MedicationDAO {
 

@@ -26,6 +26,12 @@
             <artifactId>spark-core</artifactId>
             <version>2.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>odms</groupId>
+            <artifactId>odms-commons</artifactId>
+            <version>0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

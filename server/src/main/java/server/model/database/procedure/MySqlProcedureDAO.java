@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import server.model.database.DatabaseConnection;
-import commons.model.enums.OrganEnum;
-import commons.model.profile.Procedure;
-import commons.model.profile.Profile;
 
 public class MySqlProcedureDAO implements ProcedureDAO {
 

@@ -15,7 +15,7 @@ import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.user.ClinicianProfile;
 import java.io.IOException;
 

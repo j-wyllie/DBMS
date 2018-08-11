@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 
 /**
  * Organ common support functions.

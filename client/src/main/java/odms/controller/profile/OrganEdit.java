@@ -4,14 +4,15 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.history.History;
+import odms.commons.model.enums.OrganEnum;
 
 /**
  * Control access for items around the organ lists.
@@ -68,7 +69,7 @@ public class OrganEdit extends CommonController {
                 DAOFactory.getOrganDao().addDonation(p, organ);
             }
             p.getOrgansDonated().add(organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "profile ",
                     p.getId(),
                     "donated",
@@ -95,7 +96,7 @@ public class OrganEdit extends CommonController {
                 DAOFactory.getOrganDao().removeDonation(p, organ);
             }
             p.getOrgansDonated().remove(organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "profile ",
                     p.getId(),
                     "removed donated",
@@ -145,7 +146,7 @@ public class OrganEdit extends CommonController {
             }
             p.getOrgansDonating().remove(organ);
             DAOFactory.getOrganDao().removeDonating(p, organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "profile ",
                     p.getId(),
                     "removed",
@@ -184,7 +185,7 @@ public class OrganEdit extends CommonController {
                 DAOFactory.getOrganDao().addDonating(p, organ);
             }
 
-            odms.model.history.History action = new odms.model.history.History("profile ", p.getId(), "set",
+            History action = new History("profile ", p.getId(), "set",
                     organ.getNamePlain(),
                     -1, LocalDateTime.now());
             CurrentHistory.updateHistory(action);
@@ -225,7 +226,7 @@ public class OrganEdit extends CommonController {
             }
             //addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                 "profile",
                     p.getId(),
                 "required organ",
@@ -254,7 +255,7 @@ public class OrganEdit extends CommonController {
                 DAOFactory.getOrganDao().removeRequired(p, organ);
             }
             p.getOrgansRequired().remove(organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "profile ",
                     p.getId(),
                     "removed required",

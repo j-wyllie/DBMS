@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import odms.commons.model.enums.UserType;
+import odms.commons.model.user.User;
+import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DatabaseConnection;
-import commons.model.enums.UserType;
-import commons.model.user.User;
-import commons.model.user.UserNotFoundException;
 
 public class MySqlUserDAO implements UserDAO {
 

@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.enums.CountriesEnum;
 import server.model.database.DatabaseConnection;
-import commons.model.enums.CountriesEnum;
 
 public class MySqlCountryDAO implements CountryDAO {
 

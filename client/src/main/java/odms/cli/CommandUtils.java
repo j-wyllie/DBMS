@@ -7,17 +7,17 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.commons.model.profile.Profile;
 import odms.controller.database.CommonDAO;
 import odms.controller.database.DAOFactory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.UndoRedoCLIService;
-import odms.model.data.ProfileDatabase;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.data.ProfileDatabase;
+import odms.commons.model.enums.OrganEnum;
 
 public class CommandUtils {
 
-    public CommandUtils() {
+    private CommandUtils() {
         throw new UnsupportedOperationException();
     }
 

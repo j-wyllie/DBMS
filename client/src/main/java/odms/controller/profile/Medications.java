@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.MedicationDataIO;
@@ -12,9 +13,9 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.MedicationDAO;
 import odms.controller.database.MedicationInteractionsDAO;
 import odms.controller.history.CurrentHistory;
-import odms.model.medications.Drug;
-import odms.model.medications.Interaction;
-import odms.model.profile.Profile;
+import odms.history.History;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.medications.Interaction;
 import odms.view.profile.MedicationsGeneral;
 
 import java.io.IOException;
@@ -99,7 +100,7 @@ public class Medications extends CommonController {
         ProfileGeneralControllerTODOContainsOldProfileMethods
                 .generateUpdateInfo(drug.getDrugName(), profile);
         //todo maybe "profile" needs to be changed to "Profile"
-        odms.model.history.History history = new odms.model.history.History("profile", profile.getId(), "added drug",
+        History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
                 data.substring(data.indexOf("index of") + 9, data.indexOf(" at"))),
                 LocalDateTime.now());
@@ -315,7 +316,7 @@ public class Medications extends CommonController {
                 moveDrugToHistory(drug, currentProfile);
                 String data = currentProfile.getMedicationTimestamps()
                         .get(currentProfile.getMedicationTimestamps().size() - 1);
-                odms.model.history.History history = new odms.model.history.History("profile", currentProfile.getId(),
+                History history = new History("profile", currentProfile.getId(),
                         "stopped", drug.getDrugName(),
                         Integer.parseInt(data.substring(data.indexOf("index of") + 9,
                                 data.indexOf(" at"))), LocalDateTime.now());
@@ -338,7 +339,7 @@ public class Medications extends CommonController {
                 moveDrugToCurrent(drug, currentProfile);
                 String data = currentProfile.getMedicationTimestamps()
                         .get(currentProfile.getMedicationTimestamps().size() - 1);
-                odms.model.history.History history = new odms.model.history.History("profile", currentProfile.getId(),
+                History history = new History("profile", currentProfile.getId(),
                         "started", drug.getDrugName(), Integer.parseInt(data.substring(
                                 data.indexOf("index of") + 9,
                                 data.indexOf(" again"))), LocalDateTime.now());

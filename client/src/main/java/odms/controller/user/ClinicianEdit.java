@@ -8,7 +8,8 @@ import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.history.CurrentHistory;
-import odms.model.user.User;
+import odms.history.History;
+import odms.commons.model.user.User;
 
 public class ClinicianEdit extends CommonController {
 
@@ -25,7 +26,7 @@ public class ClinicianEdit extends CommonController {
     @FXML
     public void save() throws IOException {
         User currentUser = view.getUser();
-        odms.model.history.History action = new odms.model.history.History("Clinician", currentUser.getStaffID(),
+        History action = new History("Clinician", currentUser.getStaffID(),
                 "updated", "previous " + currentUser.getAttributesSummary() +
                 " new " + currentUser.getAttributesSummary(), -1, LocalDateTime.now());
         currentUser.setName(view.getGivenNamesField());

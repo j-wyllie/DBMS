@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import odms.controller.GuiMain;
 import odms.controller.history.Redo;
 import odms.controller.history.Undo;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 
 public class UserGeneral {
 

@@ -3,12 +3,9 @@ package odms.controller.data.Profile;
 
 import odms.model.profile.Profile;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import static org.junit.Assert.*;
 
 public class ProcedureEdit {
     public odms.view.profile.ProcedureDetailed view;

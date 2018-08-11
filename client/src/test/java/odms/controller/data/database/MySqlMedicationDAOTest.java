@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import odms.controller.database.MySqlMedicationDAO;
 import odms.controller.database.MySqlProfileDAO;
-import odms.model.medications.Drug;
+import odms.commons.model.medications.Drug;
 import odms.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;

@@ -2,7 +2,7 @@ package odms.controller.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import odms.model.data.UserDatabase;
+import odms.data.UserDatabase;
 
 import java.io.BufferedWriter;
 import java.io.File;

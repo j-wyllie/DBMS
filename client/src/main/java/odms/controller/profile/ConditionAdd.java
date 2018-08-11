@@ -2,6 +2,7 @@ package odms.controller.profile;
 
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
+import odms.history.History;
 import odms.model.profile.Condition;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class ConditionAdd extends CommonController {
         Condition condition = parseCondition();
         view.getCurrentProfile().getAllConditions().add(condition);
         LocalDateTime currentTime = LocalDateTime.now();
-        odms.model.history.History action = new odms.model.history.History("profile", view.getCurrentProfile().getId(),
+        History action = new History("profile", view.getCurrentProfile().getId(),
                 "added condition",
                 "(" + condition.getName() + "," + condition.getDateOfDiagnosisString() +
                         "," + condition.getChronic() + ")",

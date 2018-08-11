@@ -30,10 +30,10 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import odms.commons.model.profile.Profile;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.Medications;
-import odms.model.medications.Drug;
-import odms.model.profile.Profile;
+import odms.commons.model.medications.Drug;
 import odms.view.CommonView;
 
 /**

@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 
 public class DataManagement {
 

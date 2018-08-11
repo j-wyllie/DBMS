@@ -1,7 +1,7 @@
 package odms.controller.history;
 
-import odms.model.data.ProfileDatabase;
-import odms.model.history.History;
+import odms.data.ProfileDatabase;
+import odms.history.History;
 import odms.model.profile.OrganConflictException;
 
 public abstract class UndoRedo {

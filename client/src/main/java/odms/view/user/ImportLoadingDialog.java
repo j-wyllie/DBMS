@@ -19,7 +19,7 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 
 public class ImportLoadingDialog extends CommonView {

@@ -16,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;

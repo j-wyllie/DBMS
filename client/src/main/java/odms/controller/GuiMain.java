@@ -10,10 +10,10 @@ import odms.App;
 import odms.controller.data.UserDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
-import odms.model.user.User;
-import odms.model.enums.UserType;
+import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
+import odms.commons.model.user.User;
+import odms.commons.model.enums.UserType;
 
 import java.io.IOException;
 

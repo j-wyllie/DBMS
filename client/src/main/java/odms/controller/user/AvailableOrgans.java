@@ -1,6 +1,6 @@
 package odms.controller.user;
 
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 import java.time.LocalDateTime;

@@ -2,6 +2,8 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;

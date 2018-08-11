@@ -11,7 +11,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.controller.profile.OrganRemoval;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 

@@ -9,8 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
-import odms.model.user.User;
-import odms.model.enums.UserType;
+import odms.commons.model.user.User;
+import odms.commons.model.enums.UserType;
 import odms.view.CommonView;
 
 public class UserCreate extends CommonView {

@@ -1,15 +1,12 @@
 package odms.controller.profile;
 
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
-import odms.model.profile.Attribute;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Attribute;
+import odms.commons.model.profile.Profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class ProfileGeneralControllerTODOContainsOldProfileMethods {
 
@@ -106,10 +103,10 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             } else {
                 String[] dates = value.split("-");
                 //todo set a way to set time of death
-                LocalDateTime date = LocalDateTime.of(
+                LocalDate date = LocalDate.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[0]),0,0
+                        Integer.valueOf(dates[0])
                 );
                 profile.setDateOfDeath(date);
             }

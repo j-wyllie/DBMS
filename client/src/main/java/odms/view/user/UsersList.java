@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;

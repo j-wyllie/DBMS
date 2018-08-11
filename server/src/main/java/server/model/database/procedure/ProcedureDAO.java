@@ -1,10 +1,9 @@
 package server.model.database.procedure;
 
-
 import java.util.List;
-import commons.model.enums.OrganEnum;
-import commons.model.profile.Procedure;
-import commons.model.profile.Profile;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 
 public interface ProcedureDAO {
 

@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
-import odms.model.enums.CountriesEnum;
+import odms.commons.model.enums.CountriesEnum;
 import odms.model.profile.Profile;
 
 public class ProfileGeneral {

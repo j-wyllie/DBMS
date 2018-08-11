@@ -6,7 +6,7 @@ import java.util.HashSet;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import odms.controller.database.DAOFactory;
-import odms.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 public class Search {

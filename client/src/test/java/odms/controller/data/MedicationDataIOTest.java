@@ -5,7 +5,7 @@ import static odms.controller.data.MedicationDataIO.getSuggestionList;
 import static org.junit.Assert.*;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MedicationInteractionsDAO;
-import odms.model.medications.Interaction;
+import odms.commons.model.medications.Interaction;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;

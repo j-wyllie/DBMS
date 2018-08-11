@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import odms.controller.history.CurrentHistory;
+import odms.history.History;
 import odms.model.profile.Condition;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileMedicalHistory;
@@ -86,7 +87,7 @@ public class ConditionGeneral {
             if (condition != null) {
                 removeCondition(condition,p);
                 LocalDateTime currentTime = LocalDateTime.now();
-                odms.model.history.History action = new odms.model.history.History("profile", p.getId(),
+                History action = new History("profile", p.getId(),
                         " removed condition", "(" + condition.getName() +
                         "," + condition.getDateOfDiagnosis() + "," + condition.getChronic() + "," +
                         condition.getDateCuredString() + ")", getCurrentConditions(p).indexOf(condition), currentTime);

@@ -1,9 +1,9 @@
 package odms.controller.data;
 
 import odms.controller.user.UserNotFoundException;
-import odms.model.data.UserDatabase;
-import odms.model.user.User;
-import odms.model.enums.UserType;
+import odms.data.UserDatabase;
+import odms.commons.model.user.User;
+import odms.commons.model.enums.UserType;
 import org.junit.Before;
 import org.junit.Test;
 

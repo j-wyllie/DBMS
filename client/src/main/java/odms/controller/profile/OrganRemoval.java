@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
-import odms.model.enums.OrganEnum;
+import odms.history.History;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.view.profile.OrganRemove;
 
@@ -56,7 +57,7 @@ public class OrganRemoval extends CommonController {
         //generateUpdateInfo("organsReceiving");
         for (OrganEnum organ : organs) {
             p.getOrgansRequired().remove(organ);
-            odms.model.history.History action = new odms.model.history.History(
+            History action = new History(
                     "profile ",
                     p.getId(),
                     "removed required",

@@ -1,8 +1,8 @@
 package odms.controller.history;
 
-import odms.model.history.History;
+import odms.history.History;
 import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 
 import java.util.ArrayList;
 
@@ -12,10 +12,10 @@ public final class CurrentHistory {
         throw new UnsupportedOperationException();
     }
 
-    public static ArrayList<odms.model.history.History> currentSessionHistory = new ArrayList<>();
+    public static ArrayList<History> currentSessionHistory = new ArrayList<>();
     public static int historyPosition;
     public static ArrayList<Profile> deletedProfiles = new ArrayList<>();
-    public static ArrayList<User> deletedUsers = new ArrayList<odms.model.user.User>();
+    public static ArrayList<User> deletedUsers = new ArrayList<User>();
 
 
     /**
@@ -23,7 +23,7 @@ public final class CurrentHistory {
      *
      * @param history
      */
-    public static void updateHistory(odms.model.history.History history) {
+    public static void updateHistory(History history) {
         if (getHistory().size() != 0 &&
                 getPosition() != getHistory().size() - 1) {
             currentSessionHistory
@@ -34,7 +34,7 @@ public final class CurrentHistory {
         historyPosition = currentSessionHistory.size() - 1;
     }
 
-    public static ArrayList<odms.model.history.History> getHistory() {
+    public static ArrayList<History> getHistory() {
         return currentSessionHistory;
     }
 

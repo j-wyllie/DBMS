@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import odms.controller.data.MedicationDataIO;
-import odms.model.medications.Interaction;
+import odms.commons.model.medications.Interaction;
 
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 

@@ -2,14 +2,15 @@ package odms.controller.history;
 
 import java.util.Collections;
 
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
 import odms.controller.profile.UndoRedoCLIService;
-import odms.model.data.ProfileDatabase;
-import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
-import odms.model.profile.Condition;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
-import odms.model.user.User;
+import odms.history.History;
+import odms.data.ProfileDatabase;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.user.User;
 import odms.view.LoginView;
 
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class Redo extends UndoRedo {
 
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
     private static int historyPosition;
-    private static ArrayList<odms.model.history.History> currentSessionHistory;
+    private static ArrayList<History> currentSessionHistory;
 
     /**
      * Redoes an action
@@ -37,7 +38,7 @@ public class Redo extends UndoRedo {
             historyPosition = CurrentHistory.getPosition();
             if (historyPosition != currentSessionHistory.size() - 1) {
                 historyPosition += 1;
-                odms.model.history.History action;
+                History action;
                 if (historyPosition == 0) {
                     historyPosition = 1;
                     action = currentSessionHistory.get(historyPosition);
@@ -63,7 +64,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void addedDonated(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void addedDonated(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
         UndoRedoCLIService.addOrganDonated(OrganEnum.valueOf(organ), profile);
@@ -75,7 +76,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void addedReceived(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void addedReceived(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String organ = action.getHistoryData();
         UndoRedoCLIService.addOrgansReceived(new HashSet<OrganEnum>(
@@ -88,7 +89,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void removedCondition(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void removedCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int c = action.getHistoryDataIndex();
         Condition condition = UndoRedoCLIService.getCurrentConditions(profile).get(c);
@@ -101,7 +102,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void addCondition(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void addCondition(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String s = action.getHistoryData();
         String[] values = s.split(",");
@@ -115,7 +116,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void deleteDrug(ProfileDatabase currentDatabase, odms.model.history.History action)
+    public void deleteDrug(ProfileDatabase currentDatabase, History action)
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
@@ -129,7 +130,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void stopDrug(ProfileDatabase currentDatabase, odms.model.history.History action)
+    public void stopDrug(ProfileDatabase currentDatabase, History action)
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
@@ -137,7 +138,7 @@ public class Redo extends UndoRedo {
         Drug drug = drugs.get(d);
         UndoRedoCLIService.moveDrugToHistory(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
-        odms.model.history.History data = new odms.model.history.History("profile", profile.getId(), "stopped", drug.getDrugName(),
+        History data = new History("profile", profile.getId(), "stopped", drug.getDrugName(),
                 profile.getHistoryOfMedication().indexOf(drug), currentTime);
         CurrentHistory.currentSessionHistory.set(historyPosition - 1, data);
     }
@@ -148,7 +149,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void renewDrug(ProfileDatabase currentDatabase, odms.model.history.History action)
+    public void renewDrug(ProfileDatabase currentDatabase, History action)
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int d = action.getHistoryDataIndex();
@@ -156,7 +157,7 @@ public class Redo extends UndoRedo {
         Drug drug = drugs.get(d);
         UndoRedoCLIService.moveDrugToCurrent(drug, profile);
         LocalDateTime currentTime = LocalDateTime.now();
-        odms.model.history.History data = new odms.model.history.History("profile", profile.getId(), "started", drug.getDrugName(),
+        History data = new History("profile", profile.getId(), "started", drug.getDrugName(),
                 profile.getCurrentMedications().indexOf(drug), currentTime);
         CurrentHistory.currentSessionHistory.set(historyPosition - 1, data);
     }
@@ -167,7 +168,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void addDrug(ProfileDatabase currentDatabase, odms.model.history.History action)
+    public void addDrug(ProfileDatabase currentDatabase, History action)
             throws IndexOutOfBoundsException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         if (action.getHistoryAction().contains("history")) {
@@ -186,7 +187,7 @@ public class Redo extends UndoRedo {
      *
      * @param action
      */
-    public void updated(odms.model.history.History action) {
+    public void updated(History action) {
         User user = LoginView.getCurrentUser();
         String newString = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
@@ -203,7 +204,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void added(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void added(ProfileDatabase currentDatabase, History action) {
         int oldid = action.getHistoryId();
         int id = currentDatabase
                 .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
@@ -221,7 +222,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void deleted(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void deleted(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         currentDatabase.deleteProfile(action.getHistoryId());
         CurrentHistory.deletedProfiles.add(profile);
@@ -234,7 +235,7 @@ public class Redo extends UndoRedo {
      * @param action
      * @throws Exception
      */
-    public void removed(ProfileDatabase currentDatabase, odms.model.history.History action) throws Exception {
+    public void removed(ProfileDatabase currentDatabase, History action) throws Exception {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(
                 Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
@@ -247,7 +248,7 @@ public class Redo extends UndoRedo {
      * @param action
      * @throws OrganConflictException
      */
-    public void set(ProfileDatabase currentDatabase, odms.model.history.History action) throws OrganConflictException {
+    public void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(
                 Arrays.asList(action.getHistoryData().replace(' ', '_').split(",")
@@ -260,7 +261,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void donate(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void donate(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         UndoRedoCLIService.addOrgansDonated(OrganEnum.stringListToOrganSet(
                 Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
@@ -272,7 +273,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void update(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void update(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         String newInfo = action.getHistoryData()
                 .substring(action.getHistoryData().indexOf("new ") + 4);
@@ -285,7 +286,7 @@ public class Redo extends UndoRedo {
      * @param currentDatabase
      * @param action
      */
-    public void edited(ProfileDatabase currentDatabase, odms.model.history.History action) {
+    public void edited(ProfileDatabase currentDatabase, History action) {
         Profile profile = currentDatabase.getProfile(action.getHistoryId());
         int procedurePlace = action.getHistoryDataIndex();
         String previous = action.getHistoryData()

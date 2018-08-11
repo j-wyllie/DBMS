@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import odms.cli.CommandGUI;
 import odms.controller.user.Console;
-import odms.model.user.User;
+import odms.commons.model.user.User;
 
 public class ConsoleTab {
 

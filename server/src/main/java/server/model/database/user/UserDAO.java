@@ -2,8 +2,8 @@ package server.model.database.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import commons.model.user.User;
-import commons.model.user.UserNotFoundException;
+import odms.commons.model.user.User;
+import odms.commons.model.user.UserNotFoundException;
 
 public interface UserDAO {
 

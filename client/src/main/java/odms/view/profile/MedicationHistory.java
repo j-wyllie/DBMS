@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 public class MedicationHistory extends CommonView {

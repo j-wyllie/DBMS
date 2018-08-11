@@ -6,8 +6,8 @@ import odms.controller.GuiMain;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.data.UserDataIO;
 import odms.controller.history.CurrentHistory;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
+import odms.data.ProfileDatabase;
+import odms.data.UserDatabase;
 
 import java.io.File;
 

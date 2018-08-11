@@ -1,7 +1,6 @@
 package odms.controller.data.Profile;
 
-import odms.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
+import odms.commons.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
