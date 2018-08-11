@@ -3,7 +3,7 @@ package odms.view.profile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;

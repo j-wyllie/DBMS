@@ -12,12 +12,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
-import odms.controller.data.UserDataIO;
-import odms.data.UserDatabase;
 import odms.commons.model.user.User;
 
 public class UsersList {
-    private UserDatabase userDatabase = GuiMain.getUserDatabase();
+//    private UserDatabase userDatabase = GuiMain.getUserDatabase();
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
@@ -86,7 +84,7 @@ public class UsersList {
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
-                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
+//                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
                 refreshViewUsersTable();
                 view.editTrueStage((Stage) view.getViewUsersTable().getScene().getWindow());
             }
@@ -96,9 +94,9 @@ public class UsersList {
     /**
      * save changes made in the view users window.
      */
-    public void saveChanges() {
-        UserDataIO.saveUsers(userDatabase);
-    }
+//    public void saveChanges() {
+//        UserDataIO.saveUsers(userDatabase);
+//    }
 
     /**
      * Refresh the user data in the UsersTable.
@@ -113,6 +111,6 @@ public class UsersList {
      * Gets an observable list of users.
      */
     private void fetchData() {
-        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
+//        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
     }
 }

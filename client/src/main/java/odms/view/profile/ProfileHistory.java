@@ -2,7 +2,7 @@ package odms.view.profile;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 
 
 public class ProfileHistory {

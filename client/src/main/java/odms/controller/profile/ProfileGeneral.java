@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import odms.commons.model.enums.CountriesEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 
 public class ProfileGeneral {
 

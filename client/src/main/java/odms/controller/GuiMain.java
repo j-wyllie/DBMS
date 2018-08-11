@@ -10,8 +10,6 @@ import odms.App;
 import odms.controller.data.UserDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
 
@@ -54,24 +52,6 @@ public class GuiMain extends Application {
             e.printStackTrace();
         }
 
-
-//        if (!userDb.isUser(0)) {
-//            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
-//            user.setStaffID(0);
-//            userDb.addUser(user);
-//            user.setDefault(true);
-//            UserDataIO.saveUsers(userDb, USER_DATABASE);
-//        }
-//
-//        if (!userDb.isUser(ADMIN)) {
-//            User user = new User(UserType.ADMIN, ADMIN);
-//            user.setUsername(ADMIN);
-//            user.setPassword(ADMIN);
-//            user.setDefault(true);
-//            userDb.addUser(user);
-//            UserDataIO.saveUsers(userDb, USER_DATABASE);
-//        }
-
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
@@ -109,17 +89,6 @@ public class GuiMain extends Application {
         }
     }
 
-//    public static ProfileDatabase getCurrentDatabase() {
-//        return profileDb;
-//    }
-//
-//    public static void setCurrentDatabase(ProfileDatabase profileDb) {
-//        GuiMain.profileDb = profileDb;
-//    }
-//
-//    public static UserDatabase getUserDatabase() {
-//        return userDb;
-//    }
 
     /**
      * Launches the GUI of the program.

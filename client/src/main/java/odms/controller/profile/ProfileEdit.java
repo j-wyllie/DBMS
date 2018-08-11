@@ -1,7 +1,5 @@
 package odms.controller.profile;
 
-import static odms.App.getProfileDb;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,7 +9,6 @@ import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
@@ -80,7 +77,6 @@ public class ProfileEdit extends CommonController {
 
                 ProfileDAO database = DAOFactory.getProfileDao();
                 database.update(currentProfile);
-                ProfileDataIO.saveData(getProfileDb());
 
                 // history Changes
                 action.setHistoryData(
@@ -214,7 +210,7 @@ public class ProfileEdit extends CommonController {
     public void saveDateOfDeath() throws IllegalArgumentException {
         if (view.getDODDatePicker() != null) {
             //todo way to set time of death
-            currentProfile.setDateOfDeath(LocalDateTime.from(view.getDODDatePicker()));
+            currentProfile.setDateOfDeath(LocalDate.from(view.getDODDatePicker()));
         }
     }
 
