@@ -11,12 +11,25 @@ import spark.Response;
 
 public class DrugController {
 
+    /**
+     * Gets all drugs for a profile in persistent storage.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return a list of all drugs for the profile stored.
+     */
     public static String getAll(Request req, Response res) {
         MedicationDAO database = DAOFactory.getMedicationDao();
         List<Drug> drugs;
+        int profileId;
+        boolean current;
 
-        int profileId = Integer.valueOf(req.params("id"));
-        boolean current = Boolean.valueOf(req.queryParams("current"));
+        try {
+            profileId = Integer.valueOf(req.params("id"));
+            current = Boolean.valueOf(req.queryParams("current"));
+        } catch (Exception e) {
+            res.status(500);
+            return "Bad Request";
+        }
 
         try {
             drugs = database.getAll(new Profile(profileId), current);
@@ -34,6 +47,12 @@ public class DrugController {
         return responseBody;
     }
 
+    /**
+     * Adds a new drug to a profile to persistent storage.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String add(Request req, Response res) {
         Gson gson = new Gson();
         MedicationDAO database = DAOFactory.getMedicationDao();
@@ -61,6 +80,12 @@ public class DrugController {
         return "Drug added";
     }
 
+    /**
+     * Edits a currently stored drug for a profile.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
         MedicationDAO database = DAOFactory.getMedicationDao();
@@ -86,6 +111,12 @@ public class DrugController {
         return "Drug updated";
     }
 
+    /**
+     * Deletes a drug for a profile from persistent storage.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String delete(Request req, Response res) {
         Gson gson = new Gson();
         MedicationDAO database = DAOFactory.getMedicationDao();

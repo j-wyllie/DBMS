@@ -12,6 +12,12 @@ import spark.Response;
 
 public class ProfileController {
 
+    /**
+     * Gets all profiles stored.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body, a list of all profiles.
+     */
     public static String getAll(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         List<Profile> profiles = new ArrayList<>();
@@ -32,6 +38,12 @@ public class ProfileController {
         return responseBody;
     }
 
+    /**
+     * Gets a single profile from storage.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String get(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Profile profile = null;
@@ -52,6 +64,12 @@ public class ProfileController {
         return responseBody;
     }
 
+    /**
+     * Creates and stores a new profile.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String create(Request req, Response res) {
         Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
@@ -77,6 +95,12 @@ public class ProfileController {
         return "Profile Created";
     }
 
+    /**
+     * Edits a stored profile.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
@@ -102,6 +126,12 @@ public class ProfileController {
         return "Profile Updated";
     }
 
+    /**
+     * Deletes a profile from storage.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String delete(Request req, Response res) {
         Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
@@ -127,6 +157,12 @@ public class ProfileController {
         return "Profile Deleted";
     }
 
+    /**
+     * Gets a count of all stored profiles.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body.
+     */
     public static String count(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         int count = 0;
