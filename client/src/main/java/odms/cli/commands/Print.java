@@ -15,14 +15,12 @@ import java.util.ArrayList;
 public class Print extends CommandUtils {
 
     /**
-     * Print all profiles in the Database
-     *
-     * @param currentDatabase Database reference
+     * Print all profiles in the database.
+     * @param profiles the list of profiles to print.
      */
-    public static void printAllProfiles(ProfileDatabase currentDatabase) {
-        List<Profile> allProfiles = currentDatabase.getProfiles(false);
-        if (allProfiles.size() > 0) {
-            for (Profile profile : allProfiles) {
+    public static void printAllProfiles(List<Profile> profiles) {
+        if (profiles.size() > 0) {
+            for (Profile profile : profiles) {
                 printProfileAttributes(profile);
                 System.out.println();
             }
@@ -32,14 +30,12 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all clinicians in the Database
-     *
-     * @param currentDatabase Database reference
+     * Print all clinicians in the database.
+     * @param users to print if the are of type clinican.
      */
-    public static void printAllClinicians(UserDatabase currentDatabase) {
-        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
-        if (allUsers.size() > 0) {
-            for (User user : allUsers) {
+    public static void printAllClinicians(List<User> users) {
+        if (users.size() > 0) {
+            for (User user : users) {
                 if (user.getUserType() == UserType.CLINICIAN) {
                     printUserAttributesAttributes(user);
                     System.out.println();
@@ -51,14 +47,12 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all users in the Database
-     *
-     * @param currentDatabase Database reference
+     * Print all users in the database.
+     * @param users to print.
      */
-    public static void printAllUsers(UserDatabase currentDatabase) {
-        ArrayList<User> allUsers = currentDatabase.getUsersAsArrayList();
-        if (allUsers.size() > 0) {
-            for (User user : allUsers) {
+    public static void printAllUsers(List<User> users) {
+        if (users.size() > 0) {
+            for (User user : users) {
                 printUserAttributesAttributes(user);
                 System.out.println();
             }
@@ -68,18 +62,18 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Print all profiles with donations in the Database
-     *
-     * @param currentDatabase Database reference
+     * Print all profiles with donations in the database.
+     * @param profiles to print if they are donors.
      */
-    public static void printDonors(ProfileDatabase currentDatabase) {
-        List<Profile> allProfiles = currentDatabase.getProfiles(true);
-        if (allProfiles.size() > 0) {
-            for (Profile profile : allProfiles) {
-                printProfileAttributes(profile);
-                System.out.println("Organs Donating: " + OrganEnum
-                        .organSetToString(profile.getOrgansDonating()));
-                System.out.println();
+    public static void printDonors(List<Profile> profiles) {
+        if (profiles.size() > 0) {
+            for (Profile profile : profiles) {
+                if (profile.getDonor()) {
+                    printProfileAttributes(profile);
+                    System.out.println("Organs Donating: " + OrganEnum
+                            .organSetToString(profile.getOrgansDonating()));
+                    System.out.println();
+                }
             }
         } else {
             System.out.println("There are no profile profiles to show.");
@@ -88,8 +82,7 @@ public class Print extends CommandUtils {
 
     /**
      * Display and print profile details in a list.
-     *
-     * @param profileList List of profiles
+     * @param profileList list of profiles.
      */
     public static void printProfileList(List<Profile> profileList) {
         for (Profile profile : profileList) {
@@ -103,10 +96,9 @@ public class Print extends CommandUtils {
 
     /**
      * Display and print profile details in a list.
-     *
-     * @param userlist List of profiles
+     * @param userlist List of profiles.
      */
-    public static void printUserList(ArrayList<User> userlist) {
+    public static void printUserList(List<User> userlist) {
         for (User user : userlist) {
             System.out.println("Staff ID: " + user.getStaffID());
             System.out.println("Name: " + user.getName());
@@ -118,8 +110,7 @@ public class Print extends CommandUtils {
 
     /**
      * Display and print profile donations.
-     *
-     * @param profileList list of profiles
+     * @param profileList list of profiles.
      */
     public static void printProfileDonations(List<Profile> profileList) {
         for (Profile profile : profileList) {
@@ -138,8 +129,7 @@ public class Print extends CommandUtils {
     /**
      * Display and print printAllProfiles search results from profile array. If array empty, no
      * search results have been found.
-     *
-     * @param profileList Results from searching
+     * @param profileList results from searching.
      */
     public static void printProfileSearchResults(List<Profile> profileList) {
         if (profileList.size() > 0) {
@@ -155,10 +145,9 @@ public class Print extends CommandUtils {
     /**
      * Display and print printAllProfiles search results from profile array. If array empty, no
      * search results have been found.
-     *
-     * @param userlist Results from searching
+     * @param userlist results from searching.
      */
-    public static void printUserSearchResults(ArrayList<User> userlist) {
+    public static void printUserSearchResults(List<User> userlist) {
         if (userlist.size() > 0) {
             for (User user : userlist) {
                 printUserAttributesAttributes(user);
@@ -170,9 +159,8 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Display and print the attributes of a profile
-     *
-     * @param profile to be displayed
+     * Display and print the attributes of a profile.
+     * @param profile to be displayed.
      */
     private static void printProfileAttributes(Profile profile) {
         System.out.println("NHI: " + profile.getNhi());
@@ -238,9 +226,8 @@ public class Print extends CommandUtils {
     }
 
     /**
-     * Display and print the attributes of a profile
-     *
-     * @param user to be displayed
+     * Display and print the attributes of a profile.
+     * @param user to be displayed.
      */
     private static void printUserAttributesAttributes(User user) {
         System.out.println("user type: " + user.getUserType());

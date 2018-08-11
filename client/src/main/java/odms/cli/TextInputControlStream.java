@@ -112,7 +112,7 @@ class TextInputControlStream {
 
                     final String lastLine = getLastLine();
                     final ByteBuffer buf = getCharset().encode(lastLine + "\r");
-                    this.inputTextTarget.write(buf.array(), 0, buf.remaining());
+                    this.inputTextTarget.write(buf.array());
                     this.inputTextTarget.flush();
                     this.lastLineBreakIndex = this.textInputControl.getLength() + 1;
                 } catch (IOException e) {
@@ -126,8 +126,10 @@ class TextInputControlStream {
 
         private String getLastLine() {
             synchronized (this) {
-                return this.textInputControl
+                String input = this.textInputControl
                         .getText(this.lastLineBreakIndex, this.textInputControl.getLength());
+                this.textInputControl.deleteText(this.lastLineBreakIndex, this.textInputControl.getLength());
+                return input;
             }
         }
 
@@ -228,7 +230,13 @@ class TextInputControlStream {
                 final ByteBuffer byteBuffer = ByteBuffer.wrap(this.buf.toByteArray());
                 final CharBuffer charBuffer = this.decoder.decode(byteBuffer);
                 try {
-                    this.textInputControl.appendText(charBuffer.toString());
+                    String input = charBuffer.toString();
+                    // removes escape chars from the output.
+                    if (input.length() > 0 && input.contains("[?2004")) {
+                        input = input.substring(0, input.indexOf("[?2004"))
+                                + input.substring(input.indexOf("[?2004") + 7, input.length());
+                    }
+                    this.textInputControl.appendText(input);
                     this.textInputControl.positionCaret(this.textInputControl.getLength());
                 } finally {
                     this.buf = null;

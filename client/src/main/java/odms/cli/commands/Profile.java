@@ -1,12 +1,13 @@
 package odms.cli.commands;
 
+import java.sql.SQLException;
 import java.util.List;
 import odms.cli.CommandUtils;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
-import odms.history.History;
-import odms.data.NHIConflictException;
-import odms.data.ProfileDatabase;
+import odms.model.data.NHIConflictException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,37 +16,41 @@ import java.util.Arrays;
 public class Profile extends CommandUtils {
 
     /**
-     * Add history for profile
-     *
-     * @param id profile ID
+     * Add history for profile.
+     * @param id profile ID.
      */
     protected static void addProfileHistory(Integer id) {
-        History action = new History("profile", id, "added", "", -1, LocalDateTime.now());
+        odms.model.history.History action = new odms.model.history.History("profile", id, "added", "", -1, LocalDateTime.now());
         CurrentHistory.updateHistory(action);
     }
 
     /**
      * Create profile.
-     *
-     * @param currentDatabase Database reference
-     * @param rawInput        raw command input
+     * @param rawInput raw command input.
      */
-    public static void createProfile(ProfileDatabase currentDatabase, String rawInput) {
+    public static void createProfile(String rawInput) throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
+
         try {
             String[] attrList = rawInput.substring(15).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             odms.model.profile.Profile newProfile = new odms.model.profile.Profile(attrArray);
-            currentDatabase.addProfile(newProfile);
-            addProfileHistory(newProfile.getId());
-            System.out.println("profile created.");
-
+            if (database.isUniqueNHI(newProfile.getNhi()) == 0) {
+                database.add(newProfile);
+                addProfileHistory(newProfile.getId());
+                System.out.println("profile created.");
+            }
+            else {
+                throw new NHIConflictException("NHI already in use.",
+                        String.valueOf(database.isUniqueNHI(newProfile.getNhi())));
+            }
         } catch (IllegalArgumentException e) {
             System.out.println("Please enter the required attributes correctly.");
 
         } catch (NHIConflictException e) {
             String errorNhiNumber = e.getNHI();
-            odms.model.profile.Profile errorProfile = currentDatabase
-                    .searchNHI(errorNhiNumber).get(0);
+            odms.model.profile.Profile errorProfile = database.get(database
+                    .isUniqueNHI(errorNhiNumber));
 
             System.out.println("Error: NHI " + errorNhiNumber +
                     " already in use by profile " +
@@ -59,54 +64,30 @@ public class Profile extends CommandUtils {
 
     /**
      * Delete profiles from the database.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    public static void deleteProfileBySearch(ProfileDatabase currentDatabase, String expression) {
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.lastIndexOf("\""));
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchGivenNames(attr);
-
-                deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchLastNames(attr);
-
-                deleteProfiles(profileList, currentDatabase);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchNHI(attr);
-
-                deleteProfiles(profileList, currentDatabase);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
+    public static void deleteProfileBySearch(String expression) {
+        List<odms.model.profile.Profile> profiles = search(expression);
+        try {
+            deleteProfiles(profiles);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Delete profiles.
-     *
-     * @param profileList     list of profiles
-     * @param currentDatabase Database reference
+     * @param profileList list of profiles.
      */
-    private static void deleteProfiles(List<odms.model.profile.Profile> profileList,
-            ProfileDatabase currentDatabase) {
+    private static void deleteProfiles(List<odms.model.profile.Profile> profileList) throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
         boolean result;
         if (profileList.size() > 0) {
             for (odms.model.profile.Profile profile : profileList) {
-                result = currentDatabase.deleteProfile(profile.getId());
-                if (result) {
-                    CurrentHistory.deletedProfiles.add(profile);
-                    CurrentHistory.updateHistory(new History("profile", profile.getId(),
-                            "deleted", "", -1, LocalDateTime.now()));
-                }
+                database.remove(profile);
+                CurrentHistory.deletedProfiles.add(profile);
+                CurrentHistory.updateHistory(new odms.model.history.History("profile", profile.getId(),
+                        "deleted", "", -1, LocalDateTime.now()));
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -115,16 +96,15 @@ public class Profile extends CommandUtils {
 
     /**
      * Update profile attributes.
-     *
-     * @param profileList List of profiles
-     * @param attrList    Attributes to be updated and their values
+     * @param profileList list of profiles
+     * @param attrList attributes to be updated and their values
      */
     private static void updateProfileAttr(List<odms.model.profile.Profile> profileList,
             String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             for (odms.model.profile.Profile profile : profileList) {
-                History action = new History("profile", profile.getId(), "update",
+                odms.model.history.History action = new odms.model.history.History("profile", profile.getId(), "update",
                         profile.getAttributesSummary(), -1, null);
                 ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attrArray, profile);
                 action.setHistoryData(action.getHistoryData() + profile.getAttributesSummary());
@@ -139,154 +119,75 @@ public class Profile extends CommandUtils {
 
     /**
      * Update profile attributes.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    public static void updateProfilesBySearch(ProfileDatabase currentDatabase, String expression) {
+    public static void updateProfilesBySearch(String expression) {
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
                 .trim()
                 .split("\"\\s");
-
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchGivenNames(attr);
-
-                updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchLastNames(attr);
-
-                updateProfileAttr(profileList, attrList);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchNHI(attr);
-
-                updateProfileAttr(profileList, attrList);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
+        List<odms.model.profile.Profile> profiles = search(expression);
+        updateProfileAttr(profiles, attrList);
     }
 
     /**
-     * Displays profiles attributes via the search methods
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression being used for searching
+     * Displays profiles attributes via the search methods.
+     * @param expression search expression being used for searching.
      */
-    public static void viewAttrBySearch(ProfileDatabase currentDatabase, String expression) {
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.lastIndexOf("\""));
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                Print.printProfileSearchResults(currentDatabase.searchGivenNames(attr));
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                Print.printProfileSearchResults(currentDatabase.searchLastNames(attr));
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                Print.printProfileSearchResults(
-                        currentDatabase.searchNHI(attr));
-            } else {
-                System.out.println(searchErrorText);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
+    public static void viewAttrBySearch(String expression) {
+        List<odms.model.profile.Profile> profiles = search(expression);
+        Print.printProfileSearchResults(profiles);
     }
 
     /**
      * view date and time of profile creation.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    public static void viewDateTimeCreatedBySearch(ProfileDatabase currentDatabase,
-            String expression) {
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
+    public static void viewDateTimeCreatedBySearch(String expression) {
+        List<odms.model.profile.Profile> profiles = search(expression);
+        Print.printProfileList(profiles);
+    }
 
-        if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchGivenNames(attr);
+    /**
+     * Returns a list of the relevant profiles that are to be edited.
+     * @param expression to search by.
+     * @return a list of profile objects.
+     */
+    private static List<odms.model.profile.Profile> search(String expression) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        List<odms.model.profile.Profile> profiles = new ArrayList<>();
+        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            String attr = expression.substring(expression.indexOf("\"") + 1,
+                    expression.lastIndexOf("\""));
 
-                Print.printProfileList(profileList);
-            } else {
-                System.out.println(searchErrorText);
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
+                    expression.substring(8, 8 + "last-names".length()).equals("last-names") ||
+                    expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
+
+                try {
+                     profiles = database.search(attr, 0,
+                            0, null, null, null, null);
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-        } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchLastNames(attr);
-
-                Print.printProfileList(profileList);
-            } else {
-                System.out.println(searchErrorText);
-            }
-        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                List<odms.model.profile.Profile> profileList = currentDatabase
-                        .searchNHI(attr);
-
-                Print.printProfileList(profileList);
-            } else {
-                System.out.println(searchErrorText);
-            }
-
         } else {
             System.out.println(searchErrorText);
         }
+        return profiles;
     }
 
     /**
      * view organs available for donation.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    public static void viewDonationsBySearch(ProfileDatabase currentDatabase, String expression) {
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
-        List<odms.model.profile.Profile> profileList = null;
+    public static void viewDonationsBySearch(String expression) {
+        List<odms.model.profile.Profile> profiles = search(expression);
 
-        if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                profileList = currentDatabase.searchGivenNames(attr);
-            } else {
-                System.out.println(searchErrorText);
-            }
-        } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                profileList = currentDatabase.searchLastNames(attr);
-            } else {
-                System.out.println(searchErrorText);
-            }
-        } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
-                profileList = currentDatabase.searchNHI(attr);
-            } else {
-                System.out.println(searchErrorText);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
-        }
-
-        if (profileList != null && !profileList.isEmpty()) {
-            Print.printProfileDonations(profileList);
+        if (profiles != null && !profiles.isEmpty()) {
+            Print.printProfileDonations(profiles);
         } else {
             System.out.println("No matching profiles found.");
         }
-
     }
-
 }

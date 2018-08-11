@@ -1,14 +1,15 @@
 package odms.cli;
 
+import java.sql.SQLException;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
-import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.data.UserDataIO;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.DatabaseConnection;
+import odms.controller.database.OrganDAO;
+import odms.controller.database.ProfileDAO;
+import odms.controller.database.UserDAO;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -27,20 +28,19 @@ import static odms.cli.CommandUtils.validateCommandType;
 
 public class CommandLine implements Runnable {
 
-    private ProfileDatabase currentDatabase;
-    private UserDatabase currentDatabaseUsers;
+    private ProfileDAO profileDatabase;
+    private UserDAO userDatabase;
+    private OrganDAO organDatabase;
     private LineReader reader;
     private Terminal terminal;
 
     /**
-     * Create a standard input/output terminal.
-     *
-     * @param currentDatabase the current database.
-     * @param currentDatabaseUsers the current database users.
+     * Create a standard input/output terminal
      */
-    public CommandLine(ProfileDatabase currentDatabase, UserDatabase currentDatabaseUsers) {
-        this.currentDatabase = currentDatabase;
-        this.currentDatabaseUsers = currentDatabaseUsers;
+    public CommandLine() {
+        this.profileDatabase = DAOFactory.getProfileDao();
+        this.userDatabase = DAOFactory.getUserDao();
+        this.organDatabase = DAOFactory.getOrganDao();
 
         try {
             terminal = TerminalBuilder.terminal();
@@ -58,14 +58,12 @@ public class CommandLine implements Runnable {
     }
 
     /**
-     * Create a virtual terminal command line.
-     *
-     * @param currentDatabase the current database.
-     * @param input input from the user.
-     * @param output output presented in the CLI.
+     * Create a virtual terminal command line
+     * @param input
+     * @param output
      */
-    public CommandLine(ProfileDatabase currentDatabase, InputStream input, OutputStream output) {
-        this.currentDatabase = currentDatabase;
+    public CommandLine(InputStream input, OutputStream output) {
+        this.profileDatabase = DAOFactory.getProfileDao();
 
         try {
             terminal = TerminalBuilder.builder()
@@ -89,9 +87,7 @@ public class CommandLine implements Runnable {
     /**
      * Run implementation so command line can be run in an alternate thread.
      */
-    public void run() {
-        initialiseConsole();
-    }
+    public void run() { initialiseConsole(); }
 
     /**
      * Initialise the commandline/console interface.
@@ -99,10 +95,10 @@ public class CommandLine implements Runnable {
     public void initialiseConsole() {
         Boolean exit = false;
         String input;
-        currentDatabaseUsers = GuiMain.getUserDatabase();
+        this.userDatabase = DAOFactory.getUserDao();
 
         System.out.println("Organ profile Management System");
-        System.out.println("\nPlease enter your commands below:");
+        System.out.println("Please enter your commands below:\n");
 
         while (!exit) {
             input = reader.readLine("> ").trim();
@@ -116,7 +112,11 @@ public class CommandLine implements Runnable {
                 exit = true;
             } else {
                 reader.getHighlighter();
-                processInput(new ArrayList<>(parsedInput.words()), input);
+                try {
+                    processInput(new ArrayList<>(parsedInput.words()), input);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -131,8 +131,9 @@ public class CommandLine implements Runnable {
      *
      * @param input commands entered from console
      */
-    private void processInput(ArrayList<String> input, String rawInput) {
+    private void processInput(ArrayList<String> input, String rawInput) throws SQLException {
         Commands inputCommand = validateCommandType(input, rawInput);
+        DatabaseConnection instance = DatabaseConnection.getInstance();
 
         switch (inputCommand) {
             case INVALID:
@@ -150,139 +151,139 @@ public class CommandLine implements Runnable {
 
             case PRINTALLPROFILES:
                 // Print all profiles (print all).
-                Print.printAllProfiles(currentDatabase);
+                Print.printAllProfiles(profileDatabase.getAll());
                 break;
 
             case PRINTALLCLINICIANS:
                 // Print all clinicians (print all).
-                Print.printAllClinicians(currentDatabaseUsers);
+                Print.printAllClinicians(userDatabase.getAll());
                 break;
 
             case PRINTALLUSERS:
                 // Print all users (print all).
-                Print.printAllUsers(currentDatabaseUsers);
+                Print.printAllUsers(userDatabase.getAll());
                 break;
 
             case PRINTDONORS:
                 // Print all profiles that are donors (print donors).
-                Print.printDonors(currentDatabase);
+                Print.printDonors(profileDatabase.getAll());
                 break;
-
-            case EXPORT:
-                // Export profile database to file
-                if (input.size() == 1) {
-                    ProfileDataIO.saveData(currentDatabase);
-                    UserDataIO.saveUsers(currentDatabaseUsers);
-                }
-                if (input.size() == 2) {
-                    String filepath = input.get(1);
-                    ProfileDataIO.saveData(currentDatabase, filepath);
-                    UserDataIO.saveUsers(currentDatabaseUsers, filepath);
-                }
-                break;
-
-            case IMPORT:
-                // Import a file of profiles.
-                if (input.size() == 2) {
-                    String filepath = input.get(1);
-                    currentDatabase = ProfileDataIO.loadDataFromJSON(filepath);
-                } else {
-                    System.out.println("Error: Invalid arguments. Expected: 1, " +
-                            "Found: " + (input.size() - 1));
-                }
-                break;
+//
+//            case EXPORT:
+//                // Export profile database to file
+//                if (input.size() == 1) {
+//                    ProfileDataIO.saveData(currentDatabase);
+//                    UserDataIO.saveUsers(currentDatabaseUsers);
+//                }
+//                if (input.size() == 2) {
+//                    String filepath = input.get(1);
+//                    ProfileDataIO.saveData(currentDatabase, filepath);
+//                    UserDataIO.saveUsers(currentDatabaseUsers, filepath);
+//                }
+//                break;
+//
+//            case IMPORT:
+//                // Import a file of profiles.
+//                if (input.size() == 2) {
+//                    String filepath = input.get(1);
+//                    currentDatabase = ProfileDataIO.loadData(filepath);
+//                } else {
+//                    System.out.println("Error: Invalid arguments. Expected: 1, " +
+//                            "Found: " + (input.size() - 1));
+//                }
+//                break;
 
             case PROFILECREATE:
                 // Create a new profile.
-                Profile.createProfile(currentDatabase, rawInput);
+                Profile.createProfile(rawInput);
                 break;
 
             case PROFILEDATECREATED:
                 // Search profiles (profile > date-created).
                 System.out.println("Searching for profiles...");
-                Profile.viewDateTimeCreatedBySearch(currentDatabase, rawInput);
+                Profile.viewDateTimeCreatedBySearch(rawInput);
                 break;
 
             case PROFILEDELETE:
                 // Delete a profile.
-                Profile.deleteProfileBySearch(currentDatabase, rawInput);
-                System.out.println("profile(s) successfully deleted.");
+                Profile.deleteProfileBySearch(rawInput);
+                System.out.println("Profile(s) successfully deleted.");
                 break;
 
             case PROFILEORGANS:
                 // Search profiles (profile > donations).
                 System.out.println("Searching for profiles...");
-                Profile.viewDonationsBySearch(currentDatabase, rawInput);
+                Profile.viewDonationsBySearch(rawInput);
                 break;
 
             case PROFILEUPDATE:
                 // Search profiles.
-                Profile.updateProfilesBySearch(currentDatabase, rawInput);
+                Profile.updateProfilesBySearch(rawInput);
                 System.out.println("profile(s) successfully updated.");
                 break;
 
             case PROFILEVIEW:
                 // Search profiles (profile > view).
                 System.out.println("Searching for profiles...");
-                Profile.viewAttrBySearch(currentDatabase, rawInput);
+                Profile.viewAttrBySearch(rawInput);
                 break;
 
             case CLINICIANCREATE:
                 // Create a new clinician.
-                User.createClinician(currentDatabaseUsers, rawInput);
+                User.createClinician(rawInput);
                 break;
 
             case CLINICIANDATECREATED:
                 // Search clinicians (clinician > date-created).
                 System.out.println("Searching for clinicians...");
-                User.viewDateTimeCreatedBySearch(currentDatabaseUsers, rawInput, "clinician");
+                User.viewDateTimeCreatedBySearch(rawInput, "clinician");
                 break;
 
             case CLINICIANDELETE:
                 // Delete a clinician.
-                User.deleteUserBySearch(currentDatabaseUsers, rawInput, "clinician");
+                User.deleteUserBySearch(rawInput, "clinician");
                 System.out.println("Clinician(s) successfully deleted.");
                 break;
 
             case CLINICIANUPDATE:
                 // Search clinician.
-                User.updateUserBySearch(currentDatabaseUsers, rawInput, "clinician");
+                User.updateUserBySearch(rawInput, "clinician");
                 System.out.println("Clinician(s) successfully updated.");
                 break;
 
             case CLINICIANEVIEW:
                 // Search clinician (clinician > view).
                 System.out.println("Searching for clinicians...");
-                User.viewAttrBySearch(currentDatabaseUsers, rawInput, "clinician");
+                User.viewAttrBySearch(rawInput, "clinician");
                 break;
 
             case ORGANADD:
                 // Add organs to a profile.
-                CommandUtils.addOrgansBySearch(currentDatabase, rawInput);
+                CommandUtils.addOrgansBySearch(rawInput);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case ORGANREMOVE:
                 // Remove organs from a profile.
-                CommandUtils.removeOrgansBySearch(currentDatabase, rawInput);
+                CommandUtils.removeOrgansBySearch(rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 
             case RECEIVERADD:
                 // Add organs to a Receiver profile.
-                CommandUtils.addReceiverOrgansBySearch(currentDatabase, rawInput);
+                CommandUtils.addReceiverOrgansBySearch(rawInput);
                 System.out.println("Organ successfully added to profile(s).");
                 break;
 
             case RECEIVEREMOVE:
                 // Remove organs from a printDonors profile.
-                CommandUtils.removeReceiverOrgansBySearch(currentDatabase, rawInput);
+                CommandUtils.removeReceiverOrgansBySearch(rawInput);
                 System.out.println("Organ successfully removed from profile(s).");
                 break;
 
             case ORGANDONATE:
                 // Add to donations made by a profile.
-                CommandUtils.addDonationsMadeBySearch(currentDatabase, rawInput);
+                CommandUtils.addDonationsMadeBySearch(rawInput);
                 System.out.println("Donation successfully added to profile.");
                 break;
 
@@ -291,15 +292,23 @@ public class CommandLine implements Runnable {
                 CommandUtils.executeDatabaseRead(rawInput);
                 break;
 
-            case UNDO:
-                // Undoes the previously done action
-                CommandUtils.undo(currentDatabase);
+            case RESET:
+                instance.reset();
                 break;
 
-            case REDO:
-                //Redoes the previously undone action
-                CommandUtils.redo(currentDatabase);
+            case RESAMPLE:
+                instance.resample();
                 break;
+//
+//            case UNDO:
+//                // Undoes the previously done action
+//                CommandUtils.undo(currentDatabase);
+//                break;
+//
+//            case REDO:
+//                //Redoes the previously undone action
+//                CommandUtils.redo(currentDatabase);
+//                break;
         }
     }
 }

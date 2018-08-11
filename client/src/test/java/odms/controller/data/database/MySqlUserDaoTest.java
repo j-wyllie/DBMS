@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.List;
+import odms.controller.database.DatabaseConnection;
 import odms.controller.database.MySqlUserDAO;
 import odms.controller.user.UserNotFoundException;
 import odms.commons.model.user.User;
