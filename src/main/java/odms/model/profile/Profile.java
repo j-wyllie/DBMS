@@ -1,7 +1,5 @@
 package odms.model.profile;
 
-import java.util.Set;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import odms.controller.history.CurrentHistory;
 import odms.model.enums.BloodTypeEnum;
 import odms.model.enums.CountriesEnum;
@@ -144,7 +143,8 @@ public class Profile implements Comparable<Profile> {
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
             int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, LocalDateTime created, LocalDateTime updated) {
+            String email, LocalDateTime created, LocalDateTime updated, String preferredName,
+            String preferredGender) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -168,6 +168,8 @@ public class Profile implements Comparable<Profile> {
         this.email = email;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
+        this.preferredName = preferredName;
+        this.preferredGender = preferredGender;
     }
 
     /**
@@ -1019,7 +1021,7 @@ public class Profile implements Comparable<Profile> {
      * @return BMI
      */
     public Double getBmi() {
-        return weight / Math.pow(height, 2);
+        return weight / Math.pow(height / 100, 2);
     }
 
     public void setLastUpdated() {
