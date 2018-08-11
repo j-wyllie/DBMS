@@ -788,24 +788,20 @@
           }
         }
       },
-      "parameters": [
-        {
-          "in": "path",
-          "name": "id",
-          "required": true,
-          "description": "Id of the object.",
-          "schema": {
-            "$ref": "#/components/schemas/id"
-          }
-        }
-      ]
-    },
-    "/organs/{id}": {
       "delete": {
         "tags": [
           "organs"
         ],
         "summary": "Deletes an organ from a profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1195,6 +1191,34 @@
           "auth"
         ],
         "summary": "Logs in a user of profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "id",
+                  "username",
+                  "password"
+                ],
+                "allOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -1770,9 +1794,6 @@
           },
           "current": {
             "type": "boolean"
-          },
-          "past": {
-            "type": "boolean"
           }
         }
       },
@@ -1783,9 +1804,6 @@
             "type": "string"
           },
           "current": {
-            "type": "boolean"
-          },
-          "past": {
             "type": "boolean"
           }
         }
@@ -1799,9 +1817,6 @@
               "type": "string"
             },
             "current": {
-              "type": "boolean"
-            },
-            "past": {
               "type": "boolean"
             }
           }

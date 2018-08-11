@@ -29,6 +29,10 @@ public class Procedure {
         this(summary, date, "");
     }
 
+    public Procedure(int id) {
+        this.procedureId = id;
+    }
+
     public Procedure(String summary, LocalDate date, String longDescription) {
         this.summary = summary;
         this.date = date;

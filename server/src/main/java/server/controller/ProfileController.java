@@ -20,7 +20,7 @@ public class ProfileController {
      */
     public static String getAll(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        List<Profile> profiles = new ArrayList<>();
+        List<Profile> profiles;
 
         try {
             profiles = database.getAll();
