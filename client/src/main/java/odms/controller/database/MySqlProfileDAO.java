@@ -349,13 +349,46 @@ public class MySqlProfileDAO implements ProfileDAO {
                 result.beforeFirst();
                 return (result.next());
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return true;
+    }
+
+    /**
+     * Checks if a nhi already exists in the database.
+     * @param nhi to check.
+     * @return true is the nhi does not already exist.
+     */
+    @Override
+    public int isUniqueNHI(String nhi) throws SQLException {
+        int id = 0;
+        String query = "select * from profiles where NHI = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+
+            stmt.setString(1, nhi);
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                id = result.getInt("ProfileId");
+                return id;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
             stmt.close();
         }
-        return false;
+        return id;
     }
 
     /**

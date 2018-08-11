@@ -1,5 +1,6 @@
 package odms.cli;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Set;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.CommonDAO;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.UndoRedoCLIService;
 import odms.data.ProfileDatabase;
@@ -60,8 +62,7 @@ public class CommandUtils {
     private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
 
     /**
-     * Performs checks over the input to match a valid command
-     *
+     * Performs checks over the input to match a valid command.
      * If nothing is matched than an invalid command has been used.
      *
      * @param cmd      the command being validated
@@ -161,211 +162,138 @@ public class CommandUtils {
 
     /**
      * Add organs to a profile.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    static void addOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+    static void addOrgansBySearch(String expression) {
         String[] organList = expression.substring(
                 expression.lastIndexOf("=") + 1).replace("\"", "").replace(" ", "").split(",");
-
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
-
-                addOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-
-                List<Profile> profileList = currentDatabase.searchLastNames(attr);
-
-                addOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                String attrNhi = expression.substring(expression.indexOf("\"") + 1,
-                        expression.indexOf(">") - 2);
-                List<Profile> profileList = currentDatabase
-                        .searchNHI(attrNhi);
-
-                addOrgans(profileList, organList);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = search(expression);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        addOrgans(profiles, organList);
     }
 
     /**
      * Add organs to a profile's received organs.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    static void addReceiverOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+    static void addReceiverOrgansBySearch(String expression) {
         String[] organList = expression.substring(
                 expression.lastIndexOf("=") + 1).replace("\"", "").replace(" ", "").split(",");
-
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
-
-                addReceiverOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-
-                List<Profile> profileList = currentDatabase.searchLastNames(attr);
-
-                addReceiverOrgans(profileList, organList);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                String attrNhi = expression.substring(expression.indexOf("\"") + 1,
-                        expression.indexOf(">") - 2);
-                List<Profile> profileList = currentDatabase
-                        .searchNHI(attrNhi);
-                addReceiverOrgans(profileList, organList);
-            }
-
-        } else {
-            System.out.println(searchErrorText);
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = search(expression);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        addReceiverOrgans(profiles, organList);
     }
 
     /**
      * Remove organs available for donation to a profile profile.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    static void removeOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+    static void removeOrgansBySearch(String expression) {
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
                 .replace("\"", "")
                 .split(",");
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = search(expression);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        removeOrgansDonating(profiles, organList);
 
         // TODO should we be able to remove organs using search by names, as this means it will
         // TODO remove for printAllProfiles john smiths etc
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
-
-                removeOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                List<Profile> profileList = currentDatabase.searchLastNames(attr);
-
-                removeOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                List<Profile> profileList = currentDatabase
-                        .searchNHI(attr);
-
-                removeOrgansDonating(profileList, organList);
-            }
-        } else {
-            System.out.println(searchErrorText);
-        }
     }
 
     /**
      * Remove organs available for donation to a profile profile.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    static void removeReceiverOrgansBySearch(ProfileDatabase currentDatabase, String expression) {
+    static void removeReceiverOrgansBySearch(String expression) {
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = search(expression);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
                 .replace("\"", "")
                 .split(",");
-
-        if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
-                expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.indexOf(">") - 2);
-
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
-
-                removeReceiverOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                List<Profile> profileList = currentDatabase.searchLastNames(attr);
-
-                removeReceiverOrgansDonating(profileList, organList);
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                List<Profile> profileList = currentDatabase
-                        .searchNHI(attr);
-
-                removeReceiverOrgansDonating(profileList, organList);
-            }
-        } else {
-            System.out.println(searchErrorText);
-        }
+        removeReceiverOrgansDonating(profiles, organList);
     }
 
     /**
      * Add organs available for donation to a profile profile.
-     *
-     * @param currentDatabase Database reference
-     * @param expression      Search expression
+     * @param expression search expression.
      */
-    static void addDonationsMadeBySearch(ProfileDatabase currentDatabase,
-            String expression) {
+    static void addDonationsMadeBySearch(String expression) {
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = search(expression);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
                 .replace("\"", "").split(",");
+
+        if (profiles.size() > 0) {
+            addDonation(profiles, organList);
+        } else {
+            System.out.println(searchNotFoundText);
+        }
+    }
+
+    /**
+     * Gets the profiles that match the criteria entered in the expression.
+     * @param expression representing the fields.
+     * @return the list of profiles.
+     * @throws SQLException error.
+     */
+    private static List<odms.model.profile.Profile> search(String expression) throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        List<odms.model.profile.Profile> profiles = new ArrayList<>();
 
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
                 expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.indexOf(">") - 2);
 
-            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")) {
-                List<Profile> profileList = currentDatabase.searchGivenNames(attr);
+            if (expression.substring(8, 8 + "given-names".length()).equals("given-names")
+                || expression.substring(8, 8 + "last-names".length()).equals("last-names")
+                || expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
 
-                if (profileList.size() > 0) {
-                    addDonation(profileList, organList);
-                } else {
-                    System.out.println(searchNotFoundText);
-                }
-
-            } else if (expression.substring(8, 8 + "last-names".length()).equals("last-names")) {
-                List<Profile> profileList = currentDatabase.searchLastNames(attr);
-
-                if (profileList.size() > 0) {
-                    addDonation(profileList, organList);
-                } else {
-                    System.out.println(searchNotFoundText);
-                }
-
-            } else if (expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
-                test(currentDatabase, expression, organList);
+                profiles = database.search(attr, 0, 0, null,
+                        null, null, null);
             } else {
                 System.out.println(searchErrorText);
             }
-
         } else {
             System.out.println(searchErrorText);
         }
+        return profiles;
     }
 
-    // TODO check what main purpose this serves and name appropriately
-    private static void test(ProfileDatabase currentDatabase, String expression,
-        String[] organList) {
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.indexOf(">") - 2);
-        List<Profile> profileList = currentDatabase.searchNHI(attr);
-
-        addOrgans(profileList, organList);
-    }
+//    // TODO check what main purpose this serves and name appropriately
+//    private static void test(String expression,
+//            String[] organList) {
+//        String attr = expression.substring(expression.indexOf("\"") + 1,
+//                expression.indexOf(">") - 2);
+//        List<Profile> profileList = currentDatabase.searchNHI(attr);
+//
+//        addOrgans(profileList, organList);
+//    }
 
     /**
      * Add organ donations.
-     *
-     * @param profileList list of profiles
-     * @param organList   list of organs to be added
+     * @param profileList list of profiles.
+     * @param organList list of organs to be added.
      */
     private static void addOrgans(List<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
@@ -389,9 +317,8 @@ public class CommandUtils {
 
     /**
      * Add organ donations.
-     *
-     * @param profileList list of profiles
-     * @param organList   list of organs to be added
+     * @param profileList list of profiles.
+     * @param organList list of organs to be added.
      */
     private static void addReceiverOrgans(List<Profile> profileList, String[] organList) {
         if (!profileList.isEmpty()) {
@@ -435,9 +362,8 @@ public class CommandUtils {
 
     /**
      * Remove organ from donations list for profiles.
-     *
      * @param profileList list of profile
-     * @param organList   list of organs to be removed
+     * @param organList list of organs to be removed
      */
     private static void removeOrgansDonating(List<Profile> profileList, String[] organList) {
         if (profileList.size() > 0) {
@@ -458,9 +384,8 @@ public class CommandUtils {
 
     /**
      * Remove organ from receiver list for profiles.
-     *
      * @param profileList list of profile
-     * @param organList   list of organs to be removed
+     * @param organList list of organs to be removed
      */
     private static void removeReceiverOrgansDonating(List<Profile> profileList,
             String[] organList) {
@@ -486,7 +411,6 @@ public class CommandUtils {
 
     /**
      * Undo the previous action.
-     *
      * @param currentDatabase Database reference
      */
     public static void undo(ProfileDatabase currentDatabase) {

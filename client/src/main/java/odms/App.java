@@ -23,7 +23,7 @@ public class App {
             } else {
                 switch (args[0].toLowerCase()) {
                     case "-cmd":
-                        CommandLine commandLine = new CommandLine(profileDb, userDb);
+                        CommandLine commandLine = new CommandLine();
                         commandLine.initialiseConsole();
                         break;
                 }
