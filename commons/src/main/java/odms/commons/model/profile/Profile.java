@@ -170,6 +170,14 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
+     * Constructor for quick instantiation in server calls.
+     * @param id of the profile.
+     */
+    public Profile(int id) {
+        this.id = id;
+    }
+
+    /**
      * Compares the profile object to another profile object. Result is determined by lexicographical order of profile
      * full name.
      * @param other another profile object to compare to.

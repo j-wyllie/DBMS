@@ -36,8 +36,8 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Runs the given query with the first parameter set to the profile and the second set to true
-     * @param profile
-     * @param query
+     * @param profile to get organs for.
+     * @param query to execute.
      * @return the list of the returned organs
      */
     private Set<OrganEnum> getOrgans(Profile profile, String query) {

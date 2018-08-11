@@ -1,7 +1,7 @@
 package odms.controller.database;
 
 import java.util.List;
-import odms.model.enums.CountriesEnum;
+import odms.commons.model.enums.CountriesEnum;
 
 public interface CountryDAO {
 
