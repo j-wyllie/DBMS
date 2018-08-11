@@ -254,6 +254,29 @@ public class CommonView {
     }
 
     /**
+     * Shows a notification on the parent of which the event occurred shows for 2.5 seconds. For
+     * unsuccessful events.
+     *
+     * @param event       The event which is wanted to trigger a notification
+     * @param editedField String of which is the thing edited.
+     */
+    @FXML
+    protected void showNotificationFailed(String editedField, ActionEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (currentStage.getTitle().contains("(*)")) {
+            currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
+        }
+
+        Notifications.create()
+                .title("Edit Unsuccessful")
+                .text("The " + editedField + " changes were not changed.")
+                .hideAfter(Duration.millis(2500))
+                .position(Pos.BOTTOM_LEFT)
+                .owner(currentStage)
+                .show();
+    }
+
+    /**
      * Creates a new window when a row in the search table is double clicked. The new window
      * contains a donors profile.
      *

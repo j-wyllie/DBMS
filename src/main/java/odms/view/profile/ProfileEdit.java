@@ -159,15 +159,18 @@ public class ProfileEdit extends CommonView {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-            try {
-                controller.save();
+        try {
+            if (controller.save()) {
                 showNotification("profile", event);
-                closeWindow(event);
-            } catch (IllegalArgumentException e) {
-                AlertController.invalidEntry(
-                        e.getMessage() + "\n" +
-                                "Not all changes may have been saved."
-                );
+            } else {
+                showNotificationFailed("profile", event);
+            }
+            closeWindow(event);
+        } catch (IllegalArgumentException e) {
+            AlertController.invalidEntry(
+                    e.getMessage() + "\n" +
+                            "Changes not saved."
+            );
         }
     }
 

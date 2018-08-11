@@ -30,10 +30,10 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
-     *
+     * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public void save() {
+    public Boolean save() {
         if (AlertController.saveChanges()) {
             try {
                 // History Generation
@@ -95,12 +95,15 @@ public class ProfileEdit extends CommonController {
                 action.setHistoryTimestamp(LocalDateTime.now());
                 CurrentHistory.updateHistory(action);
 
+                return true; // successful edit
             } catch (Exception e) {
                 AlertController.invalidEntry(
                         e.getMessage() + "\n" + "Changes not saved."
                 );
+                return false; // unsuccessful edit
             }
         }
+        return true; // successful edit
     }
 
     /**
