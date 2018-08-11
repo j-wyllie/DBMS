@@ -52,7 +52,7 @@ public class AvailableOrgans extends CommonView {
                 "Countdown");
         countdownCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        ((odms.controller.user.AvailableOrgans.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey())))));
+                        (odms.controller.user.AvailableOrgans.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey()))));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> donorIdCol = new TableColumn<>(
                 "Donor ID");

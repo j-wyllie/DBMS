@@ -77,6 +77,7 @@ public class AvailableOrgans {
                 } else {
                     durationFormatted += temp + " day ";
                 }
+                timeToExpiry -= temp * ONE_DAY;
             }
 
             temp = timeToExpiry / ONE_HOUR;
@@ -86,6 +87,7 @@ public class AvailableOrgans {
                 } else {
                     durationFormatted += temp + " hour ";
                 }
+                timeToExpiry -= temp * ONE_HOUR;
             }
 
             temp = timeToExpiry / ONE_MINUTE;
@@ -95,6 +97,7 @@ public class AvailableOrgans {
                 } else {
                     durationFormatted += temp + " minute ";
                 }
+                timeToExpiry -= temp * ONE_MINUTE;
             }
 
             temp = timeToExpiry / ONE_SECOND;
