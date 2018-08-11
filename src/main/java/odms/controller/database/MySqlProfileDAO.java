@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -136,9 +137,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getDate("Dob") == null)) {
             dob = profiles.getDate("Dob").toLocalDate();
         }
-        LocalDate dod = null;
+        LocalDateTime dod = null;
         if (!(profiles.getDate("Dod") == null)) {
-            dod = profiles.getDate("Dod").toLocalDate();
+            //todo way to set time of death
+            dod = LocalDateTime.of(profiles.getDate("Dod").toLocalDate(), LocalTime.now());
         }
         String gender = profiles.getString("Gender");
         Double height = profiles.getDouble("Height");
@@ -331,6 +333,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt = prepareStatement(profile, stmt);
             stmt.executeUpdate();
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         finally {
             stmt.close();
             conn.close();
@@ -518,7 +523,8 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(6, profile.getLastNames());
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
             if ((profile.getDateOfDeath() != null)) {
-                stmt.setDate(8, Date.valueOf(profile.getDateOfDeath()));
+                //todo way to set time of death
+                stmt.setDate(8, Date.valueOf(LocalDate.from(profile.getDateOfDeath())));
             }
             else {
                 stmt.setDate(8, null);

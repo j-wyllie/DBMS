@@ -212,7 +212,8 @@ public class ProfileEdit extends CommonController {
      */
     public void saveDateOfDeath() throws IllegalArgumentException {
         if (view.getDODDatePicker() != null) {
-            currentProfile.setDateOfDeath(view.getDODDatePicker());
+            //todo way to set time of death
+            currentProfile.setDateOfDeath(LocalDateTime.from(view.getDODDatePicker()));
         }
     }
 

@@ -22,6 +22,7 @@ public enum OrganEnum {
     SKIN("skin");
 
     private String name;
+    private int expiryTime;
     private LocalDate dateOfRegistration = LocalDate.now();
 
     public String getName() {

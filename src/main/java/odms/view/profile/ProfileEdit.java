@@ -310,7 +310,8 @@ public class ProfileEdit extends CommonView {
             dobDatePicker.setValue(currentProfile.getDateOfBirth());
         }
         if (currentProfile.getDateOfDeath() != null) {
-            dodDatePicker.setValue(currentProfile.getDateOfDeath());
+            //todo way to set time of death
+            dodDatePicker.setValue(LocalDate.from(currentProfile.getDateOfDeath()));
         }
         if (currentProfile.getHeight() != 0.0) {
             heightField.setText(String.valueOf(currentProfile.getHeight() / 100));
