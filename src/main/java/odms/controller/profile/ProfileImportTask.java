@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
@@ -122,10 +123,10 @@ public class ProfileImportTask extends Task<Void> {
                         return null;
                     }
 
-                    LocalDate dod = LocalDate.of(
+                    LocalDateTime dod = LocalDateTime.of(
                             Integer.valueOf(dodString[2]),
                             Integer.valueOf(dodString[0]),
-                            Integer.valueOf(dodString[1])
+                            Integer.valueOf(dodString[1]), 0,0
                     );
 
                     profile.setDateOfDeath(dod);
