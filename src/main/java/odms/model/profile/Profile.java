@@ -144,7 +144,7 @@ public class Profile implements Comparable<Profile> {
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
             int bpSystolic, int bpDiastolic, String address, String region, String phone,
             String email, LocalDateTime created, LocalDateTime updated, String preferredName,
-            String preferredGender) {
+            String preferredGender, String imageName) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -170,6 +170,7 @@ public class Profile implements Comparable<Profile> {
         this.lastUpdated = updated;
         this.preferredName = preferredName;
         this.preferredGender = preferredGender;
+        this.pictureName = imageName;
     }
 
     /**

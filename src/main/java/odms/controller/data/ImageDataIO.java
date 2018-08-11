@@ -116,7 +116,10 @@ public final class ImageDataIO {
      * @return file path object
      */
     public static File getImagePath(String imageName) {
-        return new File(getPath() + File.separator + imageName);
+        if (imageName != null && !imageName.isEmpty()) {
+            return new File(getPath() + File.separator + imageName);
+        }
+        return null;
     }
 
     /**

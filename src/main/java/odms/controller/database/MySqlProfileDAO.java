@@ -149,6 +149,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         String region = profiles.getString("Region");
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String preferredName = profiles.getString("PreferredName");
+        String preferredGender = profiles.getString("PreferredGender");
+        String imageName = profiles.getString("ImageName");
         LocalDateTime created = null;
         if (!(profiles.getTimestamp("Created") == null)) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -157,9 +160,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getTimestamp("Created") == null)) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
-        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
-                gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, created, updated);
+        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
+                dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,
+                bpSystolic, bpDiastolic, address, region, phone, email, created, updated,
+                preferredName, preferredGender, imageName);
 
         try {
             profile = setOrgans(profile);
@@ -447,8 +451,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?, "
-                + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
+                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
+                + "Created = ?, LastUpdated = ?, PreferredName = ?, PreferredGender = ?, "
+                + "ImageName = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -465,8 +470,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             if (profile.getDateOfDeath() != null) {
                 //todo way to set time of death
                 stmt.setDate(8, Date.valueOf(LocalDate.from(profile.getDateOfDeath())));
-            }
-            else {
+            } else {
                 stmt.setDate(8, null);
             }
             stmt.setString(9, profile.getGender());
@@ -483,12 +487,15 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(20, profile.getEmail());
             stmt.setTimestamp(21, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
-            stmt.setInt(23, profile.getId());
+            stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
+            stmt.setString(23, profile.getPreferredName());
+            stmt.setString(24, profile.getPreferredGender());
+            stmt.setString(25, profile.getPictureName());
+            stmt.setInt(26, profile.getId());
 
             stmt.executeUpdate();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
