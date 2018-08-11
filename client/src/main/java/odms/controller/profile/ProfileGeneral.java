@@ -40,7 +40,7 @@ public class ProfileGeneral {
         }
         if (currentProfile.getDateOfDeath() != null) {
             view.setDodLabel(currentProfile.getDateOfDeath()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
         }
         if (currentProfile.getGender() != null) {
             view.setGenderLabel(currentProfile.getGender());

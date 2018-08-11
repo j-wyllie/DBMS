@@ -25,8 +25,10 @@ public class AddressIO {
             address = address.replace("street","st");
             String jsonString = getGeocodeLocation(address,country.replace(" ","+")).toString();
             if(jsonString.toLowerCase().contains(address.toLowerCase())) {
+                System.out.println("REEE");
                 return true;
             }
+            System.out.println("ROO");
             return false;
         } catch (Exception e) {
             System.out.println("Invalid Address");
@@ -37,7 +39,6 @@ public class AddressIO {
     public static boolean checkValidRegion(String address, String region, String country) {
         try {
             String jsonString = getGeocodeLocation(address, country.replace(" ","+")).toString();
-            System.out.println(region);
             if(jsonString.contains(region)) {
                 System.out.println("A");
                 return true;
@@ -62,7 +63,7 @@ public class AddressIO {
         }
     }
 
-    public static JsonObject getGeocodeLocation(String address, String country) throws IOException{
+    private static JsonObject getGeocodeLocation(String address, String country) throws IOException{
         // TODO either use one key or come up with a way to use a few
         key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
@@ -70,7 +71,6 @@ public class AddressIO {
                 "geocode/json?address=" +
                 address.replace(" ","+") +
                 "&components=country:"+country+"&key=" + key;
-        System.out.println(query);
         URL url = new URL(query);
         URLConnection request = url.openConnection();
         request.connect();

@@ -1,5 +1,6 @@
-package server.model.database.profile;
+package odms.controller.database;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,16 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.OrganConflictException;
-import odms.commons.model.profile.Procedure;
-import odms.commons.model.profile.Profile;
-import server.model.database.DAOFactory;
-import server.model.database.DatabaseConnection;
-import server.model.database.condition.ConditionDAO;
-import server.model.database.medication.MedicationDAO;
-import server.model.database.organ.OrganDAO;
-import server.model.database.procedure.ProcedureDAO;
+import odms.model.enums.OrganEnum;
+import odms.model.medications.Drug;
+import odms.model.profile.OrganConflictException;
+import odms.model.profile.Procedure;
+import odms.model.profile.Profile;
 
 public class MySqlProfileDAO implements ProfileDAO {
 
@@ -135,9 +131,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getDate("Dob") == null)) {
             dob = profiles.getDate("Dob").toLocalDate();
         }
-        LocalDate dod = null;
-        if (!(profiles.getDate("Dod") == null)) {
-            dod = profiles.getDate("Dod").toLocalDate();
+
+        LocalDateTime dod = null;
+        Timestamp timestamp = profiles.getTimestamp("Dod");
+        if (timestamp != null) {
+            dod = profiles.getTimestamp("Dod").toLocalDateTime();
         }
         String gender = profiles.getString("Gender");
         Double height = profiles.getDouble("Height");
@@ -149,8 +147,15 @@ public class MySqlProfileDAO implements ProfileDAO {
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
+        String country = profiles.getString("Country");
+
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String city = profiles.getString("City");
+        String countryOfDeath = profiles.getString("CountryOfDeath");
+        String regionOfDeath = profiles.getString("RegionOfDeath");
+        String cityOfDeath = profiles.getString("CityOfDeath");
+
         LocalDateTime created = null;
         if (!(profiles.getTimestamp("Created") == null)) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -161,7 +166,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
                 gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, created, updated);
+                address, region, phone, email, country, city, countryOfDeath, regionOfDeath, cityOfDeath, created, updated);
 
         try {
             profile = setOrgans(profile);
@@ -449,8 +454,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?, "
-                + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
+                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
+                + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
+                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
+                + "Created = ?, LastUpdated = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -464,10 +471,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
-            if ((profile.getDateOfDeath() != null)) {
-                stmt.setDate(8, Date.valueOf(profile.getDateOfDeath()));
-            }
-            else {
+            if (profile.getDateOfDeath() != null) {
+                stmt.setTimestamp(8, Timestamp.valueOf(profile.getDateOfDeath()));
+            } else {
                 stmt.setDate(8, null);
             }
             stmt.setString(9, profile.getGender());
@@ -482,14 +488,24 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(18, profile.getRegion());
             stmt.setString(19, profile.getPhone());
             stmt.setString(20, profile.getEmail());
-            stmt.setTimestamp(21, Timestamp.valueOf(profile.getTimeOfCreation()));
-            stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
-            stmt.setInt(23, profile.getId());
+            stmt.setString(21, profile.getCountry());
+            System.out.println(profile.getCountry());
+            stmt.setString(22, profile.getBirthCountry());
+            stmt.setString(23, profile.getCountryOfDeath());
+            stmt.setString(24, profile.getRegionOfDeath());
+            stmt.setString(25, profile.getCityOfDeath());
+            stmt.setString(26, profile.getStreetNumber());
+            stmt.setString(27, profile.getStreetName());
+            stmt.setString(28, profile.getNeighbourhood());
+
+
+            stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
+            stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
+            stmt.setInt(31, profile.getId());
 
             stmt.executeUpdate();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
