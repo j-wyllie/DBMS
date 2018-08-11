@@ -185,7 +185,9 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `PreferredName` varchar(50) DEFAULT NULL
+  `PreferredGender` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

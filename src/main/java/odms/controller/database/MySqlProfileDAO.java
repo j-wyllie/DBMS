@@ -462,7 +462,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
-            if ((profile.getDateOfDeath() != null)) {
+            if (profile.getDateOfDeath() != null) {
                 //todo way to set time of death
                 stmt.setDate(8, Date.valueOf(LocalDate.from(profile.getDateOfDeath())));
             }
