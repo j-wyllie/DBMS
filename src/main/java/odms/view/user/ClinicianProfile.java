@@ -1,11 +1,16 @@
 package odms.view.user;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.model.user.User;
 import odms.model.enums.UserType;
@@ -23,7 +28,7 @@ public class ClinicianProfile extends CommonView {
     private Label clinicianFullName;
 
     @FXML
-    private Label donorStatusLabel;
+    private Label roleLabel;
     @FXML
     private Tab viewUsersTab;
     @FXML
@@ -39,13 +44,9 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab availableOrgansTab;
     @FXML
-    private odms.controller.user.DataManagement userDataManagementController;
-    private UserGeneral userGeneralTabView = new UserGeneral();
-    private ConsoleTab userConsoleTabView = new ConsoleTab();
-    private UsersList viewUsersView = new UsersList();
+    private ImageView profileImage;
 
     private Display userProfileController = new Display(this);
-
 
     /**
      * Scene change to log in view.
@@ -58,13 +59,12 @@ public class ClinicianProfile extends CommonView {
         changeScene(event, "/view/Login.fxml");
     }
 
-
     /**
      * Sets all the clinicians details in the GUI.
      */
     @FXML
     private void setClinicianDetails() {
-        donorStatusLabel.setText(currentUser.getUserType().getName());
+        roleLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
     }
 
@@ -146,12 +146,29 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
+    private void setProfileImage() throws MalformedURLException {
+        File image = ImageDataIO.getImagePath(currentUser.getPictureName());
+
+        if (image == null || !image.exists()) {
+            image = new File(
+                    new File("."),
+                    "src/main/resources/profile_images/default.png"
+            );
+        }
+        profileImage.setImage(new Image(image.toURI().toURL().toString()));
+    }
+
     @FXML
     public void initialize() {
         if (currentUser != null) {
             handleGeneralTabClicked();
             setClinicianDetails();
             setupAdmin();
+            try {
+                setProfileImage();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

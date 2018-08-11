@@ -36,10 +36,7 @@ import org.controlsfx.control.Notifications;
 public class CommonView {
     private static boolean isEdited = false;
 
-    protected static File LOCALPATH = new File(System.getProperty("user.dir"));
-
     protected static Collection<Stage> openProfileStages = new ArrayList<>();
-
 
     /**
      * Scene change to log in view.
@@ -123,7 +120,6 @@ public class CommonView {
         appStage.setScene(scene);
         appStage.show();
     }
-
 
     /**
      * Button handler to make fields editable.

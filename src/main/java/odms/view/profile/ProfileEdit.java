@@ -195,6 +195,8 @@ public class ProfileEdit extends CommonView {
 
     /**
      * File picker to choose only supported image types.
+     *
+     * @throws IOException if the file cannot be read
      */
     @FXML
     private void handleChooseImageClicked() throws IOException {

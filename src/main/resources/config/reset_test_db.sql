@@ -208,7 +208,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Region` varchar(30) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0'
+  `IsDefault` tinyint(1) DEFAULT '0',
+  `ImageName` VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

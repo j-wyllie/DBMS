@@ -33,8 +33,7 @@ public class MySqlUserDAO implements UserDAO {
                 User user = parseUser(allUserRows);
                 allUsers.add(user);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -63,8 +62,7 @@ public class MySqlUserDAO implements UserDAO {
             ResultSet rs = stmt.executeQuery();
 
             user = parseUser(rs);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new UserNotFoundException("Not found", userId);
         } finally {
             conn.close();
@@ -94,8 +92,7 @@ public class MySqlUserDAO implements UserDAO {
 
             rs.next();
             user = parseUser(rs);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new UserNotFoundException("Not found", username);
         } finally {
             conn.close();
@@ -121,8 +118,10 @@ public class MySqlUserDAO implements UserDAO {
         String region = rs.getString("Region");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
+        String imageName = rs.getString("ImageName");
 
-        User user = new User(id, username, password, name, userType, address, region, created, updated);
+        User user = new User(id, username, password, name, userType, address, region, created,
+                updated, imageName);
 
         return user;
     }
@@ -151,9 +150,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(8, LocalDateTime.now().toString());
             stmt.setBoolean(9, user.getDefault());
             stmt.execute();
-        }
-
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -181,8 +178,7 @@ public class MySqlUserDAO implements UserDAO {
                 result.beforeFirst();
                 return (result.next());
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -207,8 +203,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setInt(1, user.getStaffID());
 
             stmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -223,8 +218,8 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public void update(User user) throws SQLException {
         String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where "
-                + "UserId = ?;";
+                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
+                + "where UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -238,11 +233,11 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(6, user.getRegion());
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
-            stmt.setInt(9, user.getStaffID());
+            stmt.setString(9, user.getPictureName());
+            stmt.setInt(10, user.getStaffID());
 
             stmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
