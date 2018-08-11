@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import odms.controller.data.ImageDataIO;
 import odms.model.user.User;
 import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
@@ -53,32 +54,33 @@ public class ClinicianEdit extends CommonView {
      * @param event clicking on the choose file button.
      */
 
-    @FXML
-    private void clinicianChooseImageClicked(ActionEvent event) throws IOException {
-        File chosenFile = chooseImage(pictureText);
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" +
-                        currentUser.getStaffID().toString() + ".jpg"
-                );
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" +
-                        currentUser.getStaffID().toString() + ".png"
-                );
-            }
-            if (deleteFile.delete()) {
-                System.out.println("Old file deleted successfully");
-            } else {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(LOCALPATH + "\\" +
-                    currentUser.getStaffID().toString() + "." + extension);
-            copyFileUsingStream(chosenFile, pictureDestination);
-            currentUser.setPictureName(chosenFile.getName());
-        }
-    }
+//    @FXML
+//    private void clinicianChooseImageClicked(ActionEvent event) throws IOException {
+//        File chosenFile = chooseImage(pictureText);
+//        if (chosenFile != null) {
+//            String extension = getFileExtension(chosenFile).toLowerCase();
+//            File deleteFile;
+//            if ("jpg".equalsIgnoreCase(extension)) {
+//                deleteFile = new File(LOCALPATH + "\\" +
+//                        currentUser.getStaffID().toString() + ".jpg"
+//                );
+//            } else {
+//                deleteFile = new File(LOCALPATH + "\\" +
+//                        currentUser.getStaffID().toString() + ".png"
+//                );
+//            }
+//            if (deleteFile.delete()) {
+//                System.out.println("Old file deleted successfully");
+//            } else {
+//                System.out.println("Failed to delete the old file");
+//            }
+//            File pictureDestination = new File(
+//                    LOCALPATH + "\\" +
+//                    currentUser.getStaffID().toString() + "." + extension);
+//            ImageDataIO.copyFileUsingStream(chosenFile, pictureDestination);
+//            currentUser.setPictureName(chosenFile.getName());
+//        }
+//    }
 
 
     /**

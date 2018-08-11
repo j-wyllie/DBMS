@@ -48,31 +48,12 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         profile.getUpdateActions().add(output);
     }
 
-    /**
-     * Calculates and returns the profiles bmi
-     *
-     * @return BMI
-     */
-    public static Double calculateBMI(Profile profile) {
-        return profile.getWeight() / ((profile.getHeight()) * (profile.getHeight()));
-    }
 
     /**
-     * Compares the profile object to another profile object. Result is determined by
-     * lexicographical order of profile full name.
-     *
-     * @param other another profile object to compare to.
-     * @return int value to show if object is equal, greater than ore less than the other profile
-     * object.
-     */
-    public int compareTo(Profile other, Profile profile) {
-        return profile.getFullName().toLowerCase().compareTo(other.getFullName().toLowerCase());
-    }
-
-    /**
-     * Calls the relevant method to set the attribute
+     * Calls the relevant method to set the attribute.
      *
      * @param parts a list with an attribute and value
+     * @param profile profile object of current profile
      * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
     private static void setGivenAttribute(String[] parts, Profile profile) throws IllegalArgumentException {

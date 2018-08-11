@@ -314,32 +314,6 @@ public class CommonView {
     }
 
     /**
-     * Copies a file from source to dest
-     *
-     * @param source File source in local directory
-     * @param dest File destination in local directory
-     */
-    protected static void copyFileUsingStream(File source, File dest) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-        } finally {
-            try { if (is != null) is.close();
-            } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}
-            try { if (os != null) os.close();
-            } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
-
-        }
-    }
-
-    /**
      * Checks if there are unsaved changes in any open window.
      *
      * @return true if there are unsaved changes.

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
+import odms.controller.data.ImageDataIO;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
@@ -377,30 +378,6 @@ public class ProfileEdit extends CommonController {
         //} else {
             //controller.setProfile(currentProfile);
         //}
-    }
-
-    public File setImage(File chosenFile, File LOCALPATH) {
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
-            }
-            if (deleteFile.delete())
-            {
-                System.out.println("Old file deleted successfully");
-            }
-            else
-            {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
-            currentProfile.setPictureName(chosenFile.getName());
-            return pictureDestination;
-        }
-        return null;
     }
 
     public void setCurrentProfile(Profile donor) {

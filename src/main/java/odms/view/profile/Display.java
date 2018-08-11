@@ -1,9 +1,13 @@
 package odms.view.profile;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import odms.model.profile.Profile;
 
@@ -26,7 +30,7 @@ public class Display extends CommonView {
     @FXML
     private Label donorStatusLabel;
     @FXML
-    private Label userIdLabel;
+    private Label nhiLabel;
     @FXML
     private Label receiverStatusLabel;
     @FXML
@@ -45,6 +49,8 @@ public class Display extends CommonView {
     private Tab tabProcedures;
     @FXML
     private Button logoutButton;
+    @FXML
+    private ImageView profileImage;
 
     private Boolean isOpenedByClinician = false;
 
@@ -100,10 +106,11 @@ public class Display extends CommonView {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
-            if (currentProfile.getId() != null) {
-                userIdLabel
-                        .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
+            if (currentProfile.getNhi() != null) {
+                nhiLabel.setText("NHI : " + currentProfile.getNhi());
             }
+
+            setProfileImage();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -198,6 +205,21 @@ public class Display extends CommonView {
             profileProceduresView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
+        }
+    }
+
+    public void setProfileImage() throws MalformedURLException {
+        //setting profile photo
+        File localPath = new File(System.getProperty("user.dir"));
+        if (currentProfile.getPictureName() != null) {
+            File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
+            if(!image.exists()){
+                image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
+                if(!image.exists()){
+                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
+                }
+            }
+            profileImage.setImage(new Image(image.toURI().toURL().toString()));
         }
     }
 

@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
+import odms.controller.data.ImageDataIO;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
 import odms.model.enums.CountriesEnum;
@@ -193,15 +194,12 @@ public class ProfileEdit extends CommonView {
 
     /**
      * File picker to choose only supported image types.
-     *
-     * @param event clicking on the choose file button.
      */
     @FXML
-    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+    private void handleChooseImageClicked() throws IOException {
         File chosenFile = chooseImage(pictureText);
-        File pictureDestination = controller.setImage(chosenFile, LOCALPATH);
-        copyFileUsingStream(chosenFile, pictureDestination);
-
+        ImageDataIO.deleteAndSaveImage(chosenFile, currentProfile.getNhi());
+        currentProfile.setPictureName(chosenFile.getName());
     }
 
     /**
