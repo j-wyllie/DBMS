@@ -1,7 +1,11 @@
 package server.controller;
 
+import java.sql.SQLException;
 import java.util.List;
+import odms.commons.model.enums.CountriesEnum;
+import odms.commons.model.enums.OrganEnum;
 import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonObject;
 import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
 import spark.Request;
@@ -17,6 +21,7 @@ public class CountriesController {
      * @return The response body as a list of Json object of countries
      */
     public static String getAll(Request req, Response res) {
+        // This boolean is optional so it needs to be null
         Boolean valid = null;
         List<String> countries;
 
@@ -48,7 +53,31 @@ public class CountriesController {
      * @return The response body
      */
     public static String edit(Request req, Response res) {
-        return "Unimplemented";
+        Gson gson = new Gson();
+        CountryDAO countryDAO = DAOFactory.getCountryDAO();
+
+        String name;
+        boolean valid;
+
+        try {
+            // There's no country object to map this to which is a bit annoying
+            // We could potentially make one? But I'll just try and work around it
+            JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
+            name = jsonObject.get("name").getAsString();
+            valid = jsonObject.get("valid").getAsBoolean();
+        } catch (Exception e) {
+            res.status(400);
+            return "Bad Request";
+        }
+
+        if (OrganEnum.toArrayList().contains(name)) {
+            countryDAO.update(CountriesEnum.valueOf(name), valid);
+            res.status(200);
+            return "Country Updated";
+        } else {
+            res.status(400);
+            return "Bad Request";
+        }
     }
 
     /**
