@@ -296,11 +296,11 @@ public class CommonView {
                 stage.setTitle(profile.getFullName() + "'s profile");
             }
             stage.setScene(scene);
+            parentView.addToOpenProfileStages(stage);
             stage.show();
             stage.setOnCloseRequest((WindowEvent event) -> {
                 parentView.closeStage(stage);
             });
-            parentView.addToOpenProfileStages(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }

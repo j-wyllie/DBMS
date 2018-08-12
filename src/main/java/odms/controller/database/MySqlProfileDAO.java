@@ -741,7 +741,6 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             Connection conn = instance.getConnection();
             Statement stmt = conn.createStatement();
-            System.out.println(query);
             ResultSet result = stmt.executeQuery(query);
 
             while (result.next()) {
