@@ -79,6 +79,8 @@ public class LoginView extends CommonController {
 
     /**
      * Load the profile view.
+     *
+     * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {
         try {
@@ -89,7 +91,7 @@ public class LoginView extends CommonController {
 
                 Scene scene = new Scene(fxmlLoader.load());
                 Display controller = fxmlLoader.getController();
-                controller.initialize(profile, false);
+                controller.initialize(profile, false, null);
 
                 Stage stage = new Stage();
                 if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {

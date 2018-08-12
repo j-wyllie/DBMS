@@ -24,6 +24,7 @@ import odms.view.CommonView;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
+import odms.view.user.TransplantWaitingList;
 
 public class OrganDisplay extends CommonView {
     private Profile currentProfile;
@@ -59,13 +60,17 @@ public class OrganDisplay extends CommonView {
     private Label donatedLabel;
 
     private static OrganSelectEnum windowType;
+    private TransplantWaitingList transplantWaitingListView;
 
     /**
      * init organ display scene. Sets variables and object visibility status.
      * @param p current profile being viewed
      * @param isClinician boolean, is true if is profile was opened by clinician/admin user
+     * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
+     * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile p, Boolean isClinician) {
+    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList) {
+        transplantWaitingListView = transplantWaitingList;
         currentProfile = p;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());
@@ -105,6 +110,7 @@ public class OrganDisplay extends CommonView {
     @FXML
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
+
     }
 
     /**
@@ -136,7 +142,7 @@ public class OrganDisplay extends CommonView {
      */
 
     private void visibilityLists(ListView<String> list, Label label, Button button, Integer column, Boolean bool){
-        if(!bool) {
+        if (!bool) {
             ColumnConstraints zero_width = new ColumnConstraints();
             zero_width.setPrefWidth(0);
             organGridPane.getColumnConstraints().set(column, zero_width);
@@ -186,10 +192,12 @@ public class OrganDisplay extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-//        stage.setOnCloseRequest(ob -> {
         stage.setOnHiding((ob) -> {
             populateOrganLists();
             refreshListViews();
+            if (transplantWaitingListView != null) {
+                transplantWaitingListView.refreshTable();
+            }
         });
         stage.show();
     }

@@ -14,6 +14,7 @@ import odms.model.profile.Profile;
 
 import java.io.IOException;
 import odms.view.CommonView;
+import odms.view.user.TransplantWaitingList;
 
 import static odms.controller.AlertController.invalidUsername;
 
@@ -54,6 +55,7 @@ public class Display extends CommonView {
     private ImageView profileImage;
 
     private Boolean isOpenedByClinician = false;
+    private TransplantWaitingList transplantWaitingListView;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -151,7 +153,7 @@ public class Display extends CommonView {
             System.out.println(e.getMessage());
         }
         OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician);
+        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView);
     }
 
     @FXML
@@ -232,11 +234,17 @@ public class Display extends CommonView {
      *
      * @param profile to be used
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
+     * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
+     * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile profile, Boolean isOpenedByClinician) {
+    public void initialize(Profile profile, Boolean isOpenedByClinician,
+            TransplantWaitingList transplantWaitingList) {
         this.isOpenedByClinician = isOpenedByClinician;
         if (isOpenedByClinician) {
             logoutButton.setVisible(false);
+        }
+        if (transplantWaitingList != null) {
+            transplantWaitingListView = transplantWaitingList;
         }
         currentProfile = profile;
         setPage(profile);

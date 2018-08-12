@@ -287,7 +287,7 @@ public class CommonView {
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(profile, true);
+            controller.initialize(profile, true, parentView.getTransplantWaitingList());
 
             Stage stage = new Stage();
             if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
@@ -296,11 +296,11 @@ public class CommonView {
                 stage.setTitle(profile.getFullName() + "'s profile");
             }
             stage.setScene(scene);
+            parentView.addToOpenProfileStages(stage);
             stage.show();
             stage.setOnCloseRequest((WindowEvent event) -> {
                 parentView.closeStage(stage);
             });
-            parentView.addToOpenProfileStages(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }

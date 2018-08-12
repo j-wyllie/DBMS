@@ -11,7 +11,10 @@ import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
 
-public class DatabaseConnection {
+/**
+ * Contains methods to obtain a connection the database, as well as setting db config.
+ */
+public final class DatabaseConnection {
 
     private static DataSource connectionSource;
     private static ComboPooledDataSource source;
@@ -33,7 +36,7 @@ public class DatabaseConnection {
             source = new ComboPooledDataSource();
 
             if (CONFIG == null) {
-                CONFIG = TEST_CONFIG;
+                CONFIG = DEFAULT_CONFIG;
             }
 
             // load in config file
@@ -103,13 +106,6 @@ public class DatabaseConnection {
     }
 
     /**
-     * Helper to hold the instance of the singleton database connection class.
-     */
-    private static class DatabaseConnectionHelper {
-        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
-    }
-
-    /**
      * Supplys the instance of the singleton database connection class.
      *
      * @return the instance of the class.
@@ -144,6 +140,9 @@ public class DatabaseConnection {
         executeQuery(RESET_SQL);
     }
 
+    /**
+     * Resets the test database to the standard set of tables.
+     */
     public void resetTestDb() {
         executeQuery(RESET_TEST_SQL);
     }
@@ -198,5 +197,12 @@ public class DatabaseConnection {
 
         br.close();
         return statement;
+    }
+
+    /**
+     * Helper to hold the instance of the singleton database connection class.
+     */
+    private static class DatabaseConnectionHelper {
+        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 }
