@@ -181,18 +181,15 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         // Reading the response from the connection.
         StringBuffer response = MedicationDataIO.makeRequest(urlString);
         if (response == null) {
-            return response;
-        }
-        else if (response.toString().equals(SERVER_ERROR)) {
             // Server is fussy about what order the drugs are in the url, if request fails will
             // try again with drugs in different order.
+            // Sometimes it will return SERVER_ERROR but other times it will return null
+            // So we need to check for both cases
             urlString = String.format(INTERACTION_URL, drugB, drugA);
             response = MedicationDataIO.makeRequest(urlString);
-            if (response == null) {
-                return null;
-            } else if (response.toString().equals(SERVER_ERROR)) {
-                return response;
-            }
+        } else if (response.toString().equals(SERVER_ERROR)) {
+            urlString = String.format(INTERACTION_URL, drugB, drugA);
+            response = MedicationDataIO.makeRequest(urlString);
         }
         return response;
     }
