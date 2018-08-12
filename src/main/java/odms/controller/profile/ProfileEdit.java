@@ -37,78 +37,79 @@ public class ProfileEdit extends CommonController {
      */
     @FXML
     public void save() throws IllegalArgumentException, SQLException {
-        if (AlertController.saveChanges()) {
-            // history Generation
-            odms.model.history.History action = new odms.model.history.History("profile",
-                    currentProfile.getId(), "update",
-                    "previous " + currentProfile.getAttributesSummary(), -1, null);
+        // history Generation
+        odms.model.history.History action = new odms.model.history.History("profile",
+                currentProfile.getId(), "update",
+                "previous " + currentProfile.getAttributesSummary(), -1, null);
 
-            try {
-                if (view.getDodDateTimePicker() != null) {
-                    if (view.getCityOfDeathField() != null && (view.getComboRegionOfDeath() != null
-                            || view.getRegionOfDeathField() != null)) {
-                        String validRegion = checkValidRegionOfDeath();
-                        String validCity = checkValidCityOfDeath();
-                        if (validRegion != null && validCity != null) {
-                            saveCityofDeath(validCity);
-                            saveRegionOfDeath(validRegion);
-                            saveCountryOfDeath();
-                        }
-                    } else {
-                        throw new IllegalArgumentException(
-                                "Please enter all required death details");
+        try {
+            if (view.getDodDateTimePicker() != null) {
+                if (view.getCityOfDeathField() != null && (view.getComboRegionOfDeath() != null
+                        || view.getRegionOfDeathField() != null)) {
+                    String validRegion = checkValidRegionOfDeath();
+                    String validCity = checkValidCityOfDeath();
+                    if (validRegion != null && validCity != null) {
+                        saveCityofDeath(validCity);
+                        saveRegionOfDeath(validRegion);
+                        saveCountryOfDeath();
                     }
-
                 } else {
-                    currentProfile.setCountryOfDeath(null);
-                    currentProfile.setRegionOfDeath(null);
-                    currentProfile.setCityOfDeath(null);
-                    currentProfile.setDateOfDeath(null);
+                    throw new IllegalArgumentException(
+                            "Please enter all required death details");
                 }
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(e.getMessage());
+
+            } else {
+                currentProfile.setCountryOfDeath(null);
+                currentProfile.setRegionOfDeath(null);
+                currentProfile.setCityOfDeath(null);
+                currentProfile.setDateOfDeath(null);
             }
-            // Required General Fields
-            saveDateOfBirth();
-            saveGivenNames();
-            saveNhi();
-            saveLastNames();
-
-            // Optional General Fields
-            saveAddress();
-            saveDateOfDeath();
-            saveEmail();
-            saveGender();
-            saveHeight();
-            savePhone();
-            savePreferredGender();
-            savePreferredName();
-            saveRegion();
-            saveWeight();
-
-            // Medical Fields
-            saveAlcoholConsumption();
-            saveBloodPressure();
-            saveBloodType();
-            saveIsSmoker();
-
-            saveCity();
-            saveCountry();
-            saveRegion();
-
-            ProfileDAO database = DAOFactory.getProfileDao();
-            database.update(currentProfile);
-            ProfileDataIO.saveData(getProfileDb());
-
-            // history Changes
-            action.setHistoryData(
-                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-            action.setHistoryTimestamp(LocalDateTime.now());
-            CurrentHistory.updateHistory(action);
-
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
+        // Required General Fields
+        saveDateOfBirth();
+        saveGivenNames();
+        saveNhi();
+        saveLastNames();
+
+        // Optional General Fields
+        saveAddress();
+        saveDateOfDeath();
+        saveEmail();
+        saveGender();
+        saveHeight();
+        savePhone();
+        savePreferredGender();
+        savePreferredName();
+        saveRegion();
+        saveWeight();
+
+        // Medical Fields
+        saveAlcoholConsumption();
+        saveBloodPressure();
+        saveBloodType();
+        saveIsSmoker();
+
+        saveCity();
+        saveCountry();
+        saveRegion();
+
+        ProfileDAO database = DAOFactory.getProfileDao();
+        database.update(currentProfile);
+        ProfileDataIO.saveData(getProfileDb());
+
+        // history Changes
+        action.setHistoryData(
+                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+        action.setHistoryTimestamp(LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
+    /**
+     * Checks that the region of death is valid.
+     * @return The string of the valid region, null otherwise.
+     */
     private String checkValidRegionOfDeath() {
 
         if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {

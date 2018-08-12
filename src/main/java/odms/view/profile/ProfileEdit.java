@@ -138,15 +138,18 @@ public class ProfileEdit extends CommonView {
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
         try {
-            controller.save();
-            showNotification("profile", event);
-            closeWindow(event);
+            if (AlertController.saveChanges()) {
+                controller.save();
+                showNotification("profile", event);
+                closeWindow(event);
+            }
         } catch (IllegalArgumentException | SQLException e) {
             AlertController.invalidEntry(
                     e.getMessage() + "\n" +
                             "Changes not saved."
             );
         }
+
     }
 
     /**
@@ -275,6 +278,7 @@ public class ProfileEdit extends CommonView {
                 regionOfDeathField.setDisable(true);
                 comboRegionOfDeath.setDisable(true);
                 cityOfDeathField.setDisable(true);
+                clearDodField();
             }
         }
     }
@@ -466,7 +470,7 @@ public class ProfileEdit extends CommonView {
                         comboRegionOfDeath.setDisable(true);
                         cityOfDeathField.setDisable(true);
 
-                        clearDateTimePicker();
+                        clearDodField();
                     } else {
                         if (isOpenedByClinician) {
                             comboCountryOfDeath.setDisable(false);
@@ -480,7 +484,7 @@ public class ProfileEdit extends CommonView {
                 });
     }
 
-    private void clearDateTimePicker() {
+    private void clearDodField() {
         dodDateTimePicker.clearDateTimeValue();
     }
 
