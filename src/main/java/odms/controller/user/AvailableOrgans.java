@@ -32,7 +32,7 @@ public class AvailableOrgans {
         }
     }
 
-    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    public LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
@@ -174,7 +174,6 @@ public class AvailableOrgans {
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonaters = database.getDead();
-        System.out.println(allDonaters.size());
 
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonating()) {

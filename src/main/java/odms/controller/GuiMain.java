@@ -12,10 +12,17 @@ import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
 import odms.model.data.ProfileDatabase;
 import odms.model.data.UserDatabase;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.model.enums.UserType;
+import odms.view.user.AvailableOrgans;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Main class. GUI boots from here.
@@ -27,6 +34,7 @@ public class GuiMain extends Application {
     private static final String APP_NAME = "ODMS";
     private static final String ADMIN = "admin";
 
+    private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
     private static ProfileDatabase profileDb = App.getProfileDb();
     private static UserDatabase userDb = App.getUserDb();
 
@@ -71,6 +79,21 @@ public class GuiMain extends Application {
             userDb.addUser(user);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
+        //timer that runs in the background to check if organs have expired
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                try {
+                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                            .getAllOrgansAvailable();
+                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                        controller.checkOrganExpired(m.getValue(), m.getKey());
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        },0,1);
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
