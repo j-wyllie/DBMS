@@ -30,7 +30,7 @@ public class AvailableOrgans {
         }
     }
 
-    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    public LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
@@ -61,7 +61,7 @@ public class AvailableOrgans {
      * @param profile Given profile the organ belongs to
      * @return How long the organ has til expiry in days, minutes, hours and seconds
      */
-    public static String getTimeToExpiry(OrganEnum organ, Profile profile) {
+    public String getTimeToExpiry(OrganEnum organ, Profile profile) {
         // TODO need to fix the string returned, returns totals of each rather tan the "reducing total"?
 
         String durationFormatted = "";
@@ -126,7 +126,6 @@ public class AvailableOrgans {
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonaters = database.getDead();
-        System.out.println(allDonaters.size());
 
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonating()) {

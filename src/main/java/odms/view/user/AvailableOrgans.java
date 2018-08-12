@@ -1,7 +1,10 @@
 package odms.view.user;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -15,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import odms.controller.GuiMain;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
@@ -33,6 +37,12 @@ public class AvailableOrgans extends CommonView {
     public void initialize(User currentUser, ClinicianProfile p) {
         populateTable();
         parentView = p;
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                    availableOrgansTable.refresh();
+            }
+        },0,1);
     }
 
     public void populateTable()  {
@@ -52,7 +62,7 @@ public class AvailableOrgans extends CommonView {
                 "Countdown");
         countdownCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        (odms.controller.user.AvailableOrgans.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey()))));
+                        (controller.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey()))));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> donorIdCol = new TableColumn<>(
                 "Donor ID");
@@ -102,14 +112,14 @@ public class AvailableOrgans extends CommonView {
 
 
         // Thread stuff for the multiple progress bars, not sure how else to do it
-        ExecutorService executor = Executors.newFixedThreadPool(availableOrgansTable.getItems().size(), new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
+        //ExecutorService executor = Executors.newFixedThreadPool(availableOrgansTable.getItems().size(), new ThreadFactory() {
+         //   @Override
+         //   public Thread newThread(Runnable r) {
+         //       Thread t = new Thread(r);
+          //      t.setDaemon(true);
+         //       return t;
+        //    }
+       // });
 
     }
 
