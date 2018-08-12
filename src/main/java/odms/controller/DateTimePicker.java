@@ -71,6 +71,13 @@ public class DateTimePicker extends DatePicker {
             this.dateTimeValue.set(null);
     }
 
+    /**
+     * Sets the date time value to null.
+     */
+    public void clearDateTimeValue() {
+        this.dateTimeValue.set(null);
+    }
+
     public String getFormat() {
         return format.get();
     }

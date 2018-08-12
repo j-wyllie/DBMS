@@ -63,6 +63,7 @@ public class ProfileEdit extends CommonController {
                     currentProfile.setCountryOfDeath(null);
                     currentProfile.setRegionOfDeath(null);
                     currentProfile.setCityOfDeath(null);
+                    currentProfile.setDateOfDeath(null);
                 }
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(e.getMessage());

@@ -460,11 +460,13 @@ public class ProfileEdit extends CommonView {
 
         dodDateTimePicker.getEditor().textProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (newValue.isEmpty()) {
+                    if (newValue == null || newValue.equals("")) {
                         comboCountryOfDeath.setDisable(true);
                         regionOfDeathField.setDisable(true);
                         comboRegionOfDeath.setDisable(true);
                         cityOfDeathField.setDisable(true);
+
+                        clearDateTimePicker();
                     } else {
                         if (isOpenedByClinician) {
                             comboCountryOfDeath.setDisable(false);
@@ -476,6 +478,10 @@ public class ProfileEdit extends CommonView {
                         }
                     }
                 });
+    }
+
+    private void clearDateTimePicker() {
+        dodDateTimePicker.clearDateTimeValue();
     }
 
     public void setComboCountryOfDeath(String country) {
