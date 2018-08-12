@@ -23,13 +23,21 @@ import odms.model.medications.Interaction;
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 
     private Map<Integer, Interaction> interactionMap = new HashMap<>();
-    private String defaultPath = "cache/medication_interactions.json";
+
     private String path;
     private static final String INTERACTION_URL = "https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/";
     private static final String SERVER_ERROR = "1";
 
+    private static final String CACHE_DIR = "cache";
+    private static final String CACHE_NAME = "medication_interactions.json";
+    private static final File WORKING_DIR = new File(System.getProperty("user.dir"));
+
+    private static final String DEFAULT_PATH =
+            WORKING_DIR + File.separator + CACHE_DIR + File.separator + CACHE_NAME;
+
     /**
      * Get all interaction data stored in the cache.
+     *
      * @return all interactions data.
      */
     @Override
@@ -39,6 +47,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     /**
      * Get the interactions between two medications.
+     *
      * @param drugA is an interacting medication.
      * @param drugB is another interacting medications.
      */
@@ -75,7 +84,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     public void load() {
         Gson gson = new Gson();
 
-        String file = defaultPath;
+        String file = DEFAULT_PATH;
         if ((path != null)) {
             file = path;
         }
@@ -103,7 +112,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public boolean save() {
-        File file = new File(this.defaultPath);
+        File file = new File(DEFAULT_PATH);
         if ((this.path != null)) {
             file = new File(this.path);
         }
@@ -125,6 +134,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     /**
      * Request new interaction data between two medications from the server.
+     *
      * @param drugA is an interacting medication.
      * @param drugB is another interacting medication.
      * @return the new interaction data.
@@ -149,13 +159,15 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                         Map<String, Integer> coexistingConditions = parseAtomicInteractions(results
                                 .get("co_existing_conditions"));
 
-                        Map<String, List<String>> durationInteractions = parseListInteractions(results
-                                .get("duration_interaction"));
+                        Map<String, List<String>> durationInteractions = parseListInteractions(
+                                results
+                                        .get("duration_interaction"));
 
                         Map<String, List<String>> genderInteractions = parseListInteractions(results
                                 .get("gender_interaction"));
 
-                        interaction = new Interaction(drugA, drugB, ageEffects, coexistingConditions,
+                        interaction = new Interaction(drugA, drugB, ageEffects,
+                                coexistingConditions,
                                 durationInteractions, genderInteractions);
                     } catch (Exception e) {
                         return null;
@@ -168,6 +180,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     /**
      * Makes a request to the server to get the interactions between the medications.
+     *
      * @param drugA is an interacting medication.
      * @param drugB is the other interacting medication.
      * @return the response from the server.
@@ -197,6 +210,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     /**
      * Reformats the interaction data from a JSON string to a mapping between string keys and lists
      * of the relevant data.
+     *
      * @param element the json element representing the interactions data.
      * @return a key/value mapping of the interaction data.
      */
@@ -221,6 +235,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     /**
      * Reformats the interaction data from a JSON string to a mapping between string keys and the
      * integer values of the relevant data.
+     *
      * @param element the json element representing the interactions data.
      * @return a key/value mapping of the interaction data.
      */
@@ -249,10 +264,13 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     /**
      * Sets the location of the cached medication interactions.
+     *
      * @param path to the location.
      */
     @Override
     public void setLocation(String path) {
+        // This is only used in tests so should be fine without
+        // using the working directory
         this.path = path;
     }
 }
