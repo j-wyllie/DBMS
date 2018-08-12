@@ -32,7 +32,7 @@ public class AvailableOrgans {
         }
     }
 
-    public LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
