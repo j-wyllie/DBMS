@@ -287,7 +287,7 @@ public class CommonView {
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(profile, true);
+            controller.initialize(profile, true, parentView.getTransplantWaitingList());
 
             Stage stage = new Stage();
             if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {

@@ -722,7 +722,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId;";
+        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId where Required = 1;";
         return getReceivers(query);
     }
 
@@ -741,7 +741,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             Connection conn = instance.getConnection();
             Statement stmt = conn.createStatement();
-
+            System.out.println(query);
             ResultSet result = stmt.executeQuery(query);
 
             while (result.next()) {

@@ -49,6 +49,8 @@ public class ClinicianProfile extends CommonView {
 
     private Display userProfileController = new Display(this);
 
+    private TransplantWaitingList transplantWaitingList;
+
     /**
      * Scene change to log in view.
      *
@@ -198,6 +200,7 @@ public class ClinicianProfile extends CommonView {
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             userTransplantWaitingListTabView.initialize(currentUser, this);
+            transplantWaitingList = userTransplantWaitingListTabView;
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -211,5 +214,9 @@ public class ClinicianProfile extends CommonView {
         userProfileController.removeStageFromProfileStages(stage);
 
         openProfileStages.remove(stage);
+    }
+
+    public TransplantWaitingList getTransplantWaitingList() {
+        return transplantWaitingList;
     }
 }
