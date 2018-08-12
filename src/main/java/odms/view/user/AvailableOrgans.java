@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,11 +16,12 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ProgressBarTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
+
+import static odms.controller.user.AvailableOrgans.*;
 
 public class AvailableOrgans extends CommonView {
     @FXML
@@ -52,18 +55,12 @@ public class AvailableOrgans extends CommonView {
                 "Countdown");
         countdownCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        (odms.controller.user.AvailableOrgans.getTimeToExpiry(cdf.getValue().getValue(), cdf.getValue().getKey()))));
+                        (getTimeToExpiryFormatted(cdf.getValue().getValue(), cdf.getValue().getKey()))));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> donorIdCol = new TableColumn<>(
                 "Donor ID");
         donorIdCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getKey().getId()).toString()));
-
-//        TableColumn<Map.Entry<Profile, OrganEnum>, String> expiryProgressBarCol = new TableColumn<>(
-//                "Expiry Progress Bar");
-//        expiryProgressBarCol.setCellValueFactory(
-//                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
-
 
 //        TableColumn<TestTask, Double> expiryProgressBarCol = new TableColumn("Expiry Progress Bar");
 //        expiryProgressBarCol.setCellValueFactory(new PropertyValueFactory<>(
@@ -71,12 +68,11 @@ public class AvailableOrgans extends CommonView {
 //        expiryProgressBarCol
 //                .setCellFactory(ProgressBarTableCell.forTableColumn());
 
-        // TODO yet to work out how to link anything up, bit confused
-        TableColumn<TestTask, Double> expiryProgressBarCol = new TableColumn("Expiry Progress Bar");
-
-        // "progress" is linked to the double value that populates the progress bar
-        expiryProgressBarCol.setCellValueFactory(new PropertyValueFactory<>(
-                "progress"));
+        TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn(
+                "Expiry Progress Bar");
+        expiryProgressBarCol.setCellValueFactory(
+                cdf -> new SimpleDoubleProperty(getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey()) / getExpiryLength(cdf.getValue().getValue())).asObject()
+        );
         expiryProgressBarCol
                 .setCellFactory(ProgressBarTableCell.forTableColumn());
 
@@ -100,7 +96,6 @@ public class AvailableOrgans extends CommonView {
             }
         });
 
-
         // Thread stuff for the multiple progress bars, not sure how else to do it
         ExecutorService executor = Executors.newFixedThreadPool(availableOrgansTable.getItems().size(), new ThreadFactory() {
             @Override
@@ -117,7 +112,6 @@ public class AvailableOrgans extends CommonView {
         listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
         availableOrgansTable.setItems(listOfAvailableOrgans);
     }
-
 
 
     // TODO not sure how to feed an organ and profile into this task to use the organs expiry time as the rate etc
@@ -151,8 +145,4 @@ public class AvailableOrgans extends CommonView {
             return null;
         }
     }
-
-
-
-
 }

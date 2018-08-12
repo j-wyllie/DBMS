@@ -18,6 +18,8 @@ public class AvailableOrgans {
     public final static long ONE_MINUTE = ONE_SECOND * 60;
     public final static long ONE_HOUR = ONE_MINUTE * 60;
     public final static long ONE_DAY = ONE_HOUR * 24;
+    public final static long ONE_YEAR = ONE_DAY * 365;
+
 
     public void setOrganExpired(OrganEnum organ, Profile profile) {
         profile.getOrgansDonating().remove(organ);
@@ -56,13 +58,59 @@ public class AvailableOrgans {
     }
 
     /**
+     * Gives remaining time in milliseconds that a organ has until it expires
+     * @param organ the given organ object
+     * @param profile the donor that the organ belongs to
+     * @return the time a organ has til it expires in milliseconds
+     */
+    public static Double getTimeRemaining(OrganEnum organ, Profile profile) {
+
+        Long timeToExpiry = Duration.between(LocalDateTime.now(), getExpiryTime(organ, profile))
+                .toMillis();
+
+        return Double.valueOf(timeToExpiry);
+    }
+
+    /**
+     * Gives the expiry time of a 'fresh organ'
+     * @param organ the organ given
+     * @return the expiry time for the 'fresh' given organ
+     */
+    public static Double getExpiryLength(OrganEnum organ) {
+
+        Long expiryTime;
+
+        switch (organ) {
+            case HEART:
+                expiryTime = 6 * ONE_HOUR;
+                break;
+            case PANCREAS:
+                expiryTime = ONE_DAY;
+                break;
+            case LIVER:
+                expiryTime = ONE_DAY;
+                break;
+            case KIDNEY:
+                expiryTime = 72 * ONE_HOUR;
+                break;
+            case CORNEA:
+                expiryTime = 7 * ONE_DAY;
+                break;
+            default:
+                expiryTime = 5 * ONE_YEAR;
+                break;
+        }
+
+        return Double.valueOf(expiryTime);
+    }
+
+    /**
      * Calculates how long a Organ has til expiry, returns in formatted string
      * @param organ Given organ
      * @param profile Given profile the organ belongs to
      * @return How long the organ has til expiry in days, minutes, hours and seconds
      */
-    public static String getTimeToExpiry(OrganEnum organ, Profile profile) {
-        // TODO need to fix the string returned, returns totals of each rather tan the "reducing total"?
+    public static String getTimeToExpiryFormatted(OrganEnum organ, Profile profile) {
 
         String durationFormatted = "";
         Long timeToExpiry = Duration.between(LocalDateTime.now(), getExpiryTime(organ, profile))
