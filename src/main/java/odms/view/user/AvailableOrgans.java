@@ -134,7 +134,7 @@ public class AvailableOrgans extends CommonView {
                     } else {
                         return 0;
                     }
-        });
+                });
         availableOrgansTable.setItems(sortedDonaters
         );
     }
@@ -162,16 +162,6 @@ public class AvailableOrgans extends CommonView {
         controller.setView(this);
         populateTable();
         parentView = p;
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                availableOrgansTable.refresh();
-                for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
-                    controller.checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
-                }
-            }
-        },0,1);
-
         //Populating combo box values
         CountryDAO database = DAOFactory.getCountryDAO();
         int index = 0;
@@ -189,6 +179,15 @@ public class AvailableOrgans extends CommonView {
         organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
         organsCombobox.getItems().setAll(OrganEnum.values());
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                availableOrgansTable.refresh();
+                for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
+                    controller.checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                }
+            }
+        },0,1);
 
     }
 

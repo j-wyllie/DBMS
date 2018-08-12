@@ -23,6 +23,8 @@ public class AvailableOrgans {
     public final static long ONE_HOUR = ONE_MINUTE * 60;
     public final static long ONE_DAY = ONE_HOUR * 24;
     public final static long ONE_YEAR = ONE_DAY * 365;
+    private List<Map.Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
+    private List<Profile> allDonaters = new ArrayList<>();
 
     private odms.view.user.AvailableOrgans view;
 
@@ -166,10 +168,10 @@ public class AvailableOrgans {
      *  @return Collection of Profile and Organ that match
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException{
-        List<Map.Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
+        donaters = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
 
-        List<Profile> allDonaters = database.getDead();
+        allDonaters = database.getDead();
 
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonating()) {
