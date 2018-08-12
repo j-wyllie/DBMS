@@ -489,7 +489,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(19, profile.getPhone());
             stmt.setString(20, profile.getEmail());
             stmt.setString(21, profile.getCountry());
-            System.out.println(profile.getCountry());
             stmt.setString(22, profile.getBirthCountry());
             stmt.setString(23, profile.getCountryOfDeath());
             stmt.setString(24, profile.getRegionOfDeath());
