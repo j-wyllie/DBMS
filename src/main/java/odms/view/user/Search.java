@@ -2,6 +2,7 @@ package odms.view.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,9 @@ import odms.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
+/**
+ * Search view. Contains all GUI accessor methods for the profile search tab.
+ */
 public class Search extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
@@ -83,7 +87,7 @@ public class Search extends CommonView {
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
-    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+    private List<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfile parentView;
 
     /**
@@ -152,6 +156,9 @@ public class Search extends CommonView {
         });
     }
 
+    /**
+     * Called if the age range is toggled.
+     */
     @FXML
     private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
@@ -320,7 +327,11 @@ public class Search extends CommonView {
         };
     }
 
-    @FXML
+    /**
+     * Initializes the profile search tab GUI elements.
+     * @param currentUser the logged in user object
+     * @param parentView parent view object that the search class is called from
+     */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
         if (currentUser != null) {
