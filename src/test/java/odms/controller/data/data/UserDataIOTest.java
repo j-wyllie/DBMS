@@ -1,5 +1,6 @@
-package odms.controller.data;
+package odms.controller.data.data;
 
+import odms.controller.data.UserDataIO;
 import odms.model.data.UserDatabase;
 import odms.model.user.User;
 import odms.model.enums.UserType;
