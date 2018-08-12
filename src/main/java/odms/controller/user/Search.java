@@ -16,17 +16,7 @@ import odms.model.profile.Profile;
  */
 public class Search {
 
-    private final odms.view.user.Search view;
-
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
-
-    /**
-     * Constructor for Search class. Sets the view object.
-     * @param v view object
-     */
-    public Search(odms.view.user.Search v) {
-        view = v;
-    }
 
     /**
      * Gets a sorted list of profiles, the list contains profiles based off of the criteria set by

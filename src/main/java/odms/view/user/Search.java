@@ -44,7 +44,7 @@ public class Search extends CommonView {
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
-    private odms.controller.user.Search controller = new odms.controller.user.Search(this);
+    private odms.controller.user.Search controller = new odms.controller.user.Search();
 
     @FXML
     private TextField ageField;
