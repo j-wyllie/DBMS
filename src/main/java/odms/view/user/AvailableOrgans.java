@@ -5,50 +5,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ProgressBarTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import odms.controller.GuiMain;
+import odms.controller.database.CountryDAO;
+import odms.controller.database.DAOFactory;
+import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
+import org.controlsfx.control.CheckComboBox;
 
 import static odms.controller.user.AvailableOrgans.*;
 
 public class AvailableOrgans extends CommonView {
+
+    @FXML
+    private CheckComboBox organsCombobox;
+    @FXML
+    private CheckComboBox countriesCombobox;
+    @FXML
+    private CheckComboBox regionsCombobox;
     @FXML
     private TableView availableOrgansTable;
+
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
+    private ObservableList<Map.Entry<Profile,OrganEnum>> listOfFilteredAvailableOrgans; // TODO should these two lists just be one list?
+
     private ClinicianProfile parentView;
     private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
 
+    private ObservableList<String> organsStrings = FXCollections.observableArrayList();
+
     private Thread importTask;
-
-
-    public void initialize(User currentUser, ClinicianProfile p) {
-        populateTable();
-        parentView = p;
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                    availableOrgansTable.refresh();
-            }
-        },0,1);
-    }
 
     public void populateTable()  {
         availableOrgansTable.getColumns().clear();
@@ -96,8 +93,9 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.getColumns().add(donorIdCol);
         availableOrgansTable.getColumns().add(expiryProgressBarCol);
         availableOrgansTable.getItems().clear();
+
         try {
-            setList();
+            setAvailableOrgansList();
         } catch (SQLException e) {
             System.out.println("SQL ERROR");
         }
@@ -121,7 +119,11 @@ public class AvailableOrgans extends CommonView {
 
     }
 
-    public void setList() throws SQLException{
+    /**
+     * Populates available organs table with ALL available organs in database
+     * @throws SQLException exception thrown when accessing DB to get all available organs
+     */
+    public void setAvailableOrgansList() throws SQLException{
         listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
         SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(listOfAvailableOrgans,
                 (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
@@ -137,36 +139,85 @@ public class AvailableOrgans extends CommonView {
         );
     }
 
+    /**
+     * Updates the available organs list according to the active filters
+     */
+    private void performSearchFromFilters() {
+        listOfFilteredAvailableOrgans = controller.performSearch(organsCombobox.getCheckModel().getCheckedItems(),
+                countriesCombobox.getCheckModel().getCheckedItems(), regionsCombobox.getCheckModel().getCheckedItems());
 
-    // TODO not sure how to feed an organ and profile into this task to use the organs expiry time as the rate etc
-    // static?
-    public class TestTask extends Task<Void> {
-
-        private final int waitTime; // milliseconds
-        private final int pauseTime; // milliseconds
-
-        public static final int NUM_ITERATIONS = 100;
-
-        TestTask(int waitTime, int pauseTime) {
-            this.waitTime = waitTime;
-            this.pauseTime = pauseTime;
-            //int test = odms.controller.user.AvailableOrgans.getExpiryTime(null, null);
-        }
-
-        @Override
-        protected Void call() throws Exception {
-
-            this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
-            this.updateMessage("Waiting...");
-            Thread.sleep(waitTime);
-            this.updateMessage("Running...");
-            for (int i = 0; i < NUM_ITERATIONS; i++) {
-                updateProgress((1.0 * i) / NUM_ITERATIONS, 1);
-                Thread.sleep(pauseTime);
-            }
-            this.updateMessage("Done");
-            this.updateProgress(1, 1);
-            return null;
-        }
+        updateTable();
     }
+
+    /**
+     * Clears the available organs table and updates with the filtered data according to the filters
+     */
+    private void updateTable() {
+        availableOrgansTable.getItems().clear();
+        availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
+    }
+
+
+    public void initialize(User currentUser, ClinicianProfile p) {
+        populateTable();
+        parentView = p;
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                availableOrgansTable.refresh();
+            }
+        },0,1);
+
+        //Populating combo box values
+        CountryDAO database = DAOFactory.getCountryDAO();
+        int index = 0;
+        for (String country : database.getAll(true)) {
+            User.allowedCountriesIndices.add(index);             // TODO is allowed countries relevant for this table?
+            index++;
+        }
+
+        List<String> validCountries = database.getAll(true);
+        countriesCombobox.getItems().addAll(validCountries);
+
+        regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList()); // TODO will this be populated wit ALL regions?
+        //regionsCombobox.setDisable(true);  // TODO not sure how the region filter will work with multiple countries just yet
+
+        organsStrings.clear();
+        organsStrings.addAll(OrganEnum.toArrayList());
+        organsCombobox.getItems().setAll(OrganEnum.values());
+
+    }
+
+
+
+    // static?
+//    public class TestTask extends Task<Void> {
+//
+//        private final int waitTime; // milliseconds
+//        private final int pauseTime; // milliseconds
+//
+//        public static final int NUM_ITERATIONS = 100;
+//
+//        TestTask(int waitTime, int pauseTime) {
+//            this.waitTime = waitTime;
+//            this.pauseTime = pauseTime;
+//            //int test = odms.controller.user.AvailableOrgans.getExpiryTime(null, null);
+//        }
+//
+//        @Override
+//        protected Void call() throws Exception {
+//
+//            this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
+//            this.updateMessage("Waiting...");
+//            Thread.sleep(waitTime);
+//            this.updateMessage("Running...");
+//            for (int i = 0; i < NUM_ITERATIONS; i++) {
+//                updateProgress((1.0 * i) / NUM_ITERATIONS, 1);
+//                Thread.sleep(pauseTime);
+//            }
+//            this.updateMessage("Done");
+//            this.updateProgress(1, 1);
+//            return null;
+//        }
+//    }
 }

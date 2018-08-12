@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
@@ -144,7 +145,6 @@ public class AvailableOrgans {
     }
 
 
-
     /**
      * Generates a collection of a profile and organ for each organ that a receiver donates after death
      *
@@ -167,6 +167,19 @@ public class AvailableOrgans {
         return donaters;
     }
 
-    
+    /**
+     * Returns a list of available organs as per the filters provided
+     * @param organs list of organs to filter by
+     * @param countries list of countries to filter by
+     * @param regions list of regions to filter by
+     * @return
+     */
+    public ObservableList<Map.Entry<Profile,OrganEnum>> performSearch(ObservableList organs, ObservableList countries, ObservableList regions) {
+
+        ObservableList<Map.Entry<Profile,OrganEnum>> searchResults = null;
+
+        return searchResults;
+    }
+
 
 }
