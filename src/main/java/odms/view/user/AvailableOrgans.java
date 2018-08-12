@@ -159,12 +159,16 @@ public class AvailableOrgans extends CommonView {
 
 
     public void initialize(User currentUser, ClinicianProfile p) {
+        controller.setView(this);
         populateTable();
         parentView = p;
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 availableOrgansTable.refresh();
+                for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
+                    controller.checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                }
             }
         },0,1);
 
@@ -188,7 +192,13 @@ public class AvailableOrgans extends CommonView {
 
     }
 
+    public ObservableList<Map.Entry<Profile, OrganEnum>> getListOfAvailableOrgans() {
+        return listOfAvailableOrgans;
+    }
 
+    public void removeItem(Map.Entry<Profile, OrganEnum> m) {
+        listOfAvailableOrgans.remove(m);
+    }
 
     // static?
 //    public class TestTask extends Task<Void> {

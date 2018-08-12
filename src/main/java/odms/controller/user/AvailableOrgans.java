@@ -11,6 +11,7 @@ import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -23,15 +24,29 @@ public class AvailableOrgans {
     public final static long ONE_DAY = ONE_HOUR * 24;
     public final static long ONE_YEAR = ONE_DAY * 365;
 
+    private odms.view.user.AvailableOrgans view;
+
+    public void setView(odms.view.user.AvailableOrgans v) {
+        view = v;
+    }
 
     public void setOrganExpired(OrganEnum organ, Profile profile) {
+        System.out.println(organ);
         profile.getOrgansDonating().remove(organ);
+        MySqlOrganDAO dao = new MySqlOrganDAO();
+        dao.removeDonating(profile, organ);
         profile.getOrgansExpired().add(organ);
     }
 
-    public void checkOrganExpired(OrganEnum organ, Profile profile) {
+    public void checkOrganExpired(OrganEnum organ, Profile profile, Map.Entry<Profile, OrganEnum> m) {
         if(!profile.getDateOfDeath().equals(null) && LocalDateTime.now().isAfter(getExpiryTime(organ, profile))) {
             setOrganExpired(organ,profile);
+        }
+    }
+
+    public void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,Map.Entry<Profile, OrganEnum> m) {
+        if(!profile.getDateOfDeath().equals(null) && LocalDateTime.now().isAfter(getExpiryTime(organ, profile))) {
+            view.removeItem(m);
         }
     }
 
