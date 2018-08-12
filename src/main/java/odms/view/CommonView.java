@@ -276,24 +276,24 @@ public class CommonView {
      * Creates a new window when a row in the search table is double clicked. The new window
      * contains a donors profile.
      *
-     * @param donor The donor object that has been clicked on
+     * @param profile The donor object that has been clicked on
      * @param parentView The parent view of the stage being created
      */
     @FXML
-    protected void createNewDonorWindow(Profile donor, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(donor, true);
+            controller.initialize(profile, true);
 
             Stage stage = new Stage();
-            if (donor.getPreferredName() != null) {
-                stage.setTitle(donor.getPreferredName() + "'s profile");
+            if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
+                stage.setTitle(profile.getPreferredName() + "'s profile");
             } else {
-                stage.setTitle(donor.getFullName() + "'s profile");
+                stage.setTitle(profile.getFullName() + "'s profile");
             }
             stage.setScene(scene);
             stage.show();

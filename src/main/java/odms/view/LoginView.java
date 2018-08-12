@@ -92,7 +92,7 @@ public class LoginView extends CommonController {
                 controller.initialize(profile, false);
 
                 Stage stage = new Stage();
-                if (profile.getPreferredName() != null) {
+                if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
                     stage.setTitle(profile.getPreferredName() + "'s profile");
                 } else {
                     stage.setTitle(profile.getFullName() + "'s profile");

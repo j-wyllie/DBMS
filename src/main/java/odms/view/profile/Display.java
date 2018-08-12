@@ -87,7 +87,7 @@ public class Display extends CommonView {
     @FXML
     private void setPage(Profile currentProfile) {
         try {
-            if (currentProfile.getPreferredName() != null) {
+            if (currentProfile.getPreferredName() != null && !currentProfile.getPreferredName().isEmpty()) {
                 donorFullNameLabel.setText(currentProfile.getPreferredName());
             } else {
                 donorFullNameLabel.setText(currentProfile.getFullName());
