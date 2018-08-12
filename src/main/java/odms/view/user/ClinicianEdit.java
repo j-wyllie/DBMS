@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
@@ -37,7 +36,7 @@ public class ClinicianEdit extends CommonView {
     private TextField givenNamesField;
 
     @FXML
-    private Text pictureText;
+    private Label pictureLabel;
 
     @FXML
     private TextField staffIdField;
@@ -57,10 +56,12 @@ public class ClinicianEdit extends CommonView {
     @FXML
     private void handleChooseImageClicked() {
         Stage stage = (Stage) clinicianFullName.getScene().getWindow();
-        this.chosenFile = chooseImage(pictureText, stage);
-        this.pictureText.setVisible(true);
-        this.removePhotoBtn.setVisible(false);
-        this.removePhoto = false;
+        this.chosenFile = chooseImage(pictureLabel, stage);
+        if (this.chosenFile != null) {
+            this.pictureLabel.setVisible(true);
+            this.removePhotoBtn.setVisible(false);
+            this.removePhoto = false;
+        }
     }
 
     /**
@@ -76,12 +77,15 @@ public class ClinicianEdit extends CommonView {
         }
     }
 
+    /**
+     * Enable removal of image.
+     */
     @FXML
     private void handleRemoveImageClicked() {
         removePhoto = true;
 
-        pictureText.setText("Current photo will be removed");
-        pictureText.setVisible(true);
+        pictureLabel.setText("Current photo will be removed");
+        pictureLabel.setVisible(true);
         removePhotoBtn.setVisible(false);
     }
 
@@ -154,7 +158,7 @@ public class ClinicianEdit extends CommonView {
 
             if (currentUser.getPictureName() != null && !currentUser.getPictureName().isEmpty()) {
                 removePhotoBtn.setVisible(true);
-                pictureText.setVisible(false);
+                pictureLabel.setVisible(false);
             }
         } catch (Exception e) {
             System.out.println(e);

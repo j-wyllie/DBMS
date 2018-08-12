@@ -13,12 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.database.CountryDAO;
@@ -106,7 +106,7 @@ public class ProfileEdit extends CommonView {
     private ComboBox comboCountry;
 
     @FXML
-    private Text pictureText;
+    private Label pictureLabel;
 
     @FXML
     private TextField cityOfDeathField;
@@ -123,12 +123,16 @@ public class ProfileEdit extends CommonView {
     @FXML
     private TextField cityField;
 
+    @FXML
+    private Button removePhotoBtn;
+
     private Profile currentProfile;
 
     private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(this);
     private Boolean isOpenedByClinician;
 
     private File chosenFile;
+    private Boolean removePhoto = false;
 
     /**
      * Button handler to undo last action.
@@ -200,9 +204,26 @@ public class ProfileEdit extends CommonView {
      * @throws IOException if the file cannot be read
      */
     @FXML
-    private void handleChooseImageClicked() throws IOException {
-        Stage stage = (Stage) pictureText.getScene().getWindow();
-        this.chosenFile = chooseImage(pictureText, stage);
+    private void handleChooseImageClicked() {
+        Stage stage = (Stage) pictureLabel.getScene().getWindow();
+        this.chosenFile = chooseImage(pictureLabel, stage);
+        if (this.chosenFile != null) {
+            this.pictureLabel.setVisible(true);
+            this.removePhotoBtn.setVisible(false);
+            this.removePhoto = false;
+        }
+    }
+
+    /**
+     * Enable removal of image.
+     */
+    @FXML
+    private void handleRemoveImageClicked() {
+        removePhoto = true;
+
+        pictureLabel.setText("Current photo will be removed");
+        pictureLabel.setVisible(true);
+        removePhotoBtn.setVisible(false);
     }
 
     /**
@@ -364,13 +385,23 @@ public class ProfileEdit extends CommonView {
         }
 
         comboGenderPref.setEditable(true);
-        comboGenderPref.getItems().addAll("Male", "Female",
-                "Non binary"); //TODO Add database call for all preferred genders.
+        comboGenderPref.getItems().addAll(
+                "Male",
+                "Female",
+                "Non binary"
+        ); // TODO Add database call for all preferred genders.
 
         if (currentProfile.getPreferredGender() != null) {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
         }
         setupDeathFields();
+
+        if (currentProfile.getPictureName() != null &&
+                !currentProfile.getPictureName().isEmpty()) {
+
+            removePhotoBtn.setVisible(true);
+            pictureLabel.setVisible(false);
+        }
     }
 
     private void setupDeathFields() {
@@ -576,6 +607,10 @@ public class ProfileEdit extends CommonView {
 
     public File getChosenFile() {
         return chosenFile;
+    }
+
+    public Boolean getRemovePhoto() {
+        return removePhoto;
     }
 
     public String getLastNamesField() {

@@ -11,8 +11,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -311,7 +311,7 @@ public class CommonView {
      *
      * @param pictureText user feedback text to update on profile picture edit
      */
-    protected File chooseImage(Text pictureText, Stage stage) {
+    protected File chooseImage(Label pictureText, Stage stage) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Image File");
         ExtensionFilter extFilter = new ExtensionFilter(
@@ -322,12 +322,16 @@ public class CommonView {
 
         File file = chooser.showOpenDialog(stage);
 
-        if (file.length() > 1000000) {
-            pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
-            return null;
+        if (file != null) {
+            if (file.length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n"
+                        + "Choose another ");
+                return null;
+            }
+
+            pictureText.setText(file.getName());
         }
 
-        pictureText.setText(file.getName());
         return file;
     }
 

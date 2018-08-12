@@ -174,8 +174,13 @@ public class ProfileEdit extends CommonController {
         File chosenFile = view.getChosenFile();
         if (chosenFile != null) {
             currentProfile.setPictureName(
-                    ImageDataIO.deleteAndSaveImage(chosenFile, currentProfile.getNhi())
+                    ImageDataIO.deleteAndSaveImage(
+                            chosenFile, currentProfile.getNhi()
+                    )
             );
+        } else if (view.getRemovePhoto()){
+            ImageDataIO.deleteImage(currentProfile.getNhi());
+            currentProfile.setPictureName(null);
         }
     }
 
