@@ -105,10 +105,11 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 profile.setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(
+                //todo set a way to set time of death
+                LocalDateTime date = LocalDateTime.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[0])
+                        Integer.valueOf(dates[0]),0,0
                 );
                 profile.setDateOfDeath(date);
             }
