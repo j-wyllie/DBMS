@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
@@ -122,7 +123,18 @@ public class AvailableOrgans extends CommonView {
 
     public void setList() throws SQLException{
         listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
-        availableOrgansTable.setItems(listOfAvailableOrgans);
+        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(listOfAvailableOrgans,
+                (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
+                    if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
+                        return -1;
+                    } else if(getTimeRemaining(donor2.getValue(), donor2.getKey()) < getTimeRemaining(donor1.getValue(), donor1.getKey())) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+        });
+        availableOrgansTable.setItems(sortedDonaters
+        );
     }
 
 

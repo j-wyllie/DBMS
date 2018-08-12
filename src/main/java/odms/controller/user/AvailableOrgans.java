@@ -7,6 +7,8 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javafx.collections.transformation.SortedList;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.model.enums.OrganEnum;
@@ -118,16 +120,6 @@ public class AvailableOrgans {
 
         long temp = 0;
         if (timeToExpiry >= ONE_SECOND) {
-            temp = timeToExpiry / ONE_DAY;
-            if (temp > 0) {
-                if (temp > 1) {
-                    durationFormatted += temp + " days ";
-                } else {
-                    durationFormatted += temp + " day ";
-                }
-                timeToExpiry -= temp * ONE_DAY;
-            }
-
             temp = timeToExpiry / ONE_HOUR;
             if (temp > 0) {
                 if (temp > 1) {
@@ -137,17 +129,6 @@ public class AvailableOrgans {
                 }
                 timeToExpiry -= temp * ONE_HOUR;
             }
-
-            temp = timeToExpiry / ONE_MINUTE;
-            if (temp > 0) {
-                if (temp > 1) {
-                    durationFormatted += temp + " minutes ";
-                } else {
-                    durationFormatted += temp + " minute ";
-                }
-                timeToExpiry -= temp * ONE_MINUTE;
-            }
-
             temp = timeToExpiry / ONE_SECOND;
             if (temp > 0) {
                 if (temp > 1) {
