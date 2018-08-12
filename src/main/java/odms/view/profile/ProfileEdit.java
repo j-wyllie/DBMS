@@ -631,7 +631,7 @@ public class ProfileEdit extends CommonView {
         bloodTypeField.setText(s);
     }
 
-    public void setIsSmokerCheckBox(boolean b) {
+    public void setIsSmokerCheckBox(Boolean b) {
         isSmokerCheckBox.setSelected(b);
     }
 

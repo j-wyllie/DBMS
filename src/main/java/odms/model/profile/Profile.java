@@ -140,10 +140,10 @@ public class Profile implements Comparable<Profile> {
         );
     }
 
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+    public Profile(Integer profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
+            Integer bpSystolic, Integer bpDiastolic, String address, String region, String phone,
             String email, String country, String city, String countryOfDeath, String regionOfDeath,
             String cityOfDeath, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
@@ -176,10 +176,10 @@ public class Profile implements Comparable<Profile> {
         this.lastUpdated = updated;
     }
 
-    public Profile(int id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+    public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker,
-            String alcoholConsumption, int bpSystolic, int bpDiastolic, String address,
+            String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String streetNo, String streetName, String neighbourhood, String city, String zipCode,
             String region, String country, String birthCountry, String phone, String email,
             LocalDateTime created, LocalDateTime updated) {
