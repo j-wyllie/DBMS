@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
-  `NHI` varchar(20) DEFAULT NULL,
+  `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
   `PreferredGender` varchar(30) DEFAULT NULL,
-  `ImageName` VARCHAR(50) NOT NULL
+  `ImageName` VARCHAR(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
-  `ImageName` VARCHAR(50) NOT NULL
+  `ImageName` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
