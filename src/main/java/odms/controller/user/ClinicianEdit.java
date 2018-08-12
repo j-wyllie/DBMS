@@ -35,11 +35,15 @@ public class ClinicianEdit extends CommonController {
         currentUser.setRegion(view.getRegionField());
 
         if (view.getChosenFile() != null) {
-            currentUser.setPictureName(ImageDataIO.deleteAndSaveImage(
-                    view.getChosenFile(), currentUser.getStaffID().toString())
+            currentUser.setPictureName(
+                    ImageDataIO.deleteAndSaveImage(
+                            view.getChosenFile(),
+                            currentUser.getStaffID().toString()
+                    )
             );
         } else if (view.getRemovePhoto()){
-            System.out.println("Remove the photo");
+            ImageDataIO.deleteImage(currentUser.getStaffID().toString());
+            currentUser.setPictureName(null);
         }
 
         CurrentHistory.updateHistory(action);

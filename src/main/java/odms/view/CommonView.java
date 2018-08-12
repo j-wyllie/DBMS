@@ -327,7 +327,6 @@ public class CommonView {
             return null;
         }
 
-        System.out.println("You chose to open this file: " + file.getName());
         pictureText.setText(file.getName());
         return file;
     }

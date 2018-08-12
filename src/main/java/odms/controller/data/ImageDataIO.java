@@ -1,11 +1,14 @@
 package odms.controller.data;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 /**
  * Support class to manage image IO operations.
@@ -25,8 +28,8 @@ public final class ImageDataIO {
     /**
      * Copies a file from source to destination.
      *
-     * @param source File source in local directory
-     * @param dest File destination in local directory
+     * @param source File source in local directory.
+     * @param dest File destination in local directory.
      */
     private static void copyFileUsingStream(File source, File dest) throws IOException {
         InputStream is = null;
@@ -36,7 +39,7 @@ public final class ImageDataIO {
             is = new FileInputStream(source);
             os = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
-            Integer length;
+            int length;
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
@@ -61,10 +64,10 @@ public final class ImageDataIO {
     /**
      * Remove the old profile or user image and save the new image.
      *
-     * @param image the new image file
-     * @param name the user or profile name
-     * @return return the filename used when saving
-     * @throws IOException if an IO operation fails
+     * @param image the new image file.
+     * @param name the user or profile name.
+     * @return return the filename used when saving.
+     * @throws IOException if an IO operation fails.
      */
     public static String deleteAndSaveImage(File image, String name) throws IOException {
         deleteImage(name);
@@ -78,31 +81,34 @@ public final class ImageDataIO {
     /**
      * Delete an old image.
      *
-     * @param name the profile or user name to check against
+     * @param name the profile or user name to check against.
      */
-    private static void deleteImage(String name) {
-        File defaultPath = getImagePath(name);
-        Boolean deleted = false;
-
-        if (new File(defaultPath + ".jpg").exists()) {
-            deleted = new File(getImagePath(name) + ".jpg").delete();
+    public static void deleteImage(String name) {
+        try {
+            for (File file : getExistingImages(name)) {
+                Files.delete(file.toPath());
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to delete the old file.");
+            System.out.println("Error: " + e.getMessage());
         }
+    }
 
-        if (new File(defaultPath + ".png").exists()) {
-            deleted = new File(getImagePath(name) + ".png").delete();
-        }
-
-        if (deleted) {
-            System.out.println("Old file deleted successfully");
-        } else {
-            System.out.println("Failed to delete the old file");
-        }
+    /**
+     * Support function to find old profile or user images.
+     *
+     * @param name the profile or user name to check against.
+     * @return a File array of files found.
+     */
+    private static File[] getExistingImages(String name) {
+        FileFilter fileFilter = new WildcardFileFilter(name + ".*");
+        return getPath().listFiles(fileFilter);
     }
 
     /**
      * returns a string that is the file extension of given file.
      *
-     * @param file File to retrieve extension from
+     * @param file File to retrieve extension from.
      */
     private static String getFileExtension(File file) {
         String name = file.getName();
@@ -112,8 +118,8 @@ public final class ImageDataIO {
     /**
      * Generate image path based on image name.
      *
-     * @param imageName the chosen name
-     * @return file path object
+     * @param imageName the chosen name.
+     * @return file path object.
      */
     public static File getImagePath(String imageName) {
         if (imageName != null && !imageName.isEmpty()) {
@@ -126,7 +132,7 @@ public final class ImageDataIO {
      * Return path File object for base images path.
      * - Creates the path if it does not exist.
      *
-     * @return path object
+     * @return path object.
      */
     private static File getPath() {
         if (!PATH.exists()) {
