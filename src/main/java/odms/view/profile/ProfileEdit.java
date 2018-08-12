@@ -1,20 +1,29 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.profileCancelChanges;
+
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
+import odms.controller.DateTimePicker;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
 import odms.model.enums.CountriesEnum;
@@ -23,14 +32,11 @@ import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static odms.controller.AlertController.profileCancelChanges;
-
+/**
+ * Profile edit window.
+ */
 public class ProfileEdit extends CommonView {
+
     @FXML
     private Label donorFullNameLabel;
 
@@ -50,7 +56,7 @@ public class ProfileEdit extends CommonView {
     private DatePicker dobDatePicker;
 
     @FXML
-    private DatePicker dodDatePicker;
+    private DateTimePicker dodDateTimePicker;
 
     @FXML
     private TextField heightField;
@@ -80,7 +86,7 @@ public class ProfileEdit extends CommonView {
     private TextField bloodPressureField;
 
     @FXML
-    private RadioButton isSmokerRadioButton;
+    private CheckBox isSmokerCheckBox;
 
     @FXML
     private TextField preferredNameField;
@@ -113,59 +119,33 @@ public class ProfileEdit extends CommonView {
     private TextField cityOfDeathField;
 
     @FXML
-    private Label cityLabel;
-
-    @FXML
-    private Label countryLabel;
-
-    @FXML
-    private Label regionLabel;
-
-    @FXML
     private TextField cityField;
 
     private Profile currentProfile;
 
+    private static final String MAINCOUNTRY = "New Zealand";
 
-    private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(this);
+    private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(
+            this);
     private Boolean isOpenedByClinician;
-
-    /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
-    @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
-        controller.undo();
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
-    @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
-        controller.redo();
-    }
 
     /**
      * Button handler to save the changes made to the fields.
      *
      * @param event clicking on the save (tick) button.
+     * @throws IOException error closing windows.
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-            try {
-                controller.save();
-                showNotification("profile", event);
-                closeWindow(event);
-            } catch (IllegalArgumentException e) {
-                AlertController.invalidEntry(
-                        e.getMessage() + "\n" +
-                                "Changes not saved."
-                );
+        try {
+            controller.save();
+            showNotification("profile", event);
+            closeWindow(event);
+        } catch (IllegalArgumentException | SQLException e) {
+            AlertController.invalidEntry(
+                    e.getMessage() + "\n" +
+                            "Changes not saved."
+            );
         }
     }
 
@@ -173,13 +153,21 @@ public class ProfileEdit extends CommonView {
      * Button handler to cancel the changes made to the fields.
      *
      * @param event clicking on the cancel (x) button.
+     * @throws IOException Error closing windows.
      */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) throws IOException {
-        if (profileCancelChanges())
+        if (profileCancelChanges()) {
             closeWindow(event);
+        }
     }
 
+    /**
+     * Closes the edit window and opens the profile display.
+     *
+     * @param event Action event when button is pressed.
+     * @throws IOException Thrown when there is an error initializing a new window.
+     */
     private void closeWindow(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -195,9 +183,10 @@ public class ProfileEdit extends CommonView {
      * File picker to choose only supported image types.
      *
      * @param event clicking on the choose file button.
+     * @throws IOException thrown if an error
      */
     @FXML
-    private void handleChooseImageClicked(ActionEvent event) throws IOException{
+    private void handleChooseImageClicked(ActionEvent event) throws IOException {
         File chosenFile = chooseImage(pictureText);
         File pictureDestination = controller.setImage(chosenFile, LOCALPATH);
         copyFileUsingStream(chosenFile, pictureDestination);
@@ -211,7 +200,7 @@ public class ProfileEdit extends CommonView {
     @FXML
     private void refreshRegionSelection() {
         if (comboCountry.getValue() != null) {
-            if (comboCountry.getValue().toString().equals("New Zealand")) {
+            if (comboCountry.getValue().toString().equals(MAINCOUNTRY)) {
                 comboRegion.setDisable(false);
                 regionField.setDisable(true);
                 regionField.clear();
@@ -236,7 +225,7 @@ public class ProfileEdit extends CommonView {
     @FXML
     private void refreshRegionOfDeathSelection() {
         if (comboCountryOfDeath.getValue() != null) {
-            if (comboCountryOfDeath.getValue().toString().equals("New Zealand")) {
+            if (comboCountryOfDeath.getValue().toString().equals(MAINCOUNTRY)) {
                 comboRegionOfDeath.setDisable(false);
                 regionOfDeathField.setDisable(true);
                 regionOfDeathField.clear();
@@ -258,29 +247,47 @@ public class ProfileEdit extends CommonView {
         }
     }
 
-
     /**
      * Sets the current profile attributes to the labels on start up.
+     *
+     * @param p Current profile.
+     * @param isOpenedByClinician Boolean, true if the window was opened by a clinician.
      */
     @FXML
     public void initialize(Profile p, Boolean isOpenedByClinician) {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentProfile = p;
         this.controller.setCurrentProfile(currentProfile);
+        this.controller.setIsClinician(isOpenedByClinician);
 
         // Restrict entry on these fields to numbers only.
         // Regex: \\d* matches only with digits 0 or more times.
         setListeners();
 
         if (currentProfile != null) {
-            try {
-                populateFields();
+            populateFields();
+            if (!isOpenedByClinician) {
+                disableItems();
+            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (currentProfile.getDateOfDeath() == null) {
+                comboCountryOfDeath.setDisable(true);
+                regionOfDeathField.setDisable(true);
+                comboRegionOfDeath.setDisable(true);
+                cityOfDeathField.setDisable(true);
             }
         }
+    }
 
+    /**
+     * Disables labels if a clinician isn't viewing the profile.
+     */
+    private void disableItems() {
+        comboCountryOfDeath.setDisable(true);
+        regionOfDeathField.setDisable(true);
+        comboRegionOfDeath.setDisable(true);
+        cityOfDeathField.setDisable(true);
+        dodDateTimePicker.setDisable(true);
     }
 
     /**
@@ -310,8 +317,9 @@ public class ProfileEdit extends CommonView {
             dobDatePicker.setValue(currentProfile.getDateOfBirth());
         }
         if (currentProfile.getDateOfDeath() != null) {
-            //todo way to set time of death
-            dodDatePicker.setValue(LocalDate.from(currentProfile.getDateOfDeath()));
+            dodDateTimePicker.setDateTimeValue(LocalDateTime.from(currentProfile.getDateOfDeath()));
+        } else {
+            dodDateTimePicker.getEditor().clear();
         }
         if (currentProfile.getHeight() != 0.0) {
             heightField.setText(String.valueOf(currentProfile.getHeight() / 100));
@@ -338,9 +346,9 @@ public class ProfileEdit extends CommonView {
             bloodTypeField.setText(currentProfile.getBloodType());
         }
         if (currentProfile.getIsSmoker() == null || !currentProfile.getIsSmoker()) {
-            isSmokerRadioButton.setSelected(false);
+            isSmokerCheckBox.setSelected(false);
         } else {
-            isSmokerRadioButton.setSelected(true);
+            isSmokerCheckBox.setSelected(true);
         }
         if (currentProfile.getAlcoholConsumption() != null) {
             alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
@@ -369,11 +377,11 @@ public class ProfileEdit extends CommonView {
         if (currentProfile.getPreferredGender() != null) {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
         }
-        setupDeathFields();
+        setUpLocationFields();
+        controller.populateDeathFields();
     }
 
-    private void setupDeathFields() {
-
+    private void setUpLocationFields() {
         //city and region should be displayed same regardless
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
@@ -384,7 +392,7 @@ public class ProfileEdit extends CommonView {
         }
         if (currentProfile.getRegion() != null) {
             if (currentProfile.getCountry() != null) {
-                if (currentProfile.getCountry().equals("New Zealand")) {
+                if (currentProfile.getCountry().equals(MAINCOUNTRY)) {
                     comboRegion.setDisable(false);
                     regionField.setDisable(true);
                     comboRegion.setValue(currentProfile.getRegion());
@@ -405,103 +413,6 @@ public class ProfileEdit extends CommonView {
         regionField.setDisable(false);
         cityField.setDisable(false);
 
-
-        //Profile is dead
-        if (currentProfile.getDateOfDeath() != null) {
-
-            //Only a clinician should be able to edit these -- not sure about this.
-            if (isOpenedByClinician) {
-                comboCountryOfDeath.setDisable(false);
-                cityOfDeathField.setDisable(false);
-                regionOfDeathField.setDisable(false);
-                comboRegionOfDeath.setDisable(false);
-
-            } else {
-                comboCountryOfDeath.setDisable(true);
-                regionOfDeathField.setDisable(true);
-                comboRegionOfDeath.setDisable(true);
-                cityOfDeathField.setDisable(true);
-            }
-
-            //country
-            if (currentProfile.getCountryOfDeath() == null) {
-                if (currentProfile.getCountry() != null) {
-                    comboCountry.setValue(CountriesEnum
-                            .getValidNameFromString(currentProfile.getCountry()));
-                }
-            } else {
-                comboCountryOfDeath.setValue(CountriesEnum
-                        .getValidNameFromString(currentProfile.getCountryOfDeath()));
-            }
-
-            //city
-            if (currentProfile.getCityOfDeath() == null) {
-                if (currentProfile.getCity() != null) {
-                    cityField.setText(currentProfile.getCity());
-                }
-            } else {
-                cityOfDeathField.setText(currentProfile.getCityOfDeath());
-            }
-
-            //region
-            if (currentProfile.getRegionOfDeath() == null) {
-                if (currentProfile.getRegion() != null) {
-                    if (currentProfile.getCountry() != null) {
-                        if (currentProfile.getCountry().equals("New Zealand")) {
-                            comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
-                            regionOfDeathField.clear();
-                        } else {
-                            regionOfDeathField.setText(currentProfile.getRegionOfDeath());
-                            //comboRegionOfDeath.clearSelection()
-                        }
-                    } else {
-                        regionOfDeathField.setText(currentProfile.getRegion());
-                        //comboRegionOfDeath.clearSelection()
-                    }
-                }
-            } else {
-                if (currentProfile.getCountry() != null) {
-                    if (currentProfile.getCountry().equals("New Zealand")) {
-                        comboRegionOfDeath.setValue(currentProfile.getRegionOfDeath());
-                        regionOfDeathField.clear();
-                    }
-                } else {
-                    regionOfDeathField.setText(currentProfile.getRegionOfDeath());
-                    //comboRegionOfDeath.clearSelection()
-                }
-            }
-
-        } else {
-            //profile is alive
-
-//            if (currentProfile.getCity() != null) {
-//                cityField.setText(currentProfile.getCity());
-//            }
-//            if (currentProfile.getCountry() != null) {
-//                comboCountry.setValue(
-//                        CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
-//            }
-//            if (currentProfile.getRegion() != null) {
-//                if (currentProfile.getCountry() != null) {
-//                    if (currentProfile.getCountry().equals("New Zealand")) {
-//                        comboRegion.setDisable(false);
-//                        regionField.setDisable(true);
-//                        comboRegion.setValue(currentProfile.getRegion());
-//                    } else {
-//                        comboRegion.setDisable(true);
-//                        regionField.setDisable(false);
-//                        regionField.setText(currentProfile.getRegion());
-//                    }
-//                } else {
-//                    comboRegion.setDisable(true);
-//                    regionField.setDisable(false);
-//                    regionField.setText(currentProfile.getRegion());
-//                }
-//
-//            }
-
-        }
-
         //Populating combo box values
         CountryDAO database = DAOFactory.getCountryDAO();
         int index = 0;
@@ -516,10 +427,10 @@ public class ProfileEdit extends CommonView {
 
         refreshRegionSelection();
         if (currentProfile.getDateOfDeath() != null) {
-            refreshRegionOfDeathSelection();
-        }
 
+        }
     }
+
 
     private void setListeners() {
         String anyDigit = "//d*";
@@ -541,19 +452,60 @@ public class ProfileEdit extends CommonView {
             }
         });
 
-
         weightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(anyDigit)) {
                 weightField.setText(newValue.replaceAll(notAnyDigit, ""));
             }
         });
+
+        dodDateTimePicker.getEditor().textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue.isEmpty()) {
+                        comboCountryOfDeath.setDisable(true);
+                        regionOfDeathField.setDisable(true);
+                        comboRegionOfDeath.setDisable(true);
+                        cityOfDeathField.setDisable(true);
+                    } else {
+                        if (isOpenedByClinician) {
+                            comboCountryOfDeath.setDisable(false);
+                            regionOfDeathField.setDisable(false);
+                            comboRegionOfDeath.setDisable(false);
+                            cityOfDeathField.setDisable(false);
+                            refreshRegionOfDeathSelection();
+                            controller.populateDeathFields();
+                        }
+                    }
+                });
     }
 
-    public LocalDate getdobDatePicker(){
+    public void setComboCountryOfDeath(String country) {
+        comboCountryOfDeath.setValue(CountriesEnum.getValidNameFromString(country));
+    }
+
+    public void setRegionOfDeathField(String region) {
+        regionOfDeathField.setText(region);
+    }
+
+    public void setCityOfDeathField(String city) {
+        cityOfDeathField.setText(city);
+    }
+
+    public void setComboRegionOfDeath(String region) {
+        comboRegionOfDeath.setValue(region);
+    }
+
+    /**
+     * Clears the region of death field.
+     */
+    public void clearRegionOfDeathField() {
+        regionOfDeathField.clear();
+    }
+
+    public LocalDate getdobDatePicker() {
         return dobDatePicker.getValue();
     }
 
-    public void setdobDatePicker(LocalDate date){
+    public void setdobDatePicker(LocalDate date) {
         dobDatePicker.setValue(date);
     }
 
@@ -589,8 +541,8 @@ public class ProfileEdit extends CommonView {
         addressField.setText(s);
     }
 
-    public LocalDate getDODDatePicker() {
-        return dodDatePicker.getValue();
+    public LocalDateTime getDodDateTimePicker() {
+        return dodDateTimePicker.getDateTimeValue();
     }
 
     public String getEmailField() {
@@ -637,12 +589,12 @@ public class ProfileEdit extends CommonView {
         return bloodTypeField.getText();
     }
 
-    public boolean getIsSmokerRadioButton() {
-        return isSmokerRadioButton.isSelected();
+    public boolean getIsSmokerCheckBox() {
+        return isSmokerCheckBox.isSelected();
     }
 
-    public void setDODDatePicker(LocalDate l) {
-        dodDatePicker.setValue(l);
+    public void setDODDatePicker(LocalDateTime l) {
+        dodDateTimePicker.setDateTimeValue(l);
     }
 
     public void setComboGender(Object o) {
@@ -669,8 +621,8 @@ public class ProfileEdit extends CommonView {
         bloodTypeField.setText(s);
     }
 
-    public void setIsSmokerRadioButton(boolean b) {
-        isSmokerRadioButton.setSelected(b);
+    public void setIsSmokerCheckBox(boolean b) {
+        isSmokerCheckBox.setSelected(b);
     }
 
     public String getComboCountryOfDeath() {

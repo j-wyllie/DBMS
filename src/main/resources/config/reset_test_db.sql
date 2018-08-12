@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 06, 2018 at 10:14 PM
+-- Generation Time: Aug 11, 2018 at 02:25 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
-  `NHI` varchar(20) DEFAULT NULL,
+  `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
@@ -182,10 +182,15 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Region` varchar(30) DEFAULT NULL,
   `Country` varchar(50) DEFAULT NULL,
   `BirthCountry` varchar(50) DEFAULT NULL,
+  `CountryOfDeath` varchar(30) DEFAULT NULL,
+  `CityOfDeath` varchar(30) DEFAULT NULL,
+  `RegionOfDeath` varchar(30) DEFAULT NULL,
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `PreferredName` varchar(50) DEFAULT NULL,
+  `PreferredGender` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -205,7 +210,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Region` varchar(30) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0'
+  `IsDefault` tinyint(1) DEFAULT '0',
+  `ImageName` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

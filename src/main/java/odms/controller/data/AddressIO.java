@@ -24,10 +24,7 @@ public class AddressIO {
             address = address.replace("road","rd");
             address = address.replace("street","st");
             String jsonString = getGeocodeLocation(address,country.replace(" ","+")).toString();
-            if(jsonString.toLowerCase().contains(address.toLowerCase())) {
-                return true;
-            }
-            return false;
+            return jsonString.toLowerCase().contains(address.toLowerCase());
         } catch (Exception e) {
             System.out.println("Invalid Address");
             return false;
@@ -36,41 +33,31 @@ public class AddressIO {
 
     public static boolean checkValidRegion(String address, String region, String country) {
         try {
-            String jsonString = getGeocodeLocation(address, country.replace(" ","+")).toString();
-            System.out.println(region);
-            if(jsonString.contains(region)) {
-                System.out.println("A");
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            System.out.println("Invalid Address");
+            JsonObject jsonString = getGeocodeLocation(address, country.replace(" ","+"));
+            return jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                    "address_components").get(0).getAsJsonObject().toString().contains(region);
+        } catch (IOException | IndexOutOfBoundsException e) {
             return false;
         }
     }
 
     public static boolean checkValidCity(String address, String city, String country) {
         try {
-            String jsonString = getGeocodeLocation(address, country.replace(" ","+")).toString();
-            if(jsonString.contains(city)) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            System.out.println("Invalid Address");
+            JsonObject jsonString = getGeocodeLocation(address, country.replace(" ","+"));
+            return jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                    "address_components").get(0).getAsJsonObject().toString().contains("locality");
+        } catch (IOException | IndexOutOfBoundsException e) {
             return false;
         }
     }
 
-    public static JsonObject getGeocodeLocation(String address, String country) throws IOException{
-        // TODO either use one key or come up with a way to use a few
+    private static JsonObject getGeocodeLocation(String address, String country) throws IOException{
         key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
         String query = API_URL +
                 "geocode/json?address=" +
                 address.replace(" ","+") +
                 "&components=country:"+country+"&key=" + key;
-        System.out.println(query);
         URL url = new URL(query);
         URLConnection request = url.openConnection();
         request.connect();

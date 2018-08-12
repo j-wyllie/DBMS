@@ -144,7 +144,8 @@ public class Profile implements Comparable<Profile> {
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
             int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, LocalDateTime created, LocalDateTime updated) {
+            String email, String country, String city, String countryOfDeath, String regionOfDeath,
+            String cityOfDeath, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -166,8 +167,53 @@ public class Profile implements Comparable<Profile> {
         this.region = region;
         this.phone = phone;
         this.email = email;
+        this.country = country;
+        this.city = city;
+        this.countryOfDeath = countryOfDeath;
+        this.cityOfDeath = cityOfDeath;
+        this.regionOfDeath = regionOfDeath;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
+    }
+
+    public Profile(int id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
+            Double height, Double weight, String bloodType, Boolean isSmoker,
+            String alcoholConsumption, int bpSystolic, int bpDiastolic, String address,
+            String streetNo, String streetName, String neighbourhood, String city, String zipCode,
+            String region, String country, String birthCountry, String phone, String email,
+            LocalDateTime created, LocalDateTime updated) {
+        this.id = id;
+        this.nhi = nhi;
+        this.username = username;
+        this.donor = isDonor;
+        this.receiver = isReceiver;
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.dateOfDeath = dod;
+        this.birthCountry = birthCountry;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.isSmoker = isSmoker;
+        this.alcoholConsumption = alcoholConsumption;
+        this.bloodPressureSystolic = bpSystolic;
+        this.bloodPressureDiastolic = bpDiastolic;
+        this.address = address;
+        this.region = region;
+        this.phone = phone;
+        this.email = email;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+        this.streetNumber = streetNo;
+        this.streetName = streetName;
+        this.neighbourhood = neighbourhood;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+        this.birthCountry = country;
     }
 
     /**
