@@ -60,6 +60,10 @@ public class DateTimePicker extends DatePicker {
         return dateTimeValue.get();
     }
 
+    /**
+     * Sets the date and time of the DateTimePicker if it is after 1971. Otherwise sets it to null.
+     * @param dateTimeValue Value to be set.
+     */
     public void setDateTimeValue(LocalDateTime dateTimeValue) {
         if(dateTimeValue.isAfter(LocalDateTime.of(1971, 6, 30, 12, 00)))
             this.dateTimeValue.set(dateTimeValue);
@@ -67,22 +71,21 @@ public class DateTimePicker extends DatePicker {
             this.dateTimeValue.set(null);
     }
 
-    public ObjectProperty<LocalDateTime> dateTimeValueProperty() {
-        return dateTimeValue;
-    }
-
     public String getFormat() {
         return format.get();
     }
 
-    public ObjectProperty<String> formatProperty() {
-        return format;
-    }
-
+    /**
+     * Sets the format of the date time picker.
+     * @param format Format to be set. ie. DefaultFormat.
+     */
     public void setFormat(String format) {
         this.format.set(format);
     }
 
+    /**
+     * Class to convert the dates to a string and vice-versa.
+     */
     class InternalConverter extends StringConverter<LocalDate> {
         public String toString(LocalDate object) {
 
@@ -90,6 +93,11 @@ public class DateTimePicker extends DatePicker {
             return (value != null) ? value.format(formatter) : "";
         }
 
+        /**
+         * Gets a localdate from a string.
+         * @param value string to be converted to a date.
+         * @return A local date.
+         */
         public LocalDate fromString(String value) {
             if (value == null) {
                 dateTimeValue.set(null);
