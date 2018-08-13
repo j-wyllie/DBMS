@@ -5,8 +5,11 @@ import static odms.controller.AlertController.profileCancelChanges;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -277,10 +280,7 @@ public class ProfileEdit extends CommonView {
             }
 
             if (currentProfile.getDateOfDeath() == null) {
-                comboCountryOfDeath.setDisable(true);
-                regionOfDeathField.setDisable(true);
-                comboRegionOfDeath.setDisable(true);
-                cityOfDeathField.setDisable(true);
+                deathDetailsSetDisable(true);
                 clearDodField();
             }
         }
@@ -290,10 +290,7 @@ public class ProfileEdit extends CommonView {
      * Disables labels if a clinician isn't viewing the profile.
      */
     private void disableItems() {
-        comboCountryOfDeath.setDisable(true);
-        regionOfDeathField.setDisable(true);
-        comboRegionOfDeath.setDisable(true);
-        cityOfDeathField.setDisable(true);
+        deathDetailsSetDisable(true);
         dodDateTimePicker.setDisable(true);
     }
 
@@ -415,10 +412,7 @@ public class ProfileEdit extends CommonView {
             }
         }
 
-        comboRegion.setDisable(false);
-        comboCountry.setDisable(false);
-        regionField.setDisable(false);
-        cityField.setDisable(false);
+        deathDetailsSetDisable(false);
 
         //Populating combo box values
         CountryDAO database = DAOFactory.getCountryDAO();
@@ -433,12 +427,11 @@ public class ProfileEdit extends CommonView {
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         refreshRegionSelection();
-        if (currentProfile.getDateOfDeath() != null) {
-
-        }
     }
 
-
+    /**
+     * Sets the listeners for nhiField, weightField and dodDateTimePicker.
+     */
     private void setListeners() {
         String anyDigit = "//d*";
         String notAnyDigit = "[^\\d]";
@@ -466,24 +459,48 @@ public class ProfileEdit extends CommonView {
 
         dodDateTimePicker.getEditor().textProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (newValue == null || newValue.equals("")) {
-                        comboCountryOfDeath.setDisable(true);
-                        regionOfDeathField.setDisable(true);
-                        comboRegionOfDeath.setDisable(true);
-                        cityOfDeathField.setDisable(true);
 
+                    if (newValue == null || newValue.equals("")) {
+                        deathDetailsSetDisable(true);
                         clearDodField();
                     } else {
-                        if (isOpenedByClinician) {
-                            comboCountryOfDeath.setDisable(false);
-                            regionOfDeathField.setDisable(false);
-                            comboRegionOfDeath.setDisable(false);
-                            cityOfDeathField.setDisable(false);
-                            refreshRegionOfDeathSelection();
-                            controller.populateDeathFields();
+
+                        try {
+                            DateTimeFormatter dtFormatter = DateTimeFormatter
+                                    .ofPattern("d/M/yyyy H:mm");
+
+                            // Validate the text entry is a valid date time.
+                            LocalDateTime parsedDoD = LocalDateTime.parse(
+                                    dodDateTimePicker.getEditor().getText(), dtFormatter
+                            );
+
+                            if (isValidDateOfDeath(parsedDoD)) {
+                                deathDetailsSetDisable(false);
+                                refreshRegionOfDeathSelection();
+                                controller.populateDeathFields();
+                            } else {
+                                AlertController.invalidEntry("Date cannot be in the future.");
+                                deathDetailsSetDisable(true);
+                                clearDodField();
+                            }
+
+                        } catch (DateTimeParseException e) {
+                            deathDetailsSetDisable(true);
                         }
                     }
                 });
+    }
+
+    private Boolean isValidDateOfDeath(LocalDateTime dateOfDeath) {
+        return dateOfDeath.isAfter(LocalDateTime.of(1900, 6, 30, 12, 0)) &&
+                !dateOfDeath.isAfter(LocalDateTime.now());
+    }
+
+    private void deathDetailsSetDisable(Boolean disabled) {
+        comboCountryOfDeath.setDisable(disabled);
+        regionOfDeathField.setDisable(disabled);
+        comboRegionOfDeath.setDisable(disabled);
+        cityOfDeathField.setDisable(disabled);
     }
 
     private void clearDodField() {
