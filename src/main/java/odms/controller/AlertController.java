@@ -156,7 +156,7 @@ public class AlertController {
         Alert saveAlert = new Alert(
                 AlertType.CONFIRMATION,
                 "Do you wish to save your changes?",
-                ButtonType.NO,
+                ButtonType.CANCEL,
                 ButtonType.YES
         );
 
