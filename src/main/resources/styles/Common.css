@@ -84,4 +84,17 @@
 
 .progress-bar > .bar {
     -fx-background-color: linear-gradient(#71aee1, #135c94);
+    /*-fx-background-color: #000000;*/
+}
+
+.progress-bar-green > .bar {
+    -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+}
+
+.progress-bar-red > .bar {
+    -fx-background-color: linear-gradient(#e07173, #ae4446);
+}
+
+.progress-bar-yellow > .bar {
+    -fx-background-color: linear-gradient(#ffec4d, #e5a50d);
 }

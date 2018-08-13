@@ -215,6 +215,10 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(highlight);
+                System.out.println("Hello???");
+                System.out.println(getStyleClass());
+                System.out.println(getStyle());
+                System.out.println(getStyleableParent());
 
             } else {
                 getStyleClass().remove(highlight);
