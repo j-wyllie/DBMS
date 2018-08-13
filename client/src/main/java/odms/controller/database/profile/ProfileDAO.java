@@ -41,8 +41,6 @@ public interface ProfileDAO {
      */
     boolean isUniqueUsername(String username) throws SQLException;
 
-    boolean isUniqueNHI(String nhi) throws SQLException;
-
     /**
      * Checks if a nhi already exists in the database.
      * @param nhi to check.
