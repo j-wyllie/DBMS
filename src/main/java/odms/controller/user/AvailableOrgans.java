@@ -49,6 +49,7 @@ public class AvailableOrgans {
     public void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,Map.Entry<Profile, OrganEnum> m) {
         if(!profile.getDateOfDeath().equals(null) && LocalDateTime.now().isAfter(getExpiryTime(organ, profile))) {
             view.removeItem(m);
+            setOrganExpired(organ,profile);
         }
     }
 

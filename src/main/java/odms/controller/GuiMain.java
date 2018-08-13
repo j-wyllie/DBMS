@@ -19,10 +19,7 @@ import odms.model.enums.UserType;
 import odms.view.user.AvailableOrgans;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * Main class. GUI boots from here.
@@ -79,13 +76,11 @@ public class GuiMain extends Application {
             userDb.addUser(user);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
-        //timer that runs in the background to check if organs have expired
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        Thread checkOrgan = new Thread() {
             public void run() {
                 try {
                     List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
+                                .getAllOrgansAvailable();
                     for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                         controller.checkOrganExpired(m.getValue(), m.getKey(), m);
                     }
@@ -93,7 +88,9 @@ public class GuiMain extends Application {
                     e.printStackTrace();
                 }
             }
-        },0,1);
+        };
+        checkOrgan.start();
+        //timer that runs in the background to check if organs have expired
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));

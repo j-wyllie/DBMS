@@ -219,8 +219,12 @@ public class AvailableOrgans extends CommonView {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
+                List<Map.Entry<Profile, OrganEnum>> toRemove = new ArrayList<>();
                 availableOrgansTable.refresh();
                 for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
+                    toRemove.add(m);
+                }
+                for(Map.Entry<Profile, OrganEnum> m : toRemove) {
                     controller.checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
                 }
             }

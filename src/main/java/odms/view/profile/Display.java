@@ -5,9 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import odms.view.CommonView;
 
 import static odms.controller.AlertController.invalidUsername;
@@ -131,6 +136,21 @@ public class Display extends CommonView {
 
     @FXML
     private void onTabOrgansSelected() {
+        Thread checkOrgan = new Thread() {
+            public void run() {
+                try {
+                    odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
+                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                            .getAllOrgansAvailable();
+                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        checkOrgan.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());
