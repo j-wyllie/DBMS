@@ -115,14 +115,17 @@
                              <Insets left="20.0" />
                          </GridPane.margin>
                      </Label>
-                  <TableView fx:id="countriesTable" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.rowSpan="6">
+                  <TableView fx:id="countriesTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="7">
                     <columns>
-                      <TableColumn fx:id="countriesColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="110.0" text="Countries" />
-                      <TableColumn fx:id="allowedColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="110.0" text="Valid" />
+                      <TableColumn fx:id="countriesColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="171.0" resizable="false" text="Countries" />
+                      <TableColumn fx:id="allowedColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="171.0" resizable="false" text="Valid" />
                     </columns>
                      <GridPane.margin>
-                        <Insets right="30.0" />
+                        <Insets right="50.0" />
                      </GridPane.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                  </children>
               </GridPane>
