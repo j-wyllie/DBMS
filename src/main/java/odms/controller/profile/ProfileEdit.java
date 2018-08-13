@@ -358,7 +358,7 @@ public class ProfileEdit extends CommonController {
      * Save Region field to profile.
      */
     public void saveRegion() {
-        if (!view.getComboRegion().isDisabled()) {
+        if (view.getComboRegion().isVisible()) {
             if (view.getComboRegion().getValue() != null) {
                 currentProfile.setRegion(view.getComboRegion().getValue());
             }

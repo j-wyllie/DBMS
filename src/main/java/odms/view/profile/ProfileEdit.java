@@ -204,20 +204,23 @@ public class ProfileEdit extends CommonView {
     private void refreshRegionSelection() {
         if (comboCountry.getValue() != null) {
             if (comboCountry.getValue().toString().equals(MAINCOUNTRY)) {
-                comboRegion.setDisable(false);
-                regionField.setDisable(true);
+                comboRegion.setVisible(true);
+                regionField.setVisible(false);
                 regionField.clear();
                 comboRegion.getItems().setAll(NewZealandRegionsEnum.toArrayList());
-                if (currentProfile.getRegion() != null) {
+                if (currentProfile.getRegion() != null && NewZealandRegionsEnum.toArrayList()
+                        .contains(currentProfile.getRegion())) {
                     comboRegion.setValue(currentProfile.getRegion());
+                } else {
+                    comboRegion.setValue(NewZealandRegionsEnum.toArrayList().get(0));
                 }
             } else {
-                comboRegion.setDisable(true);
-                regionField.setDisable(false);
+                comboRegion.setVisible(false);
+                regionField.setVisible(true);
             }
         } else {
-            comboRegion.setDisable(true);
-            regionField.setDisable(false);
+            comboRegion.setVisible(false);
+            regionField.setVisible(true);
         }
     }
 
@@ -229,8 +232,8 @@ public class ProfileEdit extends CommonView {
     private void refreshRegionOfDeathSelection() {
         if (comboCountryOfDeath.getValue() != null) {
             if (comboCountryOfDeath.getValue().toString().equals(MAINCOUNTRY)) {
-                comboRegionOfDeath.setDisable(false);
-                regionOfDeathField.setDisable(true);
+                comboRegionOfDeath.setVisible(true);
+                regionOfDeathField.setVisible(false);
                 regionOfDeathField.clear();
                 comboRegionOfDeath.getItems().setAll(NewZealandRegionsEnum.toArrayList());
                 if (currentProfile.getRegionOfDeath() != null) {
@@ -241,12 +244,12 @@ public class ProfileEdit extends CommonView {
                     }
                 }
             } else {
-                comboRegionOfDeath.setDisable(true);
-                regionOfDeathField.setDisable(false);
+                comboRegionOfDeath.setVisible(false);
+                regionOfDeathField.setVisible(true);
             }
         } else {
-            comboRegionOfDeath.setDisable(true);
-            regionOfDeathField.setDisable(false);
+            comboRegionOfDeath.setVisible(false);
+            regionOfDeathField.setVisible(true);
         }
     }
 
@@ -397,17 +400,17 @@ public class ProfileEdit extends CommonView {
         if (currentProfile.getRegion() != null) {
             if (currentProfile.getCountry() != null) {
                 if (currentProfile.getCountry().equals(MAINCOUNTRY)) {
-                    comboRegion.setDisable(false);
-                    regionField.setDisable(true);
+                    comboRegion.setVisible(true);
+                    regionField.setVisible(false);
                     comboRegion.setValue(currentProfile.getRegion());
                 } else {
-                    comboRegion.setDisable(true);
-                    regionField.setDisable(false);
+                    comboRegion.setVisible(false);
+                    regionField.setVisible(true);
                     regionField.setText(currentProfile.getRegion());
                 }
             } else {
-                comboRegion.setDisable(true);
-                regionField.setDisable(false);
+                comboRegion.setVisible(false);
+                regionField.setVisible(true);
                 regionField.setText(currentProfile.getRegion());
             }
         }
@@ -439,7 +442,6 @@ public class ProfileEdit extends CommonView {
     private void setListeners() {
         String anyDigit = "//d*";
         String notAnyDigit = "[^\\d]";
-        // TODO investigate abstracting copy paste listeners to common function.
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches(anyDigit)) {
                 heightField.setText(newValue.replaceAll(notAnyDigit, ""));
