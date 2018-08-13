@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
+import odms.controller.history.CurrentHistory;
 import odms.controller.database.profile.ProfileDAO;
 
 public class ProfileEdit extends CommonController {
@@ -35,9 +37,9 @@ public class ProfileEdit extends CommonController {
     public void save() throws IllegalArgumentException, SQLException {
         if (AlertController.saveChanges()) {
             // history Generation
-//            odms.model.history.History action = new odms.model.history.History("profile",
-//                    currentProfile.getId(), "update",
-//                    "previous " + currentProfile.getAttributesSummary(), -1, null);
+            History action = new History("profile",
+                    currentProfile.getId(), "update",
+                    "previous " + currentProfile.getAttributesSummary(), -1, null);
 
             try {
                 if (view.getDodDateTimePicker() != null) {

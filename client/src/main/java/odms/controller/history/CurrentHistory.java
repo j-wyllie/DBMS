@@ -1,6 +1,6 @@
 package odms.controller.history;
 
-import odms.history.History;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 

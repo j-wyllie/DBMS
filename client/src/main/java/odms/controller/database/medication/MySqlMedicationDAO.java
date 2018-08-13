@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import odms.controller.database.DatabaseConnection;
-import odms.model.medications.Drug;
-import odms.model.profile.Profile;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.profile.Profile;
 
 public class MySqlMedicationDAO implements MedicationDAO {
 

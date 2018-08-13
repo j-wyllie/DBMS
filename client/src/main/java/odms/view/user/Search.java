@@ -25,7 +25,6 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.user.User;
-import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
