@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import odms.controller.database.MySqlOrganDAO;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.organ.MySqlOrganDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.Before;
 import org.junit.Test;
 
