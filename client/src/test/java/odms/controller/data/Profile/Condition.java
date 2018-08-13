@@ -81,6 +81,9 @@ public class Condition {
 
     @Test
     public void testToggleChronicTrueCondition() {
+        odms.commons.model.profile.Condition c = new odms.commons.model.profile.Condition("", LocalDate.now(),false);
+        controller.addCondition(c, currentProfile);
+        controller.toggleChronic(currentProfile, currentProfile.getAllConditions());
         assert(currentProfile.getAllConditions().get(0).getChronic());
     }
 
