@@ -1,7 +1,7 @@
 package odms.controller.data.Profile;
 
 
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import org.junit.Before;
 
 import java.io.IOException;

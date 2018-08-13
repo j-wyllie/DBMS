@@ -1,14 +1,13 @@
 package odms.controller.data.Profile;
 
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.Assert.assertNotEquals;
 
 public class OrganRemoval {

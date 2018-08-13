@@ -73,7 +73,6 @@ public class Condition {
     @Test
     public void testRemoveValidCondition() {
         odms.commons.model.profile.Condition c = new odms.commons.model.profile.Condition("", LocalDate.now(),false);
-        odms.commons.model.profile.Condition c = new odms.commons.model.profile.Condition("", LocalDate.now(),false);
         controller.addCondition(c, currentProfile);
         int initial_size = currentProfile.getAllConditions().size();
         controller.removeCondition(c, currentProfile);
@@ -82,7 +81,6 @@ public class Condition {
 
     @Test
     public void testToggleChronicTrueCondition() {
-        controller.addCondition(new odms.commons.Profile, currentProfile.getAllConditions());
         assert(currentProfile.getAllConditions().get(0).getChronic());
     }
 

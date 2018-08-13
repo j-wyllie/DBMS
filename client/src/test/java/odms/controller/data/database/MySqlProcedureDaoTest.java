@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import java.util.List;
-import odms.controller.database.MySqlProcedureDAO;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.MySqlProcedureDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.Before;
 import org.junit.Test;
 
