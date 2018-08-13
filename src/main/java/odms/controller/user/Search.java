@@ -1,6 +1,7 @@
 package odms.controller.user;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.ProfileDAO;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
@@ -16,7 +18,12 @@ import odms.model.profile.Profile;
  */
 public class Search {
 
+    private final odms.view.user.Search view;
     private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+
+    public Search(odms.view.user.Search v) {
+        view = v;
+    }
 
     /**
      * Gets a sorted list of profiles, the list contains profiles based off of the criteria set by
@@ -39,7 +46,7 @@ public class Search {
         if (selectedOrgans.isEmpty() && selectedType.equals("any") && selectedGender.equals("any") &&
                 searchString.equals("") && regionSearchString.equals("") &&
                 ageRangeString.equals("")) {
-            return new ArrayList<>();
+            return null;
         }
 
         int ageRangeSearchInt;
@@ -144,4 +151,8 @@ public class Search {
         return results;
     }
 
+    public String getNumberOfProfiles() throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        return "There are " + database.size() + " profiles";
+    }
 }

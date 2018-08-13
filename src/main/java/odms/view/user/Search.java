@@ -44,7 +44,7 @@ public class Search extends CommonView {
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
-    private odms.controller.user.Search controller = new odms.controller.user.Search();
+    private odms.controller.user.Search controller = new odms.controller.user.Search(this);
 
     @FXML
     private TextField ageField;
@@ -251,9 +251,12 @@ public class Search extends CommonView {
                 typeCombobox.getValue().toString(), genderCombobox.getValue().toString(), searchField.getText(), regionField.getText(),
                 ageField.getText(), ageRangeField.getText(), ageRangeCheckbox.isSelected());
 
-        updateTable(false, false);
-        updateLabels();
-
+        if (profileSearchResults == null) {
+            setSearchTablePlaceholder();
+        } else {
+            updateTable(false, false);
+            updateLabels();
+        }
     }
 
     /**
@@ -363,20 +366,24 @@ public class Search extends CommonView {
             typeCombobox.getItems().addAll(typeStrings);
             typeCombobox.getSelectionModel().selectFirst();
 
-            ProfileDAO database = DAOFactory.getProfileDao();
-
-            try {
-                makeSearchTable();
-                searchTable.getItems().clear();
-                searchTable.setPlaceholder(new Label(
-                        "There are " + database.size()
-                                + " profiles"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            makeSearchTable();
+            setSearchTablePlaceholder();
         }
 
         setPauseTransitions();
+    }
+
+    /**
+     * Clears the search table and sets the placeholder.
+     */
+    public void setSearchTablePlaceholder() {
+        try {
+            makeSearchTable();
+            searchTable.getItems().clear();
+            searchTable.setPlaceholder(new Label(controller.getNumberOfProfiles()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

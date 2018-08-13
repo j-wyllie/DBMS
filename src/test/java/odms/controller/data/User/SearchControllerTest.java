@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class SearchControllerTest {
     Search view = new Search();
-    odms.controller.user.Search controller = new odms.controller.user.Search();
+    odms.controller.user.Search controller = new odms.controller.user.Search(view);
     Profile testProfile;
     SimpleStringProperty expected = new SimpleStringProperty();
     @Before
