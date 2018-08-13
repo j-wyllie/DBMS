@@ -1,11 +1,13 @@
 package odms.controller.database.profile;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+
 
 public interface ProfileDAO {
 
@@ -41,13 +43,7 @@ public interface ProfileDAO {
      */
     boolean isUniqueUsername(String username) throws SQLException;
 
-    /**
-     * Checks if a nhi already exists in the database.
-     * @param nhi to check.
-     * @return true is the nhi does not already exist.
-     */
     int isUniqueNHI(String nhi) throws SQLException;
-
 
     /**
      * Removes a profile from the database.
@@ -72,8 +68,7 @@ public interface ProfileDAO {
      * @param organs filter based on organs selected.
      * @return a sublist of profiles.
      */
-    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
-            String region,
+    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt, String region,
             String gender, String type, Set<OrganEnum> organs) throws SQLException;
 
     /**

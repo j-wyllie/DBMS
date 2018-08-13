@@ -1,17 +1,18 @@
 package odms.controller.profile;
 
-import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
-import odms.data.NHIConflictException;
-import odms.view.profile.CreateAccount;
-import odms.controller.CommonController;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidNhi;
+
+import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
+import odms.data.NHIConflictException;
+import odms.view.profile.CreateAccount;
+import odms.controller.CommonController;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class ProfileCreate extends CommonController {
 
@@ -52,7 +53,6 @@ public class ProfileCreate extends CommonController {
      */
     public Profile createAccount() throws IOException {
         //todo rework this method potentially
-        ProfileDAO database = DAOFactory.getProfileDao();
 
         if (checkDetailsEntered()) {
             try {
@@ -62,11 +62,7 @@ public class ProfileCreate extends CommonController {
                 String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
-                if (DAOFactory.getProfileDao().isUniqueNHI(newProfile.getNhi()) == 0) {
-                    throw new NHIConflictException("Duplicate NHI", newProfile.getNhi());
-                }
                 DAOFactory.getProfileDao().add(newProfile);
-                return newProfile;
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {
                     invalidEntry(
@@ -81,8 +77,6 @@ public class ProfileCreate extends CommonController {
                 invalidDate();
             } catch (SQLException e) {
                 invalidEntry("Database could not parse this profile");
-            } catch (Exception e) {
-                invalidNhi();
             }
         }
         return null;
