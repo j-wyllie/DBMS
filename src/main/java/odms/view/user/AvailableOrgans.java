@@ -19,8 +19,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import odms.controller.database.CountryDAO;
-import odms.controller.database.DAOFactory;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -32,8 +30,6 @@ public class AvailableOrgans extends CommonView {
 
     @FXML
     private CheckComboBox organsCombobox;
-    @FXML
-    private CheckComboBox countriesCombobox;
     @FXML
     private CheckComboBox regionsCombobox;
     @FXML
@@ -114,6 +110,9 @@ public class AvailableOrgans extends CommonView {
 
 
     public void populateOrgansTable()  {
+        TableColumn test = (TableColumn) availableOrgansTable.getColumns().get(2);
+        System.out.println(test.getColumns());
+
         availableOrgansTable.getColumns().clear();
         TableColumn<Map.Entry<Profile, OrganEnum>, String> organCol = new TableColumn<>(
                 "Organ");
@@ -121,25 +120,44 @@ public class AvailableOrgans extends CommonView {
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> dateOfDeathNameCol = new TableColumn<>(
-                "Date of Death");
+                "Death");
         dateOfDeathNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
                         cdf.getValue().getKey().getDateOfDeath().toString()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
-                "Countdown");
-        countdownCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(
-                        (controller.getTimeToExpiryFormatted(cdf.getValue().getValue(), cdf.getValue().getKey()))));
+                "Countdown"
+        );
 
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownStdCol = new TableColumn<>(
+                "Standard"
+        );
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> donorIdCol = new TableColumn<>(
-                "Donor ID");
-        donorIdCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty((cdf.getValue().getKey().getId()).toString()));
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownSecCol = new TableColumn<>(
+                "Hours & Seconds"
+        );
+
+        countdownCol.getColumns().addAll(countdownStdCol, countdownSecCol);
+
+        countdownStdCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty((controller.getTimeToExpiryStd(
+                        cdf.getValue().getValue(), cdf.getValue().getKey())
+                ))
+        );
+
+        countdownSecCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty((controller.getTimeToExpiryHoursSeconds(
+                        cdf.getValue().getValue(), cdf.getValue().getKey())
+                ))
+        );
+
+        TableColumn<Map.Entry<Profile, OrganEnum>, String> nhiCol = new TableColumn<>(
+                "NHI");
+        nhiCol.setCellValueFactory(
+                cdf -> new SimpleStringProperty((cdf.getValue().getKey().getNhi())));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn(
-                "Expiry Progress Bar");
+                "Expiry");
         expiryProgressBarCol.setCellValueFactory(
                 cdf -> new SimpleDoubleProperty(
                         getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey())
@@ -162,7 +180,7 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.getColumns().add(organCol);
         availableOrgansTable.getColumns().add(dateOfDeathNameCol);
         availableOrgansTable.getColumns().add(countdownCol);
-        availableOrgansTable.getColumns().add(donorIdCol);
+        availableOrgansTable.getColumns().add(nhiCol);
         availableOrgansTable.getColumns().add(expiryProgressBarCol);
         availableOrgansTable.getItems().clear();
 
@@ -271,25 +289,6 @@ public class AvailableOrgans extends CommonView {
         populateOrgansTable();
         populateMatchesTable();
         parentView = p;
-
-        //Populating combo box values
-        CountryDAO database = DAOFactory.getCountryDAO();
-        int index = 0;
-        for (String country : database.getAll(true)) {
-            User.allowedCountriesIndices.add(index);             // TODO is allowed countries relevant for this table?
-            index++;
-        }
-
-        List<String> validCountries = database.getAll(true);
-        //todo countries not a required AC
-        countriesCombobox.setVisible(false);
-        countriesCombobox.getItems().addAll(validCountries);
-        countriesCombobox.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(Change c) {
-                performOrganSearchFromFilters();
-            }
-        });
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList()); // TODO will this be populated with ALL regions?
         //regionsCombobox.setDisable(true);  // TODO not sure how the region filter will work with multiple countries just yet

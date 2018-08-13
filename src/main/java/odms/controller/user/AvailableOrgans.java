@@ -3,6 +3,8 @@ package odms.controller.user;
 import static java.lang.Math.abs;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
@@ -182,40 +184,119 @@ public class AvailableOrgans {
     }
 
     /**
+     * Get remaining time in standard '5y 4d 3h 2m 1s' format.
+     *
+     * @param organ the organ being checked against.
+     * @param profile the selected profile.
+     * @return formatted string.
+     */
+    public static String getTimeToExpiryStd(OrganEnum organ, Profile profile) {
+        return getTimeToExpiryFormatted(organ, profile, true);
+    }
+
+    /**
+     * Get remaining time in standard '2h 1s' format.
+     *
+     * @param organ the organ being checked against.
+     * @param profile the selected profile.
+     * @return formatted string.
+     */
+    public static String getTimeToExpiryHoursSeconds(OrganEnum organ, Profile profile) {
+        return getTimeToExpiryFormatted(organ, profile, false);
+    }
+
+    /**
      * Calculates how long a Organ has til expiry, returns in formatted string
+     *
      * @param organ Given organ
      * @param profile Given profile the organ belongs to
      * @return How long the organ has til expiry in days, minutes, hours and seconds
      */
-    public static String getTimeToExpiryFormatted(OrganEnum organ, Profile profile) {
+    public static String getTimeToExpiryFormatted(OrganEnum organ, Profile profile, Boolean isStd) {
+        Long timeToExpiry = Duration.between(
+                LocalDateTime.now(),
+                getExpiryTime(organ, profile)
+        ).toMillis();
 
+        if (isStd) {
+            return msToStandard(timeToExpiry);
+        } else {
+            return msToHoursAndSeconds(timeToExpiry);
+        }
+
+    }
+
+    /**
+     * Support function to convert ms to a string representing hours and seconds.
+     *
+     * @param timeToExpiry in ms
+     * @return formatted string
+     */
+    private static String msToHoursAndSeconds(Long timeToExpiry) {
         String durationFormatted = "";
-        Long timeToExpiry = Duration.between(LocalDateTime.now(), getExpiryTime(organ, profile))
-                .toMillis();
 
-        long temp = 0;
+        long temp;
         if (timeToExpiry >= ONE_SECOND) {
+
             temp = timeToExpiry / ONE_HOUR;
             if (temp > 0) {
-                if (temp > 1) {
-                    durationFormatted += temp + " hours ";
-                } else {
-                    durationFormatted += temp + " hour ";
-                }
+                durationFormatted += temp + "h ";
                 timeToExpiry -= temp * ONE_HOUR;
             }
+
             temp = timeToExpiry / ONE_SECOND;
             if (temp > 0) {
-                if (temp > 1) {
-                    durationFormatted += temp + " seconds ";
-                } else {
-                    durationFormatted += temp + " second ";
-                }
+                durationFormatted += temp + "s ";
             }
         }
 
         return durationFormatted;
+    }
 
+    /**
+     * Support function to convert ms to a string representing years, hours, minutes and seconds.
+     *
+     * @param timeToExpiry in ms
+     * @return formatted string
+     */
+    private static String msToStandard(Long timeToExpiry) {
+        String durationFormatted = "";
+
+        long temp;
+        if (timeToExpiry >= ONE_SECOND) {
+
+            temp = timeToExpiry / ONE_YEAR;
+            if (temp > 0) {
+                durationFormatted += temp + "y ";
+                timeToExpiry -= temp * ONE_YEAR;
+            }
+
+            temp = timeToExpiry / ONE_DAY;
+            if (temp > 0) {
+                durationFormatted += temp + "d ";
+                timeToExpiry -= temp * ONE_DAY;
+            }
+
+            temp = timeToExpiry / ONE_HOUR;
+            if (temp > 0) {
+                durationFormatted += temp + "h ";
+                timeToExpiry -= temp * ONE_HOUR;
+            }
+
+            temp = timeToExpiry / ONE_MINUTE;
+            if (temp > 0) {
+                durationFormatted += temp + "m ";
+                timeToExpiry -= temp * ONE_MINUTE;
+            }
+
+            temp = timeToExpiry / ONE_SECOND;
+            if (temp > 0) {
+                durationFormatted += temp + "s ";
+            }
+
+        }
+
+        return durationFormatted;
     }
 
     /**
