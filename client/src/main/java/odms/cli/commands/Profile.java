@@ -1,16 +1,18 @@
 package odms.cli.commands;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import odms.cli.CommandUtils;
+import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.data.NHIConflictException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class Profile extends CommandUtils {
 
@@ -19,9 +21,8 @@ public class Profile extends CommandUtils {
      * @param id profile ID.
      */
     protected static void addProfileHistory(Integer id) {
-        odms.commons.model.history.History action = new odms.commons.model.history.History("profile", id, "added", "", -1, LocalDateTime.now());
-        // TODO: update history
-        // CurrentHistory.updateHistory(action);
+        History action = new History("profile", id, "added", "", -1, LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -85,10 +86,9 @@ public class Profile extends CommandUtils {
         if (profileList.size() > 0) {
             for (odms.commons.model.profile.Profile profile : profileList) {
                 database.remove(profile);
-                // TODO: update history
-//                CurrentHistory.deletedProfiles.add(profile);
-//                CurrentHistory.updateHistory(new odms.commons.model.history.History("profile", profile.getId(),
-//                        "deleted", "", -1, LocalDateTime.now()));
+                CurrentHistory.deletedProfiles.add(profile);
+                CurrentHistory.updateHistory(new odms.commons.model.history.History("profile", profile.getId(),
+                        "deleted", "", -1, LocalDateTime.now()));
             }
         } else {
             System.out.println(searchNotFoundText);

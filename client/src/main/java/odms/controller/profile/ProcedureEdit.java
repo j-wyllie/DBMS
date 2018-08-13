@@ -1,8 +1,8 @@
 package odms.controller.profile;
 
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import odms.history.History;
 import odms.view.profile.ProcedureDetailed;
 import odms.controller.history.CurrentHistory;
 

@@ -1,7 +1,6 @@
 package odms.view.profile;
 
 import static odms.controller.AlertController.saveChanges;
-import static odms.controller.GuiMain.getCurrentDatabase;
 import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
 import java.io.IOException;
@@ -30,10 +29,10 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
 import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.Medications;
-import odms.commons.model.medications.Drug;
 import odms.view.CommonView;
 
 /**
