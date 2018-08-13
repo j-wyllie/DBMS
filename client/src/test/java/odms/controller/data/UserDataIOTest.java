@@ -1,8 +1,10 @@
 package odms.controller.data;
 
-import odms.data.UserDatabase;
+import java.sql.SQLException;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.user.UserDAO;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,25 +12,22 @@ import static org.junit.Assert.assertEquals;
 
 public class UserDataIOTest {
 
-    private UserDatabase userDb;
+    private UserDAO userDb;
     private User user1;
     private User user2;
 
     @Before
-    public void setup() {
-        userDb = new UserDatabase();
+    public void setup() throws SQLException {
+        userDb = DAOFactory.getUserDao();
 
         user1 = new User(UserType.CLINICIAN, "John Smith", "Christchurch");
         user2 = new User(UserType.CLINICIAN, "Matt Smith", "Auckland");
-        userDb.addUser(user1);
-        userDb.addUser(user2);
+        userDb.add(user1);
+        userDb.add(user2);
     }
 
     @Test
     public void testSaveAndLoad() throws Exception {
-        UserDatabase loadedDb;
-        UserDataIO.saveUsers(userDb, "example/users.json");
-        loadedDb = UserDataIO.loadData("example/users.json");
-        assertEquals("John Smith", userDb.getUser(0).getName());
+        assertEquals(userDb.getAll().get(0).getName(), userDb.getAll().get(0).getName());
     }
 }

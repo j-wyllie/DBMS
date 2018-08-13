@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import odms.controller.database.MySqlConditionDAO;
-import odms.controller.database.MySqlProfileDAO;
-import odms.model.profile.Condition;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.condition.MySqlConditionDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.Before;
 import org.junit.Test;
 

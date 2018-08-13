@@ -4,7 +4,7 @@ import static junit.framework.TestCase.assertEquals;
 
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.user.Search;
 import org.junit.Before;
 import org.junit.Test;

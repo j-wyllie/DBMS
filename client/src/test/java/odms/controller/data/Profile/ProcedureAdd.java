@@ -1,7 +1,9 @@
 package odms.controller.data.Profile;
 
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import static org.junit.Assert.assertEquals;
+
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
 

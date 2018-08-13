@@ -43,8 +43,8 @@ public class ProfileDataIOTest {
     @Test
     public void testSaveAndLoad() throws SQLException {
         assertEquals(
-                profileDb.get(1).getGivenNames(),
-                profileDb.get(1).getGivenNames()
+                profileDb.getAll().get(0).getGivenNames(),
+                profileDb.getAll().get(0).getGivenNames()
         );
 
         try {
