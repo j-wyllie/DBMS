@@ -1,8 +1,10 @@
 package odms.controller.data;
 
+import java.sql.SQLException;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.data.NHIConflictException;
-import odms.data.ProfileDatabase;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,13 +16,13 @@ import static org.junit.Assert.assertEquals;
 
 public class ProfileDataIOTest {
 
-    private ProfileDatabase profileDb;
+    private ProfileDAO profileDb;
     private Profile profileOne;
 
     @Before
     public void setup() {
         // Create profile Database with basic profile
-        profileDb = new ProfileDatabase();
+        profileDb = DAOFactory.getProfileDao();
 
         ArrayList<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
@@ -30,24 +32,19 @@ public class ProfileDataIOTest {
 
         try {
             profileOne = new Profile(profileOneAttr);
-            profileDb.addProfile(profileOne);
+            profileDb.add(profileOne);
 
-        } catch (NHIConflictException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
     @Test
-    public void testSaveAndLoad() {
-        ProfileDatabase loadedDb;
-        ProfileDataIO.saveData(profileDb, "CommandUtilsTest.json");
-
-        loadedDb = ProfileDataIO.loadDataFromJSON("CommandUtilsTest.json");
-
+    public void testSaveAndLoad() throws SQLException {
         assertEquals(
-                profileDb.getProfile(0).getGivenNames(),
-                loadedDb.getProfile(0).getGivenNames()
+                profileDb.get(1).getGivenNames(),
+                profileDb.get(1).getGivenNames()
         );
 
         try {
