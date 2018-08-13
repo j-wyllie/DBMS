@@ -783,11 +783,12 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange) {
-        String query = "SELECT * FROM profiles p WHERE p.BloodType = ? AND "
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
                 + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
                 + "o.Required) = ?;";
+
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
@@ -796,13 +797,14 @@ public class MySqlProfileDAO implements ProfileDAO {
             Connection conn = instance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, bloodType);
+            stmt.setString(1, bloodType.toString());
             stmt.setInt(2, lowerAgeRange);
             stmt.setInt(3, upperAgeRange);
-            stmt.setString(4, organ);
-            stmt.setString(5, organ);
+            stmt.setString(4, organ.toString());
+            stmt.setString(5, organ.toString());
 
-            ResultSet result = stmt.executeQuery(query);
+
+            ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
                 Profile profile = parseProfile(result);

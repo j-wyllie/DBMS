@@ -1,17 +1,17 @@
 package odms.controller.user;
 
+import static java.lang.Math.abs;
+
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
@@ -32,6 +32,60 @@ public class AvailableOrgans {
 
     public void setView(odms.view.user.AvailableOrgans v) {
         view = v;
+    }
+
+    public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
+        LocalDateTime dateOrganRegistered = LocalDateTime.now();
+
+        for (OrganEnum organ: organsRequired) {
+            if (organ.getNamePlain().equalsIgnoreCase(selectedOrgan.getNamePlain())) {
+                if (organ.getDate() != null) {
+                    dateOrganRegistered = organ.getDate().atStartOfDay();
+                } else {
+                    return Long.valueOf(-1);
+                }
+            }
+        }
+
+        return abs(Duration.between(LocalDateTime.now(), dateOrganRegistered).toMillis());
+    }
+
+    public static String getWaitTime(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
+
+        LocalDateTime dateOrganRegistered = null;
+        String durationFormatted = "";
+
+        Long waitTime = getWaitTimeRaw(selectedOrgan, organsRequired);
+        if (waitTime == -1) {
+            // Means a date was not entered when a organ was registered
+            return "Insufficient data";
+        }
+
+        if (waitTime == 0) {
+            return "Registered today";
+        }
+
+        long temp = 0;
+        if (waitTime >= ONE_SECOND) {
+            temp = waitTime / ONE_DAY;
+            if (temp > 0) {
+                if (temp > 1) {
+                    durationFormatted += temp + " days ";
+                } else {
+                    durationFormatted += temp + " day ";
+                }
+                waitTime -= temp * ONE_DAY;
+            }
+            temp = waitTime / ONE_HOUR;
+            if (temp > 0) {
+                if (temp > 1) {
+                    durationFormatted += temp + " hours ";
+                } else {
+                    durationFormatted += temp + " hour ";
+                }
+            }
+        }
+        return durationFormatted;
     }
 
     public void setOrganExpired(OrganEnum organ, Profile profile) {
@@ -168,14 +222,17 @@ public class AvailableOrgans {
      * returns list of potential organ matches for a given organ and the donor the organ came from
      * @param organAvailable the available organ
      * @param donorProfile the donor the organ came from
+     * @param selectedOrgan
      * @return a list of potential organ matches
      */
-    public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
+    public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
+            Profile donorProfile, OrganEnum selectedOrgan) {
 
+        // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
-        ArrayList<Profile> receivingProfiles = new ArrayList<>();
-        receivingProfiles.addAll(GuiMain.getCurrentDatabase().getReceivers(true));
+        List<Profile> receivingProfiles = new ArrayList<>();
 
+        String organLocation = donorProfile.getRegionOfDeath();
         String reqBloodType = donorProfile.getBloodType();
         Integer minAge;
         Integer maxAge;
@@ -188,17 +245,8 @@ public class AvailableOrgans {
             maxAge = donorProfile.getAge() + 15;
         }
 
-        for (Profile p: receivingProfiles) {
-            if (p.getOrgansRequired().contains(organAvailable) && p.getAge() < maxAge && p.getAge() > minAge
-                    && p.getBloodType().equals(reqBloodType)) {
-                potentialOrganMatches.add(p);
-            }
-        }
-
-        // temporary til we get data TODO
-        System.out.println(potentialOrganMatches.size());
-        potentialOrganMatches.addAll(GuiMain.getCurrentDatabase().getProfiles(false));
-        System.out.println(potentialOrganMatches.size());
+        receivingProfiles = DAOFactory.getProfileDao().getOrganReceivers(organAvailable.getName(), reqBloodType, minAge, maxAge);
+        potentialOrganMatches.addAll(receivingProfiles);
 
         return potentialOrganMatches;
     }
@@ -236,9 +284,7 @@ public class AvailableOrgans {
     public ObservableList<Map.Entry<Profile,OrganEnum>> performSearch(ObservableList organs, ObservableList countries, ObservableList regions) {
 
         ObservableList<Map.Entry<Profile,OrganEnum>> searchResults = null;
-
         return searchResults;
     }
-
 
 }
