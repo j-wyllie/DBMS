@@ -29,6 +29,7 @@ import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.MySqlCountryDAO;
 import odms.model.enums.CountriesEnum;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.profile.Profile;
@@ -386,13 +387,24 @@ public class ProfileEdit extends CommonView {
     }
 
     private void setUpLocationFields() {
+
+        //Populating combo box values
+        CountryDAO database = DAOFactory.getCountryDAO();
+
+        List<String> validCountries = database.getAll(true);
+        comboCountry.getItems().addAll(validCountries);
+        comboCountryOfDeath.getItems().addAll(validCountries);
+
         //city and region should be displayed same regardless
+        MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }
         if (currentProfile.getCountry() != null) {
             comboCountry.setValue(
                     CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+        } else if (validCountries.contains(MAINCOUNTRY)) {
+            comboCountry.setValue(CountriesEnum.getValidNameFromString(MAINCOUNTRY));
         }
         if (currentProfile.getRegion() != null) {
             if (currentProfile.getCountry() != null) {
@@ -413,18 +425,6 @@ public class ProfileEdit extends CommonView {
         }
 
         deathDetailsSetDisable(false);
-
-        //Populating combo box values
-        CountryDAO database = DAOFactory.getCountryDAO();
-        int index = 0;
-        for (String country : database.getAll(true)) {
-            User.allowedCountriesIndices.add(index);
-            index++;
-        }
-
-        List<String> validCountries = database.getAll(true);
-        comboCountry.getItems().addAll(validCountries);
-        comboCountryOfDeath.getItems().addAll(validCountries);
 
         refreshRegionSelection();
     }

@@ -31,6 +31,7 @@ import odms.controller.database.MySqlCountryDAO;
 import odms.controller.history.Redo;
 import odms.controller.history.Undo;
 import odms.model.enums.CountriesEnum;
+import odms.model.enums.UserType;
 import odms.model.user.User;
 
 public class UserGeneral {
@@ -225,7 +226,11 @@ public class UserGeneral {
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
 
-        setupCountriesTable();
-        addAllowedColumnListeners();
+        if (currentUser.getUserType().equals(UserType.CLINICIAN)) {
+            countriesTable.setVisible(false);
+        } else {
+            setupCountriesTable();
+            addAllowedColumnListeners();
+        }
     }
 }
