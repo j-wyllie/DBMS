@@ -79,7 +79,7 @@ public class AvailableOrgans extends CommonView {
         );
         locationColumn.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        cdf.getValue().getCountryOfDeath()));      // TODO do we want address? The list is meant to be weighted by location
+                        cdf.getValue().getCountry()));      // TODO do we want address? The list is meant to be weighted by location
 
         potentialOrganMatchTable.getColumns().add(waitTimeColumn);
         potentialOrganMatchTable.getColumns().add(ageColumn);
