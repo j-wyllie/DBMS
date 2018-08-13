@@ -309,7 +309,11 @@ public class ProfileEdit extends CommonView {
      * Populates all the fields in the window.
      */
     private void populateFields() {
-        donorFullNameLabel.setText(currentProfile.getFullName());
+        if (currentProfile.getPreferredName() != null && !currentProfile.getPreferredName().isEmpty()) {
+            donorFullNameLabel.setText(currentProfile.getPreferredName());
+        } else {
+            donorFullNameLabel.setText(currentProfile.getFullName());
+        }
 
         donorStatusLabel.setText("Donor Status: Unregistered");
 
