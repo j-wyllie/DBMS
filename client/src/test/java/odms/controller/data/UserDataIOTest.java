@@ -1,16 +1,17 @@
 package odms.controller.data;
 
+import static org.junit.Assert.assertEquals;
+
 import java.sql.SQLException;
-import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
+import odms.commons.model.user.User;
+import odms.controller.data.database.MySqlCommonTests;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.user.UserDAO;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-public class UserDataIOTest {
+public class UserDataIOTest extends MySqlCommonTests {
 
     private UserDAO userDb;
     private User user1;
