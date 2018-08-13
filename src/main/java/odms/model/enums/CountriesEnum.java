@@ -3,6 +3,10 @@ package odms.model.enums;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 
 public enum CountriesEnum {
     NZ("New Zealand"),
@@ -209,6 +213,8 @@ public enum CountriesEnum {
 
     private String name;
 
+    private BooleanProperty valid = new SimpleBooleanProperty();
+
     CountriesEnum(String name) {
         this.name = name;
     }
@@ -230,6 +236,13 @@ public enum CountriesEnum {
         }
 
         return countryStrings;
+    }
+
+    public static CountriesEnum getEnumByString(String name){
+        for(CountriesEnum e : CountriesEnum.values()){
+            if(name.equals(e.name)) return e;
+        }
+        return null;
     }
 
     /**
@@ -257,5 +270,17 @@ public enum CountriesEnum {
         } else {
             return "New Zealand";
         }
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid.set(valid);
+    }
+
+    public Boolean getValid() {
+        return valid.get();
+    }
+
+    public Observable getValidProperty() {
+        return valid;
     }
 }
