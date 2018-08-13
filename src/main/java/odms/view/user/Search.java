@@ -96,14 +96,7 @@ public class Search extends CommonView {
      */
     @FXML
     private void makeSearchTable() {
-        ProfileDAO database = DAOFactory.getProfileDao();
-        try {
-            labelResultCount.setText(database.size() + " results found");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         searchTable.getItems().clear();
-
         donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
@@ -121,14 +114,6 @@ public class Search extends CommonView {
                     searchTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
             }
-        });
-
-        genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
-        });
-
-        organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
         });
 
         addTooltipToRow();
@@ -206,9 +191,6 @@ public class Search extends CommonView {
 
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
-            labelResultCount.setText("0 results found");
-            searchTable.setPlaceholder(new Label(
-                    "0 profiles found"));
             buttonShowAll.setVisible(false);
             buttonShowNext.setVisible(false);
         } else {
@@ -255,8 +237,8 @@ public class Search extends CommonView {
             setSearchTablePlaceholder();
         } else {
             updateTable(false, false);
-            updateLabels();
         }
+        updateLabels();
     }
 
     /**
@@ -278,6 +260,7 @@ public class Search extends CommonView {
             } else {
                 labelResultCount.setText(profileSearchResults.size() + " results found");
             }
+            searchTable.setPlaceholder(new Label("0 results found"));
 
             if (showAll) {
                 if (profileSearchResults.size() > 200) {
@@ -366,6 +349,22 @@ public class Search extends CommonView {
             typeCombobox.getItems().addAll(typeStrings);
             typeCombobox.getSelectionModel().selectFirst();
 
+            typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    performSearchFromFilters();
+                }
+            });
+
+            genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    performSearchFromFilters();
+                }
+            });
+
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+                performSearchFromFilters();
+            });
+
             makeSearchTable();
             setSearchTablePlaceholder();
         }
@@ -380,7 +379,9 @@ public class Search extends CommonView {
         try {
             makeSearchTable();
             searchTable.getItems().clear();
-            searchTable.setPlaceholder(new Label(controller.getNumberOfProfiles()));
+            String profileCount = controller.getNumberOfProfiles();
+            searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));
+            labelResultCount.setText(profileCount + " results found");
         } catch (SQLException e) {
             e.printStackTrace();
         }

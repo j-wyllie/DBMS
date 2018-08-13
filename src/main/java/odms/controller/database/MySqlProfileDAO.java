@@ -690,7 +690,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @return the number of profiles.
      */
     @Override
-    public int size() throws SQLException {
+    public Integer size() throws SQLException {
         String query = "select count(*) from profiles;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();

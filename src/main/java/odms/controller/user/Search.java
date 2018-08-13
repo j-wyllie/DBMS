@@ -153,6 +153,6 @@ public class Search {
 
     public String getNumberOfProfiles() throws SQLException {
         ProfileDAO database = DAOFactory.getProfileDao();
-        return "There are " + database.size() + " profiles";
+        return database.size().toString();
     }
 }
