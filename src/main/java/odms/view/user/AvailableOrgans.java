@@ -209,7 +209,6 @@ public class AvailableOrgans extends CommonView {
 
     /**
      * Populates available organs table with ALL available organs in database
-     * @throws SQLException exception thrown when accessing DB to get all available organs
      */
     public void setPotentialOrganMatchesList()   {
 
