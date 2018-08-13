@@ -18,7 +18,7 @@ import odms.controller.profile.UndoRedoCLIService;
 
 public class CommandUtils {
 
-    private CommandUtils() {
+    public CommandUtils() {
         throw new UnsupportedOperationException();
     }
 

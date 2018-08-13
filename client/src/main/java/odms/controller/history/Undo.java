@@ -1,21 +1,19 @@
 package odms.controller.history;
 
-import odms.commons.model.profile.Condition;
-import odms.commons.model.profile.Profile;
-import odms.controller.profile.UndoRedoCLIService;
-import odms.history.History;
-import odms.data.ProfileDatabase;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.medications.Drug;
-import odms.commons.model.user.User;
-import odms.view.LoginView;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.history.History;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
+import odms.controller.profile.UndoRedoCLIService;
+import odms.view.LoginView;
 
 public class Undo extends UndoRedo {
 

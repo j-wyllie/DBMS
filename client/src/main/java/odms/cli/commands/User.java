@@ -3,10 +3,10 @@ package odms.cli.commands;
 import java.sql.SQLException;
 import java.util.List;
 import odms.cli.CommandUtils;
+import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.commons.model.enums.UserType;
 
 import java.time.LocalDateTime;
@@ -56,7 +56,7 @@ public class User extends CommandUtils {
      * @param type of user.
      */
     public static void deleteUserBySearch(String expression, String type) {
-        List<User> users = search(expression, type);
+        List<odms.commons.model.user.User> users = search(expression, type);
         deleteUsers(users);
     }
 
@@ -64,10 +64,10 @@ public class User extends CommandUtils {
      * Delete users.
      * @param userList list of users.
      */
-    private static void deleteUsers(List<User> userList) {
+    private static void deleteUsers(List<odms.commons.model.user.User> userList) {
         UserDAO database = DAOFactory.getUserDao();
         if (userList.size() > 0) {
-            for (User user : userList) {
+            for (odms.commons.model.user.User user : userList) {
                 try {
                     database.remove(user);
                 } catch (SQLException e) {
@@ -87,10 +87,10 @@ public class User extends CommandUtils {
      * @param userList list of users.
      * @param attrList attributes to be updated and their values.
      */
-    private static void updateUserAttr(List<User> userList, String[] attrList) {
+    private static void updateUserAttr(List<odms.commons.model.user.User> userList, String[] attrList) {
         if (userList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            for (User user : userList) {
+            for (odms.commons.model.user.User user : userList) {
                 History action = new History("user", user.getStaffID(), "update",
                         user.getAttributesSummary(), -1, null);
                 user.setExtraAttributes(attrArray);
@@ -109,7 +109,7 @@ public class User extends CommandUtils {
      * @param type of user.
      */
     public static void updateUserBySearch(String expression, String type) {
-        List<User> users = search(expression, type);
+        List<odms.commons.model.user.User> users = search(expression, type);
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
                 .trim()
                 .split("\"\\s");
@@ -122,7 +122,7 @@ public class User extends CommandUtils {
      * @param type of user.
      */
     public static void viewAttrBySearch(String expression, String type) {
-        List<User> users = search(expression, type);
+        List<odms.commons.model.user.User> users = search(expression, type);
         Print.printUserSearchResults(users);
     }
 
@@ -132,7 +132,7 @@ public class User extends CommandUtils {
      * @param type of user.
      */
     public static void viewDateTimeCreatedBySearch(String expression, String type) {
-        List<User> users = search(expression, type);
+        List<odms.commons.model.user.User> users = search(expression, type);
         Print.printUserList(users);
     }
 
@@ -142,7 +142,7 @@ public class User extends CommandUtils {
      * @param type of user.
      * @return a list of users.
      */
-    private static List<User> search(String expression, String type) {
+    private static List<odms.commons.model.user.User> search(String expression, String type) {
         // Depending what type of user, the length to skip will change accordingly
         Integer lengthToSkip = 10;   //for clinician
         if (type.equals("clinician")) {
@@ -150,7 +150,7 @@ public class User extends CommandUtils {
         }
 
         UserDAO database = DAOFactory.getUserDao();
-        List<User> users = new ArrayList<>();
+        List<odms.commons.model.user.User> users = new ArrayList<>();
         String attr = expression.substring(expression.indexOf("\"") + 1,
                 expression.lastIndexOf("\""));
         try {

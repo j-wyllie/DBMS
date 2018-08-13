@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.commons.model.enums.OrganEnum;
 import odms.view.profile.OrganRemove;
 

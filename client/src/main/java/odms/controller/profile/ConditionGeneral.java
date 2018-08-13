@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.view.profile.ProfileMedicalHistory;
 
 public class ConditionGeneral {
