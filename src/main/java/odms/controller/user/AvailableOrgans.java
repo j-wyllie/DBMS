@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
@@ -159,6 +161,22 @@ public class AvailableOrgans {
 
         return durationFormatted;
 
+    }
+
+    /**
+     * returns list of potential organ matches for a given organ and the donor the organ came from
+     * @param organAvailable the available organ
+     * @param donorProfile the donor the organ came from
+     * @return a list of potential organ matches
+     */
+    public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
+
+        ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
+        potentialOrganMatches.addAll(GuiMain.getCurrentDatabase().getProfiles(false));
+
+        System.out.println(potentialOrganMatches.size());
+
+        return potentialOrganMatches;
     }
 
 
