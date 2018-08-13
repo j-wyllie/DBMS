@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
+<AnchorPane prefHeight="400.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
    <children>
        <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
@@ -37,7 +37,7 @@
              <TableColumn prefWidth="89.0" text="Date of Death" />
                <TableColumn prefWidth="106.0" text="Countdown" />
                <TableColumn prefWidth="96.0" text="Donor ID" />
-               <TableColumn prefWidth="211.0" text="Expiry Progress Bar" />
+               <TableColumn prefWidth="211.0" styleClass="black-bar" text="Expiry Progress Bar" />
            </columns>
          </TableView>
             <CheckComboBox fx:id="organsCombobox" GridPane.columnIndex="1" />

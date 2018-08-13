@@ -10,9 +10,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ProgressBarTableCell;
+import javafx.util.Callback;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
 import odms.model.enums.NewZealandRegionsEnum;
@@ -118,10 +120,22 @@ public class AvailableOrgans extends CommonView {
         TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn(
                 "Expiry Progress Bar");
         expiryProgressBarCol.setCellValueFactory(
-                cdf -> new SimpleDoubleProperty(getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey()) / getExpiryLength(cdf.getValue().getValue())).asObject()
+                cdf -> new SimpleDoubleProperty(
+                        getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey())
+                        / getExpiryLength(cdf.getValue().getValue())).asObject()
         );
-        expiryProgressBarCol
-                .setCellFactory(ProgressBarTableCell.forTableColumn());
+
+        expiryProgressBarCol.setCellFactory(TestProgressBar.forTableColumn(
+                this.getClass().getResource("/styles/Common.css").toExternalForm())
+        );
+
+//        System.out.println(this.getClass().getResource("/styles/Common.css").getFile());
+
+
+//        System.out.println(availableOrgansTable.getStylesheets());
+
+//        expiryProgressBarCol.getStyleClass().clear();
+//        expiryProgressBarCol.getStyleClass().add("progress-bar-test");
 
 
         availableOrgansTable.getColumns().add(organCol);
