@@ -108,6 +108,7 @@ public class ProfileController {
 
         try {
             profile = gson.fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
@@ -139,6 +140,7 @@ public class ProfileController {
 
         try {
             profile = gson.fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";

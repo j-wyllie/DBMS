@@ -63,6 +63,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
 
+            rs.next();
             user = parseUser(rs);
         }
         catch (SQLException e) {
@@ -223,6 +224,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void update(User user) throws SQLException {
+        user.setLastUpdated(LocalDateTime.now());
         String query = "update users set Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ? where "
                 + "UserId = ?;";
@@ -240,7 +242,6 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
             stmt.setInt(9, user.getStaffID());
-
             stmt.executeUpdate();
         }
         catch (SQLException e) {

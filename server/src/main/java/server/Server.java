@@ -20,7 +20,7 @@ import server.controller.UserController;
  * Main entry point for server application.
  */
 public class Server {
-    private static Integer port = 9980;
+    private static Integer port = 6969;
 
     private static UserController userController;
     private static ProfileController profileController;
@@ -44,6 +44,7 @@ public class Server {
      */
     public static void main (String[] args) {
         System.out.println("Server is alive!");
+        System.out.println("Listening on port: " + port);
 
         for (String arg : args) {
             arg = arg.toLowerCase();
@@ -60,85 +61,86 @@ public class Server {
 
     private static void initRoutes() {
         // user api routes.
-        path("/users", () -> {
+        path("/api/v1", () -> {
+            path("/users", () -> {
+                get("", UserController::getAll);
+                post("", UserController::create);
 
-            get("", UserController::getAll);
-            post("", UserController::create);
-
-            path("/:id", () -> {
-                get("", UserController::get);
-                patch("", UserController::edit);
-                delete("", UserController::delete);
-            });
-        });
-
-        // profile api routes.
-        path("/profiles", () -> {
-
-            get("", ProfileController::getAll);
-            post("", ProfileController::create);
-
-            path("/:id", () -> {
-                get("", ProfileController::get);
-                patch("", ProfileController::edit);
-                delete("", ProfileController::delete);
-            });
-
-            get("/count", ProfileController::count);
-        });
-
-        // condition api endpoints.
-        path("/conditions", () -> {
-            get("", ConditionController::getAll);
-            post("", ConditionController::add);
-
-            path("/:id", () -> {
-                patch("", ConditionController::edit);
-                delete("", ConditionController::delete);
-            });
-        });
-
-        // procedure api endpoints.
-        path("/procedures", () -> {
-            get("", ProcedureController::getAll);
-            post("", ProcedureController::add);
-
-            path("/:id", () -> {
-                patch("", ProcedureController::edit);
-                delete("", ProcedureController::delete);
-
-                path("/organs", () -> {
-                    get("", ProcedureController::getOrgans);
-                    post("", ProcedureController::addOrgan);
-                    delete("", ProcedureController::deleteOrgan);
+                path("/:id", () -> {
+                    get("", UserController::get);
+                    patch("", UserController::edit);
+                    delete("", UserController::delete);
                 });
             });
-        });
 
-        // drugs api endpoints.
-        path("/drugs", () -> {
-            get("", DrugController::getAll);
-            post("", DrugController::add);
+            // profile api routes.
+            path("/profiles", () -> {
 
-            path("/:id", () -> {
-                patch("", DrugController::edit);
-                delete("", DrugController::delete);
+                get("", ProfileController::getAll);
+                post("", ProfileController::create);
+
+                path("/:id", () -> {
+                    get("", ProfileController::get);
+                    patch("", ProfileController::edit);
+                    delete("", ProfileController::delete);
+                });
+
+                get("/count", ProfileController::count);
             });
-        });
 
-        // countries api endpoints.
-        path("/countries", () -> {
-            get("", CountriesController::getAll);
-            patch("", CountriesController::edit);
-        });
+            // condition api endpoints.
+            path("/conditions", () -> {
+                get("", ConditionController::getAll);
+                post("", ConditionController::add);
 
-        // organs api endpoints.
-        path("/organs", () -> {
-            get("", OrganController::getAll);
-            post("", OrganController::add);
+                path("/:id", () -> {
+                    patch("", ConditionController::edit);
+                    delete("", ConditionController::delete);
+                });
+            });
 
-            path("/:id", () -> {
-                delete("", OrganController::delete);
+            // procedure api endpoints.
+            path("/procedures", () -> {
+                get("", ProcedureController::getAll);
+                post("", ProcedureController::add);
+
+                path("/:id", () -> {
+                    patch("", ProcedureController::edit);
+                    delete("", ProcedureController::delete);
+
+                    path("/organs", () -> {
+                        get("", ProcedureController::getOrgans);
+                        post("", ProcedureController::addOrgan);
+                        delete("", ProcedureController::deleteOrgan);
+                    });
+                });
+            });
+
+            // drugs api endpoints.
+            path("/drugs", () -> {
+                get("", DrugController::getAll);
+                post("", DrugController::add);
+
+                path("/:id", () -> {
+                    patch("", DrugController::edit);
+                    delete("", DrugController::delete);
+                });
+            });
+
+            // countries api endpoints.
+            path("/countries", () -> {
+                get("", CountriesController::getAll);
+                patch("", CountriesController::edit);
+            });
+
+            // organs api endpoints.
+            path("/organs", () -> {
+                get("", OrganController::getAll);
+                post("", OrganController::add);
+
+                path("/:id", () -> {
+                    delete("", OrganController::delete);
+                });
             });
         });
     }
