@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.medication;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import odms.controller.database.DatabaseConnection;
 import odms.model.medications.Drug;
 import odms.model.profile.Profile;
 

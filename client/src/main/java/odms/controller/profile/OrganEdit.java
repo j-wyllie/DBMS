@@ -9,7 +9,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
+import odms.controller.database.profile.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.history.History;
 import odms.commons.model.enums.OrganEnum;

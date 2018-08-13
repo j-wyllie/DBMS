@@ -1,4 +1,4 @@
-package server.model.database;
+package odms.controller.database.common;
 
 public interface CommonDAO {
 

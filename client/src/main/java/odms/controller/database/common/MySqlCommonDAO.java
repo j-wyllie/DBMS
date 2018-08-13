@@ -1,4 +1,4 @@
-package server.model.database;
+package odms.controller.database.common;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -6,6 +6,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import odms.controller.database.DatabaseConnection;
 import org.apache.commons.lang3.StringUtils;
 
 public class MySqlCommonDAO implements CommonDAO {

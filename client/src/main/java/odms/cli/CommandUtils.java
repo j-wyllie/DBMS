@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.CommonDAO;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
+import odms.controller.database.common.CommonDAO;
+import odms.controller.database.profile.ProfileDAO;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.UndoRedoCLIService;
+import odms.commons.model.enums.OrganEnum;
 
 public class CommandUtils {
 
-    private CommandUtils() {
+    public CommandUtils() {
         throw new UnsupportedOperationException();
     }
 
@@ -279,16 +280,6 @@ public class CommandUtils {
         return profiles;
     }
 
-//    // TODO check what main purpose this serves and name appropriately
-//    private static void test(String expression,
-//            String[] organList) {
-//        String attr = expression.substring(expression.indexOf("\"") + 1,
-//                expression.indexOf(">") - 2);
-//        List<Profile> profileList = currentDatabase.searchNHI(attr);
-//
-//        addOrgans(profileList, organList);
-//    }
-
     /**
      * Add organ donations.
      * @param profileList list of profiles.
@@ -408,251 +399,251 @@ public class CommandUtils {
         return currentSessionHistory;
     }
 
-    /**
-     * Undo the previous action.
-     * @param currentDatabase Database reference
-     */
-    public static void undo(ProfileDatabase currentDatabase) {
-        try {
-            String action = currentSessionHistory.get(historyPosition);
-            action = action.substring(0, action.indexOf(" at"));
-            if (action.contains("added")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                currentDatabase.deleteProfile(id);
-                unaddedProfiles.add(profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                } else {
-                    historyPosition = 1;
-                }
-            } else if (action.contains("deleted")) {
-                int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                int id = currentDatabase
-                        .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
-                deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size() - 1));
-                for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
-                    if (currentSessionHistory.get(i).contains("profile " + oldid)) {
-                        currentSessionHistory.set(i,
-                                "profile " + id + " " + currentSessionHistory.get(i).substring(
-                                        action.indexOf("profile " + oldid) + 6 + Integer
-                                                .toString(id)
-                                                .length()));
-                    }
-                }
-                currentSessionHistory
-                        .set(historyPosition,
-                                "profile " + id + " deleted at " + LocalDateTime.now());
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("removed")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
-                        action.substring(
-                                action.indexOf("[") + 1,
-                                action.indexOf("]")).split(",")
-                )), profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("set")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                List<String> organSet = new ArrayList<>(Arrays.asList(
-                        action.substring(
-                                action.indexOf("[") + 1,
-                                action.indexOf("]")).split(","))
-                );
-                UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("donate")) {
-                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                List<String> organSet = new ArrayList<>(Arrays.asList(
-                        action.substring(
-                                action.indexOf("[") + 1,
-                                action.indexOf("]")).split(","))
-                );
-                // TODO bug here for removing organs from wrong list based on command
-                UndoRedoCLIService.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet), profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("update")) {
-                int id = Integer.parseInt(
-                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                System.out.println(action);
-                String old = action.substring(action.indexOf("nhi"), action.indexOf("new"));
-                UndoRedoCLIService.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))), profile);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            } else if (action.contains("EDITED")) {
-                int id = Integer.parseInt(
-                        action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
-                Profile profile = currentDatabase.getProfile(id);
-                int procedurePlace = Integer.parseInt(
-                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
-                                .replaceAll("[\\D]", ""));
-                String previous = action
-                        .substring(action.indexOf("PREVIOUS(") + 9, action.indexOf(") OLD"));
-                String[] previousValues = previous.split(",");
-                String organs = action
-                        .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
-                List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
-                ArrayList<OrganEnum> organList = new ArrayList<>();
-                System.out.println(organs);
-                for (String organ : list) {
-                    System.out.println(organ);
-                    try {
-                        organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e);
-                    }
-                }
-                profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
-                profile.getAllProcedures().get(procedurePlace)
-                        .setDate(LocalDate.parse(previousValues[1]));
-                if (previousValues.length == 3) {
-                    profile.getAllProcedures().get(procedurePlace)
-                            .setLongDescription(previousValues[2]);
-                }
-                profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
-                if (historyPosition != 0) {
-                    historyPosition -= 1;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("No commands have been entered");
-        }
-    }
-
-    /**
-     * Redo previously undone action.
-     *
-     * @param currentDatabase Database reference
-     */
-    public static void redo(ProfileDatabase currentDatabase) {
-        try {
-            System.out.println(historyPosition);
-            System.out.println(currentSessionHistory.size());
-
-            if (historyPosition != currentSessionHistory.size()) {
-                historyPosition += 1;
-                String action;
-                if (historyPosition == 0) {
-                    historyPosition = 1;
-                    action = currentSessionHistory.get(historyPosition);
-                    historyPosition = 0;
-                } else {
-                    System.out.println(historyPosition);
-                    System.out.println(currentSessionHistory);
-                    action = currentSessionHistory.get(historyPosition);
-                }
-                System.out.println(action);
-                action = action.substring(0, action.indexOf(" at"));
-                if (action.contains("added")) {
-                    int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    int id = currentDatabase
-                            .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
-                    unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size() - 1));
-                    for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
-                        if (currentSessionHistory.get(i).contains("profile " + oldid)) {
-                            currentSessionHistory.set(i,
-                                    "profile " + id + currentSessionHistory.get(i).substring(
-                                            action.indexOf("profile " + oldid) + 6 + Integer
-                                                    .toString(id)
-                                                    .length()));
-                        }
-                    }
-                    currentSessionHistory.set(historyPosition,
-                            "profile " + id + " added at " + LocalDateTime.now());
-                } else if (action.contains("deleted")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    currentDatabase.deleteProfile(id);
-                    deletedProfiles.add(profile);
-                } else if (action.contains("removed")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    List<String> organSet = new ArrayList<>(Arrays.asList(
-                            action.substring(action.indexOf("[") + 1, action.indexOf("]"))
-                                    .split(",")));
-                    UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
-                } else if (action.contains("set")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
-                            action.substring(
-                                    action.indexOf("[") + 1,
-                                    action.indexOf("]")).split(",")
-                    )), profile);
-                } else if (action.contains("donate")) {
-                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    UndoRedoCLIService.addOrgansDonated(
-                            OrganEnum.stringListToOrganSet(
-                                    Arrays.asList(
-                                            action.substring(
-                                                    action.indexOf("[") + 1,
-                                                    action.indexOf("]")).split(",")
-                                    )
-                            )
-                    , profile);
-                } else if (action.contains("update")) {
-                    int id = Integer.parseInt(
-                            action.substring(0, action.indexOf("previous"))
-                                    .replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    String newInfo = action.substring(action.indexOf("nhi"));
-                    ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(
-                            new ArrayList<>(Arrays.asList(newInfo.split(","))), profile);
-                } else if (action.contains("EDITED")) {
-                    int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE"))
-                            .replaceAll("[\\D]", ""));
-                    Profile profile = currentDatabase.getProfile(id);
-                    int procedurePlace = Integer.parseInt(
-                            action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
-                                    .replaceAll("[\\D]", ""));
-                    String previous = action
-                            .substring(action.indexOf("CURRENT(") + 8, action.indexOf(") NEW"));
-                    String[] previousValues = previous.split(",");
-                    String organs;
-                    ArrayList<OrganEnum> organList = new ArrayList<>();
-                    organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
-                    List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
-                    for (String organ : list) {
-                        System.out.println(organ);
-                        organList.add(OrganEnum.valueOf(organ
-                                .replace(" ", "")
-                                .replace("NEWORGANS[", ""))
-                        );
-                    }
-                    profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
-                    profile.getAllProcedures().get(procedurePlace)
-                            .setDate(LocalDate.parse(previousValues[1]));
-                    if (previousValues.length == 3) {
-                        profile.getAllProcedures().get(procedurePlace)
-                                .setLongDescription(previousValues[2]);
-                    }
-                    profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
-                }
-                System.out.println("Command redone");
-            } else {
-                System.out.println("There are no commands to redo");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("No commands have been entered.");
-        }
-
-    }
+//    /**
+//     * Undo the previous action.
+//     * @param currentDatabase Database reference
+//     */
+//    public static void undo(ProfileDatabase currentDatabase) {
+//        try {
+//            String action = currentSessionHistory.get(historyPosition);
+//            action = action.substring(0, action.indexOf(" at"));
+//            if (action.contains("added")) {
+//                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                currentDatabase.deleteProfile(id);
+//                unaddedProfiles.add(profile);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                } else {
+//                    historyPosition = 1;
+//                }
+//            } else if (action.contains("deleted")) {
+//                int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                int id = currentDatabase
+//                        .restoreProfile(oldid, deletedProfiles.get(deletedProfiles.size() - 1));
+//                deletedProfiles.remove(deletedProfiles.get(deletedProfiles.size() - 1));
+//                for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
+//                    if (currentSessionHistory.get(i).contains("profile " + oldid)) {
+//                        currentSessionHistory.set(i,
+//                                "profile " + id + " " + currentSessionHistory.get(i).substring(
+//                                        action.indexOf("profile " + oldid) + 6 + Integer
+//                                                .toString(id)
+//                                                .length()));
+//                    }
+//                }
+//                currentSessionHistory
+//                        .set(historyPosition,
+//                                "profile " + id + " deleted at " + LocalDateTime.now());
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            } else if (action.contains("removed")) {
+//                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+//                        action.substring(
+//                                action.indexOf("[") + 1,
+//                                action.indexOf("]")).split(",")
+//                )), profile);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            } else if (action.contains("set")) {
+//                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                List<String> organSet = new ArrayList<>(Arrays.asList(
+//                        action.substring(
+//                                action.indexOf("[") + 1,
+//                                action.indexOf("]")).split(","))
+//                );
+//                UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            } else if (action.contains("donate")) {
+//                int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                List<String> organSet = new ArrayList<>(Arrays.asList(
+//                        action.substring(
+//                                action.indexOf("[") + 1,
+//                                action.indexOf("]")).split(","))
+//                );
+//                // TODO bug here for removing organs from wrong list based on command
+//                UndoRedoCLIService.removeOrgansDonated(OrganEnum.stringListToOrganSet(organSet), profile);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            } else if (action.contains("update")) {
+//                int id = Integer.parseInt(
+//                        action.substring(0, action.indexOf("previous")).replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                System.out.println(action);
+//                String old = action.substring(action.indexOf("nhi"), action.indexOf("new"));
+//                UndoRedoCLIService.setExtraAttributes(new ArrayList<>(Arrays.asList(old.split(","))), profile);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            } else if (action.contains("EDITED")) {
+//                int id = Integer.parseInt(
+//                        action.substring(0, action.indexOf("PROCEDURE")).replaceAll("[\\D]", ""));
+//                Profile profile = currentDatabase.getProfile(id);
+//                int procedurePlace = Integer.parseInt(
+//                        action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
+//                                .replaceAll("[\\D]", ""));
+//                String previous = action
+//                        .substring(action.indexOf("PREVIOUS(") + 9, action.indexOf(") OLD"));
+//                String[] previousValues = previous.split(",");
+//                String organs = action
+//                        .substring(action.indexOf("[") + 1, action.indexOf("] CURRENT"));
+//                List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
+//                ArrayList<OrganEnum> organList = new ArrayList<>();
+//                System.out.println(organs);
+//                for (String organ : list) {
+//                    System.out.println(organ);
+//                    try {
+//                        organList.add(OrganEnum.valueOf(organ.replace(" ", "")));
+//                    } catch (IllegalArgumentException e) {
+//                        System.out.println(e);
+//                    }
+//                }
+//                profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
+//                profile.getAllProcedures().get(procedurePlace)
+//                        .setDate(LocalDate.parse(previousValues[1]));
+//                if (previousValues.length == 3) {
+//                    profile.getAllProcedures().get(procedurePlace)
+//                            .setLongDescription(previousValues[2]);
+//                }
+//                profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
+//                if (historyPosition != 0) {
+//                    historyPosition -= 1;
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("No commands have been entered");
+//        }
+//    }
+//
+//    /**
+//     * Redo previously undone action.
+//     *
+//     * @param currentDatabase Database reference
+//     */
+//    public static void redo(ProfileDatabase currentDatabase) {
+//        try {
+//            System.out.println(historyPosition);
+//            System.out.println(currentSessionHistory.size());
+//
+//            if (historyPosition != currentSessionHistory.size()) {
+//                historyPosition += 1;
+//                String action;
+//                if (historyPosition == 0) {
+//                    historyPosition = 1;
+//                    action = currentSessionHistory.get(historyPosition);
+//                    historyPosition = 0;
+//                } else {
+//                    System.out.println(historyPosition);
+//                    System.out.println(currentSessionHistory);
+//                    action = currentSessionHistory.get(historyPosition);
+//                }
+//                System.out.println(action);
+//                action = action.substring(0, action.indexOf(" at"));
+//                if (action.contains("added")) {
+//                    int oldid = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                    int id = currentDatabase
+//                            .restoreProfile(oldid, unaddedProfiles.get(unaddedProfiles.size() - 1));
+//                    unaddedProfiles.remove(unaddedProfiles.get(unaddedProfiles.size() - 1));
+//                    for (int i = 0; i < currentSessionHistory.size() - 1; i++) {
+//                        if (currentSessionHistory.get(i).contains("profile " + oldid)) {
+//                            currentSessionHistory.set(i,
+//                                    "profile " + id + currentSessionHistory.get(i).substring(
+//                                            action.indexOf("profile " + oldid) + 6 + Integer
+//                                                    .toString(id)
+//                                                    .length()));
+//                        }
+//                    }
+//                    currentSessionHistory.set(historyPosition,
+//                            "profile " + id + " added at " + LocalDateTime.now());
+//                } else if (action.contains("deleted")) {
+//                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    currentDatabase.deleteProfile(id);
+//                    deletedProfiles.add(profile);
+//                } else if (action.contains("removed")) {
+//                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    List<String> organSet = new ArrayList<>(Arrays.asList(
+//                            action.substring(action.indexOf("[") + 1, action.indexOf("]"))
+//                                    .split(",")));
+//                    UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(organSet), profile);
+//                } else if (action.contains("set")) {
+//                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(Arrays.asList(
+//                            action.substring(
+//                                    action.indexOf("[") + 1,
+//                                    action.indexOf("]")).split(",")
+//                    )), profile);
+//                } else if (action.contains("donate")) {
+//                    int id = Integer.parseInt(action.replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    UndoRedoCLIService.addOrgansDonated(
+//                            OrganEnum.stringListToOrganSet(
+//                                    Arrays.asList(
+//                                            action.substring(
+//                                                    action.indexOf("[") + 1,
+//                                                    action.indexOf("]")).split(",")
+//                                    )
+//                            )
+//                    , profile);
+//                } else if (action.contains("update")) {
+//                    int id = Integer.parseInt(
+//                            action.substring(0, action.indexOf("previous"))
+//                                    .replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    String newInfo = action.substring(action.indexOf("nhi"));
+//                    ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(
+//                            new ArrayList<>(Arrays.asList(newInfo.split(","))), profile);
+//                } else if (action.contains("EDITED")) {
+//                    int id = Integer.parseInt(action.substring(0, action.indexOf("PROCEDURE"))
+//                            .replaceAll("[\\D]", ""));
+//                    Profile profile = currentDatabase.getProfile(id);
+//                    int procedurePlace = Integer.parseInt(
+//                            action.substring(action.indexOf("PROCEDURE"), action.indexOf("EDITED"))
+//                                    .replaceAll("[\\D]", ""));
+//                    String previous = action
+//                            .substring(action.indexOf("CURRENT(") + 8, action.indexOf(") NEW"));
+//                    String[] previousValues = previous.split(",");
+//                    String organs;
+//                    ArrayList<OrganEnum> organList = new ArrayList<>();
+//                    organs = action.substring(action.indexOf("NEWORGANS["), action.indexOf("]END"));
+//                    List<String> list = new ArrayList<>(Arrays.asList(organs.split(",")));
+//                    for (String organ : list) {
+//                        System.out.println(organ);
+//                        organList.add(OrganEnum.valueOf(organ
+//                                .replace(" ", "")
+//                                .replace("NEWORGANS[", ""))
+//                        );
+//                    }
+//                    profile.getAllProcedures().get(procedurePlace).setSummary(previousValues[0]);
+//                    profile.getAllProcedures().get(procedurePlace)
+//                            .setDate(LocalDate.parse(previousValues[1]));
+//                    if (previousValues.length == 3) {
+//                        profile.getAllProcedures().get(procedurePlace)
+//                                .setLongDescription(previousValues[2]);
+//                    }
+//                    profile.getAllProcedures().get(procedurePlace).setOrgansAffected(organList);
+//                }
+//                System.out.println("Command redone");
+//            } else {
+//                System.out.println("There are no commands to redo");
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            System.out.println("No commands have been entered.");
+//        }
+//
+//    }
 
     /**
      * Supplys the read-only query to the database connection DAO.

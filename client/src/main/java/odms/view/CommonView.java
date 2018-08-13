@@ -25,8 +25,6 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.commons.model.profile.Profile;
 import odms.controller.GuiMain;
-import odms.controller.history.Redo;
-import odms.controller.history.Undo;
 import odms.commons.model.user.User;
 import odms.view.profile.Display;
 import odms.view.profile.ProfileEdit;
@@ -150,7 +148,7 @@ public class CommonView {
      */
     @FXML
     private void handleUndoButtonClicked() {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        //undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
@@ -158,11 +156,11 @@ public class CommonView {
      */
     @FXML
     private void handleRedoButtonClicked() {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        //redoController.redo(GuiMain.getCurrentDatabase());
     }
 
-    private Redo redoController = new Redo();
-    private Undo undoController = new Undo();
+    //private Redo redoController = new Redo();
+    //private Undo undoController = new Undo();
 
     public Boolean getEdited() {
         return isEdited;

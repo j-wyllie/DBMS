@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.country;
 
 import java.util.List;
 import odms.commons.model.enums.CountriesEnum;

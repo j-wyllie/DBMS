@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.controller.profile.ProfileCreate;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;

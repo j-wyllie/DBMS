@@ -1,4 +1,5 @@
-package odms.controller.database;
+package odms.controller.database.medication;
+
 
 import java.util.List;
 import odms.commons.model.medications.Drug;

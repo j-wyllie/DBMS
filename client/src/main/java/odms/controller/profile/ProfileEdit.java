@@ -1,20 +1,16 @@
 package odms.controller.profile;
 
-import static odms.App.getProfileDb;
-
 import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
-import odms.controller.history.CurrentHistory;
-import odms.model.profile.Profile;
+import odms.controller.database.profile.ProfileDAO;
 
 public class ProfileEdit extends CommonController {
 
@@ -39,9 +35,9 @@ public class ProfileEdit extends CommonController {
     public void save() throws IllegalArgumentException, SQLException {
         if (AlertController.saveChanges()) {
             // history Generation
-            odms.model.history.History action = new odms.model.history.History("profile",
-                    currentProfile.getId(), "update",
-                    "previous " + currentProfile.getAttributesSummary(), -1, null);
+//            odms.model.history.History action = new odms.model.history.History("profile",
+//                    currentProfile.getId(), "update",
+//                    "previous " + currentProfile.getAttributesSummary(), -1, null);
 
             try {
                 if (view.getDodDateTimePicker() != null) {
@@ -86,13 +82,13 @@ public class ProfileEdit extends CommonController {
 
             ProfileDAO database = DAOFactory.getProfileDao();
             database.update(currentProfile);
-            ProfileDataIO.saveData(getProfileDb());
 
-            // history Changes
-            action.setHistoryData(
-                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-            action.setHistoryTimestamp(LocalDateTime.now());
-            CurrentHistory.updateHistory(action);
+            // TODO: update history.
+//            // history Changes
+//            action.setHistoryData(
+//                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+//            action.setHistoryTimestamp(LocalDateTime.now());
+//            CurrentHistory.updateHistory(action);
 
         }
     }

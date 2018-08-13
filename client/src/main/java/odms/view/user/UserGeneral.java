@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.controller.GuiMain;
-import odms.controller.history.Redo;
-import odms.controller.history.Undo;
+//import odms.controller.history.Redo;
+//import odms.controller.history.Undo;
 import odms.commons.model.user.User;
 
 public class UserGeneral {
@@ -26,8 +26,8 @@ public class UserGeneral {
     @FXML
     private Label regionLabel;
 
-    private Redo redoController = new Redo();
-    private Undo undoController = new Undo();
+    //private Redo redoController = new Redo();
+    //private Undo undoController = new Undo();
     private User currentUser;
 
 
@@ -39,7 +39,7 @@ public class UserGeneral {
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
         //todo replace with standardised?
-        undoController.undo(GuiMain.getCurrentDatabase());
+        //undoController.undo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -55,7 +55,7 @@ public class UserGeneral {
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         //todo replace with standardised?
-        redoController.redo(GuiMain.getCurrentDatabase());
+        //redoController.redo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

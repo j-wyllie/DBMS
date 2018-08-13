@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.procedure;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.model.profile.Procedure;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.DatabaseConnection;
 
 public class MySqlProcedureDAO implements ProcedureDAO {
 

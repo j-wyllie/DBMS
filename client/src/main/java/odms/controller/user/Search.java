@@ -3,23 +3,24 @@ package odms.controller.user;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
 
 public class Search {
 
     private final odms.view.user.Search view;
 
-    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+    private List<Profile> profileSearchResults = new ArrayList<>();
 
     public Search(odms.view.user.Search v) {
         view = v;
     }
 
-    public ArrayList<Profile> performSearch(
+    public List<Profile> performSearch(
             ObservableList<OrganEnum> selectedOrgans, String selectedType,
             String selectedGender, String searchString, String regionSearchString,
             String ageSearchString, String ageRangeString, boolean selected) {

@@ -8,15 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.ProcedureEdit;
 import odms.commons.model.enums.OrganEnum;
 import odms.view.CommonView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProcedureDetailed extends CommonView {
     @FXML
@@ -109,7 +106,6 @@ public class ProcedureDetailed extends CommonView {
     public void handleSaveButtonClicked(ActionEvent actionEvent) {
         //todo change save data?
         controller.save();
-        ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);

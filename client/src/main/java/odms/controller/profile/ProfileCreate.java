@@ -2,14 +2,13 @@ package odms.controller.profile;
 
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.data.NHIConflictException;
 import odms.view.profile.CreateAccount;
 import odms.controller.CommonController;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidNhi;
@@ -53,6 +52,7 @@ public class ProfileCreate extends CommonController {
      */
     public Profile createAccount() throws IOException {
         //todo rework this method potentially
+        ProfileDAO database = DAOFactory.getProfileDao();
 
         if (checkDetailsEntered()) {
             try {
@@ -77,12 +77,12 @@ public class ProfileCreate extends CommonController {
             } catch (IllegalArgumentException e) {
                 //show error window.
                 invalidEntry();
-            } catch (NHIConflictException e) {
-                invalidNhi();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
             } catch (SQLException e) {
                 invalidEntry("Database could not parse this profile");
+            } catch (Exception e) {
+                invalidNhi();
             }
         }
         return null;

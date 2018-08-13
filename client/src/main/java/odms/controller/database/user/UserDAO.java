@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

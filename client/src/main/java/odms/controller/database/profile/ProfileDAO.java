@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.profile;
 
 import java.sql.SQLException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.condition;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import odms.controller.database.DatabaseConnection;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 

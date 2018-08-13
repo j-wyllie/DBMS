@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
+import odms.controller.database.user.UserDAO;
 import odms.controller.user.UserNotFoundException;
 
 public class MySqlUserDAO implements UserDAO {

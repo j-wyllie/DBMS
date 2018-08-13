@@ -1,6 +1,7 @@
 package server.model.database;
 
-import server.model.database.profile.MySqlProfileDAO;
+import server.model.database.common.CommonDAO;
+import server.model.database.common.MySqlCommonDAO;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
 import server.model.database.country.CountryDAO;

@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.condition;
 
 import java.util.ArrayList;
 import odms.commons.model.profile.Condition;

@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.procedure;
 
 
 import java.util.List;

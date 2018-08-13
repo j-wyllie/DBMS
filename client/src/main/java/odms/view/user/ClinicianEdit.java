@@ -17,9 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.commons.model.user.User;
+import odms.controller.database.user.UserDAO;
 import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.UserDAO;
 
 import static odms.controller.AlertController.saveChanges;
 

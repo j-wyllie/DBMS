@@ -2,6 +2,7 @@ package odms.view.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,11 +21,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
@@ -83,7 +84,7 @@ public class Search extends CommonView {
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
-    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+    private List<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfile parentView;
 
     /**

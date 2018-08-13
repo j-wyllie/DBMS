@@ -2,6 +2,7 @@ package odms.commons.model.profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -105,12 +106,37 @@ public class Profile implements Comparable<Profile> {
 
     /**
      * Instantiates the basic Profile class with a raw input of values
+     * @param id
+     * @param nhi1
+     * @param username
+     * @param isDonor
+     * @param isReceiver
+     * @param s
+     * @param names
+     * @param localDate
+     * @param dod
+     * @param gender
+     * @param height
+     * @param weight
+     * @param bloodType
+     * @param isSmoker
+     * @param alcoholConsumption
+     * @param bpSystolic
+     * @param bpDiastolic
      * @param givenNames Profile's given names as String
      * @param lastNames Profile's last names as String
      * @param dob Profile's date of birth as a string
      * @param nhi Profile's NHI number as Integer
+     * @param created
+     * @param updated
      */
-    public Profile(String givenNames, String lastNames, String dob, String nhi) {
+    public Profile(int id, String nhi1, String username, Boolean isDonor,
+            Boolean isReceiver, String s, String names, LocalDate localDate,
+            LocalDateTime dod, String gender, Double height, Double weight,
+            String bloodType, Boolean isSmoker, String alcoholConsumption,
+            int bpSystolic, int bpDiastolic, String givenNames,
+            String lastNames, String dob,
+            String nhi, LocalDateTime created, LocalDateTime updated) {
 
         // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
@@ -131,12 +157,10 @@ public class Profile implements Comparable<Profile> {
     }
 
     public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
-        this(
-                givenNames,
-                lastNames,
-                dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                nhi
-        );
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.nhi = nhi;
     }
 
     public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,

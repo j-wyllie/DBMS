@@ -1,4 +1,4 @@
-package odms.controller.database;
+package odms.controller.database.profile;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -20,7 +20,12 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-
+import odms.controller.database.DAOFactory;
+import odms.controller.database.DatabaseConnection;
+import odms.controller.database.procedure.ProcedureDAO;
+import odms.controller.database.condition.ConditionDAO;
+import odms.controller.database.medication.MedicationDAO;
+import odms.controller.database.organ.OrganDAO;
 
 public class MySqlProfileDAO implements ProfileDAO {
 
@@ -224,7 +229,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
                 + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
                 + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
-                + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
+                + " City, ZipCode, Region, country, BirthCountry, Phone, Email, Created, LastUpdated) values "
                 + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
@@ -525,7 +530,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
-            String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
+            String region, String gender, String type,  Set<OrganEnum> organs) throws SQLException {
         String query = "select distinct p.* from profiles p";
         if (organs.size() > 0) {
             query += " join organs o on p.ProfileId = o.ProfileId";
