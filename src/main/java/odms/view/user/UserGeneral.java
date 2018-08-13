@@ -54,14 +54,14 @@ public class UserGeneral {
     private Undo undoController = new Undo();
     private User currentUser;
     private MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
-    private ObservableList<CountriesEnum> countriesEnumObservableList = FXCollections.observableArrayList(
-            new Callback<CountriesEnum, Observable[]>() {
-                @Override
-                public Observable[] call(CountriesEnum param) {
-                    return new Observable[] {param.getValidProperty() };
-                }
-            });
-
+    private ObservableList<CountriesEnum> countriesEnumObservableList = FXCollections
+            .observableArrayList(
+                    new Callback<CountriesEnum, Observable[]>() {
+                        @Override
+                        public Observable[] call(CountriesEnum param) {
+                            return new Observable[]{param.getValidProperty()};
+                        }
+                    });
 
 
     /**
@@ -150,7 +150,8 @@ public class UserGeneral {
     }
 
     /**
-     * Adds listeners to the valid countries checkboxes. One for key pressed and one for mouse pressed.
+     * Adds listeners to the valid countries checkboxes. One for key pressed and one for mouse
+     * pressed.
      */
     private void addAllowedColumnListeners() {
         allowedColumn.setCellFactory(p -> {
@@ -161,23 +162,44 @@ public class UserGeneral {
                 protected void updateItem(Boolean item, boolean empty) {
 
                     super.updateItem(item, empty);
-                    if (empty || item == null)
+                    if (empty || item == null) {
                         setGraphic(null);
-                    else {
+                    } else {
                         setGraphic(checkBox);
                         checkBox.setSelected(item);
                     }
                 }
             };
 
-            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event ->
-                    mySqlCountryDAO.update((CountriesEnum) tableCell.getTableRow().getItem(),
-                            !checkBox.isSelected()));
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
+                countriesEnum.setValid(!countriesEnum.getValid());
+                countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
+
+                Integer count = 0;
+                for (CountriesEnum country : countriesEnumObservableList) {
+                    if (country.getValid()) {
+                        count++;
+                        if (count > 1) {
+                            break;
+                        }
+                    }
+                }
+                if (count == 0) {
+                    checkBox.setSelected(checkBox.isSelected());
+                    countriesEnum.setValid(!countriesEnum.getValid());
+                    countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
+                }
+
+                mySqlCountryDAO.update(countriesEnum,
+                        countriesEnum.getValid());
+            });
 
             checkBox.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.getCode() == KeyCode.SPACE)
-                    mySqlCountryDAO.update((CountriesEnum) tableCell.getTableRow().getItem(),
-                            !checkBox.isSelected());
+                if (event.getCode() == KeyCode.SPACE) {
+                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
+                    checkBox.setSelected(!countriesEnum.getValid());
+                }
             });
 
             tableCell.setAlignment(Pos.CENTER);
