@@ -2,7 +2,7 @@ package odms.controller.database;
 
 import java.io.IOException;
 import java.util.Map;
-import odms.model.medications.Interaction;
+import odms.commons.model.medications.Interaction;
 
 public interface MedicationInteractionsDAO {
 

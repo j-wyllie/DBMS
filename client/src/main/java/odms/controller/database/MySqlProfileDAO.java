@@ -21,7 +21,6 @@ import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 
-
 public class MySqlProfileDAO implements ProfileDAO {
 
     /**

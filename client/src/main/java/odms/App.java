@@ -3,13 +3,7 @@ package odms;
 import javafx.application.Application;
 import odms.cli.CommandLine;
 import odms.controller.GuiMain;
-import odms.controller.data.ProfileDataIO;
-import odms.controller.data.UserDataIO;
 import odms.controller.history.CurrentHistory;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
-
-import java.io.File;
 
 public class App {
 

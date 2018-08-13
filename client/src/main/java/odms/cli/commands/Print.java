@@ -1,16 +1,12 @@
 package odms.cli.commands;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import odms.cli.CommandUtils;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
-import odms.commons.model.enums.UserType;
-
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class Print extends CommandUtils {
 

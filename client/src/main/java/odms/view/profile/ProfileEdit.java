@@ -22,14 +22,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import odms.commons.model.enums.CountriesEnum;
+import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
-import odms.commons.model.enums.CountriesEnum;
-import odms.commons.model.enums.NewZealandRegionsEnum;
-import odms.commons.model.user.User;
 import odms.view.CommonView;
 
 /**

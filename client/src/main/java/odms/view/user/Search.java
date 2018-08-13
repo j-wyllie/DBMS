@@ -20,11 +20,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
-import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 

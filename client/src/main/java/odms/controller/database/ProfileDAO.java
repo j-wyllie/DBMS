@@ -7,7 +7,6 @@ import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 
-
 public interface ProfileDAO {
 
     /**
@@ -38,17 +37,9 @@ public interface ProfileDAO {
     /**
      * Checks if a username already exists in the database.
      * @param username to check.
-     * @return true if the username does not already exist.
+     * @return true is the username does not already exist.
      */
     boolean isUniqueUsername(String username) throws SQLException;
-
-    /**
-     * Checks if a nhi already exists in the database.
-     * @param nhi to check.
-     * @return 0 if the nhi does not already exist, else the id of
-     * the profile using the nhi.
-     */
-    int isUniqueNHI(String nhi) throws SQLException;
 
     /**
      * Removes a profile from the database.
@@ -73,7 +64,8 @@ public interface ProfileDAO {
      * @param organs filter based on organs selected.
      * @return a sublist of profiles.
      */
-    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt, String region,
+    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
+            String region,
             String gender, String type, Set<OrganEnum> organs) throws SQLException;
 
     /**
