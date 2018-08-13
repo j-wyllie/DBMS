@@ -172,8 +172,31 @@ public class AvailableOrgans {
     public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
 
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
-        potentialOrganMatches.addAll(GuiMain.getCurrentDatabase().getProfiles(false));
+        ArrayList<Profile> receivingProfiles = new ArrayList<>();
+        receivingProfiles.addAll(GuiMain.getCurrentDatabase().getReceivers(true));
 
+        String reqBloodType = donorProfile.getBloodType();
+        Integer minAge;
+        Integer maxAge;
+        if (donorProfile.getAge() < 12) {
+            minAge = 0;
+            maxAge = 12;
+        } else {
+            minAge = donorProfile.getAge() - 15;
+            if (minAge < 12) {minAge = 12;}
+            maxAge = donorProfile.getAge() + 15;
+        }
+
+        for (Profile p: receivingProfiles) {
+            if (p.getOrgansRequired().contains(organAvailable) && p.getAge() < maxAge && p.getAge() > minAge
+                    && p.getBloodType().equals(reqBloodType)) {
+                potentialOrganMatches.add(p);
+            }
+        }
+
+        // temporary til we get data TODO
+        System.out.println(potentialOrganMatches.size());
+        potentialOrganMatches.addAll(GuiMain.getCurrentDatabase().getProfiles(false));
         System.out.println(potentialOrganMatches.size());
 
         return potentialOrganMatches;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -49,6 +50,11 @@
                   <TableColumn prefWidth="75.0" text="Location" />
               </columns>
             </TableView>
+            <Label text="Potential Organ Receivers" GridPane.columnIndex="5" GridPane.columnSpan="2147483647">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </Label>
       </children>
        </GridPane>
    </children>
