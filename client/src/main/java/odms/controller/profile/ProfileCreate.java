@@ -1,12 +1,10 @@
 package odms.controller.profile;
 
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.data.NHIConflictException;
 import odms.view.profile.CreateAccount;
 import odms.controller.CommonController;
-import odms.controller.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
-import odms.model.profile.Profile;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,11 +13,9 @@ import java.time.LocalDate;
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
 import static odms.controller.AlertController.invalidNhi;
-import static odms.controller.GuiMain.getCurrentDatabase;
 
 public class ProfileCreate extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private CreateAccount view;
 
     public ProfileCreate(CreateAccount v) {
@@ -66,10 +62,11 @@ public class ProfileCreate extends CommonController {
                 String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
-                currentDatabase.addProfile(newProfile);
-                ProfileDataIO.saveData(currentDatabase);
+                if (DAOFactory.getProfileDao().isUniqueNHI(newProfile.getNhi()) == 0) {
+                    throw new NHIConflictException("Duplicate NHI", newProfile.getNhi());
+                }
                 DAOFactory.getProfileDao().add(newProfile);
-                return currentDatabase.getProfile(newProfile.getId());
+                return newProfile;
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {
                     invalidEntry(

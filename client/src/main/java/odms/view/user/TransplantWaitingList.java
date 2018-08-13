@@ -11,9 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import odms.controller.GuiMain;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.table.TableFilter;
@@ -90,7 +89,7 @@ public class TransplantWaitingList extends CommonView {
     @FXML
     private void refreshTable() {
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+//            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,7 +99,7 @@ public class TransplantWaitingList extends CommonView {
         this.parentView = parentView;
         this.currentUser = currentUser;
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+//            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
             TableFilter filter = new TableFilter<>(transplantTable);
         } catch (Exception e) {
             e.printStackTrace();

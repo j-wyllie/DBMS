@@ -1,6 +1,5 @@
-package odms.controller.database;
+package server.model.database.profile;
 
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,11 +16,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
+import server.model.database.DAOFactory;
+import server.model.database.DatabaseConnection;
+import server.model.database.condition.ConditionDAO;
+import server.model.database.medication.MedicationDAO;
+import server.model.database.organ.OrganDAO;
+import server.model.database.procedure.ProcedureDAO;
+import server.model.database.profile.ProfileDAO;
 
 public class MySqlProfileDAO implements ProfileDAO {
 

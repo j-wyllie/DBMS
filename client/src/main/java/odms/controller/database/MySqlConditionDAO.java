@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import odms.model.profile.Condition;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
 
 public class MySqlConditionDAO implements ConditionDAO {
 

@@ -8,14 +8,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.CommonDAO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.UndoRedoCLIService;
-import odms.data.ProfileDatabase;
-import odms.commons.model.enums.OrganEnum;
 
 public class CommandUtils {
 
@@ -256,9 +255,9 @@ public class CommandUtils {
      * @return the list of profiles.
      * @throws SQLException error.
      */
-    private static List<odms.model.profile.Profile> search(String expression) throws SQLException {
+    private static List<Profile> search(String expression) throws SQLException {
         ProfileDAO database = DAOFactory.getProfileDao();
-        List<odms.model.profile.Profile> profiles = new ArrayList<>();
+        List<Profile> profiles = new ArrayList<>();
 
         if (expression.substring(0, expression.lastIndexOf('>')).lastIndexOf("=") ==
                 expression.substring(0, expression.lastIndexOf('>')).indexOf("=")) {

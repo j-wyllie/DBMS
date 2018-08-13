@@ -14,12 +14,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.profile.ProfileImportTask;
-import odms.model.profile.Profile;
-import odms.commons.model.user.User;
 import odms.view.CommonView;
 
 public class ImportLoadingDialog extends CommonView {

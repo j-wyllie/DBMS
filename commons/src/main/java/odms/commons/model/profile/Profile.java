@@ -31,7 +31,7 @@ public class Profile implements Comparable<Profile> {
     private String lastNames;
     private String preferredName;
     private LocalDate dateOfBirth;
-    private LocalDate dateOfDeath;
+    private LocalDateTime dateOfDeath;
     private String gender;
     private String preferredGender;
     private Double height = 0.0;
@@ -140,7 +140,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
-            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
             int bpSystolic, int bpDiastolic, String address, String region, String phone,
             String email, String country, String city, String countryOfDeath, String regionOfDeath,
@@ -284,10 +284,10 @@ public class Profile implements Comparable<Profile> {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(
+                LocalDateTime date = LocalDateTime.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[0])
+                        Integer.valueOf(dates[0]), 0, 0
                 );
                 setDateOfDeath(date);
                 setCountryOfDeath(getCountry());
@@ -600,7 +600,7 @@ public class Profile implements Comparable<Profile> {
         if (dateOfDeath == null) {
             return Period.between(dateOfBirth, LocalDate.now()).getYears();
         } else {
-            return Period.between(dateOfBirth, dateOfDeath).getYears();
+            return Period.between(dateOfBirth, dateOfDeath.toLocalDate()).getYears();
         }
     }
 
@@ -741,12 +741,12 @@ public class Profile implements Comparable<Profile> {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDate getDateOfDeath() {
+    public LocalDateTime getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(LocalDate dateOfDeath) {
-        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath)) {
+    public void setDateOfDeath(LocalDateTime dateOfDeath) {
+        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath.toLocalDate())) {
             throw new IllegalArgumentException(
                     "Date of death cannot be before date of birth"
             );

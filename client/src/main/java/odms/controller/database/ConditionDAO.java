@@ -1,8 +1,8 @@
 package odms.controller.database;
 
 import java.util.ArrayList;
-import odms.model.profile.Condition;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
 
 public interface ConditionDAO {
 

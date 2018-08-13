@@ -2,9 +2,9 @@ package odms.controller.database;
 
 
 import java.util.List;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 
 public interface ProcedureDAO {
 

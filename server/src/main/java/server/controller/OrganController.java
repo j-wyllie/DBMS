@@ -20,7 +20,7 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String getAll(Request req, Response res) {
+    public static String getAll(Request req, Response res) {
         Set<OrganEnum> organs;
         int profileId;
         boolean donated;
@@ -61,7 +61,7 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String add(Request req, Response res) {
+    public static String add(Request req, Response res) {
         int profileId;
         String organ;
         boolean donated;
@@ -98,7 +98,7 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String delete(Request req, Response res) {
+    public static String delete(Request req, Response res) {
         int profileId;
         String organ;
         boolean donated;
@@ -138,7 +138,7 @@ public class OrganController {
      * @param received are required.
      * @return the set of organs based on the criteria.
      */
-    private Set<OrganEnum> getOrgans(Profile profile, boolean donated, boolean donating,
+    private static Set<OrganEnum> getOrgans(Profile profile, boolean donated, boolean donating,
             boolean required, boolean received) {
         OrganDAO database = DAOFactory.getOrganDao();
 
@@ -167,7 +167,7 @@ public class OrganController {
      * @param received are required.
      * @throws OrganConflictException error.
      */
-    private void addOrgan(Profile profile, String organ, boolean donated, boolean donating,
+    private static void addOrgan(Profile profile, String organ, boolean donated, boolean donating,
             boolean required, boolean received) throws OrganConflictException {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
         OrganDAO database = DAOFactory.getOrganDao();
@@ -195,7 +195,7 @@ public class OrganController {
      * @param required are required.
      * @param received are required.
      */
-    private void removeOrgan(Profile profile, String organ, boolean donated, boolean donating,
+    private static void removeOrgan(Profile profile, String organ, boolean donated, boolean donating,
             boolean required, boolean received) {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
         OrganDAO database = DAOFactory.getOrganDao();
