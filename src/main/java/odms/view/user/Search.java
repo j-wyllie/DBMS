@@ -194,6 +194,7 @@ public class Search extends CommonView {
     @FXML
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
+        updateLabels();
         labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
@@ -223,9 +224,20 @@ public class Search extends CommonView {
                     buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
-                    buttonShowNext.setText("Show next 25 results");
-                    buttonShowAll.setVisible(true);
-                    buttonShowNext.setVisible(true);
+                    if ((profileSearchResults.size() - donorObservableList.size()) == 1) {
+                        buttonShowNext.setText("Show next 1 result");
+                    } else if ((profileSearchResults.size() - donorObservableList.size()) < 25) {
+                        buttonShowNext.setText("Show next " + (profileSearchResults.size() - donorObservableList.size()) + " results");
+                    } else {
+                        buttonShowNext.setText("Show next 25 results");
+                    }
+                    if (donorObservableList.size() == profileSearchResults.size()) {
+                        buttonShowAll.setVisible(false);
+                        buttonShowNext.setVisible(false);
+                    } else {
+                        buttonShowAll.setVisible(true);
+                        buttonShowNext.setVisible(true);
+                    }
                 }
             }
         }
@@ -273,12 +285,6 @@ public class Search extends CommonView {
             } else if (showNext) {
                 if (profileSearchResults.size() > (size + PAGESIZE)) {
                     donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
-                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size())
-                            .size() < PAGESIZE) {
-                        buttonShowNext.setText("Show next " + profileSearchResults
-                                .subList(size + PAGESIZE, profileSearchResults.size()).size()
-                                + " results");
-                    }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                     buttonShowNext.setVisible(false);
