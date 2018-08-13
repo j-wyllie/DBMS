@@ -36,6 +36,12 @@ public class Search {
             String selectedGender, String searchString, String regionSearchString,
             String ageSearchString, String ageRangeString, boolean selected) {
 
+        if (selectedOrgans.isEmpty() && selectedType.equals("any") && selectedGender.equals("any") &&
+                searchString.equals("") && regionSearchString.equals("") &&
+                ageRangeString.equals("")) {
+            return new ArrayList<>();
+        }
+
         int ageRangeSearchInt;
         int ageSearchInt;
 

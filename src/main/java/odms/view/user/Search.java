@@ -174,7 +174,7 @@ public class Search extends CommonView {
     }
 
     /**
-     * Button handler to display all search results in the search table
+     * Button handler to display all search results in the search table.
      *
      * @param event clicking on the show all button.
      */
@@ -187,7 +187,7 @@ public class Search extends CommonView {
     }
 
     /**
-     * Button handler to display next 25 search results in the search table
+     * Button handler to display next 25 search results in the search table.
      *
      * @param event clicking on the show all button.
      */
@@ -356,18 +356,6 @@ public class Search extends CommonView {
             typeStrings.add("receiver");
             typeCombobox.getItems().addAll(typeStrings);
             typeCombobox.getSelectionModel().selectFirst();
-
-            typeCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    performSearchFromFilters();
-                }
-            });
-
-            genderCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    performSearchFromFilters();
-                }
-            });
 
             ProfileDAO database = DAOFactory.getProfileDao();
 
