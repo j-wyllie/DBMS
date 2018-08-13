@@ -1,14 +1,14 @@
 package odms.view.user;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -36,6 +36,8 @@ public class AvailableOrgans extends CommonView {
     private CheckComboBox regionsCombobox;
     @FXML
     private TableView availableOrgansTable;
+
+    private boolean filtered = false;
 
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfFilteredAvailableOrgans; // TODO should these two lists just be one list?
@@ -137,16 +139,31 @@ public class AvailableOrgans extends CommonView {
                 });
         availableOrgansTable.setItems(sortedDonaters
         );
+        listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
     /**
      * Updates the available organs list according to the active filters
      */
     private void performSearchFromFilters() {
-        listOfFilteredAvailableOrgans = controller.performSearch(organsCombobox.getCheckModel().getCheckedItems(),
-                countriesCombobox.getCheckModel().getCheckedItems(), regionsCombobox.getCheckModel().getCheckedItems());
-
-        updateTable();
+        listOfFilteredAvailableOrgans = FXCollections.observableArrayList();
+        listOfFilteredAvailableOrgans.clear();
+        for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
+            if(organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegion())) {
+                listOfFilteredAvailableOrgans.add(m);
+            } else if(organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
+                listOfFilteredAvailableOrgans.add(m);
+            }  else if(organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
+                listOfFilteredAvailableOrgans.add(m);
+            }   else if(organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegion())) {
+                listOfFilteredAvailableOrgans.add(m);
+            }
+        }
+        if(listOfFilteredAvailableOrgans.size()!= 0 || organsCombobox.getCheckModel().getCheckedItems().size() != 0 || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
+            availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
+        } else {
+            availableOrgansTable.setItems(listOfAvailableOrgans);
+        }
     }
 
     /**
@@ -171,14 +188,34 @@ public class AvailableOrgans extends CommonView {
         }
 
         List<String> validCountries = database.getAll(true);
+        //todo countries not a required AC
+        countriesCombobox.setVisible(false);
         countriesCombobox.getItems().addAll(validCountries);
+        countriesCombobox.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                performSearchFromFilters();
+            }
+        });
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList()); // TODO will this be populated wit ALL regions?
         //regionsCombobox.setDisable(true);  // TODO not sure how the region filter will work with multiple countries just yet
+        regionsCombobox.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                performSearchFromFilters();
+            }
+        });
 
         organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
         organsCombobox.getItems().setAll(OrganEnum.values());
+        organsCombobox.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                performSearchFromFilters();
+            }
+        });
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
@@ -194,6 +231,7 @@ public class AvailableOrgans extends CommonView {
     public ObservableList<Map.Entry<Profile, OrganEnum>> getListOfAvailableOrgans() {
         return listOfAvailableOrgans;
     }
+
 
     public void removeItem(Map.Entry<Profile, OrganEnum> m) {
         listOfAvailableOrgans.remove(m);

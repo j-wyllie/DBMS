@@ -39,7 +39,7 @@
                <TableColumn prefWidth="211.0" text="Expiry Progress Bar" />
            </columns>
          </TableView>
-            <CheckComboBox fx:id="organsCombobox" GridPane.columnIndex="1" />
+            <CheckComboBox fx:id="organsCombobox" GridPane.columnIndex="1"/>
             <CheckComboBox fx:id="countriesCombobox" GridPane.columnIndex="3" />
             <CheckComboBox fx:id="regionsCombobox" GridPane.columnIndex="5" />
       </children>
