@@ -54,7 +54,6 @@ public class GuiMain extends Application {
             e.printStackTrace();
         }
 
-
         if (!userDb.isUser(0)) {
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
             user.setStaffID(0);
