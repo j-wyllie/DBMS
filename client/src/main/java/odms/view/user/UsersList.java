@@ -47,7 +47,8 @@ public class UsersList extends CommonView {
     public void handleViewUsersSaveBtn(ActionEvent actionEvent) throws IOException {
         if (saveChanges()) {
             showNotification("Users File", actionEvent);
-            controller.saveChanges();
+            // TODO: save changes
+            //controller.saveChanges();
         }
     }
 

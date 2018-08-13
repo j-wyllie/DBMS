@@ -71,6 +71,7 @@ public class Profile implements Comparable<Profile> {
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
+    private HashSet<OrganEnum> organsExpired = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -661,6 +662,8 @@ public class Profile implements Comparable<Profile> {
     public HashSet<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
+
+    public HashSet<OrganEnum> getOrgansExpired() {return organsExpired;}
 
     // Condition functions
 

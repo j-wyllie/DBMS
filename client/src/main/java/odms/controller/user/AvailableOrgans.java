@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class AvailableOrgans {
 
-    public void setOrganExpired(OrganEnum organ, Profile profile) {
+    private void setOrganExpired(OrganEnum organ, Profile profile) {
         profile.getOrgansDonating().remove(organ);
         profile.getOrgansExpired().add(organ);
     }

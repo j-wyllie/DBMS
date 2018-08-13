@@ -41,6 +41,8 @@ public interface ProfileDAO {
      */
     boolean isUniqueUsername(String username) throws SQLException;
 
+    boolean isUniqueNHI(String nhi) throws SQLException;
+
     /**
      * Removes a profile from the database.
      * @param profile to remove.

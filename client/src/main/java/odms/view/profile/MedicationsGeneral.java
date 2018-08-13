@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.profile.Medications;
 import odms.view.CommonView;
 
@@ -125,7 +124,7 @@ public class MedicationsGeneral extends CommonView {
     @FXML
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (saveChanges()) {
-            ProfileDataIO.saveData(getCurrentDatabase());
+            //ProfileDataIO.saveData(getCurrentDatabase());
             controller.saveDrugs();
             //todo sort out show notification
             showNotification("Medications Tab", event);

@@ -16,7 +16,6 @@ import odms.controller.database.procedure.MySqlProcedureDAO;
 import odms.controller.database.procedure.ProcedureDAO;
 import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.database.profile.ProfileDAO;
-import odms.controller.database.user.MySqlUserDAO;
 import odms.controller.database.user.UserDAO;
 
 public class DAOFactory {
@@ -31,9 +30,7 @@ public class DAOFactory {
      * Gives the data access object class for the User object.
      * @return dao for User object database transactions.
      */
-    public static UserDAO getUserDao() {
-        return new MySqlUserDAO();
-    }
+    public static UserDAO getUserDao() { return new odms.controller.database.MySqlUserDAO(); }
 
     /**
      * Gives the data access object class for the Profile object.

@@ -1,7 +1,7 @@
 package odms.controller.profile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 import odms.commons.model.history.History;
@@ -37,7 +37,7 @@ public class OrganRemoval extends CommonController {
             case "Patient deceased":
                 view.removeAllOrgans();
                 //todo way to set time of death
-                view.getCurrentProfile().setDateOfDeath(LocalDate.from(view.getDOD()));
+                view.getCurrentProfile().setDateOfDeath(LocalDateTime.of(view.getDOD(), LocalTime.MIN));
                 Set<OrganEnum> organsRequired = new HashSet<>(
                         view.getCurrentProfile().getOrgansRequired()
                 );

@@ -12,6 +12,7 @@ import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.MySqlProcedureDAO;
 import server.model.database.procedure.ProcedureDAO;
+import server.model.database.profile.MySqlProfileDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.MySqlUserDAO;
 import server.model.database.user.UserDAO;

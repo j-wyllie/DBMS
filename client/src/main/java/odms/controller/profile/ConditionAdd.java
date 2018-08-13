@@ -1,12 +1,13 @@
 package odms.controller.profile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import odms.commons.model.history.History;
 import odms.commons.model.profile.Condition;
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
+import odms.commons.model.history.History;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ConditionAdd extends CommonController {
     private odms.view.profile.ConditionAdd view;

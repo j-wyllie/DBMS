@@ -11,6 +11,7 @@ import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.DatabaseConnection;
 
 public class MySqlOrganDAO implements OrganDAO {
 

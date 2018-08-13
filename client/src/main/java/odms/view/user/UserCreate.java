@@ -1,5 +1,6 @@
 package odms.view.user;
 
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
+import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
 
 public class UserCreate extends CommonView {
@@ -34,7 +36,7 @@ public class UserCreate extends CommonView {
     private Button userCreateAccountButton;
 
     @FXML
-    public void handleUserCreateAccountButtonClicked(ActionEvent event) {
+    public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
         if (checkValidEntries()) {
             if (checkUniqueUsername()) {
                 User user = new User(userTypeBox.getValue(),
@@ -43,7 +45,7 @@ public class UserCreate extends CommonView {
                 );
                 user.setUsername(userUsernameField.getText());
                 user.setPassword(userPasswordField.getText());
-                GuiMain.getUserDatabase().addUser(user);
+                DAOFactory.getUserDao().add(user);
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
                 editTrueAction(event, true);
@@ -60,8 +62,8 @@ public class UserCreate extends CommonView {
      *
      * @return a boolean signalling that all fields were filled it.
      */
-    private boolean checkUniqueUsername() {
-        return GuiMain.getUserDatabase().checkUniqueUsername(userUsernameField.getText());
+    private boolean checkUniqueUsername() throws SQLException {
+        return DAOFactory.getUserDao().isUniqueUsername(userUsernameField.getText());
     }
 
     /**

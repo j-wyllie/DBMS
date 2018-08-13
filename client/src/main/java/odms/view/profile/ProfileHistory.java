@@ -11,14 +11,16 @@ public class ProfileHistory {
 
     private Profile currentProfile;
     // init controller corresponding to this view
-    private odms.controller.profile.ProfileHistory controller = new odms.controller.profile.ProfileHistory(this);
+
+    // TODO: fix profile history.
+    //private ProfileHistory controller = new ProfileHistory(this);
 
     public Profile getProfile() {
         return currentProfile;
     }
 
     private void setHistoryView() {
-        historyView.setText(controller.getHistory());
+        //historyView.setText(controller.getHistory());
     }
 
     //todo do we need this function?????
