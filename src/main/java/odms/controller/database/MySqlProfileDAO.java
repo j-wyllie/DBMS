@@ -772,6 +772,51 @@ public class MySqlProfileDAO implements ProfileDAO {
         return getReceivers(query);
     }
 
+    /**
+     * Get list of receivers that could be recipients of a selected organ.
+     * @param organ type of organ that is being donated
+     * @param bloodType blood type recipient needs to have
+     * @param lowerAgeRange lowest age the recipient can have
+     * @param upperAgeRange highest age the recipient can have
+     * @return list of profile objects
+     */
+    @Override
+    public List<Profile> getOrganReceivers(String organ, String bloodType,
+            Integer lowerAgeRange, Integer upperAgeRange) {
+        String query = "SELECT * FROM profiles p WHERE p.BloodType = ? AND "
+                + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
+                + "AND p.IsReceiver = 1 AND ("
+                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
+                + "o.Required) = ?;";
+
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<Profile> receivers = new ArrayList<>();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, bloodType);
+            stmt.setInt(2, lowerAgeRange);
+            stmt.setInt(3, upperAgeRange);
+            stmt.setString(4, organ);
+            stmt.setString(5, organ);
+
+            ResultSet result = stmt.executeQuery(query);
+
+            while (result.next()) {
+                Profile profile = parseProfile(result);
+                receivers.add(profile);
+            }
+            conn.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return receivers;
+    }
+
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
@@ -788,6 +833,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 receivers.add(new SimpleEntry<>(profile, organ));
             }
             conn.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
