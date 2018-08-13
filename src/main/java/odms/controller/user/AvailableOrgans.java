@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
@@ -160,6 +162,45 @@ public class AvailableOrgans {
 
         return durationFormatted;
 
+    }
+
+    /**
+     * returns list of potential organ matches for a given organ and the donor the organ came from
+     * @param organAvailable the available organ
+     * @param donorProfile the donor the organ came from
+     * @return a list of potential organ matches
+     */
+    public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
+
+        ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
+        ArrayList<Profile> receivingProfiles = new ArrayList<>();
+        receivingProfiles.addAll(GuiMain.getCurrentDatabase().getReceivers(true));
+
+        String reqBloodType = donorProfile.getBloodType();
+        Integer minAge;
+        Integer maxAge;
+        if (donorProfile.getAge() < 12) {
+            minAge = 0;
+            maxAge = 12;
+        } else {
+            minAge = donorProfile.getAge() - 15;
+            if (minAge < 12) {minAge = 12;}
+            maxAge = donorProfile.getAge() + 15;
+        }
+
+        for (Profile p: receivingProfiles) {
+            if (p.getOrgansRequired().contains(organAvailable) && p.getAge() < maxAge && p.getAge() > minAge
+                    && p.getBloodType().equals(reqBloodType)) {
+                potentialOrganMatches.add(p);
+            }
+        }
+
+        // temporary til we get data TODO
+        System.out.println(potentialOrganMatches.size());
+        potentialOrganMatches.addAll(GuiMain.getCurrentDatabase().getProfiles(false));
+        System.out.println(potentialOrganMatches.size());
+
+        return potentialOrganMatches;
     }
 
 
