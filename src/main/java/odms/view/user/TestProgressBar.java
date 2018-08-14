@@ -5,6 +5,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.ProgressBarTableCell;
+import javafx.scene.shape.Line;
 import javafx.util.Callback;
 
 class TestProgressBar<S> extends TableCell<S, Double> {

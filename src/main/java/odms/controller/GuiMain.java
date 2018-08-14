@@ -73,6 +73,8 @@ public class GuiMain extends Application {
             userDb.addUser(user);
             UserDataIO.saveUsers(userDb, USER_DATABASE);
         }
+
+        //thread that runs in the background to check if organs have expired since last launch
         Thread checkOrgan = new Thread() {
             public void run() {
                 try {
@@ -86,8 +88,8 @@ public class GuiMain extends Application {
                 }
             }
         };
+        checkOrgan.setDaemon(true);
         checkOrgan.start();
-        //timer that runs in the background to check if organs have expired
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));

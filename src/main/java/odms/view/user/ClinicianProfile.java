@@ -207,6 +207,7 @@ public class ClinicianProfile extends CommonView {
                     }
                 }
             };
+            checkOrgan.setDaemon(true);
             checkOrgan.start();
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();

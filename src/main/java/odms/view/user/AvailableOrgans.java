@@ -314,7 +314,7 @@ public class AvailableOrgans extends CommonView {
                 performOrganSearchFromFilters();
             }
         });
-        Timer timer = new Timer();
+        Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 List<Map.Entry<Profile, OrganEnum>> toRemove = new ArrayList<>();

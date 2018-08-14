@@ -150,6 +150,7 @@ public class Display extends CommonView {
                 }
             }
         };
+        checkOrgan.setDaemon(true);
         checkOrgan.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
