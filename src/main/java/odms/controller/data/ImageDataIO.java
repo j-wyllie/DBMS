@@ -72,6 +72,10 @@ public final class ImageDataIO {
     public static String deleteAndSaveImage(File image, String name) throws IOException {
         deleteImage(name);
 
+        if (image == null) {
+            throw new IOException("No file specified");
+        }
+
         File destination = getSaveDestination(image, name);
         copyFileUsingStream(image, destination);
 
