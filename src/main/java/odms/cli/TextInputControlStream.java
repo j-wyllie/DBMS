@@ -1,10 +1,5 @@
 package odms.cli;
 
-import javafx.application.Platform;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,11 +10,9 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import static odms.cli.GUIUtils.runSafe;
+import javafx.application.Platform;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyEvent;
 
 class TextInputControlStream {
 
@@ -37,7 +30,6 @@ class TextInputControlStream {
         this.charset = charset;
         this.in = new TextInputControlInputStream(textInputControl);
         this.out = new TextInputControlOutputStream(textInputControl);
-
 
         textInputControl.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -89,9 +81,9 @@ class TextInputControlStream {
         private final TextInputControl textInputControl;
         private final PipedInputStream outputTextSource;
         private final PipedOutputStream inputTextTarget;
-        private int lastLineBreakIndex = 0;
+        private int lastLineBreakIndex;
 
-        public TextInputControlInputStream(TextInputControl textInputControl) {
+        TextInputControlInputStream(TextInputControl textInputControl) {
             this.textInputControl = textInputControl;
             this.inputTextTarget = new PipedOutputStream();
             try {
@@ -132,10 +124,10 @@ class TextInputControlStream {
             }
         }
 
-
         private String getLastLine() {
             synchronized (this) {
-                return this.textInputControl.getText(this.lastLineBreakIndex, this.textInputControl.getLength());
+                return this.textInputControl
+                        .getText(this.lastLineBreakIndex, this.textInputControl.getLength());
             }
         }
 

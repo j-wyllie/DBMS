@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import java.util.Objects;
 
 public final class GUIUtils {
+
     private GUIUtils() {
         throw new UnsupportedOperationException();
     }
@@ -18,8 +19,7 @@ public final class GUIUtils {
         Objects.requireNonNull(runnable, "runnable");
         if (Platform.isFxApplicationThread()) {
             runnable.run();
-        }
-        else {
+        } else {
             Platform.runLater(runnable);
         }
     }

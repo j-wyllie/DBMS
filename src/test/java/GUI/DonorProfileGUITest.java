@@ -1,31 +1,24 @@
 package GUI;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeoutException;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-
 import javafx.scene.input.KeyCode;
-import odms.controller.GuiMain;
-import odms.profile.Condition;
-
-import odms.profile.Profile;
+import odms.model.profile.Condition;
+import odms.model.profile.Profile;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.*;
 
 @Ignore
 public class DonorProfileGUITest extends TestFxMethods {
+
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private LocalDate now = LocalDate.now();
 
@@ -36,7 +29,8 @@ public class DonorProfileGUITest extends TestFxMethods {
     }
 
     /**
-     * Test that the history tab can be opened but none of the buttons to edit it should be available
+     * Test that the history tab can be opened but none of the buttons to edit it should be
+     * available
      */
     @Test
     public void openHistoryTabForDonor() {
@@ -55,8 +49,8 @@ public class DonorProfileGUITest extends TestFxMethods {
     }
 
     /**
-     * Test that the history tab is available when accessed by a clinician
-     * Also test that all of the buttons that can be used to edit the history are available
+     * Test that the history tab is available when accessed by a clinician Also test that all of the
+     * buttons that can be used to edit the history are available
      */
     @Test
     public void openHistoryForClinician() {

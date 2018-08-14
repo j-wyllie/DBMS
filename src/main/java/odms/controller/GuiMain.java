@@ -1,19 +1,25 @@
 package odms.controller;
 
+import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.App;
-import odms.data.ProfileDatabase;
-import odms.data.UserDataIO;
-import odms.data.UserDatabase;
-import odms.user.User;
-import odms.user.UserType;
+import odms.controller.data.UserDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.user.UserNotFoundException;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
+import odms.model.user.User;
+import odms.model.enums.UserType;
 
 import java.io.IOException;
 
+/**
+ * Main class. GUI boots from here.
+ */
 public class GuiMain extends Application {
 
     private static final String DONOR_DATABASE = "example/example.json";
@@ -27,26 +33,25 @@ public class GuiMain extends Application {
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
+     *
      * @param primaryStage the primary stage
      * @throws IOException file read exception for login fxml
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        if (!userDb.isUser(0)) {
-            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
-            user.setStaffID(0);
-            userDb.addUser(user);
-            user.setDefault(true);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
+        try {
+            DAOFactory.getUserDao().get(ADMIN);
+        } catch (UserNotFoundException e) {
+            createDefaultAdmin();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        if (!userDb.isUser(ADMIN)) {
-            User user = new User(UserType.ADMIN, ADMIN);
-            user.setUsername(ADMIN);
-            user.setPassword(ADMIN);
-            user.setDefault(true);
-            userDb.addUser(user);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
+        try {
+            DAOFactory.getUserDao().get("0");
+        } catch (UserNotFoundException e) {
+            createDefaultClinician();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
@@ -56,17 +61,55 @@ public class GuiMain extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Creates a default admin profile in the database.
+     */
+    private static void createDefaultAdmin() {
+        try {
+            User admin = new User(UserType.ADMIN, ADMIN);
+            admin.setUsername(ADMIN);
+            admin.setPassword(ADMIN);
+            admin.setDefault(true);
+            DAOFactory.getUserDao().add(admin);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates a default clinician profile in the database.
+     */
+    private static void createDefaultClinician() {
+        try {
+            User clinician = new User(UserType.CLINICIAN, "Doc");
+            clinician.setUsername("0");
+            clinician.setPassword("");
+            clinician.setDefault(true);
+            DAOFactory.getUserDao().add(clinician);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static ProfileDatabase getCurrentDatabase() {
         return profileDb;
     }
 
-    public static UserDatabase getUserDatabase(){
+    public static void setCurrentDatabase(ProfileDatabase profileDb) {
+        GuiMain.profileDb = profileDb;
+    }
+
+    public static UserDatabase getUserDatabase() {
         return userDb;
     }
 
-    public static void setCurrentDatabase(ProfileDatabase profileDb) { GuiMain.profileDb = profileDb; }
-
+    /**
+     * Launches the GUI of the program.
+     * @param args command arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }

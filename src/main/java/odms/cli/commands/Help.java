@@ -2,7 +2,11 @@ package odms.cli.commands;
 
 import java.util.Arrays;
 
-public class Help {
+public final class Help {
+
+    private Help() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Output a list of all commands and explanations/examples of use
@@ -43,8 +47,8 @@ public class Help {
         System.out.println("\n-Update a profiles attributes:");
         System.out.println("profile {attributes to search profiles by} > {attributes to update}");
         System.out
-            .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
-                + "-1998\" > height=\"169\"");
+                .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+                        + "-1998\" > height=\"169\"");
 
         System.out.println("\n-View a profiles past donations, required organs and currently "
                 + "donating organs:");
@@ -52,17 +56,18 @@ public class Help {
 
         System.out.println("\n-Add an organ to donate:");
         System.out
-            .println("profile {attributes to search profiles by} > add-organ=\" {list of organs "
-                + "to donate} \"");
+                .println(
+                        "profile {attributes to search profiles by} > add-organ=\" {list of organs "
+                                + "to donate} \"");
         System.out
-            .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
-                + "-1998\" > add-organ=\"liver, kidney\"");
+                .println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-03"
+                        + "-1998\" > add-organ=\"liver, kidney\"");
 
         System.out.println("\n-Remove an organ to donate:");
         System.out.println("profile {attributes to search profiles by} > remove-organ=\" {list of "
-            + "organs to remove} \"");
+                + "organs to remove} \"");
         System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
-            + "03-1998\" > remove-organ=\"liver, kidney\"");
+                + "03-1998\" > remove-organ=\"liver, kidney\"");
 
         System.out.println("\n-Add an organ to profile(s) donated organs:");
         System.out

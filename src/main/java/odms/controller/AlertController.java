@@ -3,14 +3,15 @@ package odms.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import odms.enums.OrganEnum;
+import javafx.stage.Modality;
+import odms.model.enums.OrganEnum;
 
 public class AlertController {
 
     /**
      * Creates a generic popup when details are entered incorrectly.
      */
-    static void invalidEntry() {
+    public static void invalidEntry() {
         invalidEntry("Please enter your details correctly.");
     }
 
@@ -18,12 +19,13 @@ public class AlertController {
      * Creates a message based popup when the details are entered incorrectly.
      * @param message the message to be displayed
      */
-    static void invalidEntry(String message) {
+    public static void invalidEntry(String message) {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 message,
                 ButtonType.CLOSE
         );
+        invalidAlert.initModality(Modality.APPLICATION_MODAL);
 
         invalidAlert.show();
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
@@ -52,7 +54,7 @@ public class AlertController {
     /**
      * Creates a popup when the username entered was invalid
      */
-    static void invalidUsername() {
+    public static void invalidUsername() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Please enter a valid username.",
@@ -68,7 +70,7 @@ public class AlertController {
     /**
      * Creates a popup when the username or password entered was invalid.
      */
-    static void invalidUsernameOrPassword() {
+    public static void invalidUsernameOrPassword() {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 "Incorrect username or password.",
@@ -84,7 +86,7 @@ public class AlertController {
     /**
      * Creates a popup when the NHI number entered was invalid
      */
-    static void invalidNhi() {
+    public static void invalidNhi() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Please enter a valid NHI number.",
@@ -100,7 +102,7 @@ public class AlertController {
     /**
      * Creates a popup when the date entered is an incorrect format
      */
-    static void invalidDate() {
+    public static void invalidDate() {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             "Date entered is not in the format dd-mm-yyyy.",
@@ -118,7 +120,7 @@ public class AlertController {
      * Creates a popup with a personalized message from the controller
      * @param message the message to be displayed
      */
-    static void guiPopup(String message) {
+    public static void guiPopup(String message) {
         Alert invalidAlert = new Alert(
             AlertType.ERROR,
             message,
@@ -134,7 +136,7 @@ public class AlertController {
     /**
      * Creates a popup with a personalized message from the controller
      */
-    static void uniqueUsername() {
+    public static void uniqueUsername() {
         Alert invalidAlert = new Alert(
                 AlertType.ERROR,
                 "Please enter a unique username",
@@ -148,10 +150,28 @@ public class AlertController {
     }
 
     /**
+     * Displays a popup prompting the user to confirm the changes they have made.
+     *
+     * @return true or false on whether the changes were confirmed
+     */
+    public static boolean saveChanges() {
+        Alert saveAlert = new Alert(
+                AlertType.CONFIRMATION,
+                "Do you wish to save your changes?",
+                ButtonType.CANCEL,
+                ButtonType.YES
+        );
+
+        saveAlert.showAndWait();
+
+        return handleAlert(saveAlert);
+    }
+
+    /**
      * Displays a popup prompting the user to confirm the action they want to perform.
      * @return true or false on whether the changes were confirmed
      */
-    static boolean generalConfirmation(String message) {
+    public static boolean generalConfirmation(String message) {
         Alert confirmAlert = new Alert(
                 AlertType.CONFIRMATION,
                 message,
@@ -168,7 +188,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean profileCancelChanges() {
+    public static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "Do you wish to cancel your changes?",
@@ -200,7 +220,7 @@ public class AlertController {
      * Displays a popup prompting the user to confirm cancellation of changes made
      * @return true or false on whether the changes were confirmed
      */
-    static boolean deleteUserConfirmation() {
+    public static boolean deleteUserConfirmation() {
         Alert cancelAlert = new Alert(
                 AlertType.CONFIRMATION,
                 "Are you sure you want to delete this user?",
@@ -214,10 +234,12 @@ public class AlertController {
     }
 
     /**
-     * Displays a popup prompting the user to that they have unsaved changes somewhere in the program
+     * Displays a popup prompting the user to that they have unsaved changes somewhere in the
+     * program
+     *
      * @return true or false on whether the changes were confirmed
      */
-    static boolean unsavedChangesImport() {
+    public static boolean unsavedChangesImport() {
         Alert cancelAlert = new Alert(
             AlertType.CONFIRMATION,
             "You have unsaved changes.\n" +

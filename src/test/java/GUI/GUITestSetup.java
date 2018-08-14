@@ -4,7 +4,11 @@ import java.util.concurrent.TimeoutException;
 
 import static org.testfx.api.FxToolkit.registerPrimaryStage;
 
-public class GUITestSetup {
+public final class GUITestSetup {
+
+    private GUITestSetup() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Configure TestFX tests to run in headless mode

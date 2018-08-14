@@ -1,21 +1,25 @@
 package odms.cli;
 
-import static odms.cli.GUIUtils.runSafe;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
+
+import static odms.cli.GUIUtils.runSafe;
 
 public class CommandGUI {
-    @FXML
-    private TextArea displayTextArea;
 
     private final PrintStream out;
     private final InputStream in;
+
+    @FXML
+    private TextArea displayTextArea;
 
     /**
      * Create a command line with the give text area as input/output
@@ -29,7 +33,8 @@ public class CommandGUI {
 
         // init IO steams
         Charset charset = Charset.defaultCharset();
-        final TextInputControlStream stream = new TextInputControlStream(this.displayTextArea, Charset.defaultCharset());
+        final TextInputControlStream stream = new TextInputControlStream(this.displayTextArea,
+                Charset.defaultCharset());
         try {
             this.out = new PrintStream(stream.getOut(), true, charset.name());
         } catch (UnsupportedEncodingException e) {
@@ -50,13 +55,17 @@ public class CommandGUI {
                 switch (event.getCode()) {
                     case UP:
                         textLen = displayTextArea.getText().length();
-                        displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                        displayTextArea
+                                .deleteText(textLen - commandLine.getHistory().current().length(),
+                                        textLen);
                         commandLine.getHistory().previous();
                         displayTextArea.appendText(commandLine.getHistory().current());
                         break;
                     case DOWN:
                         textLen = displayTextArea.getText().length();
-                        displayTextArea.deleteText(textLen - commandLine.getHistory().current().length(), textLen);
+                        displayTextArea
+                                .deleteText(textLen - commandLine.getHistory().current().length(),
+                                        textLen);
                         commandLine.getHistory().next();
                         displayTextArea.appendText(commandLine.getHistory().current());
                         break;
@@ -71,7 +80,11 @@ public class CommandGUI {
         runSafe(() -> displayTextArea.clear());
     }
 
-    public PrintStream getOut() { return out; }
+    public PrintStream getOut() {
+        return out;
+    }
 
-    public InputStream getIn() { return in; }
+    public InputStream getIn() {
+        return in;
+    }
 }

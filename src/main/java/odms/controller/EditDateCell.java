@@ -4,18 +4,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import odms.profile.Condition;
+import odms.model.profile.Condition;
 
-class EditDateCell extends TableCell<Condition, LocalDate> {
+public class EditDateCell extends TableCell<Condition, LocalDate> {
 
     private TextField textField;
 
-    public EditDateCell() {}
+    public EditDateCell() {
+    }
 
     @Override
     public void startEdit() {
@@ -61,29 +64,29 @@ class EditDateCell extends TableCell<Condition, LocalDate> {
 
     private void createTextField() {
         textField = new TextField(getString());
-        textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()*2);
+        textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        ChangeListener<? super Boolean> changeListener = (observable, oldSelection, newSelection) ->
-        {
+        ChangeListener<? super Boolean> changeListener;
+        changeListener = (observable, oldSelection, newSelection) -> {
             if (!newSelection) {
                 try {
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
             }
         };
         textField.focusedProperty().addListener(changeListener);
 
-        textField.setOnKeyPressed((ke) -> {
+        textField.setOnKeyPressed(ke -> {
             if (ke.getCode() == KeyCode.ENTER) {
                 try {
                     textField.focusedProperty().removeListener(changeListener);
                     commitEdit(LocalDate.parse(textField.getText(), dtf));
                 } catch (Exception e) {
-
+                    // noop
                 }
                 textField.focusedProperty().addListener(changeListener);
             }
@@ -109,8 +112,10 @@ class EditDateCell extends TableCell<Condition, LocalDate> {
         } else {
             final TableView table = getTableView();
             if (table != null) {
-                TablePosition position = new TablePosition(getTableView(), getTableRow().getIndex(), getTableColumn());
-                TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(table, position, TableColumn.editCommitEvent(), item);
+                TablePosition position = new TablePosition(getTableView(), getTableRow().getIndex(),
+                        getTableColumn());
+                TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(table, position,
+                        TableColumn.editCommitEvent(), item);
                 Event.fireEvent(getTableColumn(), editEvent);
             }
             updateItem(item, false);

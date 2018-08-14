@@ -1,10 +1,10 @@
 package odms.cli;
 
-import odms.data.NHIConflictException;
-import odms.data.ProfileDatabase;
-import odms.data.UserDatabase;
-import odms.profile.Profile;
-import odms.user.User;
+import odms.model.data.NHIConflictException;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
+import odms.model.profile.Profile;
+import odms.model.user.User;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CommandUtilsTest {
+
     private ProfileDatabase profileDb;
     private UserDatabase userDb;
     private Profile profileOne;
@@ -48,7 +49,7 @@ public class CommandUtilsTest {
         donorOneAttr.add("given-names=\"John\"");
         donorOneAttr.add("last-names=\"Wayne\"");
         donorOneAttr.add("dob=\"17-01-1998\"");
-        donorOneAttr.add("nhi=\"123456789\"");
+        donorOneAttr.add("nhi=\"ABC1234\"");
 
         ArrayList<String> donorTwoAttr = new ArrayList<>();
         donorTwoAttr.add("given-names=\"Sam\"");
@@ -125,9 +126,12 @@ public class CommandUtilsTest {
         ArrayList<String> printCliniciansTest = new ArrayList<>(Arrays.asList(printCliniciansTestStr.split("\\s")));
         ArrayList<String> printUsersTest = new ArrayList<>(Arrays.asList(printUsersTestStr.split("\\s")));
         ArrayList<String> helpTest = new ArrayList<>(Arrays.asList(helpTestStr.split("\\s")));
-        ArrayList<String> addOrganTest = new ArrayList<>(Arrays.asList(addOrganTestStr.split("\\s")));
-        ArrayList<String> deleteOrganTest = new ArrayList<>(Arrays.asList(deleteOrganTestStr.split("\\s")));
-        ArrayList<String> invalidCommandTest = new ArrayList<>(Arrays.asList(invalidCommandTestStr.split("\\s")));
+        ArrayList<String> addOrganTest = new ArrayList<>(
+                Arrays.asList(addOrganTestStr.split("\\s")));
+        ArrayList<String> deleteOrganTest = new ArrayList<>(
+                Arrays.asList(deleteOrganTestStr.split("\\s")));
+        ArrayList<String> invalidCommandTest = new ArrayList<>(
+                Arrays.asList(invalidCommandTestStr.split("\\s")));
 
         // Check tokens validate appropriately
         assertEquals(Commands.PRINTALLPROFILES, validateCommandType(printAllProfilesTest, printAllProfilesTestStr));
@@ -135,20 +139,27 @@ public class CommandUtilsTest {
         assertEquals(Commands.PRINTALLCLINICIANS, validateCommandType(printCliniciansTest, printCliniciansTestStr));
         assertEquals(Commands.PRINTALLUSERS, validateCommandType(printUsersTest, printUsersTestStr));
         assertEquals(Commands.HELP, validateCommandType(helpTest, helpTestStr));
-        assertEquals(Commands.PROFILECREATE, validateCommandType(createProfileTest, createProfileTestStr));
+        assertEquals(Commands.PROFILECREATE,
+                validateCommandType(createProfileTest, createProfileTestStr));
         assertEquals(Commands.PROFILEVIEW, validateCommandType(viewDonorTest, viewDonorTestStr));
         assertEquals(Commands.PROFILEDATECREATED, validateCommandType(viewDateCreatedTest, viewDateCreatedTestStr));
         assertEquals(Commands.PROFILEORGANS, validateCommandType(viewDonationsTest, viewDonationsTestStr));
         assertEquals(Commands.PROFILEUPDATE, validateCommandType(updateDonorTest, updateDonorTestStr));
 
-        assertEquals(Commands.CLINICIANCREATE, validateCommandType(createClinicianTest, createClinicianTestStr));
-        assertEquals(Commands.CLINICIANEVIEW, validateCommandType(viewClinicianTest, viewClinicianTestStr));
-        assertEquals(Commands.CLINICIANDATECREATED, validateCommandType(viewClinicianDateCreatedTest, viewClinicianDateCreatedTestStr));
-        assertEquals(Commands.CLINICIANUPDATE, validateCommandType(updateClinicianTest, updateClinicianTestStr));
+        assertEquals(Commands.CLINICIANCREATE,
+                validateCommandType(createClinicianTest, createClinicianTestStr));
+        assertEquals(Commands.CLINICIANEVIEW,
+                validateCommandType(viewClinicianTest, viewClinicianTestStr));
+        assertEquals(Commands.CLINICIANDATECREATED,
+                validateCommandType(viewClinicianDateCreatedTest, viewClinicianDateCreatedTestStr));
+        assertEquals(Commands.CLINICIANUPDATE,
+                validateCommandType(updateClinicianTest, updateClinicianTestStr));
 
         assertEquals(Commands.ORGANADD, validateCommandType(addOrganTest, addOrganTestStr));
-        assertEquals(Commands.ORGANREMOVE, validateCommandType(deleteOrganTest, deleteOrganTestStr));
-        assertEquals(Commands.INVALID, validateCommandType(invalidCommandTest, invalidCommandTestStr));
+        assertEquals(Commands.ORGANREMOVE,
+                validateCommandType(deleteOrganTest, deleteOrganTestStr));
+        assertEquals(Commands.INVALID,
+                validateCommandType(invalidCommandTest, invalidCommandTestStr));
     }
 
     @Test
@@ -162,7 +173,7 @@ public class CommandUtilsTest {
         String givenNames = "Given Names";
         String lastNames = "Last Names";
         String dob = "12-08-1989";
-        String nhi = "987654321";
+        String nhi = "AAA1234";
 
         LocalDate dobConverted = LocalDate.of(
                 Integer.valueOf(dob.split("-")[2]),
@@ -207,13 +218,13 @@ public class CommandUtilsTest {
 
     @Test
     public void testDeleteProfileCommand() {
-        String nhi = "123456789";
+        String nhi = "ABC1234";
         String deleteProfileStr = "profile " +
-            "nhi=\"" + nhi + "\" "
-            + "> delete";
+                "nhi=\"" + nhi + "\" "
+                + "> delete";
         odms.cli.commands.Profile.deleteProfileBySearch(profileDb, deleteProfileStr);
 
-        assertEquals(profileDb.searchNHI("123456789").size(), 0);
+        assertEquals(profileDb.searchNHI("ABC1234").size(), 0);
     }
 
     @Test
@@ -241,11 +252,11 @@ public class CommandUtilsTest {
     @Test
     public void testUpdateProfileCommand() {
         String givenNames = "Boaty McBoatface";
-        String nhi = "123456789";
+        String nhi = "ABC1234";
         String updateProfileStr = "profile " +
-            "nhi=\"" + nhi + "\" "
-            + "> "
-            + "given-names=\"" + givenNames + "\"";
+                "nhi=\"" + nhi + "\" "
+                + "> "
+                + "given-names=\"" + givenNames + "\"";
 
         odms.cli.commands.Profile.updateProfilesBySearch(profileDb, updateProfileStr);
 
@@ -278,19 +289,19 @@ public class CommandUtilsTest {
         User updatedUser = userDb.searchStaffID(staffID).get(0);
         assertEquals(updatedUser.getName(), newName);
     }
-    
+
     @Test
     public void testProfileDateCreatedCommand() {
-        String nhi = "123456789";
+        String nhi = "ABC1234";
         String viewProfileDateStr = "profile " +
-            "nhi=\"" + nhi + "\" "
-            + "> date-created";
+                "nhi=\"" + nhi + "\" "
+                + "> date-created";
         Profile profile = profileDb.searchNHI(nhi).get(0);
         odms.cli.commands.Profile.viewDateTimeCreatedBySearch(profileDb, viewProfileDateStr);
 
         assertTrue(
-            result.toString().trim().split("\\r?\\n")[3]
-                .contains(profile.getTimeOfCreation().toString())
+                result.toString().trim().split("\\r?\\n")[3]
+                        .contains(profile.getTimeOfCreation().toString())
         );
 
     }
@@ -306,14 +317,16 @@ public class CommandUtilsTest {
                 "region=\"" + region + "\" " +
                 "workAddress=\"" + workAddress + "\" ";
 
-        int staffID = odms.cli.commands.User.createClinician(userDb, createClinicianStr).getStaffID();
+        int staffID = odms.cli.commands.User.createClinician(userDb, createClinicianStr)
+                .getStaffID();
 
         String viewClincianDateStr = "clinician " +
                 "staffID=\"" + staffID + "\" "
                 + "> date-created";
 
         User user = userDb.searchStaffID(staffID).get(0);
-        odms.cli.commands.User.viewDateTimeCreatedBySearch(userDb, viewClincianDateStr, "clinician");
+        odms.cli.commands.User
+                .viewDateTimeCreatedBySearch(userDb, viewClincianDateStr, "clinician");
 
         assertTrue(
                 result.toString().trim().split("\\r?\\n")[4]

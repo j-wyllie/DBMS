@@ -1,103 +1,113 @@
 {
-  "deletedUsers": [
-    2
-  ],
+  "deletedUsers": [],
   "userDb": {
     "0": {
       "userType": "CLINICIAN",
-      "name": "Doc",
+      "name": "John Smith",
       "staffID": 0,
-      "workAddress": "",
       "region": "Christchurch",
       "lastUpdated": {
         "date": {
           "year": 2018,
-          "month": 7,
-          "day": 26
+          "month": 8,
+          "day": 8
         },
         "time": {
-          "hour": 14,
-          "minute": 45,
-          "second": 58,
-          "nano": 447000000
+          "hour": 18,
+          "minute": 8,
+          "second": 35,
+          "nano": 118000000
         }
       },
       "updateActions": [
-        "Account for Doccreated at 2018-07-25T13:42:29.203",
-        "Clinician updated at 01:42 PM 25-07-2018",
-        "0 updated at 01:42 PM 25-07-2018",
-        "0 updated at 01:42 PM 25-07-2018",
-        "Doc updated at 01:10 PM 26-07-2018",
-        "0 updated at 01:10 PM 26-07-2018",
-        " updated at 01:10 PM 26-07-2018",
-        "Christchurch updated at 01:10 PM 26-07-2018",
-        "Doc updated at 01:10 PM 26-07-2018",
-        "0 updated at 01:10 PM 26-07-2018",
-        " updated at 01:10 PM 26-07-2018",
-        "Christchurch updated at 01:10 PM 26-07-2018",
-        "Doc updated at 01:10 PM 26-07-2018",
-        "0 updated at 01:10 PM 26-07-2018",
-        " updated at 01:10 PM 26-07-2018",
-        "Christchurch updated at 01:10 PM 26-07-2018",
-        "Doc updated at 01:11 PM 26-07-2018",
-        "0 updated at 01:11 PM 26-07-2018",
-        " updated at 01:11 PM 26-07-2018",
-        "Christchurch updated at 01:11 PM 26-07-2018",
-        "Doc updated at 02:45 PM 26-07-2018",
-        "0 updated at 02:45 PM 26-07-2018",
-        " updated at 02:45 PM 26-07-2018",
-        "Christchurch updated at 02:45 PM 26-07-2018"
+        "Account for John Smithcreated at 2018-08-08T18:08:35.118",
+        "0 updated at 06:08 PM 08-08-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
-          "month": 7,
-          "day": 25
+          "month": 8,
+          "day": 8
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 203000000
+          "hour": 18,
+          "minute": 8,
+          "second": 35,
+          "nano": 118000000
         }
       },
-      "username": "Clinician",
-      "isDefault": true,
-      "pictureName": "CheekyElon.jpg"
+      "isDefault": false
     },
     "1": {
-      "userType": "ADMIN",
-      "name": "admin",
+      "userType": "CLINICIAN",
+      "name": "Matt Smith",
       "staffID": 1,
+      "region": "Auckland",
       "lastUpdated": {
         "date": {
           "year": 2018,
-          "month": 7,
-          "day": 25
+          "month": 8,
+          "day": 8
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
-          "second": 29,
-          "nano": 418000000
+          "hour": 18,
+          "minute": 8,
+          "second": 35,
+          "nano": 118000000
         }
       },
       "updateActions": [
-        "ADMINaccount for admincreated at 2018-07-25T13:42:29.418",
-        "admin updated at 01:42 PM 25-07-2018",
-        "1 updated at 01:42 PM 25-07-2018"
+        "Account for Matt Smithcreated at 2018-08-08T18:08:35.118",
+        "1 updated at 06:08 PM 08-08-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
-          "month": 7,
-          "day": 25
+          "month": 8,
+          "day": 8
         },
         "time": {
-          "hour": 13,
-          "minute": 42,
+          "hour": 18,
+          "minute": 8,
+          "second": 35,
+          "nano": 118000000
+        }
+      },
+      "isDefault": false
+    },
+    "2": {
+      "userType": "ADMIN",
+      "name": "admin",
+      "staffID": 2,
+      "lastUpdated": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 11
+        },
+        "time": {
+          "hour": 15,
+          "minute": 38,
           "second": 29,
-          "nano": 418000000
+          "nano": 329000000
+        }
+      },
+      "updateActions": [
+        "ADMINaccount for admincreated at 2018-08-11T15:38:29.320",
+        "admin updated at 03:38 PM 11-08-2018",
+        "2 updated at 03:38 PM 11-08-2018"
+      ],
+      "timeOfCreation": {
+        "date": {
+          "year": 2018,
+          "month": 8,
+          "day": 11
+        },
+        "time": {
+          "hour": 15,
+          "minute": 38,
+          "second": 29,
+          "nano": 320000000
         }
       },
       "username": "admin",
