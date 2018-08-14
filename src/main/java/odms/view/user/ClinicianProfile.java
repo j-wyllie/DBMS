@@ -179,21 +179,6 @@ public class ClinicianProfile extends CommonView {
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
         try {
-            Thread checkOrgan = new Thread() {
-                public void run() {
-                    try {
-                        odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-                        List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                                .getAllOrgansAvailable();
-                        for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                            controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            checkOrgan.start();
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             userTransplantWaitingListTabView.initialize(currentUser, this);

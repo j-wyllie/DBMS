@@ -13,6 +13,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
@@ -57,6 +58,9 @@ public class OrganDisplay extends CommonView {
     @FXML
     private GridPane organGridPane;
 
+    @FXML
+    private Button expiredButton;
+
 
 
 
@@ -71,7 +75,7 @@ public class OrganDisplay extends CommonView {
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
 
-        if(!isClinician) {
+        if (!isClinician) {
             if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
                 visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
             } else {
@@ -81,6 +85,20 @@ public class OrganDisplay extends CommonView {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
             } else {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
+            }
+
+            RowConstraints zeroHeight = new RowConstraints();
+            zeroHeight.setPrefHeight(0);
+            organGridPane.getRowConstraints().set(2, zeroHeight);
+            expiredButton.setVisible(false);
+        } else {
+            if (currentProfile.getDateOfDeath() == null) {
+                RowConstraints zeroHeight = new RowConstraints();
+                zeroHeight.setPrefHeight(0);
+                organGridPane.getRowConstraints().set(2, zeroHeight);
+                expiredButton.setVisible(false);
+            } else {
+                listViewDonating.setMouseTransparent(false);
             }
         }
 
@@ -108,7 +126,8 @@ public class OrganDisplay extends CommonView {
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
-        System.out.println(currentProfile.getOrgansDonating());
+        System.out.println(currentProfile.getDateOfDeath());
+        System.out.println("-");
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
@@ -131,10 +150,10 @@ public class OrganDisplay extends CommonView {
      */
 
     private void visibilityLists(ListView<String> list, Label label, Button button, Integer column, Boolean bool){
-        if(!bool) {
-            ColumnConstraints zero_width = new ColumnConstraints();
-            zero_width.setPrefWidth(0);
-            organGridPane.getColumnConstraints().set(column, zero_width);
+        if (!bool) {
+            ColumnConstraints zeroWidth = new ColumnConstraints();
+            zeroWidth.setPrefWidth(0);
+            organGridPane.getColumnConstraints().set(column, zeroWidth);
         }
 
         list.setVisible(bool);
@@ -215,7 +234,6 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(highlight);
-                System.out.println("Hello???");
                 System.out.println(getStyleClass());
                 System.out.println(getStyle());
                 System.out.println(getStyleableParent());
