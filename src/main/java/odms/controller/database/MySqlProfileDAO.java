@@ -632,7 +632,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 query += ")";
             }
         }
-        query += " where (p.GivenNames like ? OR p.LastNames like ? OR CONCAT(p.GivenNames, ' ', p.LastNames) like ?) and p.Region like ?";
+        query += " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, p.LastNames) LIKE ?) or "
+                + "(CONCAT(p.GivenNames, p.LastNames) LIKE ?)) and p.Region like ?";
         if (!gender.equals("any")) {
             query += " and p.Gender = ?";
         }
@@ -665,10 +666,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
-            stmt.setString(3, "%" + searchString + "%");
-            stmt.setString(4, "%" + region + "%");
+            stmt.setString(3, "%" + region + "%");
 
-            int index = 5;
+            int index = 4;
             if (!gender.equals("any")) {
                 stmt.setString(index, gender);
                 index++;
@@ -735,7 +735,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @return the number of profiles.
      */
     @Override
-    public int size() throws SQLException {
+    public Integer size() throws SQLException {
         String query = "select count(*) from profiles;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
@@ -760,7 +760,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId;";
+        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId where Required = 1;";
         return getReceivers(query);
     }
 

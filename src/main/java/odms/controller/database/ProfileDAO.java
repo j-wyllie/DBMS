@@ -76,7 +76,7 @@ public interface ProfileDAO {
      * Gets the number of profiles in the database.
      * @return the number of profiles.
      */
-    int size() throws SQLException;
+    Integer size() throws SQLException;
 
     /**
      * Gets all profiles that require organs.
