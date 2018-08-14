@@ -1,6 +1,7 @@
 package odms.view.profile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,36 +15,40 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.Profile;
 
 
 public class OrganExpired extends OrganCommon{
 
-    protected ObservableList<String> observableExpiredOrganList = FXCollections.observableArrayList();
+    protected ObservableList<ExpiredOrgan> observableExpiredOrganList = FXCollections.observableArrayList();
     private Profile currentProfile;
-    Set<OrganEnum> organs = new HashSet<>();
+    List<ExpiredOrgan> organs = new ArrayList<>();
     private odms.controller.profile.OrganExpired controller = new odms.controller.profile.OrganExpired(this);
 
     private OrganSelectEnum windowType;
 
-    @FXML
-    private ListView<String> expiredOrganName;
-    @FXML
-    private ListView<String> expiredAvailability;
-    @FXML
-    private ListView<String> expiredNotes;
+
     @FXML
     private Button btnCancel;
+    @FXML
+    private TableView<ExpiredOrgan> expiredOrganTable;
+    @FXML
+    private TableColumn<ExpiredOrgan, String> expiredOrganColumn;
+    @FXML
+    private TableColumn<ExpiredOrgan, String> expiredClinicianColumn;
+    @FXML
+    private TableColumn<ExpiredOrgan, LocalDateTime> expiredTimeColumn;
+    @FXML
+    private TableColumn<ExpiredOrgan, String> expiredNoteColumn;
 
     /**
      * Initialize the current view instance and populate organ lists.
@@ -54,12 +59,18 @@ public class OrganExpired extends OrganCommon{
         currentProfile = profile;
 
 
-        if (currentProfile != null) {
 
-            organs = currentProfile.getOrgansDonated();
-            populateOrganList(observableExpiredOrganList, organs);
-            //expiredOrganName.setItems(observableExpiredOrganList);
-        }
+        organs = controller.getExpiredOrgans(profile);
+        observableExpiredOrganList.addAll(organs);
+
+        expiredOrganTable.setItems(observableExpiredOrganList);
+        expiredOrganColumn.setCellValueFactory(new PropertyValueFactory<>("Organ"));
+        expiredClinicianColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicianName"));
+        expiredNoteColumn.setCellValueFactory(new PropertyValueFactory<>("Note"));
+        expiredTimeColumn.setCellValueFactory(new PropertyValueFactory<>("ExpiryDate"));
+        expiredOrganTable.getColumns().setAll(expiredOrganColumn, expiredClinicianColumn, expiredTimeColumn, expiredNoteColumn);
+
+
 
     }
 

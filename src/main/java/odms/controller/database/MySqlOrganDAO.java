@@ -6,9 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 
@@ -84,6 +88,45 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public Set<OrganEnum> getReceived(Profile profile) {
         return getOrgans(profile, "select * from organs where ProfileId = ? and Received = ?");
+    }
+
+    /**
+     * Gets all organs that have expired from a profile.
+     *
+     * @param profile to get the organs for.
+     */
+    @Override
+    public List<ExpiredOrgan> getExpired(Profile profile) {
+
+        String query = "SELECT * FROM organs JOIN users ON organs.UserId = users.UserId WHERE Expired = ? AND ProfileId = ? ;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<ExpiredOrgan> allOrgans = new ArrayList<>();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, 1);
+            stmt.setInt(2, profile.getId());
+
+            ResultSet allOrganRows = stmt.executeQuery();
+
+            while (allOrganRows.next()) {
+                String organName = allOrganRows.getString("Organ");
+                OrganEnum organEnum = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
+                String note = allOrganRows.getString("Note");
+                String clinicianName = allOrganRows.getString("Name");
+                LocalDateTime date = allOrganRows.getTimestamp("ExpiryDate").toLocalDateTime();
+                ExpiredOrgan organ = new ExpiredOrgan(organEnum, note, clinicianName, date);
+
+                allOrgans.add(organ);
+            }
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allOrgans;
     }
 
     /**
@@ -305,7 +348,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId){
-        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = ? WHERE ProfileId = ? and Organ = ? ;";
+        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP WHERE ProfileId = ? and Organ = ? ;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -314,11 +357,9 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setInt(1, expired);
             stmt.setInt(2, userId);
             stmt.setString(3, note);
-            stmt.setDate(4, Date.valueOf(LocalDate.now()));
-            stmt.setInt(5, profile.getId());
-            stmt.setString(6, organ);
+            stmt.setInt(4, profile.getId());
+            stmt.setString(5, organ);
 
-            System.out.println(stmt);
 
             stmt.executeUpdate();
             conn.close();

@@ -3,6 +3,7 @@ package odms.controller.profile;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 
@@ -27,7 +29,7 @@ public class OrganExpired extends CommonController {
     }
 
 
-
-
-
+    public List<ExpiredOrgan> getExpiredOrgans(Profile profile) {
+        return DAOFactory.getOrganDao().getExpired(profile);
+    }
 }

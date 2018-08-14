@@ -232,7 +232,7 @@ public class OrganDisplay extends CommonView {
             throws IOException {
         Node source = (Node) event.getSource();
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/UserOrgansExpired.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileExpiredOrgans.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         OrganExpired view = fxmlLoader.getController();

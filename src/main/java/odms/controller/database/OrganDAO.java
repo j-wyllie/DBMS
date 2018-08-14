@@ -1,7 +1,9 @@
 package odms.controller.database;
 
+import java.util.List;
 import java.util.Set;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
 
@@ -34,6 +36,13 @@ public interface OrganDAO {
      * @param profile to get the organs for.
      */
     Set<OrganEnum> getReceived(Profile profile);
+
+    /**
+     * Gets all organs that have expired from a profile.
+     *
+     * @param profile to get the organs for.
+     */
+    List<ExpiredOrgan> getExpired(Profile profile);
 
     /**
      * Adds an organ to a profiles past donations.

@@ -28,11 +28,8 @@
                 <GridPane alignment="CENTER" GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="35.0" vgrow="ALWAYS" />
                     </rowConstraints>
@@ -40,17 +37,19 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </opaqueInsets>
                     <children>
-                        <ListView fx:id="expiredOrganName" prefHeight="317.0" prefWidth="499.0" GridPane.rowIndex="1" />
-                        <Label text="Organ Name" />
-                        <Button fx:id="btnCancel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <Button fx:id="btnCancel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets top="10.0" />
                             </GridPane.margin>
                         </Button>
-                  <ListView fx:id="expiredAvailability" prefHeight="317.0" prefWidth="499.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ListView fx:id="expiredNotes" prefHeight="317.0" prefWidth="499.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label text="Availability" GridPane.columnIndex="1" />
-                  <Label text="Notes" GridPane.columnIndex="2" />
+                  <TableView fx:id="expiredOrganTable" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="expiredOrganColumn" prefWidth="92.0" text="Organ" />
+                      <TableColumn fx:id="expiredClinicianColumn" prefWidth="138.0" text="Clinician" />
+                        <TableColumn fx:id="expiredTimeColumn" prefWidth="115.0" text="Time" />
+                        <TableColumn fx:id="expiredNoteColumn" prefWidth="236.0" text="Note" />
+                    </columns>
+                  </TableView>
                     </children>
                     <GridPane.margin>
                         <Insets />
