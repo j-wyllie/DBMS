@@ -16,7 +16,6 @@ import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.model.enums.UserType;
-import odms.view.user.AvailableOrgans;
 
 import java.io.IOException;
 import java.util.*;

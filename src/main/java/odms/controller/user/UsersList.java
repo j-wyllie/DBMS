@@ -1,5 +1,6 @@
 package odms.controller.user;
 
+import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -11,16 +12,17 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.GuiMain;
-import odms.controller.data.UserDataIO;
-import odms.model.data.UserDatabase;
+import odms.controller.database.MySqlUserDAO;
 import odms.model.user.User;
 
+/**
+ * The users list tab controller.
+ */
 public class UsersList {
-    private UserDatabase userDatabase = GuiMain.getUserDatabase();
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
+    private MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     /**
      * public constructor for the ViewUsersController class.
@@ -86,18 +88,15 @@ public class UsersList {
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
-                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
+                try {
+                    mySqlUserDAO.remove(user);
+                } catch (SQLException e) {
+                    AlertController.invalidEntry("Error deleting user.");
+                }
                 refreshViewUsersTable();
                 view.editTrueStage((Stage) view.getViewUsersTable().getScene().getWindow());
             }
         });
-    }
-
-    /**
-     * save changes made in the view users window.
-     */
-    public void saveChanges() {
-        UserDataIO.saveUsers(userDatabase);
     }
 
     /**
@@ -113,6 +112,10 @@ public class UsersList {
      * Gets an observable list of users.
      */
     private void fetchData() {
-        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
+        try {
+            usersObservableList = FXCollections.observableArrayList(mySqlUserDAO.getAll());
+        } catch (SQLException e) {
+            AlertController.invalidEntry("Error fetching users from database.");
+        }
     }
 }
