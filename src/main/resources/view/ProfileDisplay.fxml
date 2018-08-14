@@ -32,24 +32,24 @@
                 <!--<fx:include fx:id="profileMedicalTab" source="ProfileMedicalTab.fxml"-->
                     <!--GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>-->
             </Tab>
-                     <Tab fx:id="tabOrgans" onSelectionChanged="#onTabOrgansSelected" text="Organs">
-                <!--<fx:include GridPane.halignment="CENTER"-->
-                    <!--GridPane.valignment="CENTER"-->
-                    <!--source="ProfileOrganOverview.fxml" fx:id="profileOrganOverview"/>-->
-            </Tab>
                      <Tab fx:id="tabHistory" onSelectionChanged="#onTabHistorySelected" text="History">
                 <!--<fx:include fx:id="profileHistoryTab" source="ProfileHistoryTab.fxml"-->
                     <!--GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>-->
+            </Tab>
+                     <Tab fx:id="tabMedicalHistory" onSelectionChanged="#onTabMedicalHistorySelected" text="Medical History">
+                <!--<fx:include fx:id="profileMedicalHistoryTab"-->
+                    <!--source="ProfileMedicalHistoryTab.fxml" GridPane.halignment="CENTER"-->
+                    <!--GridPane.valignment="CENTER"/>-->
             </Tab>
                      <Tab fx:id="tabMedications" onSelectionChanged="#onTabMedicationsSelected" text="Medications">
                 <!--<fx:include fx:id="profileMedicationsTab"-->
                     <!--source="ProfileMedicationsTab.fxml" GridPane.halignment="CENTER"-->
                     <!--GridPane.valignment="CENTER"/>-->
             </Tab>
-                     <Tab fx:id="tabMedicalHistory" onSelectionChanged="#onTabMedicalHistorySelected" text="MedicalHistory">
-                <!--<fx:include fx:id="profileMedicalHistoryTab"-->
-                    <!--source="ProfileMedicalHistoryTab.fxml" GridPane.halignment="CENTER"-->
-                    <!--GridPane.valignment="CENTER"/>-->
+                     <Tab fx:id="tabOrgans" onSelectionChanged="#onTabOrgansSelected" text="Organs">
+                <!--<fx:include GridPane.halignment="CENTER"-->
+                    <!--GridPane.valignment="CENTER"-->
+                    <!--source="ProfileOrganOverview.fxml" fx:id="profileOrganOverview"/>-->
             </Tab>
                      <Tab fx:id="tabProcedures" onSelectionChanged="#onTabProceduresSelected" text="Procedures">
                 <!--<fx:include fx:id="profileProceduresTab" source="ProfileProceduresTab.fxml"-->
