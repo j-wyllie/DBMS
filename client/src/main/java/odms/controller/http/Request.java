@@ -11,11 +11,32 @@ import java.util.Map;
 
 public class Request {
 
-    public Response getReguest(String urlString, int token, Map<String, String> headers)
+    private String urlString;
+    private int token;
+    private Map<String, String> headers;
+    private Map<String, String> queryParams;
+    private String body;
+
+    public Request(String urlString, int token, Map<String, String> headers,
+            Map<String, String> queryParams, String body) {
+        this.urlString = urlString;
+        this.token = token;
+        this.headers = headers;
+        this.queryParams = queryParams;
+        this.body = body;
+    }
+
+    public Request(String urlString, int token, Map<String, String> queryParams) {
+        this.urlString = urlString;
+        this.token = token;
+        this.queryParams = queryParams;
+    }
+
+    public Response get()
             throws IOException {
         JsonParser parser = new JsonParser();
 
-        URL url = new URL(urlString);
+        URL url = new URL(constructUrl(this.urlString, this.queryParams));
         StringBuffer responseContent = null;
 
         //Creating the connection to the API server.
@@ -41,21 +62,35 @@ public class Request {
         response.close();
         con.disconnect();
 
-        return new Response(headers, token, body, status);
+        return new Response(this.headers, this.token, body, status);
     }
 
-    public Response postReguest(String url, int token, Map<String, String> headers) {
+    public Response post() {
         Response response = new Response(null, 0, null, 0);
         return response;
     }
 
-    public Response patchReguest(String url, int token, Map<String, String> headers) {
+    public Response patch() {
         Response response = new Response(null, 0, null, 0);
         return response;
     }
 
-    public Response deleteReguest(String url, int token, Map<String, String> headers) {
+    public Response delete() {
         Response response = new Response(null, 0, null, 0);
         return response;
+    }
+
+    private String constructUrl(String urlString, Map<String, String> queryParams) {
+        Object[] keys = queryParams.keySet().toArray();
+        for (int i = 0; i < queryParams.size(); i++) {
+            String key = (String) keys[i];
+            if (i == 0) {
+                urlString += ("?" + key + "=" + queryParams.get(key));
+            }
+            else {
+                urlString += ("&" + key + "=" + queryParams.get(key));
+            }
+        }
+        return urlString;
     }
 }

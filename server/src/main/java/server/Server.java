@@ -76,11 +76,11 @@ public class Server {
             // profile api routes.
             path("/profiles", () -> {
 
-                get("", ProfileController::getAll);
+                get("/all", ProfileController::getAll);
+                get("", ProfileController::get);
                 post("", ProfileController::create);
 
                 path("/:id", () -> {
-                    get("", ProfileController::get);
                     patch("", ProfileController::edit);
                     delete("", ProfileController::delete);
                 });

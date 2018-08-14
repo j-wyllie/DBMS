@@ -49,7 +49,12 @@ public class ProfileController {
         Profile profile = null;
 
         try {
-            profile = database.get(Integer.valueOf(req.params("id")));
+            if (req.queryMap().hasKey("id")) {
+                profile = database.get(Integer.valueOf(req.queryParams("id")));
+            }
+            else {
+                profile = database.get(req.queryParams("username"));
+            }
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();

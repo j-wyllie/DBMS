@@ -16,4 +16,12 @@ public class Response {
         this.body = body;
         this.status = status;
     }
+
+    public Map<String, String> getHeaders() { return headers; }
+
+    public int getToken() { return token; }
+
+    public JsonElement getBody() { return body; }
+
+    public int getStatus() { return status; }
 }

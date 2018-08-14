@@ -14,6 +14,7 @@ import odms.controller.database.organ.MySqlOrganDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.MySqlProcedureDAO;
 import odms.controller.database.procedure.ProcedureDAO;
+import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
@@ -37,6 +38,12 @@ public class DAOFactory {
      * @return dao for the Profile object database transactions.
      */
     public static ProfileDAO getProfileDao() { return new MySqlProfileDAO(); }
+
+    /**
+     * Gives the data access object class for the Profile object.
+     * @return dao for the Profile object http transactions.
+     */
+    public static ProfileDAO getProfileHttpDao() { return new HttpProfileDAO(); }
 
     /**
      * Gives the data access object class for the Drug object.
