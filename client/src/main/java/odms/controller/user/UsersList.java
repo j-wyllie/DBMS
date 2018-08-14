@@ -11,9 +11,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import odms.controller.AlertController;
-import odms.controller.database.MySqlUserDAO;
 import odms.commons.model.user.User;
+import odms.controller.AlertController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.user.UserDAO;
 
 /**
  * The users list tab controller.
@@ -22,10 +23,9 @@ public class UsersList {
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
-    private MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     /**
-     * public constructor for the ViewUsersController class.
+     * Public constructor for the ViewUsersController class.
      * @param v instance of ViewUsersView
      */
     public UsersList(odms.view.user.UsersList v) {
@@ -78,18 +78,19 @@ public class UsersList {
     }
 
     /**
-     * creates and populate the context menu for the table.
+     * Creates and populate the context menu for the table.
      */
     private void createContextMenu() {
         contextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");
         contextMenu.getItems().add(deleteMenuItem);
+        UserDAO server = DAOFactory.getUserDao();
 
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
                 try {
-                    mySqlUserDAO.remove(user);
+                    server.remove(user);
                 } catch (SQLException e) {
                     AlertController.invalidEntry("Error deleting user.");
                 }
@@ -112,10 +113,11 @@ public class UsersList {
      * Gets an observable list of users.
      */
     private void fetchData() {
+        UserDAO server = DAOFactory.getUserDao();
         try {
-            usersObservableList = FXCollections.observableArrayList(mySqlUserDAO.getAll());
+            usersObservableList = FXCollections.observableArrayList(server.getAll());
         } catch (SQLException e) {
-            AlertController.invalidEntry("Error fetching users from database.");
+            e.printStackTrace();
         }
     }
 }
