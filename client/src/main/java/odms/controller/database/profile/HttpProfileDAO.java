@@ -26,7 +26,7 @@ public class HttpProfileDAO implements ProfileDAO {
     public List<Profile> getAll() {
         String url = "http://localhost:6969/api/v1/profiles/all";
         Map<String, String> queryParams = new HashMap<>();
-        return getArrayRequest(url, queryParams);
+        return getArrayRequest(url, queryParams, null);
     }
 
     @Override
@@ -101,7 +101,19 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) {
-        return null;
+        Gson gson = new Gson();
+        String url = "http://localhost:6969/api/v1/profiles/all";
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("searchString", searchString);
+        body.put("ageSearchInt", ageSearchInt);
+        body.put("ageRangeSearchInt", ageRangeSearchInt);
+        body.put("region", region);
+        body.put("gender", gender);
+        body.put("type", type);
+        body.put("organs", organs);
+
+        return getArrayRequest(url, new HashMap<>(), gson.toJson(body));
     }
 
     @Override
@@ -134,7 +146,11 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
-        return null;
+        String url = "http://localhost:6969/api/v1/profiles/all";
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("receiving", "true");
+        queryParams.put("searchString", searchString);
+        return getEntryArrayRequest(url, queryParams);
     }
 
     private Profile getSingleRequest(String url, Map<String, String> queryParams) {
@@ -153,11 +169,11 @@ public class HttpProfileDAO implements ProfileDAO {
         return null;
     }
 
-    private List<Profile> getArrayRequest(String url, Map<String, String> queryParams) {
+    private List<Profile> getArrayRequest(String url, Map<String, String> queryParams, String body) {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, 0, queryParams, body);
         try {
             response = request.get();
         } catch (IOException e) {

@@ -80,7 +80,7 @@ public class ClinicianProfile extends CommonView {
      * Initializes the controller for the view users Tab.
      */
     public void handleViewUsersTabClicked() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ListUsersTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ViewUsersTab.fxml"));
         try {
             listUsersTab.setContent(loader.load());
             UsersList listUsersView = loader.getController();
