@@ -27,7 +27,6 @@ public class ProfileController {
      */
     public static String getAll(Request req, Response res) {
         Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
         ProfileDAO database = DAOFactory.getProfileDao();
         String profiles;
 
@@ -35,7 +34,7 @@ public class ProfileController {
             if (req.queryMap().hasKey("receiving")
                 && Boolean.valueOf(req.queryParams("receiving"))) {
 
-                if (!(parser.parse(req.body()).isJsonNull())) {
+                if (req.queryMap().hasKey("searchString")) {
                     String searchString = req.queryParams("searchString");
                     List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                     profiles = gson.toJson(result);
@@ -44,7 +43,8 @@ public class ProfileController {
                     profiles = gson.toJson(database.getAllReceiving());
                 }
             } else {
-                if (!(parser.parse(req.body()).isJsonNull())) {
+                if (req.queryMap().hasKey("searchString")) {
+                    System.out.println(req.queryParams("searchString"));
                     String searchString = req.queryParams("searchString");
                     int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
                     int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
