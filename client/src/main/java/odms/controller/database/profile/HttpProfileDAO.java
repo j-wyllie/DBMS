@@ -3,9 +3,11 @@ package odms.controller.database.profile;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,14 +22,14 @@ import odms.controller.http.Response;
 public class HttpProfileDAO implements ProfileDAO {
 
     @Override
-    public List<Profile> getAll() throws SQLException {
+    public List<Profile> getAll() {
         String url = "http://localhost:6969/api/v1/profiles/all";
         Map<String, String> queryParams = new HashMap<>();
         return getArrayRequest(url, queryParams);
     }
 
     @Override
-    public Profile get(int profileId) throws SQLException {
+    public Profile get(int profileId) {
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("id", String.valueOf(profileId));
@@ -35,7 +37,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public Profile get(String username) throws SQLException {
+    public Profile get(String username) {
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("username", username);
@@ -43,7 +45,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public void add(Profile profile) throws SQLException {
+    public void add(Profile profile) {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
@@ -58,7 +60,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public boolean isUniqueUsername(String username) throws SQLException {
+    public boolean isUniqueUsername(String username) {
         if (get(username) != null) {
             return true;
         }
@@ -66,7 +68,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public int isUniqueNHI(String nhi) throws SQLException {
+    public int isUniqueNHI(String nhi) {
         // TODO: properly.
         if (get(nhi) != null) {
             return 1;
@@ -75,7 +77,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public void remove(Profile profile) throws SQLException {
+    public void remove(Profile profile) {
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("id", Integer.toString(profile.getId()));
@@ -89,7 +91,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public void update(Profile profile) throws SQLException {
+    public void update(Profile profile) {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
@@ -106,12 +108,12 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
-            String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
+            String region, String gender, String type, Set<OrganEnum> organs) {
         return null;
     }
 
     @Override
-    public int size() throws SQLException {
+    public int size() {
         String url = "http://localhost:6969/api/v1/profiles/count";
         Map<String, String> queryParams = new HashMap<>();
         Request request = new Request(url, 0, queryParams);
@@ -134,7 +136,7 @@ public class HttpProfileDAO implements ProfileDAO {
         String url = "http://localhost:6969/api/v1/profiles/all";
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("receiving", "true");
-        return null;
+        return getEntryArrayRequest(url, queryParams);
     }
 
     @Override
@@ -173,6 +175,30 @@ public class HttpProfileDAO implements ProfileDAO {
             JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
             for (JsonElement result : results) {
                 profiles.add(gson.fromJson(result, Profile.class));
+            }
+        }
+        return profiles;
+    }
+
+    private List<Entry<Profile, OrganEnum>> getEntryArrayRequest(String url, Map<String, String> queryParams) {
+        JsonParser parser = new JsonParser();
+        Gson gson = new Gson();
+
+        Response response = null;
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<Entry<Profile, OrganEnum>> profiles = new ArrayList<>();
+        if (response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+            for (JsonElement result : results) {
+                Profile profile = gson.fromJson(result.getAsJsonObject().get("key"), Profile.class);
+                OrganEnum organ = gson.fromJson(result.getAsJsonObject().get("value"), OrganEnum.class);
+                profiles.add(new SimpleEntry<>(profile, organ));
             }
         }
         return profiles;

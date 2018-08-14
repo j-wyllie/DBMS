@@ -3,6 +3,8 @@ package server.controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
@@ -19,23 +21,26 @@ public class ProfileController {
      * @return the response body, a list of all profiles.
      */
     public static String getAll(Request req, Response res) {
+        Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
-        List<Profile> profiles;
+        String profiles;
 
         try {
-            profiles = database.getAll();
+            if (req.queryMap().hasKey("receiving")
+                && Boolean.valueOf(req.queryParams("receiving"))) {
+
+                profiles = gson.toJson(database.getAllReceiving());
+            } else {
+                profiles = gson.toJson(database.getAll());
+            }
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
         }
-
-        Gson gson = new Gson();
-        String responseBody = gson.toJson(profiles);
-
         res.type("application/json");
         res.status(200);
 
-        return responseBody;
+        return profiles;
     }
 
     /**
