@@ -48,9 +48,7 @@ public class MySqlCountryDAO implements CountryDAO {
 
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setBoolean(1, valid);
-
             ResultSet result = stmt.executeQuery();
-
             while (result.next()) {
                 countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
             }

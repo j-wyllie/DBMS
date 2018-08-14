@@ -426,7 +426,7 @@ public class ProfileEdit extends CommonController {
      * Save Country field to profile.
      */
     private void saveCountry() {
-        if (view.getComboCountry() != null) {
+        if (view.getComboCountry().getValue() != null) {
             currentProfile.setCountry(view.getComboCountry().getValue().toString());
         }
     }

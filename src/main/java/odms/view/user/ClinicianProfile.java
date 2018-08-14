@@ -1,17 +1,17 @@
 package odms.view.user;
 
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import odms.controller.user.Display;
-import odms.model.user.User;
 import odms.model.enums.UserType;
+import odms.model.user.User;
 import odms.view.CommonView;
-
-import java.io.IOException;
 
 public class ClinicianProfile extends CommonView {
     private User currentUser;
