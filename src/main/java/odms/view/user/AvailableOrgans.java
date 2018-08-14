@@ -42,7 +42,7 @@ public class AvailableOrgans extends CommonView {
     private Profile selectedProfile;
 
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
-    private ObservableList<Map.Entry<Profile,OrganEnum>> listOfFilteredAvailableOrgans; // TODO should these two lists just be one list?
+    private ObservableList<Map.Entry<Profile,OrganEnum>> listOfFilteredAvailableOrgans;
     private ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
 
     private ClinicianProfile parentView;
@@ -78,13 +78,6 @@ public class AvailableOrgans extends CommonView {
                 cdf -> new SimpleStringProperty(
                         String.valueOf(cdf.getValue().getNhi())));
 
-        TableColumn<Profile, String> distanceFromOrganColumn = new TableColumn<>(
-                "Aprox distance"
-        );
-        distanceFromOrganColumn.setCellValueFactory(
-                cdf -> new SimpleStringProperty(String.valueOf(
-                        controller.getDistanceBetween(cdf.getValue(), selectedProfile))));
-
         TableColumn<Profile, String> locationColumn = new TableColumn<>(
                 "Location"
         );
@@ -96,7 +89,6 @@ public class AvailableOrgans extends CommonView {
         potentialOrganMatchTable.getColumns().add(ageColumn);
         potentialOrganMatchTable.getColumns().add(nhiColumn);
         potentialOrganMatchTable.getColumns().add(locationColumn);
-        potentialOrganMatchTable.getColumns().add(distanceFromOrganColumn);
 
         setPotentialOrganMatchesList();
 
@@ -128,7 +120,6 @@ public class AvailableOrgans extends CommonView {
 
     public void populateOrgansTable()  {
         TableColumn test = (TableColumn) availableOrgansTable.getColumns().get(2);
-        System.out.println(test.getColumns());
 
         availableOrgansTable.getColumns().clear();
         TableColumn<Map.Entry<Profile, OrganEnum>, String> organCol = new TableColumn<>(
@@ -185,14 +176,6 @@ public class AvailableOrgans extends CommonView {
                 this.getClass().getResource("/styles/Common.css").toExternalForm())
         );
 
-//        System.out.println(this.getClass().getResource("/styles/Common.css").getFile());
-
-
-//        System.out.println(availableOrgansTable.getStylesheets());
-
-//        expiryProgressBarCol.getStyleClass().clear();
-//        expiryProgressBarCol.getStyleClass().add("progress-bar-test");
-
 
         availableOrgansTable.getColumns().add(organCol);
         availableOrgansTable.getColumns().add(dateOfDeathNameCol);
@@ -204,7 +187,7 @@ public class AvailableOrgans extends CommonView {
         try {
             setAvailableOrgansList();
         } catch (SQLException e) {
-            System.out.println("SQL ERROR");
+            e.printStackTrace();
         }
         availableOrgansTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
@@ -229,7 +212,15 @@ public class AvailableOrgans extends CommonView {
      */
     public void setAvailableOrgansList() throws SQLException{
         listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
-        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(listOfAvailableOrgans,
+        sortList(listOfAvailableOrgans);
+        listOfFilteredAvailableOrgans = listOfAvailableOrgans;
+    }
+
+    /**
+     * Sorts the of organs list based on time till expiry.
+     */
+    public void sortList(ObservableList list) {
+        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(list,
                 (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
                     if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
                         return -1;
@@ -241,7 +232,6 @@ public class AvailableOrgans extends CommonView {
                 });
         availableOrgansTable.setItems(sortedDonaters
         );
-        listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
     /**
@@ -279,25 +269,16 @@ public class AvailableOrgans extends CommonView {
             }
         }
         if(listOfFilteredAvailableOrgans.size()!= 0 || organsCombobox.getCheckModel().getCheckedItems().size() != 0 || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
-            availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
+            sortList(listOfFilteredAvailableOrgans);
         } else {
-            availableOrgansTable.setItems(listOfAvailableOrgans);
+            sortList(listOfAvailableOrgans);
         }
-    }
-
-    /**
-     * Clears the available organs table and updates with the filtered data according to the filters
-     */
-    private void updateOrgansTable() {
-        availableOrgansTable.getItems().clear();
-        availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
     }
 
     /**
      * Clears the potential organ match table and updates with the updated profiles
      */
     private void updateMatchesTable() {
-        potentialOrganMatchTable.getItems().clear();
         potentialOrganMatchTable.setItems(potentialOrganMatches);
     }
 
@@ -308,8 +289,7 @@ public class AvailableOrgans extends CommonView {
         populateMatchesTable();
         parentView = p;
 
-        regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList()); // TODO will this be populated with ALL regions?
-        //regionsCombobox.setDisable(true);  // TODO not sure how the region filter will work with multiple countries just yet
+        regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList());
         regionsCombobox.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
             @Override
             public void onChanged(Change c) {
@@ -331,7 +311,6 @@ public class AvailableOrgans extends CommonView {
             public void run() {
                 List<Map.Entry<Profile, OrganEnum>> toRemove = new ArrayList<>();
                 availableOrgansTable.refresh();
-                // potentialOrganMatchTable.refresh();  // not really needed
                 for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
                     toRemove.add(m);
                 }

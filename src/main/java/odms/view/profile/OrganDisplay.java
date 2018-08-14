@@ -70,6 +70,14 @@ public class OrganDisplay extends CommonView {
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+        try {
+        if(!currentProfile.getDateOfDeath().equals(null)) {
+            donatingButton.setDisable(true);
+            receivingButton.setDisable(true);
+        }}catch (NullPointerException e) {
+            donatingButton.setDisable(false);
+            receivingButton.setDisable(false);
+        }
 
         if(!isClinician) {
             if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
@@ -108,7 +116,6 @@ public class OrganDisplay extends CommonView {
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
-        System.out.println(currentProfile.getOrgansDonating());
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
@@ -215,10 +222,6 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(highlight);
-                System.out.println("Hello???");
-                System.out.println(getStyleClass());
-                System.out.println(getStyle());
-                System.out.println(getStyleableParent());
 
             } else {
                 getStyleClass().remove(highlight);
