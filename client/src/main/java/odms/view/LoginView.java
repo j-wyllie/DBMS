@@ -50,7 +50,6 @@ public class LoginView extends CommonController {
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
         Scene scene;
-
         if (!usernameField.getText().equals("")) {
 
             String username = usernameField.getText();
@@ -82,7 +81,6 @@ public class LoginView extends CommonController {
                     invalidUsernameOrPassword();
                 }
             } catch (UserNotFoundException u) {
-
                 try {
                     ProfileDAO database = DAOFactory.getProfileDao();
                     Profile currentProfile = database.get(username);

@@ -45,19 +45,18 @@ public class UserController {
      */
     public static String get(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
-        User user = null;
+        User user;
         try {
             if (req.queryMap().hasKey("id")) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
-            }
-            else {
+            } else {
                 user = database.get(req.queryParams("username"));
             }
+        } catch (UserNotFoundException e) {
+                res.status(400);
+                return e.getMessage();
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
-        } catch (UserNotFoundException e) {
-            res.status(400);
             return e.getMessage();
         }
 
