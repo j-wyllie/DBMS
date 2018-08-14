@@ -3,6 +3,7 @@ package odms.view.profile;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -103,6 +104,13 @@ public class OrganDisplay extends CommonView {
         }
 
         populateOrganLists();
+
+        listViewDonating.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                giveReasonForOverride(event, listViewDonating.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
     @FXML
@@ -257,4 +265,31 @@ public class OrganDisplay extends CommonView {
         }
     }
 
+    /**
+     * Launch pane to add reasoning for organ expiry override.
+     *
+     * @param event the JavaFX event
+     * @param organ the organ to specify reason for
+     */
+    private void giveReasonForOverride(Event event, String organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganOverride.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            OrganOverride overrideView = fxmlLoader.getController();
+            overrideView.initialize(organ, this.currentProfile);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Manual Organ Override");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding(ob -> refreshListViews());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
