@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 06, 2018 at 10:14 PM
+-- Generation Time: Aug 11, 2018 at 02:25 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
@@ -182,10 +182,15 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Region` varchar(30) DEFAULT NULL,
   `Country` varchar(50) DEFAULT NULL,
   `BirthCountry` varchar(50) DEFAULT NULL,
+  `CountryOfDeath` varchar(30) DEFAULT NULL,
+  `CityOfDeath` varchar(30) DEFAULT NULL,
+  `RegionOfDeath` varchar(30) DEFAULT NULL,
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `PreferredName` varchar(50) DEFAULT NULL,
+  `PreferredGender` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

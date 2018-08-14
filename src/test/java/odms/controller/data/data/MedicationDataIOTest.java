@@ -1,8 +1,10 @@
-package odms.controller.data;
+package odms.controller.data.data;
 
 import static odms.controller.data.MedicationDataIO.getActiveIngredients;
 import static odms.controller.data.MedicationDataIO.getSuggestionList;
 import static org.junit.Assert.*;
+
+import odms.controller.data.MedicationDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MedicationInteractionsDAO;
 import odms.model.medications.Interaction;

@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -137,10 +136,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getDate("Dob") == null)) {
             dob = profiles.getDate("Dob").toLocalDate();
         }
+
         LocalDateTime dod = null;
-        if (!(profiles.getDate("Dod") == null)) {
-            //todo way to set time of death
-            dod = LocalDateTime.of(profiles.getDate("Dod").toLocalDate(), LocalTime.now());
+        Timestamp timestamp = profiles.getTimestamp("Dod");
+        if (timestamp != null) {
+            dod = profiles.getTimestamp("Dod").toLocalDateTime();
         }
         String gender = profiles.getString("Gender");
         Double height = profiles.getDouble("Height");
@@ -152,8 +152,15 @@ public class MySqlProfileDAO implements ProfileDAO {
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
+        String country = profiles.getString("Country");
+
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String city = profiles.getString("City");
+        String countryOfDeath = profiles.getString("CountryOfDeath");
+        String regionOfDeath = profiles.getString("RegionOfDeath");
+        String cityOfDeath = profiles.getString("CityOfDeath");
+
         LocalDateTime created = null;
         if (!(profiles.getTimestamp("Created") == null)) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -164,7 +171,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
                 gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, created, updated);
+                address, region, phone, email, country, city, countryOfDeath, regionOfDeath, cityOfDeath, created, updated);
 
         try {
             profile = setOrgans(profile);
@@ -506,8 +513,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
                 + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?, "
-                + "Region = ?, Phone = ?, Email = ?, Created = ?, LastUpdated = ? where ProfileId = ?;";
+                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
+                + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
+                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
+                + "Created = ?, LastUpdated = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -521,11 +530,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
-            if ((profile.getDateOfDeath() != null)) {
-                //todo way to set time of death
-                stmt.setDate(8, Date.valueOf(LocalDate.from(profile.getDateOfDeath())));
-            }
-            else {
+            if (profile.getDateOfDeath() != null) {
+                stmt.setTimestamp(8, Timestamp.valueOf(profile.getDateOfDeath()));
+            } else {
                 stmt.setDate(8, null);
             }
             stmt.setString(9, profile.getGender());
@@ -540,14 +547,23 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(18, profile.getRegion());
             stmt.setString(19, profile.getPhone());
             stmt.setString(20, profile.getEmail());
-            stmt.setTimestamp(21, Timestamp.valueOf(profile.getTimeOfCreation()));
-            stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
-            stmt.setInt(23, profile.getId());
+            stmt.setString(21, profile.getCountry());
+            stmt.setString(22, profile.getBirthCountry());
+            stmt.setString(23, profile.getCountryOfDeath());
+            stmt.setString(24, profile.getRegionOfDeath());
+            stmt.setString(25, profile.getCityOfDeath());
+            stmt.setString(26, profile.getStreetNumber());
+            stmt.setString(27, profile.getStreetName());
+            stmt.setString(28, profile.getNeighbourhood());
+
+
+            stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
+            stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
+            stmt.setInt(31, profile.getId());
 
             stmt.executeUpdate();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -587,7 +603,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 query += ")";
             }
         }
-        query += " where (p.GivenNames like ? OR p.LastNames like ? OR CONCAT(p.GivenNames, ' ', p.LastNames) like ?) and p.Region like ?";
+        query += " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, p.LastNames) LIKE ?) or "
+                + "(CONCAT(p.GivenNames, p.LastNames) LIKE ?)) and p.Region like ?";
         if (!gender.equals("any")) {
             query += " and p.Gender = ?";
         }
@@ -620,10 +637,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
-            stmt.setString(3, "%" + searchString + "%");
-            stmt.setString(4, "%" + region + "%");
+            stmt.setString(3, "%" + region + "%");
 
-            int index = 5;
+            int index = 4;
             if (!gender.equals("any")) {
                 stmt.setString(index, gender);
                 index++;
@@ -690,7 +706,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @return the number of profiles.
      */
     @Override
-    public int size() throws SQLException {
+    public Integer size() throws SQLException {
         String query = "select count(*) from profiles;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
@@ -715,7 +731,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId;";
+        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId where Required = 1;";
         return getReceivers(query);
     }
 

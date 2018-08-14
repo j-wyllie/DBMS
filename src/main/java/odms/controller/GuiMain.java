@@ -54,24 +54,6 @@ public class GuiMain extends Application {
             e.printStackTrace();
         }
 
-
-        if (!userDb.isUser(0)) {
-            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
-            user.setStaffID(0);
-            userDb.addUser(user);
-            user.setDefault(true);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
-        }
-
-        if (!userDb.isUser(ADMIN)) {
-            User user = new User(UserType.ADMIN, ADMIN);
-            user.setUsername(ADMIN);
-            user.setPassword(ADMIN);
-            user.setDefault(true);
-            userDb.addUser(user);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
-        }
-
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
