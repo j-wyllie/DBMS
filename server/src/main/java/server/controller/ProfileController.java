@@ -25,45 +25,14 @@ public class ProfileController {
      * @param res sent back.
      * @return the response body, a list of all profiles.
      */
-    public static String getAll(Request req, Response res) {
-        Gson gson = new Gson();
-        ProfileDAO database = DAOFactory.getProfileDao();
+    public String getAll(Request req, Response res) {
         String profiles;
-
         try {
             if (req.queryMap().hasKey("receiving")
                 && Boolean.valueOf(req.queryParams("receiving"))) {
-
-                if (req.queryMap().hasKey("searchString")) {
-                    String searchString = req.queryParams("searchString");
-                    List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
-                    profiles = gson.toJson(result);
-                }
-                else {
-                    profiles = gson.toJson(database.getAllReceiving());
-                }
+                profiles = getReceiving(req);
             } else {
-                if (req.queryMap().hasKey("searchString")) {
-                    System.out.println(req.queryParams("searchString"));
-                    String searchString = req.queryParams("searchString");
-                    int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
-                    int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
-                    String region = req.queryParams("region");
-                    String gender = req.queryParams("gender");
-                    String type = req.queryParams("type");
-
-                    Set<OrganEnum> organs = new HashSet<>();
-                    List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class);
-                    for (String organ : organArray) {
-                        organs.add(OrganEnum.valueOf(organ));
-                    }
-                    List<Profile> result = database.search(searchString, ageSearchInt,
-                            ageRangeSearchInt, region, gender, type, organs);
-                    profiles = gson.toJson(result);
-                }
-                else {
-                    profiles = gson.toJson(database.getAll());
-                }
+                profiles = getAll(req);
             }
         } catch (SQLException e) {
             res.status(500);
@@ -72,6 +41,63 @@ public class ProfileController {
         res.type("application/json");
         res.status(200);
 
+        return profiles;
+    }
+
+    /**
+     * Gets all receiving profiles (possibly with search criteria).
+     * @param req received.
+     * @return json string of profiles.
+     */
+    private String getReceiving(Request req) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
+        String profiles;
+
+        if (req.queryMap().hasKey("searchString")) {
+            String searchString = req.queryParams("searchString");
+            List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
+            profiles = gson.toJson(result);
+        }
+        else {
+            profiles = gson.toJson(database.getAllReceiving());
+        }
+        return profiles;
+    }
+
+    /**
+     /**
+     * Gets all profiles (possibly with search criteria).
+     * @param req received.
+     * @return json string of profiles.
+     * @throws SQLException error.
+     */
+    private String getAll(Request req) throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
+        String profiles;
+
+        if (req.queryMap().hasKey("searchString")) {
+            System.out.println(req.queryParams("searchString"));
+            String searchString = req.queryParams("searchString");
+            int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
+            int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
+            String region = req.queryParams("region");
+            String gender = req.queryParams("gender");
+            String type = req.queryParams("type");
+
+            Set<OrganEnum> organs = new HashSet<>();
+            List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class);
+            for (String organ : organArray) {
+                organs.add(OrganEnum.valueOf(organ));
+            }
+            List<Profile> result = database.search(searchString, ageSearchInt,
+                    ageRangeSearchInt, region, gender, type, organs);
+            profiles = gson.toJson(result);
+        }
+        else {
+            profiles = gson.toJson(database.getAll());
+        }
         return profiles;
     }
 
@@ -120,7 +146,6 @@ public class ProfileController {
         try {
             newProfile = gson.fromJson(req.body(), Profile.class);
         } catch (Exception e) {
-            System.out.println("YEEET");
             res.status(400);
             return "Bad Request";
         }
@@ -133,7 +158,6 @@ public class ProfileController {
                     database.add(newProfile);
                 }
                 else {
-                    System.out.println("YOTE");
                     res.status(400);
                     return "Bad Request";
                 }
