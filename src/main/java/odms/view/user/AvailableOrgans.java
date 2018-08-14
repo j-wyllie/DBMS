@@ -50,6 +50,7 @@ public class AvailableOrgans extends CommonView {
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
     private Thread importTask;
+    private User currentUser;
 
     public void populateMatchesTable() {
 
@@ -102,7 +103,7 @@ public class AvailableOrgans extends CommonView {
         potentialOrganMatchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     potentialOrganMatchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 
@@ -193,7 +194,7 @@ public class AvailableOrgans extends CommonView {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow(((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel()
-                        .getSelectedItem()).getKey(), parentView);
+                        .getSelectedItem()).getKey(), parentView, currentUser);
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getValue();
@@ -288,6 +289,7 @@ public class AvailableOrgans extends CommonView {
         controller.setView(this);
         populateOrgansTable();
         populateMatchesTable();
+        this.currentUser = currentUser;
         parentView = p;
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList()); // TODO will this be populated with ALL regions?

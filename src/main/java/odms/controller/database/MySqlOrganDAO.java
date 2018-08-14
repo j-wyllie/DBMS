@@ -293,4 +293,39 @@ public class MySqlOrganDAO implements OrganDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Updates organ to be expired.
+     *
+     * @param profile to update the organ.
+     * @param organ   to update.
+     * @param expired expired boolean.
+     * @param note   Clinician's reason to update.
+     * @param userId   Clinician's user Id.
+     */
+    @Override
+    public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId){
+        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = ? WHERE ProfileId = ? and Organ = ? ;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, expired);
+            stmt.setInt(2, userId);
+            stmt.setString(3, note);
+            stmt.setDate(4, Date.valueOf(LocalDate.now()));
+            stmt.setInt(5, profile.getId());
+            stmt.setString(6, organ);
+
+            System.out.println(stmt);
+
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

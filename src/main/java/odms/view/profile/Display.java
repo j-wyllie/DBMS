@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import odms.model.user.User;
 import odms.view.CommonView;
 
 import static odms.controller.AlertController.invalidUsername;
@@ -52,6 +53,7 @@ public class Display extends CommonView {
     private Button logoutButton;
 
     private Boolean isOpenedByClinician = false;
+    private User currentUser;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -158,7 +160,7 @@ public class Display extends CommonView {
             System.out.println(e.getMessage());
         }
         OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician);
+        organsView.initialize(currentProfile, isOpenedByClinician, currentUser);
     }
 
     @FXML
@@ -227,8 +229,9 @@ public class Display extends CommonView {
      * @param profile to be used
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      */
-    public void initialize(Profile profile, Boolean isOpenedByClinician) {
+    public void initialize(Profile profile, Boolean isOpenedByClinician, User user) {
         this.isOpenedByClinician = isOpenedByClinician;
+        currentUser = user;
         if (isOpenedByClinician) {
             logoutButton.setVisible(false);
         }

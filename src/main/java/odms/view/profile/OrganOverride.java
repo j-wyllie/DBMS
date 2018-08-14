@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import odms.view.CommonView;
 
 /**
@@ -26,6 +27,7 @@ public class OrganOverride extends CommonView {
     private String currentOrgan;
 
     private odms.controller.profile.OrganOverride controller = new odms.controller.profile.OrganOverride(this);
+    private User currentUser;
 
     /**
      * Confirms the changes made to the manual organ override and stores the reason given for this
@@ -36,7 +38,7 @@ public class OrganOverride extends CommonView {
     @FXML
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        controller.confirm(getCurrentProfile());
+        controller.confirm();
         appStage.close();
     }
 
@@ -58,7 +60,8 @@ public class OrganOverride extends CommonView {
      * @param organ the organ being overridden.
      * @param profile the profile the organ is being removed from.
      */
-    public void initialize(String organ, Profile profile) {
+    public void initialize(String organ, Profile profile, User user) {
+        currentUser = user;
         currentProfile = profile;
         currentOrgan = organ;
         organLabel.setText(organLabel.getText() + organ);
@@ -66,5 +69,17 @@ public class OrganOverride extends CommonView {
 
     public Profile getCurrentProfile() {
         return currentProfile;
+    }
+
+    public String getCurrentOrgan() {
+        return currentOrgan;
+    }
+
+    public String getReasonText() {
+        return reasonText.getText();
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 }

@@ -21,6 +21,7 @@ import odms.controller.database.DAOFactory;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -66,9 +67,11 @@ public class OrganDisplay extends CommonView {
 
 
     private static OrganSelectEnum windowType;
+    private User currentUser;
 
-    public void initialize(Profile p, Boolean isClinician) {
+    public void initialize(Profile p, Boolean isClinician, User user) {
         currentProfile = p;
+        currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());
 
@@ -314,7 +317,7 @@ public class OrganDisplay extends CommonView {
         try {
             Scene scene = new Scene(fxmlLoader.load());
             OrganOverride overrideView = fxmlLoader.getController();
-            overrideView.initialize(organ, this.currentProfile);
+            overrideView.initialize(organ, currentProfile, currentUser);
 
             Stage stage = new Stage();
             stage.setScene(scene);

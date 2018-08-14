@@ -128,6 +128,10 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `ToDonate` tinyint(1) DEFAULT NULL,
   `Required` tinyint(1) DEFAULT NULL,
   `Received` tinyint(1) DEFAULT NULL,
+  `Expired` tinyint(1) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ExpiryDate` datetime DEFAULT NULL,
+  `Note` varchar(200) DEFAULT NULL,
   `DateRegistered` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -158,7 +162,7 @@ DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
-  `Username` varchar(50) DEFAULT NULL,
+  `Username` varchar(50) UNIQUE DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
   `GivenNames` varchar(50) DEFAULT NULL,
@@ -190,7 +194,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
-  `PreferredGender` varchar(30) DEFAULT NULL
+  `PreferredGender` varchar(30) DEFAULT NULL,
+  `ImageName` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -202,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
-  `Username` varchar(50) DEFAULT NULL,
+  `Username` varchar(50) UNIQUE DEFAULT NULL,
   `Password` varchar(50) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
@@ -372,6 +377,8 @@ ALTER TABLE `history`
 --
 ALTER TABLE `organs`
   ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+ALTER TABLE `organs`
+  ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
 
 --
 -- Constraints for table `procedures`

@@ -95,7 +95,7 @@ public class LoginView extends CommonController {
 
                         scene = new Scene(fxmlLoader.load());
                         Display controller = fxmlLoader.getController();
-                        controller.initialize(currentProfile, false);
+                        controller.initialize(currentProfile, false, null);
 
                         Stage stage = new Stage();
                         stage.setTitle(currentProfile.getFullName() + "'s profile");

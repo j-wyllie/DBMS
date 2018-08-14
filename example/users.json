@@ -10,30 +10,30 @@
         "date": {
           "year": 2018,
           "month": 8,
-          "day": 8
+          "day": 14
         },
         "time": {
-          "hour": 18,
-          "minute": 8,
-          "second": 35,
-          "nano": 118000000
+          "hour": 20,
+          "minute": 33,
+          "second": 36,
+          "nano": 132000000
         }
       },
       "updateActions": [
-        "Account for John Smithcreated at 2018-08-08T18:08:35.118",
-        "0 updated at 06:08 PM 08-08-2018"
+        "Account for John Smithcreated at 2018-08-14T20:33:36.132",
+        "0 updated at 08:33 PM 14-08-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 8,
-          "day": 8
+          "day": 14
         },
         "time": {
-          "hour": 18,
-          "minute": 8,
-          "second": 35,
-          "nano": 118000000
+          "hour": 20,
+          "minute": 33,
+          "second": 36,
+          "nano": 132000000
         }
       },
       "isDefault": false
@@ -47,74 +47,35 @@
         "date": {
           "year": 2018,
           "month": 8,
-          "day": 8
+          "day": 14
         },
         "time": {
-          "hour": 18,
-          "minute": 8,
-          "second": 35,
-          "nano": 118000000
+          "hour": 20,
+          "minute": 33,
+          "second": 36,
+          "nano": 132000000
         }
       },
       "updateActions": [
-        "Account for Matt Smithcreated at 2018-08-08T18:08:35.118",
-        "1 updated at 06:08 PM 08-08-2018"
+        "Account for Matt Smithcreated at 2018-08-14T20:33:36.132",
+        "1 updated at 08:33 PM 14-08-2018"
       ],
       "timeOfCreation": {
         "date": {
           "year": 2018,
           "month": 8,
-          "day": 8
+          "day": 14
         },
         "time": {
-          "hour": 18,
-          "minute": 8,
-          "second": 35,
-          "nano": 118000000
+          "hour": 20,
+          "minute": 33,
+          "second": 36,
+          "nano": 132000000
         }
       },
       "isDefault": false
-    },
-    "2": {
-      "userType": "ADMIN",
-      "name": "admin",
-      "staffID": 2,
-      "lastUpdated": {
-        "date": {
-          "year": 2018,
-          "month": 8,
-          "day": 11
-        },
-        "time": {
-          "hour": 15,
-          "minute": 38,
-          "second": 29,
-          "nano": 329000000
-        }
-      },
-      "updateActions": [
-        "ADMINaccount for admincreated at 2018-08-11T15:38:29.320",
-        "admin updated at 03:38 PM 11-08-2018",
-        "2 updated at 03:38 PM 11-08-2018"
-      ],
-      "timeOfCreation": {
-        "date": {
-          "year": 2018,
-          "month": 8,
-          "day": 11
-        },
-        "time": {
-          "hour": 15,
-          "minute": 38,
-          "second": 29,
-          "nano": 320000000
-        }
-      },
-      "username": "admin",
-      "password": "admin",
-      "isDefault": true
     }
   },
-  "lastID": 2,
+  "lastID": 1,
   "path": "example/users.json"
 }

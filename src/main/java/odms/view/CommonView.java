@@ -265,14 +265,14 @@ public class CommonView {
      * @param parentView The parent view of the stage being created
      */
     @FXML
-    protected void createNewDonorWindow(Profile donor, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile donor, ClinicianProfile parentView, User user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(donor, true);
+            controller.initialize(donor, true, user);
 
             Stage stage = new Stage();
             stage.setTitle(donor.getFullName() + "'s profile");
