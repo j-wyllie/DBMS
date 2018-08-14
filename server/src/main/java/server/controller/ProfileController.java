@@ -88,17 +88,20 @@ public class ProfileController {
         try {
             newProfile = gson.fromJson(req.body(), Profile.class);
         } catch (Exception e) {
+            System.out.println("YEEET");
             res.status(400);
             return "Bad Request";
         }
 
-        if (!(newProfile == null)) {
+        if ((newProfile != null)) {
             try {
+                System.out.println(newProfile.getNhi());
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
-                        && database.isUniqueUsername(newProfile.getUsername())) {
+                        && !database.isUniqueUsername(newProfile.getUsername())) {
                     database.add(newProfile);
                 }
                 else {
+                    System.out.println("YOTE");
                     res.status(400);
                     return "Bad Request";
                 }

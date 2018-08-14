@@ -2,11 +2,11 @@ package odms.view.user;
 
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +22,7 @@ import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
 
 import static odms.controller.AlertController.saveChanges;
+
 
 public class ClinicianEdit extends CommonView {
     private static User currentUser;

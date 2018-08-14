@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import odms.commons.model.enums.OrganEnum;
+import javafx.stage.Modality;
 
 public class AlertController {
 
@@ -24,6 +25,7 @@ public class AlertController {
                 message,
                 ButtonType.CLOSE
         );
+        invalidAlert.initModality(Modality.APPLICATION_MODAL);
 
         invalidAlert.show();
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
@@ -156,7 +158,7 @@ public class AlertController {
         Alert saveAlert = new Alert(
                 AlertType.CONFIRMATION,
                 "Do you wish to save your changes?",
-                ButtonType.NO,
+                ButtonType.CANCEL,
                 ButtonType.YES
         );
 

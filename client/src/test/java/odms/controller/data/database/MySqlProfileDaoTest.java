@@ -112,7 +112,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile0);
         Profile newProfile = mySqlProfileDAO.get("ABC1234");
         MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
-        mySqlOrganDAO.addReceived(newProfile, OrganEnum.LIVER);
+        mySqlOrganDAO.addRequired(newProfile, OrganEnum.LIVER);
         assertEquals(1, mySqlProfileDAO.getAllReceiving().size());
     }
 

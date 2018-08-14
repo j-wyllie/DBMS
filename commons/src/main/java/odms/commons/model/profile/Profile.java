@@ -162,12 +162,34 @@ public class Profile implements Comparable<Profile> {
         this.lastNames = lastNames;
         this.dateOfBirth = dob;
         this.nhi = nhi;
+        this.donor = false;
+        this.receiver = false;
+        this.dateOfDeath = null;
+        this.gender = null;
+        this.height = 0.0;
+        this.weight = 0.0;
+        this.bloodType = null;
+        this.isSmoker = null;
+        this.alcoholConsumption = null;
+        this.bloodPressureSystolic = 0;
+        this.bloodPressureDiastolic = 0;
+        this.address = null;
+        this.region = null;
+        this.phone = null;
+        this.email = null;
+        this.country = null;
+        this.city = null;
+        this.countryOfDeath = null;
+        this.cityOfDeath = null;
+        this.regionOfDeath = null;
+        this.timeOfCreation = LocalDateTime.now();
+        this.lastUpdated = LocalDateTime.now();
     }
 
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+    public Profile(Integer profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
+            Integer bpSystolic, Integer bpDiastolic, String address, String region, String phone,
             String email, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
         this.nhi = nhi;
@@ -194,14 +216,14 @@ public class Profile implements Comparable<Profile> {
         this.lastUpdated = updated;
     }
 
-
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+    public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
-            Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email,String country, String city, String countryOfDeath, String regionOfDeath,
-            String cityOfDeath, LocalDateTime created, LocalDateTime updated) {
-        this.id = profileId;
+            Double height, Double weight, String bloodType, Boolean isSmoker,
+            String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
+             String region, String phone,
+            String email, String country, String city, String countryOfDeath, String regionOfDeath,
+            String cityOfDeath,LocalDateTime created, LocalDateTime updated) {
+        this.id = id;
         this.nhi = nhi;
         this.username = username;
         this.donor = isDonor;

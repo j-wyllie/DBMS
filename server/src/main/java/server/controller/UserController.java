@@ -21,7 +21,6 @@ public class UserController {
     public static String getAll(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
         List<User> users;
-
         try {
             users = database.getAll();
         } catch (SQLException e) {
@@ -47,7 +46,6 @@ public class UserController {
     public static String get(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
         User user = null;
-
         try {
             if (req.queryMap().hasKey("id")) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
@@ -55,8 +53,11 @@ public class UserController {
             else {
                 user = database.get(req.queryParams("username"));
             }
-        } catch (SQLException | UserNotFoundException e) {
+        } catch (SQLException e) {
             res.status(500);
+            return e.getMessage();
+        } catch (UserNotFoundException e) {
+            res.status(400);
             return e.getMessage();
         }
 

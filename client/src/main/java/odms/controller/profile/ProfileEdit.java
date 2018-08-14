@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
-import odms.controller.history.CurrentHistory;
 import odms.controller.database.profile.ProfileDAO;
 
 public class ProfileEdit extends CommonController {
@@ -378,13 +378,7 @@ public class ProfileEdit extends CommonController {
      */
     @FXML
     public Profile close() {
-        //todo sort out a way to check this
         return currentProfile;
-        //if (isClinician) {
-        //controller.setProfileViaClinician(currentProfile);
-        //} else {
-        //controller.setProfile(currentProfile);
-        //}
     }
 
     /**

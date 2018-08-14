@@ -9,12 +9,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-import odms.controller.GuiMain;
-import odms.commons.model.user.User;
+import odms.controller.database.MySqlUserDAO;
 import odms.commons.model.enums.UserType;
+import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
 
+/**
+ * Class to handle the user create popup.
+ */
 public class UserCreate extends CommonView {
 
     @FXML
@@ -35,53 +38,50 @@ public class UserCreate extends CommonView {
     @FXML
     private Button userCreateAccountButton;
 
+    private MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
+
+    /**
+     * Checks that all fields have valid inputs.
+     * Adds the user to the database.
+     *
+     * @param event ActionEvent when the button is pressed.
+     */
     @FXML
     public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
         if (checkValidEntries()) {
-            try {
                 User user = new User(userTypeBox.getValue(),
                         userNameField.getText(),
                         userRegionField.getText()
                 );
                 user.setUsername(userUsernameField.getText());
                 user.setPassword(userPasswordField.getText());
-                DAOFactory.getUserDao().add(user);
-                Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
-                stage.close();
-                editTrueAction(event, true);
-            } catch (IllegalArgumentException e) {
-                AlertController.uniqueUsername();
-            }
+                try {
+                    mySqlUserDAO.add(user);
+                    Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
+                    stage.close();
+                    editTrueAction(event, true);
+                } catch (SQLException e) {
+                    AlertController.invalidEntry("User already exists with username " +
+                            userNameField.getText());
+                }
+
         } else {
             AlertController.invalidEntry();
         }
     }
 
     /**
-     * checks that all fields have been filled out
+     * Checks that the username entered is unique.
      *
-     * @return a boolean signalling that all fields were filled it.
-     */
-    private boolean checkUniqueUsername() throws SQLException {
-        return DAOFactory.getUserDao().isUniqueUsername(userUsernameField.getText());
-    }
-
-    /**
-     * checks that the username entered is unique
-     *
-     * @return a boolean signalling that the username is or isn't unique
+     * @return a boolean signalling that the username is or isn't unique.
      */
     private boolean checkValidEntries() {
-        if (userNameField.getText().equals("") || userUsernameField.getText().equals("") ||
-                userRegionField.getText().equals("") || userPasswordField.getText().equals("")) {
-            return false;
-        } else {
-            return true;
-        }
+        return !userNameField.getText().equals("") && !userUsernameField.getText().equals("") &&
+                !userRegionField.getText().equals("") && !userPasswordField.getText().equals("");
     }
 
     /**
-     * adds the UserTypes to the choice box
+     * Adds the UserTypes to the choice box.
      */
     private void populateUserTypeBox() {
         userTypeBox.getItems().clear();
@@ -89,7 +89,9 @@ public class UserCreate extends CommonView {
         userTypeBox.getSelectionModel().selectFirst();
     }
 
-    @FXML
+    /**
+     * Calls the method to populate the usertype box on window initialization.
+     */
     public void initialize() {
         populateUserTypeBox();
     }

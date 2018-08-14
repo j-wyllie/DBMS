@@ -57,7 +57,6 @@ public class LoginView extends CommonController {
             try {
                 UserDAO database = DAOFactory.getUserDao();
                 currentUser = database.get(username);
-
                 if (currentUser.getPassword() != null && passwordField.getText()
                         .equals(currentUser.getPassword())) {
                     try {

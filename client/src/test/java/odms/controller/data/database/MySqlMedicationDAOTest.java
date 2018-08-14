@@ -9,6 +9,8 @@ import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.medication.MySqlMedicationDAO;
 import odms.controller.database.profile.MySqlProfileDAO;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,5 +56,11 @@ public class MySqlMedicationDAOTest extends MySqlCommonTests {
         mySqlMedicationDAO.update(testDrug0, current);
         List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0, current);
         assertEquals(1, drugs.size());
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        mySqlMedicationDAO.remove(testDrug0);
+        mySqlProfileDAO.remove(testProfile0);
     }
 }

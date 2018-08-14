@@ -2,10 +2,8 @@ package odms.view.user;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
