@@ -86,6 +86,13 @@ public class Server {
                 });
 
                 get("/count", ProfileController::count);
+
+                // organs api endpoints.
+                path("/organs", () -> {
+                    get("", OrganController::getAll);
+                    post("", OrganController::add);
+                    delete("", OrganController::delete);
+                });
             });
 
             // condition api endpoints.
@@ -131,16 +138,6 @@ public class Server {
             path("/countries", () -> {
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
-            });
-
-            // organs api endpoints.
-            path("/organs", () -> {
-                get("", OrganController::getAll);
-                post("", OrganController::add);
-
-                path("/:id", () -> {
-                    delete("", OrganController::delete);
-                });
             });
         });
     }

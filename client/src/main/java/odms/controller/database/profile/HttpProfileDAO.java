@@ -25,14 +25,14 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getAll() {
         String url = "http://localhost:6969/api/v1/profiles/all";
-        Map<String, String> queryParams = new HashMap<>();
-        return getArrayRequest(url, queryParams, null);
+        Map<String, Object> queryParams = new HashMap<>();
+        return getArrayRequest(url, queryParams);
     }
 
     @Override
     public Profile get(int profileId) {
         String url = "http://localhost:6969/api/v1/profiles";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("id", String.valueOf(profileId));
         return getSingleRequest(url, queryParams);
     }
@@ -40,7 +40,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public Profile get(String username) {
         String url = "http://localhost:6969/api/v1/profiles";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
         return getSingleRequest(url, queryParams);
     }
@@ -49,7 +49,7 @@ public class HttpProfileDAO implements ProfileDAO {
     public void add(Profile profile) throws NHIConflictException, SQLException {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         Response response = null;
 
         String body = gson.toJson(profile);
@@ -101,26 +101,25 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) {
-        Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles/all";
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("searchString", searchString);
-        body.put("ageSearchInt", ageSearchInt);
-        body.put("ageRangeSearchInt", ageRangeSearchInt);
-        body.put("region", region);
-        body.put("gender", gender);
-        body.put("type", type);
-        body.put("organs", organs);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("searchString", searchString);
+        queryParams.put("ageSearchInt", ageSearchInt);
+        queryParams.put("ageRangeSearchInt", ageRangeSearchInt);
+        queryParams.put("region", region);
+        queryParams.put("gender", gender);
+        queryParams.put("type", type);
+        queryParams.put("organs", organs);
 
-        return getArrayRequest(url, new HashMap<>(), gson.toJson(body));
+        return getArrayRequest(url, queryParams);
     }
 
     @Override
     public int size() {
         JsonParser parser = new JsonParser();
         String url = "http://localhost:6969/api/v1/profiles/count";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         Request request = new Request(url, 0, queryParams);
         Response response = null;
         int count = 0;
@@ -139,7 +138,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
         String url = "http://localhost:6969/api/v1/profiles/all";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("receiving", "true");
         return getEntryArrayRequest(url, queryParams);
     }
@@ -147,13 +146,13 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
         String url = "http://localhost:6969/api/v1/profiles/all";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("receiving", "true");
         queryParams.put("searchString", searchString);
         return getEntryArrayRequest(url, queryParams);
     }
 
-    private Profile getSingleRequest(String url, Map<String, String> queryParams) {
+    private Profile getSingleRequest(String url, Map<String, Object> queryParams) {
         Gson parser = new Gson();
         Response response = null;
         Request request = new Request(url, 0, queryParams);
@@ -169,11 +168,11 @@ public class HttpProfileDAO implements ProfileDAO {
         return null;
     }
 
-    private List<Profile> getArrayRequest(String url, Map<String, String> queryParams, String body) {
+    private List<Profile> getArrayRequest(String url, Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, 0, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -189,7 +188,7 @@ public class HttpProfileDAO implements ProfileDAO {
         return profiles;
     }
 
-    private List<Entry<Profile, OrganEnum>> getEntryArrayRequest(String url, Map<String, String> queryParams) {
+    private List<Entry<Profile, OrganEnum>> getEntryArrayRequest(String url, Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
 
