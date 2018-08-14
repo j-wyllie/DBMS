@@ -1,17 +1,16 @@
 package odms.view.profile;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.controller.profile.OrganRemoval;
+import odms.controller.DateTimePicker;
 import odms.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -33,7 +32,7 @@ public class OrganRemove extends CommonView {
 
     private CheckBox curedCheck = new CheckBox();
 
-    private DatePicker dodPicker = new DatePicker(LocalDate.now());
+    private DateTimePicker dodPicker = new DateTimePicker();
 
     private Profile currentProfile;
 
@@ -141,14 +140,15 @@ public class OrganRemove extends CommonView {
         GridPane.setMargin(curedCheck, new Insets(5, 0, 0, 0));
         windowGrid.add(curedCheck, 2, 2, 2, 1);
         curedCheck.setVisible(false);
+        dodPicker.setDateTimeValue(LocalDateTime.now());
     }
 
     public Profile getCurrentProfile() {
         return currentProfile;
     }
 
-    public LocalDate getDOD() {
-        return dodPicker.getValue();
+    public LocalDateTime getDOD() {
+        return dodPicker.getDateTimeValue();
     }
 
     public String getSelection() {

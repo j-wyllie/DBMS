@@ -73,7 +73,6 @@ public class ProfileEdit extends CommonController {
 
         ProfileDAO database = DAOFactory.getProfileDao();
         database.update(currentProfile);
-        ProfileDataIO.saveData(getProfileDb());
 
         // history Changes
         action.setHistoryData(
@@ -292,6 +291,8 @@ public class ProfileEdit extends CommonController {
     public void saveDateOfDeath() {
         if (view.getDodDateTimePicker() != null) {
             currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
+            currentProfile.getOrgansRequired().clear();
+            currentProfile.setReceiver(false);
         }
     }
 
