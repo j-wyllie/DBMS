@@ -18,6 +18,7 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
+import odms.data.NHIConflictException;
 
 public class HttpProfileDAO implements ProfileDAO {
 
@@ -45,36 +46,33 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public void add(Profile profile) {
+    public void add(Profile profile) throws NHIConflictException, SQLException {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles";
         Map<String, String> queryParams = new HashMap<>();
+        Response response = null;
 
         String body = gson.toJson(profile);
         Request request = new Request(url, 0, queryParams, body);
         try {
-            request.post();
+            response = request.post();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (response.getStatus() == 400 ) {
+            throw new NHIConflictException("NHI in use.", profile.getNhi());
+        }
+        else if (response.getStatus() == 500) {
+            throw new SQLException(response.getBody());
+        }
     }
 
     @Override
-    public boolean isUniqueUsername(String username) {
-        if (get(username) != null) {
-            return true;
-        }
-        return false;
-    }
+    public boolean isUniqueUsername(String username) { throw new UnsupportedOperationException(); }
 
     @Override
-    public int isUniqueNHI(String nhi) {
-        // TODO: properly.
-        if (get(nhi) != null) {
-            return 1;
-        }
-        return 0;
-    }
+    public int isUniqueNHI(String nhi) { throw new UnsupportedOperationException(); }
 
     @Override
     public void remove(Profile profile) {
@@ -114,6 +112,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public int size() {
+        JsonParser parser = new JsonParser();
         String url = "http://localhost:6969/api/v1/profiles/count";
         Map<String, String> queryParams = new HashMap<>();
         Request request = new Request(url, 0, queryParams);
@@ -126,7 +125,7 @@ public class HttpProfileDAO implements ProfileDAO {
             e.printStackTrace();
         }
         if (response != null) {
-            count = response.getBody().getAsInt();
+            count = parser.parse(response.getBody()).getAsInt();
         }
         return count;
     }

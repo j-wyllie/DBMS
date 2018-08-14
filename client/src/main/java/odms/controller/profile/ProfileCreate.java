@@ -51,9 +51,8 @@ public class ProfileCreate extends CommonController {
      * Scene change to profile profile view if all required fields are filled in.
      * @throws IOException throws IOException
      */
-    public Profile createAccount() throws IOException {
+    public Profile createAccount() {
         //todo rework this method potentially
-
         if (checkDetailsEntered()) {
             try {
                 String givenNames = view.getGivenNamesFieldValue();
@@ -62,7 +61,8 @@ public class ProfileCreate extends CommonController {
                 String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
-                DAOFactory.getProfileDao().add(newProfile);
+                DAOFactory.getProfileHttpDao().add(newProfile);
+                return newProfile;
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {
                     invalidEntry(
@@ -77,6 +77,8 @@ public class ProfileCreate extends CommonController {
                 invalidDate();
             } catch (SQLException e) {
                 invalidEntry("Database could not parse this profile");
+            } catch (NHIConflictException e) {
+                invalidEntry("NHI number is already used by another account");
             }
         }
         return null;

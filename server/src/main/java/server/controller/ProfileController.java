@@ -94,7 +94,14 @@ public class ProfileController {
 
         if (!(newProfile == null)) {
             try {
-                database.add(newProfile);
+                if (database.isUniqueNHI(newProfile.getNhi()) == 0
+                        && database.isUniqueUsername(newProfile.getUsername())) {
+                    database.add(newProfile);
+                }
+                else {
+                    res.status(400);
+                    return "Bad Request";
+                }
             } catch (SQLException e) {
                 res.status(500);
                 return "Internal Server Error";

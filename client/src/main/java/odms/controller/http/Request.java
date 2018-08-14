@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -35,8 +36,9 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
 
-        JsonElement body = execute(con);
+        String body = execute(con);
         int status = con.getResponseCode();
 
         con.disconnect();
@@ -48,8 +50,13 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
 
-        JsonElement body = execute(con);
+        con.setDoOutput(true);
+        OutputStream output = con.getOutputStream();
+        output.write(this.body.getBytes("UTF-8"));
+
+        String body = execute(con);
         int status = con.getResponseCode();
 
         con.disconnect();
@@ -61,8 +68,13 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PATCH");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setDoOutput(true);
 
-        JsonElement body = execute(con);
+        OutputStream output = con.getOutputStream();
+        output.write(this.body.getBytes("UTF-8"));
+
+        String body = execute(con);
         int status = con.getResponseCode();
 
         con.disconnect();
@@ -74,31 +86,34 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("DELETE");
+        con.setRequestProperty("Content-Type", "application/json");
 
-        JsonElement body = execute(con);
+        String body = execute(con);
         int status = con.getResponseCode();
 
         con.disconnect();
         return new Response(this.token, body, status);
     }
 
-    private JsonElement execute(HttpURLConnection con) throws IOException {
-        JsonParser parser = new JsonParser();
-
-        con.setRequestProperty("Content-Type", "application/json");
+    private String execute(HttpURLConnection con) throws IOException {
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
 
         StringBuffer responseContent = new StringBuffer();
-        BufferedReader response = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-
+        BufferedReader response;
+        try {
+            response = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+        } catch (Exception e) {
+            response = new BufferedReader(
+                    new InputStreamReader(con.getErrorStream()));
+        }
         String line = response.readLine();
         while (line != null) {
             responseContent.append(line);
             line = response.readLine();
         }
-        JsonElement body = parser.parse(responseContent.toString());
+        String body = responseContent.toString();
 
         response.close();
         return body;

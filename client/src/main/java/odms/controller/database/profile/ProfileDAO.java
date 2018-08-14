@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.data.NHIConflictException;
 
 
 public interface ProfileDAO {
@@ -34,7 +35,7 @@ public interface ProfileDAO {
      * Adds a new profile to the database.
      * @param profile to add.
      */
-    void add(Profile profile) throws SQLException;
+    void add(Profile profile) throws SQLException, NHIConflictException;
 
     /**
      * Checks if a username already exists in the database.
