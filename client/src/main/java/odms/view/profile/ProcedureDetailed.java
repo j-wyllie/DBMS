@@ -45,8 +45,9 @@ public class ProcedureDetailed extends CommonView {
     private ObjectProperty<Profile> profile;
     private ProceduresDisplay parent;
 
-    @FXML
-    public void initialize(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
+    public ProcedureDetailed() {}
+
+    public void setup(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
             ProceduresDisplay p) {
         parent = p;
         profile = currentProfile;

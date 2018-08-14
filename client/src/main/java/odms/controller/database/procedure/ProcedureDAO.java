@@ -1,6 +1,7 @@
 package odms.controller.database.procedure;
 
 
+import java.io.IOException;
 import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
@@ -33,7 +34,7 @@ public interface ProcedureDAO {
      * Update a procedure for the profile.
      * @param procedure to update.
      */
-    void update(Procedure procedure);
+    void update(Profile profile, Procedure procedure);
 
     /**
      * Gets all affected organs for a procedure.

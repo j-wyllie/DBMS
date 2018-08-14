@@ -13,9 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.profile.ProcedureEdit;
 import odms.controller.profile.ProcedureGeneral;
 import odms.view.CommonView;
@@ -51,6 +53,7 @@ public class ProceduresDisplay extends CommonView {
     private ObservableList<Procedure> pendingProceduresObservableList;
 
     private ProcedureGeneral controller = new ProcedureGeneral(this);
+    HttpProfileDAO httpProfileDAO = new HttpProfileDAO();
 
     @FXML
     public void handleAddProcedureButtonClicked(ActionEvent actionEvent) {
@@ -125,12 +128,9 @@ public class ProceduresDisplay extends CommonView {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProcedureEdit.fxml"));
-
             Scene scene = new Scene(fxmlLoader.load());
-            ProcedureEdit controller = fxmlLoader.<ProcedureEdit>getController();
-            ProcedureDetailed child = new ProcedureDetailed();
-            child.initialize(selectedProcedure, currentProfile, this);
-
+            ProcedureDetailed controller = fxmlLoader.getController();
+            controller.setup(selectedProcedure, currentProfile, this);
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.show();
@@ -144,6 +144,8 @@ public class ProceduresDisplay extends CommonView {
      */
     @FXML
     void refreshProcedureTable() {
+        //currentProfile.set(httpProfileDAO.get(currentProfile.get().getId()));
+
         if (previousProceduresObservableList == null) {
             previousProceduresObservableList = FXCollections.observableArrayList();
         }

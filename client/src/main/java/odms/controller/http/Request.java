@@ -15,6 +15,10 @@ public class Request {
     private Map<String, Object> queryParams;
     private String body;
 
+    private static Integer port = 6969;
+    private static String domain = "localhost";
+    private static String url = "http://" + domain + ":" + port + "/api/v1/";
+
     public Request(String urlString, int token, Map<String, Object> queryParams, String body) {
         this.urlString = urlString;
         this.token = token;
@@ -130,5 +134,9 @@ public class Request {
         }
         System.out.println(urlString);
         return urlString;
+    }
+
+    public static String getUrl() {
+        return url;
     }
 }
