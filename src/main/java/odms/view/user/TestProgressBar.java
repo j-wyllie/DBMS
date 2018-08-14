@@ -1,6 +1,8 @@
 package odms.view.user;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -60,15 +62,7 @@ class TestProgressBar<S> extends TableCell<S, Double> {
                 setRed();
             }
         }
-        if (value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
-            getStyleClass().add("lower-bound-heart");
-        } else if (value.contains("CORNEAS")) {
-            getStyleClass().add("lower-bound-corneas");
-        } else if (value.contains("PANCREAS")) {
-            getStyleClass().add("lower-bound-pancreas");
-        } else if (!value.equals("") && !value.contains("LIVER")) {
-            getStyleClass().add("lower-bound-generic");
-        }
+
 
         if (empty) {
             setGraphic(null);
@@ -85,7 +79,23 @@ class TestProgressBar<S> extends TableCell<S, Double> {
                 progressBar.setProgress(item);
             }
 
-            setGraphic(progressBar);
+
+            Group group = new Group();
+            group.getChildren().add(progressBar);
+            if (value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
+                Line line = new Line(30, 20,   30,   0);
+                group.getChildren().add(line);
+            } else if (value.contains("CORNEA")) {
+                Line line = new Line(28, 20,   28,   0);
+                group.getChildren().add(line);
+            } else if (value.contains("PANCREAS")) {
+                Line line = new Line(50, 20,   50,   0);
+                group.getChildren().add(line);
+            } else if (!value.equals("") && !value.contains("LIVER")) {
+                Line line = new Line(70, 20,   70,   0);
+                group.getChildren().add(line);
+            }
+            setGraphic(group);
         }
     }
 }
