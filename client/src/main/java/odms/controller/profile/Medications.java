@@ -320,7 +320,8 @@ public class Medications extends CommonController {
                         "stopped", drug.getDrugName(),
                         Integer.parseInt(data.substring(data.indexOf("index of") + 9,
                                 data.indexOf(" at"))), LocalDateTime.now());
-                CurrentHistory.updateHistory(history);
+//                CurrentHistory.updateHistory(history);
+                //TODO: update history it breaks.
             }
         }
     }

@@ -1,5 +1,6 @@
 package odms.controller.data.Profile;
 
+import java.util.List;
 import odms.controller.profile.ConditionGeneral;
 import odms.commons.model.profile.Profile;
 import odms.view.profile.ProfileMedicalHistory;
@@ -19,7 +20,7 @@ public class Condition {
 
     @Before
     public void setup() throws IOException{
-        ArrayList<String> profileOneAttr = new ArrayList<>();
+        List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");

@@ -27,7 +27,7 @@ public class DrugController {
             profileId = Integer.valueOf(req.params("id"));
             current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return "Bad Request";
         }
 
@@ -63,12 +63,11 @@ public class DrugController {
         try {
             profileId = Integer.valueOf(req.params("id"));
             newDrug = gson.fromJson(req.body(), Drug.class);
-            current = Boolean.valueOf(req.queryMap("current").toString());
+            current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return "Bad Request";
         }
-
         try {
             database.add(newDrug, new Profile(profileId), current);
         } catch (Exception e) {
@@ -94,9 +93,9 @@ public class DrugController {
 
         try {
             newDrug = gson.fromJson(req.body(), Drug.class);
-            current = Boolean.valueOf(req.queryMap("current").toString());
+            current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return "Bad Request";
         }
 
@@ -123,9 +122,9 @@ public class DrugController {
         Drug newDrug;
 
         try {
-            newDrug = gson.fromJson(req.body(), Drug.class);
+            newDrug = new Drug(Integer.valueOf(req.params("id")), null);
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return "Bad Request";
         }
 

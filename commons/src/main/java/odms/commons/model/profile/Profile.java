@@ -60,12 +60,12 @@ public class Profile implements Comparable<Profile> {
     private Integer bloodPressureDiastolic;
     private HashSet<String> chronicDiseases = new HashSet<>();
 
-    private ArrayList<String> updateActions = new ArrayList<>();
+    private List<String> updateActions = new ArrayList<>();
 
-    private ArrayList<Procedure> procedures = new ArrayList<>();
+    private List<Procedure> procedures = new ArrayList<>();
 
-    private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-    private ArrayList<Procedure> previousProcedures = new ArrayList<>();
+    private List<Procedure> pendingProcedures = new ArrayList<>();
+    private List<Procedure> previousProcedures = new ArrayList<>();
 
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
@@ -73,7 +73,7 @@ public class Profile implements Comparable<Profile> {
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
     private HashSet<OrganEnum> organsExpired = new HashSet<>();
 
-    private ArrayList<Condition> conditions = new ArrayList<>();
+    private List<Condition> conditions = new ArrayList<>();
 
     private String phone;
     private String mobilePhone;
@@ -88,7 +88,7 @@ public class Profile implements Comparable<Profile> {
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
-    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+    private List<String> medicationTimestamps = new ArrayList<>();
 
     /**
      * Instantiates the Profile class with data from the CLI
@@ -420,25 +420,25 @@ public class Profile implements Comparable<Profile> {
      * Gets all of the profiles procedures
      * @return all procedures
      */
-    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+    public List<Procedure> getAllProcedures() { return procedures; }
 
     /**
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
+    public List<Procedure> getPendingProcedures() {
         return this.pendingProcedures;
     }
 
-    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+    public void setPendingProcedures(List<Procedure> pendingProcedures) {
         this.pendingProcedures = pendingProcedures;
     }
 
-    public ArrayList<Procedure> getPreviousProcedures() {
+    public List<Procedure> getPreviousProcedures() {
         return this.previousProcedures;
     }
 
-    public void setPreviousProcedures(ArrayList<Procedure> previous) {
+    public void setPreviousProcedures(List<Procedure> previous) {
         this.previousProcedures = previous;
     }
 
@@ -675,7 +675,7 @@ public class Profile implements Comparable<Profile> {
         return historyOfMedication;
     }
 
-    public ArrayList<String> getMedicationTimestamps() {
+    public List<String> getMedicationTimestamps() {
         return medicationTimestamps;
     }
 
@@ -695,7 +695,7 @@ public class Profile implements Comparable<Profile> {
      * Gets all the current conditions of the user
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() {
+    public List<Condition> getAllConditions() {
         return this.conditions;
     }
 
@@ -703,8 +703,8 @@ public class Profile implements Comparable<Profile> {
      * Gets all the cured conditions of the user
      * @return the cured conditions of the user
      */
-    public ArrayList<Condition> getCuredConditions() {
-        ArrayList<Condition> curedConditions = new ArrayList<>();
+    public List<Condition> getCuredConditions() {
+        List<Condition> curedConditions = new ArrayList<>();
         for (Condition condition : this.conditions) {
             if (condition.getCured()) {
                 curedConditions.add(condition);
@@ -718,8 +718,8 @@ public class Profile implements Comparable<Profile> {
      * Gets all the current conditions of the user
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions() {
-        ArrayList<Condition> currentConditions = new ArrayList<>();
+    public List<Condition> getCurrentConditions() {
+        List<Condition> currentConditions = new ArrayList<>();
         for (Condition condition : this.conditions) {
             if (!condition.getCured()) {
                 currentConditions.add(condition);
@@ -892,7 +892,7 @@ public class Profile implements Comparable<Profile> {
         this.id = id;
     }
 
-    public ArrayList<String> getUpdateActions() {
+    public List<String> getUpdateActions() {
         return updateActions;
     }
 
@@ -945,12 +945,12 @@ public class Profile implements Comparable<Profile> {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setProcedures(ArrayList<Procedure> procedures) {
+    public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
 
 
-    public void setConditions(ArrayList<Condition> conditions) {
+    public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 
@@ -983,7 +983,7 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-    public void setAllConditions(ArrayList<Condition> conditions) {
+    public void setAllConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 

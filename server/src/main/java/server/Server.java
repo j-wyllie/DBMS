@@ -83,6 +83,12 @@ public class Server {
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
                     delete("", ProfileController::delete);
+
+                    // drugs api endpoints.
+                    path("/drugs", () -> {
+                        get("", DrugController::getAll);
+                        post("", DrugController::add);
+                    });
                 });
 
                 get("/count", ProfileController::count);
@@ -125,9 +131,6 @@ public class Server {
 
             // drugs api endpoints.
             path("/drugs", () -> {
-                get("", DrugController::getAll);
-                post("", DrugController::add);
-
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);

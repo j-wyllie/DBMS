@@ -92,12 +92,18 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public List<User> search(String name) throws SQLException {
-        return null;
+        String url = "http://localhost:6969/api/v1/users/all";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("name", name);
+        return getArrayRequest(url, queryParams);
     }
 
     @Override
     public List<User> search(int id) throws SQLException {
-        return null;
+        String url = "http://localhost:6969/api/v1/users/all";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("id", id);
+        return getArrayRequest(url, queryParams);
     }
 
     private User getSingleRequest(String url, Map<String, Object> queryParams)
