@@ -30,10 +30,11 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
     private static final String CACHE_DIR = "cache";
     private static final String CACHE_NAME = "medication_interactions.json";
-    private static final File WORKING_DIR = new File(System.getProperty("user.dir"));
+    private static final String CACHE_PATH = CACHE_DIR + File.separator + CACHE_NAME;
 
+    private static final File WORKING_DIR = new File(System.getProperty("user.dir"));
     private static final String DEFAULT_PATH =
-            WORKING_DIR + File.separator + CACHE_DIR + File.separator + CACHE_NAME;
+            WORKING_DIR + File.separator + CACHE_PATH;
 
     /**
      * Get all interaction data stored in the cache.
@@ -88,6 +89,14 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         if ((path != null)) {
             file = path;
         }
+
+        // If the cache doesn't exist create the dir and pre-populate it
+        if (!new File(file).exists()) {
+            new File(WORKING_DIR + File.separator + CACHE_DIR).mkdir();
+            prepopulateCache();
+            save();
+        }
+
         try {
             this.interactionMap.clear();
             JsonParser parser = new JsonParser();
@@ -101,7 +110,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 this.interactionMap.put(Integer.valueOf(key), value);
             });
         } catch (FileNotFoundException e) {
-            System.out.println("The medication interactions JSON file could not be found.");
+            System.out.println("No default cache file was found");
         } catch (Exception e) {
             System.out.println("There was an error opening the medication interactions JSON file.");
         }
@@ -112,7 +121,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
      */
     @Override
     public boolean save() {
-        File file = new File(DEFAULT_PATH);
+        File file = new File(CACHE_PATH);
         if ((this.path != null)) {
             file = new File(this.path);
         }
@@ -127,7 +136,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
         } catch (IOException e) {
             System.out.println("IO exception, please check the specified cache location.");
-            System.out.println("Cache requested: " + path);
+            System.out.println("Cache requested: " + file.getPath());
             return false;
         }
     }
@@ -272,5 +281,16 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         // This is only used in tests so should be fine without
         // using the working directory
         this.path = path;
+    }
+
+    /**
+     * Pre-populates the cache with some interactions
+     */
+    private void prepopulateCache() {
+        try {
+            get("Diazepam", "Codeine sulfate");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
