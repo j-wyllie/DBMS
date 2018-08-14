@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
@@ -35,6 +36,8 @@ public class AvailableOrgans {
     public void setView(odms.view.user.AvailableOrgans v) {
         view = v;
     }
+
+
 
     public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
         LocalDateTime dateOrganRegistered = LocalDateTime.now();
@@ -117,6 +120,9 @@ public class AvailableOrgans {
             case HEART:
                 expiryTime = profile.getDateOfDeath().plusHours(6);
                 break;
+            case LUNG:
+                expiryTime = profile.getDateOfDeath().plusHours(6);
+                break;
             case PANCREAS:
                 expiryTime = profile.getDateOfDeath().plusHours(24);
                 break;
@@ -161,6 +167,9 @@ public class AvailableOrgans {
 
         switch (organ) {
             case HEART:
+                expiryTime = 6 * ONE_HOUR;
+                break;
+            case LUNG:
                 expiryTime = 6 * ONE_HOUR;
                 break;
             case PANCREAS:
@@ -328,8 +337,42 @@ public class AvailableOrgans {
 
         receivingProfiles = DAOFactory.getProfileDao().getOrganReceivers(organAvailable.getName(), reqBloodType, minAge, maxAge);
         potentialOrganMatches.addAll(receivingProfiles);
+        SortedList<Profile> sortedByCountry = new SortedList<>(potentialOrganMatches,
+                (Profile profile1, Profile profile2) -> {
+                    if(profile1.getCountry().equals(donorProfile.getCountryOfDeath()) && !profile2.getCountry().equals(donorProfile.getCountryOfDeath())) {
+                        return -1;
+                    } else if(!profile1.getCountry().equals(donorProfile.getCountryOfDeath()) && profile2.getCountry().equals(donorProfile.getCountryOfDeath())){
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+        System.out.println("A");
+        SortedList<Profile> sortedByRegion = new SortedList<>(sortedByCountry,
+                (Profile profile1, Profile profile2) -> {
+                    if(profile1.getRegion().equals(donorProfile.getRegionOfDeath()) && !profile2.getRegion().equals(donorProfile.getRegionOfDeath())) {
+                        return -1;
+                    } else if(!profile1.getRegion().equals(donorProfile.getRegionOfDeath()) && profile2.getRegion().equals(donorProfile.getRegionOfDeath())){
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+        System.out.println("A");
+        SortedList<Profile> sortedByCity = new SortedList<>(sortedByRegion,
+                (Profile profile1, Profile profile2) -> {
+            if(profile1.getCity().equals(donorProfile.getCityOfDeath()) && !profile2.getCity().equals(donorProfile.getCityOfDeath())) {
+                        return -1;
+                    } else if(!profile1.getCity().equals(donorProfile.getCityOfDeath()) && profile2.getCity().equals(donorProfile.getCityOfDeath())){
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
 
-        return potentialOrganMatches;
+
+
+        return sortedByCity;
     }
 
 

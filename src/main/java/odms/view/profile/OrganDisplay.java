@@ -78,6 +78,14 @@ public class OrganDisplay extends CommonView {
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+        try {
+        if(!currentProfile.getDateOfDeath().equals(null)) {
+            donatingButton.setDisable(true);
+            receivingButton.setDisable(true);
+        }}catch (NullPointerException e) {
+            donatingButton.setDisable(false);
+            receivingButton.setDisable(false);
+        }
 
         if (!isClinician) {
             if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {

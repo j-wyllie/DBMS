@@ -70,7 +70,7 @@ public class ClinicianProfile extends CommonView {
             consoleTab.setContent(loader.load());
             ConsoleTab userConsoleTabView = loader.getController();
             userConsoleTabView.initialize();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -84,7 +84,7 @@ public class ClinicianProfile extends CommonView {
             listUsersTab.setContent(loader.load());
             UsersList listUsersView = loader.getController();
             listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
 
             System.out.println(e.getMessage());
@@ -101,7 +101,7 @@ public class ClinicianProfile extends CommonView {
                 generalTab.setContent(loader.load());
                 UserGeneral userGeneralTabView = loader.getController();
                 userGeneralTabView.initialize(currentUser);
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -116,7 +116,7 @@ public class ClinicianProfile extends CommonView {
             dataManagementTab.setContent(loader.load());
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -130,7 +130,7 @@ public class ClinicianProfile extends CommonView {
             availableOrgansTab.setContent(loader.load());
             AvailableOrgans availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -174,7 +174,7 @@ public class ClinicianProfile extends CommonView {
             searchTab.setContent(loader.load());
             Search userSearchView = loader.getController();
             userSearchView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -188,7 +188,7 @@ public class ClinicianProfile extends CommonView {
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             userTransplantWaitingListTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
