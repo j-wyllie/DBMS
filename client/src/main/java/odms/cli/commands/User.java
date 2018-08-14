@@ -28,24 +28,26 @@ public class User extends CommandUtils {
      * @param rawInput raw command input.
      * @return staffID the staff id of created clinician.
      */
-    public static odms.commons.model.user.User createClinician(String rawInput) {
+    public static void createClinician(String rawInput) {
         try {
             String[] attrList = rawInput.substring(16).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             UserType userType = UserType.CLINICIAN;
             odms.commons.model.user.User newUser = new odms.commons.model.user.User(userType, attrArray);
-
-            addClinicianHistory(newUser.getStaffID());
-            System.out.println("Clinician created.");
-            return newUser;
-
+            if ((newUser.getUsername() != null && !newUser.getUsername().equals("")) &&
+                    (newUser.getPassword() != null && !newUser.getPassword().equals("")) &&
+                    (newUser.getName() != null && !newUser.getName().equals(""))) {
+                DAOFactory.getUserDao().add(newUser);
+                System.out.println("Clinician created.");
+            } else {
+                throw new IllegalArgumentException("Please enter all fields.");
+            }
         } catch (IllegalArgumentException e) {
-            System.out.println("Please enter the required attributes correctly.");
+            System.out.println(e.getMessage());
 
         } catch (Exception e) {
             System.out.println("Please enter a valid command.");
         }
-        return null;
     }
 
     /**

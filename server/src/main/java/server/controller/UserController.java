@@ -83,11 +83,14 @@ public class UserController {
         try {
             newUser = gson.fromJson(req.body(), User.class);
             if (!(database.isUniqueUsername(newUser.getUsername()))) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Username must be unique.");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             res.status(400);
             return "Bad Request";
+        } catch (IllegalArgumentException e) {
+            res.status(403);
+            return "Forbidden";
         }
 
         if (!(newUser == null)) {

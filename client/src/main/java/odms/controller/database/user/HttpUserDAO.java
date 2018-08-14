@@ -59,7 +59,10 @@ public class HttpUserDAO implements UserDAO {
         }
 
         if (response.getStatus() == 400) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid details.");
+        }
+        if (response.getStatus() == 403) {
+            throw new IllegalArgumentException("Username already exists.");
         }
     }
 
