@@ -10,6 +10,7 @@ import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.medication.MySqlMedicationDAO;
+import odms.controller.database.organ.HttpOrganDAO;
 import odms.controller.database.organ.MySqlOrganDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.MySqlProcedureDAO;
@@ -63,7 +64,7 @@ public class DAOFactory {
      * Gives the data access object class for the Organ object.
      * @return dao for the Organ object database transactions.
      */
-    public static OrganDAO getOrganDao() { return new MySqlOrganDAO(); }
+    public static OrganDAO getOrganDao() { return new HttpOrganDAO(); }
 
     /**
      * Gives the data access object class for the Countries enum.

@@ -103,7 +103,6 @@ public class Request {
             response = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
         } catch (Exception e) {
-            e.printStackTrace();
             response = new BufferedReader(
                     new InputStreamReader(con.getErrorStream()));
         }
