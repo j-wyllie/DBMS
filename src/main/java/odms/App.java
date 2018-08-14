@@ -25,14 +25,12 @@ public class App {
 
         CurrentHistory.currentSessionHistory.add(null);
         try {
-
             File userDbFile = new File(USER_DATABASE);
             if (!userDbFile.isFile()) {
                 userDb = new UserDatabase();
             } else {
                 userDb = UserDataIO.loadData(USER_DATABASE);
             }
-
             File profileDbFile = new File(DONOR_DATABASE);
             if (!profileDbFile.isFile()) {
                 profileDb = new ProfileDatabase();
@@ -40,10 +38,8 @@ public class App {
             } else {
                 profileDb = ProfileDataIO.loadDataFromJSON(DONOR_DATABASE);
             }
-
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);
-
             } else {
                 switch (args[0].toLowerCase()) {
                     case "-cmd":
@@ -56,7 +52,6 @@ public class App {
             e.printStackTrace();
         }
     }
-
 
 
     public static ProfileDatabase getProfileDb() {

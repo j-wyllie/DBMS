@@ -8,49 +8,15 @@ import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.util.Callback;
 
 class TestProgressBar<S> extends TableCell<S, Double> {
-    /***************************************************************************
-     *                                                                         *
-     * Static cell factories                                                   *
-     *                                                                         *
-     **************************************************************************/
 
-    /**
-     * Provides a {@link ProgressBar} that allows easy visualisation of a Number
-     * value as it proceeds from 0.0 to 1.0. If the value is -1, the progress
-     * bar will appear indeterminate.
-     *
-     * @return A {@link Callback} that can be inserted into the
-     *      {@link TableColumn#cellFactoryProperty() cell factory property} of a
-     *      TableColumn, that enables visualisation of a Number as it progresses
-     *      from 0.0 to 1.0.
-     */
-    public static <S> Callback<TableColumn<S,Double>, TableCell<S,Double>> forTableColumn(String style) {
+    public static <S> Callback<TableColumn<S, Double>, TableCell<S, Double>> forTableColumn(
+            String style) {
         return param -> new TestProgressBar<>(style);
     }
-
-
-
-    /***************************************************************************
-     *                                                                         *
-     * Fields                                                                  *
-     *                                                                         *
-     **************************************************************************/
 
     private final ProgressBar progressBar;
 
     private ObservableValue<Double> observable;
-
-
-
-    /***************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
-
-    /**
-     * Creates a default {@link ProgressBarTableCell} instance
-     */
     public TestProgressBar(String style) {
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
@@ -74,16 +40,8 @@ class TestProgressBar<S> extends TableCell<S, Double> {
         progressBar.getStyleClass().add("progress-bar-yellow");
     }
 
-
-
-    /***************************************************************************
-     *                                                                         *
-     * Public API                                                              *
-     *                                                                         *
-     **************************************************************************/
-
-    /** {@inheritDoc} */
-    @Override public void updateItem(Double item, boolean empty) {
+    @Override
+    public void updateItem(Double item, boolean empty) {
         String value;
 
         try {
@@ -92,7 +50,7 @@ class TestProgressBar<S> extends TableCell<S, Double> {
             value = "";
         }
         super.updateItem(item, empty);
-        if(item != null) {
+        if (item != null) {
             if (item >= 0.8) {
                 setGreen();
             } else if (item >= 0.2) {
@@ -101,17 +59,15 @@ class TestProgressBar<S> extends TableCell<S, Double> {
                 setRed();
             }
         }
-        if(value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
+        if (value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
             getStyleClass().add("lower-bound-heart");
-        } else if(value.contains("CORNEAS")){
+        } else if (value.contains("CORNEAS")) {
             getStyleClass().add("lower-bound-corneas");
-        } else if(value.contains("PANCREAS")){
+        } else if (value.contains("PANCREAS")) {
             getStyleClass().add("lower-bound-pancreas");
-        } else if(!value.equals("") && !value.contains("LIVER")){
+        } else if (!value.equals("") && !value.contains("LIVER")) {
             getStyleClass().add("lower-bound-generic");
         }
-
-
 
         if (empty) {
             setGraphic(null);
@@ -119,7 +75,7 @@ class TestProgressBar<S> extends TableCell<S, Double> {
 
             progressBar.progressProperty().unbind();
 
-            final TableColumn<S,Double> column = getTableColumn();
+            final TableColumn<S, Double> column = getTableColumn();
             observable = column == null ? null : column.getCellObservableValue(getIndex());
 
             if (observable != null) {
@@ -131,38 +87,4 @@ class TestProgressBar<S> extends TableCell<S, Double> {
             setGraphic(progressBar);
         }
     }
-//    public TestProgressBar(String style) {
-//        super();
-//
-////        System.out.println(style);
-//        super.getStyleClass().clear();
-//        super.getStylesheets().clear();
-//        super.getStylesheets().add(style);
-////        this.setStyle(".progress-bar > .bar {\n" +
-////                "    -fx-background-color: #000000;\n" +
-////                "}");
-////        this.getStyle().
-////        this.getStyleClass().clear();
-//        super.getStyleClass().clear();
-//        super.getStyleClass().add("black-bar");
-//    }
-//
-//    @Override public void updateItem(Double item, boolean empty) {
-//        System.out.println(this.getStylesheets());
-//        System.out.println(this.getStyleClass());
-//        System.out.println(this.getStyle());
-//
-//        super.getStyleClass().clear();
-//        super.getStyleClass().add("black-bar");
-//
-//
-//
-//        super.updateItem(item, empty);
-//        super.getStyleClass().clear();
-//        super.getStyleClass().add("black-bar");
-//    }
-//
-//    public static <S> Callback<TableColumn<S,Double>, TableCell<S,Double>> forTableColumn(String style) {
-//        return param -> new TestProgressBar<S>(style);
-//    }
 }

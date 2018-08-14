@@ -216,7 +216,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     private Profile setOrgans(Profile profile) throws OrganConflictException {
         OrganDAO database = DAOFactory.getOrganDao();
-
         profile.addOrgansDonating(database.getDonating(profile));
         profile.addOrgansDonated(database.getDonations(profile));
         profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
@@ -485,7 +484,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     private void removeOrgans(Profile profile) {
         OrganDAO database = DAOFactory.getOrganDao();
-
         profile.getOrgansDonating().forEach(organ -> {
             database.removeDonating(profile, organ);
         });
@@ -789,10 +787,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
                 + "o.Required) = ?;";
 
-
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-
         try {
             Connection conn = instance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -802,10 +798,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setInt(3, upperAgeRange);
             stmt.setString(4, organ.toString());
             stmt.setString(5, organ.toString());
-
-
             ResultSet result = stmt.executeQuery();
-
             while (result.next()) {
                 Profile profile = parseProfile(result);
                 receivers.add(profile);
@@ -815,7 +808,6 @@ public class MySqlProfileDAO implements ProfileDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return receivers;
     }
 
