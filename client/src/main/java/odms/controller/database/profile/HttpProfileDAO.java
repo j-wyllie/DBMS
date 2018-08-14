@@ -76,11 +76,8 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public void remove(Profile profile) {
-        String url = "http://localhost:6969/api/v1/profiles";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("id", Integer.toString(profile.getId()));
-
-        Request request = new Request(url, 0, queryParams);
+        String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();
+        Request request = new Request(url, 0, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
@@ -91,12 +88,9 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public void update(Profile profile) {
         Gson gson = new Gson();
-        String url = "http://localhost:6969/api/v1/profiles";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("id", Integer.toString(profile.getId()));
-
+        String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();
         String body = gson.toJson(profile);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, 0, new HashMap<>(), body);
         try {
             request.patch();
         } catch (IOException e) {

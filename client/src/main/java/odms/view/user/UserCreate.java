@@ -38,7 +38,7 @@ public class UserCreate extends CommonView {
     @FXML
     public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
         if (checkValidEntries()) {
-            if (checkUniqueUsername()) {
+            try {
                 User user = new User(userTypeBox.getValue(),
                         userNameField.getText(),
                         userRegionField.getText()
@@ -49,7 +49,7 @@ public class UserCreate extends CommonView {
                 Stage stage = (Stage) userCreateAccountButton.getScene().getWindow();
                 stage.close();
                 editTrueAction(event, true);
-            } else {
+            } catch (IllegalArgumentException e) {
                 AlertController.uniqueUsername();
             }
         } else {

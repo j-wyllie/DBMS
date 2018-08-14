@@ -64,7 +64,8 @@ public class Request {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("PATCH");
+        con.setRequestProperty("X-HTTP-Method-Override", "PATCH");
+        con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
         con.setDoOutput(true);
 
@@ -127,6 +128,7 @@ public class Request {
                 urlString += ("&" + key + "=" + queryParams.get(key));
             }
         }
+        System.out.println(urlString);
         return urlString;
     }
 }

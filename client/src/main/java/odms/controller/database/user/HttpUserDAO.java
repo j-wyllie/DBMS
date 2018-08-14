@@ -39,24 +39,28 @@ public class HttpUserDAO implements UserDAO {
     public User get(String username) throws UserNotFoundException {
         String url = "http://localhost:6969/api/v1/users";
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("username", String.valueOf(username));
+        queryParams.put("username", username);
         return getSingleRequest(url, queryParams);
     }
 
     @Override
-    public void add(User user) throws SQLException {
+    public void add(User user) throws IllegalArgumentException {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/users";
         Map<String, String> queryParams = new HashMap<>();
 
         String body = gson.toJson(user);
         Request request = new Request(url, 0, queryParams, body);
+        Response response = null;
         try {
-            request.post();
+            response = request.post();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // TODO: username check.
+
+        if (response.getStatus() == 400) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
@@ -64,11 +68,8 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public void remove(User user) {
-        String url = "http://localhost:6969/api/v1/users";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("id", Integer.toString(user.getStaffID()));
-
-        Request request = new Request(url, 0, queryParams);
+        String url = "http://localhost:6969/api/v1/users/" + user.getStaffID();
+        Request request = new Request(url, 0, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
@@ -79,12 +80,9 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public void update(User user) {
         Gson gson = new Gson();
-        String url = "http://localhost:6969/api/v1/users";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("id", Integer.toString(user.getStaffID()));
-
+        String url = "http://localhost:6969/api/v1/users/" + user.getStaffID();
         String body = gson.toJson(user);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, 0, new HashMap<>(), body);
         try {
             request.patch();
         } catch (IOException e) {

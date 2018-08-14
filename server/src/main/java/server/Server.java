@@ -63,11 +63,11 @@ public class Server {
         // user api routes.
         path("/api/v1", () -> {
             path("/users", () -> {
-                get("", UserController::getAll);
+                get("/all", UserController::getAll);
+                get("", UserController::get);
                 post("", UserController::create);
 
                 path("/:id", () -> {
-                    get("", UserController::get);
                     patch("", UserController::edit);
                     delete("", UserController::delete);
                 });

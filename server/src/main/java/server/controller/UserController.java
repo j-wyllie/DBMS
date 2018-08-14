@@ -49,7 +49,12 @@ public class UserController {
         User user = null;
 
         try {
-            user = database.get(Integer.valueOf(req.params("id")));
+            if (req.queryMap().hasKey("id")) {
+                user = database.get(Integer.valueOf(req.queryParams("id")));
+            }
+            else {
+                user = database.get(req.queryParams("username"));
+            }
         } catch (SQLException | UserNotFoundException e) {
             res.status(500);
             return e.getMessage();
@@ -73,10 +78,13 @@ public class UserController {
     public static String create(Request req, Response res) {
         Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
-        User newUser = null;
+        User newUser;
 
         try {
             newUser = gson.fromJson(req.body(), User.class);
+            if (!(database.isUniqueUsername(newUser.getUsername()))) {
+                throw new IllegalArgumentException();
+            }
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
@@ -90,7 +98,6 @@ public class UserController {
                 return "Internal Server Error";
             }
         }
-
         res.status(201);
         return "User Created";
     }
