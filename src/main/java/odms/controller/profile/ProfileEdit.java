@@ -1,19 +1,18 @@
 package odms.controller.profile;
 
-import static odms.App.getProfileDb;
-
 import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.fxml.FXML;
-import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 public class ProfileEdit extends CommonController {
@@ -291,7 +290,11 @@ public class ProfileEdit extends CommonController {
     public void saveDateOfDeath() {
         if (view.getDodDateTimePicker() != null) {
             currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
-            currentProfile.getOrgansRequired().clear();
+            Set<OrganEnum> organsRequired = new HashSet<>();
+            organsRequired.addAll(currentProfile.getOrgansRequired());
+            for (OrganEnum organEnum : organsRequired) {
+                DAOFactory.getOrganDao().removeRequired(currentProfile, organEnum);
+            }
             currentProfile.setReceiver(false);
         }
     }
