@@ -1,5 +1,6 @@
 package odms.controller.user;
 
+import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -13,15 +14,17 @@ import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.GuiMain;
 import odms.commons.model.user.User;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.user.UserDAO;
 
 public class UsersList {
-//    private UserDatabase userDatabase = GuiMain.getUserDatabase();
+
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
 
     /**
-     * public constructor for the ViewUsersController class.
+     * Public constructor for the ViewUsersController class.
      * @param v instance of ViewUsersView
      */
     public UsersList(odms.view.user.UsersList v) {
@@ -74,17 +77,22 @@ public class UsersList {
     }
 
     /**
-     * creates and populate the context menu for the table.
+     * Creates and populate the context menu for the table.
      */
     private void createContextMenu() {
         contextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");
         contextMenu.getItems().add(deleteMenuItem);
+        UserDAO server = DAOFactory.getUserDao();
 
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (AlertController.deleteUserConfirmation()) {
                 User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
-//                GuiMain.getUserDatabase().deleteUser(user.getStaffID());
+                try {
+                    server.remove(user);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 refreshViewUsersTable();
                 view.editTrueStage((Stage) view.getViewUsersTable().getScene().getWindow());
             }
@@ -92,7 +100,7 @@ public class UsersList {
     }
 
     /**
-     * save changes made in the view users window.
+     * Save changes made in the view users window.
      */
 //    public void saveChanges() {
 //        UserDataIO.saveUsers(userDatabase);
@@ -111,6 +119,11 @@ public class UsersList {
      * Gets an observable list of users.
      */
     private void fetchData() {
-//        usersObservableList = FXCollections.observableArrayList(userDatabase.getUsers());
+        UserDAO server = DAOFactory.getUserDao();
+        try {
+            usersObservableList = FXCollections.observableArrayList(server.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -19,22 +19,22 @@ public class UserCreate extends CommonView {
 
     @FXML
     private TextField userUsernameField;
-
     @FXML
     private TextField userNameField;
-
     @FXML
     private TextField userRegionField;
-
     @FXML
     private PasswordField userPasswordField;
-
     @FXML
     private ChoiceBox<UserType> userTypeBox;
-
     @FXML
     private Button userCreateAccountButton;
 
+    /**
+     * Handles the creation of new user accounts on button clicked event.
+     * @param event of create account button clicked.
+     * @throws SQLException error.
+     */
     @FXML
     public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
         if (checkValidEntries()) {
@@ -58,18 +58,8 @@ public class UserCreate extends CommonView {
     }
 
     /**
-     * checks that all fields have been filled out
-     *
-     * @return a boolean signalling that all fields were filled it.
-     */
-    private boolean checkUniqueUsername() throws SQLException {
-        return DAOFactory.getUserDao().isUniqueUsername(userUsernameField.getText());
-    }
-
-    /**
-     * checks that the username entered is unique
-     *
-     * @return a boolean signalling that the username is or isn't unique
+     * Checks that the entries are valid.
+     * @return a boolean signalling whether the entries are valid.
      */
     private boolean checkValidEntries() {
         if (userNameField.getText().equals("") || userUsernameField.getText().equals("") ||
@@ -81,7 +71,7 @@ public class UserCreate extends CommonView {
     }
 
     /**
-     * adds the UserTypes to the choice box
+     * Adds the UserTypes to the choice box.
      */
     private void populateUserTypeBox() {
         userTypeBox.getItems().clear();
