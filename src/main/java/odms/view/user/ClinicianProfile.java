@@ -13,10 +13,8 @@ import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.model.enums.UserType;
-import odms.model.user.User;
 import odms.view.CommonView;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +185,7 @@ public class ClinicianProfile extends CommonView {
                         odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
                         List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                                 .getAllOrgansAvailable();
-                        for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                        for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                             controller.checkOrganExpired(m.getValue(), m.getKey(), m);
                         }
                     } catch (SQLException e) {
