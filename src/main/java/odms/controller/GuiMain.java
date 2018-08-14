@@ -57,8 +57,6 @@ public class GuiMain extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         if (!userDb.isUser(0)) {
             User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
             user.setStaffID(0);

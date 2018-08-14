@@ -60,8 +60,8 @@ public class ProfileDatabase {
     }
 
     /**
-     * Remove profile from the database, adding their ID to the deletedID's set for
-     * logging of removed profiles.
+     * Remove profile from the database, adding their ID to the deletedID's set for logging of
+     * removed profiles.
      *
      * @param id unique profile ID
      * @return boolean on whether the profile was successfully deleted.
@@ -81,7 +81,7 @@ public class ProfileDatabase {
     /**
      * Restore a previously deleted profile
      *
-     * @param id ODMS ID of deleted profile
+     * @param id      ODMS ID of deleted profile
      * @param profile the profile to be restored
      * @return current ProfileDatabase lastId
      */
@@ -165,9 +165,8 @@ public class ProfileDatabase {
     }
 
     /**
-     * Generate a list of profiles ordered by last names.
-     * Parameter to specify whether or not the list contains every profile or only profiles that
-     * are currently donating organs.
+     * Generate a list of profiles ordered by last names. Parameter to specify whether or not the
+     * list contains every profile or only profiles that are currently donating organs.
      *
      * @param donating specify donating organs or not
      * @return Array of profiles found that match
@@ -192,12 +191,14 @@ public class ProfileDatabase {
 
     /**
      * Searches a given list of profiles with a given search string using fuzzy search
+     *
      * @param profilesGiven list of profiles to search through
-     * @param searchString string to match profiles against
-     * @param type type of attribute to filter against
+     * @param searchString  string to match profiles against
+     * @param type          type of attribute to filter against
      * @return the filtered list of profiles
      */
-    public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString, String type) {
+    public ArrayList<Profile> fuzzySearch(ArrayList<Profile> profilesGiven, String searchString,
+            String type) {
         ArrayList<Profile> resultProfiles = new ArrayList<>();
         ArrayList<String> profiles = new ArrayList<>();
         ArrayList<Profile> temp = new ArrayList<>();
@@ -238,10 +239,11 @@ public class ProfileDatabase {
     }
 
     /**
-     * Compares each string in the names array to the searchString. Returns the weightedRatio value of the string that
-     * was the closest to the searchString.
+     * Compares each string in the names array to the searchString. Returns the weightedRatio value
+     * of the string that was the closest to the searchString.
+     *
      * @param searchString the string that the donor names will be searched against.
-     * @param names String array of profile names.
+     * @param names        String array of profile names.
      * @return ratio value, represents how close of a match the closest name is to the searchString
      */
     private int stringMatcher(String searchString, String[] names) {
@@ -254,7 +256,8 @@ public class ProfileDatabase {
             if (name.length() < searchLength) {
                 tempRatio = FuzzySearch.weightedRatio(searchString, name);
             } else {
-                tempRatio = FuzzySearch.weightedRatio(searchString, name.substring(0, searchLength));
+                tempRatio = FuzzySearch
+                        .weightedRatio(searchString, name.substring(0, searchLength));
             }
             if (tempRatio > ratio) {
                 ratio = tempRatio;
@@ -264,17 +267,19 @@ public class ProfileDatabase {
     }
 
     //TODO add preferred name when that functionality is in dev
+
     /**
-     * Fuzzy search that finds profiles with a name similar to the search string. Order of results goes as follows:
-     * Exact matches in last names ordered alphabetically,
-     * Exact matches in first names ordered alphabetically,
-     * Similar matches in last names ordered alphabetically,
-     * Similar matches in first names ordered alphabetically
+     * Fuzzy search that finds profiles with a name similar to the search string. Order of results
+     * goes as follows: Exact matches in last names ordered alphabetically, Exact matches in first
+     * names ordered alphabetically, Similar matches in last names ordered alphabetically, Similar
+     * matches in first names ordered alphabetically
+     *
      * @param searchString the string that the donor names will be searched against.
      * @param profilesList the list of profiles that the search string is searching through.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList, String searchString) {
+    public ArrayList<Profile> searchProfilesName(ArrayList<Profile> profilesList,
+            String searchString) {
         // Constant that represents the cutoff at which profiles will not be added to search results
         final Integer matchLimit = 60;
 
@@ -323,14 +328,14 @@ public class ProfileDatabase {
                 profilesMatchesLast.add(profile);
             } else if (ratio == 100 && nameCategory.equals("preferred")) {
                 profilesMatchesPreferred.add(profile);
-            }else if (ratio == 100 && nameCategory.equals("first")) {
+            } else if (ratio == 100 && nameCategory.equals("first")) {
                 profilesMatchesFirst.add(profile);
                 // If ratio is below 60 don't include profile because it doesn't match close enough to searchString
             } else if (ratio >= matchLimit && nameCategory.equals("last")) {
                 profilesSimilarLast.add(profile);
             } else if (ratio >= matchLimit && nameCategory.equals("preferred")) {
                 profilesSimilarPreferred.add(profile);
-            }else if (ratio >= matchLimit && nameCategory.equals("first")) {
+            } else if (ratio >= matchLimit && nameCategory.equals("first")) {
                 profilesSimilarFirst.add(profile);
             }
         }
@@ -356,17 +361,20 @@ public class ProfileDatabase {
 
     /**
      * Fuzzy search that finds the top 30 donors that match the provided search string.
-     * @param searchString the string that the donor names will be searched against.
-     * @param ageSearchInt integer of the age to be searched.
-     * @param ageRangeSearchInt integer of the age range to be searched.
+     *
+     * @param searchString       the string that the donor names will be searched against.
+     * @param ageSearchInt       integer of the age to be searched.
+     * @param ageRangeSearchInt  integer of the age range to be searched.
      * @param regionSearchString the region to be searched.
-     * @param selectedGender the selected gender to be searched.
-     * @param selectedType the selected type (donor or receiver) to be searched.
-     * @param selectedOrgans the selected organs to be searched.
+     * @param selectedGender     the selected gender to be searched.
+     * @param selectedType       the selected type (donor or receiver) to be searched.
+     * @param selectedOrgans     the selected organs to be searched.
      * @return list of donors that match the provided search string, with a max size of 30.
      */
-    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt, int ageRangeSearchInt,
-            String regionSearchString, String selectedGender,  String selectedType, HashSet<OrganEnum> selectedOrgans) {
+    public ArrayList<Profile> searchProfiles(String searchString, int ageSearchInt,
+            int ageRangeSearchInt,
+            String regionSearchString, String selectedGender, String selectedType,
+            HashSet<OrganEnum> selectedOrgans) {
         ArrayList<Profile> resultProfiles;
 
         switch (selectedType) {
@@ -381,16 +389,15 @@ public class ProfileDatabase {
                 break;
         }
 
-
         //ArrayList<Profile> resultProfiles = allProfiles;
 
         //parsing out organs as strings for later use
 
-        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999 && selectedGender.equals("") && selectedType
-                .equals("") && selectedOrgans.isEmpty()){
+        if (searchString.equals("") && regionSearchString.equals("") && ageSearchInt == -999
+                && selectedGender.equals("") && selectedType
+                .equals("") && selectedOrgans.isEmpty()) {
             return resultProfiles;
         }
-
 
         if (!searchString.equals("")) {
             resultProfiles = fuzzySearch(resultProfiles, searchString, "name");
@@ -405,15 +412,21 @@ public class ProfileDatabase {
         if (ageSearchInt != -999) {
             if (ageRangeSearchInt != -999) {
                 //use a range
-                if (ageRangeSearchInt > ageSearchInt ) {resultProfiles.removeIf(profile -> ((profile.getAge() > ageRangeSearchInt) || (profile.getAge() < ageSearchInt))); }
-                else { resultProfiles.removeIf(profile -> ((profile.getAge() < ageRangeSearchInt) || (profile.getAge() > ageSearchInt))); }
+                if (ageRangeSearchInt > ageSearchInt) {
+                    resultProfiles.removeIf(
+                            profile -> ((profile.getAge() > ageRangeSearchInt) || (profile.getAge()
+                                    < ageSearchInt)));
+                } else {
+                    resultProfiles.removeIf(
+                            profile -> ((profile.getAge() < ageRangeSearchInt) || (profile.getAge()
+                                    > ageSearchInt)));
+                }
 
             } else {
                 //just the age specified
                 resultProfiles.removeIf(profile -> profile.getAge() != ageSearchInt);
             }
         }
-
 
         if (!selectedGender.equals("")) {
             if (!selectedGender.equals("any")) {
@@ -465,7 +478,7 @@ public class ProfileDatabase {
     private List<String> getOrgansAsStrings(List selectedOrgans) {
         List<String> selectedOrgansStrings = new ArrayList<>();
         if (selectedOrgans != null) {
-            for (int i = 0; i< selectedOrgans.size(); i++) {
+            for (int i = 0; i < selectedOrgans.size(); i++) {
                 //todo need some consistency in how we are naming organs that have two words in them.
                 if (selectedOrgans.get(i).toString().toLowerCase().equals("connective tissue")) {
                     selectedOrgansStrings.add("connective_tissue");
@@ -480,9 +493,9 @@ public class ProfileDatabase {
     }
 
     /**
-     * Generates a list of profiles receiving organs ordered by last names.
-     * Parameter to specify whether or not the list contains every receiver or only receivers that
-     * are currently receiving organs.
+     * Generates a list of profiles receiving organs ordered by last names. Parameter to specify
+     * whether or not the list contains every receiver or only receivers that are currently
+     * receiving organs.
      *
      * @param receiving specify currently receiving organs or not
      * @return Array of profiles found that match
@@ -510,13 +523,11 @@ public class ProfileDatabase {
     /**
      * Generates a collection of a profile and organ for each organ that a receiver requires
      *
-     *  @return Collection of Profile and Organ that match
+     * @return Collection of Profile and Organ that match
      */
     public List<Entry<Profile, OrganEnum>> getAllOrgansRequired() {
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
-
         ArrayList<Profile> allReceivers = getReceivers(true);
-
         for (Profile profile : allReceivers) {
             for (OrganEnum organ : profile.getOrgansRequired()) {
                 Map.Entry<Profile, OrganEnum> pair = new SimpleEntry<>(profile, organ);
@@ -525,7 +536,4 @@ public class ProfileDatabase {
         }
         return receivers;
     }
-
-
-
 }
