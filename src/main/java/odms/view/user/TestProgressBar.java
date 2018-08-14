@@ -57,6 +57,8 @@ class TestProgressBar<S> extends TableCell<S, Double> {
 
         progressBar.getStylesheets().clear();
         progressBar.getStylesheets().add(style);
+        getStylesheets().clear();
+        getStylesheets().add(style);
     }
 
 
@@ -92,6 +94,7 @@ class TestProgressBar<S> extends TableCell<S, Double> {
                 setRed();
             }
         }
+        getStyleClass().add("lower-bound-heart");
 
 
 

@@ -89,6 +89,8 @@
 
 .progress-bar-green > .bar {
     -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+    -fx-padding: 1px;
+    -fx-background-insets: 0;
 }
 
 .progress-bar-red > .bar {
@@ -97,4 +99,9 @@
 
 .progress-bar-yellow > .bar {
     -fx-background-color: linear-gradient(#ffec4d, #e5a50d);
+}
+
+.lower-bound-heart {
+    -fx-background-image: url(ac.png);
+    -fx-background-size: cover, auto;
 }
