@@ -116,6 +116,17 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         assertEquals(1, mySqlProfileDAO.getAllReceiving().size());
     }
 
+    @Test
+    public void testGetOrganReceivers() throws SQLException {
+        testProfileLong0.setReceiver(true);
+        mySqlProfileDAO.add(testProfileLong0);
+        Profile newProfile = mySqlProfileDAO.get("DSF5422");
+        MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
+        mySqlOrganDAO.addRequired(newProfile, OrganEnum.BONE);
+        assertEquals(testProfileLong0.getFullName(), mySqlProfileDAO.getOrganReceivers(
+                "Bone", "O-", 12, 42).get(0).getFullName());
+    }
+
     @After
     public void cleanup() throws SQLException {
         ArrayList<Profile> profiles = (ArrayList<Profile>) mySqlProfileDAO.getAll();
