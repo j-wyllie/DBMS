@@ -6,24 +6,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import odms.controller.user.Display;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.model.user.User;
 import odms.model.enums.UserType;
+import odms.model.user.User;
 import odms.view.CommonView;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Handles all of the tabs for the user profile view.
+ */
 public class ClinicianProfile extends CommonView {
     private User currentUser;
-
-    @FXML
-    private static AnchorPane clinicianAp;
 
     @FXML
     private Label clinicianFullName;
@@ -31,7 +24,7 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Label donorStatusLabel;
     @FXML
-    private Tab viewUsersTab;
+    private Tab listUsersTab;
     @FXML
     private Tab consoleTab;
     @FXML
@@ -44,26 +37,20 @@ public class ClinicianProfile extends CommonView {
     private Tab transplantTab;
     @FXML
     private Tab availableOrgansTab;
-    @FXML
-    private odms.controller.user.DataManagement userDataManagementController;
-    private UserGeneral userGeneralTabView = new UserGeneral();
-    private ConsoleTab userConsoleTabView = new ConsoleTab();
-    private UsersList viewUsersView = new UsersList();
 
     private Display userProfileController = new Display(this);
-
 
     /**
      * Scene change to log in view.
      *
      * @param event clicking on the logout button.
+     * @throws IOException if the scene cannot be changed.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         currentUser = null;
         changeScene(event, "/view/Login.fxml");
     }
-
 
     /**
      * Sets all the clinicians details in the GUI.
@@ -74,7 +61,9 @@ public class ClinicianProfile extends CommonView {
         clinicianFullName.setText(currentUser.getName());
     }
 
-
+    /**
+     * Initializes the controller for the console tab.
+     */
     public void handleConsoleTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
         try {
@@ -87,21 +76,24 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the view users Tab
+     * Initializes the controller for the view users Tab.
      */
     public void handleViewUsersTabClicked() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ViewUsersTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ListUsersTab.fxml"));
         try {
-            viewUsersTab.setContent(loader.load());
-            UsersList viewUsersView = loader.getController();
-            viewUsersView.initialize();
+            listUsersTab.setContent(loader.load());
+            UsersList listUsersView = loader.getController();
+            listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
         } catch (IOException e){
+            e.printStackTrace();
+
             System.out.println(e.getMessage());
         }
-
-//        viewUsersView.setCurrentUser(currentUser);
     }
 
+    /**
+     * Initializes the general tab controller.
+     */
     public void handleGeneralTabClicked() {
         if (currentUser != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserGeneralTab.fxml"));
@@ -115,6 +107,9 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
+    /**
+     * Initializes the controller for the data management tab.
+     */
     public void handleTabDataManagementClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DataManagement.fxml"));
         try {
@@ -126,6 +121,9 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
+    /**
+     * Initializes the controller for available organs.
+     */
     public void handleTabAvailableClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserAvailableOrgansTab.fxml"));
         try {
@@ -138,21 +136,23 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them.
      */
     private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
             dataManagementTab.setDisable(true);
-            viewUsersTab.setDisable(true);
+            listUsersTab.setDisable(true);
             consoleTab.setDisable(true);
         } else {
             dataManagementTab.setDisable(false);
-            viewUsersTab.setDisable(false);
+            listUsersTab.setDisable(false);
             consoleTab.setDisable(false);
         }
     }
 
-    @FXML
+    /**
+     * Sets up all of the tabs and opens the general tab.
+     */
     public void initialize() {
         if (currentUser != null) {
             handleGeneralTabClicked();
@@ -165,6 +165,9 @@ public class ClinicianProfile extends CommonView {
         this.currentUser = currentUser;
     }
 
+    /**
+     * Initializes the search tab controller.
+     */
     public void handleSearchTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSearchTab.fxml"));
         try {
@@ -176,6 +179,9 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
+    /**
+     * Initializes the controller for the transplant waiting list.
+     */
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
         try {
@@ -187,13 +193,20 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
-    public boolean addToOpenProfileStages(Stage s) {
-        return userProfileController.addToOpenProfileStages(s);
+    /**
+     * Adds a stage to the list of currently open profile stages.
+     * @param s stage to add.
+     */
+    public void addToOpenProfileStages(Stage s) {
+        userProfileController.addToOpenProfileStages(s);
     }
 
+    /**
+     * Removes a stage from the currently open stages.
+     * @param stage stage to remove.
+     */
     public void closeStage(Stage stage) {
         userProfileController.removeStageFromProfileStages(stage);
-
         openProfileStages.remove(stage);
     }
 }
