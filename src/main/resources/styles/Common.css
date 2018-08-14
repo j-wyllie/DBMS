@@ -89,8 +89,6 @@
 
 .progress-bar-green > .bar {
     -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
-    -fx-padding: 1px;
-    -fx-background-insets: 0;
 }
 
 .progress-bar-red > .bar {
@@ -102,6 +100,23 @@
 }
 
 .lower-bound-heart {
-    -fx-background-image: url(ac.png);
+    -fx-background-image: url(/background_images/heart_line.png);
     -fx-background-size: cover, auto;
 }
+
+.lower-bound-pancreas {
+    -fx-background-image: url(/background_images/pancreas_line.png);
+    -fx-background-size: cover, auto;
+}
+
+.lower-bound-corneas {
+    -fx-background-image: url(/background_images/corneas_line.png);
+    -fx-background-size: cover, auto;
+}
+
+.lower-bound-generic {
+    -fx-background-image: url(/background_images/generic_line.png);
+    -fx-background-size: cover, auto;
+}
+
+

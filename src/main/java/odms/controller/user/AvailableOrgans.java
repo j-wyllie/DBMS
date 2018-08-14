@@ -141,6 +141,9 @@ public class AvailableOrgans {
             case HEART:
                 expiryTime = profile.getDateOfDeath().plusHours(6);
                 break;
+            case LUNG:
+                expiryTime = profile.getDateOfDeath().plusHours(6);
+                break;
             case PANCREAS:
                 expiryTime = profile.getDateOfDeath().plusHours(24);
                 break;
@@ -185,6 +188,9 @@ public class AvailableOrgans {
 
         switch (organ) {
             case HEART:
+                expiryTime = 6 * ONE_HOUR;
+                break;
+            case LUNG:
                 expiryTime = 6 * ONE_HOUR;
                 break;
             case PANCREAS:

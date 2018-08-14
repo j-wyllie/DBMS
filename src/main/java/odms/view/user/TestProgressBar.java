@@ -84,6 +84,13 @@ class TestProgressBar<S> extends TableCell<S, Double> {
 
     /** {@inheritDoc} */
     @Override public void updateItem(Double item, boolean empty) {
+        String value;
+
+        try {
+            value = String.valueOf(super.getTableView().getItems().get(super.getIndex()));
+        } catch (IndexOutOfBoundsException e) {
+            value = "";
+        }
         super.updateItem(item, empty);
         if(item != null) {
             if (item >= 0.8) {
@@ -94,7 +101,15 @@ class TestProgressBar<S> extends TableCell<S, Double> {
                 setRed();
             }
         }
-        getStyleClass().add("lower-bound-heart");
+        if(value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
+            getStyleClass().add("lower-bound-heart");
+        } else if(value.contains("CORNEAS")){
+            getStyleClass().add("lower-bound-corneas");
+        } else if(value.contains("PANCREAS")){
+            getStyleClass().add("lower-bound-pancreas");
+        } else if(!value.equals("") && !value.contains("LIVER")){
+            getStyleClass().add("lower-bound-generic");
+        }
 
 
 
