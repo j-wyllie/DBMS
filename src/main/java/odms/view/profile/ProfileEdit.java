@@ -178,10 +178,9 @@ public class ProfileEdit extends CommonView {
                 showNotificationFailed("profile", event);
             }
             closeWindow(event);
-        } catch (IllegalArgumentException | SQLException e) {
+        } catch (IllegalArgumentException e) {
             AlertController.invalidEntry(
-                    e.getMessage() + "\n" +
-                            "Changes not saved."
+                    e.getMessage() + "\n" + "Changes not saved."
             );
         }
     }

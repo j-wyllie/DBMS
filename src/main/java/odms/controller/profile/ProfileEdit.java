@@ -3,7 +3,7 @@ package odms.controller.profile;
 import static odms.App.getProfileDb;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
@@ -38,8 +38,10 @@ public class ProfileEdit extends CommonController {
      * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public Boolean save() throws IllegalArgumentException, SQLException {
-        // History Generation
+    public Boolean save() {
+        if (AlertController.saveChanges()) {
+            try {
+                // History Generation
                 odms.model.history.History action = new odms.model.history.History(
                         "profile",
                         currentProfile.getId(),
@@ -80,26 +82,26 @@ public class ProfileEdit extends CommonController {
                 saveCountry();
                 saveRegion();
 
-        ProfileDAO database = DAOFactory.getProfileDao();
-        database.update(currentProfile);
-        ProfileDataIO.saveData(getProfileDb());
+                ProfileDAO database = DAOFactory.getProfileDao();
+                database.update(currentProfile);
+                ProfileDataIO.saveData(getProfileDb());
 
-        // history Changes
-        action.setHistoryData(
-                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-        action.setHistoryTimestamp(LocalDateTime.now());
-        CurrentHistory.updateHistory(action);
+                // history Changes
+                action.setHistoryData(
+                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                CurrentHistory.updateHistory(action);
 
-        return true; // successful edit
-    } catch (Exception e) {
-        AlertController.invalidEntry(
-                e.getMessage() + "\n" + "Changes not saved."
-        );
-        return false; // unsuccessful edit
+                return true; // successful edit
+            } catch (Exception e) {
+                AlertController.invalidEntry(
+                        e.getMessage() + "\n" + "Changes not saved."
+                );
+                return false; // unsuccessful edit
+            }
+        }
+        return false;
     }
-}
-        return true; // successful edit
-                }
 
     /**
      * Saves the death details of the profile.
@@ -131,7 +133,6 @@ public class ProfileEdit extends CommonController {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-        return true; // successful edit
     }
 
     /**

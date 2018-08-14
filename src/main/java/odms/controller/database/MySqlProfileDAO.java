@@ -1,6 +1,5 @@
 package odms.controller.database;
 
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import odms.model.enums.OrganEnum;
-import odms.model.medications.Drug;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Procedure;
 import odms.model.profile.Profile;
@@ -514,15 +512,14 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public void update(Profile profile) throws SQLException {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
-                + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
-                + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
-                + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
-                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ? where ProfileId = ?;";
-                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
-                + "Created = ?, LastUpdated = ?, PreferredName = ?, PreferredGender = ?, "
-                + "ImageName = ? where ProfileId = ?;";
+                + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, "
+                + "Weight = ?, BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, "
+                + "BloodPressureDiastolic = ?, BloodPressureSystolic = ?, Address = ?, Region = ?, "
+                + "Phone = ?, Email = ?, Country = ?, BirthCountry = ?, CountryOfDeath = ?, "
+                + "RegionOfDeath = ?, CityOfDeath = ?, StreetNo = ?, StreetName = ?, "
+                + "Neighbourhood = ?, Created = ?, LastUpdated = ?, PreferredName = ?, "
+                + "PreferredGender = ?, ImageName = ? "
+                +  "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -563,11 +560,10 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(28, profile.getNeighbourhood());
             stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
-            stmt.setTimestamp(22, Timestamp.valueOf(profile.getLastUpdated()));
             stmt.setString(31, profile.getPreferredName());
-            stmt.setString(24, profile.getPreferredGender());
-            stmt.setString(25, profile.getPictureName());
-            stmt.setInt(26, profile.getId());
+            stmt.setString(32, profile.getPreferredGender());
+            stmt.setString(33, profile.getPictureName());
+            stmt.setInt(34, profile.getId());
 
             stmt.executeUpdate();
 
