@@ -222,7 +222,6 @@ public class CommandLine implements Runnable {
             case CLINICIANUPDATE:
                 // Search clinician.
                 User.updateUserBySearch(rawInput, "clinician");
-                System.out.println("Clinician(s) successfully updated.");
                 break;
 
             case CLINICIANEVIEW:
