@@ -24,11 +24,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,
     "Jack", "Hay", LocalDate.of(1997, 12, 29), null, "male",
     180d, 81d, "O-", true, null, 133, 80, "123 fake street", "Canterbury", "314324134",
-    "jha56@uclive.ac.nz", LocalDateTime.now(), LocalDateTime.now());
-    private Profile testProfileLong1 = new Profile(1, "HSD7892", "FaZe_Josh", true, true,
-            "Josh", "Wyllie", LocalDate.of(1997, 7, 18), null, "male",
-            182d, 79d, "O+", false, null, 144, 85, "321 imaginary place", "Canterbury", "314352341",
-            "jwy31@uclive.ac.nz", LocalDateTime.now(), LocalDateTime.now());
+    "jha56@uclive.ac.nz", "NZ", "not", "Noot", "Neet", "Reee", LocalDateTime.now(), LocalDateTime.now());
     private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
     private Profile testProfile1 = new Profile("Jack", "Hay", LocalDate.of(1998, 2, 27), "CBA43211");
 
@@ -83,10 +79,11 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     public void testupdate() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
-        testProfile0.setDateOfDeath(LocalDate.now());
+        //todo way to set time of death
+        testProfile0.setDateOfDeath(LocalDateTime.now());
         mySqlProfileDAO.update(testProfile0);
 
-        assertEquals(LocalDate.now(), mySqlProfileDAO.get("ABC1234").getDateOfDeath());
+        assertEquals(LocalDate.now(), LocalDate.from(mySqlProfileDAO.get("ABC1234").getDateOfDeath()));
     }
 
     @Test
@@ -106,7 +103,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     @Test
     public void testSize() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
-        assertEquals(1, mySqlProfileDAO.size());
+        assertEquals(new Integer(1), mySqlProfileDAO.size());
     }
 
     @Test
@@ -115,7 +112,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile0);
         Profile newProfile = mySqlProfileDAO.get("ABC1234");
         MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
-        mySqlOrganDAO.addReceived(newProfile, OrganEnum.LIVER);
+        mySqlOrganDAO.addRequired(newProfile, OrganEnum.LIVER);
         assertEquals(1, mySqlProfileDAO.getAllReceiving().size());
     }
 

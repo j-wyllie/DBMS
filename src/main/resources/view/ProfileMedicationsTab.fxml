@@ -8,7 +8,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml"
     prefHeight="400.0" prefWidth="600.0"
-        fx:controller="odms.view.profile.ProfileMedicationsView">
+        fx:controller="odms.view.profile.MedicationsGeneral">
     <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
         AnchorPane.rightAnchor="-1.0"
         AnchorPane.topAnchor="-1.0" layoutY="-3.0"

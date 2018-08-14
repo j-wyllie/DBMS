@@ -1,7 +1,6 @@
 package odms.model.profile;
 
 import java.util.Set;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,17 +10,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import odms.controller.history.HistoryController;
+import odms.controller.history.CurrentHistory;
 import odms.model.enums.BloodTypeEnum;
 import odms.model.enums.CountriesEnum;
 import odms.model.enums.OrganEnum;
-import odms.model.history.History;
 import odms.model.medications.Drug;
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
     //TODO do we want regions as enum? Or stored somewhere else at least
+    //TODO merge must have taken all the old useless methods need to get rid of them
     public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
     private Boolean donor = false;
@@ -32,7 +31,7 @@ public class Profile implements Comparable<Profile> {
     private String lastNames;
     private String preferredName;
     private LocalDate dateOfBirth;
-    private LocalDate dateOfDeath;
+    private LocalDateTime dateOfDeath;
     private String gender;
     private String preferredGender;
     private Double height = 0.0;
@@ -71,6 +70,7 @@ public class Profile implements Comparable<Profile> {
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
+    private HashSet<OrganEnum> organsExpired = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -140,11 +140,12 @@ public class Profile implements Comparable<Profile> {
         );
     }
 
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
-            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+    public Profile(Integer profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, LocalDateTime created, LocalDateTime updated) {
+            Integer bpSystolic, Integer bpDiastolic, String address, String region, String phone,
+            String email, String country, String city, String countryOfDeath, String regionOfDeath,
+            String cityOfDeath, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -166,8 +167,53 @@ public class Profile implements Comparable<Profile> {
         this.region = region;
         this.phone = phone;
         this.email = email;
+        this.country = country;
+        this.city = city;
+        this.countryOfDeath = countryOfDeath;
+        this.cityOfDeath = cityOfDeath;
+        this.regionOfDeath = regionOfDeath;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
+    }
+
+    public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
+            Double height, Double weight, String bloodType, Boolean isSmoker,
+            String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
+            String streetNo, String streetName, String neighbourhood, String city, String zipCode,
+            String region, String country, String birthCountry, String phone, String email,
+            LocalDateTime created, LocalDateTime updated) {
+        this.id = id;
+        this.nhi = nhi;
+        this.username = username;
+        this.donor = isDonor;
+        this.receiver = isReceiver;
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.dateOfDeath = dod;
+        this.birthCountry = birthCountry;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.isSmoker = isSmoker;
+        this.alcoholConsumption = alcoholConsumption;
+        this.bloodPressureSystolic = bpSystolic;
+        this.bloodPressureDiastolic = bpDiastolic;
+        this.address = address;
+        this.region = region;
+        this.phone = phone;
+        this.email = email;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+        this.streetNumber = streetNo;
+        this.streetName = streetName;
+        this.neighbourhood = neighbourhood;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+        this.birthCountry = country;
     }
 
     /**
@@ -231,10 +277,11 @@ public class Profile implements Comparable<Profile> {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(
+                //TODO set a way to actually set time of death
+                LocalDateTime date = LocalDateTime.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[0])
+                        Integer.valueOf(dates[0]),0,0
                 );
                 setDateOfDeath(date);
                 setCountryOfDeath(getCountry());
@@ -405,9 +452,9 @@ public class Profile implements Comparable<Profile> {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
             organ.setDate(LocalDate.now());
-            History action = new History("Profile", this.getId(),"required organ",
+            odms.model.history.History action = new odms.model.history.History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -429,9 +476,9 @@ public class Profile implements Comparable<Profile> {
             }
             this.addOrganDonating(organ);
 
-            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),
+            odms.model.history.History action = new odms.model.history.History("Profile ", this.getId(),"set",organ.getNamePlain(),
                     -1,LocalDateTime.now());
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -460,9 +507,10 @@ public class Profile implements Comparable<Profile> {
         generateUpdateInfo("organsReceived");
 
         for (OrganEnum organ : organs) {
-            addOrganReceived(organ);History action = new History("Profile ", this.getId(),
+            addOrganReceived(organ);
+            odms.model.history.History action = new odms.model.history.History("Profile ", this.getId(),
                     "received",organ.getNamePlain(),-1,LocalDateTime.now());
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -492,7 +540,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
-            History action = new History(
+            odms.model.history.History action = new odms.model.history.History(
                     "Profile ",
                     this.getId(),
                     "donated",
@@ -500,7 +548,7 @@ public class Profile implements Comparable<Profile> {
                     -1,
                     LocalDateTime.now()
             );
-            HistoryController.updateHistory(action);
+            CurrentHistory.updateHistory(action);
         }
     }
 
@@ -546,7 +594,7 @@ public class Profile implements Comparable<Profile> {
         if (dateOfDeath == null) {
             return Period.between(dateOfBirth, LocalDate.now()).getYears();
         } else {
-            return Period.between(dateOfBirth, dateOfDeath).getYears();
+            return Period.between(dateOfBirth, dateOfDeath.toLocalDate()).getYears();
         }
     }
 
@@ -583,6 +631,8 @@ public class Profile implements Comparable<Profile> {
     public HashSet<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
+
+    public HashSet<OrganEnum> getOrgansExpired() {return organsExpired;}
 
     // Condition functions
 
@@ -687,12 +737,12 @@ public class Profile implements Comparable<Profile> {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDate getDateOfDeath() {
+    public LocalDateTime getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(LocalDate dateOfDeath) {
-        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath)) {
+    public void setDateOfDeath(LocalDateTime dateOfDeath) {
+        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath.toLocalDate())) {
             throw new IllegalArgumentException(
                     "Date of death cannot be before date of birth"
             );

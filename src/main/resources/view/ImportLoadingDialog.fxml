@@ -9,45 +9,45 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ImportLoadingDialogView">
-    <children>
-        <GridPane layoutY="4.0" prefWidth="400.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="100.0" vgrow="NEVER" />
-                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="97.0" valignment="CENTER" vgrow="NEVER" />
-                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-            </rowConstraints>
-            <children>
-                <ProgressBar fx:id="progressBarImport" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="200.0" progress="0.0" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.valignment="CENTER">
-                    <GridPane.margin>
-                        <Insets />
-                    </GridPane.margin>
-                </ProgressBar>
-                <Button fx:id="buttonImportConfirm" disable="true" mnemonicParsing="false" prefWidth="100.0" text="Confirm" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                    <GridPane.margin>
-                        <Insets />
-                    </GridPane.margin>
-                </Button>
-                <Button fx:id="buttonImportCancel" mnemonicParsing="false" prefWidth="100.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                <TableView fx:id="tableStatus" fixedCellSize="25.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                    <GridPane.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                    </GridPane.margin>
-                </TableView>
-            </children>
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </padding>
-        </GridPane>
-    </children>
+<AnchorPane prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ImportLoadingDialog">
+   <children>
+       <GridPane layoutY="4.0" prefWidth="400.0">
+           <columnConstraints>
+               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="100.0" vgrow="NEVER" />
+               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="97.0" valignment="CENTER" vgrow="NEVER" />
+               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+           </rowConstraints>
+           <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+           </padding>
+          <children>
+              <ProgressBar fx:id="progressBarImport" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="200.0" progress="0.0" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.valignment="CENTER">
+                  <GridPane.margin>
+                      <Insets />
+                  </GridPane.margin>
+              </ProgressBar>
+              <Button fx:id="buttonImportConfirm" disable="true" mnemonicParsing="false" prefWidth="100.0" text="Confirm" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                  <GridPane.margin>
+                      <Insets />
+                  </GridPane.margin>
+              </Button>
+              <Button fx:id="buttonImportCancel" mnemonicParsing="false" prefWidth="100.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+              <TableView fx:id="tableStatus" fixedCellSize="25.0" focusTraversable="false" pickOnBounds="false" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                  <columnResizePolicy>
+                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
+                  <opaqueInsets>
+                      <Insets />
+                  </opaqueInsets>
+                  <GridPane.margin>
+                      <Insets bottom="10.0" top="10.0" />
+                  </GridPane.margin>
+              </TableView>
+          </children>
+       </GridPane>
+   </children>
 </AnchorPane>
