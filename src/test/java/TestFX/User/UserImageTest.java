@@ -1,25 +1,25 @@
 package TestFX.User;
 
-import javafx.scene.Scene;
-import odms.model.user.User;
+import static org.testfx.api.FxAssert.verifyThat;
+
 import org.junit.Test;
 
 public class UserImageTest extends UserTest {
 
-    private void testAddImage(User user) {
-//        Scene scene = lookup("#editButton")
-        createUserWindow(testUserAdmin);
-        clickOn("#editButton");
+    private void testAddImage() {
+        createUserGeneralTab(testUserAdmin);
+        moveTo(0,0);
+        clickOn("#editClinicianButton");
+        clickOn("#imagePicker");
+
     }
 
     @Test
-    public void testAddImageToAdmin() {
-        testAddImage(testUserAdmin);
-    }
+    public void testAddImageToAdmin() { testAddImage(); }
 
     @Test
     public void testAddImageToClinician() {
-        testAddImage(testUserClinician);
+        testAddImage();
     }
 
 

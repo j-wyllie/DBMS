@@ -1,15 +1,16 @@
 package TestFX.User;
 
-import static odms.controller.AlertController.invalidUsername;
-
 import TestFX.TestFXTest;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import odms.model.enums.UserType;
 import odms.model.user.User;
 import odms.view.user.ClinicianProfile;
+import odms.view.user.UserGeneral;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
@@ -38,22 +39,23 @@ public class UserTest extends TestFXTest {
      *
      * @param user the test user to make window from.
      */
-    protected void createUserWindow(User user) {
+    protected void createUserGeneralTab(User user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(
-                    getClass().getResource("/view/ClinicianProfile.fxml")
+                    getClass().getResource("/view/UserGeneralTab.fxml")
             );
 
             Scene scene = new Scene(fxmlLoader.load());
-            ClinicianProfile v = fxmlLoader.getController();
-            v.setCurrentUser(user);
-            v.initialize();
+            UserGeneral v = fxmlLoader.getController();
+            v.initialize(user);
 
-            Stage stage = new Stage();
-            stage.setTitle(user.getUserType().getName());
-            stage.setScene(scene);
-            stage.show();
+            Platform.runLater(() -> {
+                Stage stage = new Stage();
+                stage.setTitle(user.getUserType().getName());
+                stage.setScene(scene);
+                stage.show();
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +69,7 @@ public class UserTest extends TestFXTest {
     }
 
     @BeforeClass
-    public static void setupClass() {
+    public static void setupClass() throws TimeoutException {
         setupTestFX();
     }
 

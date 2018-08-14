@@ -6,12 +6,13 @@ import javafx.scene.input.MouseButton;
 import org.junit.After;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import static org.testfx.api.FxToolkit.registerPrimaryStage;
 
 public abstract class TestFXTest extends ApplicationTest {
 
     private final static Boolean headlessMode = false;
 
-    protected static void setupTestFX() {
+    protected static void setupTestFX() throws TimeoutException {
         if (headlessMode) {
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
@@ -20,9 +21,9 @@ public abstract class TestFXTest extends ApplicationTest {
             System.setProperty("testfx.setup.timeout", "2500");
             System.setProperty("headless.geometry", "1920x1080-32");
         } else {
-            System.setProperty("testfx.robot.write_sleep", "10");
+            System.setProperty("testfx.robot.write_sleep", "1");
         }
-
+        registerPrimaryStage();
     }
 
     @After
