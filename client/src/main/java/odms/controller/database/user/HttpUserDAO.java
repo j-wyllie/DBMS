@@ -23,14 +23,14 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public List<User> getAll() {
         String url = "http://localhost:6969/api/v1/users/all";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         return getArrayRequest(url, queryParams);
     }
 
     @Override
     public User get(int userId) throws UserNotFoundException {
         String url = "http://localhost:6969/api/v1/users";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("id", String.valueOf(userId));
         return getSingleRequest(url, queryParams);
     }
@@ -38,7 +38,7 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public User get(String username) throws UserNotFoundException {
         String url = "http://localhost:6969/api/v1/users";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
         return getSingleRequest(url, queryParams);
     }
@@ -47,7 +47,7 @@ public class HttpUserDAO implements UserDAO {
     public void add(User user) throws IllegalArgumentException {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/users";
-        Map<String, String> queryParams = new HashMap<>();
+        Map<String, Object> queryParams = new HashMap<>();
 
         String body = gson.toJson(user);
         Request request = new Request(url, 0, queryParams, body);
@@ -100,7 +100,7 @@ public class HttpUserDAO implements UserDAO {
         return null;
     }
 
-    private User getSingleRequest(String url, Map<String, String> queryParams)
+    private User getSingleRequest(String url, Map<String, Object> queryParams)
             throws UserNotFoundException {
         Gson parser = new Gson();
         Response response = null;
@@ -116,16 +116,18 @@ public class HttpUserDAO implements UserDAO {
         }
         else if (response.getStatus() == 400) {
             if (queryParams.keySet().contains("id")) {
-                throw new UserNotFoundException("User not found", Integer.valueOf(queryParams.get("id")));
+                throw new UserNotFoundException("User not found",
+                        Integer.valueOf(queryParams.get("id").toString()));
             }
             else if (queryParams.keySet().contains("username")) {
-                throw new UserNotFoundException("User not found", queryParams.get("username"));
+                throw new UserNotFoundException("User not found",
+                        queryParams.get("username").toString());
             }
         }
         return null;
     }
 
-    private List<User> getArrayRequest(String url, Map<String, String> queryParams) {
+    private List<User> getArrayRequest(String url, Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;

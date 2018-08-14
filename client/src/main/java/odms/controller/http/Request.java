@@ -12,17 +12,17 @@ public class Request {
 
     private String urlString;
     private int token;
-    private Map<String, String> queryParams;
+    private Map<String, Object> queryParams;
     private String body;
 
-    public Request(String urlString, int token, Map<String, String> queryParams, String body) {
+    public Request(String urlString, int token, Map<String, Object> queryParams, String body) {
         this.urlString = urlString;
         this.token = token;
         this.queryParams = queryParams;
         this.body = body;
     }
 
-    public Request(String urlString, int token, Map<String, String> queryParams) {
+    public Request(String urlString, int token, Map<String, Object> queryParams) {
         this.urlString = urlString;
         this.token = token;
         this.queryParams = queryParams;
@@ -94,8 +94,8 @@ public class Request {
     }
 
     private String execute(HttpURLConnection con) throws IOException {
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(60000);
+        con.setReadTimeout(60000);
 
         StringBuffer responseContent = new StringBuffer();
         BufferedReader response;
@@ -103,6 +103,7 @@ public class Request {
             response = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
         } catch (Exception e) {
+            e.printStackTrace();
             response = new BufferedReader(
                     new InputStreamReader(con.getErrorStream()));
         }
@@ -117,7 +118,7 @@ public class Request {
         return body;
     }
 
-    private String constructUrl(String urlString, Map<String, String> queryParams) {
+    private String constructUrl(String urlString, Map<String, Object> queryParams) {
         Object[] keys = queryParams.keySet().toArray();
         for (int i = 0; i < queryParams.size(); i++) {
             String key = (String) keys[i];
