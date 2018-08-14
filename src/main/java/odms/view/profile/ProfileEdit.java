@@ -386,8 +386,10 @@ public class ProfileEdit extends CommonView {
         controller.populateDeathFields();
     }
 
+    /**
+     * Sets up the location fields to be populated with the correct countries and regions.
+     */
     private void setUpLocationFields() {
-
         //Populating combo box values
         CountryDAO database = DAOFactory.getCountryDAO();
 

@@ -57,12 +57,7 @@ public class UserGeneral {
     private MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList = FXCollections
             .observableArrayList(
-                    new Callback<CountriesEnum, Observable[]>() {
-                        @Override
-                        public Observable[] call(CountriesEnum param) {
-                            return new Observable[]{param.getValidProperty()};
-                        }
-                    });
+                    param -> new Observable[]{param.getValidProperty()});
 
 
     /**
@@ -209,6 +204,10 @@ public class UserGeneral {
         });
     }
 
+    /**
+     * Initializes all of the labels and checks the user type.
+     * @param currentUser The current user logged in.
+     */
     public void initialize(User currentUser) {
         this.currentUser = currentUser;
         givenNamesLabel.setText(

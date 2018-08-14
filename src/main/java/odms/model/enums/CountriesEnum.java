@@ -225,6 +225,7 @@ public enum CountriesEnum {
 
     /**
      * Generate an ArrayList of strings of country names.
+     *
      * @return the array list of countries
      */
     public static List<String> toArrayList() {
@@ -238,15 +239,24 @@ public enum CountriesEnum {
         return countryStrings;
     }
 
-    public static CountriesEnum getEnumByString(String name){
-        for(CountriesEnum e : CountriesEnum.values()){
-            if(name.equals(e.name)) return e;
+    /**
+     * Gets the value of the enum from the name.
+     *
+     * @param name Name to be converted to enum.
+     * @return The converted name to the country enum.
+     */
+    public static CountriesEnum getEnumByString(String name) {
+        for (CountriesEnum e : CountriesEnum.values()) {
+            if (name.equals(e.name)) {
+                return e;
+            }
         }
         return null;
     }
 
     /**
      * Creates a list of the enum country values.
+     *
      * @return list of country enum values.
      */
     public static List<String> getValuesAsStrings() {
@@ -259,6 +269,7 @@ public enum CountriesEnum {
 
     /**
      * Gets the name of a country.
+     *
      * @param string string of country to be converted.
      * @return country name.
      */
