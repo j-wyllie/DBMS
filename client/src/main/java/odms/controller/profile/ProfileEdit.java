@@ -86,11 +86,11 @@ public class ProfileEdit extends CommonController {
             database.update(currentProfile);
 
             // TODO: update history.
-//            // history Changes
-//            action.setHistoryData(
-//                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-//            action.setHistoryTimestamp(LocalDateTime.now());
-//            CurrentHistory.updateHistory(action);
+            // history Changes
+            action.setHistoryData(
+                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+            action.setHistoryTimestamp(LocalDateTime.now());
+            CurrentHistory.updateHistory(action);
 
         }
     }

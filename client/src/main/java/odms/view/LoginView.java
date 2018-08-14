@@ -85,7 +85,7 @@ public class LoginView extends CommonController {
             } catch (UserNotFoundException u) {
 
                 try {
-                    ProfileDAO database = DAOFactory.getProfileHttpDao();
+                    ProfileDAO database = DAOFactory.getProfileDao();
                     Profile currentProfile = database.get(username);
 
                     if (currentProfile != null) {

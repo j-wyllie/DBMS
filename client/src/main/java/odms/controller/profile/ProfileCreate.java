@@ -61,7 +61,7 @@ public class ProfileCreate extends CommonController {
                 String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
-                DAOFactory.getProfileHttpDao().add(newProfile);
+                DAOFactory.getProfileDao().add(newProfile);
                 return newProfile;
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {

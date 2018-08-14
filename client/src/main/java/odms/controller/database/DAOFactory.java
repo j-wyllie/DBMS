@@ -1,11 +1,11 @@
 package odms.controller.database;
 
+import odms.controller.database.common.CommonDAO;
+import odms.controller.database.common.MySqlCommonDAO;
 import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.condition.MySqlConditionDAO;
 import odms.controller.database.country.CountryDAO;
 import odms.controller.database.country.MySqlCountryDAO;
-import odms.controller.database.common.CommonDAO;
-import odms.controller.database.common.MySqlCommonDAO;
 import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.medication.MedicationDAO;
@@ -17,7 +17,9 @@ import odms.controller.database.procedure.ProcedureDAO;
 import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.database.profile.ProfileDAO;
+import odms.controller.database.user.HttpUserDAO;
 import odms.controller.database.user.UserDAO;
+
 
 public class DAOFactory {
 
@@ -29,21 +31,15 @@ public class DAOFactory {
 
     /**
      * Gives the data access object class for the User object.
-     * @return dao for User object database transactions.
+     * @return dao for User object http transactions.
      */
-    public static UserDAO getUserDao() { return new odms.controller.database.MySqlUserDAO(); }
-
-    /**
-     * Gives the data access object class for the Profile object.
-     * @return dao for the Profile object database transactions.
-     */
-    public static ProfileDAO getProfileDao() { return new MySqlProfileDAO(); }
+    public static UserDAO getUserDao() { return new HttpUserDAO(); }
 
     /**
      * Gives the data access object class for the Profile object.
      * @return dao for the Profile object http transactions.
      */
-    public static ProfileDAO getProfileHttpDao() { return new HttpProfileDAO(); }
+    public static ProfileDAO getProfileDao() { return new HttpProfileDAO(); }
 
     /**
      * Gives the data access object class for the Drug object.
