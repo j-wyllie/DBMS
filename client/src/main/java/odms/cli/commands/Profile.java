@@ -121,10 +121,10 @@ public class Profile extends CommandUtils {
             //CurrentHistory.updateHistory(action);
 
         } else {
-        System.out.println(searchNotFoundText);
-    }
+            System.out.println(searchNotFoundText);
+        }
 
-}
+    }
 
     /**
      * Update profile attributes.

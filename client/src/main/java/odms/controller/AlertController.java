@@ -211,7 +211,6 @@ public class AlertController {
             alert.close();
             return true;
         } else {
-            System.out.println(false);
             return false;
         }
     }

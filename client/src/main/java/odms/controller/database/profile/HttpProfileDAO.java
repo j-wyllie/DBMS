@@ -104,7 +104,6 @@ public class HttpProfileDAO implements ProfileDAO {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles/all";
 
-        System.out.println(searchString);
         Map<String, Object> body = new HashMap<>();
         body.put("searchString", searchString);
         body.put("ageSearchInt", ageSearchInt);

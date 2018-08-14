@@ -100,7 +100,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             );
             if (date.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException(
-                        "Date of birth cannot be a future date"
+                        "Date of birth cannot be a future date."
                 );
             }
             profile.setDateOfBirth(date);
@@ -129,7 +129,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 }
                 profile.setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid height entered");
+                throw new IllegalArgumentException("Invalid height entered.");
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
@@ -138,7 +138,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 }
                 profile.setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid weight entered");
+                throw new IllegalArgumentException("Invalid weight entered.");
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
             if (value.equals("null") || value.equals("")) {
@@ -159,7 +159,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                         profile.getCountry()
                                 .equalsIgnoreCase(CountriesEnum.NZ.toString())) &&
                         !NewZealandRegionsEnum.toArrayList().contains(value)) {
-                    throw new IllegalArgumentException("Must be a region within New Zealand");
+                    throw new IllegalArgumentException("Must be a region within New Zealand.");
                 }
             }
             profile.setRegion(value);
@@ -167,7 +167,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             try {
                 profile.setNhi(value);
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid NHI entered");
+                throw new IllegalArgumentException("Invalid NHI entered.");
             }
         } else if (attrName.equals("isSmoker")) {
             profile.setIsSmoker(Boolean.valueOf(value));
@@ -190,12 +190,12 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         } else if (attrName.equals("email")) {
             profile.setEmail(value);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid field '" + attrName + "'.");
         }
         try {
             DAOFactory.getProfileDao().update(profile);
         } catch (SQLException e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cannot update fields.");
         }
         System.out.println("profile(s) successfully updated.");
 
