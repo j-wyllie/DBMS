@@ -128,6 +128,11 @@ public class OrganDisplay extends CommonView {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
     }
 
+    @FXML
+    private void handleExpiredClicked(ActionEvent event) throws IOException {
+        showExpiredOrgans(event);
+    }
+
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
      * conflicting organs.
@@ -201,6 +206,37 @@ public class OrganDisplay extends CommonView {
 
         Stage stage = new Stage();
         stage.setTitle(selectType.toString());
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(source.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.centerOnScreen();
+//        stage.setOnCloseRequest(ob -> {
+        stage.setOnHiding((ob) -> {
+            populateOrganLists();
+            refreshListViews();
+        });
+        stage.show();
+    }
+
+    /**
+     * Display the Organ Expired view.
+     *
+     * @param event      the base action event
+     * @throws IOException if the fxml cannot load
+     */
+    private void showExpiredOrgans(ActionEvent event)
+            throws IOException {
+        Node source = (Node) event.getSource();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/UserOrgansExpired.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        OrganExpired view = fxmlLoader.getController();
+        view.initialize(currentProfile);
+
+        Stage stage = new Stage();
+        stage.setTitle("Expired Organs");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(source.getScene().getWindow());
