@@ -95,19 +95,16 @@ public class AvailableOrgans extends CommonView {
 
 
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
-        potentialOrganMatchTable.setSortPolicy(param -> {
-            Comparator<Profile> comparator = (o1, o2) -> {
-                if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) > controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()))
+        Comparator<Profile> comparator1 = (o1, o2) -> {
+            if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) > controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()))
                     return 1;
-                else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) == controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired())) {
-                    return 0;
-                } else {
+            else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) == controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired())) {
+                return 0;
+            } else {
                     return -1;
-                }
-            };
-            FXCollections.sort(potentialOrganMatchTable.getItems(), comparator);
-            return true;
-        });
+            }
+        };
+        FXCollections.sort(potentialOrganMatchTable.getItems(), comparator1);
 
         potentialOrganMatchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
@@ -190,6 +187,17 @@ public class AvailableOrgans extends CommonView {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
+            Comparator<Map.Entry<Profile, OrganEnum>> comparator = (o1, o2) -> {
+                if(getTimeRemaining(o1.getValue(), o1.getKey()) < getTimeRemaining(o2.getValue(), o2.getKey())) {
+                    return -1;
+                } else if(getTimeRemaining(o2.getValue(), o2.getKey()) < getTimeRemaining(o1.getValue(), o1.getKey())) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            };
+        FXCollections.sort(availableOrgansTable.getItems(), comparator);
         availableOrgansTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
@@ -213,27 +221,27 @@ public class AvailableOrgans extends CommonView {
      */
     public void setAvailableOrgansList() throws SQLException{
         listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
-        sortList(listOfAvailableOrgans);
+        availableOrgansTable.setItems(listOfAvailableOrgans);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
-    /**
-     * Sorts the of organs list based on time till expiry.
-     */
-    public void sortList(ObservableList list) {
-        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(list,
-                (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
-                    if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
-                        return -1;
-                    } else if(getTimeRemaining(donor2.getValue(), donor2.getKey()) < getTimeRemaining(donor1.getValue(), donor1.getKey())) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                });
-        availableOrgansTable.setItems(sortedDonaters
-        );
-    }
+//    /**
+//     * Sorts the of organs list based on time till expiry.
+//     */
+//    public void sortList(ObservableList list) {
+//        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(list,
+//                (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
+//                    if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
+//                        return -1;
+//                    } else if(getTimeRemaining(donor2.getValue(), donor2.getKey()) < getTimeRemaining(donor1.getValue(), donor1.getKey())) {
+//                        return 1;
+//                    } else {
+//                        return 0;
+//                    }
+//                });
+//        availableOrgansTable.setItems(sortedDonaters
+//        );
+//    }
 
     /**
      * Populates available organs table with ALL available organs in database
@@ -270,9 +278,9 @@ public class AvailableOrgans extends CommonView {
             }
         }
         if(listOfFilteredAvailableOrgans.size()!= 0 || organsCombobox.getCheckModel().getCheckedItems().size() != 0 || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
-            sortList(listOfFilteredAvailableOrgans);
+            availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
         } else {
-            sortList(listOfAvailableOrgans);
+            availableOrgansTable.setItems(listOfAvailableOrgans);
         }
     }
 
@@ -313,6 +321,7 @@ public class AvailableOrgans extends CommonView {
             public void run() {
                 List<Map.Entry<Profile, OrganEnum>> toRemove = new ArrayList<>();
                 availableOrgansTable.refresh();
+                potentialOrganMatchTable.refresh();
                 for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
                     toRemove.add(m);
                 }
