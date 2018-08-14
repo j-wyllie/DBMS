@@ -181,7 +181,7 @@ public class MySqlUserDAO implements UserDAO {
             ResultSet result = stmt.executeQuery();
             if (result.last()) {
                 result.beforeFirst();
-                return (result.next());
+                return !(result.next());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -189,7 +189,7 @@ public class MySqlUserDAO implements UserDAO {
             conn.close();
             stmt.close();
         }
-        return false;
+        return true;
     }
 
     /**
