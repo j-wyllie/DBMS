@@ -138,6 +138,28 @@ public class Profile implements Comparable<Profile> {
                 dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 nhi
         );
+        this.donor = false;
+        this.receiver = false;
+        this.dateOfDeath = null;
+        this.gender = null;
+        this.height = 0.0;
+        this.weight = 0.0;
+        this.bloodType = null;
+        this.isSmoker = null;
+        this.alcoholConsumption = null;
+        this.bloodPressureSystolic = 0;
+        this.bloodPressureDiastolic = 0;
+        this.address = null;
+        this.region = null;
+        this.phone = null;
+        this.email = null;
+        this.country = null;
+        this.city = null;
+        this.countryOfDeath = null;
+        this.cityOfDeath = null;
+        this.regionOfDeath = null;
+        this.timeOfCreation = LocalDateTime.now();
+        this.lastUpdated = LocalDateTime.now();
     }
 
     public Profile(Integer profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
