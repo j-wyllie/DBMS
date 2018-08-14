@@ -25,7 +25,7 @@ public class ProfileController {
      * @param res sent back.
      * @return the response body, a list of all profiles.
      */
-    public String getAll(Request req, Response res) {
+    public static String getAll(Request req, Response res) {
         String profiles;
         try {
             if (req.queryMap().hasKey("receiving")
@@ -49,7 +49,7 @@ public class ProfileController {
      * @param req received.
      * @return json string of profiles.
      */
-    private String getReceiving(Request req) {
+    private static String getReceiving(Request req) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
@@ -72,7 +72,7 @@ public class ProfileController {
      * @return json string of profiles.
      * @throws SQLException error.
      */
-    private String getAll(Request req) throws SQLException {
+    private static String getAll(Request req) throws SQLException {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
