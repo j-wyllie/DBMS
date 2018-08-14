@@ -60,7 +60,7 @@ public class CreateAccount extends CommonView {
     @FXML
     private void handleLoginLinkClicked(ActionEvent event) throws IOException {
         //controller.login();
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
     public void initialize() {

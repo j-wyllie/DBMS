@@ -40,10 +40,11 @@ public class CommonView {
      * @param event clicking on the logout button.
      */
     @FXML
-    protected void changeScene(ActionEvent event, String resourceName) throws IOException {
+    protected void changeScene(ActionEvent event, String resourceName, String title) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(resourceName));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setTitle(title);
         appStage.setScene(newScene);
         appStage.show();
     }

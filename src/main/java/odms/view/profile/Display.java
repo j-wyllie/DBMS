@@ -77,7 +77,7 @@ public class Display extends CommonView {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         //todo showLoginScene(event);
         currentProfile = null;
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
 

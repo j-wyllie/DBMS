@@ -64,7 +64,7 @@ public class ClinicianProfile extends CommonView {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         userProfileController.closeAllOpenStages();
         currentUser = null;
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
     /**
