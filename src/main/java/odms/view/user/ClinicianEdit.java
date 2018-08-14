@@ -2,11 +2,11 @@ package odms.view.user;
 
 import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
+import static odms.controller.AlertController.saveChanges;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,12 +16,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import odms.model.user.User;
-import odms.view.CommonView;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
-
-import static odms.controller.AlertController.saveChanges;
+import odms.model.user.User;
+import odms.view.CommonView;
 
 public class ClinicianEdit extends CommonView {
     private static User currentUser;
