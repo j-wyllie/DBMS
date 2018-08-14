@@ -27,23 +27,21 @@
                <RowConstraints />
            </rowConstraints>
           <children>
-      
-                          <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
+
+           <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
          <tabs>
                      <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
                      <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
                      <Tab fx:id="dataManagementTab" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management" />
                      <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search">
             </Tab>
-         
-                                 <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
-                     <Tab fx:id="viewUsersTab" onSelectionChanged="#handleViewUsersTabClicked" text="View Users" />
-                     <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
-         </tabs>
-              </TabPane>
+                              <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
+            <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users" fx:id="listUsersTab"/>
+               <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
+        </TabPane>
               <GridPane fx:id="bannerPane" styleClass="banner-clinician" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                   <columnConstraints>
-                  <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="135.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="135.0" />
                       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
                       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="45.0" />
                   </columnConstraints>
@@ -51,44 +49,44 @@
                       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="ALWAYS" />
                       <RowConstraints minHeight="-Infinity" prefHeight="36.0" vgrow="NEVER" />
                   </rowConstraints>
-                  <children>
-                  <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
-                     <image>
-                        <Image url="@../profile_images/default.png" />
-                     </image>
-                  </ImageView>
-                      <Label fx:id="clinicianFullName" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="BOTTOM">
-                          <font>
-                              <Font name="System Bold" size="40.0" />
-                          </font>
-                          <GridPane.margin>
-                              <Insets />
-                          </GridPane.margin>
-                      </Label>
-                      <Label fx:id="roleLabel" text="Clinician" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                          <font>
-                              <Font size="28.0" />
-                          </font>
-                          <GridPane.margin>
-                              <Insets />
-                          </GridPane.margin>
-                      </Label>
-                      <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Common.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
-                          <GridPane.margin>
-                              <Insets />
-                          </GridPane.margin>
-                          <padding>
-                              <Insets right="15.0" />
-                          </padding>
-                      </Button>
-                  </children>
-                  <GridPane.margin>
-                      <Insets />
-                  </GridPane.margin>
-                  <padding>
-                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                  </padding>
-              </GridPane>
+            <children>
+            <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
+                <image>
+                    <Image url="@../profile_images/default.png" />
+                </image>
+            </ImageView>
+                <Label fx:id="clinicianFullName" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="BOTTOM">
+                    <font>
+                        <Font name="System Bold" size="40.0" />
+                    </font>
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="roleLabel" text="Clinician" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <font>
+                        <Font size="28.0" />
+                    </font>
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </Label>
+                <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Common.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                    <padding>
+                        <Insets right="15.0" />
+                    </padding>
+                </Button>
+            </children>
+            <GridPane.margin>
+                <Insets />
+            </GridPane.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </GridPane>
           </children>
        </GridPane>
    </children>
