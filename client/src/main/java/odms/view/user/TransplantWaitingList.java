@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
 import org.controlsfx.control.table.TableFilter;
 
@@ -37,6 +38,7 @@ public class TransplantWaitingList extends CommonView {
     private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
 
+        transplantTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         receiverObservableList = FXCollections.observableList(receivers);
         //transplantTable.setItems(receiverObservableList);
         //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
@@ -89,7 +91,7 @@ public class TransplantWaitingList extends CommonView {
     @FXML
     private void refreshTable() {
         try {
-//            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,7 +101,7 @@ public class TransplantWaitingList extends CommonView {
         this.parentView = parentView;
         this.currentUser = currentUser;
         try {
-//            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
             TableFilter filter = new TableFilter<>(transplantTable);
         } catch (Exception e) {
             e.printStackTrace();
