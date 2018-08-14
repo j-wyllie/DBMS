@@ -78,7 +78,6 @@ public class ProfileController {
         String profiles;
 
         if (req.queryMap().hasKey("searchString")) {
-            System.out.println(req.queryParams("searchString"));
             String searchString = req.queryParams("searchString");
             int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
             int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
