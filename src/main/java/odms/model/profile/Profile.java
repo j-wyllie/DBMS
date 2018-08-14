@@ -22,10 +22,13 @@ public class Profile implements Comparable<Profile> {
     //TODO merge must have taken all the old useless methods need to get rid of them
     public List<String> regionsNZ = Arrays.asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
 
+    private Integer id;
+    private String nhi;
+    private String username;
+
     private Boolean donor = false;
     private Boolean receiver = false;
 
-    private String username;
     private String givenNames;
     private String lastNames;
     private String preferredName;
@@ -78,11 +81,8 @@ public class Profile implements Comparable<Profile> {
     private String email;
     private String pictureName;
 
-    private String nhi;
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
-
-    private Integer id;
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
@@ -132,20 +132,48 @@ public class Profile implements Comparable<Profile> {
 
     public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
         this(
-                givenNames,
-                lastNames,
-                dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                nhi
+                null, // id
+                nhi, // nhi
+                nhi, // username
+                false, // isDonor
+                false, // isReceiver
+                givenNames, // givenNames
+                lastNames, // lastNames
+                dob, // dob
+                null, // dod
+                null, // gender
+                0.0, // height
+                0.0, // weight
+                null, // bloodType
+                null, // isSmoker
+                null, // alcoholConsumption
+                0, // bpSystolic
+                0, // bpDiastolic
+                null, // address
+                null, // region
+                null, // phone
+                null, // email
+                null, // country
+                null, // city
+                null, // countryOfDeath
+                null, // regionOfDeath
+                null, // cityOfDeath
+                null, // created
+                null, // updated
+                null, // preferredName
+                null, // preferredGender
+                null // imageName
         );
     }
 
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+    public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
-            Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, LocalDateTime created, LocalDateTime updated, String preferredName,
-            String preferredGender, String imageName) {
-        this.id = profileId;
+            Double height, Double weight, String bloodType, Boolean isSmoker,
+            String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
+            String region, String phone, String email, String country, String city,
+            String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
+            LocalDateTime updated, String preferredName, String preferredGender, String imageName) {
+        this.id = id;
         this.nhi = nhi;
         this.username = username;
         this.donor = isDonor;
@@ -166,6 +194,11 @@ public class Profile implements Comparable<Profile> {
         this.region = region;
         this.phone = phone;
         this.email = email;
+        this.country = country;
+        this.city = city;
+        this.countryOfDeath = countryOfDeath;
+        this.cityOfDeath = cityOfDeath;
+        this.regionOfDeath = regionOfDeath;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
         this.preferredName = preferredName;
@@ -832,19 +865,11 @@ public class Profile implements Comparable<Profile> {
      * @return blood pressure string
      */
     public String getBloodPressure() {
-        if (bloodPressureDiastolic != null && bloodPressureSystolic != null) {
+        if (bloodPressureDiastolic != null && bloodPressureSystolic != null &&
+                bloodPressureDiastolic != 0 && bloodPressureSystolic != 0) {
             return bloodPressureSystolic.toString() + "/" + bloodPressureDiastolic.toString();
         }
         return null;
-    }
-
-    public HashSet<String> getChronicDiseases() {
-        return chronicDiseases;
-    }
-
-    // TODO access to this array should be restricted, this makes it public and redundant.
-    public void setChronicDiseases(HashSet<String> chronicDiseases) {
-        this.chronicDiseases = chronicDiseases;
     }
 
     public void setProcedures(ArrayList<Procedure> procedures) {
@@ -883,10 +908,6 @@ public class Profile implements Comparable<Profile> {
         } else {
             throw new IllegalArgumentException();
         }
-    }
-
-    public void setAllConditions(ArrayList<Condition> conditions) {
-        this.conditions = conditions;
     }
 
     public void setPreferredGender(String preferredGender) {

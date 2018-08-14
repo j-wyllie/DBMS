@@ -1,5 +1,6 @@
-package odms.controller.data;
+package odms.controller.data.data;
 
+import odms.controller.data.ProfileDataIO;
 import odms.model.data.NHIConflictException;
 import odms.model.data.ProfileDatabase;
 import odms.model.profile.Profile;

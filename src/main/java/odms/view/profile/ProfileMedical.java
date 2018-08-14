@@ -36,8 +36,9 @@ public class ProfileMedical extends CommonView {
             );
         }
         if (currentProfile.getBloodPressure() != null) {
-            bloodPressureLabel
-                    .setText(bloodPressureLabel.getText() + currentProfile.getBloodPressure());
+            bloodPressureLabel.setText(
+                    bloodPressureLabel.getText() + currentProfile.getBloodPressure()
+            );
         }
         if (currentProfile.getBloodType() != null) {
             bloodTypeLabel.setText(bloodTypeLabel.getText() + currentProfile.getBloodType());

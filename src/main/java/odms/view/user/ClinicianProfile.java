@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -20,7 +22,7 @@ import odms.model.user.User;
 import odms.view.CommonView;
 
 /**
- * View for the clinician scene.
+ * Handles all of the tabs for the user profile view.
  */
 public class ClinicianProfile extends CommonView {
     private User currentUser;
@@ -30,7 +32,7 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Label roleLabel;
     @FXML
-    private Tab viewUsersTab;
+    private Tab listUsersTab;
     @FXML
     private Tab consoleTab;
     @FXML
@@ -58,7 +60,7 @@ public class ClinicianProfile extends CommonView {
      * Scene change to log in view.
      *
      * @param event clicking on the logout button.
-     * @throws IOException thrown if Login.fxml causes IO issues
+     * @throws IOException if the scene cannot be changed.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
@@ -84,9 +86,8 @@ public class ClinicianProfile extends CommonView {
         clinicianFullName.setText(currentUser.getName());
     }
 
-
     /**
-     * Initializes the controller for the console Tab
+     * Initializes the controller for the console tab.
      */
     public void handleConsoleTabClicked() {
         setTransplantWaitingListNull();
@@ -101,16 +102,18 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the view users Tab
+     * Initializes the controller for the view users Tab.
      */
     public void handleViewUsersTabClicked() {
         setTransplantWaitingListNull();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ViewUsersTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ListUsersTab.fxml"));
         try {
-            viewUsersTab.setContent(loader.load());
-            UsersList viewUsersView = loader.getController();
-            viewUsersView.initialize();
+            listUsersTab.setContent(loader.load());
+            UsersList listUsersView = loader.getController();
+            listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
         } catch (IOException e){
+            e.printStackTrace();
+
             System.out.println(e.getMessage());
         }
     }
@@ -133,7 +136,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the data import Tab
+     * Initializes the controller for the data management tab.
      */
     public void handleTabDataManagementClicked() {
         setTransplantWaitingListNull();
@@ -148,7 +151,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the available organs Tab
+     * Initializes the controller for available organs.
      */
     public void handleTabAvailableClicked() {
         setTransplantWaitingListNull();
@@ -163,16 +166,16 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Hides/Shows certain nodes if the clinician does / does not have permission to view them
+     * Hides/Shows certain nodes if the clinician does / does not have permission to view them.
      */
     private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
             dataManagementTab.setDisable(true);
-            viewUsersTab.setDisable(true);
+            listUsersTab.setDisable(true);
             consoleTab.setDisable(true);
         } else {
             dataManagementTab.setDisable(false);
-            viewUsersTab.setDisable(false);
+            listUsersTab.setDisable(false);
             consoleTab.setDisable(false);
 
             bannerPane.getStyleClass().clear();
@@ -200,7 +203,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Sets variables and labels.
+     * Sets up all of the tabs and opens the general tab.
      */
     public void initialize() {
         if (currentUser != null) {
@@ -220,7 +223,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the profile search Tab
+     * Initializes the controller for the profile search Tab.
      */
     public void handleSearchTabClicked() {
         setTransplantWaitingListNull();
@@ -235,7 +238,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the transplant waiting list Tab
+     * Initializes the controller for the transplant waiting list.
      */
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
@@ -263,7 +266,6 @@ public class ClinicianProfile extends CommonView {
      */
     public void closeStage(Stage stage) {
         userProfileController.removeStageFromProfileStages(stage);
-
         openProfileStages.remove(stage);
     }
 

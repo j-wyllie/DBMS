@@ -77,7 +77,6 @@ public class CreateAccount extends CommonView {
     }
 
     public String getGivenNamesFieldValue() {
-        givenNamesField.setText("REE");
         return givenNamesField.getText();
     }
 
