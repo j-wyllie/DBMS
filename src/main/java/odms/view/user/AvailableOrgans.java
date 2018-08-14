@@ -128,7 +128,7 @@ public class AvailableOrgans extends CommonView {
                 "Death");
         dateOfDeathNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        cdf.getValue().getKey().getDateOfDeath().toLocalDate().toString()));
+                        cdf.getValue().getKey().getDateOfDeath().toString()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
                 "Countdown"
