@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
 
@@ -13,15 +14,12 @@ public class Request {
 
     private String urlString;
     private int token;
-    private Map<String, String> headers;
     private Map<String, String> queryParams;
     private String body;
 
-    public Request(String urlString, int token, Map<String, String> headers,
-            Map<String, String> queryParams, String body) {
+    public Request(String urlString, int token, Map<String, String> queryParams, String body) {
         this.urlString = urlString;
         this.token = token;
-        this.headers = headers;
         this.queryParams = queryParams;
         this.body = body;
     }
@@ -32,21 +30,66 @@ public class Request {
         this.queryParams = queryParams;
     }
 
-    public Response get()
-            throws IOException {
-        JsonParser parser = new JsonParser();
-
+    public Response get() throws IOException {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
-        StringBuffer responseContent = null;
-
-        //Creating the connection to the API server.
+        //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+
+        JsonElement body = execute(con);
+        int status = con.getResponseCode();
+
+        con.disconnect();
+        return new Response(this.token, body, status);
+    }
+
+    public Response post() throws IOException {
+        URL url = new URL(constructUrl(this.urlString, this.queryParams));
+        //Creating the connection to the server.
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+
+        JsonElement body = execute(con);
+        int status = con.getResponseCode();
+
+        con.disconnect();
+        return new Response(this.token, body, status);
+    }
+
+    public Response patch() throws IOException {
+        URL url = new URL(constructUrl(this.urlString, this.queryParams));
+        //Creating the connection to the server.
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("PATCH");
+
+        JsonElement body = execute(con);
+        int status = con.getResponseCode();
+
+        con.disconnect();
+        return new Response(this.token, body, status);
+    }
+
+    public Response delete() throws IOException {
+        URL url = new URL(constructUrl(this.urlString, this.queryParams));
+        //Creating the connection to the server.
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("DELETE");
+
+        JsonElement body = execute(con);
+        int status = con.getResponseCode();
+
+        con.disconnect();
+        return new Response(this.token, body, status);
+    }
+
+    private JsonElement execute(HttpURLConnection con) throws IOException {
+        JsonParser parser = new JsonParser();
+
         con.setRequestProperty("Content-Type", "application/json");
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
 
-        responseContent = new StringBuffer();
+        StringBuffer responseContent = new StringBuffer();
         BufferedReader response = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
 
@@ -55,29 +98,10 @@ public class Request {
             responseContent.append(line);
             line = response.readLine();
         }
-
-        int status = con.getResponseCode();
         JsonElement body = parser.parse(responseContent.toString());
 
         response.close();
-        con.disconnect();
-
-        return new Response(this.headers, this.token, body, status);
-    }
-
-    public Response post() {
-        Response response = new Response(null, 0, null, 0);
-        return response;
-    }
-
-    public Response patch() {
-        Response response = new Response(null, 0, null, 0);
-        return response;
-    }
-
-    public Response delete() {
-        Response response = new Response(null, 0, null, 0);
-        return response;
+        return body;
     }
 
     private String constructUrl(String urlString, Map<String, String> queryParams) {
