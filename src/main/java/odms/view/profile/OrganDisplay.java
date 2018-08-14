@@ -126,8 +126,6 @@ public class OrganDisplay extends CommonView {
      * Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
-        System.out.println(currentProfile.getDateOfDeath());
-        System.out.println("-");
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
@@ -234,9 +232,6 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(highlight);
-                System.out.println(getStyleClass());
-                System.out.println(getStyle());
-                System.out.println(getStyleableParent());
 
             } else {
                 getStyleClass().remove(highlight);
