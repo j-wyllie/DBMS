@@ -36,6 +36,30 @@ public class AvailableOrgans {
         view = v;
     }
 
+    public static int getDistanceBetween(Profile receiver, Profile donor) {
+        int distance = 0;
+
+        if (receiver.getCountry().equals("") || donor.getCountryOfDeath().equals("")) {
+            return -1;
+        } else if (receiver.getRegion().equals("") || donor.getRegionOfDeath().equals("")) {
+
+            if (receiver.getCountry().equals(donor.getCountryOfDeath())) {
+                return distance;
+            }
+            // TODO calculate distance between countries here
+
+            return -1;
+        }
+
+        if (receiver.getRegion().equals(donor.getRegion())) {
+            return 0;
+        }
+
+        // TODO calculate distance between regions here
+
+        return distance;
+    }
+
     public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
         LocalDateTime dateOrganRegistered = LocalDateTime.now();
 

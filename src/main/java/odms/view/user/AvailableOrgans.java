@@ -39,6 +39,7 @@ public class AvailableOrgans extends CommonView {
 
     private boolean filtered = false;
     private OrganEnum selectedOrgan;
+    private Profile selectedProfile;
 
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile,OrganEnum>> listOfFilteredAvailableOrgans; // TODO should these two lists just be one list?
@@ -70,16 +71,32 @@ public class AvailableOrgans extends CommonView {
                 cdf -> new SimpleStringProperty(
                         String.valueOf(cdf.getValue().getAge())));
 
+        TableColumn<Profile, String> nhiColumn = new TableColumn<>(
+                "NHI"
+        );
+        nhiColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(
+                        String.valueOf(cdf.getValue().getNhi())));
+
+        TableColumn<Profile, String> distanceFromOrganColumn = new TableColumn<>(
+                "Aprox distance"
+        );
+        distanceFromOrganColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(String.valueOf(
+                        controller.getDistanceBetween(cdf.getValue(), selectedProfile))));
+
         TableColumn<Profile, String> locationColumn = new TableColumn<>(
                 "Location"
         );
         locationColumn.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        cdf.getValue().getCountry()));      // TODO do we want address? The list is meant to be weighted by location
+                        cdf.getValue().getCountry() + ", " + cdf.getValue().getRegion()));
 
         potentialOrganMatchTable.getColumns().add(waitTimeColumn);
         potentialOrganMatchTable.getColumns().add(ageColumn);
+        potentialOrganMatchTable.getColumns().add(nhiColumn);
         potentialOrganMatchTable.getColumns().add(locationColumn);
+        potentialOrganMatchTable.getColumns().add(distanceFromOrganColumn);
 
         setPotentialOrganMatchesList();
 
@@ -197,6 +214,8 @@ public class AvailableOrgans extends CommonView {
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getValue();
+                selectedProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getKey();
+
                 setPotentialOrganMatchesList();
                 updateMatchesTable();
             }
@@ -239,7 +258,6 @@ public class AvailableOrgans extends CommonView {
         } catch (NullPointerException e) {
             // No organ selected in table
         }
-
     }
 
 
