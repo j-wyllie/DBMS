@@ -1,8 +1,6 @@
 package odms.cli;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,9 +11,9 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.profile.ProfileDAO;
-import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.controller.profile.UndoRedoCLIService;
-import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+
 
 public class CommandUtils {
 

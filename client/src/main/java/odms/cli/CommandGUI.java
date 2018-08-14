@@ -1,17 +1,15 @@
 package odms.cli;
 
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
+import static odms.cli.GUIUtils.runSafe;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
 
-import static odms.cli.GUIUtils.runSafe;
 
 public class CommandGUI {
 

@@ -378,7 +378,8 @@ public class Profile implements Comparable<Profile> {
             setCountry(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
             if (getCountry() != null) {
-                if (getCountry().toLowerCase().equals(CountriesEnum.NZ.getName().toLowerCase()) || getCountry().toLowerCase().equals(CountriesEnum.NZ.toString().toLowerCase())) {
+                if (getCountry().toLowerCase().equals(CountriesEnum.NZ.getName().toLowerCase()) ||
+                        getCountry().toLowerCase().equals(CountriesEnum.NZ.toString().toLowerCase())) {
                     if (!regionsNZ.contains(value.toString())) {
                         throw new IllegalArgumentException("Must be a region within New Zealand");
                     }

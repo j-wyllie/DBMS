@@ -167,30 +167,6 @@ public class CommandLine implements Runnable {
                 // Print all profiles that are donors (print donors).
                 Print.printDonors(profileDatabase.getAll());
                 break;
-//
-//            case EXPORT:
-//                // Export profile database to file
-//                if (input.size() == 1) {
-//                    ProfileDataIO.saveData(currentDatabase);
-//                    UserDataIO.saveUsers(currentDatabaseUsers);
-//                }
-//                if (input.size() == 2) {
-//                    String filepath = input.get(1);
-//                    ProfileDataIO.saveData(currentDatabase, filepath);
-//                    UserDataIO.saveUsers(currentDatabaseUsers, filepath);
-//                }
-//                break;
-//
-//            case IMPORT:
-//                // Import a file of profiles.
-//                if (input.size() == 2) {
-//                    String filepath = input.get(1);
-//                    currentDatabase = ProfileDataIO.loadData(filepath);
-//                } else {
-//                    System.out.println("Error: Invalid arguments. Expected: 1, " +
-//                            "Found: " + (input.size() - 1));
-//                }
-//                break;
 
             case PROFILECREATE:
                 // Create a new profile.
@@ -218,7 +194,6 @@ public class CommandLine implements Runnable {
             case PROFILEUPDATE:
                 // Search profiles.
                 Profile.updateProfilesBySearch(rawInput);
-                System.out.println("profile(s) successfully updated.");
                 break;
 
             case PROFILEVIEW:
