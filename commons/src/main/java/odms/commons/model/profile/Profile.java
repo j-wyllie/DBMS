@@ -1064,6 +1064,9 @@ public class Profile implements Comparable<Profile> {
         for(Organ o: organTimeStamps) {
             if(o.getOrganEnum().getName().equals(name)) {
                 System.out.println(o.getDate());
+                if (o.getDate() == null) {
+                    return LocalDateTime.MIN;
+                }
                 return o.getDate();
             }
         }
@@ -1071,6 +1074,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     public void setOrganDate(String organDate, LocalDateTime date) {
+        System.out.println("add");
         organTimeStamps.add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-","_")), date));
     }
 }

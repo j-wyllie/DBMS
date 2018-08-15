@@ -403,8 +403,7 @@ public class AvailableOrgans {
         donaters = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
 
-//        allDonaters = database.getDead();
-        //TODO BROOKE ANNE
+        allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonating()) {
                 Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,

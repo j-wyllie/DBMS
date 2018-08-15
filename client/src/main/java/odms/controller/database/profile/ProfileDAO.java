@@ -9,13 +9,14 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.data.NHIConflictException;
 
-
 public interface ProfileDAO {
 
     /**
      * Gets all profiles from the database.
      */
     List<Profile> getAll() throws SQLException;
+
+    List<Profile> getDead() throws SQLException;
 
     /**
      * Get a single profile from the database by id.
@@ -69,7 +70,8 @@ public interface ProfileDAO {
      * @param organs filter based on organs selected.
      * @return a sublist of profiles.
      */
-    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt, String region,
+    List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
+            String region,
             String gender, String type, Set<OrganEnum> organs) throws SQLException;
 
     /**
@@ -101,6 +103,4 @@ public interface ProfileDAO {
      */
     List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange);
-
-    List<Profile> getDead() throws SQLException;
 }

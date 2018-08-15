@@ -28,12 +28,7 @@ public class ProfileController {
     public static String getAll(Request req, Response res) {
         String profiles;
         try {
-            if (req.queryMap().hasKey("receiving")
-                && Boolean.valueOf(req.queryParams("receiving"))) {
-                profiles = getReceiving(req);
-            } else {
-                profiles = getAll(req);
-            }
+            profiles = getAll(req);
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -49,19 +44,61 @@ public class ProfileController {
      * @param req received.
      * @return json string of profiles.
      */
-    private static String getReceiving(Request req) {
+    public static String getReceiving(Request req,  Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
 
-        if (req.queryMap().hasKey("searchString")) {
-            String searchString = req.queryParams("searchString");
-            List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
-            profiles = gson.toJson(result);
+        try {
+            if (req.queryMap().hasKey("searchString")) {
+                String searchString = req.queryParams("searchString");
+                List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
+                profiles = gson.toJson(result);
+            }
+            else if (req.queryMap().hasKey("organ")) {
+                String organ = req.queryParams("organ");
+                String bloodType = req.queryParams("bloodType");
+                Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
+                Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
+                List<Profile> result = database.getOrganReceivers(organ, bloodType,
+                        lowerAgeRange, upperAgeRange);
+                profiles = gson.toJson(result);
+            }
+            else {
+                profiles = gson.toJson(database.getAllReceiving());
+            }
+        } catch (NumberFormatException e) {
+            res.status(400);
+            return "Bad Request";
+        } catch (Exception e) {
+            res.status(500);
+            return "Internal Server Error";
         }
-        else {
-            profiles = gson.toJson(database.getAllReceiving());
+        res.type("application/json");
+        res.status(200);
+
+        return profiles;
+    }
+
+    /**
+     * Gets all profiles stored.
+     * @param req sent to the endpoint.
+     * @param res sent back.
+     * @return the response body, a list of all profiles.
+     */
+    public static String getDead(Request req, Response res) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
+        String profiles;
+        try {
+            profiles = gson.toJson(database.getDead());
+        } catch (SQLException e) {
+            res.status(500);
+            return e.getMessage();
         }
+        res.type("application/json");
+        res.status(200);
+
         return profiles;
     }
 

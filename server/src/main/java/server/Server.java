@@ -83,6 +83,9 @@ public class Server {
                 get("", ProfileController::get);
                 post("", ProfileController::create);
 
+                get("/receivers", ProfileController::getReceiving);
+                get("/dead", ProfileController::getDead);
+
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
                     delete("", ProfileController::delete);

@@ -59,7 +59,7 @@ public class HttpProfileDAO implements ProfileDAO {
             e.printStackTrace();
         }
 
-        if (response.getStatus() == 400 ) {
+        if (response.getStatus() == 400) {
             throw new NHIConflictException("NHI in use.", profile.getNhi());
         }
         else if (response.getStatus() == 500) {
@@ -136,17 +136,15 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
-        String url = "http://localhost:6969/api/v1/profiles/all";
+        String url = "http://localhost:6969/api/v1/profiles/receivers";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("receiving", "true");
         return getEntryArrayRequest(url, queryParams);
     }
 
     @Override
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
-        String url = "http://localhost:6969/api/v1/profiles/all";
+        String url = "http://localhost:6969/api/v1/profiles/receivers";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("receiving", "true");
         queryParams.put("searchString", searchString);
         return getEntryArrayRequest(url, queryParams);
     }
@@ -154,12 +152,21 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getOrganReceivers(String organ, String bloodType, Integer lowerAgeRange,
             Integer upperAgeRange) {
-        return null;
+        String url = "http://localhost:6969/api/v1/profiles/receivers";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("organ", organ);
+        queryParams.put("bloodType", bloodType);
+        queryParams.put("lowerAgeRange", bloodType);
+        queryParams.put("upperAgeRange", bloodType);
+
+        return getArrayRequest(url, queryParams);
     }
 
     @Override
     public List<Profile> getDead() throws SQLException {
-        return null;
+        String url = "http://localhost:6969/api/v1/profiles/dead";
+        Map<String, Object> queryParams = new HashMap<>();
+        return getArrayRequest(url, queryParams);
     }
 
     private Profile getSingleRequest(String url, Map<String, Object> queryParams) {

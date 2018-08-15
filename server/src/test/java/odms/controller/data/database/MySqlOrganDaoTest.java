@@ -69,7 +69,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
     @Test
     public void testGetRequired() {
-        assertTrue(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ5));
+        assertTrue(mysqlOrganDao.getRequired(testProfile2).contains(organ5));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     @Test
     public void testAddRequired() {
         mysqlOrganDao.addRequired(testProfile2, organ2);
-        assertTrue(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ2));
+        assertTrue(mysqlOrganDao.getRequired(testProfile2).contains(organ2));
     }
 
     @Test(expected = OrganConflictException.class)
@@ -123,7 +123,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     @Test
     public void testRemoveRequired() {
         mysqlOrganDao.removeRequired(testProfile2, organ5);
-        assertFalse(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ5));
+        assertFalse(mysqlOrganDao.getRequired(testProfile2).contains(organ5));
     }
 
     @After

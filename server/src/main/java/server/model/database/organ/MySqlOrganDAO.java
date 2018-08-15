@@ -10,12 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
-import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
-import server.model.database.profile.ProfileDAO;
 
 public class MySqlOrganDAO implements OrganDAO {
 
@@ -25,7 +23,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonations(int profile) {
-        return getOrgans( profile, "select * from organs where ProfileId = ? and Donated = ?");
+        return getOrgans( new Profile(profile), "select * from organs where ProfileId = ? and Donated = ?");
 
     }
 
@@ -35,7 +33,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonating(int profile) {
-        return getOrgans(profile, "select * from organs where ProfileId = ? and ToDonate = ?");
+        return getOrgans(new Profile(profile), "select * from organs where ProfileId = ? and ToDonate = ?");
     }
 
     /**
@@ -44,17 +42,15 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param query to execute.
      * @return the list of the returned organs
      */
-    private Set<OrganEnum> getOrgans(int profile, String query) {
+    private Set<OrganEnum> getOrgans(Profile profile, String query) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Set<OrganEnum> allOrgans = new HashSet<>();
-
-        Profile profileOb = new Profile(profile);
 
         try {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile);
+            stmt.setInt(1, profile.getId());
             stmt.setBoolean(2, true);
             ResultSet allOrganRows = stmt.executeQuery();
 
@@ -64,9 +60,9 @@ public class MySqlOrganDAO implements OrganDAO {
                 try {
                     String str = allOrganRows.getString("DateRegistered");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    organ.setDate(LocalDateTime.parse(str, formatter), profileOb);
+                    organ.setDate(LocalDateTime.parse(str, formatter), profile);
                 } catch (DateTimeParseException e) {
-                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profileOb);
+                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profile);
                 }
                 allOrgans.add(organ);
             }
@@ -85,7 +81,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public Set<OrganEnum> getRequired(int profile) {
+    public Set<OrganEnum> getRequired(Profile profile) {
         return getOrgans(profile, "select * from organs where ProfileId = ? and Required = ?");
     }
 
@@ -95,7 +91,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getReceived(int profile) {
-        return getOrgans(profile, "select * from organs where ProfileId = ? and Received = ?");
+        return getOrgans(new Profile(profile), "select * from organs where ProfileId = ? and Received = ?");
     }
 
     /**

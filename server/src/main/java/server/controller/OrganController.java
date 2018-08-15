@@ -119,7 +119,7 @@ public class OrganController {
             return database.getDonating(profile.getId());
         }
         if (req.queryMap().hasKey("required")) {
-            return database.getRequired(profile.getId());
+            return database.getRequired(profile);
         }
         if (req.queryMap().hasKey("received")) {
             return database.getReceived(profile.getId());

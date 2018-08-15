@@ -23,7 +23,7 @@ public interface OrganDAO {
      * Gets all organs that a profile requires.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getRequired(int profile);
+    Set<OrganEnum> getRequired(Profile profile);
 
     /**
      * Gets all organs that a profile has received in the past.

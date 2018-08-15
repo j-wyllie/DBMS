@@ -199,7 +199,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         profile.addOrgansDonating(database.getDonating(profile.getId()));
         profile.addOrgansDonated(database.getDonations(profile.getId()));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile.getId()));
+        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
         profile.addOrgansReceived(database.getReceived(profile.getId()));
 
         return profile;
