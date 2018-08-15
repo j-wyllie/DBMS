@@ -1,7 +1,6 @@
 package server.model.database.organ;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
+import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import server.model.database.profile.ProfileDAO;
 
 public class MySqlOrganDAO implements OrganDAO {
 
@@ -48,6 +49,8 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Set<OrganEnum> allOrgans = new HashSet<>();
 
+        Profile profileOb = new Profile(profile);
+
         try {
             Connection conn = instance.getConnection();
 
@@ -62,9 +65,9 @@ public class MySqlOrganDAO implements OrganDAO {
                 try {
                     String str = allOrganRows.getString("DateRegistered");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    organ.setDate(LocalDateTime.parse(str, formatter), profile);
+                    organ.setDate(LocalDateTime.parse(str, formatter), profileOb);
                 } catch (DateTimeParseException e) {
-                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profile);
+                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profileOb);
                 }
                 allOrgans.add(organ);
             }

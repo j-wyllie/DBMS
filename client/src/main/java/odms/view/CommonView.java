@@ -21,6 +21,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import odms.commons.model.profile.Profile;
 import odms.controller.GuiMain;
 import odms.commons.model.user.User;
 import odms.view.profile.Display;

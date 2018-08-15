@@ -2,12 +2,13 @@ package odms.controller.profile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.fxml.FXML;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
@@ -16,7 +17,6 @@ import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
-import odms.controller.data.ImageDataIO;
 import odms.controller.database.profile.ProfileDAO;
 
 public class ProfileEdit extends CommonController {
@@ -37,10 +37,11 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
+     *
      * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public Boolean save() {
+    public void save() {
         if (AlertController.saveChanges()) {
             try {
                 // History Generation
@@ -62,46 +63,45 @@ public class ProfileEdit extends CommonController {
                 saveLastNames();
                 saveNhi();
 
-            // Optional General Fields
-            saveAddress();
-            saveDateOfDeath();
-            saveEmail();
-            saveGender();
-            saveHeight();
-            savePhone();
-            savePreferredGender();
-            savePreferredName();
+                // Optional General Fields
+                saveAddress();
+                saveDateOfDeath();
+                saveEmail();
+                saveGender();
+                saveHeight();
+                savePhone();
+                savePreferredGender();
+                savePreferredName();
+                saveRegion();
+                saveWeight();
 
-            saveWeight();
+                // Medical Fields
+                saveAlcoholConsumption();
+                saveBloodPressure();
+                saveBloodType();
+                saveIsSmoker();
 
-            // Medical Fields
-            saveAlcoholConsumption();
-            saveBloodPressure();
-            saveBloodType();
-            saveIsSmoker();
+                saveCity();
+                saveCountry();
+                saveRegion();
 
-            saveCity();
-            saveCountry();
-            saveRegion();
+                ProfileDAO server = DAOFactory.getProfileDao();
+                server.update(currentProfile);
 
-            ProfileDAO server = DAOFactory.getProfileDao();
-            server.update(currentProfile);
+                // history Changes
+                action.setHistoryData(
+                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                CurrentHistory.updateHistory(action);
 
 
-            // history Changes
-            action.setHistoryData(
-                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-            action.setHistoryTimestamp(LocalDateTime.now());
-            CurrentHistory.updateHistory(action);
-
-            } else {
-                currentProfile.setCountryOfDeath(null);
-                currentProfile.setRegionOfDeath(null);
-                currentProfile.setCityOfDeath(null);
-                currentProfile.setDateOfDeath(null);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

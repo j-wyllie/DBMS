@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
@@ -80,7 +79,7 @@ public class ProfileImportTask extends Task<Void> {
         int progressCount = 0;
         int successCount = 0;
         int failedCount = 0;
-        //conn = server.getConnection();
+//        conn = server.getConnection();
 
         for (CSVRecord csvRecord : csvParser) {
             if (Thread.currentThread().isInterrupted()) {
@@ -89,12 +88,12 @@ public class ProfileImportTask extends Task<Void> {
 
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
-                try {
-                    //server.addToTransaction(conn, profile);
-                    successCount++;
-                } catch (SQLException e) {
-                    failedCount++;
-                }
+//                try {
+//                    server.addToTransaction(conn, profile);
+//                    successCount++;
+//                } catch (SQLException e) {
+//                    failedCount++;
+//                }
             } else {
                 failedCount++;
             }

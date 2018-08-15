@@ -151,6 +151,17 @@ public class HttpProfileDAO implements ProfileDAO {
         return getEntryArrayRequest(url, queryParams);
     }
 
+    @Override
+    public List<Profile> getOrganReceivers(String organ, String bloodType, Integer lowerAgeRange,
+            Integer upperAgeRange) {
+        return null;
+    }
+
+    @Override
+    public List<Profile> getDead() throws SQLException {
+        return null;
+    }
+
     private Profile getSingleRequest(String url, Map<String, Object> queryParams) {
         Gson parser = new Gson();
         Response response = null;

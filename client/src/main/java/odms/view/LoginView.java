@@ -52,43 +52,42 @@ public class LoginView extends CommonController {
 
             try {
                 try {
-                currentUser = loadUser(username);
+                    currentUser = loadUser(username);
 
+                    loadUserView(currentUser);
+                } catch (UserNotFoundException u) {
+                    Profile currentProfile = loadProfile(username);
 
+                    loadProfileView(currentProfile);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-                        loadUserView(currentUser);
-                        } catch (UserNotFoundException u){
-                        Profile currentProfile = loadProfile(username);
-
-loadProfileView(currentProfile);
-                        }
-                        } catch (SQLException e){
-                        e.printStackTrace();
-                        }
-                        }
-                    }
-
-                    /**
-                * Load a profile from the database.
-                    *
-                * @param username the username to load
-            * @return a profile object
-
-                * @throws SQLException if a SQL error occurs
+    /**
+     * Load a profile from the database.
+     *
+     * @param username the username to load
+     * @return a profile object
+     * @throws SQLException if a SQL error occurs
      */
-                    private Profile loadProfile(String username) throws SQLException {
+    private Profile loadProfile(String username) throws SQLException {
         return DAOFactory.getProfileDao().get(username);
-}
-        /**
+    }
+
+    /**
      * Load the profile view.
      *
      * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {
-        try {            if (profile != null) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(
-                            getClass().getResource("/view/ProfileDisplay.fxml"));
+        try {
+            if (profile != null) {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(
+                        getClass().getResource("/view/ProfileDisplay.fxml"));
 
                 Scene scene = new Scene(fxmlLoader.load());
                 Display controller = fxmlLoader.getController();

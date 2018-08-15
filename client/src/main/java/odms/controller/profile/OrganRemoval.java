@@ -37,7 +37,7 @@ public class OrganRemoval extends CommonController {
 
             case "Patient deceased":
                 view.removeAllOrgans();
-                view.getCurrentProfile().setDateOfDeath(LocalDateTime.of(view.getDOD(), LocalTime.MIN));
+                view.getCurrentProfile().setDateOfDeath(view.getDOD());
                 Set<OrganEnum> organsRequired = new HashSet<>(
                         view.getCurrentProfile().getOrgansRequired()
                 );

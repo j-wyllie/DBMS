@@ -6,16 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
-import odms.model.data.ProfileDatabase;
-import odms.model.data.UserDatabase;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.model.user.User;
-import odms.model.enums.UserType;
 
 import java.io.IOException;
 import java.util.*;

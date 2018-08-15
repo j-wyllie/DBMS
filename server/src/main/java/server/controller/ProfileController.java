@@ -118,6 +118,7 @@ public class ProfileController {
                 profile = database.get(req.queryParams("username"));
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             res.status(500);
             return e.getMessage();
         }

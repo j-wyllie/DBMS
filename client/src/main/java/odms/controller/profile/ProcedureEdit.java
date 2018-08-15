@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class ProcedureEdit {
 
     private ProcedureDetailed view;
-    private HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
+    private ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
 
     /**
      * constructor for ProcedureEdit class. Sets the view component of the controller.
@@ -71,7 +71,7 @@ public class ProcedureEdit {
         action.setHistoryData(oldValues + newValues);
         CurrentHistory.updateHistory(action);
 
-        httpProcedureDAO.update(profile, procedure);
+        procedureDAO.update(profile, procedure);
         updateAffectedOrgans(newAffectedOrgans, oldAffectedOrgans);
     }
 

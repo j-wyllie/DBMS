@@ -54,7 +54,10 @@ public class Server {
             }
         }
         port(port);
-        initExceptionHandler((e) -> System.out.println("Server init failed"));
+        initExceptionHandler((e) -> {
+            System.out.println("Server init failed");
+            System.out.println(e.getMessage());
+        });
         initRoutes();
         initControllers();
     }

@@ -423,7 +423,6 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
-            organ.setDate(LocalDate.now());
             History action = new History("profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             CurrentHistory.updateHistory(action);
@@ -1062,6 +1061,7 @@ public class Profile implements Comparable<Profile> {
     public LocalDateTime getOrganDate(String name) {
         for(Organ o: organTimeStamps) {
             if(o.getOrganEnum().getName().equals(name)) {
+                System.out.println(o.getDate());
                 return o.getDate();
             }
         }

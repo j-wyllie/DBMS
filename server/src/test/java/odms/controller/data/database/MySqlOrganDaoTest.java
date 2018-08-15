@@ -136,15 +136,4 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.remove(testProfile2);
         mySqlProfileDAO.remove(testProfile1);
     }
-
-    @After
-    public void tearDown() throws SQLException {
-        mysqlOrganDao.removeDonating(testProfile2, organ2);
-        mysqlOrganDao.removeDonation(testProfile2, organ3);
-        mysqlOrganDao.removeReceived(testProfile2, organ4);
-        mysqlOrganDao.removeRequired(testProfile2, organ5);
-
-        mySqlProfileDAO.remove(testProfile2);
-        mySqlProfileDAO.remove(testProfile1);
-    }
 }

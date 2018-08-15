@@ -21,11 +21,6 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.user.UserDAO;
 import odms.view.CommonView;
 
-import odms.controller.database.DAOFactory;
-import odms.controller.database.UserDAO;
-import odms.model.user.User;
-import odms.view.CommonView;
-
 public class ClinicianEdit extends CommonView {
     private User currentUser;
 

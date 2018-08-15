@@ -131,6 +131,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
+        System.out.println(username);
         Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, username);

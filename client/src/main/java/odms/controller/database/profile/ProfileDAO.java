@@ -90,4 +90,17 @@ public interface ProfileDAO {
      * @return a sublist of the waiting list.
      */
     List<Entry<Profile, OrganEnum>> searchReceiving(String searchString);
+
+    /**
+     * Get list of receivers that could be recipients of a selected organ.
+     * @param organ type of organ that is being donated
+     * @param bloodType blood type recipient needs to have
+     * @param lowerAgeRange lowest age the recipient can have
+     * @param upperAgeRange highest age the recipient can have
+     * @return list of profile objects
+     */
+    List<Profile> getOrganReceivers(String organ, String bloodType,
+            Integer lowerAgeRange, Integer upperAgeRange);
+
+    List<Profile> getDead() throws SQLException;
 }

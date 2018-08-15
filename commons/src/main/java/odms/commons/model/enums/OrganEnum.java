@@ -1,8 +1,6 @@
 package odms.commons.model.enums;
 
-import odms.model.profile.Profile;
-
-import java.time.LocalDate;
+import odms.commons.model.profile.Profile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;

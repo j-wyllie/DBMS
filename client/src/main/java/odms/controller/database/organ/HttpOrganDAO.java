@@ -55,7 +55,7 @@ public class HttpOrganDAO implements OrganDAO {
         Map<String, Object> organInfo = new HashMap<>();
         System.out.println(organ);
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donated", true);
         post(url, organInfo);
     }
@@ -65,7 +65,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donating", true);
         post(url, organInfo);
     }
@@ -75,7 +75,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("required", true);
         post(url, organInfo);
     }
@@ -85,7 +85,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("received", true);
         post(url, organInfo);
     }
@@ -106,7 +106,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donated", true);
         delete(url, organInfo);
     }
@@ -116,7 +116,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donating", true);
         delete(url, organInfo);
     }
@@ -126,7 +126,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("required", true);
         delete(url, organInfo);
     }
@@ -136,7 +136,7 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate());
+        organInfo.put("date", organ.getDate(profile));
         organInfo.put("received", true);
         delete(url, organInfo);
     }

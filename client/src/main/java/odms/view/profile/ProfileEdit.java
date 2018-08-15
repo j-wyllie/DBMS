@@ -5,10 +5,6 @@ import static odms.controller.AlertController.profileCancelChanges;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -27,14 +23,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.commons.model.enums.CountriesEnum;
+import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.MySqlCountryDAO;
-import odms.commons.model.enums.CountriesEnum;
-import odms.commons.model.enums.NewZealandRegionsEnum;
-import odms.commons.model.user.User;
 import odms.controller.database.country.CountryDAO;
 import odms.view.CommonView;
 
@@ -453,7 +447,7 @@ public class ProfileEdit extends CommonView {
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         // City and region should be displayed same regardless
-        MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
+        CountryDAO countryDAO = DAOFactory.getCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }

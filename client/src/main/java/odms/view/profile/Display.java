@@ -23,7 +23,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.controller.data.ImageDataIO;
 import odms.view.CommonView;
 
 import odms.view.user.TransplantWaitingList;import  odms.view.user.TransplantWaitingList;

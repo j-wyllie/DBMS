@@ -1,8 +1,7 @@
-package odms.model.profile;
-
-import odms.model.enums.OrganEnum;
+package odms.commons.model.profile;
 
 import java.time.LocalDateTime;
+import odms.commons.model.enums.OrganEnum;
 
 /**
  * Data model class that defines an organ object.

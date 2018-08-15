@@ -105,7 +105,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     @Test
     public void testSize() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
-        assertEquals(new Integer(1), mySqlProfileDAO.getAll().size());
+        assertEquals(1, mySqlProfileDAO.getAll().size());
     }
 
     @Test
