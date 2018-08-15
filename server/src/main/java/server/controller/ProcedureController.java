@@ -20,27 +20,27 @@ public class ProcedureController {
      */
     public static String getAll(Request req, Response res) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
-        List<Procedure> profiles;
+        List<Procedure> procedures;
         int profileId;
         boolean pending;
 
         try {
             profileId = Integer.valueOf(req.params("id"));
-            pending = Boolean.valueOf(req.queryMap("pending").toString());
+            pending = Boolean.valueOf(Boolean.valueOf(req.queryMap("pending").value()));
         } catch (Exception e) {
             res.status(500);
             return "Bad Request";
         }
 
         try {
-            profiles = database.getAll(new Profile(profileId), pending);
+            procedures = database.getAll(new Profile(profileId), pending);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
         }
 
         Gson gson = new Gson();
-        String responseBody = gson.toJson(profiles);
+        String responseBody = gson.toJson(procedures);
 
         res.type("application/json");
         res.status(200);
@@ -76,7 +76,7 @@ public class ProcedureController {
         }
 
         res.status(201);
-        return "Profile Created";
+        return "Procedure Created";
     }
 
     /**
@@ -120,21 +120,22 @@ public class ProcedureController {
         Procedure newProcedure;
 
         try {
-            newProcedure = gson.fromJson(req.body(), Procedure.class);
+            newProcedure = new Procedure(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
-
+;
         try {
+
             database.remove(newProcedure);
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";
         }
 
-        res.status(201);
-        return "Profile Created";
+        res.status(200);
+        return "Procedure Deleted";
     }
 
     /**

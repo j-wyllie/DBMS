@@ -3,6 +3,7 @@ package odms.controller.profile;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.view.profile.ProcedureDetailed;
 import odms.controller.history.CurrentHistory;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 public class ProcedureEdit {
 
     private ProcedureDetailed view;
+    private HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
 
     public ProcedureEdit(ProcedureDetailed v) {
         view = v;
@@ -20,6 +22,7 @@ public class ProcedureEdit {
     public void save() throws IllegalArgumentException {
         Profile profile = view.getProfile();
         Procedure procedure = view.getCurrentProcedure();
+
         History action = new History("profile ", profile.getId(), "EDITED",
                 "",
                 profile.getAllProcedures().indexOf(procedure),
@@ -49,5 +52,7 @@ public class ProcedureEdit {
                         + procedure.getOrgansAffected();
         action.setHistoryData(oldValues + newValues);
         CurrentHistory.updateHistory(action);
+
+        httpProcedureDAO.update(profile, procedure);
     }
 }

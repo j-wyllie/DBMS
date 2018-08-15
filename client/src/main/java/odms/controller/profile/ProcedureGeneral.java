@@ -4,6 +4,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.view.profile.ProceduresDisplay;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class ProcedureGeneral {
     public ProcedureGeneral(ProceduresDisplay v) {
         view = v;
     }
+    private HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
 
     /**
      * Given a procedure, will return whether the procedure has past
@@ -31,7 +33,6 @@ public class ProcedureGeneral {
      */
     @FXML
     public void delete() {
-
         Procedure procedure = view.getSelectedPendingProcedure();
         if (procedure == null) {
             procedure = view.getSelectedPreviousProcedure();
@@ -48,8 +49,7 @@ public class ProcedureGeneral {
      * @param procedure the procedure to remove
      */
     public void removeProcedure(Procedure procedure, Profile profile) {
-        List<Procedure> procedures = profile.getAllProcedures();
-        procedures.remove(procedure);
+        httpProcedureDAO.remove(procedure);
     }
 
     /**
@@ -58,16 +58,7 @@ public class ProcedureGeneral {
      * @return previous procedures
      */
     public List<Procedure> getPreviousProcedures(Profile profile) {
-        ArrayList<Procedure> prevProcedures = new ArrayList<>();
-        List<Procedure> procedures = profile.getAllProcedures();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isBefore(LocalDate.now())) {
-                    prevProcedures.add(procedure);
-                }
-            }
-        }
-        return prevProcedures;
+        return httpProcedureDAO.getAll(profile, false);
     }
 
     /**
@@ -76,15 +67,6 @@ public class ProcedureGeneral {
      * @return pending procedures
      */
     public List<Procedure> getPendingProcedures(Profile profile) {
-        List<Procedure> pendingProcedures = new ArrayList<>();
-        List<Procedure> procedures = profile.getAllProcedures();
-        if (procedures != null) {
-            for (Procedure procedure : procedures) {
-                if (procedure.getDate().isAfter(LocalDate.now())) {
-                    pendingProcedures.add(procedure);
-                }
-            }
-        }
-        return pendingProcedures;
+        return httpProcedureDAO.getAll(profile, true);
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.view.profile.Display;
 import odms.commons.model.enums.OrganEnum;
 
@@ -54,9 +55,9 @@ public class ProcedureAdd {
      *
      * @param procedure
      */
-    public void addProcedure(Procedure procedure, Profile p) {
-        List<Procedure> procedures = p.getAllProcedures();
-        procedures.add(procedure);
+    public void addProcedure(Procedure procedure, Profile profile) {
+        HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
+        httpProcedureDAO.add(profile, procedure);
     }
 
 

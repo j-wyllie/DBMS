@@ -114,12 +114,11 @@ public class Server {
 
             // procedure api endpoints.
             path("/procedures", () -> {
-                get("", ProcedureController::getAll);
-                post("", ProcedureController::add);
-
                 path("/:id", () -> {
+                    get("", ProcedureController::getAll);
                     patch("", ProcedureController::edit);
-                    delete("", ProcedureController::delete);
+                    delete("", ProcedureController::delete);        // id refers to procedure id
+                    post("", ProcedureController::add);
 
                     path("/organs", () -> {
                         get("", ProcedureController::getOrgans);

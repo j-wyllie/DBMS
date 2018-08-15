@@ -161,7 +161,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      * @param procedure to update.
      */
     @Override
-    public void update(Procedure procedure) {
+    public void update(Profile Profile, Procedure procedure) {
         String query = "update procedures set Summary = ?, Description = ?, ProcedureDate = ? "
                 + "where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();

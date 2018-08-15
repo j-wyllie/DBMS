@@ -83,6 +83,10 @@ public class Condition {
         if (isChronic) {this.chronicText = "CHRONIC";}
     }
 
+    public Condition(int id) {
+        this.id = id;
+    }
+
     // getters
     public int getId() { return this.id; }
     public String getName() { return this.name; }
