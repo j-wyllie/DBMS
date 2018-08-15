@@ -32,6 +32,7 @@ public class ProcedureGeneral {
     @Test
     public void testRemoveValidProcedure() {
         Procedure testProcedure = new Procedure("ABC", LocalDate.now());
+        testProcedure.setId(1);
         currentProfile.getAllProcedures().add(testProcedure);
         int initial_size = currentProfile.getAllProcedures().size();
         controller.removeProcedure(testProcedure, currentProfile);

@@ -85,4 +85,8 @@ public class Procedure {
     public void removeAffectedOrgan(OrganEnum organ) {
         organsAffected.remove(organ);
     }
+
+    public void setId(Integer id) {
+        this.procedureId = id;
+    }
 }
