@@ -33,7 +33,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     private OrganEnum organ5;
 
     @Before
-    public void setup() throws SQLException, OrganConflictException {
+    public void setup() throws SQLException, OrganConflictException, UserNotFoundException {
 
         testUser1 = new User(UserType.CLINICIAN, "Clinician", "Auckland");
         testUser1.setUsername("Bob");
@@ -60,6 +60,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         testProfile2 = mySqlProfileDAO.get("ABC2345");
 
         mySqlUserDAO.add(testUser1);
+        testUser1 = mySqlUserDAO.get("Bob");
 
         mysqlOrganDao.addDonating(testProfile2, organ2);
         mysqlOrganDao.addDonation(testProfile2, organ3);
@@ -168,5 +169,6 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.remove(testProfile2);
         mySqlProfileDAO.remove(testProfile1);
+        mySqlUserDAO.remove(testUser1);
     }
 }
