@@ -1,26 +1,24 @@
-package odms.view.user;
+package odms.controller.user;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.shape.Line;
 import javafx.util.Callback;
 
-class TestProgressBar<S> extends TableCell<S, Double> {
+public class OrganExpiryProgressBar<S> extends TableCell<S, Double> {
 
     public static <S> Callback<TableColumn<S, Double>, TableCell<S, Double>> forTableColumn(
             String style) {
-        return param -> new TestProgressBar<>(style);
+        return param -> new OrganExpiryProgressBar<>(style);
     }
 
     private final ProgressBar progressBar;
 
     private ObservableValue<Double> observable;
-    public TestProgressBar(String style) {
+    public OrganExpiryProgressBar(String style) {
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
 
@@ -78,21 +76,23 @@ class TestProgressBar<S> extends TableCell<S, Double> {
             } else if (item != null) {
                 progressBar.setProgress(item);
             }
+            progressBar.setMinWidth(getTableColumn().getWidth());
+            progressBar.setMaxWidth(getTableColumn().getWidth());
 
 
             Group group = new Group();
             group.getChildren().add(progressBar);
             if (value.contains("HEART") || value.contains("LUNG") || value.contains("KIDNEY")) {
-                Line line = new Line(30, 20,   30,   0);
+                Line line = new Line(30*getTableColumn().getWidth()/100, 20,   30*getTableColumn().getWidth()/100,   0);
                 group.getChildren().add(line);
             } else if (value.contains("CORNEA")) {
-                Line line = new Line(28, 20,   28,   0);
+                Line line = new Line(28*getTableColumn().getWidth()/100, 20,   28*getTableColumn().getWidth()/100,   0);
                 group.getChildren().add(line);
             } else if (value.contains("PANCREAS")) {
-                Line line = new Line(50, 20,   50,   0);
+                Line line = new Line(50*getTableColumn().getWidth()/100, 20,   50*getTableColumn().getWidth()/100,   0);
                 group.getChildren().add(line);
             } else if (!value.equals("") && !value.contains("LIVER")) {
-                Line line = new Line(70, 20,   70,   0);
+                Line line = new Line(70*getTableColumn().getWidth()/100, 20,   70*getTableColumn().getWidth()/100,   0);
                 group.getChildren().add(line);
             }
             setGraphic(group);

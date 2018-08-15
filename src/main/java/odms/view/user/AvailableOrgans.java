@@ -4,6 +4,7 @@ import static odms.controller.user.AvailableOrgans.getExpiryLength;
 import static odms.controller.user.AvailableOrgans.getTimeRemaining;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,10 +16,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import odms.controller.user.OrganExpiryProgressBar;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -129,6 +131,7 @@ public class AvailableOrgans extends CommonView {
         dateOfDeathNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
                         cdf.getValue().getKey().getDateOfDeath().toString()));
+        dateOfDeathNameCol.setMinWidth(35);
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
                 "Countdown"
@@ -169,7 +172,7 @@ public class AvailableOrgans extends CommonView {
                         / getExpiryLength(cdf.getValue().getValue())).asObject()
         );
 
-        expiryProgressBarCol.setCellFactory(TestProgressBar.forTableColumn(
+        expiryProgressBarCol.setCellFactory(OrganExpiryProgressBar.forTableColumn(
                 this.getClass().getResource("/styles/Common.css").toExternalForm())
         );
 
