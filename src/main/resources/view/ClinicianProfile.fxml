@@ -1,111 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.controlsfx.control.CheckComboBox?>
-<?import java.lang.String?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" style="-:: #1fa98c;" prefHeight="700.0"
-    prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" fx:id="clinicianAp"
-    fx:controller="odms.view.user.ClinicianProfile">
-    <GridPane style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
-        AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"
-        prefHeight="800.0" prefWidth="1200.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="150.0" valignment="CENTER"
-                vgrow="NEVER"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
-            <RowConstraints/>
-        </rowConstraints>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-        <TabPane GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3"
-            prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE">
-            <Tab onSelectionChanged="#handleGeneralTabClicked" text="General" fx:id="generalTab"/>
-            <Tab onSelectionChanged="#handleConsoleTabClicked" text="Console" fx:id="consoleTab"/>
-            <Tab onSelectionChanged="#handleTabDataManagementClicked"
-                text="Data Management"
-                fx:id="dataManagementTab"/>
-            <Tab onSelectionChanged="#handleSearchTabClicked" text="Search" fx:id="searchTab">
+<AnchorPane fx:id="clinicianAp" prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ClinicianProfile">
+   <children>
+       <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+           <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="150.0" valignment="CENTER" vgrow="NEVER" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+               <RowConstraints />
+           </rowConstraints>
+          <children>
+
+           <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                     <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
+                     <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
+                     <Tab fx:id="dataManagementTab" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management" />
+                     <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search">
             </Tab>
-
-            <Tab onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" fx:id="transplantTab"/>
-            <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users"
-                    fx:id="listUsersTab"/>
-            <Tab onSelectionChanged="#handleTabAvailableClicked" text="Available Organs"
-                    fx:id="availableOrgansTab"/>
+                              <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
+            <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users" fx:id="listUsersTab"/>
+               <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
         </TabPane>
-        <GridPane GridPane.columnSpan="2" stylesheets="@../styles/Common.css">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1141.0" minWidth="10.0"
-                    prefWidth="966.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0"
-                    prefWidth="20.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="15.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="22.0"
-                    vgrow="NEVER"/>
-                <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="74.0"
-                    vgrow="NEVER"/>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            </rowConstraints>
+              <GridPane fx:id="bannerPane" styleClass="banner-clinician" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                  <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="135.0" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="45.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="-Infinity" prefHeight="36.0" vgrow="NEVER" />
+                  </rowConstraints>
             <children>
-                <Label GridPane.rowIndex="1" prefHeight="52.0" prefWidth="972.0"
-                    text="Brooke Anne Rakowitz" textFill="WHITE" fx:id="clinicianFullName">
+            <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
+                <image>
+                    <Image url="@../profile_images/default.png" />
+                </image>
+            </ImageView>
+                <Label fx:id="clinicianFullName" text="Brooke Anne Rakowitz" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="BOTTOM">
                     <font>
-                        <Font name="System Bold" size="40.0"/>
+                        <Font name="System Bold" size="40.0" />
                     </font>
                     <GridPane.margin>
-                        <Insets left="40.0"/>
+                        <Insets />
                     </GridPane.margin>
                 </Label>
-                <Label GridPane.rowIndex="2" prefHeight="40.0" prefWidth="1141.0"
-                    text="Clinician" textFill="WHITE" fx:id="donorStatusLabel">
+                <Label fx:id="roleLabel" text="Clinician" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <font>
-                        <Font size="28.0"/>
+                        <Font size="28.0" />
                     </font>
                     <GridPane.margin>
-                        <Insets left="40.0"/>
+                        <Insets />
                     </GridPane.margin>
                 </Label>
-                <Button style="-fx-background-image: url(icons/logout.png);"
-                    GridPane.columnIndex="3" GridPane.halignment="RIGHT"
-                    GridPane.hgrow="NEVER" GridPane.rowSpan="2"
-                    GridPane.valignment="TOP" GridPane.vgrow="NEVER"
-                    layoutX="1135.0"
-                    layoutY="10.0"
-                    mnemonicParsing="false" onAction="#handleLogoutButtonClicked"
-                    prefHeight="45.0" prefWidth="45.0"
-                    styleClass="button-clinician-logout" stylesheets="@../styles/Common.css"
-                    fx:id="logoutButton">
+                <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Common.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                     <GridPane.margin>
-                        <Insets/>
+                        <Insets />
                     </GridPane.margin>
                     <padding>
-                        <Insets right="15.0"/>
+                        <Insets right="15.0" />
                     </padding>
                 </Button>
             </children>
             <GridPane.margin>
-                <Insets/>
+                <Insets />
             </GridPane.margin>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
-            <styleClass>
-                <String fx:value="banner"/>
-                <String fx:value="banner-clinician"/>
-            </styleClass>
         </GridPane>
-    </GridPane>
+          </children>
+       </GridPane>
+   </children>
 </AnchorPane>

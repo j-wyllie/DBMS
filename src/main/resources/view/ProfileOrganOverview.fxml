@@ -38,7 +38,7 @@
                       <Insets left="5.0" right="5.0" />
                   </GridPane.margin>
               </Button>
-              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBtnDonatedClicked" text="Edit" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+              <Button fx:id="donatedButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBtnDonatedClicked" text="Edit" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                   <GridPane.margin>
                       <Insets left="5.0" />
                   </GridPane.margin>
@@ -63,7 +63,7 @@
                       <Insets left="5.0" right="5.0" />
                   </GridPane.margin>
               </Label>
-              <Label styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Donated" GridPane.columnIndex="2">
+              <Label fx:id="donatedLabel" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Donated" GridPane.columnIndex="2">
                   <GridPane.margin>
                       <Insets left="5.0" />
                   </GridPane.margin>

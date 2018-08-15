@@ -1,5 +1,9 @@
 package odms.view;
 
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsernameOrPassword;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,20 +11,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
-import odms.controller.database.UserDAO;
-import odms.view.profile.Display;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.UserDAO;
 import odms.controller.user.UserNotFoundException;
 import odms.model.profile.Profile;
 import odms.model.user.User;
+import odms.view.profile.Display;
 import odms.view.user.ClinicianProfile;
-import java.io.IOException;
-
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.invalidUsernameOrPassword;
 
 public class LoginView extends CommonController {
 
@@ -44,78 +43,116 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
-     *
-     * @param event clicking on the login button.
      */
     @FXML
-    private void handleLoginButtonClicked(ActionEvent event) {
-        Scene scene;
-
+    private void handleLoginButtonClicked() {
         if (!usernameField.getText().equals("")) {
-
             String username = usernameField.getText();
+
             try {
-                UserDAO database = DAOFactory.getUserDao();
-                currentUser = database.get(username);
-
-                if (currentUser.getPassword() != null && passwordField.getText()
-                        .equals(currentUser.getPassword())) {
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource(
-                                "/view/ClinicianProfile.fxml")
-                        );
-
-                        scene = new Scene(fxmlLoader.load());
-                        ClinicianProfile v = fxmlLoader.getController();
-                        v.setCurrentUser(currentUser);
-                        v.initialize();
-
-                        Stage stage = new Stage();
-                        stage.setTitle(currentUser.getUserType().getName());
-                        stage.setScene(scene);
-                        stage.show();
-                        closeCurrentStage();
-                    } catch (IOException e) {
-                        invalidUsername();
-                    }
-                } else {
-                    invalidUsernameOrPassword();
-                }
-            } catch (UserNotFoundException u) {
-
                 try {
-                    ProfileDAO database = DAOFactory.getProfileDao();
-                    Profile currentProfile = database.get(username);
+                    currentUser = loadUser(username);
 
-                    if (currentProfile != null) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(
-                            getClass().getResource("/view/ProfileDisplay.fxml"));
+                    loadUserView(currentUser);
+                } catch (UserNotFoundException u) {
+                    Profile currentProfile = loadProfile(username);
 
-                        scene = new Scene(fxmlLoader.load());
-                        Display controller = fxmlLoader.getController();
-                        controller.initialize(currentProfile, false, null);
-
-                        Stage stage = new Stage();
-                        stage.setTitle(currentProfile.getFullName() + "'s profile");
-                        stage.setScene(scene);
-                        stage.show();
-
-                        closeCurrentStage();
-                    } else {
-                        AlertController.invalidUsername();
-                    }
-                } catch (NumberFormatException e) {
-                    AlertController.invalidEntry();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    invalidUsername();
+                    loadProfileView(currentProfile);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Load a profile from the database.
+     *
+     * @param username the username to load
+     * @return a profile object
+     * @throws SQLException if a SQL error occurs
+     */
+    private Profile loadProfile(String username) throws SQLException {
+        return DAOFactory.getProfileDao().get(username);
+    }
+
+    /**
+     * Load the profile view.
+     *
+     * @param profile the profile object whose data will be displayed
+     */
+    private void loadProfileView(Profile profile) {
+        try {
+            if (profile != null) {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(
+                        getClass().getResource("/view/ProfileDisplay.fxml"));
+
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Display controller = fxmlLoader.getController();
+                        controller.initialize(profile, false, null);
+
+                Stage stage = new Stage();
+                if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
+                    stage.setTitle(profile.getPreferredName() + "'s profile");
+                } else {
+                    stage.setTitle(profile.getFullName() + "'s profile");
+                }
+                stage.setScene(scene);
+                stage.show();
+
+                closeCurrentStage();
+            } else {
+                AlertController.invalidUsername();
+            }
+        } catch (NumberFormatException e) {
+            AlertController.invalidEntry();
+        } catch (Exception e) {
+            e.printStackTrace();
+            invalidUsername();
+        }
+    }
+
+    /**
+     * Load a user from the database.
+     *
+     * @param username the username to load
+     * @return a user object
+     * @throws SQLException if a SQL error occurs
+     * @throws UserNotFoundException if a user cannot be found
+     */
+    private User loadUser(String username) throws SQLException, UserNotFoundException {
+        UserDAO database = DAOFactory.getUserDao();
+        this.currentUser = database.get(username);
+        return currentUser;
+    }
+
+    /**
+     * Load the user view.
+     */
+    private void loadUserView(User user) {
+        if (user.getPassword() != null && passwordField.getText().equals(user.getPassword())) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(
+                        getClass().getResource("/view/ClinicianProfile.fxml")
+                );
+
+                Scene scene = new Scene(fxmlLoader.load());
+                ClinicianProfile v = fxmlLoader.getController();
+                v.setCurrentUser(user);
+                v.initialize();
+
+                Stage stage = new Stage();
+                stage.setTitle(user.getUserType().getName());
+                stage.setScene(scene);
+                stage.show();
+                closeCurrentStage();
+            } catch (IOException e) {
+                invalidUsername();
+            }
+        } else {
+            invalidUsernameOrPassword();
         }
     }
 
@@ -136,8 +173,11 @@ public class LoginView extends CommonController {
         showScene(event, scene, title, false);
     }
 
+    /**
+     * Handle enter button being used to login.
+     */
     @FXML
-    private void onEnter(ActionEvent event) {
-        handleLoginButtonClicked(event);
+    private void onEnter() {
+        handleLoginButtonClicked();
     }
 }

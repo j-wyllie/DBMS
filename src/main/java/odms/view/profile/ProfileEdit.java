@@ -4,6 +4,8 @@ import static odms.controller.AlertController.profileCancelChanges;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -18,12 +20,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
@@ -40,6 +42,8 @@ import odms.view.CommonView;
  * Profile edit window.
  */
 public class ProfileEdit extends CommonView {
+
+    private static final String MAINCOUNTRY = "New Zealand";
 
     @FXML
     private Label donorFullNameLabel;
@@ -117,7 +121,7 @@ public class ProfileEdit extends CommonView {
     private ComboBox comboCountry;
 
     @FXML
-    private Text pictureText;
+    private Label pictureLabel;
 
     @FXML
     private TextField cityOfDeathField;
@@ -125,13 +129,38 @@ public class ProfileEdit extends CommonView {
     @FXML
     private TextField cityField;
 
+    @FXML
+    private Button removePhotoBtn;
+
     private Profile currentProfile;
-
-    private static final String MAINCOUNTRY = "New Zealand";
-
-    private odms.controller.profile.ProfileEdit controller = new odms.controller.profile.ProfileEdit(
-            this);
+    private odms.controller.profile.ProfileEdit controller =
+            new odms.controller.profile.ProfileEdit(
+                    this
+            );
     private Boolean isOpenedByClinician;
+
+    private File chosenFile;
+    private Boolean removePhoto = false;
+
+    /**
+     * Button handler to undo last action.
+     *
+     * @param event clicking on the undo button.
+     */
+    @FXML
+    private void handleUndoButtonClicked(ActionEvent event) {
+        controller.undo();
+    }
+
+    /**
+     * Button handler to redo last undo action.
+     *
+     * @param event clicking on the redo button.
+     */
+    @FXML
+    private void handleRedoButtonClicked(ActionEvent event) {
+        controller.redo();
+    }
 
     /**
      * Button handler to save the changes made to the fields.
@@ -145,15 +174,15 @@ public class ProfileEdit extends CommonView {
             if (AlertController.saveChanges()) {
                 controller.save();
                 showNotification("profile", event);
-                closeWindow(event);
+            } else {
+                showNotificationFailed("profile", event);
             }
-        } catch (IllegalArgumentException | SQLException e) {
+            closeWindow(event);
+        } catch (IllegalArgumentException e) {
             AlertController.invalidEntry(
-                    e.getMessage() + "\n" +
-                            "Changes not saved."
+                    e.getMessage() + "\n" + "Changes not saved."
             );
         }
-
     }
 
     /**
@@ -189,15 +218,29 @@ public class ProfileEdit extends CommonView {
     /**
      * File picker to choose only supported image types.
      *
-     * @param event clicking on the choose file button.
-     * @throws IOException thrown if an error
+     * @throws IOException if the file cannot be read.
      */
     @FXML
-    private void handleChooseImageClicked(ActionEvent event) throws IOException {
-        File chosenFile = chooseImage(pictureText);
-        File pictureDestination = controller.setImage(chosenFile, LOCALPATH);
-        copyFileUsingStream(chosenFile, pictureDestination);
+    private void handleChooseImageClicked() {
+        Stage stage = (Stage) pictureLabel.getScene().getWindow();
+        this.chosenFile = chooseImage(pictureLabel, stage);
+        if (this.chosenFile != null) {
+            this.pictureLabel.setVisible(true);
+            this.removePhotoBtn.setVisible(false);
+            this.removePhoto = false;
+        }
+    }
 
+    /**
+     * Enable removal of image.
+     */
+    @FXML
+    private void handleRemoveImageClicked() {
+        removePhoto = true;
+
+        pictureLabel.setText("Current photo will be removed");
+        pictureLabel.setVisible(true);
+        removePhotoBtn.setVisible(false);
     }
 
     /**
@@ -299,7 +342,11 @@ public class ProfileEdit extends CommonView {
      * Populates all the fields in the window.
      */
     private void populateFields() {
-        donorFullNameLabel.setText(currentProfile.getFullName());
+        if (currentProfile.getPreferredName() != null && !currentProfile.getPreferredName().isEmpty()) {
+            donorFullNameLabel.setText(currentProfile.getPreferredName());
+        } else {
+            donorFullNameLabel.setText(currentProfile.getFullName());
+        }
 
         donorStatusLabel.setText("Donor Status: Unregistered");
 
@@ -376,12 +423,23 @@ public class ProfileEdit extends CommonView {
         }
 
         comboGenderPref.setEditable(true);
-        comboGenderPref.getItems().addAll("Male", "Female",
-                "Non binary"); //TODO Add database call for all preferred genders.
+        comboGenderPref.getItems().addAll(
+                "Male",
+                "Female",
+                "Non binary"
+        ); // TODO Add database call for all preferred genders.
 
         if (currentProfile.getPreferredGender() != null) {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
         }
+
+        if (currentProfile.getPictureName() != null &&
+                !currentProfile.getPictureName().isEmpty()) {
+
+            removePhotoBtn.setVisible(true);
+            pictureLabel.setVisible(false);
+        }
+
         setUpLocationFields();
         controller.populateDeathFields();
     }
@@ -397,7 +455,7 @@ public class ProfileEdit extends CommonView {
         comboCountry.getItems().addAll(validCountries);
         comboCountryOfDeath.getItems().addAll(validCountries);
 
-        //city and region should be displayed same regardless
+        // City and region should be displayed same regardless
         MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
@@ -554,6 +612,14 @@ public class ProfileEdit extends CommonView {
 
     public void setNhiField(String s) {
         nhiField.setText(s);
+    }
+
+    public File getChosenFile() {
+        return chosenFile;
+    }
+
+    public Boolean getRemovePhoto() {
+        return removePhoto;
     }
 
     public String getLastNamesField() {

@@ -11,17 +11,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import odms.controller.GuiMain;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
-import org.controlsfx.control.table.TableFilter;
 
+/**
+ * View for the transplant waiting list. Contains all GUI element accessors for the transplant
+ * waiting view scene.
+ */
 public class TransplantWaitingList extends CommonView {
 
     private User currentUser;
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
+    private odms.controller.user.TransplantWaitingList controller = new
+            odms.controller.user.TransplantWaitingList(this);
 
     @FXML
     private TableView transplantTable;
@@ -37,17 +41,11 @@ public class TransplantWaitingList extends CommonView {
     @FXML
     private void makeTransplantWaitingList(List<Entry<Profile, OrganEnum>> receivers) {
         transplantTable.getColumns().clear();
-
         receiverObservableList = FXCollections.observableList(receivers);
-        //transplantTable.setItems(receiverObservableList);
-        //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
-        //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
-        //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
-        //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
         TableColumn<Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
                 "Organs Required");
-        //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
+
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
@@ -88,20 +86,24 @@ public class TransplantWaitingList extends CommonView {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
+            makeTransplantWaitingList(controller.getWaitingList());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Set the currentUser and parentView variables. Populates the waiting list table.
+     * @param currentUser current user logged in
+     * @param parentView The clinicianDisplay view object
+     */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
         this.currentUser = currentUser;
         try {
-            makeTransplantWaitingList(GuiMain.getCurrentDatabase().getAllOrgansRequired());
-            TableFilter filter = new TableFilter<>(transplantTable);
+            makeTransplantWaitingList(controller.getWaitingList());
         } catch (Exception e) {
             e.printStackTrace();
         }

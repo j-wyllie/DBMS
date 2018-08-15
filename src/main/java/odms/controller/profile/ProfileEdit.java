@@ -1,16 +1,14 @@
 package odms.controller.profile;
 
-import static odms.App.getProfileDb;
-
 import java.io.File;
-import java.sql.SQLException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
-import odms.controller.data.ProfileDataIO;
+import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
@@ -34,51 +32,71 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
+     * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public void save() throws IllegalArgumentException, SQLException {
-        // history Generation
-        odms.model.history.History action = new odms.model.history.History("profile",
-                currentProfile.getId(), "update",
-                "previous " + currentProfile.getAttributesSummary(), -1, null);
+    public Boolean save() {
+        if (AlertController.saveChanges()) {
+            try {
+                // History Generation
+                odms.model.history.History action = new odms.model.history.History(
+                        "profile",
+                        currentProfile.getId(),
+                        "update",
+                        "previous " + currentProfile.getAttributesSummary(),
+                        -1,
+                        null
+                );
 
-        saveDeathDetails();
-        // Required General Fields
-        saveDateOfBirth();
-        saveGivenNames();
-        saveNhi();
-        saveLastNames();
+                saveDeathDetails();
 
-        // Optional General Fields
-        saveAddress();
-        saveDateOfDeath();
-        saveEmail();
-        saveGender();
-        saveHeight();
-        savePhone();
-        savePreferredGender();
-        savePreferredName();
-        saveRegion();
-        saveWeight();
+                // Required General Fields
+                saveChosenImage();
+                saveDateOfBirth();
+                saveGivenNames();
+                saveLastNames();
+                saveNhi();
 
-        // Medical Fields
-        saveAlcoholConsumption();
-        saveBloodPressure();
-        saveBloodType();
-        saveIsSmoker();
+                // Optional General Fields
+                saveAddress();
+                saveDateOfDeath();
+                saveEmail();
+                saveGender();
+                saveHeight();
+                savePhone();
+                savePreferredGender();
+                savePreferredName();
+                saveRegion();
+                saveWeight();
 
-        saveCity();
-        saveCountry();
-        saveRegion();
+                // Medical Fields
+                saveAlcoholConsumption();
+                saveBloodPressure();
+                saveBloodType();
+                saveIsSmoker();
 
-        ProfileDAO database = DAOFactory.getProfileDao();
-        database.update(currentProfile);
+                saveCity();
+                saveCountry();
+                saveRegion();
 
-        // history Changes
-        action.setHistoryData(
-                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-        action.setHistoryTimestamp(LocalDateTime.now());
-        CurrentHistory.updateHistory(action);
+                ProfileDAO database = DAOFactory.getProfileDao();
+                database.update(currentProfile);
+
+                // history Changes
+                action.setHistoryData(
+                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+                action.setHistoryTimestamp(LocalDateTime.now());
+                CurrentHistory.updateHistory(action);
+
+                return true; // successful edit
+            } catch (Exception e) {
+                AlertController.invalidEntry(
+                        e.getMessage() + "\n" + "Changes not saved."
+                );
+                return false; // unsuccessful edit
+            }
+        }
+        return false;
     }
 
     /**
@@ -115,6 +133,7 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Checks that the region of death is valid.
+     *
      * @return The string of the valid region, null otherwise.
      */
     private String checkValidRegionOfDeath() {
@@ -158,6 +177,11 @@ public class ProfileEdit extends CommonController {
         currentProfile.setRegionOfDeath(region);
     }
 
+    /**
+     * Save City of deaith field to profile.
+     *
+     * @param city
+     */
     private void saveCityofDeath(String city) {
         currentProfile.setCityOfDeath(city);
     }
@@ -219,6 +243,25 @@ public class ProfileEdit extends CommonController {
             );
         }
         currentProfile.setDateOfBirth(view.getdobDatePicker());
+    }
+
+    /**
+     * Save Chosen Image.
+     *
+     * @throws IOException if there is a exception handling the file
+     */
+    public void saveChosenImage() throws IOException {
+        File chosenFile = view.getChosenFile();
+        if (chosenFile != null) {
+            currentProfile.setPictureName(
+                    ImageDataIO.deleteAndSaveImage(
+                            chosenFile, currentProfile.getNhi()
+                    )
+            );
+        } else if (view.getRemovePhoto()) {
+            ImageDataIO.deleteImage(currentProfile.getNhi());
+            currentProfile.setPictureName(null);
+        }
     }
 
     /**
@@ -447,35 +490,6 @@ public class ProfileEdit extends CommonController {
     @FXML
     public Profile close() {
         return currentProfile;
-    }
-
-    /**
-     * Sets the image in the edit profile view.
-     *
-     * @param chosenFile file chosen.
-     * @param LOCALPATH local path of the chosen file.
-     * @return Picture destination.
-     */
-    public File setImage(File chosenFile, File LOCALPATH) {
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
-            }
-            if (deleteFile.delete()) {
-                System.out.println("Old file deleted successfully");
-            } else {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(
-                    LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
-            currentProfile.setPictureName(chosenFile.getName());
-            return pictureDestination;
-        }
-        return null;
     }
 
     /**

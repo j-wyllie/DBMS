@@ -26,6 +26,7 @@ import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
+import odms.view.user.TransplantWaitingList;
 
 public class OrganDisplay extends CommonView {
 
@@ -45,6 +46,7 @@ public class OrganDisplay extends CommonView {
 
     @FXML
     private ListView<String> listViewReceiving;
+
     @FXML
     private Label donatingLabel;
 
@@ -63,11 +65,26 @@ public class OrganDisplay extends CommonView {
     @FXML
     private Button expiredButton;
 
+    @FXML
+    private Button donatedButton;
+
+    @FXML
+    private Label donatedLabel;
 
     private static OrganSelectEnum windowType;
+    private TransplantWaitingList transplantWaitingListView;
     private User currentUser;
 
-    public void initialize(Profile p, Boolean isClinician, User user) {
+    /**
+     * init organ display scene. Sets variables and object visibility status.
+     * @param p current profile being viewed
+     * @param isClinician boolean, is true if is profile was opened by clinician/admin user
+     * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
+     * @param user the logged in user
+     * profile was not opened by a clinician or admin
+     */
+    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) {
+        transplantWaitingListView = transplantWaitingList;
         currentProfile = p;
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
@@ -87,16 +104,18 @@ public class OrganDisplay extends CommonView {
         }
 
         if (!isClinician) {
-            if (DAOFactory.getOrganDao().getDonating(currentProfile).isEmpty()) {
-                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, false);
+            if (DAOFactory.getOrganDao().getDonations(currentProfile).isEmpty()) {
+                visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, false);
             } else {
-                visibilityLists(listViewDonating, donatingLabel, donatingButton, 0, true);
+                visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, true);
             }
             if (DAOFactory.getOrganDao().getRequired(currentProfile).isEmpty()) {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
             } else {
                 visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
             }
+            receivingButton.setVisible(false);
+            donatedButton.setVisible(false);
 
             RowConstraints zeroHeight = new RowConstraints();
             zeroHeight.setPrefHeight(0);
@@ -136,6 +155,7 @@ public class OrganDisplay extends CommonView {
     @FXML
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
+
     }
 
     @FXML
@@ -168,8 +188,9 @@ public class OrganDisplay extends CommonView {
      * @param list   List to set invisible
      * @param label  Label to set invisible.
      * @param button Button to set invisible.
+     * @param column The grid column to set constraints for
+     * @param bool true if column should be shown
      */
-
     private void visibilityLists(ListView<String> list, Label label, Button button, Integer column,
             Boolean bool) {
         if (!bool) {
@@ -222,10 +243,12 @@ public class OrganDisplay extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-//        stage.setOnCloseRequest(ob -> {
         stage.setOnHiding((ob) -> {
             populateOrganLists();
             refreshListViews();
+            if (transplantWaitingListView != null) {
+                transplantWaitingListView.refreshTable();
+            }
         });
         stage.show();
     }
