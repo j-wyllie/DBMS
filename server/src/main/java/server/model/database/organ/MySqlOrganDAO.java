@@ -93,6 +93,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
+        profile.addOrganDonated(organ);
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -120,12 +121,14 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Adds an organ to a profiles organs to donate.
+     *
      * @param profile to donate.
      * @param organ to donate.
      * @throws OrganConflictException error.
      */
     @Override
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
+        profile.addOrganDonating(organ);
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -147,7 +150,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new OrganConflictException();
         }
     }
 
@@ -158,6 +161,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
+        profile.addOrganRequired(organ);
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
