@@ -654,6 +654,11 @@ public class Profile implements Comparable<Profile> {
         return organsDonating;
     }
 
+    public HashSet<OrganEnum> getOrgansDonatingNotExpired() {
+        //TODO implement
+        return organsDonating;
+    }
+
     public HashSet<OrganEnum> getOrgansExpired() {return organsExpired;}
 
     // Condition functions

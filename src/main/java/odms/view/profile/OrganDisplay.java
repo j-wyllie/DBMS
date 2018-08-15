@@ -1,5 +1,8 @@
 package odms.view.profile;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,10 +26,6 @@ import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 public class OrganDisplay extends CommonView {
 
@@ -149,8 +148,9 @@ public class OrganDisplay extends CommonView {
      * conflicting organs. Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
+
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
+        populateOrganList(observableListDonating, currentProfile.getOrgansDonatingNotExpired());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
