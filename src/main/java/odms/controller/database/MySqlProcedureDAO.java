@@ -111,6 +111,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public void remove(Procedure procedure) {
         String query = "delete from procedures where Id = ?;";
+        String query2 = "delete from procedures where ProcedureId = ?";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -120,8 +121,14 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(1, procedure.getId());
 
             stmt.executeUpdate();
-            conn.close();
             stmt.close();
+
+            PreparedStatement stmt2 = conn.prepareStatement(query2);
+            stmt2.setInt(1, procedure.getId());
+
+            stmt2.executeUpdate();
+            stmt2.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

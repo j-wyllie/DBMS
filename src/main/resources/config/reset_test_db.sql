@@ -190,7 +190,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
-  `PreferredGender` varchar(30) DEFAULT NULL
+  `PreferredGender` varchar(30) DEFAULT NULL,
+  `ImageName` VARCHAR(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

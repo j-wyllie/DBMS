@@ -1,14 +1,20 @@
 package odms.view.profile;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import odms.controller.data.ImageDataIO;
 import odms.model.profile.Profile;
 
 import java.io.IOException;
 import odms.view.CommonView;
+import odms.view.user.TransplantWaitingList;
 
 import static odms.controller.AlertController.invalidUsername;
 
@@ -26,7 +32,7 @@ public class Display extends CommonView {
     @FXML
     private Label donorStatusLabel;
     @FXML
-    private Label userIdLabel;
+    private Label nhiLabel;
     @FXML
     private Label receiverStatusLabel;
     @FXML
@@ -45,8 +51,11 @@ public class Display extends CommonView {
     private Tab tabProcedures;
     @FXML
     private Button logoutButton;
+    @FXML
+    private ImageView profileImage;
 
     private Boolean isOpenedByClinician = false;
+    private TransplantWaitingList transplantWaitingListView;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -68,7 +77,7 @@ public class Display extends CommonView {
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         //todo showLoginScene(event);
         currentProfile = null;
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
 
@@ -80,7 +89,12 @@ public class Display extends CommonView {
     @FXML
     private void setPage(Profile currentProfile) {
         try {
-            donorFullNameLabel.setText(currentProfile.getFullName());
+            if (currentProfile.getPreferredName() != null && !currentProfile.getPreferredName().isEmpty()) {
+                donorFullNameLabel.setText(currentProfile.getPreferredName());
+            } else {
+                donorFullNameLabel.setText(currentProfile.getFullName());
+            }
+
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
@@ -100,10 +114,11 @@ public class Display extends CommonView {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
-            if (currentProfile.getId() != null) {
-                userIdLabel
-                        .setText(userIdLabel.getText() + Integer.toString(currentProfile.getId()));
+            if (currentProfile.getNhi() != null) {
+                nhiLabel.setText("NHI : " + currentProfile.getNhi());
             }
+
+            setProfileImage();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +153,7 @@ public class Display extends CommonView {
             System.out.println(e.getMessage());
         }
         OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician);
+        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView);
     }
 
     @FXML
@@ -195,10 +210,23 @@ public class Display extends CommonView {
         try {
             tabProcedures.setContent(loader.load());
             ProceduresDisplay profileProceduresView = loader.getController();
-            profileProceduresView.initialize(currentProfile);
+            profileProceduresView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    private void setProfileImage() throws MalformedURLException {
+        File image = ImageDataIO.getImagePath(currentProfile.getPictureName());
+
+        if (image == null || !image.exists()) {
+            image = new File(
+                    new File("."),
+                    "src/main/resources/profile_images/default.png"
+            );
+        }
+
+        profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 
     /**
@@ -206,11 +234,17 @@ public class Display extends CommonView {
      *
      * @param profile to be used
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
+     * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
+     * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile profile, Boolean isOpenedByClinician) {
+    public void initialize(Profile profile, Boolean isOpenedByClinician,
+            TransplantWaitingList transplantWaitingList) {
         this.isOpenedByClinician = isOpenedByClinician;
         if (isOpenedByClinician) {
             logoutButton.setVisible(false);
+        }
+        if (transplantWaitingList != null) {
+            transplantWaitingListView = transplantWaitingList;
         }
         currentProfile = profile;
         setPage(profile);

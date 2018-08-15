@@ -1,6 +1,5 @@
 package odms.view.user;
 
-
 import java.io.IOException;
 import java.util.List;
 import javafx.beans.Observable;
@@ -59,7 +58,6 @@ public class UserGeneral {
             .observableArrayList(
                     param -> new Observable[]{param.getValidProperty()});
 
-
     /**
      * Button handler to undo last action.
      *
@@ -99,15 +97,13 @@ public class UserGeneral {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         //todo replace scene change with standardised and controller with view
         ClinicianEdit v = fxmlLoader.getController();
-        v.setCurrentUser(currentUser);
-        v.initialize();
+        v.initialize(currentUser);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Edit profile");
