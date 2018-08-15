@@ -169,7 +169,9 @@ public class ProfileEdit extends CommonController {
     }
 
     /**
-     * Save City of deaith field to profile.
+     * Save City of death field to profile.
+     *
+     * @param city city of death string
      */
     private void saveCityofDeath(String city) {
         currentProfile.setCityOfDeath(city);
