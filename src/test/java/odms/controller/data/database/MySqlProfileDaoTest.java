@@ -24,7 +24,9 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,
     "Jack", "Hay", LocalDate.of(1997, 12, 29), null, "male",
     180d, 81d, "O-", true, null, 133, 80, "123 fake street", "Canterbury", "314324134",
-    "jha56@uclive.ac.nz", "NZ", "not", "Noot", "Neet", "Reee", LocalDateTime.now(), LocalDateTime.now());
+    "jha56@uclive.ac.nz", "NZ", "not", "Noot", "Neet", "Reee", LocalDateTime.now(),
+            LocalDateTime.now(), null, null, null
+    );
     private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
     private Profile testProfile1 = new Profile("Jack", "Hay", LocalDate.of(1998, 2, 27), "CBA43211");
 

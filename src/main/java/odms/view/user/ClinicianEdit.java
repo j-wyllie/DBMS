@@ -12,9 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.UserDAO;
@@ -22,9 +22,12 @@ import odms.model.user.User;
 import odms.view.CommonView;
 
 public class ClinicianEdit extends CommonView {
-    private static User currentUser;
+    private User currentUser;
 
     private odms.controller.user.ClinicianEdit controller = new odms.controller.user.ClinicianEdit(this);
+
+    @FXML
+    private TextField addressField;
 
     @FXML
     private Label clinicianFullName;
@@ -33,51 +36,33 @@ public class ClinicianEdit extends CommonView {
     private TextField givenNamesField;
 
     @FXML
-    private TextField staffIdField;
+    private Label pictureLabel;
 
     @FXML
-    private TextField addressField;
+    private TextField staffIdField;
 
     @FXML
     private TextField regionField;
 
     @FXML
-    private Text pictureText;
+    private Button removePhotoBtn;
 
+    private File chosenFile;
+    private Boolean removePhoto = false;
 
     /**
      * File picker to choose only supported image types.
-     *
-     * @param event clicking on the choose file button.
      */
-
     @FXML
-    private void clinicianChooseImageClicked(ActionEvent event) throws IOException {
-        File chosenFile = chooseImage(pictureText);
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" +
-                        currentUser.getStaffID().toString() + ".jpg"
-                );
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" +
-                        currentUser.getStaffID().toString() + ".png"
-                );
-            }
-            if (deleteFile.delete()) {
-                System.out.println("Old file deleted successfully");
-            } else {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(LOCALPATH + "\\" +
-                    currentUser.getStaffID().toString() + "." + extension);
-            copyFileUsingStream(chosenFile, pictureDestination);
-            currentUser.setPictureName(chosenFile.getName());
+    private void handleChooseImageClicked() {
+        Stage stage = (Stage) clinicianFullName.getScene().getWindow();
+        this.chosenFile = chooseImage(pictureLabel, stage);
+        if (this.chosenFile != null) {
+            this.pictureLabel.setVisible(true);
+            this.removePhotoBtn.setVisible(false);
+            this.removePhoto = false;
         }
     }
-
 
     /**
      * Button handler to cancel the changes made to the fields.
@@ -90,6 +75,18 @@ public class ClinicianEdit extends CommonView {
         if (cancelBool) {
             openClinicianWindow(event);
         }
+    }
+
+    /**
+     * Enable removal of image.
+     */
+    @FXML
+    private void handleRemoveImageClicked() {
+        removePhoto = true;
+
+        pictureLabel.setText("Current photo will be removed");
+        pictureLabel.setVisible(true);
+        removePhotoBtn.setVisible(false);
     }
 
     /**
@@ -119,7 +116,7 @@ public class ClinicianEdit extends CommonView {
         }
     }
 
-    public void openClinicianWindow(ActionEvent event) throws IOException {
+    private void openClinicianWindow(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
 
@@ -138,13 +135,15 @@ public class ClinicianEdit extends CommonView {
      * Sets the current clinician attributes to the labels on start up.
      */
     @FXML
-    public void initialize() {
+    public void initialize(User currentUser) {
+        this.currentUser = currentUser;
         try {
             clinicianFullName.setText(currentUser.getName());
 
             if (currentUser.getName() != null) {
                 givenNamesField.setText(currentUser.getName());
             }
+
             if (currentUser.getStaffID() != null) {
                 staffIdField.setText(currentUser.getStaffID().toString());
             }
@@ -156,13 +155,22 @@ public class ClinicianEdit extends CommonView {
             if (currentUser.getRegion() != null) {
                 regionField.setText(currentUser.getRegion());
             }
+
+            if (currentUser.getPictureName() != null && !currentUser.getPictureName().isEmpty()) {
+                removePhotoBtn.setVisible(true);
+                pictureLabel.setVisible(false);
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public File getChosenFile() {
+        return chosenFile;
+    }
+
+    public Boolean getRemovePhoto() {
+        return removePhoto;
     }
 
     public User getUser() {

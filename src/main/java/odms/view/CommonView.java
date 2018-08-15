@@ -1,11 +1,7 @@
 package odms.view;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.event.ActionEvent;
@@ -15,14 +11,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import odms.controller.GuiMain;
 import odms.controller.history.Redo;
 import odms.controller.history.Undo;
@@ -36,10 +32,7 @@ import org.controlsfx.control.Notifications;
 public class CommonView {
     private static boolean isEdited = false;
 
-    protected static File LOCALPATH = new File(System.getProperty("user.dir"));
-
     protected static Collection<Stage> openProfileStages = new ArrayList<>();
-
 
     /**
      * Scene change to log in view.
@@ -47,10 +40,11 @@ public class CommonView {
      * @param event clicking on the logout button.
      */
     @FXML
-    protected void changeScene(ActionEvent event, String resourceName) throws IOException {
+    protected void changeScene(ActionEvent event, String resourceName, String title) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(resourceName));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.setTitle(title);
         appStage.setScene(newScene);
         appStage.show();
     }
@@ -123,7 +117,6 @@ public class CommonView {
         appStage.setScene(scene);
         appStage.show();
     }
-
 
     /**
      * Button handler to make fields editable.
@@ -258,30 +251,57 @@ public class CommonView {
     }
 
     /**
+     * Shows a notification on the parent of which the event occurred shows for 2.5 seconds. For
+     * unsuccessful events.
+     *
+     * @param event       The event which is wanted to trigger a notification
+     * @param editedField String of which is the thing edited.
+     */
+    @FXML
+    protected void showNotificationFailed(String editedField, ActionEvent event) throws IOException {
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (currentStage.getTitle().contains("(*)")) {
+            currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
+        }
+
+        Notifications.create()
+                .title("Edit Unsuccessful")
+                .text("The " + editedField + " changes were not changed.")
+                .hideAfter(Duration.millis(2500))
+                .position(Pos.BOTTOM_LEFT)
+                .owner(currentStage)
+                .show();
+    }
+
+    /**
      * Creates a new window when a row in the search table is double clicked. The new window
      * contains a donors profile.
      *
-     * @param donor The donor object that has been clicked on
+     * @param profile The donor object that has been clicked on
      * @param parentView The parent view of the stage being created
      */
     @FXML
-    protected void createNewDonorWindow(Profile donor, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(donor, true);
+            controller.initialize(profile, true, parentView.getTransplantWaitingList());
 
             Stage stage = new Stage();
-            stage.setTitle(donor.getFullName() + "'s profile");
+            if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
+                stage.setTitle(profile.getPreferredName() + "'s profile");
+            } else {
+                stage.setTitle(profile.getFullName() + "'s profile");
+            }
             stage.setScene(scene);
+            parentView.addToOpenProfileStages(stage);
             stage.show();
             stage.setOnCloseRequest((WindowEvent event) -> {
                 parentView.closeStage(stage);
             });
-            parentView.addToOpenProfileStages(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -292,51 +312,28 @@ public class CommonView {
      *
      * @param pictureText user feedback text to update on profile picture edit
      */
+    protected File chooseImage(Label pictureText, Stage stage) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Image File");
+        ExtensionFilter extFilter = new ExtensionFilter(
+                "Image Files (*.jpg;*.png)",
+                "*.jpg", "*.png"
+        );
+        chooser.getExtensionFilters().add(extFilter);
 
-    protected File chooseImage(Text pictureText) throws IOException{
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Images", "jpg", "png");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = chooser.showOpenDialog(stage);
 
-            if (chooser.getSelectedFile().length() > 1000000) {
-                pictureText.setText("Photos must be less than 1 mb! \n" + "Choose another ");
+        if (file != null) {
+            if (file.length() > 1000000) {
+                pictureText.setText("Photos must be less than 1 mb! \n"
+                        + "Choose another ");
                 return null;
             }
 
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            pictureText.setText(chooser.getSelectedFile().getName());
+            pictureText.setText(file.getName());
         }
-        return chooser.getSelectedFile();
-    }
 
-    /**
-     * Copies a file from source to dest
-     *
-     * @param source File source in local directory
-     * @param dest File destination in local directory
-     */
-    protected static void copyFileUsingStream(File source, File dest) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-        } finally {
-            try { if (is != null) is.close();
-            } catch(IOException e){System.out.println("Error in closing input stream for source." + source);}
-            try { if (os != null) os.close();
-            } catch(IOException e){System.out.println("Error in closing output stream for destination." + dest);}
-
-        }
+        return file;
     }
 
     /**
