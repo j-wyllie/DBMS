@@ -29,7 +29,6 @@ public class User extends CommandUtils {
      * Create clinician.
      *
      * @param rawInput raw command input.
-     * @return staffID the staff id of created clinician.
      */
     public static void createClinician(String rawInput) {
         try {
