@@ -58,6 +58,9 @@ public class OrganDisplay extends CommonView {
     private Button donatedButton;
 
     @FXML
+    private Button donatingButton;
+
+    @FXML
     private Label donatedLabel;
 
     private static OrganSelectEnum windowType;
