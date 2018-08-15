@@ -346,16 +346,16 @@ public class ProfileMedicalHistory extends CommonView {
     @FXML
     private void handleToggleCuredButtonClicked(ActionEvent event) {
         try {
-            controller.toggleCured(currentProfile,getSelectedConditions());
+            controller.toggleCured(currentProfile, getSelectedConditions());
         } catch (IllegalArgumentException e) {
             AlertController.invalidEntry(e.getMessage());
         }
         refreshConditionTable();
     }
 
-        public Profile getCurrentProfile() {
+    public Profile getCurrentProfile() {
         return currentProfile;
-        }
+    }
 
     /**
      * hides items that shouldn't be visible to either a donor or clinician
