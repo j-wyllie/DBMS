@@ -29,11 +29,11 @@ public class OrganExpired extends CommonController {
     }
 
 
-    public List<ExpiredOrgan> getExpiredOrgans(Profile profile) {
+    public List<ExpiredOrgan> getExpiredOrgans(Profile profile) throws SQLException {
         return DAOFactory.getOrganDao().getExpired(profile);
     }
 
-    public void revertExpired(Integer profileId, String organ) {
+    public void revertExpired(Integer profileId, String organ) throws SQLException {
         DAOFactory.getOrganDao().revertExpired(profileId, organ);
     }
 

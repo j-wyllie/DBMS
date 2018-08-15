@@ -119,7 +119,12 @@ public class AvailableOrgans {
             setOrganExpired(organ, profile);
         }
         if(!profile.getDateOfDeath().equals(null)){
-            List<ExpiredOrgan> expiredList = DAOFactory.getOrganDao().getExpired(profile);
+            List<ExpiredOrgan> expiredList = null;
+            try {
+                expiredList = DAOFactory.getOrganDao().getExpired(profile);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             for(ExpiredOrgan currentOrgan: expiredList){
                 if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
                     view.removeItem(m);

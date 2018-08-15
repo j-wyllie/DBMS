@@ -3,25 +3,30 @@ package odms.view.profile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.controller.AlertController;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 import odms.view.CommonView;
+
+import java.sql.SQLException;
 
 /**
  * Control the organ removal view for selecting reasoning behind removing an organ from a profile.
  */
 public class OrganOverride extends CommonView {
-    @FXML
-    private Label dynamicLabel;
 
     @FXML
     private Label organLabel;
 
     @FXML
     private TextField reasonText;
+
+    @FXML
+    private Button confirmButton;
 
     private Profile currentProfile;
     private String currentOrgan;
@@ -38,7 +43,11 @@ public class OrganOverride extends CommonView {
     @FXML
     private void handleConfirmButtonAction(ActionEvent event) {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        controller.confirm();
+        try {
+            controller.confirm();
+        } catch (SQLException e) {
+            AlertController.invalidEntry("Failed to override organ expiry.");
+        }
         appStage.close();
     }
 
@@ -65,6 +74,15 @@ public class OrganOverride extends CommonView {
         currentProfile = profile;
         currentOrgan = organ;
         organLabel.setText(organLabel.getText() + organ);
+        confirmButton.setDisable(true);
+
+        reasonText.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() < 1) {
+                confirmButton.setDisable(true);
+            } else {
+                confirmButton.setDisable(false);
+            }
+        });
     }
 
     public Profile getCurrentProfile() {

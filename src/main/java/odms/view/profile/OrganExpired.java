@@ -1,6 +1,7 @@
 package odms.view.profile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.controller.AlertController;
 import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.ExpiredOrgan;
@@ -65,8 +67,11 @@ public class OrganExpired extends OrganCommon{
         currentUser = user;
 
 
-
-        organs = controller.getExpiredOrgans(profile);
+        try {
+            organs = controller.getExpiredOrgans(profile);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         observableExpiredOrganList.addAll(organs);
 
         expiredOrganTable.setItems(observableExpiredOrganList);
@@ -101,8 +106,13 @@ public class OrganExpired extends OrganCommon{
     public void onBtnRevertClicked() {
         String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
         Integer profileId = currentProfile.getId();
-        controller.revertExpired(profileId, organ);
-        observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
+        try {
+            controller.revertExpired(profileId, organ);
+            observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
+        } catch (SQLException e) {
+            AlertController.invalidEntry("Failed to revert manual override.");
+        }
+
 
     }
 
@@ -138,7 +148,11 @@ public class OrganExpired extends OrganCommon{
      * Refresh the ListViews to reflect changes made from the edit pane.
      */
     private void refreshTableView() {
-        organs = controller.getExpiredOrgans(currentProfile);
+        try {
+            organs = controller.getExpiredOrgans(currentProfile);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         observableExpiredOrganList.clear();
         observableExpiredOrganList.addAll(organs);
         expiredOrganTable.refresh();

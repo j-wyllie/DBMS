@@ -2,6 +2,7 @@ package odms.controller.profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -550,7 +551,7 @@ public class ProfileEdit extends CommonController {
         isClinician = bool;
     }
 
-    public boolean getManuallyExpiredOrgans() {
+    public boolean getManuallyExpiredOrgans() throws SQLException{
         return !DAOFactory.getOrganDao().getExpired(currentProfile).isEmpty();
     }
 }

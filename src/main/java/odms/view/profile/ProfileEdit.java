@@ -328,14 +328,18 @@ public class ProfileEdit extends CommonView {
                 deathDetailsSetDisable(true);
                 clearDodField();
             }
-            if(controller.getManuallyExpiredOrgans()) {
-                disableItems();
-                dodPane.hoverProperty().addListener(observable -> {
-                    if (dodPane.isHover()) {
-                        dodPane.setTooltip(new Tooltip("Profile has manually expired organ(s)."));
-                    }
-                });
+            try {
+                if(controller.getManuallyExpiredOrgans()) {
+                    disableItems();
+                    dodPane.hoverProperty().addListener(observable -> {
+                        if (dodPane.isHover()) {
+                            dodPane.setTooltip(new Tooltip("Profile has manually expired organ(s)."));
+                        }
+                    });
 
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

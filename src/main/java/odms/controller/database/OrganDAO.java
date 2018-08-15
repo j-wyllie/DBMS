@@ -1,5 +1,6 @@
 package odms.controller.database;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import odms.model.enums.OrganEnum;
@@ -42,7 +43,7 @@ public interface OrganDAO {
      *
      * @param profile to get the organs for.
      */
-    List<ExpiredOrgan> getExpired(Profile profile);
+    List<ExpiredOrgan> getExpired(Profile profile) throws SQLException;
 
     /**
      * Adds an organ to a profiles past donations.
@@ -119,7 +120,7 @@ public interface OrganDAO {
      * @param note   Clinician's reason to update.
      * @param userId   Clinician's user Id.
      */
-    void setExpired(Profile profile, String organ,Integer expired, String note, Integer userId);
+    void setExpired(Profile profile, String organ,Integer expired, String note, Integer userId) throws SQLException;
 
 
     /**
@@ -128,5 +129,5 @@ public interface OrganDAO {
      * @param profileId to revert organ expired.
      * @param organ   to revert.
      */
-    void revertExpired(Integer profileId, String organ);
+    void revertExpired(Integer profileId, String organ) throws SQLException;
 }

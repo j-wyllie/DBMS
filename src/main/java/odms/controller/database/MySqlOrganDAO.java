@@ -348,29 +348,24 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param userId   Clinician's user Id.
      */
     @Override
-    public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId){
+    public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId) throws SQLException {
         String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP " +
                 "WHERE ProfileId = ? and Organ = ? and ToDonate = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, expired);
-            stmt.setInt(2, userId);
-            stmt.setString(3, note);
-            stmt.setInt(4, profile.getId());
-            stmt.setString(5, organ);
-            stmt.setInt(6, 1);
+        Connection conn = instance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, expired);
+        stmt.setInt(2, userId);
+        stmt.setString(3, note);
+        stmt.setInt(4, profile.getId());
+        stmt.setString(5, organ);
+        stmt.setInt(6, 1);
 
 
-            stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+        stmt.executeUpdate();
+        conn.close();
+        stmt.close();
     }
 
     /**
@@ -380,23 +375,19 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param organ   to revert.
      */
     @Override
-    public void revertExpired(Integer profile, String organ){
+    public void revertExpired(Integer profile, String organ) throws SQLException {
         String query = "UPDATE organs SET Expired = NULL , UserId = NULL , Note = NULL WHERE ProfileId = ? and Organ = ? ;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile);
-            stmt.setString(2, organ);
+        Connection conn = instance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, profile);
+        stmt.setString(2, organ);
 
 
-            stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+        stmt.executeUpdate();
+        conn.close();
+        stmt.close();
+
     }
 }

@@ -5,6 +5,8 @@ import odms.controller.database.DAOFactory;
 import odms.model.profile.Profile;
 import odms.model.user.User;
 
+import java.sql.SQLException;
+
 public class OrganOverride extends CommonController {
     odms.view.profile.OrganOverride view;
 
@@ -12,8 +14,7 @@ public class OrganOverride extends CommonController {
         this.view = view;
     }
 
-    public void confirm() {
-        System.out.println("HERE");
+    public void confirm() throws SQLException {
         Integer isExpired = 1;
         DAOFactory.getOrganDao().setExpired(view.getCurrentProfile(), view.getCurrentOrgan(), isExpired,
                 view.getReasonText(), view.getCurrentUser().getStaffID());
