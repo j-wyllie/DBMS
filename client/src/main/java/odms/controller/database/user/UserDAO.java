@@ -52,7 +52,7 @@ public interface UserDAO {
      * Updates a users information in the database.
      * @param user to update.
      */
-    void update(User user) throws SQLException;
+    void update(User user) throws SQLException, IllegalArgumentException;
 
     /**
      * Searches the database for users based on their id.

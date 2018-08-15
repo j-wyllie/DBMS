@@ -14,6 +14,7 @@ public class UserController {
 
     /**
      * Gets all users stored.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -39,6 +40,7 @@ public class UserController {
 
     /**
      * Gets a single user from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -53,8 +55,8 @@ public class UserController {
                 user = database.get(req.queryParams("username"));
             }
         } catch (UserNotFoundException e) {
-                res.status(400);
-                return e.getMessage();
+            res.status(400);
+            return e.getMessage();
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -71,6 +73,7 @@ public class UserController {
 
     /**
      * Creates and stores a new user.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -107,6 +110,7 @@ public class UserController {
 
     /**
      * Edits a stored user.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -124,13 +128,16 @@ public class UserController {
             return "Bad Request";
         }
 
-        if (!(user == null)) {
-            try {
+        try {
+            if (!database.isUniqueUsername(user.getUsername())) {
                 database.update(user);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
+            } else {
+                res.status(403);
+                return "Forbidden";
             }
+        } catch (SQLException e) {
+            res.status(500);
+            return "Internal Server Error";
         }
 
         res.status(200);
@@ -139,6 +146,7 @@ public class UserController {
 
     /**
      * Deletes a user from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.

@@ -103,6 +103,8 @@ public class User extends CommandUtils {
                 System.out.println("Clinician(s) successfully updated.");
             } catch (SQLException e) {
                 System.out.println("Could not update attributes.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         } else {
             System.out.println(searchNotFoundText);

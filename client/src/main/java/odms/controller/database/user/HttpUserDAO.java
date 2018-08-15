@@ -81,13 +81,16 @@ public class HttpUserDAO implements UserDAO {
     }
 
     @Override
-    public void update(User user) {
+    public void update(User user) throws IllegalArgumentException {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/users/" + user.getStaffID();
         String body = gson.toJson(user);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
-            request.patch();
+            Response response = request.patch();
+            if (response.getStatus() == 403) {
+                throw new IllegalArgumentException("Username already exists.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
