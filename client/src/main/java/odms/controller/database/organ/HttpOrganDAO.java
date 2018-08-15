@@ -53,17 +53,18 @@ public class HttpOrganDAO implements OrganDAO {
     public void addDonation(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        System.out.println(organ.getNamePlain());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("donated", true);
         post(url, organInfo);
     }
 
     @Override
-    public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
+    public void addDonating(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("donating", true);
         post(url, organInfo);
@@ -73,7 +74,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void addRequired(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("required", true);
         post(url, organInfo);
@@ -83,7 +84,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void addReceived(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("received", true);
         post(url, organInfo);
@@ -104,7 +105,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void removeDonation(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("donated", true);
         delete(url, organInfo);
@@ -114,7 +115,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void removeDonating(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("donating", true);
         delete(url, organInfo);
@@ -124,7 +125,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void removeRequired(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("required", true);
         delete(url, organInfo);
@@ -134,7 +135,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void removeReceived(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        organInfo.put("name", organ.getName());
+        organInfo.put("name", organ.getNamePlain());
         organInfo.put("date", organ.getDate());
         organInfo.put("received", true);
         delete(url, organInfo);

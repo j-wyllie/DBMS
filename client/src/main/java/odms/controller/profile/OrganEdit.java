@@ -66,6 +66,7 @@ public class OrganEdit extends CommonController {
         for (OrganEnum organ : organs) {
             //todo might need to change to addOrganDonated
             if(!DAOFactory.getOrganDao().getDonations(p).contains(organ)) {
+                System.out.println("add");
                 DAOFactory.getOrganDao().addDonation(p, organ);
             }
             p.getOrgansDonated().add(organ);

@@ -89,23 +89,26 @@ public class Server {
                         get("", DrugController::getAll);
                         post("", DrugController::add);
                     });
+
+                    // organs api endpoints.
+                    path("/organs", () -> {
+                        get("", OrganController::getAll);
+                        post("", OrganController::add);
+                        delete("", OrganController::delete);
+                    });
+
+                    // condition api endpoints.
+                    path("/conditions", () -> {
+                        get("", ConditionController::getAll);
+                        post("", ConditionController::add);
+                    });
                 });
 
                 get("/count", ProfileController::count);
-
-                // organs api endpoints.
-                path("/organs", () -> {
-                    get("", OrganController::getAll);
-                    post("", OrganController::add);
-                    delete("", OrganController::delete);
-                });
             });
 
             // condition api endpoints.
             path("/conditions", () -> {
-                get("", ConditionController::getAll);
-                post("", ConditionController::add);
-
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);

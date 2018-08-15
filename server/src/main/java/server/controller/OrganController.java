@@ -50,9 +50,10 @@ public class OrganController {
         int profileId;
         String organ;
 
+        System.out.println(String.valueOf(req.queryParams("name")));
         try {
             profileId = Integer.valueOf(req.params("id"));
-            organ = req.queryParams("name");
+            organ = String.valueOf(req.queryParams("name"));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
@@ -61,6 +62,7 @@ public class OrganController {
         try {
             addOrgan(new Profile(profileId), organ, req);
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(500);
             return e.getMessage();
         }
@@ -81,7 +83,7 @@ public class OrganController {
 
         try {
             profileId = Integer.valueOf(req.params("id"));
-            organ = req.queryParams("name");
+            organ = String.valueOf(req.queryParams("name"));
         } catch (Exception e) {
             res.status(500);
             return "Bad Request";
@@ -133,7 +135,10 @@ public class OrganController {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
         OrganDAO database = DAOFactory.getOrganDao();
 
+        System.out.println(req.queryMap().hasKey("donated"));
+
         if (req.queryMap().hasKey("donated")) {
+            System.out.println("add");
             database.addDonation(profile, organEnum);
         }
         if (req.queryMap().hasKey("donating")) {
@@ -161,7 +166,7 @@ public class OrganController {
         if (req.queryMap().hasKey("donated")) {
             database.removeDonation(profile, organEnum);
         }
-        if (req.queryMap().hasKey("required")) {
+        if (req.queryMap().hasKey("donating")) {
             database.removeDonating(profile, organEnum);
         }
         if (req.queryMap().hasKey("required")) {
