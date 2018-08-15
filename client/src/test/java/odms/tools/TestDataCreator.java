@@ -12,7 +12,7 @@
 //import odms.commons.model.enums.OrganEnum;
 //import odms.model.profile.Condition;
 //import odms.model.profile.OrganConflictException;
-//import odms.model.profile.Profile;
+//import odms.model.profile.profile;
 //
 //public class TestDataCreator {
 //    private ProfileDatabase database;
@@ -97,7 +97,7 @@
 //
 //        for (String name : names) {
 //            String[] profileName = name.split(" ");
-//            Profile profile = new Profile(
+//            profile profile = new profile(
 //                    profileName[0],
 //                    profileName[1],
 //                    randomDOB(),
@@ -134,7 +134,7 @@
 //     *
 //     * @param profile the profile in which to add the organs
 //     */
-//    private void addOrganDonations(Profile profile) {
+//    private void addOrganDonations(profile profile) {
 //        Integer numberDonations = randInRange(0, OrganEnum.values().length);
 //
 //        if (numberDonations > 0) {
@@ -150,7 +150,7 @@
 //     *
 //     * @param profile the profile that the diseases will be given
 //     */
-//    private void addConditions(Profile profile) {
+//    private void addConditions(profile profile) {
 //        profile.getAllConditions().add(new Condition("Heart Disease", "01-04-2018", true));
 //        profile.getAllConditions().add(new Condition("Heart Palpitations", "01-03-2018", "01-04-2018", false));
 //    }
@@ -160,7 +160,7 @@
 //     *
 //     * @param profile the profile in which to add the organs
 //     */
-//    private void addOrganDonors(Profile profile) {
+//    private void addOrganDonors(profile profile) {
 //        Integer numberDonating = randInRange(0, OrganEnum.values().length);
 //
 //        if (numberDonating > 0) {
@@ -180,7 +180,7 @@
 //     *
 //     * @param profile the profile in which to add the required organs
 //     */
-//    private void addOrgansRequired(Profile profile) {
+//    private void addOrgansRequired(profile profile) {
 //        Integer numberReceiving = randInRange(0, OrganEnum.values().length);
 //
 //        if (numberReceiving > 0) {

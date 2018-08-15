@@ -12,14 +12,14 @@
 //import odms.commons.model.medications.Drug;
 //import odms.commons.model.profile.Condition;
 //import odms.commons.model.profile.OrganConflictException;
-//import odms.commons.model.profile.Profile;
-//import odms.commons.model.user.User;
+//import odms.commons.model.profile.profile;
+//import odms.commons.model.user.user;
 //import odms.controller.profile.UndoRedoCLIService;
 //import odms.view.LoginView;
 //
 //public class Redo extends UndoRedo {
 //
-//    private static ArrayList<Profile> unaddedProfiles = new ArrayList<>();
+//    private static ArrayList<profile> unaddedProfiles = new ArrayList<>();
 //    private static int historyPosition;
 //    private static ArrayList<History> currentSessionHistory;
 //
@@ -62,7 +62,7 @@
 //     * @param action
 //     */
 //    public void addedDonated(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        String organ = action.getHistoryData();
 //        UndoRedoCLIService.addOrganDonated(OrganEnum.valueOf(organ), profile);
 //    }
@@ -74,7 +74,7 @@
 //     * @param action
 //     */
 //    public void addedReceived(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        String organ = action.getHistoryData();
 //        UndoRedoCLIService.addOrgansReceived(new HashSet<OrganEnum>(
 //                Collections.singletonList(OrganEnum.valueOf(organ))), profile);
@@ -87,7 +87,7 @@
 //     * @param action
 //     */
 //    public void removedCondition(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        int c = action.getHistoryDataIndex();
 //        Condition condition = UndoRedoCLIService.getCurrentConditions(profile).get(c);
 //        UndoRedoCLIService.removeCondition(condition, profile);
@@ -100,7 +100,7 @@
 //     * @param action
 //     */
 //    public void addCondition(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        String s = action.getHistoryData();
 //        String[] values = s.split(",");
 //        Condition condition = new Condition(values[0], values[1], null, Boolean.valueOf(values[2]));
@@ -115,7 +115,7 @@
 //     */
 //    public void deleteDrug(ProfileDatabase currentDatabase, History action)
 //            throws IndexOutOfBoundsException {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        int d = action.getHistoryDataIndex();
 //        List<Drug> drugs = profile.getCurrentMedications();
 //        UndoRedoCLIService.deleteDrug(drugs.get(d), profile);
@@ -129,7 +129,7 @@
 //     */
 //    public void stopDrug(ProfileDatabase currentDatabase, History action)
 //            throws IndexOutOfBoundsException {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        int d = action.getHistoryDataIndex();
 //        List<Drug> drugs = profile.getCurrentMedications();
 //        Drug drug = drugs.get(d);
@@ -148,7 +148,7 @@
 //     */
 //    public void renewDrug(ProfileDatabase currentDatabase, History action)
 //            throws IndexOutOfBoundsException {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        int d = action.getHistoryDataIndex();
 //        List<Drug> drugs = profile.getHistoryOfMedication();
 //        Drug drug = drugs.get(d);
@@ -167,7 +167,7 @@
 //     */
 //    public void addDrug(ProfileDatabase currentDatabase, History action)
 //            throws IndexOutOfBoundsException {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        if (action.getHistoryAction().contains("history")) {
 //            String drug = action.getHistoryData();
 //            Drug d = new Drug(drug);
@@ -185,7 +185,7 @@
 //     * @param action
 //     */
 //    public void updated(History action) {
-//        User user = LoginView.getCurrentUser();
+//        user user = LoginView.getCurrentUser();
 //        String newString = action.getHistoryData()
 //                .substring(action.getHistoryData().indexOf("new ") + 4);
 //        String[] newValues = newString.split(",");
@@ -220,7 +220,7 @@
 //     * @param action
 //     */
 //    public void deleted(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        currentDatabase.deleteProfile(action.getHistoryId());
 //        CurrentHistory.deletedProfiles.add(profile);
 //    }
@@ -233,7 +233,7 @@
 //     * @throws Exception
 //     */
 //    public void removed(ProfileDatabase currentDatabase, History action) throws Exception {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        UndoRedoCLIService.removeOrgansDonating(OrganEnum.stringListToOrganSet(
 //                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
 //    }
@@ -246,7 +246,7 @@
 //     * @throws OrganConflictException
 //     */
 //    public void set(ProfileDatabase currentDatabase, History action) throws OrganConflictException {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        UndoRedoCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(
 //                Arrays.asList(action.getHistoryData().replace(' ', '_').split(",")
 //                )), profile);
@@ -259,7 +259,7 @@
 //     * @param action
 //     */
 //    public void donate(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        UndoRedoCLIService.addOrgansDonated(OrganEnum.stringListToOrganSet(
 //                Arrays.asList(action.getHistoryData().replace(' ', '_').split(","))), profile);
 //    }
@@ -271,7 +271,7 @@
 //     * @param action
 //     */
 //    public void update(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        String newInfo = action.getHistoryData()
 //                .substring(action.getHistoryData().indexOf("new ") + 4);
 //        UndoRedoCLIService.setExtraAttributes(new ArrayList<String>(Arrays.asList(newInfo.split(","))), profile);
@@ -284,7 +284,7 @@
 //     * @param action
 //     */
 //    public void edited(ProfileDatabase currentDatabase, History action) {
-//        Profile profile = currentDatabase.getProfile(action.getHistoryId());
+//        profile profile = currentDatabase.getProfile(action.getHistoryId());
 //        int procedurePlace = action.getHistoryDataIndex();
 //        String previous = action.getHistoryData()
 //                .substring(action.getHistoryData().indexOf("CURRENT(") + 8);

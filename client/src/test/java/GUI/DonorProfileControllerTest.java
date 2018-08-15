@@ -2,7 +2,7 @@
 //
 //import javafx.scene.control.TableView;
 //import odms.model.medications.Drug;
-//import odms.model.profile.Profile;
+//import odms.model.profile.profile;
 //import org.junit.Before;
 //import org.junit.BeforeClass;
 //import org.junit.Ignore;
@@ -31,7 +31,7 @@
 //
 //        clickOn("#searchTab");
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile donor = (Profile) searchTable.getItems().get(1);
+//        profile donor = (profile) searchTable.getItems().get(1);
 //        doubleClickOn(row("#searchTable", 1));
 //        clickOn("#medicationsTab");
 //
@@ -51,7 +51,7 @@
 //
 //        clickOn("#searchTab");
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile donor = (Profile) searchTable.getItems().get(1);
+//        profile donor = (profile) searchTable.getItems().get(1);
 //        doubleClickOn(row("#searchTable", 1));
 //        clickOn("#medicationsTab");
 //
@@ -75,7 +75,7 @@
 //
 //        clickOn("#searchTab");
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile donor = (Profile) searchTable.getItems().get(1);
+//        profile donor = (profile) searchTable.getItems().get(1);
 //        doubleClickOn(row("#searchTable", 1));
 //        clickOn("#medicationsTab");
 //
@@ -99,7 +99,7 @@
 //
 //        clickOn("#searchTab");
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile donor = (Profile) searchTable.getItems().get(1);
+//        profile donor = (profile) searchTable.getItems().get(1);
 //        doubleClickOn(row("#searchTable", 1));
 //        clickOn("#medicationsTab");
 //

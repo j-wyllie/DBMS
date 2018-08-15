@@ -72,7 +72,7 @@ public class ProfileGeneral {
             view.setAgeLabel(Integer.toString(currentProfile.getAge()));
         }
 
-        // Profile is deceased
+        // profile is deceased
         if (currentProfile.getDateOfDeath() != null) {
 
             if (currentProfile.getCountryOfDeath() == null ) {
@@ -105,7 +105,7 @@ public class ProfileGeneral {
             }
 
         } else {
-            //Profile is alive
+            //profile is alive
 
             if (currentProfile.getRegion() != null) {
                 view.getRegionLabel().setText("Region : " + currentProfile.getRegion());

@@ -1,20 +1,21 @@
-package odms.controller.data.Profile;
+package odms.controller.profile;
 
-import java.sql.SQLException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import odms.commons.model.profile.Profile;
 import odms.view.profile.ProfileEdit;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-
 @Ignore
-public class Edit {
+public class EditTest {
     //todo Tests can't work using a view as it can't be loaded and can't set values for fxml elements if it hasn't been loaded
 
     public ProfileEdit view;

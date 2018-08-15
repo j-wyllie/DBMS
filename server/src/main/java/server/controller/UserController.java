@@ -105,7 +105,7 @@ public class UserController {
             }
         }
         res.status(201);
-        return "User Created";
+        return "user Created";
     }
 
     /**
@@ -141,7 +141,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "User Updated";
+        return "user Updated";
     }
 
     /**
@@ -175,7 +175,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "User Deleted";
+        return "user Deleted";
     }
 
 }

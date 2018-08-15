@@ -3,7 +3,7 @@
 //import java.util.Collection;
 //import odms.controller.user.UserNotFoundException;
 //import odms.commons.model.enums.UserType;
-//import odms.commons.model.user.User;
+//import odms.commons.model.user.user;
 //import org.junit.Assert;
 //import org.junit.Before;
 //import org.junit.Test;
@@ -15,19 +15,19 @@
 //public class UserDatabaseTest {
 //
 //    private UserDatabase userDb;
-//    private User clinician1;
-//    private User clinician2;
-//    private User admin1;
+//    private user clinician1;
+//    private user clinician2;
+//    private user admin1;
 //
 //    @Before
 //    public void setup() {
 //        userDb = new UserDatabase();
 //
-//        clinician1 = new User(UserType.CLINICIAN, "John Smith",
+//        clinician1 = new user(UserType.CLINICIAN, "John Smith",
 //                "Christchurch", "username", "password");
-//        clinician2 = new User(UserType.CLINICIAN, "Matt Smith",
+//        clinician2 = new user(UserType.CLINICIAN, "Matt Smith",
 //                "Auckland", "username2", "password");
-//        admin1 = new User(UserType.ADMIN, "Matt Smith",
+//        admin1 = new user(UserType.ADMIN, "Matt Smith",
 //                "Auckland", "username2", "password");
 //    }
 //
@@ -53,14 +53,14 @@
 //    @Test
 //    public void testSearchNamesInvalid() {
 //        userDb.addUser(clinician1);
-//        Collection<User> results = userDb.searchNames("John Ree");
+//        Collection<user> results = userDb.searchNames("John Ree");
 //        assertEquals(0, results.size());
 //    }
 //
 //    @Test
 //    public void testSearchNamesValid() {
 //        userDb.addUser(clinician1);
-//        Collection<User> results = userDb.searchNames("John Smith");
+//        Collection<user> results = userDb.searchNames("John Smith");
 //        assertEquals(1, results.size());
 //    }
 //
@@ -68,7 +68,7 @@
 //    public void testSearchStaffIDInvalid() {
 //        clinician1.setStaffID(1);
 //        userDb.addUser(clinician1);
-//        Collection<User> results = userDb.searchStaffID(2);
+//        Collection<user> results = userDb.searchStaffID(2);
 //        assertEquals(0, results.size());
 //    }
 //
@@ -76,7 +76,7 @@
 //    public void testSearchStaffIDValid() {
 //        clinician1.setStaffID(1);
 //        userDb.addUser(clinician1);
-//        Collection<User> results = userDb.searchStaffID(0);
+//        Collection<user> results = userDb.searchStaffID(0);
 //        assertEquals(1, results.size());
 //    }
 //

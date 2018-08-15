@@ -91,7 +91,7 @@ public class Profile implements Comparable<Profile> {
     private List<String> medicationTimestamps = new ArrayList<>();
 
     /**
-     * Instantiates the Profile class with data from the CLI
+     * Instantiates the profile class with data from the CLI
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
@@ -396,7 +396,7 @@ public class Profile implements Comparable<Profile> {
         if (this.organsDonating.contains(organ)) {
             // A donor cannot donate an organ they've received.
             throw new OrganConflictException(
-                    "Profile has previously received " + organ,
+                    "profile has previously received " + organ,
                     organ
             );
         }
@@ -424,7 +424,7 @@ public class Profile implements Comparable<Profile> {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
             organ.setDate(LocalDate.now());
-            History action = new History("Profile", this.getId(),"required organ",
+            History action = new History("profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             CurrentHistory.updateHistory(action);
         }
@@ -448,7 +448,7 @@ public class Profile implements Comparable<Profile> {
             }
             this.addOrganDonating(organ);
 
-            History action = new History("Profile ", this.getId(),"set",organ.getNamePlain(),
+            History action = new History("profile ", this.getId(),"set",organ.getNamePlain(),
                     -1,LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
@@ -480,7 +480,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             addOrganReceived(organ);
-            History action = new History("Profile ", this.getId(),
+            History action = new History("profile ", this.getId(),
                     "received",organ.getNamePlain(),-1,LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
@@ -513,7 +513,7 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
             History action = new History(
-                    "Profile ",
+                    "profile ",
                     this.getId(),
                     "donated",
                     organ.getNamePlain(),

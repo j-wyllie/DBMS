@@ -38,7 +38,7 @@ import odms.controller.database.country.CountryDAO;
 import odms.view.CommonView;
 
 /**
- * Profile edit window.
+ * profile edit window.
  */
 public class ProfileEdit extends CommonView {
 

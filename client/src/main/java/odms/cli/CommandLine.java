@@ -182,7 +182,7 @@ public class CommandLine implements Runnable {
             case PROFILEDELETE:
                 // Delete a profile.
                 Profile.deleteProfileBySearch(rawInput);
-                System.out.println("Profile(s) successfully deleted.");
+                System.out.println("profile(s) successfully deleted.");
                 break;
 
             case PROFILEORGANS:

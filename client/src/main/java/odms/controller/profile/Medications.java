@@ -99,7 +99,7 @@ public class Medications extends CommonController {
         //todo improve generateUpdateInfo
         ProfileGeneralControllerTODOContainsOldProfileMethods
                 .generateUpdateInfo(drug.getDrugName(), profile);
-        //todo maybe "profile" needs to be changed to "Profile"
+        //todo maybe "profile" needs to be changed to "profile"
         History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
                 data.substring(data.indexOf("index of") + 9, data.indexOf(" at"))),

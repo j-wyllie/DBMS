@@ -1,4 +1,4 @@
-package odms.controller.data.Profile;
+package odms.controller.profile;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -7,20 +7,22 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganEdit {
+@Ignore
+public class OrganEditTest {
     public odms.view.profile.OrganEdit view;
     public odms.controller.profile.OrganEdit controller;
     public Profile currentProfile;
     public List<String> testOrganStrings = new ArrayList<>();
 
     @Before
-    public void setup() throws IOException{
+    public void setup() {
         ArrayList<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
@@ -34,38 +36,43 @@ public class OrganEdit {
 
     @Test
     public void testValidAddOrganDonating() throws OrganConflictException {
-
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansDonating().size(), 1);
     }
+
     @Test
     public void testValidAddOrganDonated() {
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansDonated().size(), 1);
     }
+
     @Test
     public void testValidAddOrganRequired() {
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansRequired().size(), 1);
     }
+
     @Test
     public void testMultipleAddOrganDonating() throws OrganConflictException {
         testOrganStrings.add("lung");
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansDonating().size(), 2);
     }
+
     @Test
     public void testMultipleAddOrganDonated() {
         testOrganStrings.add("lung");
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansDonated().size(), 2);
     }
+
     @Test
     public void testMultipleAddOrganRequired() {
         testOrganStrings.add("lung");
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertEquals(currentProfile.getOrgansRequired().size(), 2);
     }
+
     @Test
     public void testRemoveOrganDonating() throws OrganConflictException{
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
@@ -73,22 +80,21 @@ public class OrganEdit {
         controller.removeOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertNotEquals(containsOrgan, currentProfile.getOrgansDonating().contains(OrganEnum.HEART));
     }
+
     @Test
-    public void testRemoveOrganDonated() throws OrganConflictException{
+    public void testRemoveOrganDonated() {
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         Boolean containsOrgan = currentProfile.getOrgansDonated().contains(OrganEnum.HEART);
         controller.removeOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertNotEquals(containsOrgan, currentProfile.getOrgansDonated().contains(OrganEnum.HEART));
     }
+
     @Test
-    public void testRemoveOrganRequired() throws OrganConflictException{
+    public void testRemoveOrganRequired() {
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         Boolean containsOrgan = currentProfile.getOrgansRequired().contains(OrganEnum.HEART);
         controller.removeOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         assertNotEquals(containsOrgan, currentProfile.getOrgansRequired().contains(OrganEnum.HEART));
     }
-
-
-
 
 }

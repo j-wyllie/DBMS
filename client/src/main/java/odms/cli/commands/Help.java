@@ -119,11 +119,11 @@ public final class Help {
         System.out.println("quit");
 
         System.out.println("\n-------------------------------------------------------------------");
-        System.out.println("-Profile attributes:");
+        System.out.println("-profile attributes:");
         System.out.println("given-names, last-names, dob, dod, gender, height, weight, blood-type,"
             + " address, region, country, nhi");
 
-        System.out.println("\n-User attributes:");
+        System.out.println("\n-user attributes:");
         System.out.println("name, password, username, workAddress, staffID, region");
 
         System.out.println("\n-Organs:");
