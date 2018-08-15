@@ -35,12 +35,15 @@ public class HttpCountryDAO implements CountryDAO {
 
     @Override
     public void update(CountriesEnum country, boolean valid) {
+        Gson gson = new Gson();
         String url = String.format("http://localhost:6969/api/v1/countries");
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("country", country.getName());
-        queryParams.put("valid", valid);
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", country);
+        body.put("valid", valid);
 
-        Request request = new Request(url, 0, queryParams);
+        String responseBody = gson.toJson(body);
+
+        Request request = new Request(url, 0, new HashMap<>(), responseBody);
         try {
             request.patch();
         } catch (IOException e) {
@@ -50,7 +53,6 @@ public class HttpCountryDAO implements CountryDAO {
 
     private List<String> getListRequest(String url, Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
-        Gson gson = new Gson();
         Response response = null;
         Request request = new Request(url, 0, queryParams);
         try {
@@ -60,7 +62,7 @@ public class HttpCountryDAO implements CountryDAO {
         }
         List<String> countries = new ArrayList<>();
         if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 countries.add(result.getAsString());
             }

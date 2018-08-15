@@ -6,6 +6,7 @@ import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
+import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
 import spark.Request;
@@ -55,23 +56,25 @@ public class CountriesController {
     public static String edit(Request req, Response res) {
         System.out.print("here");
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
-
+        JsonParser parser = new JsonParser();
         String name;
         boolean valid;
 
         try {
-            name = req.queryParams("name");
-            valid = Boolean.valueOf(req.queryParams("valid"));
+            JsonObject body = parser.parse(req.body()).getAsJsonObject();
+            name = body.get("name").getAsString();
+            valid = body.get("valid").getAsBoolean();
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(400);
             return "Bad Request";
         }
-
-        if (OrganEnum.toArrayList().contains(name)) {
+        try {
             countryDAO.update(CountriesEnum.valueOf(name), valid);
             res.status(200);
             return "Country Updated";
-        } else {
+        }
+        catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
