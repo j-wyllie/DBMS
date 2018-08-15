@@ -4,24 +4,26 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import server.model.database.condition.MySqlConditionDAO;
-import server.model.database.profile.MySqlProfileDAO;
+import server.model.database.DAOFactory;
+import server.model.database.condition.ConditionDAO;
+import server.model.database.profile.ProfileDAO;
 
 public class MySqlConditionDaoTest extends MySqlCommonTests {
 
     private Profile testProfile1;
     private Profile testProfile2;
-    Condition condition1;
-    Condition condition2;
+    private Condition condition1;
+    private Condition condition2;
 
-    MySqlConditionDAO mySqlConditionDAO = new MySqlConditionDAO();
-    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-
+    ConditionDAO conditionDao = DAOFactory.getConditionDao();
+    ProfileDAO profileDao = DAOFactory.getProfileDao();
 
     @Before
     public void setup() throws SQLException {
@@ -31,47 +33,55 @@ public class MySqlConditionDaoTest extends MySqlCommonTests {
         testProfile1 = new Profile("Jack", "Haaay", LocalDate.of(1998, 2, 27), "ABC1234");
         testProfile2 = new Profile("Tim", "Hamb-lame", LocalDate.of(1998, 2, 27), "ABC2345");
 
-        mySqlProfileDAO.add(testProfile1);
-        testProfile1 = mySqlProfileDAO.get("ABC1234");
+        profileDao.add(testProfile1);
+        testProfile1 = profileDao.get("ABC1234");
 
-        mySqlProfileDAO.add(testProfile2);
-        testProfile2 = mySqlProfileDAO.get("ABC2345");
-        mySqlConditionDAO.add(testProfile2.getId(), condition2);
-        condition2 = mySqlConditionDAO.getAll(testProfile2.getId(), true).get(0);
+        profileDao.add(testProfile2);
+        testProfile2 = profileDao.get("ABC2345");
+        conditionDao.add(testProfile2.getId(), condition2);
+
+        condition2 = conditionDao.getAll(testProfile2.getId(), true).get(0);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        List<Condition> allConditions = new ArrayList<>();
+        allConditions.addAll(conditionDao.getAll(testProfile1.getId(), true));
+        allConditions.addAll(conditionDao.getAll(testProfile2.getId(), true));
+
+        if (!allConditions.isEmpty()) {
+            for (Condition condition : allConditions) {
+                conditionDao.remove(condition);
+            }
+        }
+
+        profileDao.remove(testProfile1);
+        profileDao.remove(testProfile2);
     }
 
     @Test
     public void testAddCondition() {
-        mySqlConditionDAO.add(testProfile2.getId(), condition1);
-        condition1 = mySqlConditionDAO.getAll(testProfile1.getId(), true).get(0);
-        assertEquals(1, mySqlConditionDAO.getAll(testProfile1.getId(), true).size());
+        conditionDao.add(testProfile1.getId(), condition1);
+        condition1 = conditionDao.getAll(testProfile1.getId(), true).get(0);
+        assertEquals(1, conditionDao.getAll(testProfile1.getId(), true).size());
     }
 
     @Test
     public void testGetAll() {
-        assertEquals(1, mySqlConditionDAO.getAll(testProfile2.getId(), true).size());
+        assertEquals(1, conditionDao.getAll(testProfile2.getId(), true).size());
     }
 
     @Test
     public void testRemoveCondition() {
-        mySqlConditionDAO.remove(condition2);
-        assertEquals(0, mySqlConditionDAO.getAll(testProfile2.getId(), true).size());
+        conditionDao.remove(condition2);
+        assertEquals(0, conditionDao.getAll(testProfile2.getId(), true).size());
     }
 
     @Test
     public void testConditionUpdate() {
         condition2.setName("Psyc");
-        mySqlConditionDAO.update(condition2);
-        assertEquals("Psyc", mySqlConditionDAO.getAll(testProfile2.getId(), true).get(0).getName());
+        conditionDao.update(condition2);
+        assertEquals("Psyc", conditionDao.getAll(testProfile2.getId(), true).get(0).getName());
     }
 
-    @After
-    public void tearDown() throws SQLException {
-        mySqlConditionDAO.remove(condition2);
-        mySqlConditionDAO.remove(condition1);
-
-        mySqlProfileDAO.remove(testProfile1);
-
-        mySqlProfileDAO.remove(testProfile2);
-    }
 }

@@ -80,19 +80,19 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
     @Test
     public void testAddDonations() {
-        mysqlOrganDao.addDonation(testProfile1, organ2);
+        mysqlOrganDao.addDonation(testProfile2, organ2);
         assertTrue(mysqlOrganDao.getDonations(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testAddReceived() {
-        mysqlOrganDao.addReceived(testProfile1, organ2);
+        mysqlOrganDao.addReceived(testProfile2, organ2);
         assertTrue(mysqlOrganDao.getReceived(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testAddRequired() {
-        mysqlOrganDao.addRequired(testProfile1, organ2);
+        mysqlOrganDao.addRequired(testProfile2, organ2);
         assertTrue(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ2));
     }
 

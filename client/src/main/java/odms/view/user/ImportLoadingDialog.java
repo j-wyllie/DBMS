@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
-import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;

@@ -1,4 +1,4 @@
-package server.model.database.profile;
+package odms.controller.database.profile;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -20,12 +20,12 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import server.model.database.DAOFactory;
-import server.model.database.DatabaseConnection;
-import server.model.database.condition.ConditionDAO;
-import server.model.database.medication.MedicationDAO;
-import server.model.database.organ.OrganDAO;
-import server.model.database.procedure.ProcedureDAO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.DatabaseConnection;
+import odms.controller.database.condition.ConditionDAO;
+import odms.controller.database.medication.MedicationDAO;
+import odms.controller.database.organ.OrganDAO;
+import odms.controller.database.procedure.ProcedureDAO;
 
 public class MySqlProfileDAO implements ProfileDAO {
     String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
@@ -197,10 +197,10 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setOrgans(Profile profile) throws OrganConflictException {
         OrganDAO database = DAOFactory.getOrganDao();
 
-        profile.addOrgansDonating(database.getDonating(profile.getId()));
-        profile.addOrgansDonated(database.getDonations(profile.getId()));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile.getId()));
-        profile.addOrgansReceived(database.getReceived(profile.getId()));
+        profile.addOrgansDonating(database.getDonating(profile));
+        profile.addOrgansDonated(database.getDonations(profile));
+        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
+        profile.addOrgansReceived(database.getReceived(profile));
 
         return profile;
     }
@@ -208,8 +208,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setMedications(Profile profile) {
         MedicationDAO database = DAOFactory.getMedicationDao();
 
-        profile.setCurrentMedications(database.getAll(profile.getId(), true));
-        profile.setHistoryOfMedication(database.getAll(profile.getId(), false));
+        profile.setCurrentMedications(database.getAll(profile, true));
+        profile.setHistoryOfMedication(database.getAll(profile, false));
 
         return profile;
     }
@@ -217,8 +217,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile.getId(), true));
-        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile.getId(), false));
+        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, true));
+        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile, false));
 
         return profile;
     }
@@ -226,7 +226,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
 
-        profile.setConditions(database.getAll(profile.getId(), false));
+        profile.setConditions(database.getAll(profile, false));
         return profile;
     }
 
