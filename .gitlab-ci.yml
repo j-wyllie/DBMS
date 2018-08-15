@@ -17,7 +17,6 @@ recent-artifacts:
     - mvn -B package
   artifacts:
     paths:
-      - target/*.jar
       - client/target/*.jar
       - server/target/*.jar
       - target/site/jacoco/*
@@ -38,6 +37,6 @@ release-artifacts:
     - server/target/*.jar
     - server/target/site/jacoco/*
     - commons/target/site/jacoco/*
-
   only:
     - tags
+    - dev@seng302-2018/team-200

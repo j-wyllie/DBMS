@@ -53,7 +53,6 @@ public class HttpOrganDAO implements OrganDAO {
     public void addDonation(Profile profile, OrganEnum organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
-        System.out.println(organ);
         organInfo.put("name", organ);
         organInfo.put("date", organ.getDate());
         organInfo.put("donated", true);

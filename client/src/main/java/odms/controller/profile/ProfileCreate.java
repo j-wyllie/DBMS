@@ -18,8 +18,8 @@ public class ProfileCreate extends CommonController {
 
     private CreateAccount view;
 
-    public ProfileCreate(CreateAccount v) {
-        view = v;
+    public ProfileCreate(CreateAccount view) {
+        this.view = view;
     }
 
     private boolean checkDetailsEntered() {
@@ -45,11 +45,8 @@ public class ProfileCreate extends CommonController {
         }
     }
 
-
-
     /**
      * Scene change to profile profile view if all required fields are filled in.
-     * @throws IOException throws IOException
      */
     public Profile createAccount() {
         //todo rework this method potentially
