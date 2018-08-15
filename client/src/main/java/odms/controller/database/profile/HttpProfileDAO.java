@@ -1,10 +1,5 @@
 package odms.controller.database.profile;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.AbstractMap.SimpleEntry;
@@ -19,6 +14,10 @@ import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 import odms.data.NHIConflictException;
+import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonArray;
+import org.sonar.api.internal.google.gson.JsonElement;
+import org.sonar.api.internal.google.gson.JsonParser;
 
 public class HttpProfileDAO implements ProfileDAO {
 

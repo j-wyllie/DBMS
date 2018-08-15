@@ -53,18 +53,14 @@ public class CountriesController {
      * @return The response body
      */
     public static String edit(Request req, Response res) {
-        Gson gson = new Gson();
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
 
         String name;
         boolean valid;
 
         try {
-            // There's no country object to map this to which is a bit annoying
-            // We could potentially make one? But I'll just try and work around it
-            JsonObject jsonObject = gson.fromJson(req.body(), JsonObject.class);
-            name = jsonObject.get("name").getAsString();
-            valid = jsonObject.get("valid").getAsBoolean();
+            name = req.queryParams("name");
+            valid = Boolean.valueOf(req.queryParams("valid"));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";

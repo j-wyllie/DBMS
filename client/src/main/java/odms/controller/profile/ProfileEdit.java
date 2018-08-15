@@ -82,8 +82,8 @@ public class ProfileEdit extends CommonController {
             saveCountry();
             saveRegion();
 
-            ProfileDAO database = DAOFactory.getProfileDao();
-            database.update(currentProfile);
+            ProfileDAO server = DAOFactory.getProfileDao();
+            server.update(currentProfile);
 
             // TODO: update history.
             // history Changes
@@ -91,7 +91,6 @@ public class ProfileEdit extends CommonController {
                     action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
             action.setHistoryTimestamp(LocalDateTime.now());
             CurrentHistory.updateHistory(action);
-
         }
     }
 
