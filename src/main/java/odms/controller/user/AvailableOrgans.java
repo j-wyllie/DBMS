@@ -39,7 +39,7 @@ public class AvailableOrgans {
         for (OrganEnum organ : organsRequired) {
             if (organ.getNamePlain().equalsIgnoreCase(selectedOrgan.getNamePlain())) {
                 if (organ.getDate() != null) {
-                    dateOrganRegistered = organ.getDate().atStartOfDay();
+                    dateOrganRegistered = organ.getDate();
                 } else {
                     return Long.valueOf(-1);
                 }

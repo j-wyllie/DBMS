@@ -427,7 +427,9 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
-        organ.setDate(LocalDate.now());
+        if(organ.getDate() == null) {
+            organ.setDate(LocalDateTime.now());
+        }
         this.organsRequired.add(organ);
     }
 
@@ -441,7 +443,6 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
-            organ.setDate(LocalDate.now());
             odms.model.history.History action = new odms.model.history.History("Profile", this.getId(),"required organ",
                     ""+organ.getNamePlain(),-1,now);
             CurrentHistory.updateHistory(action);
