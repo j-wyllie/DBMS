@@ -428,9 +428,6 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
-//        if(organ.getDate() == null) {
-//            organ.setDate(LocalDateTime.now());
-//        }
         this.organsRequired.add(organ);
     }
 
