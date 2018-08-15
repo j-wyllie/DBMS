@@ -1,10 +1,7 @@
 package odms.view.profile;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +31,7 @@ import odms.view.user.TransplantWaitingList;
 public class OrganDisplay extends CommonView {
 
     private Profile currentProfile;
+    private odms.controller.profile.OrganDisplay controller = new odms.controller.profile.OrganDisplay(this);
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
@@ -49,9 +47,6 @@ public class OrganDisplay extends CommonView {
 
     @FXML
     private ListView<String> listViewReceiving;
-
-    @FXML
-    private Label donatingLabel;
 
     @FXML
     private Button donatingButton;
@@ -86,21 +81,9 @@ public class OrganDisplay extends CommonView {
      * @param user the logged in user
      * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) throws SQLException {
+    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) {
         transplantWaitingListView = transplantWaitingList;
-
-        try{
-            odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-            List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                    .getAllOrgansAvailable();
-            for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        currentProfile = DAOFactory.getProfileDao().get(p.getId());
+        currentProfile = controller.getUpdatedProfileDetails(p);
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());

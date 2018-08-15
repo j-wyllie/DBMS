@@ -156,15 +156,12 @@ public class Display extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());
+            OrganDisplay organsView = loader.getController();
+            organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        OrganDisplay organsView = loader.getController();
-        try {
-            organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
