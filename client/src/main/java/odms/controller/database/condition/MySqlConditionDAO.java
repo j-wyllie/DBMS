@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import odms.controller.database.DatabaseConnection;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
@@ -19,7 +20,7 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @param chronic true if the conditions required are chronic.
      */
     @Override
-    public ArrayList<Condition> getAll(Profile profile, boolean chronic) {
+    public List<Condition> getAll(Profile profile, boolean chronic) {
         String query = "select * from conditions where ProfileId = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         ArrayList<Condition> allConditions = new ArrayList<>();
