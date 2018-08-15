@@ -23,7 +23,7 @@ public class ProfileEdit extends CommonController {
     private static final String MAINCOUNTRY = "New Zealand";
 
     /**
-     * Profile edit view connected to this controller.
+     * profile edit view connected to this controller.
      *
      * @param v view.
      */

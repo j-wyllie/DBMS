@@ -5,7 +5,7 @@
 //import javafx.scene.control.TableView;
 //import javafx.scene.input.KeyCode;
 //import odms.model.profile.Condition;
-//import odms.model.profile.Profile;
+//import odms.model.profile.profile;
 //import org.junit.BeforeClass;
 //import org.junit.Ignore;
 //import org.junit.Test;
@@ -179,7 +179,7 @@
 //        openSearchedProfile("Galil AR");
 //
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile profile = (Profile) searchTable.getSelectionModel().getSelectedItem();
+//        profile profile = (profile) searchTable.getSelectionModel().getSelectedItem();
 //
 //        clickOn("#medicalHistoryTab");
 //
@@ -230,7 +230,7 @@
 //        openSearchedProfile("Galil AR");
 //
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile profile = (Profile) searchTable.getSelectionModel().getSelectedItem();
+//        profile profile = (profile) searchTable.getSelectionModel().getSelectedItem();
 //
 //        clickOn("#medicalHistoryTab");
 //

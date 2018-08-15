@@ -4,7 +4,7 @@
 //
 //import java.sql.SQLException;
 //import odms.commons.model.enums.UserType;
-//import odms.commons.model.user.User;
+//import odms.commons.model.user.user;
 //import odms.controller.data.database.MySqlCommonTests;
 //import odms.controller.database.DAOFactory;
 //import odms.controller.database.user.UserDAO;
@@ -14,15 +14,15 @@
 //public class UserDataIOTest extends MySqlCommonTests {
 //
 //    private UserDAO userDb;
-//    private User user1;
-//    private User user2;
+//    private user user1;
+//    private user user2;
 //
 //    @Before
 //    public void setup() throws SQLException {
 //        userDb = DAOFactory.getUserDao();
 //
-//        user1 = new User(UserType.CLINICIAN, "John Smith", "Christchurch");
-//        user2 = new User(UserType.CLINICIAN, "Matt Smith", "Auckland");
+//        user1 = new user(UserType.CLINICIAN, "John Smith", "Christchurch");
+//        user2 = new user(UserType.CLINICIAN, "Matt Smith", "Auckland");
 //        userDb.add(user1);
 //        userDb.add(user2);
 //    }

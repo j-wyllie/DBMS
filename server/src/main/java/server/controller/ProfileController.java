@@ -167,7 +167,7 @@ public class ProfileController {
         }
 
         res.status(201);
-        return "Profile Created";
+        return "profile Created";
     }
 
     /**
@@ -199,7 +199,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "Profile Updated";
+        return "profile Updated";
     }
 
     /**
@@ -231,7 +231,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "Profile Deleted";
+        return "profile Deleted";
     }
 
     /**

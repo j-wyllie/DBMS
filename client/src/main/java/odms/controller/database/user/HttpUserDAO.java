@@ -128,11 +128,11 @@ public class HttpUserDAO implements UserDAO {
         }
         else if (response.getStatus() == 400) {
             if (queryParams.keySet().contains("id")) {
-                throw new UserNotFoundException("User not found",
+                throw new UserNotFoundException("user not found",
                         Integer.valueOf(queryParams.get("id").toString()));
             }
             else if (queryParams.keySet().contains("username")) {
-                throw new UserNotFoundException("User not found",
+                throw new UserNotFoundException("user not found",
                         queryParams.get("username").toString());
             }
         }

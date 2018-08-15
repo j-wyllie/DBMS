@@ -29,14 +29,14 @@ public class DAOFactory {
     public static CommonDAO getCommonDao() { return new HttpCommonDAO(); }
 
     /**
-     * Gives the data access object class for the User object.
-     * @return dao for User object http transactions.
+     * Gives the data access object class for the user object.
+     * @return dao for user object http transactions.
      */
     public static UserDAO getUserDao() { return new HttpUserDAO(); }
 
     /**
-     * Gives the data access object class for the Profile object.
-     * @return dao for the Profile object http transactions.
+     * Gives the data access object class for the profile object.
+     * @return dao for the profile object http transactions.
      */
     public static ProfileDAO getProfileDao() { return new HttpProfileDAO(); }
 

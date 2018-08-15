@@ -362,7 +362,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     /**
      * Adds a profile to a transaction.
      * @param conn Connection to add to.
-     * @param profile Profile to add.
+     * @param profile profile to add.
      * @throws SQLException thrown if you can't add the profile.
      */
     public void addToTransaction(Connection conn, Profile profile) throws SQLException {

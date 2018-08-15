@@ -35,7 +35,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 procedures.add(gson.fromJson(result, Procedure.class));
             }

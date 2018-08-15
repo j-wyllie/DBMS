@@ -1,25 +1,26 @@
-package odms.controller.data.Profile;
+package odms.controller.profile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import odms.controller.profile.ConditionGeneral;
 import odms.commons.model.profile.Profile;
 import odms.view.profile.ProfileMedicalHistory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import static org.junit.Assert.*;
-
-public class Condition {
+public class ConditionTest {
     public ProfileMedicalHistory view;
     public ConditionGeneral controller;
     public Profile currentProfile;
 
     @Before
-    public void setup() throws IOException{
+    public void setup() {
         List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");

@@ -1,23 +1,23 @@
-package odms.controller.data.Profile;
+package odms.controller.profile;
 
 import static org.junit.Assert.assertEquals;
 
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-public class ProcedureAdd {
+@Ignore
+public class ProcedureAddTest {
     public odms.view.profile.ProcedureAdd view;
     public odms.controller.profile.ProcedureAdd controller;
     public Profile currentProfile;
 
     @Before
-    public void setup() throws IOException{
+    public void setup() {
         ArrayList<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");

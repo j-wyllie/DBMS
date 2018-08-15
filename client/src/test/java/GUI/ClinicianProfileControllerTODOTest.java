@@ -8,7 +8,7 @@
 //import javafx.stage.Stage;
 //import odms.controller.GuiMain;
 //import odms.model.enums.OrganEnum;
-//import odms.model.profile.Profile;
+//import odms.model.profile.profile;
 //import org.controlsfx.control.CheckComboBox;
 //import org.junit.*;
 //import org.testfx.api.FxToolkit;
@@ -72,7 +72,7 @@
 //        clickOn("#ageField").write("10");
 //        clickOn("#ageRangeField").write("30");
 //
-//        Profile firstDonor = (Profile) searchTable.getItems().get(0);
+//        profile firstDonor = (profile) searchTable.getItems().get(0);
 //
 //        assertTrue(firstDonor.getAge() > 10 && firstDonor.getAge() < 30);
 //
@@ -84,7 +84,7 @@
 //        //to overcome 'not on FX' thread exception
 //        Platform.runLater(() -> genderCombobox.getCheckModel().check(0));
 //        clickOn(scene.lookup("#genderCombobox"));
-//        firstDonor = (Profile) searchTable.getItems().get(0);
+//        firstDonor = (profile) searchTable.getItems().get(0);
 //
 //        assertEquals("male", firstDonor.getGender());
 //
@@ -98,7 +98,7 @@
 //
 //        });
 //        clickOn(scene.lookup("#organsCombobox"));
-//        firstDonor = (Profile) searchTable.getItems().get(0);
+//        firstDonor = (profile) searchTable.getItems().get(0);
 //
 //        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.KIDNEY));
 //        assertTrue(firstDonor.getOrgansDonating().contains(OrganEnum.INTESTINE));
@@ -114,7 +114,7 @@
 //    public void openSearchedProfileTest() {
 //        clickOn("#searchTab");
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile firstDonor = (Profile) searchTable.getItems().get(0);
+//        profile firstDonor = (profile) searchTable.getItems().get(0);
 //
 //        doubleClickOn(row("#searchTable", 0));
 //

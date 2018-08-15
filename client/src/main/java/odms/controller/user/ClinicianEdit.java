@@ -52,7 +52,7 @@ public class ClinicianEdit extends CommonController {
         try {
             DAOFactory.getUserDao().update(currentUser);
         } catch (SQLException e) {
-            AlertController.invalidEntry("User could not be updated on database.");
+            AlertController.invalidEntry("user could not be updated on database.");
         }
     }
 }

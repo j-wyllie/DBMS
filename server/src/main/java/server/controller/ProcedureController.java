@@ -109,7 +109,7 @@ public class ProcedureController {
         }
 
         res.status(201);
-        return "Profile Created";
+        return "profile Created";
     }
 
     /**
@@ -125,7 +125,7 @@ public class ProcedureController {
         Procedure newProcedure;
 
         try {
-            newProcedure = new Procedure(Integer.valueOf(req.params("id")));
+            newProcedure = new Procedure(Integer.parseInt(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";

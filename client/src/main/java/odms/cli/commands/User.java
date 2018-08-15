@@ -221,7 +221,7 @@ public class User extends CommandUtils {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (UserNotFoundException e) {
-            System.out.println("User not found");
+            System.out.println("user not found");
         }
         return null;
     }

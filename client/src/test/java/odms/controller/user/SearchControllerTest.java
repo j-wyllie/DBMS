@@ -1,4 +1,4 @@
-package odms.controller.data.User;
+package odms.controller.user;
 
 import static junit.framework.TestCase.assertEquals;
 

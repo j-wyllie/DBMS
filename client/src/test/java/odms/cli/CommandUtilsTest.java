@@ -1,7 +1,7 @@
 //package odms.cli;
 //
 //import java.sql.SQLException;
-//import odms.commons.model.profile.Profile;
+//import odms.commons.model.profile.profile;
 //import odms.controller.database.DAOFactory;
 //import org.jline.reader.impl.completer.ArgumentCompleter;
 //import org.junit.After;
@@ -23,8 +23,8 @@
 //public class CommandUtilsTest {
 //
 // TODO: fix cli tests
-//    private Profile profileOne;
-//    private Profile profileTwo;
+//    private profile profileOne;
+//    private profile profileTwo;
 //
 //    // Output Handling
 //    private PrintStream stdout;
@@ -55,13 +55,13 @@
 //        donorTwoAttr.add("nhi=\"123456878\"");
 //
 //        try {
-//            profileOne = new Profile(donorOneAttr);
+//            profileOne = new profile(donorOneAttr);
 //        } catch (IllegalArgumentException e) {
 //            e.printStackTrace();
 //        }
 //
 //        try {
-//            profileTwo = new Profile(donorTwoAttr);
+//            profileTwo = new profile(donorTwoAttr);
 //        } catch (IllegalArgumentException e) {
 //            e.printStackTrace();
 //        }
@@ -185,10 +185,10 @@
 //                "nhi=\"" + nhi + "\"";
 //
 //
-//        odms.cli.commands.Profile.createProfile(createProfileStr);
+//        odms.cli.commands.profile.createProfile(createProfileStr);
 //        ProfileDAO database = DAOFactory.getProfileDao();
 //
-//        Profile profile = database.search(nhi, 0, 0, null,
+//        profile profile = database.search(nhi, 0, 0, null,
 //                null, null, null).get(0);
 //
 //        assertEquals(profile.getGivenNames(), givenNames);
@@ -208,7 +208,7 @@
 //                "region=\"" + region + "\" " +
 //                "workAddress=\"" + workAddress + "\" ";
 //
-//        User user = odms.cli.commands.User.createClinician(createClinicianStr);
+//        user user = odms.cli.commands.user.createClinician(createClinicianStr);
 //
 //        assertEquals(user.getName(), name);
 //        assertEquals(user.getRegion(), region);
@@ -222,7 +222,7 @@
 //        String deleteProfileStr = "profile " +
 //                "nhi=\"" + nhi + "\" "
 //                + "> delete";
-//        odms.cli.commands.Profile.deleteProfileBySearch(deleteProfileStr);
+//        odms.cli.commands.profile.deleteProfileBySearch(deleteProfileStr);
 //
 //        assertEquals(profileDb.searchNHI("ABC1234").size(), 0);
 //    }
@@ -238,13 +238,13 @@
 //                "region=\"" + region + "\" " +
 //                "workAddress=\"" + workAddress + "\" ";
 //
-//        User user = odms.cli.commands.User.createClinician(createClinicianStr);
+//        user user = odms.cli.commands.user.createClinician(createClinicianStr);
 //
 //        int staffID = user.getStaffID();
 //        String deleteProfileStr = "clinician " +
 //                "staffID=\"" + staffID + "\" "
 //                + "> delete";
-//        odms.cli.commands.User.deleteUserBySearch(deleteProfileStr, "clinician");
+//        odms.cli.commands.user.deleteUserBySearch(deleteProfileStr, "clinician");
 //        UserDAO database = DAOFactory.getUserDao();
 //        assertEquals(0, database.search(staffID).size());
 //    }
@@ -258,10 +258,10 @@
 //                + "> "
 //                + "given-names=\"" + givenNames + "\"";
 //
-//        odms.cli.commands.Profile.updateProfilesBySearch(updateProfileStr);
+//        odms.cli.commands.profile.updateProfilesBySearch(updateProfileStr);
 //        ProfileDAO database = DAOFactory.getProfileDao();
 //
-//        Profile updatedProfile = database.search(nhi, 0, 0, null,
+//        profile updatedProfile = database.search(nhi, 0, 0, null,
 //                null, null, null).get(0);
 //        assertEquals(updatedProfile.getGivenNames(), givenNames);
 //    }
@@ -277,7 +277,7 @@
 //                "region=\"" + region + "\" " +
 //                "workAddress=\"" + workAddress + "\" ";
 //
-//        User user = odms.cli.commands.User.createClinician(createClinicianStr);
+//        user user = odms.cli.commands.user.createClinician(createClinicianStr);
 //        int staffID = user.getStaffID();
 //
 //        String newName = "Billy";
@@ -286,10 +286,10 @@
 //                + "> "
 //                + "name=\"" + newName + "\"";
 //
-//        odms.cli.commands.User.updateUserBySearch(updateClinicianStr, "clinician");
+//        odms.cli.commands.user.updateUserBySearch(updateClinicianStr, "clinician");
 //        UserDAO database = DAOFactory.getUserDao();
 //
-//        User updatedUser = database.search(staffID).get(0);
+//        user updatedUser = database.search(staffID).get(0);
 //        assertEquals(updatedUser.getName(), newName);
 //    }
 //
@@ -302,9 +302,9 @@
 //
 //        ProfileDAO database = DAOFactory.getProfileDao();
 //
-//        Profile profile = database.search(nhi, 0, 0, null, null,
+//        profile profile = database.search(nhi, 0, 0, null, null,
 //                null, null).get(0);
-//        odms.cli.commands.Profile.viewDateTimeCreatedBySearch(viewProfileDateStr);
+//        odms.cli.commands.profile.viewDateTimeCreatedBySearch(viewProfileDateStr);
 //
 //        assertTrue(
 //                result.toString().trim().split("\\r?\\n")[3]
@@ -324,15 +324,15 @@
 //                "region=\"" + region + "\" " +
 //                "workAddress=\"" + workAddress + "\" ";
 //
-//        int staffID = odms.cli.commands.User.createClinician(createClinicianStr)
+//        int staffID = odms.cli.commands.user.createClinician(createClinicianStr)
 //                .getStaffID();
 //
 //        String viewClincianDateStr = "clinician " +
 //                "staffID=\"" + staffID + "\" "
 //                + "> date-created";
 //
-//        User user = userDb.searchStaffID(staffID).get(0);
-//        odms.cli.commands.User
+//        user user = userDb.searchStaffID(staffID).get(0);
+//        odms.cli.commands.user
 //                .viewDateTimeCreatedBySearch(viewClincianDateStr, "clinician");
 //
 //        assertTrue(

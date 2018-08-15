@@ -1,7 +1,6 @@
-package odms.controller.data.Profile;
+package odms.controller.profile;
 
 import javafx.fxml.FXMLLoader;
-import odms.controller.profile.ProfileCreate;
 import odms.view.profile.CreateAccount;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -11,12 +10,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @Ignore
-public class Create {
+public class CreateTest {
     public CreateAccount view;
     public ProfileCreate controller;
 
     @Before
-    public void setup() throws IOException{
+    public void setup() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(
                 getClass().getResource("/view/ProfileCreate.fxml"));
@@ -27,7 +26,7 @@ public class Create {
     }
 
     @Test
-    public void testCreateAccountInvalid() throws IOException {
+    public void testCreateAccountInvalid() {
         view.setGivenNamesFieldValue("John");
         view.setsurnamesFieldValue("Smith");
         view.setdobDatePickerValue(LocalDate.now());

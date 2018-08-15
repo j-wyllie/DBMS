@@ -8,7 +8,7 @@
 //import javafx.scene.input.MouseButton;
 //import javafx.stage.Stage;
 //import odms.controller.GuiMain;
-//import odms.model.profile.Profile;
+//import odms.model.profile.profile;
 //import org.junit.*;
 //import org.testfx.api.FxRobot;
 //import org.testfx.api.FxToolkit;
@@ -102,7 +102,7 @@
 //
 //        //Open a profile
 //        TableView searchTable = getTableView("#searchTable");
-//        Profile profile = (Profile) searchTable.getItems().get(0);
+//        profile profile = (profile) searchTable.getItems().get(0);
 //        doubleClickOn(row("#searchTable", 0));
 //
 //        clickOn("#medicationsTab");

@@ -105,7 +105,7 @@ public class UserController {
             }
         }
         res.status(201);
-        return "User Created";
+        return "user Created";
     }
 
     /**
@@ -118,7 +118,7 @@ public class UserController {
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
-        User user = null;
+        User user;
 
         try {
             user = gson.fromJson(req.body(), User.class);
@@ -129,7 +129,7 @@ public class UserController {
         }
 
         try {
-            if (!database.isUniqueUsername(user.getUsername())) {
+            if (database.isUniqueUsername(user.getUsername())) {
                 database.update(user);
             } else {
                 res.status(403);
@@ -141,7 +141,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "User Updated";
+        return "user Updated";
     }
 
     /**
@@ -175,7 +175,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "User Deleted";
+        return "user Deleted";
     }
 
 }

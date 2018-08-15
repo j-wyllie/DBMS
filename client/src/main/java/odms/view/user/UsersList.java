@@ -21,7 +21,7 @@ public class UsersList extends CommonView {
      */
     @FXML
     public void handleCreateUserBtnPressed(ActionEvent actionEvent) {
-        createPopup(actionEvent, "/view/UserCreate.fxml", "Create User");
+        createPopup(actionEvent, "/view/UserCreate.fxml", "Create user");
     }
 
     public TableView<User> getViewUsersTable() {
