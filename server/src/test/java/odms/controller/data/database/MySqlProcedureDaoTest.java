@@ -9,11 +9,11 @@ import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.procedure.MySqlProcedureDAO;
-import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import server.model.database.procedure.MySqlProcedureDAO;
+import server.model.database.profile.MySqlProfileDAO;
 
 public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
@@ -77,7 +77,7 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
     public void testUpdate() {
         Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
         testProcedure.setSummary("gg no re");
-        mySqlProcedureDAO.update(testProfile0, testProcedure);
+        mySqlProcedureDAO.update(testProcedure);
         assertEquals(testProcedure.getSummary(),
                 mySqlProcedureDAO.getAll(testProfile0, true).get(0).getSummary());
     }

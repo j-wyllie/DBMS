@@ -12,11 +12,11 @@ import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.organ.MySqlOrganDAO;
-import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import server.model.database.organ.MySqlOrganDAO;
+import server.model.database.profile.MySqlProfileDAO;
 
 public class MySqlProfileDaoTest extends MySqlCommonTests {
     private MySqlProfileDAO mySqlProfileDAO;
@@ -103,7 +103,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     @Test
     public void testSize() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
-        assertEquals(1, mySqlProfileDAO.size());
+        assertEquals(1, mySqlProfileDAO.getAll().size());
     }
 
     @Test

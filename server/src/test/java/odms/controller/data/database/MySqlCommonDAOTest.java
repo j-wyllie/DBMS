@@ -7,11 +7,11 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.common.MySqlCommonDAO;
-import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import server.model.database.common.MySqlCommonDAO;
+import server.model.database.profile.MySqlProfileDAO;
 
 /**
  * MySqlCommonDao Tests.

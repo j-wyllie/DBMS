@@ -3,16 +3,17 @@ package odms.controller.data.database;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import odms.controller.database.MySqlUserDAO;
-import odms.controller.user.UserNotFoundException;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
+import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import server.model.database.user.MySqlUserDAO;
 
 public class MySqlUserDaoTest extends MySqlCommonTests {
     MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();

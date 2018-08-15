@@ -1,9 +1,9 @@
 package odms.controller.data.database;
 
-import odms.controller.database.DatabaseConnection;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import server.model.database.DatabaseConnection;
 
 public abstract class MySqlCommonTests {
 

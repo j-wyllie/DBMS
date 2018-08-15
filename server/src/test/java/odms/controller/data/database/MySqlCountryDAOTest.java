@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.util.List;
 import odms.commons.model.enums.CountriesEnum;
-import odms.controller.database.country.MySqlCountryDAO;
 import org.junit.Before;
 import org.junit.Test;
+import server.model.database.country.MySqlCountryDAO;
 
 public class MySqlCountryDAOTest extends MySqlCommonTests {
     private MySqlCountryDAO mySqlCountryDAO;
