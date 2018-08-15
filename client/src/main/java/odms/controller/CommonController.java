@@ -8,14 +8,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import odms.controller.history.Redo;
-import odms.controller.history.Undo;
 
 public class CommonController {
     //todo rework commoncontroller by cleaning up methods and removing or replacing them
 
-    private Redo redoController = new Redo();
-    private Undo undoController = new Undo();
+    //private Redo redoController = new Redo();
+    //private Undo undoController = new Undo();
 
     /**
      * JavaFX Scene loader
@@ -54,14 +52,14 @@ public class CommonController {
      * Button handler to undo last action.
      */
     public void undo() {
-        undoController.undo(GuiMain.getCurrentDatabase());
+        //undoController.undo(GuiMain.getCurrentDatabase());
     }
 
     /**
      * Button handler to redo last undo action.
      */
     public void redo() {
-        redoController.redo(GuiMain.getCurrentDatabase());
+        //redoController.redo(GuiMain.getCurrentDatabase());
     }
 
     /**

@@ -1,7 +1,8 @@
 package odms.controller.data.Profile;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.profile.ProfileEdit;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -151,8 +152,6 @@ public class Edit {
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

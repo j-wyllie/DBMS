@@ -3,7 +3,6 @@ package odms.history;
 import java.time.LocalDateTime;
 
 public class History {
-
     private String historyType;
     private Integer historyId;
     private String historyAction;

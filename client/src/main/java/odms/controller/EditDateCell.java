@@ -11,7 +11,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import odms.model.profile.Condition;
+import odms.commons.model.profile.Condition;
 
 public class EditDateCell extends TableCell<Condition, LocalDate> {
 

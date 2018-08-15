@@ -6,8 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import odms.App;
-import odms.controller.data.UserDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
 import odms.commons.model.user.User;

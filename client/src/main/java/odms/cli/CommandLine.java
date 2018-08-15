@@ -7,9 +7,9 @@ import odms.cli.commands.Profile;
 import odms.cli.commands.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.DatabaseConnection;
-import odms.controller.database.OrganDAO;
-import odms.controller.database.ProfileDAO;
-import odms.controller.database.UserDAO;
+import odms.controller.database.organ.OrganDAO;
+import odms.controller.database.profile.ProfileDAO;
+import odms.controller.database.user.UserDAO;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -128,7 +128,6 @@ public class CommandLine implements Runnable {
 
     /**
      * Take the input from the console commands and process them accordingly.
-     *
      * @param input commands entered from console
      */
     private void processInput(ArrayList<String> input, String rawInput) throws SQLException {

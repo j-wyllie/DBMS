@@ -33,7 +33,7 @@ public class DatabaseConnection {
             source = new ComboPooledDataSource();
 
             if (CONFIG == null) {
-                CONFIG = TEST_CONFIG;
+                CONFIG = DEFAULT_CONFIG;
             }
 
             // load in config file

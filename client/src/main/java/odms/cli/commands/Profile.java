@@ -1,17 +1,18 @@
 package odms.cli.commands;
 
 import java.sql.SQLException;
-import java.util.List;
-import odms.cli.CommandUtils;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
-import odms.controller.history.CurrentHistory;
-import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
-import odms.model.data.NHIConflictException;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import odms.cli.CommandUtils;
+import odms.commons.model.history.History;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
+import odms.controller.history.CurrentHistory;
+import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
+import odms.data.NHIConflictException;
+
 
 public class Profile extends CommandUtils {
 
@@ -20,7 +21,7 @@ public class Profile extends CommandUtils {
      * @param id profile ID.
      */
     protected static void addProfileHistory(Integer id) {
-        odms.model.history.History action = new odms.model.history.History("profile", id, "added", "", -1, LocalDateTime.now());
+        History action = new History("profile", id, "added", "", -1, LocalDateTime.now());
         CurrentHistory.updateHistory(action);
     }
 
@@ -34,7 +35,7 @@ public class Profile extends CommandUtils {
         try {
             String[] attrList = rawInput.substring(15).split("\"\\s");
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            odms.model.profile.Profile newProfile = new odms.model.profile.Profile(attrArray);
+            odms.commons.model.profile.Profile newProfile = new odms.commons.model.profile.Profile(attrArray);
             if (database.isUniqueNHI(newProfile.getNhi()) == 0) {
                 database.add(newProfile);
                 addProfileHistory(newProfile.getId());
@@ -49,7 +50,7 @@ public class Profile extends CommandUtils {
 
         } catch (NHIConflictException e) {
             String errorNhiNumber = e.getNHI();
-            odms.model.profile.Profile errorProfile = database.get(database
+            odms.commons.model.profile.Profile errorProfile = database.get(database
                     .isUniqueNHI(errorNhiNumber));
 
             System.out.println("Error: NHI " + errorNhiNumber +
@@ -67,7 +68,7 @@ public class Profile extends CommandUtils {
      * @param expression search expression.
      */
     public static void deleteProfileBySearch(String expression) {
-        List<odms.model.profile.Profile> profiles = search(expression);
+        List<odms.commons.model.profile.Profile> profiles = search(expression);
         try {
             deleteProfiles(profiles);
         } catch (SQLException e) {
@@ -79,14 +80,14 @@ public class Profile extends CommandUtils {
      * Delete profiles.
      * @param profileList list of profiles.
      */
-    private static void deleteProfiles(List<odms.model.profile.Profile> profileList) throws SQLException {
+    private static void deleteProfiles(List<odms.commons.model.profile.Profile> profileList) throws SQLException {
         ProfileDAO database = DAOFactory.getProfileDao();
         boolean result;
         if (profileList.size() > 0) {
-            for (odms.model.profile.Profile profile : profileList) {
+            for (odms.commons.model.profile.Profile profile : profileList) {
                 database.remove(profile);
                 CurrentHistory.deletedProfiles.add(profile);
-                CurrentHistory.updateHistory(new odms.model.history.History("profile", profile.getId(),
+                CurrentHistory.updateHistory(new odms.commons.model.history.History("profile", profile.getId(),
                         "deleted", "", -1, LocalDateTime.now()));
             }
         } else {
@@ -99,17 +100,17 @@ public class Profile extends CommandUtils {
      * @param profileList list of profiles
      * @param attrList attributes to be updated and their values
      */
-    private static void updateProfileAttr(List<odms.model.profile.Profile> profileList,
+    private static void updateProfileAttr(List<odms.commons.model.profile.Profile> profileList,
             String[] attrList) {
         if (profileList.size() > 0) {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            for (odms.model.profile.Profile profile : profileList) {
-                odms.model.history.History action = new odms.model.history.History("profile", profile.getId(), "update",
+            for (odms.commons.model.profile.Profile profile : profileList) {
+                odms.commons.model.history.History action = new odms.commons.model.history.History("profile", profile.getId(), "update",
                         profile.getAttributesSummary(), -1, null);
                 ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attrArray, profile);
                 action.setHistoryData(action.getHistoryData() + profile.getAttributesSummary());
                 action.setHistoryTimestamp(LocalDateTime.now());
-                CurrentHistory.updateHistory(action);
+                //CurrentHistory.updateHistory(action);
 
             }
         } else {
@@ -125,7 +126,7 @@ public class Profile extends CommandUtils {
         String[] attrList = expression.substring(expression.indexOf('>') + 1)
                 .trim()
                 .split("\"\\s");
-        List<odms.model.profile.Profile> profiles = search(expression);
+        List<odms.commons.model.profile.Profile> profiles = search(expression);
         updateProfileAttr(profiles, attrList);
     }
 
@@ -134,7 +135,7 @@ public class Profile extends CommandUtils {
      * @param expression search expression being used for searching.
      */
     public static void viewAttrBySearch(String expression) {
-        List<odms.model.profile.Profile> profiles = search(expression);
+        List<odms.commons.model.profile.Profile> profiles = search(expression);
         Print.printProfileSearchResults(profiles);
     }
 
@@ -143,7 +144,7 @@ public class Profile extends CommandUtils {
      * @param expression search expression.
      */
     public static void viewDateTimeCreatedBySearch(String expression) {
-        List<odms.model.profile.Profile> profiles = search(expression);
+        List<odms.commons.model.profile.Profile> profiles = search(expression);
         Print.printProfileList(profiles);
     }
 
@@ -152,9 +153,9 @@ public class Profile extends CommandUtils {
      * @param expression to search by.
      * @return a list of profile objects.
      */
-    private static List<odms.model.profile.Profile> search(String expression) {
+    private static List<odms.commons.model.profile.Profile> search(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        List<odms.model.profile.Profile> profiles = new ArrayList<>();
+        List<odms.commons.model.profile.Profile> profiles = new ArrayList<>();
         if (expression.lastIndexOf("=") == expression.indexOf("=")) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
@@ -182,7 +183,7 @@ public class Profile extends CommandUtils {
      * @param expression search expression.
      */
     public static void viewDonationsBySearch(String expression) {
-        List<odms.model.profile.Profile> profiles = search(expression);
+        List<odms.commons.model.profile.Profile> profiles = search(expression);
 
         if (profiles != null && !profiles.isEmpty()) {
             Print.printProfileDonations(profiles);

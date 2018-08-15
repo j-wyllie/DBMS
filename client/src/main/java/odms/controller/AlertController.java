@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import odms.commons.model.enums.OrganEnum;
+import javafx.stage.Modality;
 
 public class AlertController {
 
@@ -24,6 +25,7 @@ public class AlertController {
                 message,
                 ButtonType.CLOSE
         );
+        invalidAlert.initModality(Modality.APPLICATION_MODAL);
 
         invalidAlert.show();
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
@@ -54,9 +56,9 @@ public class AlertController {
      */
     public static void invalidUsername() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Please enter a valid username.",
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                "Please enter a valid username.",
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -86,9 +88,9 @@ public class AlertController {
      */
     public static void invalidNhi() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Please enter a valid NHI number.",
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                "Please enter a valid NHI number.",
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -102,8 +104,8 @@ public class AlertController {
      */
     public static void invalidDate() {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            "Date entered is not in the format dd-mm-yyyy.",
+                AlertType.ERROR,
+                "Date entered is not in the format dd-mm-yyyy.",
                 ButtonType.CLOSE
         );
 
@@ -120,9 +122,9 @@ public class AlertController {
      */
     public static void guiPopup(String message) {
         Alert invalidAlert = new Alert(
-            AlertType.ERROR,
-            message,
-            ButtonType.CLOSE
+                AlertType.ERROR,
+                message,
+                ButtonType.CLOSE
         );
 
         invalidAlert.show();
@@ -156,7 +158,7 @@ public class AlertController {
         Alert saveAlert = new Alert(
                 AlertType.CONFIRMATION,
                 "Do you wish to save your changes?",
-                ButtonType.NO,
+                ButtonType.CANCEL,
                 ButtonType.YES
         );
 
@@ -188,10 +190,10 @@ public class AlertController {
      */
     public static boolean profileCancelChanges() {
         Alert cancelAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "Do you wish to cancel your changes?",
-            ButtonType.NO,
-            ButtonType.YES
+                AlertType.CONFIRMATION,
+                "Do you wish to cancel your changes?",
+                ButtonType.NO,
+                ButtonType.YES
         );
 
         cancelAlert.showAndWait();
@@ -239,11 +241,11 @@ public class AlertController {
      */
     public static boolean unsavedChangesImport() {
         Alert cancelAlert = new Alert(
-            AlertType.CONFIRMATION,
-            "You have unsaved changes.\n" +
-                "Do you want to continue without saving?",
-            ButtonType.CANCEL,
-            ButtonType.YES
+                AlertType.CONFIRMATION,
+                "You have unsaved changes.\n" +
+                        "Do you want to continue without saving?",
+                ButtonType.CANCEL,
+                ButtonType.YES
         );
 
         cancelAlert.showAndWait();

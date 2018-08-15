@@ -1,25 +1,21 @@
 package odms.controller.profile;
 
+import static odms.controller.AlertController.invalidDate;
+import static odms.controller.AlertController.invalidEntry;
+import static odms.controller.AlertController.invalidNhi;
+
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.data.NHIConflictException;
 import odms.view.profile.CreateAccount;
 import odms.controller.CommonController;
-import odms.controller.data.ProfileDataIO;
-import odms.data.ProfileDatabase;
-import odms.model.profile.Profile;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import static odms.controller.AlertController.invalidDate;
-import static odms.controller.AlertController.invalidEntry;
-import static odms.controller.AlertController.invalidNhi;
-import static odms.controller.GuiMain.getCurrentDatabase;
-
 public class ProfileCreate extends CommonController {
 
-    private static ProfileDatabase currentDatabase = getCurrentDatabase();
     private CreateAccount view;
 
     public ProfileCreate(CreateAccount v) {
@@ -55,9 +51,8 @@ public class ProfileCreate extends CommonController {
      * Scene change to profile profile view if all required fields are filled in.
      * @throws IOException throws IOException
      */
-    public Profile createAccount() throws IOException {
+    public Profile createAccount() {
         //todo rework this method potentially
-
         if (checkDetailsEntered()) {
             try {
                 String givenNames = view.getGivenNamesFieldValue();
@@ -66,10 +61,8 @@ public class ProfileCreate extends CommonController {
                 String nhi = view.getNhiField();
 
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
-                currentDatabase.addProfile(newProfile);
-                ProfileDataIO.saveData(currentDatabase);
                 DAOFactory.getProfileDao().add(newProfile);
-                return currentDatabase.getProfile(newProfile.getId());
+                return newProfile;
             } catch (NumberFormatException e) {
                 if (view.getNhiField().length() > 9) {
                     invalidEntry(
@@ -80,12 +73,12 @@ public class ProfileCreate extends CommonController {
             } catch (IllegalArgumentException e) {
                 //show error window.
                 invalidEntry();
-            } catch (NHIConflictException e) {
-                invalidNhi();
             } catch (ArrayIndexOutOfBoundsException e) {
                 invalidDate();
             } catch (SQLException e) {
                 invalidEntry("Database could not parse this profile");
+            } catch (NHIConflictException e) {
+                invalidEntry("NHI number is already used by another account");
             }
         }
         return null;

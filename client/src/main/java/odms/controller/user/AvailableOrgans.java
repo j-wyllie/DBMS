@@ -1,20 +1,20 @@
 package odms.controller.user;
 
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 
 import java.time.LocalDateTime;
 
 public class AvailableOrgans {
 
-    public void setOrganExpired(OrganEnum organ, Profile profile) {
+    private void setOrganExpired(OrganEnum organ, Profile profile) {
         profile.getOrgansDonating().remove(organ);
         profile.getOrgansExpired().add(organ);
     }
 
     public void checkOrganExpired(OrganEnum organ, Profile profile) {
         if(!profile.getDateOfDeath().equals(null) && LocalDateTime.now().isAfter(getExpiryTime(organ, profile))) {
-            setOrganExpired(organ,profile);
+            setOrganExpired(organ, profile);
         }
     }
 
@@ -42,7 +42,4 @@ public class AvailableOrgans {
         }
         return expiryTime;
     }
-
-    
-
 }

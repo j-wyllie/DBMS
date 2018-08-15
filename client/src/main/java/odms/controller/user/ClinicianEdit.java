@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
+import odms.commons.model.history.History;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.commons.model.user.User;
 
 public class ClinicianEdit extends CommonController {

@@ -2,6 +2,7 @@ package odms.view.user;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,14 +21,17 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
+/**
+ * Search view. Contains all GUI accessor methods for the profile search tab.
+ */
 public class Search extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
@@ -83,7 +87,7 @@ public class Search extends CommonView {
 
     private ObservableList<Profile> donorObservableList = FXCollections.observableArrayList();
 
-    private ArrayList<Profile> profileSearchResults = new ArrayList<>();
+    private List<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfile parentView;
 
     /**
@@ -92,14 +96,7 @@ public class Search extends CommonView {
      */
     @FXML
     private void makeSearchTable() {
-        ProfileDAO database = DAOFactory.getProfileDao();
-        try {
-            labelResultCount.setText(database.size() + " results found");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         searchTable.getItems().clear();
-
         donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
@@ -117,14 +114,6 @@ public class Search extends CommonView {
                     searchTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
             }
-        });
-
-        genderCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
-        });
-
-        organsCombobox.addEventHandler(ComboBox.ON_HIDING, event -> {
-            performSearchFromFilters();
         });
 
         addTooltipToRow();
@@ -152,6 +141,9 @@ public class Search extends CommonView {
         });
     }
 
+    /**
+     * Called if the age range is toggled.
+     */
     @FXML
     private void handleAgeRangeCheckboxChecked() {
         if (ageRangeCheckbox.isSelected()) {
@@ -167,7 +159,7 @@ public class Search extends CommonView {
     }
 
     /**
-     * Button handler to display all search results in the search table
+     * Button handler to display all search results in the search table.
      *
      * @param event clicking on the show all button.
      */
@@ -180,13 +172,14 @@ public class Search extends CommonView {
     }
 
     /**
-     * Button handler to display next 25 search results in the search table
+     * Button handler to display next 25 search results in the search table.
      *
      * @param event clicking on the show all button.
      */
     @FXML
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
+        updateLabels();
         labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
     }
 
@@ -198,9 +191,6 @@ public class Search extends CommonView {
 
         if (profileSearchResults == null || profileSearchResults.size() == 0) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
-            labelResultCount.setText("0 results found");
-            searchTable.setPlaceholder(new Label(
-                    "0 profiles found"));
             buttonShowAll.setVisible(false);
             buttonShowNext.setVisible(false);
         } else {
@@ -216,9 +206,20 @@ public class Search extends CommonView {
                     buttonShowNext.setVisible(false);
                 } else {
                     buttonShowAll.setText("Show all " + profileSearchResults.size() + " results");
-                    buttonShowNext.setText("Show next 25 results");
-                    buttonShowAll.setVisible(true);
-                    buttonShowNext.setVisible(true);
+                    if ((profileSearchResults.size() - donorObservableList.size()) == 1) {
+                        buttonShowNext.setText("Show next 1 result");
+                    } else if ((profileSearchResults.size() - donorObservableList.size()) < 25) {
+                        buttonShowNext.setText("Show next " + (profileSearchResults.size() - donorObservableList.size()) + " results");
+                    } else {
+                        buttonShowNext.setText("Show next 25 results");
+                    }
+                    if (donorObservableList.size() == profileSearchResults.size()) {
+                        buttonShowAll.setVisible(false);
+                        buttonShowNext.setVisible(false);
+                    } else {
+                        buttonShowAll.setVisible(true);
+                        buttonShowNext.setVisible(true);
+                    }
                 }
             }
         }
@@ -232,9 +233,12 @@ public class Search extends CommonView {
                 typeCombobox.getValue().toString(), genderCombobox.getValue().toString(), searchField.getText(), regionField.getText(),
                 ageField.getText(), ageRangeField.getText(), ageRangeCheckbox.isSelected());
 
-        updateTable(false, false);
+        if (profileSearchResults == null) {
+            setSearchTablePlaceholder();
+        } else {
+            updateTable(false, false);
+        }
         updateLabels();
-
     }
 
     /**
@@ -256,6 +260,7 @@ public class Search extends CommonView {
             } else {
                 labelResultCount.setText(profileSearchResults.size() + " results found");
             }
+            searchTable.setPlaceholder(new Label("0 results found"));
 
             if (showAll) {
                 if (profileSearchResults.size() > 200) {
@@ -266,12 +271,6 @@ public class Search extends CommonView {
             } else if (showNext) {
                 if (profileSearchResults.size() > (size + PAGESIZE)) {
                     donorObservableList.addAll(profileSearchResults.subList(0, size + PAGESIZE));
-                    if (profileSearchResults.subList(size + PAGESIZE, profileSearchResults.size())
-                            .size() < PAGESIZE) {
-                        buttonShowNext.setText("Show next " + profileSearchResults
-                                .subList(size + PAGESIZE, profileSearchResults.size()).size()
-                                + " results");
-                    }
                 } else {
                     donorObservableList.addAll(profileSearchResults);
                     buttonShowNext.setVisible(false);
@@ -320,7 +319,11 @@ public class Search extends CommonView {
         };
     }
 
-    @FXML
+    /**
+     * Initializes the profile search tab GUI elements.
+     * @param currentUser the logged in user object
+     * @param parentView parent view object that the search class is called from
+     */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
         if (currentUser != null) {
@@ -358,20 +361,30 @@ public class Search extends CommonView {
                 }
             });
 
-            ProfileDAO database = DAOFactory.getProfileDao();
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+                performSearchFromFilters();
+            });
 
-            try {
-                makeSearchTable();
-                searchTable.getItems().clear();
-                searchTable.setPlaceholder(new Label(
-                        "There are " + database.size()
-                                + " profiles"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            makeSearchTable();
+            setSearchTablePlaceholder();
         }
 
         setPauseTransitions();
+    }
+
+    /**
+     * Clears the search table and sets the placeholder.
+     */
+    public void setSearchTablePlaceholder() {
+        try {
+            makeSearchTable();
+            searchTable.getItems().clear();
+            String profileCount = controller.getNumberOfProfiles();
+            searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));
+            labelResultCount.setText(profileCount + " results found");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

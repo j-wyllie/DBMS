@@ -5,15 +5,15 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.MedicationDataIO;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.MedicationDAO;
-import odms.controller.database.MedicationInteractionsDAO;
+import odms.controller.database.interactions.MedicationInteractionsDAO;
+import odms.controller.database.medication.MedicationDAO;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.medications.Interaction;
 import odms.view.profile.MedicationsGeneral;
@@ -320,7 +320,8 @@ public class Medications extends CommonController {
                         "stopped", drug.getDrugName(),
                         Integer.parseInt(data.substring(data.indexOf("index of") + 9,
                                 data.indexOf(" at"))), LocalDateTime.now());
-                CurrentHistory.updateHistory(history);
+//                CurrentHistory.updateHistory(history);
+                //TODO: update history it breaks.
             }
         }
     }

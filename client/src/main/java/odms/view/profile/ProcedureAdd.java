@@ -1,7 +1,5 @@
 package odms.view.profile;
 
-import static odms.controller.GuiMain.getCurrentDatabase;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
@@ -16,7 +14,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
-import odms.controller.data.ProfileDataIO;
 import odms.commons.model.enums.OrganEnum;
 
 public class ProcedureAdd {
@@ -51,7 +48,6 @@ public class ProcedureAdd {
         try {
             controller.add(getSearchedDonor());
             parentView.refreshProcedureTable();
-            ProfileDataIO.saveData(getCurrentDatabase(), "example/example.json");
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {

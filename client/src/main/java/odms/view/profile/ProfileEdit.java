@@ -25,11 +25,11 @@ import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
-import odms.controller.database.CountryDAO;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.user.User;
+import odms.controller.database.country.CountryDAO;
 import odms.view.CommonView;
 
 /**

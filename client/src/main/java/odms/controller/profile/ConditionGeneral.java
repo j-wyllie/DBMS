@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
 import odms.view.profile.ProfileMedicalHistory;
 
 public class ConditionGeneral {
@@ -21,12 +22,11 @@ public class ConditionGeneral {
     }
 
     /**
-     * Gets all the cured conditions of the user
-     *
+     * Gets all the cured conditions of the user.
      * @return the cured conditions of the user
      */
-    public ArrayList<Condition> getCuredConditions(Profile p) {
-        ArrayList<Condition> curedConditions = new ArrayList<>();
+    public List<Condition> getCuredConditions(Profile p) {
+        List<Condition> curedConditions = new ArrayList<>();
         for (Condition condition : p.getAllConditions()) {
             if (condition.getCured()) {
                 curedConditions.add(condition);
@@ -41,9 +41,9 @@ public class ConditionGeneral {
      *
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions(Profile p) {
+    public List<Condition> getCurrentConditions(Profile p) {
         //todo potentially add parent controller for conditions
-        ArrayList<Condition> currentConditions = new ArrayList<>();
+        List<Condition> currentConditions = new ArrayList<>();
         for (Condition condition : p.getAllConditions()) {
             if (!condition.getCured()) {
                 currentConditions.add(condition);
@@ -63,10 +63,10 @@ public class ConditionGeneral {
         p.getAllConditions().remove(condition);
     }
 
-    public ArrayList<Condition> convertConditionObservableToArray(
+    public List<Condition> convertConditionObservableToArray(
             ObservableList<Condition> conditions) {
         //todo not called might have a use though or another class isn't calling it properly
-        ArrayList<Condition> toReturn = new ArrayList<>();
+        List<Condition> toReturn = new ArrayList<>();
         for (int i = 0; i < conditions.size(); i++) {
             if (conditions.get(i) != null) {
                 toReturn.add(conditions.get(i));
@@ -82,7 +82,7 @@ public class ConditionGeneral {
      */
     @FXML
     public void delete(Profile p) throws IOException {
-        ArrayList<Condition> conditions = view.getSelectedConditions();
+        List<Condition> conditions = view.getSelectedConditions();
         for (Condition condition : conditions) {
             if (condition != null) {
                 removeCondition(condition,p);
@@ -100,7 +100,7 @@ public class ConditionGeneral {
      * Button handler to handle toggle chronic button clicked, only available to clinicians
      */
     @FXML
-    public void toggleChronic(Profile p, ArrayList<Condition> conditions) {
+    public void toggleChronic(Profile p, List<Condition> conditions) {
         for (Condition condition : conditions) {
             if (condition != null) {
 
@@ -121,7 +121,7 @@ public class ConditionGeneral {
      *
      */
     @FXML
-    public void toggleCured(Profile p, ArrayList<Condition> conditions) {
+    public void toggleCured(Profile p, List<Condition> conditions) {
         for (Condition condition : conditions) {
             if (condition != null) {
 
@@ -144,4 +144,5 @@ public class ConditionGeneral {
     public void addCondition(Condition condition,Profile p) {
         p.getAllConditions().add(condition);
     }
+
 }

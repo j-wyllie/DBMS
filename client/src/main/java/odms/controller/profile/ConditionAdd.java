@@ -3,7 +3,7 @@ package odms.controller.profile;
 import odms.commons.model.profile.Condition;
 import odms.controller.CommonController;
 import odms.controller.history.CurrentHistory;
-import odms.history.History;
+import odms.commons.model.history.History;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

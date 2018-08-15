@@ -1,12 +1,12 @@
 package server.controller;
 
+import com.google.gson.Gson;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
-import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonElement;
 import server.model.database.DAOFactory;
 import server.model.database.organ.OrganDAO;
 import spark.Request;
@@ -20,27 +20,12 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String getAll(Request req, Response res) {
+    public static String getAll(Request req, Response res) {
         Set<OrganEnum> organs;
-        int profileId;
-        boolean donated;
-        boolean donating;
-        boolean required;
-        boolean received;
+        int profileId = Integer.valueOf(req.params("id"));
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
-            donated = Boolean.valueOf(req.queryParams("donated"));
-            donating = Boolean.valueOf(req.queryParams("donating"));
-            required = Boolean.valueOf(req.queryParams("required"));
-            received = Boolean.valueOf(req.queryParams("received"));
-        } catch (Exception e) {
-            res.status(500);
-            return "Bad Request";
-        }
-
-        try {
-            organs = getOrgans(new Profile(profileId), donated, donating, required, received);
+            organs = getOrgans(new Profile(profileId), req);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -61,28 +46,20 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String add(Request req, Response res) {
+    public static String add(Request req, Response res) {
         int profileId;
         String organ;
-        boolean donated;
-        boolean donating;
-        boolean required;
-        boolean received;
 
         try {
             profileId = Integer.valueOf(req.params("id"));
-            organ = req.body();
-            donated = Boolean.valueOf(req.queryParams("donated"));
-            donating = Boolean.valueOf(req.queryParams("donating"));
-            required = Boolean.valueOf(req.queryParams("required"));
-            received = Boolean.valueOf(req.queryParams("received"));
+            organ = req.queryParams("name");
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return "Bad Request";
         }
 
         try {
-            addOrgan(new Profile(profileId), organ, donated, donating, required, received);
+            addOrgan(new Profile(profileId), organ, req);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -98,28 +75,20 @@ public class OrganController {
      * @param res sent back.
      * @return the response body.
      */
-    public String delete(Request req, Response res) {
+    public static String delete(Request req, Response res) {
         int profileId;
         String organ;
-        boolean donated;
-        boolean donating;
-        boolean required;
-        boolean received;
 
         try {
             profileId = Integer.valueOf(req.params("id"));
-            organ = req.body();
-            donated = Boolean.valueOf(req.queryParams("donated"));
-            donating = Boolean.valueOf(req.queryParams("donating"));
-            required = Boolean.valueOf(req.queryParams("required"));
-            received = Boolean.valueOf(req.queryParams("received"));
+            organ = req.queryParams("name");
         } catch (Exception e) {
             res.status(500);
             return "Bad Request";
         }
 
         try {
-            removeOrgan(new Profile(profileId), organ, donated, donating, required, received);
+            removeOrgan(new Profile(profileId), organ, req);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -132,26 +101,22 @@ public class OrganController {
     /**
      * Gets the organs from the database bases on organ usage.
      * @param profile to get the organs for.
-     * @param donated are required.
-     * @param donating are required.
-     * @param required are required.
-     * @param received are required.
+     * @param req that was received.
      * @return the set of organs based on the criteria.
      */
-    private Set<OrganEnum> getOrgans(Profile profile, boolean donated, boolean donating,
-            boolean required, boolean received) {
+    private static Set<OrganEnum> getOrgans(Profile profile, Request req) {
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (donated) {
+        if (req.queryMap().hasKey("donated")) {
             return database.getDonations(profile);
         }
-        if (donating) {
+        if (req.queryMap().hasKey("donating")) {
             return database.getDonating(profile);
         }
-        if (required) {
+        if (req.queryMap().hasKey("required")) {
             return database.getRequired(profile);
         }
-        if (received) {
+        if (req.queryMap().hasKey("received")) {
             return database.getReceived(profile);
         }
         return new HashSet<>();
@@ -161,27 +126,23 @@ public class OrganController {
      * Add an organ to a profile in persistent storage.
      * @param profile to add the organ to.
      * @param organ to add.
-     * @param donated are required.
-     * @param donating are required.
-     * @param required are required.
-     * @param received are required.
+     * @param req that was received.
      * @throws OrganConflictException error.
      */
-    private void addOrgan(Profile profile, String organ, boolean donated, boolean donating,
-            boolean required, boolean received) throws OrganConflictException {
+    private static void addOrgan(Profile profile, String organ, Request req) throws OrganConflictException {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (donated) {
+        if (req.queryMap().hasKey("donated")) {
             database.addDonation(profile, organEnum);
         }
-        if (donating) {
+        if (req.queryMap().hasKey("donating")) {
             database.addDonating(profile, organEnum);
         }
-        if (required) {
+        if (req.queryMap().hasKey("required")) {
             database.addRequired(profile, organEnum);
         }
-        if (received) {
+        if (req.queryMap().hasKey("received")) {
             database.addReceived(profile, organEnum);
         }
     }
@@ -190,26 +151,23 @@ public class OrganController {
      * Removes an organ from a profile in persistent storage.
      * @param profile to add the organ to.
      * @param organ to add.
-     * @param donated are required.
-     * @param donating are required.
-     * @param required are required.
-     * @param received are required.
+     * @param req that was received.
      */
-    private void removeOrgan(Profile profile, String organ, boolean donated, boolean donating,
-            boolean required, boolean received) {
+    private static void removeOrgan(Profile profile, String organ, Request req) {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
+        organEnum.setDate(LocalDate.parse(req.queryParams("date")));
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (donated) {
+        if (req.queryMap().hasKey("donated")) {
             database.removeDonation(profile, organEnum);
         }
-        if (donating) {
+        if (req.queryMap().hasKey("required")) {
             database.removeDonating(profile, organEnum);
         }
-        if (required) {
+        if (req.queryMap().hasKey("required")) {
             database.removeRequired(profile, organEnum);
         }
-        if (received) {
+        if (req.queryMap().hasKey("received")) {
             database.removeReceived(profile, organEnum);
         }
     }

@@ -1,10 +1,17 @@
 package server.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonArray;
+import org.sonar.api.internal.google.gson.JsonElement;
+import org.sonar.api.internal.google.gson.JsonObject;
+import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;
 import spark.Request;
@@ -19,23 +26,78 @@ public class ProfileController {
      * @return the response body, a list of all profiles.
      */
     public static String getAll(Request req, Response res) {
-        ProfileDAO database = DAOFactory.getProfileDao();
-        List<Profile> profiles;
-
+        String profiles;
         try {
-            profiles = database.getAll();
+            if (req.queryMap().hasKey("receiving")
+                && Boolean.valueOf(req.queryParams("receiving"))) {
+                profiles = getReceiving(req);
+            } else {
+                profiles = getAll(req);
+            }
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
         }
-
-        Gson gson = new Gson();
-        String responseBody = gson.toJson(profiles);
-
         res.type("application/json");
         res.status(200);
 
-        return responseBody;
+        return profiles;
+    }
+
+    /**
+     * Gets all receiving profiles (possibly with search criteria).
+     * @param req received.
+     * @return json string of profiles.
+     */
+    private static String getReceiving(Request req) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
+        String profiles;
+
+        if (req.queryMap().hasKey("searchString")) {
+            String searchString = req.queryParams("searchString");
+            List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
+            profiles = gson.toJson(result);
+        }
+        else {
+            profiles = gson.toJson(database.getAllReceiving());
+        }
+        return profiles;
+    }
+
+    /**
+     /**
+     * Gets all profiles (possibly with search criteria).
+     * @param req received.
+     * @return json string of profiles.
+     * @throws SQLException error.
+     */
+    private static String getAll(Request req) throws SQLException {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
+        String profiles;
+
+        if (req.queryMap().hasKey("searchString")) {
+            String searchString = req.queryParams("searchString");
+            int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
+            int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
+            String region = req.queryParams("region");
+            String gender = req.queryParams("gender");
+            String type = req.queryParams("type");
+
+            Set<OrganEnum> organs = new HashSet<>();
+            List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class);
+            for (String organ : organArray) {
+                organs.add(OrganEnum.valueOf(organ));
+            }
+            List<Profile> result = database.search(searchString, ageSearchInt,
+                    ageRangeSearchInt, region, gender, type, organs);
+            profiles = gson.toJson(result);
+        }
+        else {
+            profiles = gson.toJson(database.getAll());
+        }
+        return profiles;
     }
 
     /**
@@ -49,7 +111,12 @@ public class ProfileController {
         Profile profile = null;
 
         try {
-            profile = database.get(Integer.valueOf(req.params("id")));
+            if (req.queryMap().hasKey("id")) {
+                profile = database.get(Integer.valueOf(req.queryParams("id")));
+            }
+            else {
+                profile = database.get(req.queryParams("username"));
+            }
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -82,9 +149,17 @@ public class ProfileController {
             return "Bad Request";
         }
 
-        if (!(newProfile == null)) {
+        if ((newProfile != null)) {
             try {
-                database.add(newProfile);
+                System.out.println(newProfile.getNhi());
+                if (database.isUniqueNHI(newProfile.getNhi()) == 0
+                        && !database.isUniqueUsername(newProfile.getUsername())) {
+                    database.add(newProfile);
+                }
+                else {
+                    res.status(400);
+                    return "Bad Request";
+                }
             } catch (SQLException e) {
                 res.status(500);
                 return "Internal Server Error";
@@ -108,6 +183,7 @@ public class ProfileController {
 
         try {
             profile = gson.fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
@@ -139,6 +215,7 @@ public class ProfileController {
 
         try {
             profile = gson.fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";

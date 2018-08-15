@@ -2,7 +2,6 @@ package odms.view.user;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -14,12 +13,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import odms.controller.AlertController;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.ProfileDAO;
-import odms.controller.profile.ProfileImportTask;
-import odms.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.AlertController;
+import odms.controller.database.profile.MySqlProfileDAO;
+import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 
 public class ImportLoadingDialog extends CommonView {
@@ -91,23 +88,23 @@ public class ImportLoadingDialog extends CommonView {
                     event -> buttonImportConfirm.setDisable(false));
 
             buttonImportConfirm.setOnAction(event -> {
-                List<Profile> profiles = profileImportTask.getDb();
-                ProfileDAO database = DAOFactory.getProfileDao();
-
-                profiles.forEach(profile -> {
-                    try {
-                        database.add(profile);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
+                try {
+                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                    mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 closeWindows(parentStage);
             });
 
             buttonImportCancel.setOnAction(event -> {
                 importTask.interrupt();
+                MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
+
+            tableStatus.setSelectionModel(null);
 
             setupTable();
             updateProgress();
@@ -173,7 +170,11 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     public void setOnCloseRequest() {
-        this.currentStage.setOnCloseRequest((WindowEvent event) -> importTask.interrupt());
+        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
+            importTask.interrupt();
+            MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+            mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+        });
     }
 
     public class ImportResult {

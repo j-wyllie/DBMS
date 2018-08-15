@@ -1,7 +1,7 @@
 package odms.controller.data.Profile;
 
 import odms.commons.model.medications.Drug;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.profile.MedicationsGeneral;
 import org.junit.Before;
 import org.junit.Test;

@@ -84,12 +84,12 @@ public class ProfileGeneral {
             if (currentProfile.getCountryOfDeath() == null ) {
                 if (currentProfile.getCountry() != null) {
                     currentProfile.setCountryOfDeath(currentProfile.getCountry());
-                    view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
                 } else {
-                    view.getCountryLabel().setText("Country of Death : ");
+                    view.getCountryLabel().setText("country of Death : ");
                 }
             } else {
-                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+                view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
             }
 
             if (currentProfile.getCityOfDeath() == null) {
@@ -117,7 +117,7 @@ public class ProfileGeneral {
                 view.getRegionLabel().setText("Region : " + currentProfile.getRegion());
             }
             if (currentProfile.getCountry() != null) {
-                view.getCountryLabel().setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                view.getCountryLabel().setText("country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
             }
             if (currentProfile.getCity() != null) {
                 view.getCityLabel().setText("City : " + currentProfile.getCity());

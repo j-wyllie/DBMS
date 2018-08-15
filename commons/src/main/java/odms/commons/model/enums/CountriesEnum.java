@@ -3,6 +3,10 @@ package odms.commons.model.enums;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 
 public enum CountriesEnum {
     NZ("New Zealand"),
@@ -209,6 +213,8 @@ public enum CountriesEnum {
 
     private String name;
 
+    private BooleanProperty valid = new SimpleBooleanProperty();
+
     CountriesEnum(String name) {
         this.name = name;
     }
@@ -219,6 +225,7 @@ public enum CountriesEnum {
 
     /**
      * Generate an ArrayList of strings of country names.
+     *
      * @return the array list of countries
      */
     public static List<String> toArrayList() {
@@ -233,7 +240,23 @@ public enum CountriesEnum {
     }
 
     /**
+     * Gets the value of the enum from the name.
+     *
+     * @param name Name to be converted to enum.
+     * @return The converted name to the country enum.
+     */
+    public static CountriesEnum getEnumByString(String name) {
+        for (CountriesEnum e : CountriesEnum.values()) {
+            if (name.equals(e.name)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Creates a list of the enum country values.
+     *
      * @return list of country enum values.
      */
     public static List<String> getValuesAsStrings() {
@@ -246,6 +269,7 @@ public enum CountriesEnum {
 
     /**
      * Gets the name of a country.
+     *
      * @param string string of country to be converted.
      * @return country name.
      */
@@ -257,5 +281,17 @@ public enum CountriesEnum {
         } else {
             return "New Zealand";
         }
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid.set(valid);
+    }
+
+    public Boolean getValid() {
+        return valid.get();
+    }
+
+    public Observable getValidProperty() {
+        return valid;
     }
 }

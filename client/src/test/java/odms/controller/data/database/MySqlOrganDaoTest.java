@@ -1,16 +1,16 @@
 package odms.controller.data.database;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import odms.controller.database.MySqlOrganDAO;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.organ.MySqlOrganDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -124,5 +124,16 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     public void testRemoveRequired() {
         mysqlOrganDao.removeRequired(testProfile2, organ5);
         assertFalse(mysqlOrganDao.getRequired(testProfile2).contains(organ5));
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        mysqlOrganDao.removeDonating(testProfile2, organ2);
+        mysqlOrganDao.removeDonation(testProfile2, organ3);
+        mysqlOrganDao.removeReceived(testProfile2, organ4);
+        mysqlOrganDao.removeRequired(testProfile2, organ5);
+
+        mySqlProfileDAO.remove(testProfile2);
+        mySqlProfileDAO.remove(testProfile1);
     }
 }

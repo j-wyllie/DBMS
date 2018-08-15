@@ -1,8 +1,11 @@
 package odms.controller.data.Profile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
 import org.junit.Before;
 import org.junit.Test;
 

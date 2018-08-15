@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import java.time.LocalTime;
 import java.util.List;
 import odms.commons.model.profile.Attribute;
 import odms.commons.model.profile.Profile;
@@ -108,7 +109,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                         Integer.valueOf(dates[1]),
                         Integer.valueOf(dates[0])
                 );
-                profile.setDateOfDeath(date);
+                profile.setDateOfDeath(LocalDateTime.of(date, LocalTime.MIN));
             }
         } else if (attrName.equals(Attribute.GENDER.getText())) {
             profile.setGender(value.toLowerCase());

@@ -1,5 +1,6 @@
 package odms.view.user;
 
+import java.util.Map.Entry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class AvailableOrgans extends CommonView {
     @FXML
     private TableView availableOrgansTable;
-    private ObservableList<Map.Entry<Profile,OrganEnum>> listOfAvailableOrgans;
+    private ObservableList<Entry<Profile,OrganEnum>> listOfAvailableOrgans;
     private ClinicianProfile parentView;
 
     public void initialize(User currentUser, ClinicianProfile p) {

@@ -8,8 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import odms.commons.model.profile.Profile;
 import odms.controller.profile.ProfileCreate;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class CreateAccount extends CommonView {
         Scene scene = new Scene(loader.load());
         Display v = loader.getController();
         Profile profile = controller.createAccount();
-        if(profile != null) {
+        if (profile != null) {
             v.initialize(profile, false);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(scene);
@@ -77,7 +78,6 @@ public class CreateAccount extends CommonView {
     }
 
     public String getGivenNamesFieldValue() {
-        givenNamesField.setText("REE");
         return givenNamesField.getText();
     }
 

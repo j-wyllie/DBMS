@@ -194,7 +194,7 @@ public class User {
 
     public void setStaffID(Integer staffID) {
         this.staffID = staffID;
-        generateUpdateInfo(staffID.toString());
+        //generateUpdateInfo(staffID.toString());
     }
 
     public String getWorkAddress() {

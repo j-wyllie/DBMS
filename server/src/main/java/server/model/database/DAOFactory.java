@@ -1,11 +1,12 @@
 package server.model.database;
 
+import server.model.database.common.CommonDAO;
+import server.model.database.common.MySqlCommonDAO;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
 import server.model.database.country.CountryDAO;
 import server.model.database.country.MySqlCountryDAO;
 import server.model.database.medication.MedicationDAO;
-import server.model.database.medication.MedicationInteractionsDAO;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.organ.OrganDAO;

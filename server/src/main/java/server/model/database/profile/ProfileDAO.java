@@ -1,6 +1,7 @@
 package server.model.database.profile;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -41,6 +42,8 @@ public interface ProfileDAO {
      */
     boolean isUniqueUsername(String username) throws SQLException;
 
+    int isUniqueNHI(String nhi) throws SQLException;
+
     /**
      * Removes a profile from the database.
      * @param profile to remove.
@@ -72,7 +75,7 @@ public interface ProfileDAO {
      * Gets the number of profiles in the database.
      * @return the number of profiles.
      */
-    int size() throws SQLException;
+    Integer size() throws SQLException;
 
     /**
      * Gets all profiles that require organs.

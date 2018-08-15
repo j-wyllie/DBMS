@@ -3,23 +3,35 @@ package odms.controller.profile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.profile.MySqlProfileDAO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+/**
+ * Task to import parse a csv file to a user object.
+ */
 public class ProfileImportTask extends Task<Void> {
 
     private File file;
-    private List<Profile> db;
+    private MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+    private Connection conn;
+    private static final int VALID_DOD_LENGTH = 3;
+    private static final String DATE_SPLITTER = "/";
 
+
+    /**
+     * Gives a CSV file to the profile import task.
+     * @param file CSV file to be parsed.
+     */
     public ProfileImportTask(File file) {
         this.file = file;
     }
@@ -27,7 +39,7 @@ public class ProfileImportTask extends Task<Void> {
     @Override
     protected Void call() throws InvalidFileException {
         try {
-            db = loadDataFromCSV(this.file);
+            loadDataFromCSV(this.file);
         } catch (InvalidFileException e) {
             throw new InvalidFileException(e.getMessage(), e.getFile());
         }
@@ -38,49 +50,47 @@ public class ProfileImportTask extends Task<Void> {
     /**
      * Load the specified csv file instantiating a ProfileDatabase Object.
      *
-     * @param csv the csv file that is being loaded
-     * @return ProfileDatabase the updated profile database.
+     * @param csv the csv file that is being loaded.
+     * @throws InvalidFileException thrown when the CSV file could not be read.
      */
-    private List<Profile> loadDataFromCSV(File csv) throws InvalidFileException {
-        List<Profile> profileDb = new ArrayList<>();
+    private void loadDataFromCSV(File csv) throws InvalidFileException {
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
             Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
                     .getRecords().size();
 
-            profileDb = parseCsvRecord(profileDb, csvParser, csvLength);
-        } catch (IOException | IllegalArgumentException e) {
+            parseCsvRecord(csvParser, csvLength);
+        } catch (IOException | IllegalArgumentException | SQLException e) {
             throw new InvalidFileException("CSV file could not be read.", csv);
         }
-        return profileDb;
     }
 
     /**
-     * Loops through the csv records and adds it to the profileDB if it is valid.
-     * Updates the counts of successful and failed imports.
+     * Loops through the csv records and adds it to the profileDB if it is valid. Updates the counts
+     * of successful and failed imports.
      *
      * @param csvParser the csv parser to parse each row.
      * @param csvLength the length of the csv.
-     * @return a profile database to be saved as the new database.
+     * @throws SQLException thrown when a profile can't be added to the transaction.
      */
-    private List<Profile> parseCsvRecord(List<Profile> profileDb, CSVParser csvParser,
-            Integer csvLength) {
+    private void parseCsvRecord(CSVParser csvParser,
+            Integer csvLength) throws SQLException {
         int progressCount = 0;
         int successCount = 0;
         int failedCount = 0;
+        conn = mySqlProfileDAO.getConnection();
+
         for (CSVRecord csvRecord : csvParser) {
             if (Thread.currentThread().isInterrupted()) {
-                return null;
+                return;
             }
 
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
-
-                    profileDb.add(profile);
+                    mySqlProfileDAO.addToTransaction(conn, profile);
                     successCount++;
-
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     failedCount++;
                 }
             } else {
@@ -89,20 +99,22 @@ public class ProfileImportTask extends Task<Void> {
 
             progressCount++;
             this.updateProgress(progressCount, csvLength);
-            this.updateMessage(successCount + "," + failedCount + "," + progressCount);
+            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
         }
-        return profileDb;
     }
 
     /**
-     * Converts a record in the csv to a profile object
-     * @param csvRecord the record to be converted
-     * @return the profile object
+     * Converts a record in the csv to a profile object.
+     *
+     * @param csvRecord the record to be converted.
+     * @return the profile object.
      */
     private Profile csvToProfileConverter(CSVRecord csvRecord) {
-        if (isValidNHI(csvRecord.get("nhi"))) {
+
+        String nhi = csvRecord.get("nhi");
+        if (isValidNHI(nhi)) {
             try {
-                String[] dobString = csvRecord.get("date_of_birth").split("/");
+                String[] dobString = csvRecord.get("date_of_birth").split(DATE_SPLITTER);
                 LocalDate dob = LocalDate.of(
                         Integer.valueOf(dobString[2]),
                         Integer.valueOf(dobString[0]),
@@ -110,21 +122,21 @@ public class ProfileImportTask extends Task<Void> {
                 );
 
                 Profile profile = new Profile(csvRecord.get("first_names"),
-                        csvRecord.get("last_names"), dob, csvRecord.get("nhi"));
+                        csvRecord.get("last_names"), dob, nhi);
 
-                if (!csvRecord.get("date_of_death").isEmpty()) {
-                    String[] dodString = csvRecord.get("date_of_death").split("/");
+                String dateOfDeath = csvRecord.get("date_of_death");
+                if (!dateOfDeath.isEmpty()) {
+                    String[] dodString = dateOfDeath.split(DATE_SPLITTER);
 
                     // If the dod is invalid then don't upload
-                    if (dodString.length != 3) {
+                    if (dodString.length != VALID_DOD_LENGTH) {
                         return null;
                     }
 
-                    //todo set way to set time of death
                     LocalDateTime dod = LocalDateTime.of(
                             Integer.valueOf(dodString[2]),
                             Integer.valueOf(dodString[0]),
-                            Integer.valueOf(dodString[1]), 0,0
+                            Integer.valueOf(dodString[1]), 0, 0
                     );
 
                     profile.setDateOfDeath(dod);
@@ -157,12 +169,12 @@ public class ProfileImportTask extends Task<Void> {
     }
 
     /**
-     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers)
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
      *
-     * @param nhi the nhi to check
-     * @return true if valid and false if not valid
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
      */
-    protected boolean isValidNHI(String nhi) {
+    private boolean isValidNHI(String nhi) {
         String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
         Pattern r = Pattern.compile(pattern);
 
@@ -170,7 +182,7 @@ public class ProfileImportTask extends Task<Void> {
         return m.find();
     }
 
-    public List<Profile> getDb() {
-        return db;
+    public Connection getConnection() {
+        return conn;
     }
 }

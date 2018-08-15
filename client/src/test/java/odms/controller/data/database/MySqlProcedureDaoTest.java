@@ -5,23 +5,27 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-
 import java.util.List;
-import odms.controller.database.MySqlProcedureDAO;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.MySqlProcedureDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MySqlProcedureDaoTest extends MySqlCommonTests {
+
     private MySqlProcedureDAO mySqlProcedureDAO;
     private MySqlProfileDAO mySqlProfileDAO;
 
-    private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
-    private Procedure testProcedurePending = new Procedure("Head Amputation", LocalDate.of(2020, 2, 22), "Head will be removed from neck. Fatal Procedure");
-    private Procedure testProcedureNotPending = new Procedure("Head Amputation", LocalDate.of(2001, 2, 22), "Head will be removed from neck. Fatal Procedure");
+    private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18),
+            "ABC1234");
+    private Procedure testProcedurePending = new Procedure("Head Amputation",
+            LocalDate.of(2020, 2, 22), "Head will be removed from neck. Fatal Procedure");
+    private Procedure testProcedureNotPending = new Procedure("Head Amputation",
+            LocalDate.of(2001, 2, 22), "Head will be removed from neck. Fatal Procedure");
 
     /**
      * Sets the Database to the test database and Initialises the DBO
@@ -45,7 +49,7 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
     @Test
     public void testAddAffectedOrgan() {
-        Procedure procedure= mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        Procedure procedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
         mySqlProcedureDAO.addAffectedOrgan(procedure, OrganEnum.LIVER);
         List<OrganEnum> affectedOrgans = mySqlProcedureDAO.getAffectedOrgans(procedure.getId());
         assertTrue(affectedOrgans.contains(OrganEnum.LIVER));
@@ -73,8 +77,27 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
     public void testUpdate() {
         Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
         testProcedure.setSummary("gg no re");
-        mySqlProcedureDAO.update(testProcedure);
+        mySqlProcedureDAO.update(testProfile0, testProcedure);
         assertEquals(testProcedure.getSummary(),
                 mySqlProcedureDAO.getAll(testProfile0, true).get(0).getSummary());
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+
+        List<Procedure> procedures = mySqlProcedureDAO.getAll(testProfile0, true);
+        for (Procedure procedure : procedures) {
+            mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
+            mySqlProcedureDAO.remove(procedure);
+        }
+
+        procedures = mySqlProcedureDAO.getAll(testProfile0, false);
+        for (Procedure procedure : procedures) {
+            mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
+
+            mySqlProcedureDAO.remove(procedure);
+        }
+
+        mySqlProfileDAO.remove(testProfile0);
     }
 }

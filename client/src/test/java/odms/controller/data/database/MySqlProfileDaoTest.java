@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import odms.controller.database.MySqlOrganDAO;
-import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.OrganConflictException;
-import odms.model.profile.Profile;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.organ.MySqlOrganDAO;
+import odms.controller.database.profile.MySqlProfileDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,7 +112,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile0);
         Profile newProfile = mySqlProfileDAO.get("ABC1234");
         MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
-        mySqlOrganDAO.addReceived(newProfile, OrganEnum.LIVER);
+        mySqlOrganDAO.addRequired(newProfile, OrganEnum.LIVER);
         assertEquals(1, mySqlProfileDAO.getAllReceiving().size());
     }
 

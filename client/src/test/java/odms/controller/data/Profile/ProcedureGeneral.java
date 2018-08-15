@@ -1,8 +1,11 @@
 package odms.controller.data.Profile;
 
 
-import odms.model.profile.Procedure;
-import odms.model.profile.Profile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import odms.view.profile.ProceduresDisplay;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,12 +42,12 @@ public class ProcedureGeneral {
 
     @Test
     public void testGetEmptyPreviousProcedures() {
-        Assert.assertEquals(controller.getPreviousProcedures(currentProfile).size(), 0);
+        assertEquals(controller.getPreviousProcedures(currentProfile).size(), 0);
     }
 
     @Test
     public void testGetEmptyPendingProcedures() {
-        Assert.assertEquals(controller.getPendingProcedures(currentProfile).size(), 0);
+        assertEquals(controller.getPendingProcedures(currentProfile).size(), 0);
     }
 
     @Test

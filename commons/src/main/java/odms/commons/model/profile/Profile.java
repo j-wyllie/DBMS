@@ -2,6 +2,7 @@ package odms.commons.model.profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class Profile implements Comparable<Profile> {
     private String lastNames;
     private String preferredName;
     private LocalDate dateOfBirth;
-    private LocalDate dateOfDeath;
+    private LocalDateTime dateOfDeath;
     private String gender;
     private String preferredGender;
     private Double height = 0.0;
@@ -59,19 +60,20 @@ public class Profile implements Comparable<Profile> {
     private Integer bloodPressureDiastolic;
     private HashSet<String> chronicDiseases = new HashSet<>();
 
-    private ArrayList<String> updateActions = new ArrayList<>();
+    private List<String> updateActions = new ArrayList<>();
 
-    private ArrayList<Procedure> procedures = new ArrayList<>();
+    private List<Procedure> procedures = new ArrayList<>();
 
-    private ArrayList<Procedure> pendingProcedures = new ArrayList<>();
-    private ArrayList<Procedure> previousProcedures = new ArrayList<>();
+    private List<Procedure> pendingProcedures = new ArrayList<>();
+    private List<Procedure> previousProcedures = new ArrayList<>();
 
     private HashSet<OrganEnum> organsDonating = new HashSet<>();
     private HashSet<OrganEnum> organsDonated = new HashSet<>();
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
+    private HashSet<OrganEnum> organsExpired = new HashSet<>();
 
-    private ArrayList<Condition> conditions = new ArrayList<>();
+    private List<Condition> conditions = new ArrayList<>();
 
     private String phone;
     private String mobilePhone;
@@ -86,7 +88,7 @@ public class Profile implements Comparable<Profile> {
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
-    private ArrayList<String> medicationTimestamps = new ArrayList<>();
+    private List<String> medicationTimestamps = new ArrayList<>();
 
     /**
      * Instantiates the Profile class with data from the CLI
@@ -103,48 +105,92 @@ public class Profile implements Comparable<Profile> {
         timeOfCreation = LocalDateTime.now();
     }
 
-    /**
-     * Instantiates the basic Profile class with a raw input of values
-     * @param givenNames Profile's given names as String
-     * @param lastNames Profile's last names as String
-     * @param dob Profile's date of birth as a string
-     * @param nhi Profile's NHI number as Integer
-     */
-    public Profile(String givenNames, String lastNames, String dob, String nhi) {
-
-        // Build an ArrayList so I can reuse the
-        ArrayList<String> attr = new ArrayList<>();
-        attr.add("given-names=\"" + givenNames + "\"");
-        attr.add("last-names=\"" + lastNames + "\"");
-        attr.add("nhi=\"" + nhi + "\"");
-        attr.add("dob=\"" + dob + "\"");
-        this.setReceiver(false);
-        setExtraAttributes(attr);
-
-        if (getGivenNames() == null ||
-                getLastNames() == null ||
-                getDateOfBirth() == null ||
-                getNhi() == null) {
-            throw new IllegalArgumentException();
-        }
-        timeOfCreation = LocalDateTime.now();
-    }
+//    /**
+//     * Instantiates the basic Profile class with a raw input of values
+//     * @param id
+//     * @param nhi1
+//     * @param username
+//     * @param isDonor
+//     * @param isReceiver
+//     * @param s
+//     * @param names
+//     * @param localDate
+//     * @param dod
+//     * @param gender
+//     * @param height
+//     * @param weight
+//     * @param bloodType
+//     * @param isSmoker
+//     * @param alcoholConsumption
+//     * @param bpSystolic
+//     * @param bpDiastolic
+//     * @param givenNames Profile's given names as String
+//     * @param lastNames Profile's last names as String
+//     * @param dob Profile's date of birth as a string
+//     * @param nhi Profile's NHI number as Integer
+//     * @param created
+//     * @param updated
+//     */
+//    public Profile(int id, String nhi1, String username, Boolean isDonor,
+//            Boolean isReceiver, String s, String names, LocalDate localDate,
+//            LocalDateTime dod, String gender, Double height, Double weight,
+//            String bloodType, Boolean isSmoker, String alcoholConsumption,
+//            int bpSystolic, int bpDiastolic, String givenNames,
+//            String lastNames, String dob,
+//            String nhi, LocalDateTime created, LocalDateTime updated) {
+//
+//        // Build an ArrayList so I can reuse the
+//        ArrayList<String> attr = new ArrayList<>();
+//        attr.add("given-names=\"" + givenNames + "\"");
+//        attr.add("last-names=\"" + lastNames + "\"");
+//        attr.add("nhi=\"" + nhi + "\"");
+//        attr.add("dob=\"" + dob + "\"");
+//        this.setReceiver(false);
+//        setExtraAttributes(attr);
+//
+//        if (getGivenNames() == null ||
+//                getLastNames() == null ||
+//                getDateOfBirth() == null ||
+//                getNhi() == null) {
+//            throw new IllegalArgumentException();
+//        }
+//        timeOfCreation = LocalDateTime.now();
+//    }
 
     public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
-        this(
-                givenNames,
-                lastNames,
-                dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                nhi
-        );
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.nhi = nhi;
+        this.donor = false;
+        this.receiver = false;
+        this.dateOfDeath = null;
+        this.gender = null;
+        this.height = 0.0;
+        this.weight = 0.0;
+        this.bloodType = null;
+        this.isSmoker = null;
+        this.alcoholConsumption = null;
+        this.bloodPressureSystolic = 0;
+        this.bloodPressureDiastolic = 0;
+        this.address = null;
+        this.region = null;
+        this.phone = null;
+        this.email = null;
+        this.country = null;
+        this.city = null;
+        this.countryOfDeath = null;
+        this.cityOfDeath = null;
+        this.regionOfDeath = null;
+        this.timeOfCreation = LocalDateTime.now();
+        this.lastUpdated = LocalDateTime.now();
     }
 
-    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
-            String givenNames, String lastNames, LocalDate dob, LocalDate dod, String gender,
+    public Profile(Integer profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
-            int bpSystolic, int bpDiastolic, String address, String region, String phone,
-            String email, String country, String city, String countryOfDeath, String regionOfDeath,
-            String cityOfDeath, LocalDateTime created, LocalDateTime updated) {
+            Integer bpSystolic, Integer bpDiastolic, String address, String region, String phone,
+            String email, LocalDateTime created, LocalDateTime updated) {
         this.id = profileId;
         this.nhi = nhi;
         this.username = username;
@@ -153,7 +199,39 @@ public class Profile implements Comparable<Profile> {
         this.givenNames = givenNames;
         this.lastNames = lastNames;
         this.dateOfBirth = dob;
-        this.dateOfDeath = dod;
+        this.dateOfDeath = dod;       //should be time
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.isSmoker = isSmoker;
+        this.alcoholConsumption = alcoholConsumption;
+        this.bloodPressureSystolic = bpSystolic;
+        this.bloodPressureDiastolic = bpDiastolic;
+        this.address = address;
+        this.region = region;
+        this.phone = phone;
+        this.email = email;
+        this.timeOfCreation = created;
+        this.lastUpdated = updated;
+    }
+
+    public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
+            Double height, Double weight, String bloodType, Boolean isSmoker,
+            String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
+             String region, String phone,
+            String email, String country, String city, String countryOfDeath, String regionOfDeath,
+            String cityOfDeath,LocalDateTime created, LocalDateTime updated) {
+        this.id = id;
+        this.nhi = nhi;
+        this.username = username;
+        this.donor = isDonor;
+        this.receiver = isReceiver;
+        this.givenNames = givenNames;
+        this.lastNames = lastNames;
+        this.dateOfBirth = dob;
+        this.dateOfDeath = dod;       //should be time
         this.gender = gender;
         this.height = height;
         this.weight = weight;
@@ -169,51 +247,22 @@ public class Profile implements Comparable<Profile> {
         this.country = country;
         this.city = city;
         this.countryOfDeath = countryOfDeath;
-        this.cityOfDeath = cityOfDeath;
         this.regionOfDeath = regionOfDeath;
+        this.cityOfDeath = cityOfDeath;
         this.timeOfCreation = created;
         this.lastUpdated = updated;
     }
 
-    public Profile(int id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
-            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
-            Double height, Double weight, String bloodType, Boolean isSmoker,
-            String alcoholConsumption, int bpSystolic, int bpDiastolic, String address,
-            String streetNo, String streetName, String neighbourhood, String city, String zipCode,
-            String region, String country, String birthCountry, String phone, String email,
-            LocalDateTime created, LocalDateTime updated) {
-        this.id = id;
-        this.nhi = nhi;
-        this.username = username;
-        this.donor = isDonor;
-        this.receiver = isReceiver;
-        this.givenNames = givenNames;
-        this.lastNames = lastNames;
-        this.dateOfBirth = dob;
-        this.dateOfDeath = dod;
-        this.birthCountry = birthCountry;
-        this.gender = gender;
-        this.height = height;
-        this.weight = weight;
-        this.bloodType = bloodType;
-        this.isSmoker = isSmoker;
-        this.alcoholConsumption = alcoholConsumption;
-        this.bloodPressureSystolic = bpSystolic;
-        this.bloodPressureDiastolic = bpDiastolic;
-        this.address = address;
-        this.region = region;
-        this.phone = phone;
-        this.email = email;
-        this.timeOfCreation = created;
-        this.lastUpdated = updated;
-        this.streetNumber = streetNo;
-        this.streetName = streetName;
-        this.neighbourhood = neighbourhood;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.country = country;
-        this.birthCountry = country;
-    }
+//    public Profile(int profileId, String nhi, String username, Boolean isDonor, Boolean isReceiver,
+//            String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
+//            Double height, Double weight, String bloodType, Boolean isSmoker, String alcoholConsumption,
+//            int bpSystolic, int bpDiastolic, String address, String region, String phone,
+//            String email, LocalDateTime created, LocalDateTime updated) {
+//        this(profileId, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod.toLocalDate(), gender,
+//                height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic, address,
+//                region, phone, email, created, updated);
+//
+//    }
 
     /**
      * Constructor for quick instantiation in server calls.
@@ -284,10 +333,10 @@ public class Profile implements Comparable<Profile> {
                 setDateOfDeath(null);
             } else {
                 String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(
+                LocalDateTime date = LocalDateTime.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
-                        Integer.valueOf(dates[0])
+                        Integer.valueOf(dates[0]), 0, 0
                 );
                 setDateOfDeath(date);
                 setCountryOfDeath(getCountry());
@@ -371,25 +420,25 @@ public class Profile implements Comparable<Profile> {
      * Gets all of the profiles procedures
      * @return all procedures
      */
-    public ArrayList<Procedure> getAllProcedures() { return procedures; }
+    public List<Procedure> getAllProcedures() { return procedures; }
 
     /**
      * Gets all the pending procedures
      * @return pending procedures
      */
-    public ArrayList<Procedure> getPendingProcedures() {
+    public List<Procedure> getPendingProcedures() {
         return this.pendingProcedures;
     }
 
-    public void setPendingProcedures(ArrayList<Procedure> pendingProcedures) {
+    public void setPendingProcedures(List<Procedure> pendingProcedures) {
         this.pendingProcedures = pendingProcedures;
     }
 
-    public ArrayList<Procedure> getPreviousProcedures() {
+    public List<Procedure> getPreviousProcedures() {
         return this.previousProcedures;
     }
 
-    public void setPreviousProcedures(ArrayList<Procedure> previous) {
+    public void setPreviousProcedures(List<Procedure> previous) {
         this.previousProcedures = previous;
     }
 
@@ -600,7 +649,7 @@ public class Profile implements Comparable<Profile> {
         if (dateOfDeath == null) {
             return Period.between(dateOfBirth, LocalDate.now()).getYears();
         } else {
-            return Period.between(dateOfBirth, dateOfDeath).getYears();
+            return Period.between(dateOfBirth, dateOfDeath.toLocalDate()).getYears();
         }
     }
 
@@ -626,7 +675,7 @@ public class Profile implements Comparable<Profile> {
         return historyOfMedication;
     }
 
-    public ArrayList<String> getMedicationTimestamps() {
+    public List<String> getMedicationTimestamps() {
         return medicationTimestamps;
     }
 
@@ -638,13 +687,15 @@ public class Profile implements Comparable<Profile> {
         return organsDonating;
     }
 
+    public HashSet<OrganEnum> getOrgansExpired() {return organsExpired;}
+
     // Condition functions
 
     /**
      * Gets all the current conditions of the user
      * @return the conditions of the user
      */
-    public ArrayList<Condition> getAllConditions() {
+    public List<Condition> getAllConditions() {
         return this.conditions;
     }
 
@@ -652,8 +703,8 @@ public class Profile implements Comparable<Profile> {
      * Gets all the cured conditions of the user
      * @return the cured conditions of the user
      */
-    public ArrayList<Condition> getCuredConditions() {
-        ArrayList<Condition> curedConditions = new ArrayList<>();
+    public List<Condition> getCuredConditions() {
+        List<Condition> curedConditions = new ArrayList<>();
         for (Condition condition : this.conditions) {
             if (condition.getCured()) {
                 curedConditions.add(condition);
@@ -667,8 +718,8 @@ public class Profile implements Comparable<Profile> {
      * Gets all the current conditions of the user
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions() {
-        ArrayList<Condition> currentConditions = new ArrayList<>();
+    public List<Condition> getCurrentConditions() {
+        List<Condition> currentConditions = new ArrayList<>();
         for (Condition condition : this.conditions) {
             if (!condition.getCured()) {
                 currentConditions.add(condition);
@@ -741,12 +792,12 @@ public class Profile implements Comparable<Profile> {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDate getDateOfDeath() {
+    public LocalDateTime getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(LocalDate dateOfDeath) {
-        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath)) {
+    public void setDateOfDeath(LocalDateTime dateOfDeath) {
+        if (dateOfDeath != null && getDateOfBirth().isAfter(dateOfDeath.toLocalDate())) {
             throw new IllegalArgumentException(
                     "Date of death cannot be before date of birth"
             );
@@ -841,7 +892,7 @@ public class Profile implements Comparable<Profile> {
         this.id = id;
     }
 
-    public ArrayList<String> getUpdateActions() {
+    public List<String> getUpdateActions() {
         return updateActions;
     }
 
@@ -894,12 +945,12 @@ public class Profile implements Comparable<Profile> {
         this.chronicDiseases = chronicDiseases;
     }
 
-    public void setProcedures(ArrayList<Procedure> procedures) {
+    public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
 
 
-    public void setConditions(ArrayList<Condition> conditions) {
+    public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 
@@ -932,7 +983,7 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-    public void setAllConditions(ArrayList<Condition> conditions) {
+    public void setAllConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 
