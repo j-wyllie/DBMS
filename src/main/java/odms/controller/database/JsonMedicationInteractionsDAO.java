@@ -91,12 +91,7 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             file = path;
         }
 
-        // If the cache doesn't exist create the dir and pre-populate it
-        if (!new File(file).exists()) {
-            new File(WORKING_DIR + File.separator + CACHE_DIR).mkdir();
-            prepopulateCache();
-            save();
-        }
+        createAndPopulateCache(file);
 
         try {
             this.interactionMap.clear();
@@ -114,6 +109,22 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             System.out.println("No default cache file was found");
         } catch (Exception e) {
             System.out.println("There was an error opening the medication interactions JSON file.");
+        }
+    }
+
+    /**
+     * If the cache doesn't exist then it creates the cache
+     * This will also prepopulate the cache
+     * @param file The path of the cache
+     */
+    private void createAndPopulateCache(String file) {
+        Thread t = new Thread(() -> {
+            new File(WORKING_DIR + File.separator + CACHE_DIR).mkdir();
+            prepopulateCache();
+            save();
+        });
+        if (!new File(file).exists()) {
+            t.start();
         }
     }
 
@@ -290,6 +301,9 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     private void prepopulateCache() {
         try {
             get("Diazepam", "Codeine sulfate");
+            get("Valium", "Xanax");
+            get("Alcohol 5% and dextrose 5%", "Xanax");
+            get("Adderall 10", "Vyvanse");
         } catch (IOException e) {
             e.printStackTrace();
         }
