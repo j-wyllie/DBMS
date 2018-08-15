@@ -1,12 +1,14 @@
 package server.controller;
 
-import com.google.gson.Gson;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonObject;
+import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.organ.OrganDAO;
 import spark.Request;
@@ -48,21 +50,21 @@ public class OrganController {
      */
     public static String add(Request req, Response res) {
         int profileId;
-        String organ;
+        JsonObject body;
+        JsonParser parser = new JsonParser();
 
         System.out.println(String.valueOf(req.queryParams("name")));
         try {
             profileId = Integer.valueOf(req.params("id"));
-            organ = String.valueOf(req.queryParams("name"));
+            body = parser.parse(req.body()).getAsJsonObject();
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
 
         try {
-            addOrgan(new Profile(profileId), organ, req);
+            addOrgan(new Profile(profileId), body);
         } catch (Exception e) {
-            e.printStackTrace();
             res.status(500);
             return e.getMessage();
         }
@@ -80,7 +82,7 @@ public class OrganController {
     public static String delete(Request req, Response res) {
         int profileId;
         String organ;
-
+        System.out.println(req.queryParams("name"));
         try {
             profileId = Integer.valueOf(req.params("id"));
             organ = String.valueOf(req.queryParams("name"));
@@ -127,27 +129,23 @@ public class OrganController {
     /**
      * Add an organ to a profile in persistent storage.
      * @param profile to add the organ to.
-     * @param organ to add.
-     * @param req that was received.
+     * @param body that was received.
      * @throws OrganConflictException error.
      */
-    private static void addOrgan(Profile profile, String organ, Request req) throws OrganConflictException {
-        OrganEnum organEnum = OrganEnum.valueOf(organ);
+    private static void addOrgan(Profile profile, JsonObject body) throws OrganConflictException {
+        OrganEnum organEnum = OrganEnum.valueOf(body.get("name").getAsString());
         OrganDAO database = DAOFactory.getOrganDao();
 
-        System.out.println(req.queryMap().hasKey("donated"));
-
-        if (req.queryMap().hasKey("donated")) {
-            System.out.println("add");
+        if (body.keySet().contains("donated")) {
             database.addDonation(profile, organEnum);
         }
-        if (req.queryMap().hasKey("donating")) {
+        if (body.keySet().contains("donating")) {
             database.addDonating(profile, organEnum);
         }
-        if (req.queryMap().hasKey("required")) {
+        if (body.keySet().contains("required")) {
             database.addRequired(profile, organEnum);
         }
-        if (req.queryMap().hasKey("received")) {
+        if (body.keySet().contains("received")) {
             database.addReceived(profile, organEnum);
         }
     }
