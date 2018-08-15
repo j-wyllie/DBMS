@@ -29,7 +29,7 @@ public class Edit {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         view = new ProfileEdit();
-        view.initialize(currentProfile, false);
+        view.initialize(currentProfile, false, null);
         controller = new odms.controller.profile.ProfileEdit(view);
     }
 

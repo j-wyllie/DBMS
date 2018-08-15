@@ -144,7 +144,7 @@ public class Display extends CommonView {
             try {
                 tabGeneral.setContent(loader.load());
                 ProfileGeneral profileGeneralView = loader.getController();
-                profileGeneralView.initialize(currentProfile, isOpenedByClinician);
+                profileGeneralView.initialize(currentProfile, isOpenedByClinician, currentUser);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -184,7 +184,7 @@ public class Display extends CommonView {
         try {
             tabMedical.setContent(loader.load());
             ProfileMedical profileMedicalViewTODO = loader.getController();
-            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
+            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

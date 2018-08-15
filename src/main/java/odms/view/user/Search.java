@@ -88,6 +88,7 @@ public class Search extends CommonView {
 
     private List<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfile parentView;
+    private User currentUser;
 
     /**
      * Initializes and refreshes the search table Adds a listener to each row so that when it is

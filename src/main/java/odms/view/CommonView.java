@@ -106,11 +106,11 @@ public class CommonView {
      *
      * @param event clicking on the edit button.
      */
-    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
+    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician, User currentUser) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEdit controller = fxmlLoader.getController();
-        controller.initialize(currentProfile, isOpenedByClinician);
+        controller.initialize(currentProfile, isOpenedByClinician, currentUser);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
