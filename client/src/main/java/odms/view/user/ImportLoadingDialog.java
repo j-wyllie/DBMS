@@ -13,10 +13,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import odms.cli.commands.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.MySqlProfileDAO;
+import odms.controller.database.profile.ProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 
@@ -90,9 +91,9 @@ public class ImportLoadingDialog extends CommonView {
 
             buttonImportConfirm.setOnAction(event -> {
                 try {
-                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                    mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
-                } catch (SQLException e) {
+                    ProfileDAO mySqlProfileDAO = DAOFactory.getProfileDao();
+                    //mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 closeWindows(parentStage);
@@ -100,8 +101,8 @@ public class ImportLoadingDialog extends CommonView {
 
             buttonImportCancel.setOnAction(event -> {
                 importTask.interrupt();
-                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                    mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+                ProfileDAO mySqlProfileDAO = DAOFactory.getProfileDao();
+                //mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 
@@ -173,8 +174,8 @@ public class ImportLoadingDialog extends CommonView {
     public void setOnCloseRequest() {
         this.currentStage.setOnCloseRequest((WindowEvent event) -> {
             importTask.interrupt();
-            MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-            mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+            ProfileDAO mySqlProfileDAO = DAOFactory.getProfileDao();
+            //mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
         });
     }
 

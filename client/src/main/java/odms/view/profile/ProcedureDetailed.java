@@ -1,5 +1,6 @@
 package odms.view.profile;
 
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,7 +41,7 @@ public class ProcedureDetailed extends CommonView {
     private Label warningLabel;
 
     @FXML
-    private ListView<OrganEnum> affectedOrgansListView;
+    private ListView<String> affectedOrgansListView;
 
     private Procedure currentProcedure;
     private ProcedureEdit controller = new ProcedureEdit(this);
@@ -80,9 +81,15 @@ public class ProcedureDetailed extends CommonView {
         saveButton.setVisible(false);
 
         if (isOpenedByClinician) {
+            System.out.println("here");
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            ObservableList<OrganEnum> organsDonated = FXCollections
-                    .observableArrayList(controller.getDonatedOrgans());
+            ObservableList<String> organsDonated = FXCollections
+                    .observableArrayList();
+            List<String> organs = new ArrayList<>();
+            controller.getDonatedOrgans().forEach(organEnum -> {
+                organs.add(organEnum.getNamePlain());
+            });
+            organsDonated.addAll(organs);
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
         } else {

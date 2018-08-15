@@ -5,6 +5,7 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.procedure.ProcedureDAO;
 import spark.Request;
@@ -186,18 +187,18 @@ public class ProcedureController {
     public static String deleteOrgan(Request req, Response res) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
         int id;
-        OrganEnum organ;
+        String organ;
 
         try {
             id = Integer.valueOf(req.params("id"));
-            organ = OrganEnum.valueOf(req.body());
+            organ = req.queryParams("name");
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
 
         try {
-            database.removeAffectedOrgan(new Procedure(id), organ);
+            database.removeAffectedOrgan(new Procedure(id), OrganEnum.valueOf(organ));
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";
@@ -214,13 +215,14 @@ public class ProcedureController {
      * @return the response body.
      */
     public static String addOrgan(Request req, Response res) {
+        Gson gson = new Gson();
         ProcedureDAO database = DAOFactory.getProcedureDao();
         int id;
         OrganEnum organ;
 
         try {
             id = Integer.valueOf(req.params("id"));
-            organ = OrganEnum.valueOf(req.body());
+            organ = OrganEnum.valueOf(gson.toJson(req.body(), OrganEnum.class));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";

@@ -69,6 +69,7 @@ public class ConditionController {
         try {
             database.add(profileId, newCondition);
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(500);
             return "Internal Server Error";
         }
@@ -98,6 +99,7 @@ public class ConditionController {
         try {
             database.update(condition);
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(500);
             return "Internal Server Error";
         }
@@ -126,6 +128,7 @@ public class ConditionController {
         try {
             database.remove(new Condition(id));
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(500);
             return "Internal Server Error";
         }

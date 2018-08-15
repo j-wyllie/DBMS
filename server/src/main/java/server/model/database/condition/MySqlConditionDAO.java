@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import odms.commons.model.profile.Condition;
@@ -85,7 +87,12 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setBoolean(4, condition.getChronic());
             stmt.setBoolean(5, !condition.getCured());
             stmt.setBoolean(6, condition.getCured());
-            stmt.setDate(7, Date.valueOf(condition.getDateCured()));
+            if (condition.getDateCured() == null) {
+                stmt.setNull(7, Types.DATE);
+            }
+            else {
+                stmt.setDate(7, Date.valueOf(condition.getDateCured()));
+            }
 
             stmt.executeUpdate();
             conn.close();
@@ -139,7 +146,12 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setBoolean(3, condition.getChronic());
             stmt.setBoolean(4, !condition.getCured());
             stmt.setBoolean(5, condition.getCured());
-            stmt.setDate(6, Date.valueOf(condition.getDateCured()));
+            if (condition.getDateCured() == null) {
+                stmt.setNull(6, Types.DATE);
+            }
+            else {
+                stmt.setDate(6, Date.valueOf(condition.getDateCured()));
+            }
             stmt.setInt(7, condition.getId());
 
             stmt.executeUpdate();
