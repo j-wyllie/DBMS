@@ -62,18 +62,4 @@ public class CommonController {
         //redoController.redo(GuiMain.getCurrentDatabase());
     }
 
-    /**
-     * returns a string that is the file extension of given file
-     *
-     * @param file File to retrieve extension from
-     */
-    protected String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
 }

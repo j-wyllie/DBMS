@@ -38,8 +38,8 @@ public class Search extends CommonView {
     private static final int PAGESIZE = 25;
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
-    private User currentUser;
 
+    private User currentUser;
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
@@ -189,7 +189,7 @@ public class Search extends CommonView {
     private void updateLabels() {
         labelToManyResults.setVisible(false);
 
-        if (profileSearchResults == null || profileSearchResults.size() == 0) {
+        if (profileSearchResults == null || profileSearchResults.isEmpty()) {
             labelCurrentOnDisplay.setText("displaying 0 to 0");
             buttonShowAll.setVisible(false);
             buttonShowNext.setVisible(false);
@@ -297,24 +297,20 @@ public class Search extends CommonView {
      * @param maxLength that can be entered in the textfield
      * @return
      */
-    public EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
-        return new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= maxLength) {
+    private EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+        return e -> {
+            TextField txt_TextField = (TextField) e.getSource();
+            if (txt_TextField.getText().length() >= maxLength) {
+                e.consume();
+            }
+            if (e.getCharacter().matches("[0-9.]")) {
+                if ((txt_TextField.getText().contains(".") ||
+                        txt_TextField.getText().length() == 0) &&
+                        e.getCharacter().matches("[.]")) {
                     e.consume();
                 }
-                if (e.getCharacter().matches("[0-9.]")) {
-                    if (txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")) {
-                        e.consume();
-                    } else if (txt_TextField.getText().length() == 0 && e.getCharacter()
-                            .matches("[.]")) {
-                        e.consume();
-                    }
-                } else {
-                    e.consume();
-                }
+            } else {
+                e.consume();
             }
         };
     }
@@ -365,6 +361,10 @@ public class Search extends CommonView {
                 performSearchFromFilters();
             });
 
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+                performSearchFromFilters();
+            });
+
             makeSearchTable();
             setSearchTablePlaceholder();
         }
@@ -393,30 +393,22 @@ public class Search extends CommonView {
     private void setPauseTransitions() {
         PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pauseTransition.setOnFinished(ae -> {
-                performSearchFromFilters();
-            });
+            pauseTransition.setOnFinished(ae -> performSearchFromFilters());
             pauseTransition.playFromStart();
         });
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pauseTransition.setOnFinished(ae -> {
-                performSearchFromFilters();
-            });
+            pauseTransition.setOnFinished(ae -> performSearchFromFilters());
             pauseTransition.playFromStart();
         });
 
         ageRangeField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pauseTransition.setOnFinished(ae -> {
-                performSearchFromFilters();
-            });
+            pauseTransition.setOnFinished(ae -> performSearchFromFilters());
             pauseTransition.playFromStart();
         });
 
         regionField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pauseTransition.setOnFinished(ae -> {
-                performSearchFromFilters();
-            });
+            pauseTransition.setOnFinished(ae -> performSearchFromFilters());
             pauseTransition.playFromStart();
         });
     }

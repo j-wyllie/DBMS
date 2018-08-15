@@ -32,7 +32,7 @@ public class DrugController {
         }
 
         try {
-            drugs = database.getAll(new Profile(profileId), current);
+            drugs = database.getAll(profileId, current);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -69,7 +69,7 @@ public class DrugController {
             return "Bad Request";
         }
         try {
-            database.add(newDrug, new Profile(profileId), current);
+            database.add(newDrug, profileId, current);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();

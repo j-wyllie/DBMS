@@ -18,10 +18,16 @@ import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
 import org.controlsfx.control.table.TableFilter;
 
+/**
+ * View for the transplant waiting list. Contains all GUI element accessors for the transplant
+ * waiting view scene.
+ */
 public class TransplantWaitingList extends CommonView {
 
     private User currentUser;
     private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
+    private odms.controller.user.TransplantWaitingList controller = new
+            odms.controller.user.TransplantWaitingList(this);
 
     @FXML
     private TableView transplantTable;
@@ -40,15 +46,10 @@ public class TransplantWaitingList extends CommonView {
 
         transplantTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         receiverObservableList = FXCollections.observableList(receivers);
-        //transplantTable.setItems(receiverObservableList);
-        //transplantOrganRequiredCol.setCellValueFactory(new PropertyValueFactory<>("organ"));
-        //transplantOrganDateCol.setCellFactory(new PropertyValueFactory<>("date"));
-        //transplantReceiverNameCol.setCellValueFactory(new PropertyValueFactory("fullName"));
-        //transplantRegionCol.setCellValueFactory(new PropertyValueFactory("region"));
 
         TableColumn<Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
                 "Organs Required");
-        //organRequiredCol.setCellValueFactory(cdf -> new SimpleStringProperty(cdf.getValue(0));
+
         transplantOrganRequiredCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
 
@@ -89,7 +90,7 @@ public class TransplantWaitingList extends CommonView {
      * Refresh the search and transplant medication tables with the most up to date data
      */
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         try {
             makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
         } catch (Exception e) {
@@ -97,6 +98,11 @@ public class TransplantWaitingList extends CommonView {
         }
     }
 
+    /**
+     * Set the currentUser and parentView variables. Populates the waiting list table.
+     * @param currentUser current user logged in
+     * @param parentView The clinicianDisplay view object
+     */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
         this.currentUser = currentUser;

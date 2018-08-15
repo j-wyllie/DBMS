@@ -4,11 +4,12 @@ import java.util.List;
 import javafx.fxml.FXML;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
 import odms.controller.database.procedure.HttpProcedureDAO;
+import odms.controller.database.procedure.ProcedureDAO;
 import odms.view.profile.ProceduresDisplay;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class ProcedureGeneral {
     ProceduresDisplay view;
@@ -16,7 +17,7 @@ public class ProcedureGeneral {
     public ProcedureGeneral(ProceduresDisplay v) {
         view = v;
     }
-    private HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
+    private ProcedureDAO server = DAOFactory.getProcedureDao();
 
     /**
      * Given a procedure, will return whether the procedure has past
@@ -49,7 +50,7 @@ public class ProcedureGeneral {
      * @param procedure the procedure to remove
      */
     public void removeProcedure(Procedure procedure, Profile profile) {
-        httpProcedureDAO.remove(procedure);
+        server.remove(procedure);
     }
 
     /**
@@ -58,7 +59,7 @@ public class ProcedureGeneral {
      * @return previous procedures
      */
     public List<Procedure> getPreviousProcedures(Profile profile) {
-        return httpProcedureDAO.getAll(profile, false);
+        return server.getAll(profile, false);
     }
 
     /**
@@ -67,6 +68,6 @@ public class ProcedureGeneral {
      * @return pending procedures
      */
     public List<Procedure> getPendingProcedures(Profile profile) {
-        return httpProcedureDAO.getAll(profile, true);
+        return server.getAll(profile, true);
     }
 }

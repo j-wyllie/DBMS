@@ -36,33 +36,33 @@ public class MySqlConditionDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.add(testProfile2);
         testProfile2 = mySqlProfileDAO.get("ABC2345");
-        mySqlConditionDAO.add(testProfile2, condition2);
-        condition2 = mySqlConditionDAO.getAll(testProfile2, true).get(0);
+        mySqlConditionDAO.add(testProfile2.getId(), condition2);
+        condition2 = mySqlConditionDAO.getAll(testProfile2.getId(), true).get(0);
     }
 
     @Test
     public void testAddCondition() {
-        mySqlConditionDAO.add(testProfile1, condition1);
-        condition1 = mySqlConditionDAO.getAll(testProfile1, true).get(0);
-        assertEquals(1, mySqlConditionDAO.getAll(testProfile1, true).size());
+        mySqlConditionDAO.add(testProfile2.getId(), condition1);
+        condition1 = mySqlConditionDAO.getAll(testProfile1.getId(), true).get(0);
+        assertEquals(1, mySqlConditionDAO.getAll(testProfile1.getId(), true).size());
     }
 
     @Test
     public void testGetAll() {
-        assertEquals(1, mySqlConditionDAO.getAll(testProfile2, true).size());
+        assertEquals(1, mySqlConditionDAO.getAll(testProfile2.getId(), true).size());
     }
 
     @Test
     public void testRemoveCondition() {
         mySqlConditionDAO.remove(condition2);
-        assertEquals(0, mySqlConditionDAO.getAll(testProfile2, true).size());
+        assertEquals(0, mySqlConditionDAO.getAll(testProfile2.getId(), true).size());
     }
 
     @Test
     public void testConditionUpdate() {
         condition2.setName("Psyc");
         mySqlConditionDAO.update(condition2);
-        assertEquals("Psyc", mySqlConditionDAO.getAll(testProfile2, true).get(0).getName());
+        assertEquals("Psyc", mySqlConditionDAO.getAll(testProfile2.getId(), true).get(0).getName());
     }
 
     @After

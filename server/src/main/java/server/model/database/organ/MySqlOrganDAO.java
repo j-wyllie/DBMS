@@ -20,7 +20,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public Set<OrganEnum> getDonations(Profile profile) {
+    public Set<OrganEnum> getDonations(int profile) {
         return getOrgans( profile, "select * from organs where ProfileId = ? and Donated = ?");
 
     }
@@ -30,7 +30,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public Set<OrganEnum> getDonating(Profile profile) {
+    public Set<OrganEnum> getDonating(int profile) {
         return getOrgans(profile, "select * from organs where ProfileId = ? and ToDonate = ?");
     }
 
@@ -40,7 +40,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param query to execute.
      * @return the list of the returned organs
      */
-    private Set<OrganEnum> getOrgans(Profile profile, String query) {
+    private Set<OrganEnum> getOrgans(int profile, String query) {
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Set<OrganEnum> allOrgans = new HashSet<>();
@@ -49,7 +49,7 @@ public class MySqlOrganDAO implements OrganDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile);
             stmt.setBoolean(2, true);
             ResultSet allOrganRows = stmt.executeQuery();
 
@@ -74,7 +74,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public Set<OrganEnum> getRequired(Profile profile) {
+    public Set<OrganEnum> getRequired(int profile) {
         return getOrgans(profile, "select * from organs where ProfileId = ? and Required = ?");
     }
 
@@ -83,7 +83,7 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param profile to get the organs for.
      */
     @Override
-    public Set<OrganEnum> getReceived(Profile profile) {
+    public Set<OrganEnum> getReceived(int profile) {
         return getOrgans(profile, "select * from organs where ProfileId = ? and Received = ?");
     }
 

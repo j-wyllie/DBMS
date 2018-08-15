@@ -2,7 +2,6 @@ package server.model.database.medication;
 
 import java.util.List;
 import odms.commons.model.medications.Drug;
-import odms.commons.model.profile.Profile;
 
 public interface MedicationDAO {
 
@@ -12,7 +11,7 @@ public interface MedicationDAO {
      * @param current true if the current drugs are required for that profile.
      * @return a list of current or past drugs.
      */
-    List<Drug> getAll(Profile profile, Boolean current);
+    List<Drug> getAll(int profile, Boolean current);
 
     /**
      * Adds a new drug for a profile stored in the database.
@@ -20,7 +19,7 @@ public interface MedicationDAO {
      * @param profile to add the drug to.
      * @param current is true if the profile is currently taking the drug.
      */
-    void add(Drug drug, Profile profile, Boolean current);
+    void add(Drug drug, int profile, Boolean current);
 
     /**
      * Removes a drug from a profile stored in the database.

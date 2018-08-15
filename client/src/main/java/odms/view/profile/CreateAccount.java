@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.controller.profile.ProfileCreate;
-import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class CreateAccount extends CommonView {
         Display v = loader.getController();
         Profile profile = controller.createAccount();
         if (profile != null) {
-            v.initialize(profile, false);
+            v.initialize(profile, false, null);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(scene);
             appStage.show();
@@ -61,7 +60,7 @@ public class CreateAccount extends CommonView {
     @FXML
     private void handleLoginLinkClicked(ActionEvent event) throws IOException {
         //controller.login();
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
     public void initialize() {

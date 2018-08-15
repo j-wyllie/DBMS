@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
+import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
@@ -99,8 +100,8 @@ public class ImportLoadingDialog extends CommonView {
 
             buttonImportCancel.setOnAction(event -> {
                 importTask.interrupt();
-                MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                    mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 

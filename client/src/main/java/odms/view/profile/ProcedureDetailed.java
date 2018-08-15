@@ -1,9 +1,7 @@
 package odms.view.profile;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import odms.commons.model.profile.Procedure;
@@ -15,6 +13,10 @@ import odms.view.CommonView;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+
+/**
+ * View for the procedure details scene.
+ */
 public class ProcedureDetailed extends CommonView {
     @FXML
     private Label procedureSummaryLabel;
@@ -42,13 +44,20 @@ public class ProcedureDetailed extends CommonView {
 
     private Procedure currentProcedure;
     private ProcedureEdit controller = new ProcedureEdit(this);
-    private ObjectProperty<Profile> profile;
+    private Profile profile;
     private ProceduresDisplay parent;
 
     public ProcedureDetailed() {}
 
-    public void setup(Procedure selectedProcedure, ObjectProperty<Profile> currentProfile,
-            ProceduresDisplay p) {
+    /**
+     * Init variables and populate text fields.
+     * @param selectedProcedure procedure object that is to be displayed
+     * @param currentProfile current profile being viewed
+     * @param p parent view/controller, will be a instance of ProfileProceduresView
+     * @param isOpenedByClinician boolean is true is scene is opened by a clinician/admin user
+     */
+    public void initialize(Procedure selectedProcedure, Profile currentProfile,
+            ProceduresDisplay p, Boolean isOpenedByClinician) {
         parent = p;
         profile = currentProfile;
         warningLabel.setVisible(false);
@@ -69,21 +78,22 @@ public class ProcedureDetailed extends CommonView {
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
-        //todo get rid of calls to model?
-        try {
+
+        if (isOpenedByClinician) {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<OrganEnum> organsDonated = FXCollections
-                    .observableArrayList(profile.get().getOrgansDonated());
+                    .observableArrayList(controller.getDonatedOrgans());
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
-        } catch (NullPointerException e) {
-            System.out.println("Not clinician");
+        } else {
             editButton.setVisible(false);
         }
-
     }
 
-    public void handleEditButtonClicked(ActionEvent actionEvent) {
+    /**
+     * Button handler for edit button.
+     */
+    public void handleEditButtonClicked() {
         warningLabel.setVisible(false);
         affectedOrgansListView.setDisable(false);
         affectedOrgansListView.setVisible(true);
@@ -104,7 +114,10 @@ public class ProcedureDetailed extends CommonView {
         procedureOrgansLabel.setText("Donations Affected:");
     }
 
-    public void handleSaveButtonClicked(ActionEvent actionEvent) {
+    /**
+     * Button handler for save button.
+     */
+    public void handleSaveButtonClicked() {
         //todo change save data?
         controller.save();
         affectedOrgansListView.setDisable(true);
@@ -129,11 +142,28 @@ public class ProcedureDetailed extends CommonView {
         parent.refreshProcedureTable();
     }
 
-    public Profile getProfile() {return profile.getValue();}
-    public Procedure getCurrentProcedure() {return currentProcedure;}
-    public String getDescEntry() {return descEntry.getText();}
-    public String getSummaryEntry() {return summaryEntry.getText();}
-    public LocalDate getDateOfProcedure() {return dateOfProcedureDatePicker.getValue();}
-    public ArrayList getAffectedOrgansListView() {return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());}
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public Procedure getCurrentProcedure() {
+        return currentProcedure;
+    }
+
+    public String getDescEntry() {
+        return descEntry.getText();
+    }
+
+    public String getSummaryEntry() {
+        return summaryEntry.getText();
+    }
+
+    public LocalDate getDateOfProcedure() {
+        return dateOfProcedureDatePicker.getValue();
+    }
+
+    public ArrayList getAffectedOrgansListView() {
+        return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
+    }
 
 }

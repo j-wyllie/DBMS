@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import odms.commons.model.profile.Condition;
-import odms.commons.model.profile.Profile;
 import server.model.database.DatabaseConnection;
 
 public class MySqlConditionDAO implements ConditionDAO {
@@ -19,7 +18,7 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @param chronic true if the conditions required are chronic.
      */
     @Override
-    public ArrayList<Condition> getAll(Profile profile, boolean chronic) {
+    public ArrayList<Condition> getAll(int profile, boolean chronic) {
         String query = "select * from conditions where ProfileId = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         ArrayList<Condition> allConditions = new ArrayList<>();
@@ -27,7 +26,7 @@ public class MySqlConditionDAO implements ConditionDAO {
         try {
             Connection conn = connectionInstance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile);
             ResultSet allConditionRows = stmt.executeQuery();
 
             while (allConditionRows.next()) {
@@ -71,7 +70,7 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @param condition to add.
      */
     @Override
-    public void add(Profile profile, Condition condition) {
+    public void add(int profile, Condition condition) {
         String query = "insert into conditions (ProfileId, Description, DiagnosisDate, Chronic, "
                 + "Current, Past, CuredDate) values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -80,7 +79,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile);
             stmt.setString(2, condition.getName());
             stmt.setDate(3, Date.valueOf(condition.getDateOfDiagnosis()));
             stmt.setBoolean(4, condition.getChronic());

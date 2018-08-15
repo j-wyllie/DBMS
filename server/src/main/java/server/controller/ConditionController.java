@@ -30,8 +30,8 @@ public class ConditionController {
         }
 
         try {
-            conditions = database.getAll(new Profile(profileId), true);
-            conditions.addAll(database.getAll(new Profile(profileId), false));
+            conditions = database.getAll(profileId, true);
+            conditions.addAll(database.getAll(profileId, false));
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -67,7 +67,7 @@ public class ConditionController {
         }
 
         try {
-            database.add(new Profile(profileId), newCondition);
+            database.add(profileId, newCondition);
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";

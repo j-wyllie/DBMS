@@ -1,7 +1,7 @@
 package odms.controller.profile;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
@@ -12,6 +12,7 @@ import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
+import odms.controller.data.ImageDataIO;
 import odms.controller.database.profile.ProfileDAO;
 
 public class ProfileEdit extends CommonController {
@@ -32,66 +33,141 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
+     * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public void save() throws IllegalArgumentException, SQLException {
+    public Boolean save() {
         if (AlertController.saveChanges()) {
-            // history Generation
-            History action = new History("profile",
-                    currentProfile.getId(), "update",
-                    "previous " + currentProfile.getAttributesSummary(), -1, null);
-
             try {
-                if (view.getDodDateTimePicker() != null) {
-                    saveCityOfDeath();
-                    saveRegionOfDeath();
-                    saveCountryOfDeath();
-                } else {
-                    currentProfile.setCountryOfDeath(null);
-                    currentProfile.setRegionOfDeath(null);
-                    currentProfile.setCityOfDeath(null);
-                }
-            } catch (IllegalArgumentException e) {
-                //throw new IllegalArgumentException(e.getMessage());
-            }
-            // Required General Fields
-            saveDateOfBirth();
-            saveGivenNames();
-            saveNhi();
-            saveLastNames();
+                // History Generation
+                History action = new History(
+                        "profile",
+                        currentProfile.getId(),
+                        "update",
+                        "previous " + currentProfile.getAttributesSummary(),
+                        -1,
+                        null
+                );
 
-            // Optional General Fields
-            saveAddress();
-            saveDateOfDeath();
-            saveEmail();
-            saveGender();
-            saveHeight();
-            savePhone();
-            savePreferredGender();
-            savePreferredName();
-            saveRegion();
-            saveWeight();
+                saveDeathDetails();
 
-            // Medical Fields
-            saveAlcoholConsumption();
-            saveBloodPressure();
-            saveBloodType();
-            saveIsSmoker();
+                // Required General Fields
+                saveChosenImage();
+                saveDateOfBirth();
+                saveGivenNames();
+                saveLastNames();
+                saveNhi();
 
-            saveCity();
-            saveCountry();
-            saveRegion();
+                // Optional General Fields
+                saveAddress();
+                saveDateOfDeath();
+                saveEmail();
+                saveGender();
+                saveHeight();
+                savePhone();
+                savePreferredGender();
+                savePreferredName();
+                saveRegion();
+                saveWeight();
+
+                // Medical Fields
+                saveAlcoholConsumption();
+                saveBloodPressure();
+                saveBloodType();
+                saveIsSmoker();
+
+                saveCity();
+                saveCountry();
+                saveRegion();
 
             ProfileDAO server = DAOFactory.getProfileDao();
             server.update(currentProfile);
 
-            // TODO: update history.
+
+                // TODO: update history.
             // history Changes
             action.setHistoryData(
                     action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
             action.setHistoryTimestamp(LocalDateTime.now());
             CurrentHistory.updateHistory(action);
+return true; // successful edit
+            } catch (Exception e) {
+                AlertController.invalidEntry(
+                        e.getMessage() + "\n" + "Changes not saved."
+                );
+                return false; // unsuccessful edit
+            }
         }
+        return false;
+    }
+
+    /**
+     * Saves the death details of the profile.
+     */
+    private void saveDeathDetails() {
+        try {
+            if (view.getDodDateTimePicker() != null) {
+                if (view.getCityOfDeathField() != null && (view.getComboRegionOfDeath() != null
+                        || view.getRegionOfDeathField() != null)) {
+                    String validRegion = checkValidRegionOfDeath();
+                    String validCity = checkValidCityOfDeath();
+                    if (validRegion != null && validCity != null) {
+                        saveCityofDeath(validCity);
+                        saveRegionOfDeath(validRegion);
+                        saveCountryOfDeath();
+                    }
+                } else {
+                    throw new IllegalArgumentException(
+                            "Please enter all required death details"
+                    );
+                }
+
+            } else {
+                currentProfile.setCountryOfDeath(null);
+                currentProfile.setRegionOfDeath(null);
+                currentProfile.setCityOfDeath(null);
+                currentProfile.setDateOfDeath(null);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    /**
+     * Checks that the region of death is valid.
+     *
+     * @return The string of the valid region, null otherwise.
+     */
+    private String checkValidRegionOfDeath() {
+
+        if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
+            if (view.getComboRegionOfDeath() != null && AddressIO
+                    .checkValidRegion(
+                            view.getComboRegionOfDeath() + " " + view.getComboCountryOfDeath(),
+                            view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
+                return view.getComboRegionOfDeath();
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid Region of Death"
+                );
+
+            }
+        } else {
+            if (view.getRegionOfDeathField() != null && AddressIO
+                    .checkValidRegion(
+                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                return view.getRegionOfDeathField();
+            } else if (view.getRegionOfDeathField() != null && !AddressIO
+                    .checkValidRegion(
+                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                throw new IllegalArgumentException(
+                        "Invalid Region of Death"
+                );
+            }
+        }
+        return null;
     }
 
     /**
@@ -99,26 +175,17 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException Thrown when an invalid region is entered.
      */
-    private void saveRegionOfDeath() throws IllegalArgumentException {
-        if (!view.getRegionOfDeathField().isEmpty() && AddressIO
-                .checkValidRegion(
-                        view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                        view.getRegionOfDeathField(), view.getComboCountryOfDeath()) && view
-                .getComboRegion().isDisabled()) {
-            currentProfile.setRegionOfDeath(view.getRegionOfDeathField());
-        } else if (!view.getRegionOfDeathField().isEmpty() && !AddressIO
-                .checkValidRegion(
-                        view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                        view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
-            throw new IllegalArgumentException("Invalid Region of Death");
-        } else if (!view.getComboRegionOfDeath().isEmpty() && AddressIO
-                .checkValidRegion(
-                        view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                        view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
-            currentProfile.setRegionOfDeath(view.getComboRegionOfDeath());
-        } else {
-            throw new IllegalArgumentException("Invalid Region of Death");
-        }
+    private void saveRegionOfDeath(String region) throws IllegalArgumentException {
+        currentProfile.setRegionOfDeath(region);
+    }
+
+    /**
+     * Save City of deaith field to profile.
+     *
+     * @param city
+     */
+    private void saveCityofDeath(String city) {
+        currentProfile.setCityOfDeath(city);
     }
 
     /**
@@ -126,16 +193,31 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException thrown when an invalid city is entered.
      */
-    private void saveCityOfDeath() throws IllegalArgumentException {
-        if (!view.getCityOfDeathField().isEmpty() && AddressIO
-                .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
-                        view.getCityOfDeathField(), view.getComboCountryOfDeath())) {
-            currentProfile.setCityOfDeath(view.getCityOfDeathField());
-        } else if (!view.getCityOfDeathField().isEmpty() && !AddressIO
-                .checkValidCity(view.getCityOfDeathField() + " " + view.getComboCountryOfDeath(),
-                        view.getCityOfDeathField(), view.getComboCountryOfDeath())) {
-            throw new IllegalArgumentException("Invalid city of death.");
+    private String checkValidCityOfDeath() throws IllegalArgumentException {
+        if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
+            if (view.getCityOfDeathField() != null && AddressIO
+                    .checkValidCity(view.getCityOfDeathField()
+                            + " " + view.getComboRegionOfDeath() + " " + view
+                            .getComboCountryOfDeath(), view.getCityOfDeathField(), MAINCOUNTRY)) {
+                return view.getCityOfDeathField();
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid city of death."
+                );
+            }
+        } else if (view.getRegionOfDeathField() != null) {
+            if (AddressIO.checkValidCity(view.getCityOfDeathField()
+                            + " " + view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                    view.getCityOfDeathField(),
+                    view.getComboCountryOfDeath())) {
+                return view.getCityOfDeathField();
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid city of death."
+                );
+            }
         }
+        return null;
     }
 
 
@@ -154,11 +236,34 @@ public class ProfileEdit extends CommonController {
      */
     public void saveDateOfBirth() throws IllegalArgumentException {
         if (view.getdobDatePicker() == null) {
-            throw new IllegalArgumentException("Date of Birth field cannot be blank");
+            throw new IllegalArgumentException(
+                    "Date of Birth field cannot be blank"
+            );
         } else if (view.getdobDatePicker().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Date of Birth cannot be in the future");
+            throw new IllegalArgumentException(
+                    "Date of Birth cannot be in the future"
+            );
         }
         currentProfile.setDateOfBirth(view.getdobDatePicker());
+    }
+
+    /**
+     * Save Chosen Image.
+     *
+     * @throws IOException if there is a exception handling the file
+     */
+    public void saveChosenImage() throws IOException {
+        File chosenFile = view.getChosenFile();
+        if (chosenFile != null) {
+            currentProfile.setPictureName(
+                    ImageDataIO.deleteAndSaveImage(
+                            chosenFile, currentProfile.getNhi()
+                    )
+            );
+        } else if (view.getRemovePhoto()) {
+            ImageDataIO.deleteImage(currentProfile.getNhi());
+            currentProfile.setPictureName(null);
+        }
     }
 
     /**
@@ -168,7 +273,9 @@ public class ProfileEdit extends CommonController {
      */
     public void saveGivenNames() throws IllegalArgumentException {
         if (view.getGivenNamesField().isEmpty()) {
-            throw new IllegalArgumentException("Given Names field cannot be blank");
+            throw new IllegalArgumentException(
+                    "Given Names field cannot be blank"
+            );
         }
         currentProfile.setGivenNames(view.getGivenNamesField());
     }
@@ -179,9 +286,11 @@ public class ProfileEdit extends CommonController {
      * @throws IllegalArgumentException if the field is empty
      */
     public void saveNhi() throws IllegalArgumentException {
-        if (!view.getNhiField().equals(currentProfile.getNhi()) && (
-                !view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$"))) {
-            throw new IllegalArgumentException("NHI must be valid");
+        if (!view.getNhiField().equals(currentProfile.getNhi()) &&
+                !view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$")) {
+            throw new IllegalArgumentException(
+                    "NHI must be valid"
+            );
         }
 
         currentProfile.setNhi(view.getNhiField());
@@ -194,7 +303,9 @@ public class ProfileEdit extends CommonController {
      */
     public void saveLastNames() throws IllegalArgumentException {
         if (view.getLastNamesField().isEmpty()) {
-            throw new IllegalArgumentException("Last Names field cannot be blank");
+            throw new IllegalArgumentException(
+                    "Last Names field cannot be blank"
+            );
         }
         currentProfile.setLastNames(view.getLastNamesField());
     }
@@ -210,7 +321,9 @@ public class ProfileEdit extends CommonController {
         } else if (!view.getAddressField().isEmpty() && !AddressIO
                 .checkValidCountry(view.getAddressField(),
                         view.getComboCountry().getValue().toString())) {
-            throw new IllegalArgumentException("Invalid address");
+            throw new IllegalArgumentException(
+                    "Invalid address"
+            );
         }
     }
 
@@ -289,7 +402,7 @@ public class ProfileEdit extends CommonController {
      * Save Region field to profile.
      */
     public void saveRegion() {
-        if (!view.getComboRegion().isDisabled()) {
+        if (view.getComboRegion().isVisible()) {
             if (view.getComboRegion().getValue() != null) {
                 currentProfile.setRegion(view.getComboRegion().getValue());
             }
@@ -350,7 +463,6 @@ public class ProfileEdit extends CommonController {
      * Save Smoker Status to profile.
      */
     public void saveIsSmoker() {
-        // TODO this should be a checkbox and not a radio button.
         currentProfile.setIsSmoker(view.getIsSmokerCheckBox());
     }
 
@@ -358,7 +470,7 @@ public class ProfileEdit extends CommonController {
      * Save Country field to profile.
      */
     private void saveCountry() {
-        if (view.getComboCountry() != null) {
+        if (view.getComboCountry().getValue() != null) {
             currentProfile.setCountry(view.getComboCountry().getValue().toString());
         }
     }
@@ -381,35 +493,6 @@ public class ProfileEdit extends CommonController {
     }
 
     /**
-     * Sets the image in the edit profile view.
-     *
-     * @param chosenFile file chosen.
-     * @param LOCALPATH local path of the chosen file.
-     * @return Picture destination.
-     */
-    public File setImage(File chosenFile, File LOCALPATH) {
-        if (chosenFile != null) {
-            String extension = getFileExtension(chosenFile).toLowerCase();
-            File deleteFile;
-            if ("jpg".equalsIgnoreCase(extension)) {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".jpg");
-            } else {
-                deleteFile = new File(LOCALPATH + "\\" + currentProfile.getNhi() + ".png");
-            }
-            if (deleteFile.delete()) {
-                System.out.println("Old file deleted successfully");
-            } else {
-                System.out.println("Failed to delete the old file");
-            }
-            File pictureDestination = new File(
-                    LOCALPATH + "\\" + currentProfile.getNhi() + "." + extension);
-            currentProfile.setPictureName(chosenFile.getName());
-            return pictureDestination;
-        }
-        return null;
-    }
-
-    /**
      * Populates the death fields.
      */
     public void populateDeathFields() {
@@ -421,17 +504,16 @@ public class ProfileEdit extends CommonController {
             view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());
         }
 
-        //city
+        // city
         if (currentProfile.getCityOfDeath() == null) {
             if (currentProfile.getCity() != null) {
                 view.setCityOfDeathField(currentProfile.getCity());
-                view.setCityOfDeathField(currentProfile.getCity());
             }
         } else {
-            view.setCityOfDeathField(currentProfile.getCity());
+            view.setCityOfDeathField(currentProfile.getCityOfDeath());
         }
 
-        //region
+        // region
         if (currentProfile.getRegionOfDeath() == null) {
             if (currentProfile.getRegion() != null) {
                 if (currentProfile.getCountry() != null) {
@@ -440,22 +522,17 @@ public class ProfileEdit extends CommonController {
                         view.clearRegionOfDeathField();
                     } else {
                         view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
-                        //comboRegionOfDeath.clearSelection()
                     }
                 } else {
                     view.setRegionOfDeathField(currentProfile.getRegion());
-                    //comboRegionOfDeath.clearSelection()
                 }
             }
         } else {
-            if (currentProfile.getCountry() != null) {
-                if (currentProfile.getCountry().equals(MAINCOUNTRY)) {
-                    view.setComboRegionOfDeath(currentProfile.getRegionOfDeath());
-                    view.clearRegionOfDeathField();
-                }
+            if (currentProfile.getCountryOfDeath().equals(MAINCOUNTRY)) {
+                view.setComboRegionOfDeath(currentProfile.getRegionOfDeath());
+                view.clearRegionOfDeathField();
             } else {
                 view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
-                //comboRegionOfDeath.clearSelection()
             }
         }
     }

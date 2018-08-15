@@ -89,7 +89,8 @@ public class User {
      * @param region user region.
      */
     public User(int userId, String username, String password, String name, UserType userType,
-            String address, String region, LocalDateTime created, LocalDateTime updated) {
+            String address, String region, LocalDateTime created, LocalDateTime updated,
+            String imageName) {
         this.staffID = userId;
         this.username = username;
         this.password = password;
@@ -100,6 +101,7 @@ public class User {
         this.timeOfCreation = created;
         this.lastUpdated = updated;
         this.updateActions.add(name + " logged on at " + LocalDateTime.now());
+        this.pictureName = imageName;
     }
 
 

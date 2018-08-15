@@ -25,17 +25,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
-import odms.controller.GuiMain;
-//import odms.controller.history.Redo;
-//import odms.controller.history.Undo;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.country.CountryDAO;
-import odms.controller.database.country.MySqlCountryDAO;
-
 
 public class UserGeneral {
 
@@ -107,10 +101,8 @@ public class UserGeneral {
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
-        //todo replace scene change with standardised and controller with view
         ClinicianEdit v = fxmlLoader.getController();
-        v.setCurrentUser(currentUser);
-        v.initialize();
+        v.initialize(currentUser);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Edit profile");

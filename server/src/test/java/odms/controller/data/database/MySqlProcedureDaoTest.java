@@ -37,19 +37,19 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
-        mySqlProcedureDAO.add(testProfile0, testProcedurePending);
+        mySqlProcedureDAO.add(testProfile0.getId(), testProcedurePending);
 
     }
 
     @Test
     public void testAddProcedure() {
-        mySqlProcedureDAO.add(testProfile0, testProcedureNotPending);
-        assertEquals(1, mySqlProcedureDAO.getAll(testProfile0, false).size());
+        mySqlProcedureDAO.add(testProfile0.getId(), testProcedureNotPending);
+        assertEquals(1, mySqlProcedureDAO.getAll(testProfile0.getId(), false).size());
     }
 
     @Test
     public void testAddAffectedOrgan() {
-        Procedure procedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        Procedure procedure = mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0);
         mySqlProcedureDAO.addAffectedOrgan(procedure, OrganEnum.LIVER);
         List<OrganEnum> affectedOrgans = mySqlProcedureDAO.getAffectedOrgans(procedure.getId());
         assertTrue(affectedOrgans.contains(OrganEnum.LIVER));
@@ -57,7 +57,7 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
     @Test
     public void testRemoveAffectedOrgans() {
-        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0);
         mySqlProcedureDAO.addAffectedOrgan(testProcedure, OrganEnum.LIVER);
         mySqlProcedureDAO.removeAffectedOrgan(testProcedure, OrganEnum.LIVER);
         int procedureId = testProcedure.getId();
@@ -67,31 +67,31 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
     @Test
     public void testRemove() {
-        mySqlProcedureDAO.remove(mySqlProcedureDAO.getAll(testProfile0, true).get(0));
+        mySqlProcedureDAO.remove(mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0));
 
-        List<Procedure> allProcedures = mySqlProcedureDAO.getAll(testProfile0, true);
+        List<Procedure> allProcedures = mySqlProcedureDAO.getAll(testProfile0.getId(), true);
         assertTrue(allProcedures.isEmpty());
     }
 
     @Test
     public void testUpdate() {
-        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0, true).get(0);
+        Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0);
         testProcedure.setSummary("gg no re");
         mySqlProcedureDAO.update(testProcedure);
         assertEquals(testProcedure.getSummary(),
-                mySqlProcedureDAO.getAll(testProfile0, true).get(0).getSummary());
+                mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0).getSummary());
     }
 
     @After
     public void tearDown() throws SQLException {
 
-        List<Procedure> procedures = mySqlProcedureDAO.getAll(testProfile0, true);
+        List<Procedure> procedures = mySqlProcedureDAO.getAll(testProfile0.getId(), true);
         for (Procedure procedure : procedures) {
             mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
             mySqlProcedureDAO.remove(procedure);
         }
 
-        procedures = mySqlProcedureDAO.getAll(testProfile0, false);
+        procedures = mySqlProcedureDAO.getAll(testProfile0.getId(), false);
         for (Procedure procedure : procedures) {
             mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
 

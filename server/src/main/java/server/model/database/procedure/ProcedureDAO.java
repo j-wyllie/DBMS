@@ -3,7 +3,6 @@ package server.model.database.procedure;
 import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
-import odms.commons.model.profile.Profile;
 
 public interface ProcedureDAO {
 
@@ -13,14 +12,14 @@ public interface ProcedureDAO {
      * @param pending procedures or false for past procedures.
      * @return a list of past or current procedures.
      */
-    List<Procedure> getAll(Profile profile, Boolean pending);
+    List<Procedure> getAll(int profile, Boolean pending);
 
     /**
      * Add a new procedure to a profile.
      * @param profile to add the procedure to.
      * @param procedure to add.
      */
-    void add(Profile profile, Procedure procedure);
+    void add(int profile, Procedure procedure);
 
     /**
      * Remove a procedure from a profile.

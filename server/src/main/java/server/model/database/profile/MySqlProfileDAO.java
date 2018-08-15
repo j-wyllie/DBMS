@@ -161,6 +161,10 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
+        String preferredName = profiles.getString("PreferredName");
+        String preferredGender = profiles.getString("PreferredGender");
+        String imageName = profiles.getString("ImageName");
+
         String city = profiles.getString("City");
         String countryOfDeath = profiles.getString("CountryOfDeath");
         String regionOfDeath = profiles.getString("RegionOfDeath");
@@ -174,9 +178,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (!(profiles.getTimestamp("Created") == null)) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
-        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames, dob, dod,
-                gender, height, weight, bloodType, isSmoker, alcoholConsumption, bpSystolic, bpDiastolic,
-                address, region, phone, email, country, city, countryOfDeath, regionOfDeath, cityOfDeath, created, updated);
+        Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
+                dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,
+                bpSystolic, bpDiastolic, address, region, phone, email, country, city, countryOfDeath, regionOfDeath, cityOfDeath, created, updated,
+                preferredName, preferredGender, imageName);
 
         try {
             profile = setOrgans(profile);
@@ -193,10 +198,10 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setOrgans(Profile profile) throws OrganConflictException {
         OrganDAO database = DAOFactory.getOrganDao();
 
-        profile.addOrgansDonating(database.getDonating(profile));
-        profile.addOrgansDonated(database.getDonations(profile));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
-        profile.addOrgansReceived(database.getReceived(profile));
+        profile.addOrgansDonating(database.getDonating(profile.getId()));
+        profile.addOrgansDonated(database.getDonations(profile.getId()));
+        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile.getId()));
+        profile.addOrgansReceived(database.getReceived(profile.getId()));
 
         return profile;
     }
@@ -204,8 +209,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setMedications(Profile profile) {
         MedicationDAO database = DAOFactory.getMedicationDao();
 
-        profile.setCurrentMedications(database.getAll(profile, true));
-        profile.setHistoryOfMedication(database.getAll(profile, false));
+        profile.setCurrentMedications(database.getAll(profile.getId(), true));
+        profile.setHistoryOfMedication(database.getAll(profile.getId(), false));
 
         return profile;
     }
@@ -213,8 +218,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, true));
-        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile, false));
+        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile.getId(), true));
+        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile.getId(), false));
 
         return profile;
     }
@@ -222,7 +227,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
 
-        profile.setConditions(database.getAll(profile, false));
+        profile.setConditions(database.getAll(profile.getId(), false));
         return profile;
     }
 

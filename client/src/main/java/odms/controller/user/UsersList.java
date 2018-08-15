@@ -23,6 +23,7 @@ public class UsersList {
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
+    private UserDAO userDAO= DAOFactory.getUserDao();
 
     /**
      * Public constructor for the ViewUsersController class.
@@ -117,7 +118,7 @@ public class UsersList {
         try {
             usersObservableList = FXCollections.observableArrayList(server.getAll());
         } catch (SQLException e) {
-            e.printStackTrace();
+            AlertController.invalidEntry("Error fetching users from database.");
         }
     }
 }

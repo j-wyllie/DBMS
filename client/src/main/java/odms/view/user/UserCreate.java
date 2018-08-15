@@ -60,8 +60,8 @@ public class UserCreate extends CommonView {
                 stage.close();
                 editTrueAction(event, true);
             } catch (IllegalArgumentException e) {
-                AlertController.uniqueUsername();
-            }
+                AlertController.invalidEntry("User already exists with username " +
+                        userNameField.getText());            }
         } else {
             AlertController.invalidEntry();
         }

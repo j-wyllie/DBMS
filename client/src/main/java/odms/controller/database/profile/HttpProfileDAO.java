@@ -115,7 +115,7 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public int size() {
+    public Integer size() {
         JsonParser parser = new JsonParser();
         String url = "http://localhost:6969/api/v1/profiles/count";
         Map<String, Object> queryParams = new HashMap<>();

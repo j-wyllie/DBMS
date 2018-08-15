@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.medications.Drug;
-import odms.commons.model.profile.Profile;
 import server.model.database.DatabaseConnection;
 
 public class MySqlMedicationDAO implements MedicationDAO {
@@ -19,7 +18,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
      * @return a list of current or past drugs.
      */
     @Override
-    public List<Drug> getAll(Profile profile, Boolean current) {
+    public List<Drug> getAll(int profile, Boolean current) {
         String query = "select * from drugs where ProfileId = ? and Current = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Drug> result = new ArrayList<>();
@@ -27,7 +26,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
         try {
             Connection conn = connectionInstance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile);
             stmt.setBoolean(2, current);
 
             ResultSet allDrugs = stmt.executeQuery();
@@ -65,7 +64,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
      * @param current is true if the profile is currently taking the drug.
      */
     @Override
-    public void add(Drug drug, Profile profile, Boolean current) {
+    public void add(Drug drug, int profile, Boolean current) {
         String query = "insert into drugs (ProfileId, Drug, Current, Past) values (?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -73,7 +72,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile);
             stmt.setString(2, drug.getDrugName());
             stmt.setBoolean(3, current);
             stmt.setBoolean(4, !current);

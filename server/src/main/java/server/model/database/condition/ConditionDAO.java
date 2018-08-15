@@ -2,7 +2,6 @@ package server.model.database.condition;
 
 import java.util.ArrayList;
 import odms.commons.model.profile.Condition;
-import odms.commons.model.profile.Profile;
 
 public interface ConditionDAO {
 
@@ -11,14 +10,14 @@ public interface ConditionDAO {
      * @param profile to get the conditions for.
      * @param chronic true if the conditions required are chronic.
      */
-    ArrayList<Condition> getAll(Profile profile, boolean chronic);
+    ArrayList<Condition> getAll(int profile, boolean chronic);
 
     /**
      * Add a new condition to a profile.
      * @param profile to add the condition to.
      * @param condition to add.
      */
-    void add(Profile profile, Condition condition);
+    void add(int profile, Condition condition);
 
     /**
      * Remove a condition from a profile.

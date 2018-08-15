@@ -54,46 +54,46 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
     @Test
     public void testGetDonating() {
-        assertTrue(mysqlOrganDao.getDonating(testProfile2).contains(organ2));
+        assertTrue(mysqlOrganDao.getDonating(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testGetDonations() {
-        assertTrue(mysqlOrganDao.getDonations(testProfile2).contains(organ3));
+        assertTrue(mysqlOrganDao.getDonations(testProfile2.getId()).contains(organ3));
     }
 
     @Test
     public void testGetReceived() {
-        assertTrue(mysqlOrganDao.getReceived(testProfile2).contains(organ4));
+        assertTrue(mysqlOrganDao.getReceived(testProfile2.getId()).contains(organ4));
     }
 
     @Test
     public void testGetRequired() {
-        assertTrue(mysqlOrganDao.getRequired(testProfile2).contains(organ5));
+        assertTrue(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ5));
     }
 
     @Test
     public void testAddDonating() throws OrganConflictException {
         mysqlOrganDao.addDonating(testProfile1, organ2);
-        assertTrue(mysqlOrganDao.getDonating(testProfile1).contains(organ2));
+        assertTrue(mysqlOrganDao.getDonating(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testAddDonations() {
         mysqlOrganDao.addDonation(testProfile1, organ2);
-        assertTrue(mysqlOrganDao.getDonations(testProfile1).contains(organ2));
+        assertTrue(mysqlOrganDao.getDonations(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testAddReceived() {
         mysqlOrganDao.addReceived(testProfile1, organ2);
-        assertTrue(mysqlOrganDao.getReceived(testProfile1).contains(organ2));
+        assertTrue(mysqlOrganDao.getReceived(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testAddRequired() {
         mysqlOrganDao.addRequired(testProfile1, organ2);
-        assertTrue(mysqlOrganDao.getRequired(testProfile1).contains(organ2));
+        assertTrue(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ2));
     }
 
     @Test(expected = OrganConflictException.class)
@@ -105,25 +105,25 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     @Test
     public void testRemoveDonating() {
         mysqlOrganDao.removeDonating(testProfile2, organ2);
-        assertFalse(mysqlOrganDao.getDonating(testProfile2).contains(organ2));
+        assertFalse(mysqlOrganDao.getDonating(testProfile2.getId()).contains(organ2));
     }
 
     @Test
     public void testRemoveDonation() {
         mysqlOrganDao.removeDonation(testProfile2, organ3);
-        assertFalse(mysqlOrganDao.getDonations(testProfile2).contains(organ3));
+        assertFalse(mysqlOrganDao.getDonations(testProfile2.getId()).contains(organ3));
     }
 
     @Test
     public void testRemoveReceived() {
         mysqlOrganDao.removeReceived(testProfile2, organ4);
-        assertFalse(mysqlOrganDao.getReceived(testProfile2).contains(organ4));
+        assertFalse(mysqlOrganDao.getReceived(testProfile2.getId()).contains(organ4));
     }
 
     @Test
     public void testRemoveRequired() {
         mysqlOrganDao.removeRequired(testProfile2, organ5);
-        assertFalse(mysqlOrganDao.getRequired(testProfile2).contains(organ5));
+        assertFalse(mysqlOrganDao.getRequired(testProfile2.getId()).contains(organ5));
     }
 
     @After

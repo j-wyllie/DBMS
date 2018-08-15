@@ -31,13 +31,13 @@ public class MySqlMedicationDAOTest extends MySqlCommonTests {
         testProfile0 = mySqlProfileDAO.get("SEX1337");
 
         current = true;
-        mySqlMedicationDAO.add(testDrug0, testProfile0, current);
-        testDrug0 = mySqlMedicationDAO.getAll(testProfile0, current).get(0);
+        mySqlMedicationDAO.add(testDrug0, testProfile0.getId(), current);
+        testDrug0 = mySqlMedicationDAO.getAll(testProfile0.getId(), current).get(0);
     }
 
     @Test
     public void testGetAll() {
-        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0, current);
+        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0.getId(), current);
         assertEquals(1, drugs.size());
     }
 
@@ -45,7 +45,7 @@ public class MySqlMedicationDAOTest extends MySqlCommonTests {
     @Test
     public void testRemove() {
         mySqlMedicationDAO.remove(testDrug0);
-        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0, current);
+        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0.getId(), current);
         assertEquals(0, drugs.size());
     }
 
@@ -53,7 +53,7 @@ public class MySqlMedicationDAOTest extends MySqlCommonTests {
     public void testUpdate() {
         current = false;
         mySqlMedicationDAO.update(testDrug0, current);
-        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0, current);
+        List<Drug> drugs = mySqlMedicationDAO.getAll(testProfile0.getId(), current);
         assertEquals(1, drugs.size());
     }
 

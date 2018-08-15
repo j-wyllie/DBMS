@@ -53,6 +53,7 @@ public class CountriesController {
      * @return The response body
      */
     public static String edit(Request req, Response res) {
+        System.out.print("here");
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
 
         String name;

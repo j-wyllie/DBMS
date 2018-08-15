@@ -11,25 +11,25 @@ public interface OrganDAO {
      * Gets all organs that a profile has donated in the past.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getDonations(Profile profile);
+    Set<OrganEnum> getDonations(int profile);
 
     /**
      * Gets all organs that a profile has registered to donate.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getDonating(Profile profile);
+    Set<OrganEnum> getDonating(int profile);
 
     /**
      * Gets all organs that a profile requires.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getRequired(Profile profile);
+    Set<OrganEnum> getRequired(int profile);
 
     /**
      * Gets all organs that a profile has received in the past.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getReceived(Profile profile);
+    Set<OrganEnum> getReceived(int profile);
 
     /**
      * Adds an organ to a profiles past donations.

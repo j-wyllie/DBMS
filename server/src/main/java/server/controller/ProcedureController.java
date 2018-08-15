@@ -34,7 +34,7 @@ public class ProcedureController {
         }
 
         try {
-            procedures = database.getAll(new Profile(profileId), pending);
+            procedures = database.getAll(profileId, pending);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -71,7 +71,7 @@ public class ProcedureController {
         }
 
         try {
-            database.add(new Profile(profileId), newProcedure);
+            database.add(profileId, newProcedure);
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";

@@ -112,16 +112,16 @@ public class OrganController {
         OrganDAO database = DAOFactory.getOrganDao();
 
         if (req.queryMap().hasKey("donated")) {
-            return database.getDonations(profile);
+            return database.getDonations(profile.getId());
         }
         if (req.queryMap().hasKey("donating")) {
-            return database.getDonating(profile);
+            return database.getDonating(profile.getId());
         }
         if (req.queryMap().hasKey("required")) {
-            return database.getRequired(profile);
+            return database.getRequired(profile.getId());
         }
         if (req.queryMap().hasKey("received")) {
-            return database.getReceived(profile);
+            return database.getReceived(profile.getId());
         }
         return new HashSet<>();
     }
