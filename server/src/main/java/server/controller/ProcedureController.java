@@ -76,7 +76,7 @@ public class ProcedureController {
         }
 
         res.status(201);
-        return "Profile Created";
+        return "Procedure Created";
     }
 
     /**

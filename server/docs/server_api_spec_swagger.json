@@ -483,17 +483,6 @@
           "conditions"
         ],
         "summary": "Deletes a condition from a profile.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "conditionId",
-            "required": true,
-            "description": "Id of the condition",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
