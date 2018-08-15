@@ -17,6 +17,8 @@ public interface ProfileDAO {
      */
     List<Profile> getAll() throws SQLException;
 
+    List<Profile> getDead() throws SQLException;
+
     /**
      * Get a single profile from the database by id.
      * @param profileId of the profile.
@@ -88,4 +90,15 @@ public interface ProfileDAO {
      * @return a sublist of the waiting list.
      */
     List<Entry<Profile, OrganEnum>> searchReceiving(String searchString);
+
+    /**
+     * Get list of receivers that could be recipients of a selected organ.
+     * @param organ type of organ that is being donated
+     * @param bloodType blood type recipient needs to have
+     * @param lowerAgeRange lowest age the recipient can have
+     * @param upperAgeRange highest age the recipient can have
+     * @return list of profile objects
+     */
+    List<Profile> getOrganReceivers(String organ, String bloodType,
+            Integer lowerAgeRange, Integer upperAgeRange);
 }

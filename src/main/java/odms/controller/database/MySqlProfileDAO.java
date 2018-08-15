@@ -57,6 +57,35 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
+     * Gets all profiles from the database where the person is dead.
+     */
+    @Override
+    public List<Profile> getDead() throws SQLException {
+        String query = "SELECT DISTINCT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        List<Profile> result = new ArrayList<>();
+        Connection conn = connectionInstance.getConnection();
+        Statement stmt = conn.createStatement();
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery(query);
+            while (allProfiles.next()) {
+                Profile newProfile  = parseProfile(allProfiles);
+                if(!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());}
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return result;
+    }
+
+    /**
      * Get a single profile from the database.
      * @return a profile.
      */
@@ -188,7 +217,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     private Profile setOrgans(Profile profile) throws OrganConflictException {
         OrganDAO database = DAOFactory.getOrganDao();
-
         profile.addOrgansDonating(database.getDonating(profile));
         profile.addOrgansDonated(database.getDonations(profile));
         profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
@@ -457,7 +485,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     private void removeOrgans(Profile profile) {
         OrganDAO database = DAOFactory.getOrganDao();
-
         profile.getOrgansDonating().forEach(organ -> {
             database.removeDonating(profile, organ);
         });
@@ -518,7 +545,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "Phone = ?, Email = ?, Country = ?, BirthCountry = ?, CountryOfDeath = ?, "
                 + "RegionOfDeath = ?, CityOfDeath = ?, StreetNo = ?, StreetName = ?, "
                 + "Neighbourhood = ?, Created = ?, LastUpdated = ?, PreferredName = ?, "
-                + "PreferredGender = ?, ImageName = ? "
+                + "PreferredGender = ?, ImageName = ?, City = ? "
                 +  "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
@@ -563,12 +590,13 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(31, profile.getPreferredName());
             stmt.setString(32, profile.getPreferredGender());
             stmt.setString(33, profile.getPictureName());
-            stmt.setInt(34, profile.getId());
+            stmt.setString(34, profile.getCity());
+            stmt.setInt(35, profile.getId());
 
             stmt.executeUpdate();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new SQLException();
         } finally {
             conn.close();
             stmt.close();
@@ -747,6 +775,47 @@ public class MySqlProfileDAO implements ProfileDAO {
         return getReceivers(query);
     }
 
+    /**
+     * Get list of receivers that could be recipients of a selected organ.
+     * @param organ type of organ that is being donated
+     * @param bloodType blood type recipient needs to have
+     * @param lowerAgeRange lowest age the recipient can have
+     * @param upperAgeRange highest age the recipient can have
+     * @return list of profile objects
+     */
+    @Override
+    public List<Profile> getOrganReceivers(String organ, String bloodType,
+            Integer lowerAgeRange, Integer upperAgeRange) {
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
+                + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
+                + "AND p.IsReceiver = 1 AND ("
+                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
+                + "o.Required) = ?;";
+
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<Profile> receivers = new ArrayList<>();
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, bloodType.toString());
+            stmt.setInt(2, lowerAgeRange);
+            stmt.setInt(3, upperAgeRange);
+            stmt.setString(4, organ.toString());
+            stmt.setString(5, organ.toString());
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                Profile profile = parseProfile(result);
+                receivers.add(profile);
+            }
+            conn.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return receivers;
+    }
+
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
@@ -762,6 +831,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 receivers.add(new SimpleEntry<>(profile, organ));
             }
             conn.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

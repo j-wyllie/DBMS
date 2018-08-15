@@ -1,22 +1,27 @@
 package odms.view.profile;
 
+import static odms.controller.AlertController.invalidUsername;
+
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import odms.controller.data.ImageDataIO;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
-
-import java.io.IOException;
 import odms.view.CommonView;
 import odms.view.user.TransplantWaitingList;
-
-import static odms.controller.AlertController.invalidUsername;
 
 public class Display extends CommonView {
 
@@ -146,6 +151,22 @@ public class Display extends CommonView {
 
     @FXML
     private void onTabOrgansSelected() {
+        Thread checkOrgan = new Thread() {
+            public void run() {
+                try {
+                    odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
+                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                            .getAllOrgansAvailable();
+                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        checkOrgan.setDaemon(true);
+        checkOrgan.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());

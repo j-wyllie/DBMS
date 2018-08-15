@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
 import odms.model.enums.OrganEnum;
@@ -55,7 +58,13 @@ public class MySqlOrganDAO implements OrganDAO {
             while (allOrganRows.next()) {
                 String organName = allOrganRows.getString("Organ");
                 OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
-                organ.setDate(allOrganRows.getDate("DateRegistered").toLocalDate());
+                try {
+                    String str = allOrganRows.getString("DateRegistered");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    organ.setDate(LocalDateTime.parse(str, formatter), profile);
+                } catch (DateTimeParseException e) {
+                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profile);
+                }
                 allOrgans.add(organ);
             }
             conn.close();
@@ -108,7 +117,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, false);
-            stmt.setDate(7, Date.valueOf(LocalDate.now()));
+            stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
@@ -143,7 +152,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, true);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, false);
-            stmt.setDate(7, Date.valueOf(LocalDate.now()));
+            stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
@@ -176,7 +185,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, true);
             stmt.setBoolean(6, false);
-            stmt.setDate(7, Date.valueOf(LocalDate.now()));
+            stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();
@@ -209,7 +218,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setBoolean(4, false);
             stmt.setBoolean(5, false);
             stmt.setBoolean(6, true);
-            stmt.setDate(7, Date.valueOf(LocalDate.now()));
+            stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
             conn.close();

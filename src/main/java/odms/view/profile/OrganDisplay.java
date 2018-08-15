@@ -27,6 +27,7 @@ import java.util.Set;
 import odms.view.user.TransplantWaitingList;
 
 public class OrganDisplay extends CommonView {
+
     private Profile currentProfile;
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
@@ -57,6 +58,9 @@ public class OrganDisplay extends CommonView {
     private Button donatedButton;
 
     @FXML
+    private Button donatingButton;
+
+    @FXML
     private Label donatedLabel;
 
     private static OrganSelectEnum windowType;
@@ -78,6 +82,15 @@ public class OrganDisplay extends CommonView {
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+        try {
+            if (!currentProfile.getDateOfDeath().equals(null)) {
+                donatingButton.setDisable(true);
+                receivingButton.setDisable(true);
+            }
+        } catch (NullPointerException e) {
+            donatingButton.setDisable(false);
+            receivingButton.setDisable(false);
+        }
 
         if (!isClinician) {
             if (DAOFactory.getOrganDao().getDonations(currentProfile).isEmpty()) {
@@ -115,11 +128,9 @@ public class OrganDisplay extends CommonView {
 
     /**
      * Repopulate the ObservableLists with any Organ changes and repopulate the check list for
-     * conflicting organs.
-     * Populates the checklist with donating organs for highlighting.
+     * conflicting organs. Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
-        System.out.println(currentProfile.getOrgansDonating());
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonating());
         populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
@@ -136,12 +147,15 @@ public class OrganDisplay extends CommonView {
     /**
      * Removes a specific list from view.
      *
-     * @param list List to set invisible
-     * @param label Label to set invisible.
+     * @param list   List to set invisible
+     * @param label  Label to set invisible.
      * @param button Button to set invisible.
+     * @param column column to set values on.
+     * @param bool boolean value, true if column should be visible.
      */
 
-    private void visibilityLists(ListView<String> list, Label label, Button button, Integer column, Boolean bool){
+    private void visibilityLists(ListView<String> list, Label label, Button button, Integer column,
+            Boolean bool) {
         if (!bool) {
             ColumnConstraints zero_width = new ColumnConstraints();
             zero_width.setPrefWidth(0);
@@ -154,9 +168,9 @@ public class OrganDisplay extends CommonView {
     }
 
 
-        /**
-         * Refresh the ListViews to reflect changes made from the edit pane.
-         */
+    /**
+     * Refresh the ListViews to reflect changes made from the edit pane.
+     */
     private void refreshListViews() {
         populateOrganLists();
 

@@ -1,20 +1,20 @@
 package odms.controller.profile;
 
-import static odms.App.getProfileDb;
-
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.fxml.FXML;
-import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
-import odms.controller.data.ProfileDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
+import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
 
 public class ProfileEdit extends CommonController {
@@ -35,72 +35,58 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
-     * @return boolean will be true is save was successful, else false
+     *
      */
     @FXML
-    public Boolean save() {
-        if (AlertController.saveChanges()) {
-            try {
-                // History Generation
-                odms.model.history.History action = new odms.model.history.History(
-                        "profile",
-                        currentProfile.getId(),
-                        "update",
-                        "previous " + currentProfile.getAttributesSummary(),
-                        -1,
-                        null
-                );
+    public void save() throws IllegalArgumentException, IOException, SQLException {
+        // History Generation
+        odms.model.history.History action = new odms.model.history.History(
+                "profile",
+                currentProfile.getId(),
+                "update",
+                "previous " + currentProfile.getAttributesSummary(),
+                -1,
+                null
+        );
 
-                saveDeathDetails();
+        saveDeathDetails();
 
-                // Required General Fields
-                saveChosenImage();
-                saveDateOfBirth();
-                saveGivenNames();
-                saveLastNames();
-                saveNhi();
+        // Required General Fields
+        saveChosenImage();
+        saveDateOfBirth();
+        saveGivenNames();
+        saveLastNames();
+        saveNhi();
 
-                // Optional General Fields
-                saveAddress();
-                saveDateOfDeath();
-                saveEmail();
-                saveGender();
-                saveHeight();
-                savePhone();
-                savePreferredGender();
-                savePreferredName();
-                saveRegion();
-                saveWeight();
+        // Optional General Fields
+        saveAddress();
+        saveDateOfDeath();
+        saveEmail();
+        saveGender();
+        saveHeight();
+        savePhone();
+        savePreferredGender();
+        savePreferredName();
+        saveWeight();
 
-                // Medical Fields
-                saveAlcoholConsumption();
-                saveBloodPressure();
-                saveBloodType();
-                saveIsSmoker();
+        // Medical Fields
+        saveAlcoholConsumption();
+        saveBloodPressure();
+        saveBloodType();
+        saveIsSmoker();
 
-                saveCity();
-                saveCountry();
-                saveRegion();
+        saveCity();
+        saveCountry();
+        saveRegion();
 
-                ProfileDAO database = DAOFactory.getProfileDao();
-                database.update(currentProfile);
-                ProfileDataIO.saveData(getProfileDb());
+        ProfileDAO database = DAOFactory.getProfileDao();
+        database.update(currentProfile);
 
-                // history Changes
-                action.setHistoryData(
-                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-                action.setHistoryTimestamp(LocalDateTime.now());
-                CurrentHistory.updateHistory(action);
-
-                return true; // successful edit
-            } catch (Exception e) {
-                AlertController.invalidEntry(
-                        e.getMessage() + "\n" + "Changes not saved."
-                );
-                return false; // unsuccessful edit
-            }
-        }
-        return false;
+        // history Changes
+        action.setHistoryData(
+                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+        action.setHistoryTimestamp(LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -182,9 +168,9 @@ public class ProfileEdit extends CommonController {
     }
 
     /**
-     * Save City of deaith field to profile.
+     * Save City of death field to profile.
      *
-     * @param city
+     * @param city city of death string
      */
     private void saveCityofDeath(String city) {
         currentProfile.setCityOfDeath(city);
@@ -287,12 +273,17 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveNhi() throws IllegalArgumentException {
-        if (!view.getNhiField().equals(currentProfile.getNhi()) &&
-                !view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$")) {
-            throw new IllegalArgumentException(
-                    "NHI must be valid"
-            );
+    public void saveNhi() throws IllegalArgumentException, SQLException {
+        if (!view.getNhiField().equals(currentProfile.getNhi())) {
+            if (!view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$")) {
+                throw new IllegalArgumentException(
+                        "NHI must be valid"
+                );
+            } else if (DAOFactory.getProfileDao().isUniqueUsername(view.getNhiField())) {
+                throw new IllegalArgumentException(
+                        "NHI is not unique."
+                );
+            }
         }
 
         currentProfile.setNhi(view.getNhiField());
@@ -338,6 +329,12 @@ public class ProfileEdit extends CommonController {
     public void saveDateOfDeath() {
         if (view.getDodDateTimePicker() != null) {
             currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
+            Set<OrganEnum> organsRequired = new HashSet<>();
+            organsRequired.addAll(currentProfile.getOrgansRequired());
+            for (OrganEnum organEnum : organsRequired) {
+                DAOFactory.getOrganDao().removeRequired(currentProfile, organEnum);
+            }
+            currentProfile.setReceiver(false);
         }
     }
 
