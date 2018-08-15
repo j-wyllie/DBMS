@@ -1,7 +1,10 @@
 package odms.view.profile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,16 +86,30 @@ public class OrganDisplay extends CommonView {
      * @param user the logged in user
      * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) {
+    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) throws SQLException {
         transplantWaitingListView = transplantWaitingList;
-        currentProfile = p;
+
+        try{
+            odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
+            List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                    .getAllOrgansAvailable();
+            for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        currentProfile = DAOFactory.getProfileDao().get(p.getId());
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());
 
+
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
+        refreshListViews();
         try {
             if (!currentProfile.getDateOfDeath().equals(null)) {
                 donatingButton.setDisable(true);

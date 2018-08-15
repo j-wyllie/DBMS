@@ -228,24 +228,6 @@ public class AvailableOrgans extends CommonView {
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
-//    /**
-//     * Sorts the of organs list based on time till expiry.
-//     */
-//    public void sortList(ObservableList list) {
-//        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(list,
-//                (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
-//                    if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
-//                        return -1;
-//                    } else if(getTimeRemaining(donor2.getValue(), donor2.getKey()) < getTimeRemaining(donor1.getValue(), donor1.getKey())) {
-//                        return 1;
-//                    } else {
-//                        return 0;
-//                    }
-//                });
-//        availableOrgansTable.setItems(sortedDonaters
-//        );
-//    }
-
     /**
      * Populates available organs table with ALL available organs in database
      */

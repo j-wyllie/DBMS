@@ -153,22 +153,6 @@ public class Display extends CommonView {
 
     @FXML
     private void onTabOrgansSelected() {
-        Thread checkOrgan = new Thread() {
-            public void run() {
-                try {
-                    odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        checkOrgan.setDaemon(true);
-        checkOrgan.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());
@@ -176,8 +160,13 @@ public class Display extends CommonView {
             System.out.println(e.getMessage());
         }
         OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+        try {
+            organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     public void onTabMedicalSelected() {

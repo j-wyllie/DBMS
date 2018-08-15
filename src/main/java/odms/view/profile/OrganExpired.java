@@ -104,13 +104,15 @@ public class OrganExpired extends OrganCommon{
      */
     @FXML
     public void onBtnRevertClicked() {
-        String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
-        Integer profileId = currentProfile.getId();
-        try {
-            controller.revertExpired(profileId, organ);
-            observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
-        } catch (SQLException e) {
-            AlertController.invalidEntry("Failed to revert manual override.");
+        if(expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
+            String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
+            Integer profileId = currentProfile.getId();
+            try {
+                controller.revertExpired(profileId, organ);
+                observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
+            } catch (SQLException e) {
+                AlertController.invalidEntry("Failed to revert manual override.");
+            }
         }
 
 

@@ -82,7 +82,6 @@ public class ProfileEdit extends CommonController {
 
         ProfileDAO database = DAOFactory.getProfileDao();
         database.update(currentProfile);
-
         // history Changes
         action.setHistoryData(
                 action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
