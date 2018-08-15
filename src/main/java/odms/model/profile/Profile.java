@@ -73,6 +73,7 @@ public class Profile implements Comparable<Profile> {
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
     private HashSet<OrganEnum> organsExpired = new HashSet<>();
+    private HashSet<Organ> organTimeStamps = new HashSet<>();
 
     private ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -427,9 +428,9 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
-        if(organ.getDate() == null) {
-            organ.setDate(LocalDateTime.now());
-        }
+//        if(organ.getDate() == null) {
+//            organ.setDate(LocalDateTime.now());
+//        }
         this.organsRequired.add(organ);
     }
 
@@ -1072,5 +1073,18 @@ public class Profile implements Comparable<Profile> {
         } else {
             this.setReceiver(false);
         }
+    }
+
+    public LocalDateTime getOrganDate(String name) {
+        for(Organ o: organTimeStamps) {
+            if(o.getOrganEnum().getName().equals(name)) {
+                return o.getDate();
+            }
+        }
+        return null;
+    }
+
+    public void setOrganDate(String organDate, LocalDateTime date) {
+        organTimeStamps.add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-","_")), date));
     }
 }

@@ -64,7 +64,7 @@ public class AvailableOrgans extends CommonView {
         );
         waitTimeColumn.setCellValueFactory(
                cdf -> new SimpleStringProperty(
-                       controller.getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired())));
+                       controller.getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired(),cdf.getValue())));
 
         TableColumn<Profile, String> ageColumn = new TableColumn<>(
                 "Age"
@@ -97,9 +97,9 @@ public class AvailableOrgans extends CommonView {
 
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Profile> comparator1 = (o1, o2) -> {
-            if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) > controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()))
+            if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(),o1) > controller.getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(),o2))
                     return 1;
-            else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) == controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired())) {
+            else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(),o1) == controller.getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(), o2)) {
                 return 0;
             } else {
                     return -1;

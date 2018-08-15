@@ -61,9 +61,9 @@ public class MySqlOrganDAO implements OrganDAO {
                 try {
                     String str = allOrganRows.getString("DateRegistered");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    organ.setDate(LocalDateTime.parse(str, formatter));
+                    organ.setDate(LocalDateTime.parse(str, formatter), profile);
                 } catch (DateTimeParseException e) {
-                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay());
+                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profile);
                 }
                 allOrgans.add(organ);
             }

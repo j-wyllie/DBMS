@@ -1,5 +1,7 @@
 package odms.model.enums;
 
+import odms.model.profile.Profile;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,8 +32,8 @@ public enum OrganEnum {
         return name;
     }
 
-    public LocalDateTime getDate() { return dateOfRegistration; }
-    public void setDate(LocalDateTime date) { dateOfRegistration = date; }
+    public LocalDateTime getDate(Profile p) { return p.getOrganDate(this.name); }
+    public void setDate(LocalDateTime date, Profile p) { p.setOrganDate(this.name, date); }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.
