@@ -47,10 +47,6 @@ public class ProfileGeneral extends CommonView {
     private Label cityLabel;
     @FXML
     private Label emailLabel;
-    @FXML
-    private ImageView profileImage;
-
-    private File localPath = new File(System.getProperty("user.dir"));
 
     private Profile currentProfile;
     // init controller corresponding to this view
@@ -191,24 +187,6 @@ public class ProfileGeneral extends CommonView {
 
     public void setCityLabel(String string) {
         this.cityLabel.setText(cityLabel.getText() + string);
-    }
-
-    public ImageView getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage() throws MalformedURLException {
-        //setting profile photo
-        if (currentProfile.getPictureName() != null) {
-            File image = new File(localPath + "\\" + currentProfile.getNhi() + ".png");
-            if(!image.exists()){
-                image = new File(localPath + "\\" + currentProfile.getNhi() + ".jpg");
-                if(!image.exists()){
-                    image = new File(new File("."),"src/main/resources/profile_images/default.png");
-                }
-            }
-            profileImage.setImage(new Image(image.toURI().toURL().toString()));
-        }
     }
 
     private void setUpDetails() {

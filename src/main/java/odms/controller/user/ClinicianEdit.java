@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.history.CurrentHistory;
 import odms.model.user.User;
@@ -32,11 +33,25 @@ public class ClinicianEdit extends CommonController {
         currentUser.setStaffID(Integer.valueOf(view.getStaffIdField()));
         currentUser.setWorkAddress(view.getAddressField());
         currentUser.setRegion(view.getRegionField());
+
+        if (view.getChosenFile() != null) {
+            currentUser.setPictureName(
+                    ImageDataIO.deleteAndSaveImage(
+                            view.getChosenFile(),
+                            currentUser.getStaffID().toString()
+                    )
+            );
+        } else if (view.getRemovePhoto()) {
+            ImageDataIO.deleteImage(currentUser.getStaffID().toString());
+            currentUser.setPictureName(null);
+        }
+
         CurrentHistory.updateHistory(action);
+
         try {
             DAOFactory.getUserDao().update(currentUser);
         } catch (SQLException e) {
-            AlertController.invalidEntry("Database could not update the user.");
+            AlertController.invalidEntry("User could not be updated on database.");
         }
     }
 }
