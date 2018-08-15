@@ -4,6 +4,7 @@ import static odms.controller.user.AvailableOrgans.getExpiryLength;
 import static odms.controller.user.AvailableOrgans.getTimeRemaining;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,10 +16,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import odms.controller.user.OrganExpiryProgressBar;
 import odms.model.enums.NewZealandRegionsEnum;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
@@ -63,7 +65,7 @@ public class AvailableOrgans extends CommonView {
         );
         waitTimeColumn.setCellValueFactory(
                cdf -> new SimpleStringProperty(
-                       controller.getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired())));
+                       controller.getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired(),cdf.getValue())));
 
         TableColumn<Profile, String> ageColumn = new TableColumn<>(
                 "Age"
@@ -96,9 +98,9 @@ public class AvailableOrgans extends CommonView {
 
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Profile> comparator1 = (o1, o2) -> {
-            if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) > controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()))
+            if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(),o1) > controller.getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(),o2))
                     return 1;
-            else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired()) == controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired())) {
+            else if (controller.getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(),o1) == controller.getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(), o2)) {
                 return 0;
             } else {
                     return -1;
@@ -130,6 +132,7 @@ public class AvailableOrgans extends CommonView {
         dateOfDeathNameCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
                         cdf.getValue().getKey().getDateOfDeath().toString()));
+        dateOfDeathNameCol.setMinWidth(35);
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
                 "Countdown"
@@ -170,7 +173,7 @@ public class AvailableOrgans extends CommonView {
                         / getExpiryLength(cdf.getValue().getValue())).asObject()
         );
 
-        expiryProgressBarCol.setCellFactory(TestProgressBar.forTableColumn(
+        expiryProgressBarCol.setCellFactory(OrganExpiryProgressBar.forTableColumn(
                 this.getClass().getResource("/styles/Common.css").toExternalForm())
         );
 
@@ -316,7 +319,7 @@ public class AvailableOrgans extends CommonView {
                 performOrganSearchFromFilters();
             }
         });
-        Timer timer = new Timer();
+        Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 List<Map.Entry<Profile, OrganEnum>> toRemove = new ArrayList<>();

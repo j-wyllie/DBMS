@@ -71,8 +71,8 @@ public class GuiMain extends Application {
                 }
             }
         };
+        checkOrgan.setDaemon(true);
         checkOrgan.start();
-        //timer that runs in the background to check if organs have expired
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));

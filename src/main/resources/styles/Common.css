@@ -99,24 +99,4 @@
     -fx-background-color: linear-gradient(#ffec4d, #e5a50d);
 }
 
-.lower-bound-heart {
-    -fx-background-image: url(/background_images/heart_line.png);
-    -fx-background-size: cover, auto;
-}
-
-.lower-bound-pancreas {
-    -fx-background-image: url(/background_images/pancreas_line.png);
-    -fx-background-size: cover, auto;
-}
-
-.lower-bound-corneas {
-    -fx-background-image: url(/background_images/corneas_line.png);
-    -fx-background-size: cover, auto;
-}
-
-.lower-bound-generic {
-    -fx-background-image: url(/background_images/generic_line.png);
-    -fx-background-size: cover, auto;
-}
-
 

@@ -37,13 +37,13 @@ public class AvailableOrgans {
     }
 
 
-    public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
+    public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired, Profile p) {
         LocalDateTime dateOrganRegistered = LocalDateTime.now();
 
         for (OrganEnum organ : organsRequired) {
             if (organ.getNamePlain().equalsIgnoreCase(selectedOrgan.getNamePlain())) {
-                if (organ.getDate() != null) {
-                    dateOrganRegistered = organ.getDate().atStartOfDay();
+                if (organ.getDate(p) != null) {
+                    dateOrganRegistered = organ.getDate(p);
                 } else {
                     return Long.valueOf(-1);
                 }
@@ -52,12 +52,12 @@ public class AvailableOrgans {
         return abs(Duration.between(LocalDateTime.now(), dateOrganRegistered).toMillis());
     }
 
-    public static String getWaitTime(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired) {
+    public static String getWaitTime(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired, Profile p) {
 
         LocalDateTime dateOrganRegistered = null;
         String durationFormatted = "";
 
-        Long waitTime = getWaitTimeRaw(selectedOrgan, organsRequired);
+        Long waitTime = getWaitTimeRaw(selectedOrgan, organsRequired, p);
         if (waitTime == -1) {
             // Means a date was not entered when a organ was registered
             return "Insufficient data";

@@ -188,8 +188,8 @@ public class OrganDisplay extends CommonView {
      * @param list   List to set invisible
      * @param label  Label to set invisible.
      * @param button Button to set invisible.
-     * @param column The grid column to set constraints for
-     * @param bool true if column should be shown
+     * @param column column to set values on.
+     * @param bool boolean value, true if column should be visible.
      */
     private void visibilityLists(ListView<String> list, Label label, Button button, Integer column,
             Boolean bool) {

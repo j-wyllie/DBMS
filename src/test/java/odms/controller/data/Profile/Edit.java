@@ -1,5 +1,6 @@
 package odms.controller.data.Profile;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import odms.model.profile.Profile;
 import odms.view.profile.ProfileEdit;
@@ -123,7 +124,7 @@ public class Edit {
     }
 
     @Test
-    public void testSaveNHINullValue() {
+    public void testSaveNHINullValue() throws SQLException {
         try {
             controller.saveNhi();
             fail();
@@ -133,7 +134,7 @@ public class Edit {
     }
 
     @Test
-    public void testSaveNHICorrectValue() {
+    public void testSaveNHICorrectValue() throws SQLException {
         try {
             String oldValue = currentProfile.getNhi();
             view.setNhiField("587095144");

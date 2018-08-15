@@ -1,13 +1,8 @@
 package odms.view.user;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -20,6 +15,10 @@ import odms.controller.user.Display;
 import odms.model.enums.UserType;
 import odms.model.user.User;
 import odms.view.CommonView;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 /**
  * Handles all of the tabs for the user profile view.
