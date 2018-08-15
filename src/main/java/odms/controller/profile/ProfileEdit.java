@@ -262,7 +262,7 @@ public class ProfileEdit extends CommonController {
                             chosenFile, currentProfile.getNhi()
                     )
             );
-        } else if (view.getRemovePhoto()){
+        } else if (view.getRemovePhoto()) {
             ImageDataIO.deleteImage(currentProfile.getNhi());
             currentProfile.setPictureName(null);
         }

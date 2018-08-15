@@ -144,15 +144,14 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void add(User user) throws SQLException {
-        // TODO does this need an imagename here
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
-                " Region, Created, LastUpdated, IsDefault) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                " Region, Created, LastUpdated, IsDefault, ImageName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
@@ -162,6 +161,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, LocalDateTime.now().toString());
             stmt.setString(8, LocalDateTime.now().toString());
             stmt.setBoolean(9, user.getDefault());
+            stmt.setString(10, user.getPictureName());
             stmt.execute();
         } catch (SQLException e) {
             throw new SQLException();

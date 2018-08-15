@@ -79,7 +79,7 @@ public class OrganDisplay extends CommonView {
         listViewDonating.setItems(observableListDonating);
         listViewReceiving.setItems(observableListReceiving);
 
-        if(!isClinician) {
+        if (!isClinician) {
             if (DAOFactory.getOrganDao().getDonations(currentProfile).isEmpty()) {
                 visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, false);
             } else {

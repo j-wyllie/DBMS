@@ -21,16 +21,10 @@ public class UserTest extends TestFXTest {
     protected User testUserClinician;
 
     private void createBasicUsers() {
-        testUserAdmin = new User(
-                UserType.ADMIN,
-                "admin"
-        );
+        testUserAdmin = new User(UserType.ADMIN,"admin");
         setUserDetails(testUserAdmin);
 
-        testUserClinician = new User(
-                UserType.CLINICIAN,
-                "clinician"
-        );
+        testUserClinician = new User(UserType.CLINICIAN,"clinician");
         setUserDetails(testUserClinician);
     }
 

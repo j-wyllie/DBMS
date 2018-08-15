@@ -188,6 +188,7 @@ public class ClinicianProfile extends CommonView {
 
     /**
      * Sets the profile image.
+     *
      * @throws MalformedURLException if the URL to the image is malformed
      */
     private void setProfileImage() throws MalformedURLException {

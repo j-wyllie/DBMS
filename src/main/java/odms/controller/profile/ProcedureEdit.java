@@ -80,9 +80,9 @@ public class ProcedureEdit {
      * @param newAffectedOrgans List of the affected organs after the edit
      * @param oldAffectedOrgans List of the affected organs before the edit
      */
-    private void updateAffectedOrgans(List<OrganEnum> newAffectedOrgans,
+    private void updateAffectedOrgans(
+            List<OrganEnum> newAffectedOrgans,
             List<OrganEnum> oldAffectedOrgans) {
-
         Procedure procedure = view.getCurrentProcedure();
         ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
         List<OrganEnum> organsToBeAdded = new ArrayList<>(newAffectedOrgans);
