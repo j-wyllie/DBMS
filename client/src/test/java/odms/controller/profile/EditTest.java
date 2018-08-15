@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import odms.commons.model.profile.Profile;
@@ -125,7 +126,7 @@ public class EditTest {
     }
 
     @Test
-    public void testSaveNHINullValue() {
+    public void testSaveNHINullValue() throws SQLException {
         try {
             controller.saveNhi();
             fail();
@@ -135,7 +136,7 @@ public class EditTest {
     }
 
     @Test
-    public void testSaveNHICorrectValue() {
+    public void testSaveNHICorrectValue() throws SQLException {
         try {
             String oldValue = currentProfile.getNhi();
             view.setNhiField("587095144");

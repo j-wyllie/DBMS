@@ -1,23 +1,27 @@
 package odms.view.user;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
-import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
+
+/**
+ * Handles all of the tabs for the user profile view.
+ */
 
 /**
  * Handles all of the tabs for the user profile view.
@@ -241,6 +245,22 @@ public class ClinicianProfile extends CommonView {
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
         try {
+            Thread checkOrgan = new Thread() {
+                public void run() {
+                    try {
+                        odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
+                        List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                                .getAllOrgansAvailable();
+                        for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                            controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            checkOrgan.setDaemon(true);
+            checkOrgan.start();
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             transplantWaitingList = userTransplantWaitingListTabView;

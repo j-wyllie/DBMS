@@ -81,7 +81,6 @@ public class ProcedureDetailed extends CommonView {
         saveButton.setVisible(false);
 
         if (isOpenedByClinician) {
-            System.out.println("here");
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<String> organsDonated = FXCollections
                     .observableArrayList();

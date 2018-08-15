@@ -73,6 +73,9 @@ public class ProcedureAdd {
     public void addProcedure(Procedure procedure, Profile profile) {
         ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
         procedureDAO.add(profile, procedure);
+
+        ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
+        procedureDAO.add(profile, procedure);
     }
 
 

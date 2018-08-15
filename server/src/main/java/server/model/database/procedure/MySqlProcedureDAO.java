@@ -109,7 +109,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public void remove(Procedure procedure) {
         String idQuery = "delete from procedures where Id = ?;";
-        String procedureIdQuery = "delete from procedures where ProcedureId = ?";
+        String procedureIdQuery = "delete from affected_organs where ProcedureId = ?";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {

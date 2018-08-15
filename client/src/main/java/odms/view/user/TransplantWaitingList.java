@@ -16,7 +16,6 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
-import org.controlsfx.control.table.TableFilter;
 
 /**
  * View for the transplant waiting list. Contains all GUI element accessors for the transplant
@@ -66,7 +65,7 @@ public class TransplantWaitingList extends CommonView {
         TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantDateCol = new TableColumn<>(
                 "Date");
         transplantDateCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate()).toString()));
+                cdf -> new SimpleStringProperty((cdf.getValue().getValue().getDate(cdf.getValue().getKey())).toString()));
 
         transplantTable.getColumns().add(transplantOrganRequiredCol);
         transplantTable.getColumns().add(transplantReceiverNameCol);
@@ -109,6 +108,7 @@ public class TransplantWaitingList extends CommonView {
         try {
             makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
             TableFilter filter = new TableFilter<>(transplantTable);
+            makeTransplantWaitingList(controller.getWaitingList());
         } catch (Exception e) {
             e.printStackTrace();
         }

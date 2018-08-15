@@ -1,14 +1,14 @@
 package odms.commons.model.profile;
+
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Set;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.CountriesEnum;
@@ -75,6 +75,7 @@ public class Profile implements Comparable<Profile> {
     private HashSet<OrganEnum> organsRequired = new HashSet<>();
     private HashSet<OrganEnum> organsReceived = new HashSet<>();
     private HashSet<OrganEnum> organsExpired = new HashSet<>();
+    private HashSet<Organ> organTimeStamps = new HashSet<>();
 
     private List<Condition> conditions = new ArrayList<>();
 
@@ -409,7 +410,6 @@ public class Profile implements Comparable<Profile> {
      */
     public void addOrganRequired(OrganEnum organ) {//TODO Error Check
         this.setReceiver(true);
-        organ.setDate(LocalDate.now());
         this.organsRequired.add(organ);
     }
 
@@ -1057,5 +1057,18 @@ public class Profile implements Comparable<Profile> {
         } else {
             this.setReceiver(false);
         }
+    }
+
+    public LocalDateTime getOrganDate(String name) {
+        for(Organ o: organTimeStamps) {
+            if(o.getOrganEnum().getName().equals(name)) {
+                return o.getDate();
+            }
+        }
+        return null;
+    }
+
+    public void setOrganDate(String organDate, LocalDateTime date) {
+        organTimeStamps.add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-","_")), date));
     }
 }

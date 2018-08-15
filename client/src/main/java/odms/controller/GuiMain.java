@@ -10,8 +10,15 @@ import odms.controller.database.DAOFactory;
 import odms.controller.user.UserNotFoundException;
 import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
+import odms.model.data.ProfileDatabase;
+import odms.model.data.UserDatabase;
+import odms.model.enums.OrganEnum;
+import odms.model.profile.Profile;
+import odms.model.user.User;
+import odms.model.enums.UserType;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Main class. GUI boots from here.
@@ -23,9 +30,7 @@ public class GuiMain extends Application {
     private static final String APP_NAME = "ODMS";
     private static final String ADMIN = "admin";
 
-//    private static ProfileDatabase profileDb = App.getProfileDb();
-//    private static UserDatabase userDb = App.getUserDb();
-
+    private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
@@ -49,6 +54,23 @@ public class GuiMain extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //thread that runs in the background to check if organs have expired since last launch
+        Thread checkOrgan = new Thread() {
+            public void run() {
+                try {
+                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                            .getAllOrgansAvailable();
+                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        checkOrgan.setDaemon(true);
+        checkOrgan.start();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root));

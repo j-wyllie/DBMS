@@ -10,10 +10,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class CommonController {
-    //todo rework commoncontroller by cleaning up methods and removing or replacing them
-
-    //private Redo redoController = new Redo();
-    //private Undo undoController = new Undo();
 
     /**
      * JavaFX Scene loader
@@ -61,5 +57,4 @@ public class CommonController {
     public void redo() {
         //redoController.redo(GuiMain.getCurrentDatabase());
     }
-
 }

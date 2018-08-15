@@ -181,7 +181,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public boolean isUniqueUsername(String username) throws SQLException {
-        String query = "select Username from users where Username = ?;";
+        String query = "SELECT Username FROM users WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -189,8 +189,10 @@ public class MySqlUserDAO implements UserDAO {
         try {
             stmt.setString(1, username);
             ResultSet result = stmt.executeQuery();
-            return !result.next();
-        } catch (SQLException e) {
+
+                return !result.next();
+            }
+        catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -249,6 +251,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
             stmt.setString(9, user.getPictureName());
+            stmt.setString(10, user.getPictureName());
             stmt.setInt(10, user.getStaffID());
             stmt.executeUpdate();
         } catch (SQLException e) {

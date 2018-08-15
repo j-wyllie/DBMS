@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
+import odms.controller.database.MySqlProfileDAO;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
@@ -91,7 +92,7 @@ public class ProfileImportTask extends Task<Void> {
                 try {
                     //server.addToTransaction(conn, profile);
                     successCount++;
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     failedCount++;
                 }
             } else {

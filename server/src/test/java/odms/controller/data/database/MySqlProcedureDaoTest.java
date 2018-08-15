@@ -100,4 +100,23 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.remove(testProfile0);
     }
+
+    @After
+    public void tearDown() throws SQLException {
+
+        List<Procedure> procedures = mySqlProcedureDAO.getAll(testProfile0, true);
+        for (Procedure procedure : procedures) {
+            mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
+            mySqlProcedureDAO.remove(procedure);
+        }
+
+        procedures = mySqlProcedureDAO.getAll(testProfile0, false);
+        for (Procedure procedure : procedures) {
+            mySqlProcedureDAO.removeAffectedOrgan(procedure, OrganEnum.LIVER);
+
+            mySqlProcedureDAO.remove(procedure);
+        }
+
+        mySqlProfileDAO.remove(testProfile0);
+    }
 }

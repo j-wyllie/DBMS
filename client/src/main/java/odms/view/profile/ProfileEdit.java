@@ -31,6 +31,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.MySqlCountryDAO;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.user.User;
@@ -422,11 +423,8 @@ public class ProfileEdit extends CommonView {
         }
 
         comboGenderPref.setEditable(true);
-        comboGenderPref.getItems().addAll(
-                "Male",
-                "Female",
-                "Non binary"
-        );
+        comboGenderPref.getItems().addAll("Male", "Female",
+                "Non binary");
 
         if (currentProfile.getPreferredGender() != null) {
             comboGenderPref.getEditor().setText(currentProfile.getPreferredGender());
@@ -455,6 +453,7 @@ public class ProfileEdit extends CommonView {
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         // City and region should be displayed same regardless
+        MySqlCountryDAO mySqlCountryDAO = new MySqlCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }

@@ -361,10 +361,6 @@ public class Search extends CommonView {
                 performSearchFromFilters();
             });
 
-            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-                performSearchFromFilters();
-            });
-
             makeSearchTable();
             setSearchTablePlaceholder();
         }

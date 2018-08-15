@@ -37,13 +37,6 @@ public class UserCreate extends CommonView {
      * Adds the user to the database.
      *
      * @param event ActionEvent when the button is pressed.
-     * @throws SQLException error.
-
-     */
-    /**
-     * Handles the creation of new user accounts on button clicked event.
-     * @param event of create account button clicked.
-     * @throws SQLException error.
      */
     @FXML
     public void handleUserCreateAccountButtonClicked(ActionEvent event) throws SQLException {
