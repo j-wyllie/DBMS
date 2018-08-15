@@ -72,7 +72,7 @@ public class UserLoginTest extends TestFxMethods {
         clickOn("#loginButton");
         Scene scene = getTopScene();
 
-        Label adminLabel = (Label) scene.lookup("#donorStatusLabel");
+        Label adminLabel = (Label) scene.lookup("#roleLabel");
 
         assertEquals("administrator", adminLabel.getText());
     }
@@ -84,8 +84,8 @@ public class UserLoginTest extends TestFxMethods {
         clickOn("#loginButton");
         Scene scene = getTopScene();
 
-        Label clinicianLabel = (Label) scene.lookup("#donorStatusLabel");
+        Label roleLabel = (Label) scene.lookup("#roleLabel");
 
-        assertEquals("clinician", clinicianLabel.getText());
+        assertEquals("clinician", roleLabel.getText());
     }
 }

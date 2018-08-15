@@ -44,7 +44,7 @@ public class CreateAccount extends CommonView {
         Display v = loader.getController();
         Profile profile = controller.createAccount();
         if(profile != null) {
-            v.initialize(profile, false);
+            v.initialize(profile, false, null);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(scene);
             appStage.show();
@@ -60,7 +60,7 @@ public class CreateAccount extends CommonView {
     @FXML
     private void handleLoginLinkClicked(ActionEvent event) throws IOException {
         //controller.login();
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
     }
 
     public void initialize() {

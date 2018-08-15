@@ -72,13 +72,7 @@ public class ProfileGeneral {
             view.setAgeLabel(Integer.toString(currentProfile.getAge()));
         }
 
-        try {
-            view.setProfileImage();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        //Profile is dead
+        // Profile is deceased
         if (currentProfile.getDateOfDeath() != null) {
 
             if (currentProfile.getCountryOfDeath() == null ) {

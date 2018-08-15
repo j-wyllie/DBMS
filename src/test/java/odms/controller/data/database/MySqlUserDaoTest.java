@@ -21,9 +21,9 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private User testUser0 = new User(1, "Username", "password", "Tim Hamblin", UserType.ADMIN, "69 Yeetville", "Yeetus",
-            LocalDateTime.now(), LocalDateTime.now());
+            LocalDateTime.now(), LocalDateTime.now(), null);
     private User testUser1 = new User(1, "Pleb", "password", "Brooke rasdasdk", UserType.ADMIN, "68 Yeetville", "Yeetskeet",
-            LocalDateTime.now(), LocalDateTime.now());
+            LocalDateTime.now(), LocalDateTime.now(), null);
 
     @Before
     public void setUp() throws SQLException, UserNotFoundException {

@@ -45,7 +45,7 @@ public class Search {
 
         if (selectedOrgans.isEmpty() && selectedType.equals("any") && selectedGender.equals("any") &&
                 searchString.equals("") && regionSearchString.equals("") &&
-                ageRangeString.equals("")) {
+                ageSearchString.equals("")) {
             return null;
         }
 

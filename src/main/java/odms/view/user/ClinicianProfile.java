@@ -1,12 +1,21 @@
 package odms.view.user;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.model.enums.UserType;
 import odms.model.user.User;
@@ -20,9 +29,8 @@ public class ClinicianProfile extends CommonView {
 
     @FXML
     private Label clinicianFullName;
-
     @FXML
-    private Label donorStatusLabel;
+    private Label roleLabel;
     @FXML
     private Tab listUsersTab;
     @FXML
@@ -37,8 +45,16 @@ public class ClinicianProfile extends CommonView {
     private Tab transplantTab;
     @FXML
     private Tab availableOrgansTab;
+    @FXML
+    private ImageView profileImage;
+    @FXML
+    private GridPane bannerPane;
+    @FXML
+    private Button logoutButton;
 
     private Display userProfileController = new Display(this);
+
+    private TransplantWaitingList transplantWaitingList;
 
     /**
      * Scene change to log in view.
@@ -48,8 +64,17 @@ public class ClinicianProfile extends CommonView {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        userProfileController.closeAllOpenStages();
         currentUser = null;
-        changeScene(event, "/view/Login.fxml");
+        changeScene(event, "/view/Login.fxml", "Login");
+    }
+
+    /**
+     * This set the transplantWaitingList to null, to prevent the transplant waiting list from
+     * being updated if the waiting list tab is not open
+     */
+    private void setTransplantWaitingListNull() {
+        transplantWaitingList = null;
     }
 
     /**
@@ -57,7 +82,7 @@ public class ClinicianProfile extends CommonView {
      */
     @FXML
     private void setClinicianDetails() {
-        donorStatusLabel.setText(currentUser.getUserType().getName());
+        roleLabel.setText(currentUser.getUserType().getName());
         clinicianFullName.setText(currentUser.getName());
     }
 
@@ -65,6 +90,7 @@ public class ClinicianProfile extends CommonView {
      * Initializes the controller for the console tab.
      */
     public void handleConsoleTabClicked() {
+        setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
         try {
             consoleTab.setContent(loader.load());
@@ -79,6 +105,7 @@ public class ClinicianProfile extends CommonView {
      * Initializes the controller for the view users Tab.
      */
     public void handleViewUsersTabClicked() {
+        setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ListUsersTab.fxml"));
         try {
             listUsersTab.setContent(loader.load());
@@ -92,9 +119,10 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the general tab controller.
+     * Initializes the controller for the general details Tab
      */
     public void handleGeneralTabClicked() {
+        setTransplantWaitingListNull();
         if (currentUser != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserGeneralTab.fxml"));
             try {
@@ -111,6 +139,7 @@ public class ClinicianProfile extends CommonView {
      * Initializes the controller for the data management tab.
      */
     public void handleTabDataManagementClicked() {
+        setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DataManagement.fxml"));
         try {
             dataManagementTab.setContent(loader.load());
@@ -125,6 +154,7 @@ public class ClinicianProfile extends CommonView {
      * Initializes the controller for available organs.
      */
     public void handleTabAvailableClicked() {
+        setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserAvailableOrgansTab.fxml"));
         try {
             availableOrgansTab.setContent(loader.load());
@@ -147,7 +177,30 @@ public class ClinicianProfile extends CommonView {
             dataManagementTab.setDisable(false);
             listUsersTab.setDisable(false);
             consoleTab.setDisable(false);
+
+            bannerPane.getStyleClass().clear();
+            bannerPane.getStyleClass().add("banner-admin");
+
+            logoutButton.getStyleClass().clear();
+            logoutButton.getStyleClass().add("button-admin-logout");
         }
+    }
+
+    /**
+     * Sets the profile image.
+     *
+     * @throws MalformedURLException if the URL to the image is malformed
+     */
+    private void setProfileImage() throws MalformedURLException {
+        File image = ImageDataIO.getImagePath(currentUser.getPictureName());
+
+        if (image == null || !image.exists()) {
+            image = new File(
+                    new File("."),
+                    "src/main/resources/profile_images/default.png"
+            );
+        }
+        profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 
     /**
@@ -158,6 +211,11 @@ public class ClinicianProfile extends CommonView {
             handleGeneralTabClicked();
             setClinicianDetails();
             setupAdmin();
+            try {
+                setProfileImage();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -166,9 +224,10 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the search tab controller.
+     * Initializes the controller for the profile search Tab.
      */
     public void handleSearchTabClicked() {
+        setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSearchTab.fxml"));
         try {
             searchTab.setContent(loader.load());
@@ -187,6 +246,7 @@ public class ClinicianProfile extends CommonView {
         try {
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
+            transplantWaitingList = userTransplantWaitingListTabView;
             userTransplantWaitingListTabView.initialize(currentUser, this);
         } catch (IOException e){
             System.out.println(e.getMessage());
@@ -194,19 +254,23 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Adds a stage to the list of currently open profile stages.
-     * @param s stage to add.
+     * Adds a profile stage from the open stage list.
+     * @param s the stage to add
      */
-    public void addToOpenProfileStages(Stage s) {
-        userProfileController.addToOpenProfileStages(s);
+    public boolean addToOpenProfileStages(Stage s) {
+        return userProfileController.addToOpenProfileStages(s);
     }
 
     /**
-     * Removes a stage from the currently open stages.
-     * @param stage stage to remove.
+     * Removes a profile stage from the open stage list.
+     * @param stage the stage to close
      */
     public void closeStage(Stage stage) {
         userProfileController.removeStageFromProfileStages(stage);
         openProfileStages.remove(stage);
+    }
+
+    public TransplantWaitingList getTransplantWaitingList() {
+        return transplantWaitingList;
     }
 }
