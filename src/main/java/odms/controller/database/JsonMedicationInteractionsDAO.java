@@ -55,12 +55,13 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
     @Override
     public Interaction get(String drugA, String drugB) throws IOException {
         for (Object interactionKey : interactionMap.keySet()) {
-
             Interaction value = interactionMap.get(interactionKey);
+            // Need to check both directions
             if ((value.getDrugA().equalsIgnoreCase(drugA) && value.getDrugB()
-                    .equalsIgnoreCase(drugB) ||
-                    value.getDrugA().equalsIgnoreCase(drugB) && value.getDrugB()
+                    .equalsIgnoreCase(drugB)) ||
+                    (value.getDrugA().equalsIgnoreCase(drugB) && value.getDrugB()
                             .equalsIgnoreCase(drugA))) {
+                // Refresh the cached interaction if it is older than a week
                 if (!value.getDateTimeExpired().isAfter(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
                     interactionMap.replace((Integer) interactionKey, value);
@@ -91,7 +92,10 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             file = path;
         }
 
-        createAndPopulateCache(file);
+        // If the directory for the cache doesn't exist, create it
+        if (!new File(file).exists()) {
+            new File(WORKING_DIR + File.separator + CACHE_DIR).mkdir();
+        }
 
         try {
             this.interactionMap.clear();
@@ -107,24 +111,9 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
             });
         } catch (FileNotFoundException e) {
             System.out.println("No default cache file was found");
+            System.out.println("A new cache will be created after an interaction is retrieved");
         } catch (Exception e) {
             System.out.println("There was an error opening the medication interactions JSON file.");
-        }
-    }
-
-    /**
-     * If the cache doesn't exist then it creates the cache
-     * This will also prepopulate the cache
-     * @param file The path of the cache
-     */
-    private void createAndPopulateCache(String file) {
-        Thread t = new Thread(() -> {
-            new File(WORKING_DIR + File.separator + CACHE_DIR).mkdir();
-            prepopulateCache();
-            save();
-        });
-        if (!new File(file).exists()) {
-            t.start();
         }
     }
 
@@ -293,19 +282,5 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         // This is only used in tests so should be fine without
         // using the working directory
         this.path = path;
-    }
-
-    /**
-     * Pre-populates the cache with some interactions
-     */
-    private void prepopulateCache() {
-        try {
-            get("Diazepam", "Codeine sulfate");
-            get("Valium", "Xanax");
-            get("Alcohol 5% and dextrose 5%", "Xanax");
-            get("Adderall 10", "Vyvanse");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
