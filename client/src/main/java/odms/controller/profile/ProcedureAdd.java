@@ -71,9 +71,6 @@ public class ProcedureAdd {
      * @param profile profile object of current profile
      */
     public void addProcedure(Procedure procedure, Profile profile) {
-        HttpProcedureDAO httpProcedureDAO = new HttpProcedureDAO();
-        httpProcedureDAO.add(profile, procedure);
-
         ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
         procedureDAO.add(profile, procedure);
     }

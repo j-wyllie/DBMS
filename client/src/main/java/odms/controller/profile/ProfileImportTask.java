@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.profile.MySqlProfileDAO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -22,7 +23,7 @@ import org.apache.commons.csv.CSVRecord;
 public class ProfileImportTask extends Task<Void> {
 
     private File file;
-    private MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+    private ProfileDAO server = DAOFactory.getProfileDao();
     private Connection conn;
     private static final int VALID_DOD_LENGTH = 3;
     private static final String DATE_SPLITTER = "/";
@@ -78,7 +79,7 @@ public class ProfileImportTask extends Task<Void> {
         int progressCount = 0;
         int successCount = 0;
         int failedCount = 0;
-        conn = mySqlProfileDAO.getConnection();
+        //conn = server.getConnection();
 
         for (CSVRecord csvRecord : csvParser) {
             if (Thread.currentThread().isInterrupted()) {
@@ -88,9 +89,9 @@ public class ProfileImportTask extends Task<Void> {
             Profile profile = csvToProfileConverter(csvRecord);
             if (profile != null) {
                 try {
-                    mySqlProfileDAO.addToTransaction(conn, profile);
+                    //server.addToTransaction(conn, profile);
                     successCount++;
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     failedCount++;
                 }
             } else {

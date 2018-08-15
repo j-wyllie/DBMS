@@ -19,7 +19,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
 
     @Override
     public List<Procedure> getAll(Profile profile, Boolean pending) {
-        String url = Request.getUrl() + "procedures/" + profile.getId();
+        String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         List<Procedure> procedures = new ArrayList<>();
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("pending", String.valueOf(pending));
@@ -47,7 +47,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
     @Override
     public void add(Profile profile, Procedure procedure) {
         Gson gson = new Gson();
-        String url = Request.getUrl() + "procedures/" + profile.getId();
+        String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         String body = gson.toJson(procedure);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
@@ -111,7 +111,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
     public void addAffectedOrgan(Procedure procedure, OrganEnum organ) {
         Gson gson = new Gson();
         String url = Request.getUrl() + "procedures/" + procedure.getId() + "/organs";
-        String body = gson.toJson(organ.getName());
+        String body = gson.toJson(organ);
         Request request = new Request(url,0, new HashMap<>(), body);
         try {
             request.post();
@@ -122,10 +122,10 @@ public class HttpProcedureDAO implements ProcedureDAO {
 
     @Override
     public void removeAffectedOrgan(Procedure procedure, OrganEnum organ) {
-        Gson gson = new Gson();
         String url = Request.getUrl() + "procedures/" + procedure.getId() + "/organs";
-        String body = gson.toJson(organ.getName());
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("name", organ);
+        Request request = new Request(url, 0, queryParams);
         try {
             request.delete();
         } catch (IOException e) {

@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.condition.ConditionDAO;
 import odms.controller.history.CurrentHistory;
 import odms.view.profile.ProfileMedicalHistory;
 
@@ -61,6 +63,8 @@ public class ConditionGeneral {
      */
     public void removeCondition(Condition condition,Profile p) {
         p.getAllConditions().remove(condition);
+        ConditionDAO server = DAOFactory.getConditionDao();
+        server.remove(condition);
     }
 
     public List<Condition> convertConditionObservableToArray(
@@ -105,12 +109,15 @@ public class ConditionGeneral {
             if (condition != null) {
 
                 condition.setIsChronic(!condition.getChronic());
+
                 if (condition.getChronic()) {
                     condition.setChronicText("CHRONIC");
                     condition.setIsCured(false);
                 } else {
                     condition.setChronicText("");
                 }
+                ConditionDAO server = DAOFactory.getConditionDao();
+                server.update(condition);
             }
         }
     }
@@ -136,13 +143,16 @@ public class ConditionGeneral {
                 } else {
                     condition.setDateCured(null);
                 }
-
+                ConditionDAO server = DAOFactory.getConditionDao();
+                server.update(condition);
             }
         }
     }
 
     public void addCondition(Condition condition,Profile p) {
         p.getAllConditions().add(condition);
+        ConditionDAO server = DAOFactory.getConditionDao();
+        server.add(view.getCurrentProfile(), condition);
     }
 
 }

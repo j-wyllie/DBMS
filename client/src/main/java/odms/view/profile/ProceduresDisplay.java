@@ -139,7 +139,6 @@ public class ProceduresDisplay extends CommonView {
             ProcedureDetailed procedureDetailed = loader.getController();
             procedureDetailed.initialize(selectedProcedure, currentProfile, this,
                     isOpenedByClinician);
-
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.show();

@@ -102,6 +102,12 @@ public class Server {
                         get("", ConditionController::getAll);
                         post("", ConditionController::add);
                     });
+
+                    // procedure api endpoints.
+                    path("/procedures", () -> {
+                        get("", ProcedureController::getAll);
+                        post("", ProcedureController::add);
+                    });
                 });
 
                 get("/count", ProfileController::count);
@@ -117,11 +123,11 @@ public class Server {
 
             // procedure api endpoints.
             path("/procedures", () -> {
+
+                // id refers to procedure id
                 path("/:id", () -> {
-                    get("", ProcedureController::getAll);
                     patch("", ProcedureController::edit);
-                    delete("", ProcedureController::delete);        // id refers to procedure id
-                    post("", ProcedureController::add);
+                    delete("", ProcedureController::delete);
 
                     path("/organs", () -> {
                         get("", ProcedureController::getOrgans);

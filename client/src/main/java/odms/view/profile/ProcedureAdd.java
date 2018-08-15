@@ -2,6 +2,7 @@ package odms.view.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,9 +40,9 @@ public class ProcedureAdd {
     private Button addButton;
 
     @FXML
-    private ListView<OrganEnum> affectedOrgansListView;
+    private ListView<String> affectedOrgansListView;
 
-    private ObservableList<OrganEnum> donatedOrgans;
+    private ObservableList<String> donatedOrgans;
 
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
@@ -68,8 +69,13 @@ public class ProcedureAdd {
     public void initialize() {
         warningLabel.setVisible(false);
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        List<String> organs = new ArrayList<>();
+        searchedDonor.getOrgansDonating().forEach(organEnum -> {
+            organs.add(organEnum.getNamePlain());
+        });
         donatedOrgans = FXCollections
-                .observableArrayList(searchedDonor.getOrgansDonated());
+                .observableArrayList();
+        donatedOrgans.addAll(organs);
         affectedOrgansListView.setItems(donatedOrgans);
     }
 

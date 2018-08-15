@@ -2,6 +2,8 @@ package odms.controller.profile;
 
 import odms.commons.model.profile.Condition;
 import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.condition.ConditionDAO;
 import odms.controller.history.CurrentHistory;
 import odms.commons.model.history.History;
 
@@ -16,9 +18,12 @@ public class ConditionAdd extends CommonController {
         view = v;
     }
 
-    public void add() throws Exception {
+    public void add() {
 
         Condition condition = parseCondition();
+        ConditionDAO server = DAOFactory.getConditionDao();
+        server.add(view.getCurrentProfile(), condition);
+
         view.getCurrentProfile().getAllConditions().add(condition);
         LocalDateTime currentTime = LocalDateTime.now();
         History action = new History("profile", view.getCurrentProfile().getId(),

@@ -54,7 +54,7 @@ public class HttpConditionDAO implements ConditionDAO {
     @Override
     public void update(Condition condition) {
         Gson gson = new Gson();
-        String url = String.format("http://localhost:6969/api/v1/drugs/%s", condition.getId());
+        String url = String.format("http://localhost:6969/api/v1/conditions/%s", condition.getId());
 
         String body = gson.toJson(condition);
         Request request = new Request(url, 0, new HashMap<>(), body);
