@@ -36,7 +36,6 @@ public class ProfileEdit extends CommonController {
     /**
      * Button handler to save the changes made to the fields.
      *
-     * @return boolean will be true is save was successful, else false
      */
     @FXML
     public void save() throws IllegalArgumentException, IOException, SQLException {
