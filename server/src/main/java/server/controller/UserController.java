@@ -118,7 +118,7 @@ public class UserController {
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
-        User user = null;
+        User user;
 
         try {
             user = gson.fromJson(req.body(), User.class);
@@ -129,7 +129,7 @@ public class UserController {
         }
 
         try {
-            if (!database.isUniqueUsername(user.getUsername())) {
+            if (database.isUniqueUsername(user.getUsername())) {
                 database.update(user);
             } else {
                 res.status(403);
