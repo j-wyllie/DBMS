@@ -25,12 +25,14 @@ import odms.model.enums.OrganEnum;
 import odms.model.enums.OrganSelectEnum;
 import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 
 
 public class OrganExpired extends OrganCommon{
 
     protected ObservableList<ExpiredOrgan> observableExpiredOrganList = FXCollections.observableArrayList();
     private Profile currentProfile;
+    private User currentUser;
     List<ExpiredOrgan> organs = new ArrayList<>();
     private odms.controller.profile.OrganExpired controller = new odms.controller.profile.OrganExpired(this);
 
@@ -52,13 +54,15 @@ public class OrganExpired extends OrganCommon{
     @FXML
     private Button btnRevert;
 
+
     /**
      * Initialize the current view instance and populate organ lists.
      *
      * @param profile the profile to set on view instance
      */
-    public void initialize(Profile profile) {
+    public void initialize(Profile profile, User user) {
         currentProfile = profile;
+        currentUser = user;
 
 
 
@@ -72,7 +76,12 @@ public class OrganExpired extends OrganCommon{
         expiredTimeColumn.setCellValueFactory(new PropertyValueFactory<>("ExpiryDate"));
         expiredOrganTable.getColumns().setAll(expiredOrganColumn, expiredClinicianColumn, expiredTimeColumn, expiredNoteColumn);
 
-
+        expiredOrganTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
+                editOrganNote(event, expiredOrganTable.getSelectionModel().getSelectedItem());
+            }
+        });
 
     }
 
@@ -95,6 +104,44 @@ public class OrganExpired extends OrganCommon{
         controller.revertExpired(profileId, organ);
         observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
 
+    }
+
+    /**
+     * Launch pane to edit reasoning for organ expiry override.
+     *
+     * @param event the JavaFX event
+     * @param organ the organ to specify reason for
+     */
+    private void editOrganNote(Event event, ExpiredOrgan organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganOverride.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            OrganOverride overrideView = fxmlLoader.getController();
+            overrideView.initialize(organ.getOrgan(), currentProfile, currentUser);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Manual Organ Override");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding(ob -> refreshTableView());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Refresh the ListViews to reflect changes made from the edit pane.
+     */
+    private void refreshTableView() {
+        organs = controller.getExpiredOrgans(currentProfile);
+        observableExpiredOrganList.clear();
+        observableExpiredOrganList.addAll(organs);
+        expiredOrganTable.refresh();
     }
 
     public void setWindowType(OrganSelectEnum windowType) {

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -12,7 +14,10 @@ import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.Profile;
+
+import static odms.controller.database.DAOFactory.getOrganDao;
 
 public class ProfileEdit extends CommonController {
 
@@ -543,5 +548,9 @@ public class ProfileEdit extends CommonController {
 
     public void setIsClinician(Boolean bool) {
         isClinician = bool;
+    }
+
+    public boolean getManuallyExpiredOrgans() {
+        return !DAOFactory.getOrganDao().getExpired(currentProfile).isEmpty();
     }
 }

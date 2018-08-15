@@ -349,7 +349,8 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId){
-        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP WHERE ProfileId = ? and Organ = ? and ToDonate = ?;";
+        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP " +
+                "WHERE ProfileId = ? and Organ = ? and ToDonate = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {

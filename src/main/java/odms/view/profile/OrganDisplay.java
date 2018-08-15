@@ -267,7 +267,7 @@ public class OrganDisplay extends CommonView {
 
         Scene scene = new Scene(fxmlLoader.load());
         OrganExpired view = fxmlLoader.getController();
-        view.initialize(currentProfile);
+        view.initialize(currentProfile, currentUser);
 
         Stage stage = new Stage();
         stage.setTitle("Expired Organs");
