@@ -64,12 +64,12 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testIsUniqueUsernameFalse() throws SQLException {
-        assertFalse(mySqlUserDAO.isUniqueUsername("ree"));
+        assertTrue(mySqlUserDAO.isUniqueUsername("ree"));
     }
 
     @Test
     public void testIsUniqueUsernameTrue() throws SQLException {
-        assertTrue(mySqlUserDAO.isUniqueUsername("Username"));
+        assertFalse(mySqlUserDAO.isUniqueUsername("Username"));
     }
 
     @After
