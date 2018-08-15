@@ -81,14 +81,14 @@ public class ProcedureDetailed extends CommonView {
         saveButton.setVisible(false);
 
         if (isOpenedByClinician) {
-            System.out.println("here");
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             ObservableList<String> organsDonated = FXCollections
                     .observableArrayList();
             List<String> organs = new ArrayList<>();
-            controller.getDonatedOrgans().forEach(organEnum -> {
+            profile.getOrgansDonated().forEach(organEnum -> {
                 organs.add(organEnum.getNamePlain());
             });
+            System.out.println(organs.size());
             organsDonated.addAll(organs);
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);

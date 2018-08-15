@@ -28,7 +28,7 @@ public class ProcedureController {
 
         try {
             profileId = Integer.valueOf(req.params("id"));
-            pending = Boolean.valueOf(Boolean.valueOf(req.queryMap("pending").value()));
+            pending = Boolean.valueOf(req.queryParams("pending"));
         } catch (Exception e) {
             res.status(500);
             return "Bad Request";
@@ -93,16 +93,18 @@ public class ProcedureController {
         Gson gson = new Gson();
         ProcedureDAO database = DAOFactory.getProcedureDao();
         Procedure newProcedure;
+        boolean pending;
 
         try {
             newProcedure = gson.fromJson(req.body(), Procedure.class);
+            pending = Boolean.valueOf(req.queryParams("pending"));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
 
         try {
-            database.update(newProcedure);
+            database.update(newProcedure, pending);
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";

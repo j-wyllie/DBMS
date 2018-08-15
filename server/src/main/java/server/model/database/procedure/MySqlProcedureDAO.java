@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,6 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         LocalDate procedureDate = procedures.getDate("ProcedureDate").toLocalDate();
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
-
         return new Procedure(id, summary, procedureDate, description, affectedOrgans);
     }
 
@@ -77,7 +77,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         try {
             Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(query);
+            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, profile);
             stmt.setString(2, procedure.getSummary());
             stmt.setString(3, procedure.getLongDescription());
@@ -91,11 +91,16 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             //todo: return and update procedure id.
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
+            ResultSet keys = stmt.getGeneratedKeys();
+            while (keys.next()) {
+                procedure.setId(keys.getInt(1));
+            }
             for (OrganEnum organ : procedure.getOrgansAffected()) {
                 addAffectedOrgan(procedure, organ);
             }
+
+            conn.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -109,19 +114,19 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public void remove(Procedure procedure) {
         String idQuery = "delete from procedures where Id = ?;";
-        String procedureIdQuery = "delete from procedures where ProcedureId = ?";
+        String procedureIdQuery = "delete from affected_organs where ProcedureId = ?";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
             Connection conn = instance.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement(idQuery);
+            PreparedStatement stmt = conn.prepareStatement(procedureIdQuery);
             stmt.setInt(1, procedure.getId());
 
             stmt.executeUpdate();
             stmt.close();
 
-            PreparedStatement stmt2 = conn.prepareStatement(procedureIdQuery);
+            PreparedStatement stmt2 = conn.prepareStatement(idQuery);
             stmt2.setInt(1, procedure.getId());
 
             stmt2.executeUpdate();
@@ -165,8 +170,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      * @param procedure to update.
      */
     @Override
-    public void update(Procedure procedure) {
-        String query = "update procedures set Summary = ?, Description = ?, ProcedureDate = ? "
+    public void update(Procedure procedure, boolean pending) {
+        String query = "update procedures set Summary = ?, Description = ?, ProcedureDate = ?, Pending = ? "
                 + "where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -177,7 +182,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(1, procedure.getSummary());
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
-            stmt.setInt(4, procedure.getId());
+            stmt.setBoolean(4, pending);
+            stmt.setInt(5, procedure.getId());
 
             stmt.executeUpdate();
             conn.close();
@@ -196,7 +202,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public List<OrganEnum> getAffectedOrgans(int procedureId) {
-        String query = "select * from affected_organs where Id = ?;";
+        String query = "select * from affected_organs where ProcedureId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<OrganEnum> organs = new ArrayList<>();
 

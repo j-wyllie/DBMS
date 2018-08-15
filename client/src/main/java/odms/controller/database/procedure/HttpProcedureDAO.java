@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         List<Procedure> procedures = new ArrayList<>();
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("pending", String.valueOf(pending));
+        queryParams.put("pending", pending);
         Request request = new Request(url, 0, queryParams);
 
         Response response = null;
@@ -76,7 +77,14 @@ public class HttpProcedureDAO implements ProcedureDAO {
         Gson gson = new Gson();
         String url = Request.getUrl() + "procedures/" + profile.getId();
         String body = gson.toJson(procedure);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Map<String, Object> queryParams = new HashMap<>();
+        if (procedure.getDate().isBefore(LocalDate.now())) {
+            queryParams.put("pending", false);
+        }
+        else {
+            queryParams.put("pending", true);
+        }
+        Request request = new Request(url, 0, queryParams, body);
         try {
             request.patch();
         } catch (IOException e) {

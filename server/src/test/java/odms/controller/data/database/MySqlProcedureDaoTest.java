@@ -77,7 +77,7 @@ public class MySqlProcedureDaoTest extends MySqlCommonTests {
     public void testUpdate() {
         Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0);
         testProcedure.setSummary("gg no re");
-        mySqlProcedureDAO.update(testProcedure);
+        mySqlProcedureDAO.update(testProcedure, true);
         assertEquals(testProcedure.getSummary(),
                 mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0).getSummary());
     }
