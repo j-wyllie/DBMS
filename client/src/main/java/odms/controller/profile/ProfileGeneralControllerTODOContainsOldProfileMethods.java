@@ -1,13 +1,17 @@
 package odms.controller.profile;
 
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
+import odms.commons.model.enums.CountriesEnum;
+import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Attribute;
 import odms.commons.model.profile.Profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import odms.controller.database.DAOFactory;
 
 public class ProfileGeneralControllerTODOContainsOldProfileMethods {
 
@@ -17,17 +21,19 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      * @param attributes the attributes given in the constructor
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public static void setExtraAttributes(List<String> attributes, Profile profile)
-            throws IllegalArgumentException {
-        //todo Change how setExtraAttributes works
-        for (String val : attributes) {
-            String[] parts = val.split("=");
-            if (parts.length == 1) {
-                String[] newParts = {parts[0], ""};
-                setGivenAttribute(newParts, profile);
-            } else {
-                setGivenAttribute(parts, profile);
+    public static void setExtraAttributes(List<String> attributes, Profile profile) {
+        try {
+            for (String val : attributes) {
+                String[] parts = val.split("=");
+                if (parts.length == 1) {
+                    String[] newParts = {parts[0], ""};
+                    setGivenAttribute(newParts, profile);
+                } else {
+                    setGivenAttribute(parts, profile);
+                }
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -54,14 +60,14 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      * @param profile profile object of current profile
      * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
-    private static void setGivenAttribute(String[] parts, Profile profile) throws IllegalArgumentException {
+    private static void setGivenAttribute(String[] parts, Profile profile)
+            throws IllegalArgumentException {
         //todo Change how setExtraAttributes works
         String attrName = parts[0];
         String value = null;
         if (!parts[1].equals(null)) {
             value = parts[1].replace("\"", ""); // get rid of the speech marks;
         }
-
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             profile.setGivenNames(value);
         } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
@@ -75,7 +81,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             );
             if (date.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException(
-                        "Date of birth cannot be a future date"
+                        "Date of birth cannot be a future date."
                 );
             }
             profile.setDateOfBirth(date);
@@ -91,6 +97,9 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                         Integer.valueOf(dates[0])
                 );
                 profile.setDateOfDeath(LocalDateTime.of(date, LocalTime.MIN));
+                profile.setCountryOfDeath(profile.getCountry());
+                profile.setCityOfDeath(profile.getCity());
+                profile.setRegionOfDeath(profile.getRegion());
             }
         } else if (attrName.equals(Attribute.GENDER.getText())) {
             profile.setGender(value.toLowerCase());
@@ -101,7 +110,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 }
                 profile.setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid height entered");
+                throw new IllegalArgumentException("Invalid height entered.");
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
@@ -110,7 +119,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 }
                 profile.setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid weight entered");
+                throw new IllegalArgumentException("Invalid weight entered.");
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
             if (value.equals("null") || value.equals("")) {
@@ -119,13 +128,27 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             profile.setBloodType(value);
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
             profile.setAddress(value);
+        } else if (attrName.equals(Attribute.COUNTRY.getText())) {
+            if (!DAOFactory.getCountryDAO().getAll(true).contains(value)) {
+                throw new IllegalArgumentException("Must be a valid country!");
+            }
+            profile.setCountry(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
+            if (profile.getCountry() != null) {
+                if ((profile.getCountry().toLowerCase()
+                        .equalsIgnoreCase(CountriesEnum.NZ.getName()) ||
+                        profile.getCountry()
+                                .equalsIgnoreCase(CountriesEnum.NZ.toString())) &&
+                        !NewZealandRegionsEnum.toArrayList().contains(value)) {
+                    throw new IllegalArgumentException("Must be a region within New Zealand.");
+                }
+            }
             profile.setRegion(value);
         } else if (attrName.equals(Attribute.NHI.getText())) {
             try {
                 profile.setNhi(value);
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid NHI entered");
+                throw new IllegalArgumentException("Invalid NHI entered.");
             }
         } else if (attrName.equals("isSmoker")) {
             profile.setIsSmoker(Boolean.valueOf(value));
@@ -148,7 +171,14 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         } else if (attrName.equals("email")) {
             profile.setEmail(value);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid field '" + attrName + "'.");
         }
+        try {
+            DAOFactory.getProfileDao().update(profile);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Cannot update fields.");
+        }
+        System.out.println("profile(s) successfully updated.");
+
     }
 }

@@ -14,18 +14,15 @@ import javafx.application.Platform;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * @author Yuhi Ishikura
+ */
 class TextInputControlStream {
 
     private final TextInputControlInputStream in;
     private final TextInputControlOutputStream out;
     private final Charset charset;
 
-    /**
-     * Creates an input and output stream for the given text area and charset
-     *
-     * @param textInputControl
-     * @param charset
-     */
     TextInputControlStream(final TextInputControl textInputControl, Charset charset) {
         this.charset = charset;
         this.in = new TextInputControlInputStream(textInputControl);
@@ -37,6 +34,7 @@ class TextInputControlStream {
                     getIn().enterKeyPressed();
                     break;
             }
+
             if (textInputControl.getCaretPosition() <= getIn().getLastLineBreakIndex()) {
                 e.consume();
             }
@@ -81,7 +79,7 @@ class TextInputControlStream {
         private final TextInputControl textInputControl;
         private final PipedInputStream outputTextSource;
         private final PipedOutputStream inputTextTarget;
-        private int lastLineBreakIndex;
+        private int lastLineBreakIndex = 0;
 
         TextInputControlInputStream(TextInputControl textInputControl) {
             this.textInputControl = textInputControl;
@@ -90,7 +88,6 @@ class TextInputControlStream {
                 this.outputTextSource = new PipedInputStream(this.inputTextTarget);
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
-
             }
         }
 
@@ -102,17 +99,14 @@ class TextInputControlStream {
             this.lastLineBreakIndex = this.textInputControl.getLength();
         }
 
-        /**
-         * Puts caret to end of line, write and flushes line to given text area
-         */
         void enterKeyPressed() {
             synchronized (this) {
                 try {
                     this.textInputControl.positionCaret(this.textInputControl.getLength());
 
                     final String lastLine = getLastLine();
-                    final ByteBuffer buf = getCharset().encode(lastLine + "\r");
-                    this.inputTextTarget.write(buf.array());
+                    final ByteBuffer buf = getCharset().encode(lastLine + "\r"); //$NON-NLS-1$
+                    this.inputTextTarget.write(buf.array(), 0, buf.remaining());
                     this.inputTextTarget.flush();
                     this.lastLineBreakIndex = this.textInputControl.getLength() + 1;
                 } catch (IOException e) {
