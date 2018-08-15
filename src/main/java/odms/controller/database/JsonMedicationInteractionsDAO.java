@@ -57,13 +57,14 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
         for (Object interactionKey : interactionMap.keySet()) {
 
             Interaction value = interactionMap.get(interactionKey);
-            if (value.getDrugA().equalsIgnoreCase(drugA)
-                    && value.getDrugB().equalsIgnoreCase(drugB)) {
-
-                if (value.getDateTimeExpired().isBefore(now()) ||
-                        value.getDateTimeExpired().isEqual(now())) {
+            if ((value.getDrugA().equalsIgnoreCase(drugA) && value.getDrugB()
+                    .equalsIgnoreCase(drugB) ||
+                    value.getDrugA().equalsIgnoreCase(drugB) && value.getDrugB()
+                            .equalsIgnoreCase(drugA))) {
+                if (!value.getDateTimeExpired().isAfter(now())) {
                     value = add(value.getDrugA(), value.getDrugB());
                     interactionMap.replace((Integer) interactionKey, value);
+                    save();
                 }
                 return value;
             }
