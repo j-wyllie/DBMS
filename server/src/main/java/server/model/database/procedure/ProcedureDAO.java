@@ -31,7 +31,7 @@ public interface ProcedureDAO {
      * Update a procedure for the profile.
      * @param procedure to update.
      */
-    void update(Procedure procedure);
+    void update(Procedure procedure, boolean pending);
 
     /**
      * Gets all affected organs for a procedure.

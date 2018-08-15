@@ -1,5 +1,6 @@
 package odms.controller.profile;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
 import odms.commons.model.profile.Procedure;
@@ -34,7 +35,14 @@ public class ProcedureAdd {
      */
     public void add(Profile p) throws IllegalArgumentException {
         Procedure procedure = parseProcedure();
-        procedure.setOrgansAffected(view.getAffectedOrgansListView());
+        List<String> organs = new ArrayList<>(view.getAffectedOrgansListView());
+        List<OrganEnum> organEnums = new ArrayList<>();
+        organs.forEach(string -> {
+            OrganEnum organ = OrganEnum.valueOf(string.toUpperCase().replace(" ",  "_"));
+            organEnums.add(organ);
+        });
+        procedure.setOrgansAffected(organEnums);
+        System.out.println(procedure.getOrgansAffected().size());
         addProcedure(procedure, p);
     }
 

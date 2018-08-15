@@ -85,9 +85,10 @@ public class ProcedureDetailed extends CommonView {
             ObservableList<String> organsDonated = FXCollections
                     .observableArrayList();
             List<String> organs = new ArrayList<>();
-            controller.getDonatedOrgans().forEach(organEnum -> {
+            profile.getOrgansDonated().forEach(organEnum -> {
                 organs.add(organEnum.getNamePlain());
             });
+            System.out.println(organs.size());
             organsDonated.addAll(organs);
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
