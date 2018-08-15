@@ -66,7 +66,6 @@ public class OrganEdit extends CommonController {
         for (OrganEnum organ : organs) {
             //todo might need to change to addOrganDonated
             if(!DAOFactory.getOrganDao().getDonations(p).contains(organ)) {
-                System.out.println("add");
                 DAOFactory.getOrganDao().addDonation(p, organ);
             }
             p.getOrgansDonated().add(organ);
@@ -109,7 +108,6 @@ public class OrganEdit extends CommonController {
         }
     }
 
-    // todo rename to something more meaningful
     public void caseDonating(Profile p) {
         try {
             Set<OrganEnum> organsRemoved;
@@ -120,7 +118,7 @@ public class OrganEdit extends CommonController {
                     view.getOrgansAdded()
             );
 
-            view.getOrgansAdded().removeAll(p.getOrgansDonating());
+//            view.getOrgansAdded().removeAll(p.getOrgansDonating());
             addOrgansDonating(view.getOrgansAdded(), p);
             removeOrgansDonating(organsRemoved, p);
         } catch (OrganConflictException e) {
@@ -168,27 +166,31 @@ public class OrganEdit extends CommonController {
      */
     public void addOrgansDonating(Set<OrganEnum> organs, Profile p)
             throws IllegalArgumentException, OrganConflictException {
-        //todo
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsDonating",
                 p
         );
 
         for (OrganEnum organ : organs) {
-            if(!DAOFactory.getOrganDao().getDonating(p).contains(organ)) {
-                if(DAOFactory.getOrganDao().getReceived(p).contains(organ)){
+            if (!DAOFactory.getOrganDao().getDonating(p).contains(organ)) {
+                if (DAOFactory.getOrganDao().getReceived(p).contains(organ)) {
                     // A donor cannot donate an organ they've received.
                     throw new OrganConflictException(
                             "profile has previously received " + organ,
                             organ
                     );
                 }
+                p.addOrganDonating(organ);
                 DAOFactory.getOrganDao().addDonating(p, organ);
             }
 
-            History action = new History("profile ", p.getId(), "set",
+            History action = new History(
+                    "profile ",
+                    p.getId(),
+                    "set",
                     organ.getNamePlain(),
-                    -1, LocalDateTime.now());
+                    -1,
+                    LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
     }
@@ -213,27 +215,26 @@ public class OrganEdit extends CommonController {
      * @param organs the set of organs to be received
      */
     public void addOrgansRequired(Set<OrganEnum> organs, Profile p) {
-        //todo
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsRequired",
                 p
         );
 
+        p.setReceiver(true);
+
         for (OrganEnum organ : organs) {
-            p.setReceiver(true);
             p.getOrgansRequired().add(organ);
-            if(!DAOFactory.getOrganDao().getRequired(p).contains(organ)){
+            if (!DAOFactory.getOrganDao().getRequired(p).contains(organ)) {
                 DAOFactory.getOrganDao().addRequired(p, organ);
             }
-            //addOrganRequired(organ);
-            LocalDateTime now = LocalDateTime.now();
+
             History action = new History(
-                "profile",
+                    "profile",
                     p.getId(),
-                "required organ",
-                "" + organ.getNamePlain(),
-                -1,
-                now
+                    "required organ",
+                    "" + organ.getNamePlain(),
+                    -1,
+                    LocalDateTime.now()
             );
             CurrentHistory.updateHistory(action);
         }

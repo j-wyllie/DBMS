@@ -41,7 +41,6 @@ public class MySqlOrganDAO implements OrganDAO {
      * @return the list of the returned organs
      */
     private Set<OrganEnum> getOrgans(int profile, String query) {
-
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Set<OrganEnum> allOrgans = new HashSet<>();
 
@@ -94,7 +93,6 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
-        profile.addOrganDonated(organ);
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -128,8 +126,6 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
-        profile.addOrganDonating(organ);
-
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -162,7 +158,6 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
-        profile.addOrganRequired(organ);
         String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
                 + "values (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
