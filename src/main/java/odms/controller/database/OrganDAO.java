@@ -121,4 +121,12 @@ public interface OrganDAO {
      */
     void setExpired(Profile profile, String organ,Integer expired, String note, Integer userId);
 
+
+    /**
+     * Updates organ to be non-expired.
+     *
+     * @param profileId to revert organ expired.
+     * @param organ   to revert.
+     */
+    void revertExpired(Integer profileId, String organ);
 }

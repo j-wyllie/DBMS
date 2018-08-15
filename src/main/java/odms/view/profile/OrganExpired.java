@@ -49,6 +49,8 @@ public class OrganExpired extends OrganCommon{
     private TableColumn<ExpiredOrgan, LocalDateTime> expiredTimeColumn;
     @FXML
     private TableColumn<ExpiredOrgan, String> expiredNoteColumn;
+    @FXML
+    private Button btnRevert;
 
     /**
      * Initialize the current view instance and populate organ lists.
@@ -81,6 +83,18 @@ public class OrganExpired extends OrganCommon{
     public void onBtnCancelClicked() {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Revert the organ to be non-expired
+     */
+    @FXML
+    public void onBtnRevertClicked() {
+        String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
+        Integer profileId = currentProfile.getId();
+        controller.revertExpired(profileId, organ);
+        observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
+
     }
 
     public void setWindowType(OrganSelectEnum windowType) {

@@ -17,6 +17,7 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.Profile;
 
 public class AvailableOrgans {
@@ -102,7 +103,6 @@ public class AvailableOrgans {
         profile.getOrgansExpired().add(organ);
     }
 
-    // TODO these need to check the database incase the organ was manually expired
     public void checkOrganExpired(OrganEnum organ, Profile profile,
             Map.Entry<Profile, OrganEnum> m) {
         if (!profile.getDateOfDeath().equals(null) && LocalDateTime.now()
@@ -111,13 +111,20 @@ public class AvailableOrgans {
         }
     }
 
-    // TODO these need to check the database incase the organ was manually expired
     public void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
             Map.Entry<Profile, OrganEnum> m) {
         if (!profile.getDateOfDeath().equals(null) && LocalDateTime.now()
                 .isAfter(getExpiryTime(organ, profile))) {
             view.removeItem(m);
             setOrganExpired(organ, profile);
+        }
+        if(!profile.getDateOfDeath().equals(null)){
+            List<ExpiredOrgan> expiredList = DAOFactory.getOrganDao().getExpired(profile);
+            for(ExpiredOrgan currentOrgan: expiredList){
+                if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
+                    view.removeItem(m);
+                }
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import odms.model.enums.OrganEnum;
 import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
+import org.sonar.api.internal.apachecommons.lang.ObjectUtils;
 
 public class MySqlOrganDAO implements OrganDAO {
 
@@ -348,7 +349,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId){
-        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP WHERE ProfileId = ? and Organ = ? ;";
+        String query = "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP WHERE ProfileId = ? and Organ = ? and ToDonate = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -359,6 +360,34 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setString(3, note);
             stmt.setInt(4, profile.getId());
             stmt.setString(5, organ);
+            stmt.setInt(6, 1);
+
+
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates organ to be non-expired.
+     *
+     * @param profile to revert organ expired.
+     * @param organ   to revert.
+     */
+    @Override
+    public void revertExpired(Integer profile, String organ){
+        String query = "UPDATE organs SET Expired = NULL , UserId = NULL , Note = NULL WHERE ProfileId = ? and Organ = ? ;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile);
+            stmt.setString(2, organ);
 
 
             stmt.executeUpdate();

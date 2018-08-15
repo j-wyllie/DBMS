@@ -13,6 +13,7 @@ public class OrganOverride extends CommonController {
     }
 
     public void confirm() {
+        System.out.println("HERE");
         Integer isExpired = 1;
         DAOFactory.getOrganDao().setExpired(view.getCurrentProfile(), view.getCurrentOrgan(), isExpired,
                 view.getReasonText(), view.getCurrentUser().getStaffID());
