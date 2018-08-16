@@ -41,9 +41,7 @@ public class ProfileEdit extends CommonController {
      * @return boolean will be true is save was successful, else false
      */
     @FXML
-    public void save() {
-        if (AlertController.saveChanges()) {
-            try {
+    public void save() throws SQLException, IOException, IllegalArgumentException {
                 // History Generation
                 History action = new History(
                         "profile",
@@ -94,15 +92,6 @@ public class ProfileEdit extends CommonController {
                 action.setHistoryTimestamp(LocalDateTime.now());
                 CurrentHistory.updateHistory(action);
 
-
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(e.getMessage());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -172,6 +161,7 @@ public class ProfileEdit extends CommonController {
             }
         }
         return null;
+
     }
 
     /**
@@ -201,7 +191,7 @@ public class ProfileEdit extends CommonController {
         if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
             if (view.getCityOfDeathField() != null && AddressIO
                     .checkValidCity(view.getCityOfDeathField()
-                            + " " + view.getComboRegionOfDeath() + " " + view
+                            + "," + view.getComboRegionOfDeath() + "," + view
                             .getComboCountryOfDeath(), view.getCityOfDeathField(), MAINCOUNTRY)) {
                 return view.getCityOfDeathField();
             } else {
@@ -211,7 +201,7 @@ public class ProfileEdit extends CommonController {
             }
         } else if (view.getRegionOfDeathField() != null) {
             if (AddressIO.checkValidCity(view.getCityOfDeathField()
-                            + " " + view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
+                            + "," + view.getRegionOfDeathField() + "," + view.getComboCountryOfDeath(),
                     view.getCityOfDeathField(),
                     view.getComboCountryOfDeath())) {
                 return view.getCityOfDeathField();

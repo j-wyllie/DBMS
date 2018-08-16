@@ -82,11 +82,20 @@ public final class AddressIO {
      */
     public static boolean checkValidCity(String address, String city, String country) {
         try {
+            System.out.println(address);
             if (address != null) {
-                JsonObject jsonString = getGeocodeLocation(address, country.replace(" ", "+"));
+                String[] components = address.split(",");
+                JsonObject jsonString = getGeocodeLocation(address.replace(",", "+"), country.replace(" ", "+"));
+                System.out.println(components[1]);
+                System.out.println(jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                        "address_components").get(1).getAsJsonObject().toString());
                 return jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(0).getAsJsonObject().toString()
-                        .contains("locality");
+                        .contains("locality") && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                        "address_components").get(0).getAsJsonObject().toString()
+                        .contains(city) && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                        "address_components").get(1).getAsJsonObject().toString()
+                        .contains(components[1]);
             } else {
                 return false;
             }
@@ -113,6 +122,7 @@ public final class AddressIO {
                 "&components=country:" + country + "&key=" + key;
         URL url = new URL(query);
         URLConnection request = url.openConnection();
+        System.out.println(query.toString());
         request.connect();
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
