@@ -558,7 +558,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
                 + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
                 + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ? where ProfileId = ?;";
+                + "Created = ?, LastUpdated = ?, City = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -597,12 +597,10 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(26, profile.getStreetNumber());
             stmt.setString(27, profile.getStreetName());
             stmt.setString(28, profile.getNeighbourhood());
-
-
             stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
-            stmt.setInt(31, profile.getId());
-
+            stmt.setString(31, profile.getCity());
+            stmt.setInt(32, profile.getId());
             stmt.executeUpdate();
 
         } catch (Exception e) {

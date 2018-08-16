@@ -4,6 +4,7 @@ import static odms.controller.AlertController.profileCancelChanges;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -172,7 +173,7 @@ public class ProfileEdit extends CommonView {
                 showNotificationFailed("profile", event);
             }
             closeWindow(event);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLException e) {
             AlertController.invalidEntry(
                     e.getMessage() + "\n" + "Changes not saved."
             );

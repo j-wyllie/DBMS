@@ -18,7 +18,6 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.view.CommonView;
-import org.controlsfx.control.table.TableFilter;
 
 /**
  * View for the transplant waiting list. Contains all GUI element accessors for the transplant
@@ -112,7 +111,6 @@ public class TransplantWaitingList extends CommonView {
         this.currentUser = currentUser;
         try {
             makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
-            TableFilter filter = new TableFilter<>(transplantTable);
             makeTransplantWaitingList(controller.getWaitingList());
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
 
@@ -33,6 +34,7 @@ public class MySqlCommonDAO implements CommonDAO {
 
             } catch (SQLException e) {
                 System.out.println("Please enter a valid read-only query.");
+
             }
         }
     }
