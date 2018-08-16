@@ -3,6 +3,7 @@ package odms.controller.profile;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class OrganRemovalTest {
         testOrganStrings.add("heart");
     }
 
+    @Ignore
     @Test
     public void testRemoveOrganRequired() {
         currentProfile.getOrgansRequired().add(OrganEnum.HEART);
