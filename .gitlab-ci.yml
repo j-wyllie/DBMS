@@ -40,3 +40,4 @@ release-artifacts:
   only:
     - tags
     - dev@seng302-2018/team-200
+    - release@seng302-2018/team-200
