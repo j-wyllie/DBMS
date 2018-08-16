@@ -847,6 +847,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange) {
+        organ = organ.replace("-",  " ");
         String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("

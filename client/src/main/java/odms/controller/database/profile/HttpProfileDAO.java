@@ -156,8 +156,8 @@ public class HttpProfileDAO implements ProfileDAO {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ);
         queryParams.put("bloodType", bloodType);
-        queryParams.put("lowerAgeRange", bloodType);
-        queryParams.put("upperAgeRange", bloodType);
+        queryParams.put("lowerAgeRange", lowerAgeRange);
+        queryParams.put("upperAgeRange", upperAgeRange);
 
         return getArrayRequest(url, queryParams);
     }

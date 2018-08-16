@@ -324,7 +324,7 @@ public class AvailableOrgans {
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
             Profile donorProfile, OrganEnum selectedOrgan) {
-
+        System.out.println("rec");
         // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
         List<Profile> receivingProfiles = new ArrayList<>();

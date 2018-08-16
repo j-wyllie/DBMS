@@ -132,6 +132,7 @@ public class Request {
                 urlString += ("&" + key + "=" + queryParams.get(key));
             }
         }
+        System.out.println(urlString);
         return urlString;
     }
 
