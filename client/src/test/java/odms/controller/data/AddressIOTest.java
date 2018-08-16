@@ -50,7 +50,7 @@ public class AddressIOTest {
 
     @Test
     public void checkValidCity() {
-        assertTrue(AddressIO.checkValidCity("Canberra,Australian Capital Territory,Australia", "Australian Capital Territory", "Australia"));
+        assertTrue(AddressIO.checkValidCity("Auckland,Auckland,New Zealand", "Auckland", "New Zealand"));
     }
 
     @Test
