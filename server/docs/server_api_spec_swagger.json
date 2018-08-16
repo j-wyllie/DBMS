@@ -1,0 +1,1886 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "ODMS API",
+    "version": "1.0",
+    "title": "Human Farm",
+    "contact": {
+      "name": "Human Farm",
+      "email": "s302team200@cosc.canterbury.ac.nz"
+    }
+  },
+  "tags": [
+    {
+      "name": "users",
+      "description": "Functionality related to clinician/admin accounts"
+    },
+    {
+      "name": "profiles",
+      "description": "Functionality related to donor/receiver accounts"
+    },
+    {
+      "name": "conditions",
+      "description": "Functionality related to conditions of profiles"
+    },
+    {
+      "name": "procedures",
+      "description": "Functionality related to procedures of profiles"
+    },
+    {
+      "name": "drugs",
+      "description": "Functionality related to drugs of profiles"
+    },
+    {
+      "name": "countries",
+      "description": "Functionality related to countries"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Gets all users from the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Creates a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get select users from the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Edits the basic attributes of a given user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Deletes a given user.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the user.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Gets all profiles from the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Creates a new profile (donor or receiver)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profiles/{id}": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get select profiles from the database",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "description": "Username of the profile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "Id of the profile",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "receiving",
+            "description": "True if you only want receivers.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Edits the basic attributes of a given profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Deletes a given profile.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/count": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Get the number of profiles in the database",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProfileCount"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/conditions": {
+      "get": {
+        "tags": [
+          "conditions"
+        ],
+        "summary": "Gets all conditions of a profile.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCondition"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "conditions"
+        ],
+        "summary": "Adds a condition to a profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addCondition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/conditions/{id}": {
+      "patch": {
+        "tags": [
+          "conditions"
+        ],
+        "summary": "Changes the details of a condition for a profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchCondition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "conditions"
+        ],
+        "summary": "Deletes a condition from a profile.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/{id}/drugs": {
+      "get": {
+        "tags": [
+          "drugs"
+        ],
+        "summary": "Get current and past drugs for a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "current",
+            "required": false,
+            "description": "Optional parameter to define whether to get current or past drugs",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getDrug"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "drugs"
+        ],
+        "summary": "Add a drug to a profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postDrug"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/drugs/{id}": {
+      "patch": {
+        "tags": [
+          "drugs"
+        ],
+        "summary": "Update a drug",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchDrug"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "drugs"
+        ],
+        "summary": "Delete a drug from a profile",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/{id}/organs": {
+      "get": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "Get organs that are associated with a profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrgan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "Add an organ to the profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "donated",
+            "description": "if the organ has been donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "donating",
+            "description": "if the organ is to be donated",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "required",
+            "description": "if the organ is a required organ",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "received",
+            "description": "if the organ has been received",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error'"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "Deletes an organ from a profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/profiles/{id}/procedures": {
+      "get": {
+        "tags": [
+          "procedures"
+        ],
+        "summary": "Gets all the procedures for a profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "True to only get pending procedures, false for all procedures.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProcedure"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "procedures"
+        ],
+        "summary": "Adds a procedure to a profile.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "True to only get pending procedures, false for all procedures.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/procedure"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/procedures/{id}": {
+      "patch": {
+        "tags": [
+          "procedures"
+        ],
+        "summary": "Updates a procedure.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/procedure"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "procedures"
+        ],
+        "summary": "Deletes a procedure from a profile",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/procedures/{id}/organs": {
+      "get": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "Get a profiles affected organs of a procedure",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getOrgan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "Add an organ to a procedure",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/organ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "organs"
+        ],
+        "summary": "removes an organ from a procedure",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "organ",
+            "description": "The organ to remove",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Id of the object.",
+          "schema": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      ]
+    },
+    "/countries": {
+      "get": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Gets all of the countries from the database",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "valid",
+            "description": "Optional parameter to define whether or not to return valid/invalid countries",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCountries"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Updates a countries valid field",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patchCountry"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/reset": {
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Force reset of database to original structure.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/resample": {
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Reload sample of data into reset database.",
+        "responses": {
+          "201": {
+            "description": "Sample of data has been reloaded."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs in a user of profile.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "id",
+                  "username",
+                  "password"
+                ],
+                "allOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logInResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/email/password supplied"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs out user session given by auth token in header",
+        "security": [
+          {
+            "User": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "postUser": {
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "name",
+          "userType",
+          "region"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "patchUser": {
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "name",
+          "userType",
+          "region"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "getUser": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "userType": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string"
+            },
+            "created": {
+              "type": "string",
+              "format": "date"
+            },
+            "lastUpdated": {
+              "type": "string",
+              "format": "date"
+            },
+            "isDefault": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "postProfile": {
+        "type": "object",
+        "required": [
+          "nhi",
+          "username",
+          "givenNames",
+          "lastNames",
+          "dob"
+        ],
+        "properties": {
+          "nhi": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "isDonor": {
+            "type": "boolean"
+          },
+          "isReceiver": {
+            "type": "boolean"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "lastNames": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "dod": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "bloodType": {
+            "type": "string"
+          },
+          "isSmoker": {
+            "type": "boolean"
+          },
+          "alcoholConsumption": {
+            "type": "number"
+          },
+          "bloodPressureSystolic": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetNo": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "neighbourhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "integer"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "getProfile": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "nhi": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "isDonor": {
+              "type": "boolean"
+            },
+            "isReceiver": {
+              "type": "boolean"
+            },
+            "givenNames": {
+              "type": "string"
+            },
+            "lastNames": {
+              "type": "string"
+            },
+            "dob": {
+              "type": "string"
+            },
+            "dod": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string"
+            },
+            "height": {
+              "type": "number"
+            },
+            "weight": {
+              "type": "number"
+            },
+            "bloodType": {
+              "type": "string"
+            },
+            "isSmoker": {
+              "type": "boolean"
+            },
+            "alcoholConsumption": {
+              "type": "number"
+            },
+            "bloodPressureSystolic": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            },
+            "streetNo": {
+              "type": "string"
+            },
+            "streetName": {
+              "type": "string"
+            },
+            "neighbourhood": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "zipcode": {
+              "type": "integer"
+            },
+            "region": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "birthCountry": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "created": {
+              "type": "string"
+            },
+            "updated": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "patchProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nhi": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "isDonor": {
+            "type": "boolean"
+          },
+          "isReceiver": {
+            "type": "boolean"
+          },
+          "givenNames": {
+            "type": "string"
+          },
+          "lastNames": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "dod": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "bloodType": {
+            "type": "string"
+          },
+          "isSmoker": {
+            "type": "boolean"
+          },
+          "alcoholConsumption": {
+            "type": "number"
+          },
+          "bloodPressureSystolic": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetNo": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "neighbourhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "integer"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string"
+          }
+        }
+      },
+      "getCountries": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "valid": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "patchCountry": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "getCondition": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "description": {
+              "type": "string"
+            },
+            "diagnosisDate": {
+              "type": "string"
+            },
+            "chronic": {
+              "type": "boolean"
+            },
+            "current": {
+              "type": "boolean"
+            },
+            "past": {
+              "type": "boolean"
+            },
+            "dateCured": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "addCondition": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "diagnosisDate": {
+            "type": "string"
+          },
+          "chronic": {
+            "type": "boolean"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          },
+          "dateCured": {
+            "type": "string"
+          }
+        }
+      },
+      "patchCondition": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "diagnosisDate": {
+            "type": "string"
+          },
+          "chronic": {
+            "type": "boolean"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "past": {
+            "type": "boolean"
+          },
+          "dateCured": {
+            "type": "string"
+          },
+          "conditionId": {
+            "type": "integer"
+          }
+        }
+      },
+      "procedure": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "procedureDate": {
+            "type": "string"
+          },
+          "procedureId": {
+            "type": "integer"
+          }
+        }
+      },
+      "getProcedure": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "procedureDate": {
+              "type": "string"
+            },
+            "procedureId": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "patchDrug": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "current": {
+            "type": "boolean"
+          }
+        }
+      },
+      "postDrug": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "current": {
+            "type": "boolean"
+          }
+        }
+      },
+      "getDrug": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "current": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "organ": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "getProfileCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "getOrgan": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "profileId": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "donated": {
+              "type": "boolean"
+            },
+            "donating": {
+              "type": "boolean"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "received": {
+              "type": "boolean"
+            },
+            "dateRegistered": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      },
+      "logInResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "the id of the logged in user"
+          },
+          "token": {
+            "type": "string",
+            "description": "a token to be used for future calls"
+          }
+        }
+      },
+      "id": {
+        "type": "integer",
+        "description": "Profile Id"
+      },
+      "pId": {
+        "type": "integer",
+        "description": "the ID of a procedure"
+      }
+    }
+  }
+}

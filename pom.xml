@@ -1,17 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>seng302</groupId>
+    <groupId>odms</groupId>
     <artifactId>odms</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <version>0.6</version>
     <name>Organ Donor Management System</name>
     <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
+    <modules>
+        <module>commons</module>
+        <module>client</module>
+        <module>server</module>
+    </modules>
+
     <properties>
+        <dir>${basedir}</dir>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPaths>
+            ${project.basedir}/target/coverage-reports/jacoco-unit.exec
+        </sonar.jacoco.reportPaths>
     </properties>
 
     <dependencies>
@@ -35,6 +49,20 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.11</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -157,113 +185,46 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.11</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <!--<execution>-->
-                    <!--<phase>process-sources</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>check</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                    <!--<id>verify-style</id>-->
-                    <!--<phase>process-classes</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>check</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                </executions>
-                <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <!-- exclude generated sources from checkstyle https://stackoverflow.com/a/30406454/7189686 -->
-                    <encoding>UTF-8</encoding>
-                    <!--This needs to be enabled once current errors are address.-->
-                    <failsOnError>false</failsOnError>
-                    <sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
-                </configuration>
-            </plugin>
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-checkstyle-plugin</artifactId>-->
+                <!--<version>3.0.0</version>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>com.puppycrawl.tools</groupId>-->
+                        <!--<artifactId>checkstyle</artifactId>-->
+                        <!--<version>8.11</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+                <!--<executions>-->
+                    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<phase>process-sources</phase>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<goal>check</goal>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<id>verify-style</id>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<phase>process-classes</phase>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<goal>check</goal>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<configLocation>checkstyle.xml</configLocation>-->
+                    <!--&lt;!&ndash; exclude generated sources from checkstyle https://stackoverflow.com/a/30406454/7189686 &ndash;&gt;-->
+                    <!--<encoding>UTF-8</encoding>-->
+                    <!--&lt;!&ndash;This needs to be enabled once current errors are address.&ndash;&gt;-->
+                    <!--<failsOnError>false</failsOnError>-->
+                    <!--<sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <configuration>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                    <transformers>
-                        <transformer
-                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <manifestEntries>
-                                <Main-Class>odms.App</Main-Class>
-                                <X-Compile-Source-JDK>${maven.compiler.source}
-                                </X-Compile-Source-JDK>
-                                <X-Compile-Target-JDK>${maven.compiler.target}
-                                </X-Compile-Target-JDK>
-                            </manifestEntries>
-                        </transformer>
-                    </transformers>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.0</version>
-                <configuration>
-                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+        <!--</plugins>-->
+    <!--</build>-->
 
     <profiles>
         <profile>
@@ -280,12 +241,57 @@
         </profile>
     </profiles>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <configuration>
+                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.5</version>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
