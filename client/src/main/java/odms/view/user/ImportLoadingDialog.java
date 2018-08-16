@@ -101,8 +101,8 @@ public class ImportLoadingDialog extends CommonView {
 
             buttonImportCancel.setOnAction(event -> {
                 importTask.interrupt();
-                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                    mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+                MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
+                mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
                 ((Stage) progressBarImport.getScene().getWindow()).close();
             });
 
@@ -130,15 +130,8 @@ public class ImportLoadingDialog extends CommonView {
                 new ImportResult("Total", "0")
         );
 
-        tableStatus.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-            Pane header = (Pane) tableStatus.lookup("TableHeaderRow");
-            if (header.isVisible()) {
-                header.setMaxHeight(0);
-                header.setMinHeight(0);
-                header.setPrefHeight(0);
-                header.setVisible(false);
-            }
-        });
+        // Hide table header
+        this.hideTableHeader(tableStatus);
     }
 
     private void updateTable(String[] results) {

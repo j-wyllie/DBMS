@@ -12,7 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -375,5 +377,17 @@ public class CommonView {
                 stage.close();
             }
         }
+    }
+
+    protected void hideTableHeader(TableView tableView) {
+        tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+            Pane header = (Pane) tableView.lookup("TableHeaderRow");
+            if (header.isVisible()) {
+                header.setMaxHeight(0);
+                header.setMinHeight(0);
+                header.setPrefHeight(0);
+                header.setVisible(false);
+            }
+        });
     }
 }
