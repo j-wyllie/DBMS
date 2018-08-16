@@ -1,20 +1,26 @@
 package odms.controller.user;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-import odms.controller.database.DAOFactory;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Profile;
+import static java.lang.Math.abs;
 
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.profile.ExpiredOrgan;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.organ.HttpOrganDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
-
-import static java.lang.Math.abs;
 
 public class AvailableOrgans {
 
@@ -23,7 +29,7 @@ public class AvailableOrgans {
     public final static long ONE_HOUR = ONE_MINUTE * 60;
     public final static long ONE_DAY = ONE_HOUR * 24;
     public final static long ONE_YEAR = ONE_DAY * 365;
-    private List<Map.Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
+    private List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
     private List<Profile> allDonaters = new ArrayList<>();
 
     private odms.view.user.AvailableOrgans view;
@@ -116,6 +122,19 @@ public class AvailableOrgans {
             view.removeItem(m);
             setOrganExpired(organ, profile);
         }
+//        if(!profile.getDateOfDeath().equals(null)){
+//            List<ExpiredOrgan> expiredList = null;
+//            try {
+//                expiredList = DAOFactory.getOrganDao().getExpired(profile);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            for(ExpiredOrgan currentOrgan: expiredList){
+//                if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
+//                    view.removeItem(m);
+//                }
+//            }
+//        }
     }
 
     public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
@@ -406,11 +425,17 @@ public class AvailableOrgans {
         allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonating()) {
-                Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
-                        organ);
-                if (!donaters.contains(pair)) {
-                    donaters.add(pair);
+                for (ExpiredOrgan expiredOrgan : DAOFactory.getOrganDao().getExpired(profile)) {
+                    if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
+                        Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
+                                organ);
+                        if (!donaters.contains(pair)) {
+                            donaters.add(pair);
+                        }
+                        break;
+                    }
                 }
+
             }
         }
         return donaters;

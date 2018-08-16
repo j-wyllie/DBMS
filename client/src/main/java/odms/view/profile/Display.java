@@ -25,6 +25,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.view.CommonView;
 
@@ -68,6 +69,7 @@ public class Display extends CommonView {
 
     private Boolean isOpenedByClinician = false;
     private TransplantWaitingList transplantWaitingListView;
+    private User currentUser;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -181,7 +183,7 @@ public class Display extends CommonView {
             System.out.println(e.getMessage());
         }
         OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView);
+        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
     }
 
     @FXML
@@ -190,7 +192,7 @@ public class Display extends CommonView {
         try {
             tabMedical.setContent(loader.load());
             ProfileMedical profileMedicalViewTODO = loader.getController();
-            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
+            profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -265,8 +267,9 @@ public class Display extends CommonView {
      * profile was not opened by a clinician or admin
      */
     public void initialize(Profile profile, Boolean isOpenedByClinician,
-            TransplantWaitingList transplantWaitingList) {
+            TransplantWaitingList transplantWaitingList, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         if (isOpenedByClinician) {
             logoutButton.setVisible(false);
         }

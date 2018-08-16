@@ -101,6 +101,13 @@ public class Server {
                         get("", OrganController::getAll);
                         post("", OrganController::add);
                         delete("", OrganController::delete);
+
+                        // organs api endpoints.
+                        path("/expired", () -> {
+                            get("", OrganController::getExpired);
+                            post("", OrganController::setExpired);
+                            delete("", OrganController::delete);
+                        });
                     });
 
                     // condition api endpoints.

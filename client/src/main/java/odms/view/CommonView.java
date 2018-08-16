@@ -108,11 +108,11 @@ public class CommonView {
      *
      * @param event clicking on the edit button.
      */
-    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
+    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician, User currentUser) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEdit controller = fxmlLoader.getController();
-        controller.initialize(currentProfile, isOpenedByClinician);
+        controller.initialize(currentProfile, isOpenedByClinician, currentUser);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -283,14 +283,14 @@ public class CommonView {
      * @param parentView The parent view of the stage being created
      */
     @FXML
-    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView, User user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(profile, true, parentView.getTransplantWaitingList());
+            controller.initialize(profile, true, parentView.getTransplantWaitingList(), user);
 
             Stage stage = new Stage();
             if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {

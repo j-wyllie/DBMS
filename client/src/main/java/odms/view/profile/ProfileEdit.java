@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.DAOFactory;
@@ -136,6 +137,7 @@ public class ProfileEdit extends CommonView {
 
     private File chosenFile;
     private Boolean removePhoto = false;
+    private User currentUser;
 
     /**
      * Button handler to undo last action.
@@ -204,7 +206,7 @@ public class ProfileEdit extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         Display v = fxmlLoader.getController();
-        v.initialize(currentProfile, isOpenedByClinician, null);
+        v.initialize(currentProfile, isOpenedByClinician, null, currentUser);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(scene);
         appStage.show();
@@ -302,8 +304,9 @@ public class ProfileEdit extends CommonView {
      * @param isOpenedByClinician Boolean, true if the window was opened by a clinician.
      */
     @FXML
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         this.currentProfile = p;
         this.controller.setCurrentProfile(currentProfile);
         this.controller.setIsClinician(isOpenedByClinician);

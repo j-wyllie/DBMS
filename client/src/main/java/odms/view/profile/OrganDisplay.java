@@ -3,6 +3,7 @@ package odms.view.profile;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
@@ -31,6 +33,8 @@ public class OrganDisplay extends CommonView {
     private Profile currentProfile;
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
+
+    private odms.controller.profile.OrganDisplay controller = new odms.controller.profile.OrganDisplay(this);
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
@@ -59,11 +63,13 @@ public class OrganDisplay extends CommonView {
 
     @FXML
     private Label donatedLabel;
+
     @FXML
     private Button donatingButton;
 
     private static OrganSelectEnum windowType;
     private TransplantWaitingList transplantWaitingListView;
+    private User currentUser;
 
     /**
      * init organ display scene. Sets variables and object visibility status.
@@ -72,7 +78,8 @@ public class OrganDisplay extends CommonView {
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
      * profile was not opened by a clinician or admin
      */
-    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList) {
+    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList, User currentUser) {
+        this.currentUser = currentUser;
         transplantWaitingListView = transplantWaitingList;
         currentProfile = p;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
@@ -107,7 +114,22 @@ public class OrganDisplay extends CommonView {
         }
 
         populateOrganLists();
+
+        listViewDonating.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                giveReasonForOverride(event,
+                        listViewDonating.getSelectionModel().getSelectedItem());
+            }
+        });
+
     }
+
+    @FXML
+    private void handleExpiredClicked(ActionEvent event) throws IOException {
+        showExpiredOrgans(event);
+    }
+
 
     @FXML
     private void handleBtnDonatingClicked(ActionEvent event) throws IOException {
@@ -215,6 +237,37 @@ public class OrganDisplay extends CommonView {
         stage.show();
     }
 
+    /**
+     * Display the Organ Expired view.
+     *
+     * @param event the base action event
+     * @throws IOException if the fxml cannot load
+     */
+    private void showExpiredOrgans(ActionEvent event)
+            throws IOException {
+        Node source = (Node) event.getSource();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileExpiredOrgans.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        OrganExpired view = fxmlLoader.getController();
+        view.initialize(currentProfile, currentUser);
+
+        Stage stage = new Stage();
+        stage.setTitle("Expired Organs");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(source.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.centerOnScreen();
+        stage.setOnHiding((ob) -> {
+            populateOrganLists();
+            refreshListViews();
+        });
+        stage.show();
+    }
+
+
     private static void setWindowType(OrganSelectEnum type) {
         windowType = type;
     }
@@ -265,5 +318,34 @@ public class OrganDisplay extends CommonView {
             Collections.sort(destinationList);
         }
     }
+
+    /**
+     * Launch pane to add reasoning for organ expiry override.
+     *
+     * @param event the JavaFX event
+     * @param organ the organ to specify reason for
+     */
+    private void giveReasonForOverride(Event event, String organ) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ProfileOrganOverride.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            OrganOverride overrideView = fxmlLoader.getController();
+            overrideView.initialize(organ, currentProfile, currentUser);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Manual Organ Override");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding(ob -> refreshListViews());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -5,11 +5,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
@@ -47,6 +51,13 @@ public class HttpOrganDAO implements OrganDAO {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("received", true);
         return getSetRequest(url, queryParams);
+    }
+
+    @Override
+    public List<ExpiredOrgan> getExpired(Profile profile) throws SQLException {
+        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
+        Map<String, Object> queryParams = new HashMap<>();
+        return getArrayRequest(url, queryParams);
     }
 
     @Override
@@ -140,6 +151,37 @@ public class HttpOrganDAO implements OrganDAO {
         delete(url, organInfo);
     }
 
+    @Override
+    public void setExpired(Profile profile, String organ, Integer expired, String note,
+            Integer userId) throws SQLException {
+        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("organ", organ);
+        queryParams.put("expired", expired);
+        queryParams.put("note", note);
+        queryParams.put("userId", userId);
+        Request request = new Request(url, 0, queryParams,"");
+        try {
+            request.post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void revertExpired(Integer profileId, String organ) throws SQLException {
+        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profileId);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("organ", organ);
+        queryParams.put("expired", 0);
+        Request request = new Request(url, 0, queryParams, "");
+        try {
+            request.post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void delete(String url, Map<String, Object> organInfo) {
         Request request = new Request(url, 0, organInfo);
         try {
@@ -164,6 +206,26 @@ public class HttpOrganDAO implements OrganDAO {
             JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
             for (JsonElement result : results) {
                 organs.add(gson.fromJson(result, OrganEnum.class));
+            }
+        }
+        return organs;
+    }
+
+    private List<ExpiredOrgan> getArrayRequest(String url, Map<String, Object> queryParams) {
+        JsonParser parser = new JsonParser();
+        Gson gson = new Gson();
+        Response response = null;
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<ExpiredOrgan> organs = new ArrayList<>();
+        if (response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+            for (JsonElement result : results) {
+                organs.add(gson.fromJson(result, ExpiredOrgan.class));
             }
         }
         return organs;

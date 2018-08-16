@@ -1,6 +1,5 @@
 package odms.view.user;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class TransplantWaitingList extends CommonView {
 
                 createNewDonorWindow(
                         ((Map.Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
-                                .getSelectedItem()).getKey(), parentView);
+                                .getSelectedItem()).getKey(), parentView, currentUser);
             }
         });
     }

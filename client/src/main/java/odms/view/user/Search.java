@@ -112,7 +112,7 @@ public class Search extends CommonView {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 

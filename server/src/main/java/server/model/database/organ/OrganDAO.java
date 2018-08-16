@@ -1,7 +1,10 @@
 package server.model.database.organ;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 
@@ -87,4 +90,33 @@ public interface OrganDAO {
      * @param organ to remove.
      */
     void removeReceived(Profile profile, OrganEnum organ);
+
+
+    /**
+     * Updates organ to be expired.
+     *
+     * @param profile to update the organ.
+     * @param organ to update.
+     * @param expired expired boolean.
+     * @param note Clinician's reason to update.
+     * @param userId Clinician's user Id.
+     */
+    void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId)
+            throws SQLException;
+
+    /**
+     * Updates organ to be non-expired.
+     *
+     * @param profileId to revert organ expired.
+     * @param organ to revert.
+     */
+    void revertExpired(Integer profileId, String organ) throws SQLException;
+
+
+    /**
+     * Gets all organs that have expired from a profile.
+     *
+     * @param profile to get the organs for.
+     */
+    List<ExpiredOrgan> getExpired(Profile profile) throws SQLException;
 }
