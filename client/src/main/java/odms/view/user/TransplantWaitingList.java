@@ -1,5 +1,7 @@
 package odms.view.user;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,7 +48,6 @@ public class TransplantWaitingList extends CommonView {
 
         transplantTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         receiverObservableList = FXCollections.observableList(receivers);
-        System.out.println(receivers);
 
         TableColumn<Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
                 "Organs Required");
@@ -69,7 +70,7 @@ public class TransplantWaitingList extends CommonView {
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
                         (cdf.getValue().getKey().getOrganDate(cdf.getValue().getValue().getName()))
-                                .toString()));
+                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
 
         transplantTable.getColumns().add(transplantOrganRequiredCol);
         transplantTable.getColumns().add(transplantReceiverNameCol);

@@ -189,7 +189,6 @@ public class ProfileController {
 
         if ((newProfile != null)) {
             try {
-                System.out.println(newProfile.getNhi());
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
                         && !database.isUniqueUsername(newProfile.getUsername())) {
                     database.add(newProfile);

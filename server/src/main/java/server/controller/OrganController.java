@@ -54,7 +54,6 @@ public class OrganController {
         JsonObject body;
         JsonParser parser = new JsonParser();
 
-        System.out.println(String.valueOf(req.queryParams("name")));
         try {
             profileId = Integer.valueOf(req.params("id"));
             body = parser.parse(req.body()).getAsJsonObject();
@@ -83,7 +82,6 @@ public class OrganController {
     public static String delete(Request req, Response res) {
         int profileId;
         String organ;
-        System.out.println(req.queryParams("name"));
         try {
             profileId = Integer.valueOf(req.params("id"));
             organ = String.valueOf(req.queryParams("name"));
