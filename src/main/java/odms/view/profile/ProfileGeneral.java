@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import odms.view.CommonView;
 
 public class ProfileGeneral extends CommonView {
@@ -52,6 +53,7 @@ public class ProfileGeneral extends CommonView {
     // init controller corresponding to this view
     private odms.controller.profile.ProfileGeneral controller = new odms.controller.profile.ProfileGeneral(this);
     private Boolean isOpenedByClinician;
+    private User currentUser;
 
     public Label getEmailLabel() {
         return emailLabel;
@@ -196,11 +198,12 @@ public class ProfileGeneral extends CommonView {
 
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician);
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         currentProfile = p;
         setUpDetails();
     }

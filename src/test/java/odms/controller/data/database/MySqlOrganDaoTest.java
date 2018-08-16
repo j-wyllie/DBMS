@@ -8,9 +8,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.MySqlProfileDAO;
+import odms.controller.database.MySqlUserDAO;
+import odms.controller.user.UserNotFoundException;
 import odms.model.enums.OrganEnum;
+import odms.model.enums.UserType;
 import odms.model.profile.OrganConflictException;
 import odms.model.profile.Profile;
+import odms.model.user.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,15 +23,24 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
     private Profile testProfile1;
     private Profile testProfile2;
+    private User testUser1;
     private MySqlProfileDAO mySqlProfileDAO;
     private OrganEnum organ2;
     private MySqlOrganDAO mysqlOrganDao;
+    private MySqlUserDAO mySqlUserDAO;
     private OrganEnum organ3;
     private OrganEnum organ4;
     private OrganEnum organ5;
 
     @Before
-    public void setup() throws SQLException, OrganConflictException {
+    public void setup() throws SQLException, OrganConflictException, UserNotFoundException {
+
+        testUser1 = new User(UserType.CLINICIAN, "Clinician", "Auckland");
+        testUser1.setUsername("Bob");
+        testUser1.setPassword(null);
+        testUser1.setDefault(false);
+        testUser1.setWorkAddress(null);
+        testUser1.setPictureName(null);
 
         testProfile1 = new Profile("Jack", "Haaay", LocalDate.of(1998, 2, 27), "ABC1234");
         testProfile2 = new Profile("Tim", "Hamb-lame", LocalDate.of(1998, 2, 27), "ABC2345");
@@ -38,6 +51,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
         mysqlOrganDao = new MySqlOrganDAO();
         mySqlProfileDAO = new MySqlProfileDAO();
+        mySqlUserDAO = new MySqlUserDAO();
 
         mySqlProfileDAO.add(testProfile1);
         testProfile1 = mySqlProfileDAO.get("ABC1234");
@@ -45,11 +59,30 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.add(testProfile2);
         testProfile2 = mySqlProfileDAO.get("ABC2345");
 
+        mySqlUserDAO.add(testUser1);
+        testUser1 = mySqlUserDAO.get("Bob");
+
         mysqlOrganDao.addDonating(testProfile2, organ2);
         mysqlOrganDao.addDonation(testProfile2, organ3);
         mysqlOrganDao.addReceived(testProfile2, organ4);
         mysqlOrganDao.addRequired(testProfile2, organ5);
 
+
+    }
+
+    @Test
+    public void testSetAndGetExpired() throws  SQLException, UserNotFoundException{
+        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mySqlUserDAO.get("Bob").getStaffID());
+        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+    }
+
+    @Test
+    public void testRevertExpired() throws  SQLException, UserNotFoundException{
+        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mySqlUserDAO.get("Bob").getStaffID());
+        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+        mysqlOrganDao.revertExpired(testProfile2.getId(), organ2.getNamePlain());
+        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
     }
 
 
@@ -136,5 +169,6 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.remove(testProfile2);
         mySqlProfileDAO.remove(testProfile1);
+        mySqlUserDAO.remove(testUser1);
     }
 }

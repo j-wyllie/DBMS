@@ -1,5 +1,15 @@
 package odms.controller.user;
 
+import static java.lang.Math.abs;
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -7,14 +17,8 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.MySqlOrganDAO;
 import odms.controller.database.ProfileDAO;
 import odms.model.enums.OrganEnum;
+import odms.model.profile.ExpiredOrgan;
 import odms.model.profile.Profile;
-
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static java.lang.Math.abs;
 
 public class AvailableOrgans {
 
@@ -113,6 +117,19 @@ public class AvailableOrgans {
                 .isAfter(getExpiryTime(organ, profile))) {
             view.removeItem(m);
             setOrganExpired(organ, profile);
+        }
+        if(!profile.getDateOfDeath().equals(null)){
+            List<ExpiredOrgan> expiredList = null;
+            try {
+                expiredList = DAOFactory.getOrganDao().getExpired(profile);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            for(ExpiredOrgan currentOrgan: expiredList){
+                if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
+                    view.removeItem(m);
+                }
+            }
         }
     }
 
@@ -402,7 +419,7 @@ public class AvailableOrgans {
         allDonaters = database.getDead();
 
         for (Profile profile : allDonaters) {
-            for (OrganEnum organ : profile.getOrgansDonating()) {
+            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
                 Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile, organ);
                 if (!donaters.contains(pair)) {
                     donaters.add(pair);

@@ -9,6 +9,7 @@ import odms.model.enums.OrganEnum;
  * A specific procedure for use in medical history
  */
 public class Procedure {
+
     private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
     private Integer procedureId;
@@ -21,7 +22,8 @@ public class Procedure {
     public Procedure(String summary, String date, String longDescription) {
         this.summary = summary;
         String[] dates = date.split("-");
-        this.date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]), Integer.valueOf(dates[0]));
+        this.date = LocalDate.of(Integer.valueOf(dates[2]), Integer.valueOf(dates[1]),
+                Integer.valueOf(dates[0]));
         this.longDescription = longDescription;
     }
 
@@ -35,7 +37,8 @@ public class Procedure {
         this.longDescription = longDescription;
     }
 
-    public Procedure(int id, String summary, LocalDate date, String longDescription, List<OrganEnum> organs) {
+    public Procedure(int id, String summary, LocalDate date, String longDescription,
+            List<OrganEnum> organs) {
         this.procedureId = id;
         this.summary = summary;
         this.date = date;
@@ -56,22 +59,49 @@ public class Procedure {
         }
     }
 
-    public int getId() { return this.procedureId; }
-    public String getSummary() { return summary; }
-    public LocalDate getDate() { return date; }
-    public String getLongDescription() { return this.longDescription; }
-    public List<OrganEnum> getOrgansAffected() { return organsAffected; }
-    public String getAffectsOrgansText() { return affectsOrgansText; }
+    public int getId() {
+        return this.procedureId;
+    }
 
-    public void setSummary(String summary) { this.summary = summary; }
-    public void setDate(LocalDate date) { this.date = date; }
-    public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
-    public void setOrgansAffected(List<OrganEnum> organs) { this.organsAffected = organs; }
+    public String getSummary() {
+        return summary;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public String getLongDescription() {
+        return this.longDescription;
+    }
+
+    public List<OrganEnum> getOrgansAffected() {
+        return organsAffected;
+    }
+
+    public String getAffectsOrgansText() {
+        return affectsOrgansText;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    public void setOrgansAffected(List<OrganEnum> organs) {
+        this.organsAffected = organs;
+    }
 
     /**
      * Adds an organ to the list of affected organs for this procedure
-     * @param profile
-     * @param organ
+     *
      * @throws IllegalArgumentException if the organ is not a donated organ
      */
     public void addAffectedOrgan(Profile profile, OrganEnum organ) throws IllegalArgumentException {
@@ -84,5 +114,9 @@ public class Procedure {
 
     public void removeAffectedOrgan(OrganEnum organ) {
         organsAffected.remove(organ);
+    }
+
+    public void setId(Integer id) {
+        this.procedureId = id;
     }
 }

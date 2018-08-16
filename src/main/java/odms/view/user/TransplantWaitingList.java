@@ -77,7 +77,7 @@ public class TransplantWaitingList extends CommonView {
 
                 createNewDonorWindow(
                         ((Map.Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
-                                .getSelectedItem()).getKey(), parentView);
+                                .getSelectedItem()).getKey(), parentView, currentUser);
             }
         });
     }

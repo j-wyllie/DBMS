@@ -1,12 +1,5 @@
 package odms.controller.profile;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import javafx.fxml.FXML;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
@@ -16,6 +9,14 @@ import odms.controller.database.ProfileDAO;
 import odms.controller.history.CurrentHistory;
 import odms.model.enums.OrganEnum;
 import odms.model.profile.Profile;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProfileEdit extends CommonController {
 
@@ -81,7 +82,6 @@ public class ProfileEdit extends CommonController {
 
         ProfileDAO database = DAOFactory.getProfileDao();
         database.update(currentProfile);
-
         // history Changes
         action.setHistoryData(
                 action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
@@ -542,5 +542,9 @@ public class ProfileEdit extends CommonController {
 
     public void setIsClinician(Boolean bool) {
         isClinician = bool;
+    }
+
+    public boolean getManuallyExpiredOrgans() throws SQLException{
+        return !DAOFactory.getOrganDao().getExpired(currentProfile).isEmpty();
     }
 }

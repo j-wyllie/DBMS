@@ -57,30 +57,13 @@ public class GuiMain extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (!userDb.isUser(0)) {
-            User user = new User(UserType.CLINICIAN, "Doc", "Christchurch", "Clinician", "");
-            user.setStaffID(0);
-            userDb.addUser(user);
-            user.setDefault(true);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
-        }
 
-        if (!userDb.isUser(ADMIN)) {
-            User user = new User(UserType.ADMIN, ADMIN);
-            user.setUsername(ADMIN);
-            user.setPassword(ADMIN);
-            user.setDefault(true);
-            userDb.addUser(user);
-            UserDataIO.saveUsers(userDb, USER_DATABASE);
-        }
-
-        //thread that runs in the background to check if organs have expired since last launch
         Thread checkOrgan = new Thread() {
             public void run() {
                 try {
                     List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                                 .getAllOrgansAvailable();
-                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                    for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                         controller.checkOrganExpired(m.getValue(), m.getKey(), m);
                     }
                 } catch (SQLException e) {

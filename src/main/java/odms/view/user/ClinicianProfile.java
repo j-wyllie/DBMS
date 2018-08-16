@@ -1,13 +1,8 @@
 package odms.view.user;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -17,17 +12,13 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
-import odms.model.enums.OrganEnum;
-import odms.model.profile.Profile;
-import odms.model.user.User;
 import odms.model.enums.UserType;
 import odms.model.user.User;
 import odms.view.CommonView;
 
+import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import java.net.MalformedURLException;
 
 /**
  * Handles all of the tabs for the user profile view.
@@ -104,7 +95,7 @@ public class ClinicianProfile extends CommonView {
             consoleTab.setContent(loader.load());
             ConsoleTab userConsoleTabView = loader.getController();
             userConsoleTabView.initialize();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -119,7 +110,7 @@ public class ClinicianProfile extends CommonView {
             listUsersTab.setContent(loader.load());
             UsersList listUsersView = loader.getController();
             listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
 
             System.out.println(e.getMessage());
@@ -137,7 +128,7 @@ public class ClinicianProfile extends CommonView {
                 generalTab.setContent(loader.load());
                 UserGeneral userGeneralTabView = loader.getController();
                 userGeneralTabView.initialize(currentUser);
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -153,7 +144,7 @@ public class ClinicianProfile extends CommonView {
             dataManagementTab.setContent(loader.load());
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -168,7 +159,7 @@ public class ClinicianProfile extends CommonView {
             availableOrgansTab.setContent(loader.load());
             AvailableOrgans availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -241,7 +232,7 @@ public class ClinicianProfile extends CommonView {
             searchTab.setContent(loader.load());
             Search userSearchView = loader.getController();
             userSearchView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -252,27 +243,11 @@ public class ClinicianProfile extends CommonView {
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
         try {
-            Thread checkOrgan = new Thread() {
-                public void run() {
-                    try {
-                        odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-                        List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                                .getAllOrgansAvailable();
-                        for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                            controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            checkOrgan.setDaemon(true);
-            checkOrgan.start();
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             transplantWaitingList = userTransplantWaitingListTabView;
             userTransplantWaitingListTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }

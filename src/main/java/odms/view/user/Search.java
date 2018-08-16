@@ -88,13 +88,14 @@ public class Search extends CommonView {
 
     private List<Profile> profileSearchResults = new ArrayList<>();
     private ClinicianProfile parentView;
+    private User currentUser;
 
     /**
      * Initializes and refreshes the search table Adds a listener to each row so that when it is
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable() {
+    private void makeSearchTable(User currentUser) {
         searchTable.getItems().clear();
         donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
@@ -111,7 +112,7 @@ public class Search extends CommonView {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 
@@ -317,6 +318,7 @@ public class Search extends CommonView {
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
+        this.currentUser = currentUser;
         if (currentUser != null) {
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -356,7 +358,7 @@ public class Search extends CommonView {
                 performSearchFromFilters();
             });
 
-            makeSearchTable();
+            makeSearchTable(currentUser);
             setSearchTablePlaceholder();
         }
 
@@ -368,7 +370,7 @@ public class Search extends CommonView {
      */
     public void setSearchTablePlaceholder() {
         try {
-            makeSearchTable();
+            makeSearchTable(currentUser);
             searchTable.getItems().clear();
             String profileCount = controller.getNumberOfProfiles();
             searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));

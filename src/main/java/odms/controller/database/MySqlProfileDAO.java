@@ -61,7 +61,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public List<Profile> getDead() throws SQLException {
-        String query = "SELECT DISTINCT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1";
+        String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
         Connection conn = connectionInstance.getConnection();

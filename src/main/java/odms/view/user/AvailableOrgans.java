@@ -53,6 +53,7 @@ public class AvailableOrgans extends CommonView {
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
     private Thread importTask;
+    private User currentUser;
 
     public void populateMatchesTable() {
 
@@ -110,7 +111,7 @@ public class AvailableOrgans extends CommonView {
         potentialOrganMatchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     potentialOrganMatchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 
@@ -204,7 +205,7 @@ public class AvailableOrgans extends CommonView {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 createNewDonorWindow(((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel()
-                        .getSelectedItem()).getKey(), parentView);
+                        .getSelectedItem()).getKey(), parentView, currentUser);
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getValue();
@@ -226,24 +227,6 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.setItems(listOfAvailableOrgans);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
-
-//    /**
-//     * Sorts the of organs list based on time till expiry.
-//     */
-//    public void sortList(ObservableList list) {
-//        SortedList<Map.Entry<Profile, OrganEnum>> sortedDonaters = new SortedList<>(list,
-//                (Map.Entry<Profile, OrganEnum> donor1, Map.Entry<Profile, OrganEnum> donor2) -> {
-//                    if(getTimeRemaining(donor1.getValue(), donor1.getKey()) < getTimeRemaining(donor2.getValue(), donor2.getKey())) {
-//                        return -1;
-//                    } else if(getTimeRemaining(donor2.getValue(), donor2.getKey()) < getTimeRemaining(donor1.getValue(), donor1.getKey())) {
-//                        return 1;
-//                    } else {
-//                        return 0;
-//                    }
-//                });
-//        availableOrgansTable.setItems(sortedDonaters
-//        );
-//    }
 
     /**
      * Populates available organs table with ALL available organs in database
@@ -298,6 +281,7 @@ public class AvailableOrgans extends CommonView {
         controller.setView(this);
         populateOrgansTable();
         populateMatchesTable();
+        this.currentUser = currentUser;
         parentView = p;
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList());
