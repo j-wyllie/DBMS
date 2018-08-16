@@ -89,13 +89,13 @@ public final class AddressIO {
                 System.out.println(components[1]);
                 System.out.println(jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(1).getAsJsonObject().toString());
-                return jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
+                return (jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(0).getAsJsonObject().toString()
                         .contains("locality") && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(0).getAsJsonObject().toString()
                         .contains(city) && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(1).getAsJsonObject().toString()
-                        .contains(components[1]);
+                        .contains(components[1]));
             } else {
                 return false;
             }
