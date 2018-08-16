@@ -122,11 +122,11 @@ public class MySqlUserDAO implements UserDAO {
         UserType userType = UserType.valueOf(rs.getString("UserType"));
         String address = rs.getString("Address");
         String region = rs.getString("Region");
+        Boolean defaultBool = rs.getBoolean("IsDefault");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
         String imageName = rs.getString("ImageName");
-
-        return new User(id,
+        User user = new User(id,
                 username,
                 password,
                 name,
@@ -137,6 +137,8 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
+        user.setDefault(defaultBool);
+        return user;
     }
 
     /**
