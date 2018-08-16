@@ -30,16 +30,15 @@ import odms.model.profile.Profile;
 import odms.model.user.User;
 
 
-public class OrganExpired extends OrganCommon{
+public class OrganExpired extends OrganCommon {
 
-    protected ObservableList<ExpiredOrgan> observableExpiredOrganList = FXCollections.observableArrayList();
+    private ObservableList<ExpiredOrgan> observableExpiredOrganList =
+            FXCollections.observableArrayList();
     private Profile currentProfile;
     private User currentUser;
-    List<ExpiredOrgan> organs = new ArrayList<>();
-    private odms.controller.profile.OrganExpired controller = new odms.controller.profile.OrganExpired(this);
-
-    private OrganSelectEnum windowType;
-
+    private List<ExpiredOrgan> organs = new ArrayList<>();
+    private odms.controller.profile.OrganExpired controller =
+            new odms.controller.profile.OrganExpired(this);
 
     @FXML
     private Button btnCancel;
@@ -53,19 +52,16 @@ public class OrganExpired extends OrganCommon{
     private TableColumn<ExpiredOrgan, LocalDateTime> expiredTimeColumn;
     @FXML
     private TableColumn<ExpiredOrgan, String> expiredNoteColumn;
-    @FXML
-    private Button btnRevert;
-
 
     /**
      * Initialize the current view instance and populate organ lists.
      *
      * @param profile the profile to set on view instance
+     * @param user the logged in user profile
      */
     public void initialize(Profile profile, User user) {
         currentProfile = profile;
         currentUser = user;
-
 
         try {
             organs = controller.getExpiredOrgans(profile);
@@ -79,7 +75,9 @@ public class OrganExpired extends OrganCommon{
         expiredClinicianColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicianName"));
         expiredNoteColumn.setCellValueFactory(new PropertyValueFactory<>("Note"));
         expiredTimeColumn.setCellValueFactory(new PropertyValueFactory<>("ExpiryDate"));
-        expiredOrganTable.getColumns().setAll(expiredOrganColumn, expiredClinicianColumn, expiredTimeColumn, expiredNoteColumn);
+        expiredOrganTable.getColumns()
+                .setAll(expiredOrganColumn, expiredClinicianColumn, expiredTimeColumn,
+                        expiredNoteColumn);
 
         expiredOrganTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
@@ -100,22 +98,21 @@ public class OrganExpired extends OrganCommon{
     }
 
     /**
-     * Revert the organ to be non-expired
+     * Revert the organ to be non-expired.
      */
     @FXML
     public void onBtnRevertClicked() {
-        if(expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
+        if (expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
             String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
             Integer profileId = currentProfile.getId();
             try {
                 controller.revertExpired(profileId, organ);
-                observableExpiredOrganList.remove(expiredOrganTable.getSelectionModel().getSelectedItem());
+                observableExpiredOrganList
+                        .remove(expiredOrganTable.getSelectionModel().getSelectedItem());
             } catch (SQLException e) {
                 AlertController.invalidEntry("Failed to revert manual override.");
             }
         }
-
-
     }
 
     /**
@@ -159,9 +156,4 @@ public class OrganExpired extends OrganCommon{
         observableExpiredOrganList.addAll(organs);
         expiredOrganTable.refresh();
     }
-
-    public void setWindowType(OrganSelectEnum windowType) {
-        this.windowType = windowType;
-    }
-
 }

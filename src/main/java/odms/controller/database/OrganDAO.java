@@ -49,7 +49,7 @@ public interface OrganDAO {
      * Adds an organ to a profiles past donations.
      *
      * @param profile to add the past donation to.
-     * @param organ   donated.
+     * @param organ donated.
      */
     void addDonation(Profile profile, OrganEnum organ);
 
@@ -57,7 +57,7 @@ public interface OrganDAO {
      * Adds an organ to a profiles organs to donate.
      *
      * @param profile to donate.
-     * @param organ   to donate.
+     * @param organ to donate.
      * @throws OrganConflictException error.
      */
     void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException;
@@ -66,7 +66,7 @@ public interface OrganDAO {
      * Adds a organ to a profiles required organs.
      *
      * @param profile requiring the organ.
-     * @param organ   required.
+     * @param organ required.
      */
     void addRequired(Profile profile, OrganEnum organ);
 
@@ -74,7 +74,7 @@ public interface OrganDAO {
      * Adds a organ to a profiles received organs.
      *
      * @param profile receiving the organ.
-     * @param organ   received.
+     * @param organ received.
      */
     void addReceived(Profile profile, OrganEnum organ);
 
@@ -82,7 +82,7 @@ public interface OrganDAO {
      * Removes an organ from a profiles past donations.
      *
      * @param profile to remove the past donation from.
-     * @param organ   to remove.
+     * @param organ to remove.
      */
     void removeDonation(Profile profile, OrganEnum organ);
 
@@ -90,7 +90,7 @@ public interface OrganDAO {
      * Removes an organ from a profiles organs to donate.
      *
      * @param profile to remove the organ from.
-     * @param organ   to remove.
+     * @param organ to remove.
      */
     void removeDonating(Profile profile, OrganEnum organ);
 
@@ -98,7 +98,7 @@ public interface OrganDAO {
      * Removes an organ from a profiles required organs.
      *
      * @param profile to remove the organ from.
-     * @param organ   to remove.
+     * @param organ to remove.
      */
     void removeRequired(Profile profile, OrganEnum organ);
 
@@ -106,28 +106,27 @@ public interface OrganDAO {
      * Removes an organ from a profiles received organs.
      *
      * @param profile to remove the organ from.
-     * @param organ   to remove.
+     * @param organ to remove.
      */
     void removeReceived(Profile profile, OrganEnum organ);
-
 
     /**
      * Updates organ to be expired.
      *
      * @param profile to update the organ.
-     * @param organ   to update.
+     * @param organ to update.
      * @param expired expired boolean.
-     * @param note   Clinician's reason to update.
-     * @param userId   Clinician's user Id.
+     * @param note Clinician's reason to update.
+     * @param userId Clinician's user Id.
      */
-    void setExpired(Profile profile, String organ,Integer expired, String note, Integer userId) throws SQLException;
-
+    void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId)
+            throws SQLException;
 
     /**
      * Updates organ to be non-expired.
      *
      * @param profileId to revert organ expired.
-     * @param organ   to revert.
+     * @param organ to revert.
      */
     void revertExpired(Integer profileId, String organ) throws SQLException;
 }

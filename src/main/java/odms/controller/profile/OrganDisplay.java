@@ -18,24 +18,27 @@ public class OrganDisplay extends CommonController {
 
     /**
      * Constructs a OrganDisplay object. Sets the view variable.
-     * @param v the OrganDisplay view.
+     *
+     * @param view the OrganDisplay view.
      */
-    public OrganDisplay(odms.view.profile.OrganDisplay v) {
-        view = v;
+    public OrganDisplay(odms.view.profile.OrganDisplay view) {
+        this.view = view;
     }
 
     /**
-     * Gets profile data from the database. This is to confirm is the donating organs are expired or not.
+     * Gets profile data from the database. This is to confirm is the donating organs are expired or
+     * not.
+     *
      * @param p current profile that is being viewed
      * @return the updated profile object
      */
     public Profile getUpdatedProfileDetails(Profile p) {
         Profile profile = null;
-        try{
+        try {
             odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
             List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                     .getAllOrgansAvailable();
-            for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+            for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                 controller.checkOrganExpired(m.getValue(), m.getKey(), m);
             }
             profile = DAOFactory.getProfileDao().get(p.getId());

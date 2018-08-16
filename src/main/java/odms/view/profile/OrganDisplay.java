@@ -31,7 +31,8 @@ import odms.view.user.TransplantWaitingList;
 public class OrganDisplay extends CommonView {
 
     private Profile currentProfile;
-    private odms.controller.profile.OrganDisplay controller = new odms.controller.profile.OrganDisplay(this);
+    private odms.controller.profile.OrganDisplay controller = new odms.controller.profile.OrganDisplay(
+            this);
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
@@ -75,19 +76,19 @@ public class OrganDisplay extends CommonView {
 
     /**
      * init organ display scene. Sets variables and object visibility status.
+     *
      * @param p current profile being viewed
      * @param isClinician boolean, is true if is profile was opened by clinician/admin user
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
-     * @param user the logged in user
-     * profile was not opened by a clinician or admin
+     * @param user the logged in user profile was not opened by a clinician or admin
      */
-    public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList,  User user) {
+    public void initialize(Profile p, Boolean isClinician,
+            TransplantWaitingList transplantWaitingList, User user) {
         transplantWaitingListView = transplantWaitingList;
         currentProfile = controller.getUpdatedProfileDetails(p);
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
         listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());
-
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
@@ -137,7 +138,8 @@ public class OrganDisplay extends CommonView {
         listViewDonating.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     listViewDonating.getSelectionModel().getSelectedItem() != null) {
-                giveReasonForOverride(event, listViewDonating.getSelectionModel().getSelectedItem());
+                giveReasonForOverride(event,
+                        listViewDonating.getSelectionModel().getSelectedItem());
             }
         });
     }
@@ -155,7 +157,6 @@ public class OrganDisplay extends CommonView {
     @FXML
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
-
     }
 
     @FXML
@@ -185,8 +186,8 @@ public class OrganDisplay extends CommonView {
     /**
      * Removes a specific list from view.
      *
-     * @param list   List to set invisible
-     * @param label  Label to set invisible.
+     * @param list List to set invisible
+     * @param label Label to set invisible.
      * @param button Button to set invisible.
      * @param column column to set values on.
      * @param bool boolean value, true if column should be visible.
@@ -204,7 +205,6 @@ public class OrganDisplay extends CommonView {
         button.setVisible(bool);
     }
 
-
     /**
      * Refresh the ListViews to reflect changes made from the edit pane.
      */
@@ -219,7 +219,7 @@ public class OrganDisplay extends CommonView {
     /**
      * Display the Organ Edit view.
      *
-     * @param event      the base action event
+     * @param event the base action event
      * @param selectType the organ list type being changed
      * @throws IOException if the fxml cannot load
      */
@@ -256,7 +256,7 @@ public class OrganDisplay extends CommonView {
     /**
      * Display the Organ Expired view.
      *
-     * @param event      the base action event
+     * @param event the base action event
      * @throws IOException if the fxml cannot load
      */
     private void showExpiredOrgans(ActionEvent event)
@@ -276,7 +276,6 @@ public class OrganDisplay extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-//        stage.setOnCloseRequest(ob -> {
         stage.setOnHiding((ob) -> {
             populateOrganLists();
             refreshListViews();
@@ -321,7 +320,7 @@ public class OrganDisplay extends CommonView {
      * Support function to populate an observable list with organs from an organ set.
      *
      * @param destinationList list to populate
-     * @param organs          source list of organs to populate from
+     * @param organs source list of organs to populate from
      */
     private void populateOrganList(ObservableList<String> destinationList,
             Set<OrganEnum> organs) {
