@@ -14,6 +14,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
@@ -67,6 +68,9 @@ public class OrganDisplay extends CommonView {
     @FXML
     private Button donatingButton;
 
+    @FXML
+    private Button expiredButton;
+
     private static OrganSelectEnum windowType;
     private TransplantWaitingList transplantWaitingListView;
     private User currentUser;
@@ -76,6 +80,7 @@ public class OrganDisplay extends CommonView {
      * @param p current profile being viewed
      * @param isClinician boolean, is true if is profile was opened by clinician/admin user
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
+     * @param currentUser  the current logged in clin/admin
      * profile was not opened by a clinician or admin
      */
     public void initialize(Profile p, Boolean isClinician, TransplantWaitingList transplantWaitingList, User currentUser) {
@@ -111,6 +116,15 @@ public class OrganDisplay extends CommonView {
             }
             receivingButton.setVisible(false);
             donatedButton.setVisible(false);
+        } else {
+            if (currentProfile.getDateOfDeath() == null) {
+                RowConstraints zeroHeight = new RowConstraints();
+                zeroHeight.setPrefHeight(0);
+                organGridPane.getRowConstraints().set(2, zeroHeight);
+                expiredButton.setVisible(false);
+            } else {
+                listViewDonating.setMouseTransparent(false);
+            }
         }
 
         populateOrganLists();

@@ -265,6 +265,7 @@ public class Display extends CommonView {
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if
      * profile was not opened by a clinician or admin
+     * @param currentUser the current logged in clin/admin
      */
     public void initialize(Profile profile, Boolean isOpenedByClinician,
             TransplantWaitingList transplantWaitingList, User currentUser) {

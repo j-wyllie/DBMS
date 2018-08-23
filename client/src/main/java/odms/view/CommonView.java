@@ -281,6 +281,7 @@ public class CommonView {
      *
      * @param profile The donor object that has been clicked on
      * @param parentView The parent view of the stage being created
+     * @param user the current logged in clin/admin
      */
     @FXML
     protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView, User user) {

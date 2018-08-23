@@ -287,10 +287,6 @@ public class Search extends CommonView {
         }
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
     /**
      * Limits the characters entered in textfield to only digits and maxLength
      *
@@ -323,6 +319,7 @@ public class Search extends CommonView {
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
         if (currentUser != null) {
+            this.currentUser = currentUser;
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
