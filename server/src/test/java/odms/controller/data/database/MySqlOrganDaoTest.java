@@ -6,11 +6,14 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
@@ -27,6 +30,20 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     private OrganEnum organ4;
     private OrganEnum organ5;
     private MySqlUserDAO mysqlUserDAO;
+
+    @BeforeClass
+    public static void setupClass() throws SQLException {
+        User testUser;
+        testUser = new User(UserType.CLINICIAN, "Clinician", "Auckland");
+        testUser.setUsername("Bob");
+        testUser.setPassword(null);
+        testUser.setDefault(false);
+        testUser.setWorkAddress(null);
+        testUser.setPictureName(null);
+
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        userDAO.add(testUser);
+    }
 
     @Before
     public void setup() throws SQLException, OrganConflictException {
@@ -52,7 +69,6 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         mysqlOrganDao.addDonation(testProfile2, organ3);
         mysqlOrganDao.addReceived(testProfile2, organ4);
         mysqlOrganDao.addRequired(testProfile2, organ5);
-
     }
 
     @Test
