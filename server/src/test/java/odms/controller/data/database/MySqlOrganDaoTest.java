@@ -8,11 +8,13 @@ import java.time.LocalDate;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
+import server.model.database.user.MySqlUserDAO;
 
 public class MySqlOrganDaoTest extends MySqlCommonTests {
 
@@ -24,6 +26,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     private OrganEnum organ3;
     private OrganEnum organ4;
     private OrganEnum organ5;
+    private MySqlUserDAO mysqlUserDAO;
 
     @Before
     public void setup() throws SQLException, OrganConflictException {
@@ -37,6 +40,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
         mysqlOrganDao = new MySqlOrganDAO();
         mySqlProfileDAO = new MySqlProfileDAO();
+        mysqlUserDAO = new MySqlUserDAO();
 
         mySqlProfileDAO.add(testProfile1);
         testProfile1 = mySqlProfileDAO.get("ABC1234");
@@ -50,7 +54,6 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         mysqlOrganDao.addRequired(testProfile2, organ5);
 
     }
-
 
     @Test
     public void testGetDonating() {
@@ -135,5 +138,20 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
         mySqlProfileDAO.remove(testProfile2);
         mySqlProfileDAO.remove(testProfile1);
+    }
+
+    @Test
+    public void testSetAndGetExpired() throws  SQLException, UserNotFoundException {
+        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mysqlUserDAO.get("Bob").getStaffID());
+        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+    }
+
+    @Test
+    public void testRevertExpired() throws  SQLException, UserNotFoundException{
+        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mysqlUserDAO.get("Bob").getStaffID());
+        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+        mysqlOrganDao.revertExpired(testProfile2.getId(), organ2.getNamePlain());
+        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
     }
 }
