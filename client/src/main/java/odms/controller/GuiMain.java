@@ -57,7 +57,7 @@ public class GuiMain extends Application {
                 try {
                     List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                             .getAllOrgansAvailable();
-                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                    for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                         controller.checkOrganExpired(m.getValue(), m.getKey(), m);
                     }
                 } catch (SQLException e) {

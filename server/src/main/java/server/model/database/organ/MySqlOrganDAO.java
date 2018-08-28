@@ -22,6 +22,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Gets all organs that a profile has donated in the past.
+     *
      * @param profile to get the organs for.
      */
     @Override
@@ -32,6 +33,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Gets all organs that a profile has registered to donate.
+     *
      * @param profile to get the organs for.
      */
     @Override
@@ -62,17 +64,18 @@ public class MySqlOrganDAO implements OrganDAO {
                 OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
                 try {
                     String str = allOrganRows.getString("DateRegistered");
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    DateTimeFormatter formatter = DateTimeFormatter
+                            .ofPattern("yyyy-MM-dd HH:mm:ss");
                     organ.setDate(LocalDateTime.parse(str, formatter), profile);
                 } catch (DateTimeParseException e) {
-                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered")).atStartOfDay(), profile);
+                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered"))
+                            .atStartOfDay(), profile);
                 }
                 allOrgans.add(organ);
             }
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -81,6 +84,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Gets all organs that a profile requires.
+     *
      * @param profile to get the organs for.
      */
     @Override
@@ -90,6 +94,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Gets all organs that a profile has received in the past.
+     *
      * @param profile to get the organs for.
      */
     @Override
@@ -98,15 +103,55 @@ public class MySqlOrganDAO implements OrganDAO {
     }
 
     /**
+     * Gets all organs that have expired from a profile.
+     *
+     * @param profile to get the organs for.
+     */
+    @Override
+    public List<ExpiredOrgan> getExpired(Profile profile) {
+
+        String query = "SELECT * FROM organs JOIN users ON organs.UserId = users.UserId WHERE Expired = ? AND ProfileId = ? ;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        List<ExpiredOrgan> allOrgans = new ArrayList<>();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, 1);
+            stmt.setInt(2, profile.getId());
+
+            ResultSet allOrganRows = stmt.executeQuery();
+
+            while (allOrganRows.next()) {
+                String organName = allOrganRows.getString("Organ");
+                OrganEnum organEnum = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
+                String note = allOrganRows.getString("Note");
+                String clinicianName = allOrganRows.getString("Name");
+                LocalDateTime date = allOrganRows.getTimestamp("ExpiryDate").toLocalDateTime();
+                ExpiredOrgan organ = new ExpiredOrgan(organEnum, note, clinicianName, date);
+
+                allOrgans.add(organ);
+            }
+            conn.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allOrgans;
+    }
+
+    /**
      * Adds an organ to a profiles past donations.
+     *
      * @param profile to add the past donation to.
      * @param organ donated.
      */
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
         profile.addOrganDonated(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                + "values (?, ?, ?, ?, ?, ?, ?);";
+        String query =
+                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -124,8 +169,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -140,8 +184,9 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
         profile.addOrganDonating(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                + "values (?, ?, ?, ?, ?, ?, ?);";
+        String query =
+                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -159,22 +204,23 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new OrganConflictException();
         }
     }
 
     /**
      * Adds a organ to a profiles required organs.
+     *
      * @param profile requiring the organ.
      * @param organ required.
      */
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
         profile.addOrganRequired(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                + "values (?, ?, ?, ?, ?, ?, ?);";
+        String query =
+                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -192,22 +238,23 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Adds a organ to a profiles received organs.
+     *
      * @param profile receiving the organ.
      * @param organ received.
      */
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
         profile.addOrganReceived(organ);
-        String query = "insert into organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                + "values (?, ?, ?, ?, ?, ?, ?);";
+        String query =
+                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -225,14 +272,14 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Removes an organ from a profiles past donations.
+     *
      * @param profile to remove the past donation from.
      * @param organ to remove.
      */
@@ -245,6 +292,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Removes an organ from a profiles organs to donate.
+     *
      * @param profile to remove the organ from.
      * @param organ to remove.
      */
@@ -257,6 +305,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Removes an organ from a profiles required organs.
+     *
      * @param profile to remove the organ from.
      * @param organ to remove.
      */
@@ -269,6 +318,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Removes an organ from a profiles received organs.
+     *
      * @param profile to remove the organ from.
      * @param organ to remove.
      */
@@ -281,6 +331,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
     /**
      * Removes an entry from the organs table in the database.
+     *
      * @param profile to remove the organ from.
      * @param organ to remove.
      * @param query to execute the removal.
@@ -299,8 +350,7 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -389,5 +439,58 @@ public class MySqlOrganDAO implements OrganDAO {
         }
         return allOrgans;
 
+    }
+
+    /**
+     * Updates organ to be expired.
+     *
+     * @param profile to update the organ.
+     * @param organ to update.
+     * @param expired expired boolean.
+     * @param note Clinician's reason to update.
+     * @param userId Clinician's user Id.
+     */
+    @Override
+    public void setExpired(Profile profile, String organ, Integer expired, String note,
+            Integer userId) throws SQLException {
+        String query =
+                "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP "
+                        +
+                        "WHERE ProfileId = ? AND Organ = ? AND ToDonate = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        Connection conn = instance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, expired);
+        stmt.setInt(2, userId);
+        stmt.setString(3, note);
+        stmt.setInt(4, profile.getId());
+        stmt.setString(5, organ);
+        stmt.setInt(6, 1);
+
+        stmt.executeUpdate();
+        conn.close();
+        stmt.close();
+    }
+
+    /**
+     * Updates organ to be non-expired.
+     *
+     * @param profile to revert organ expired.
+     * @param organ to revert.
+     */
+    @Override
+    public void revertExpired(Integer profile, String organ) throws SQLException {
+        String query = "UPDATE organs SET Expired = NULL , UserId = NULL , Note = NULL WHERE ProfileId = ? AND Organ = ? ;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        Connection conn = instance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, profile);
+        stmt.setString(2, organ);
+
+        stmt.executeUpdate();
+        conn.close();
+        stmt.close();
     }
 }

@@ -10,17 +10,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
-import odms.commons.model.profile.ExpiredOrgan;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.organ.HttpOrganDAO;
-import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
+
 
 public class AvailableOrgans {
 
@@ -122,19 +119,19 @@ public class AvailableOrgans {
             view.removeItem(m);
             setOrganExpired(organ, profile);
         }
-//        if(!profile.getDateOfDeath().equals(null)){
-//            List<ExpiredOrgan> expiredList = null;
-//            try {
-//                expiredList = DAOFactory.getOrganDao().getExpired(profile);
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            for(ExpiredOrgan currentOrgan: expiredList){
-//                if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
-//                    view.removeItem(m);
-//                }
-//            }
-//        }
+        if(!profile.getDateOfDeath().equals(null)){
+            List<ExpiredOrgan> expiredList = null;
+            try {
+                expiredList = DAOFactory.getOrganDao().getExpired(profile);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            for(ExpiredOrgan currentOrgan: expiredList){
+                if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
+                    view.removeItem(m);
+                }
+            }
+        }
     }
 
     public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
@@ -424,7 +421,7 @@ public class AvailableOrgans {
 
         allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
-            for (OrganEnum organ : profile.getOrgansDonating()) {
+            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
                 for (ExpiredOrgan expiredOrgan : DAOFactory.getOrganDao().getExpired(profile)) {
                     if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
                         Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,

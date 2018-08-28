@@ -29,8 +29,7 @@ import odms.commons.model.profile.Profile;
  * Control Organ view tab pane.
  */
 public class OrganEdit extends OrganCommon {
-    protected ObservableList<String> observableListOrgansSelected = FXCollections
-        .observableArrayList();
+    protected ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
     private Profile currentProfile;
     private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(this);
 

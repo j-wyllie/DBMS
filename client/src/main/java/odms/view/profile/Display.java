@@ -68,6 +68,7 @@ public class Display extends CommonView {
     private ImageView profileImage;
 
     private Boolean isOpenedByClinician = false;
+    private User currentUser;
     private TransplantWaitingList transplantWaitingListView;
     private User currentUser;
 
@@ -151,8 +152,8 @@ public class Display extends CommonView {
             try {
                 tabGeneral.setContent(loader.load());
                 ProfileGeneral profileGeneralView = loader.getController();
-                profileGeneralView.initialize(currentProfile, isOpenedByClinician);
-            } catch (IOException e){
+                profileGeneralView.initialize(currentProfile, isOpenedByClinician, currentUser);
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -160,31 +161,17 @@ public class Display extends CommonView {
 
     @FXML
     private void onTabOrgansSelected() {
-        Thread checkOrgan = new Thread() {
-            public void run() {
-                try {
-                    odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        checkOrgan.setDaemon(true);
-        checkOrgan.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());
-        } catch (IOException e){
+            OrganDisplay organsView = loader.getController();
+            organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        OrganDisplay organsView = loader.getController();
-        organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+
     }
+
 
     @FXML
     public void onTabMedicalSelected() {
@@ -193,7 +180,7 @@ public class Display extends CommonView {
             tabMedical.setContent(loader.load());
             ProfileMedical profileMedicalViewTODO = loader.getController();
             profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -205,7 +192,7 @@ public class Display extends CommonView {
             tabHistory.setContent(loader.load());
             ProfileHistory profileHistoryViewTODO = loader.getController();
             profileHistoryViewTODO.initialize(currentProfile);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -217,7 +204,7 @@ public class Display extends CommonView {
             tabMedications.setContent(loader.load());
             MedicationsGeneral profileMedicationsView = loader.getController();
             profileMedicationsView.initialize(currentProfile, isOpenedByClinician);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -229,7 +216,7 @@ public class Display extends CommonView {
             tabMedicalHistory.setContent(loader.load());
             ProfileMedicalHistory profileMedicalHistoryView = loader.getController();
             profileMedicalHistoryView.initialize(currentProfile, isOpenedByClinician);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -241,7 +228,7 @@ public class Display extends CommonView {
             tabProcedures.setContent(loader.load());
             ProceduresDisplay profileProceduresView = loader.getController();
             profileProceduresView.initialize(currentProfile, isOpenedByClinician);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }

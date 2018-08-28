@@ -17,12 +17,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
@@ -61,6 +57,9 @@ public class ProfileEdit extends CommonView {
 
     @FXML
     private DateTimePicker dodDateTimePicker;
+
+    @FXML
+    private SplitPane dodPane;
 
     @FXML
     private TextField heightField;
@@ -324,6 +323,19 @@ public class ProfileEdit extends CommonView {
             if (currentProfile.getDateOfDeath() == null) {
                 deathDetailsSetDisable(true);
                 clearDodField();
+            }
+            try {
+                if(controller.getManuallyExpiredOrgans()) {
+                    disableItems();
+                    dodPane.hoverProperty().addListener(observable -> {
+                        if (dodPane.isHover()) {
+                            dodPane.setTooltip(new Tooltip("Profile has manually expired organ(s)."));
+                        }
+                    });
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

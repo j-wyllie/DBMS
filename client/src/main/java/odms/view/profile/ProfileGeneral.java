@@ -201,8 +201,9 @@ public class ProfileGeneral extends CommonView {
         handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         currentProfile = p;
         setUpDetails();
     }

@@ -1,5 +1,9 @@
 package odms.view;
 
+import static odms.controller.AlertController.invalidUsername;
+import static odms.controller.AlertController.invalidUsernameOrPassword;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,19 +12,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
-import odms.controller.database.user.UserDAO;
-import odms.view.profile.Display;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.user.UserDAO;
 import odms.controller.user.UserNotFoundException;
-import odms.commons.model.user.User;
+import odms.view.profile.Display;
 import odms.view.user.ClinicianProfile;
-import java.io.IOException;
-
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.invalidUsernameOrPassword;
 
 public class LoginView extends CommonController {
 
@@ -89,9 +88,9 @@ public class LoginView extends CommonController {
                 fxmlLoader.setLocation(
                         getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                Scene scene = new Scene(fxmlLoader.load());
-                Display controller = fxmlLoader.getController();
-                controller.initialize(profile, false, null, null);
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Display controller = fxmlLoader.getController();
+                        controller.initialize(profile, false, null, null);
 
                 Stage stage = new Stage();
                 if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {

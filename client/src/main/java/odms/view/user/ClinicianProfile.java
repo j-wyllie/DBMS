@@ -25,9 +25,9 @@ import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
 
-/**
- * Handles all of the tabs for the user profile view.
- */
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 /**
  * Handles all of the tabs for the user profile view.
@@ -104,7 +104,7 @@ public class ClinicianProfile extends CommonView {
             consoleTab.setContent(loader.load());
             ConsoleTab console = loader.getController();
             // don't initialize as it will double print.
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -119,7 +119,7 @@ public class ClinicianProfile extends CommonView {
             listUsersTab.setContent(loader.load());
             UsersList listUsersView = loader.getController();
             listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
 
             System.out.println(e.getMessage());
@@ -137,7 +137,7 @@ public class ClinicianProfile extends CommonView {
                 generalTab.setContent(loader.load());
                 UserGeneral userGeneralTabView = loader.getController();
                 userGeneralTabView.initialize(currentUser);
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -153,7 +153,7 @@ public class ClinicianProfile extends CommonView {
             dataManagementTab.setContent(loader.load());
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -168,7 +168,7 @@ public class ClinicianProfile extends CommonView {
             availableOrgansTab.setContent(loader.load());
             AvailableOrgans availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -240,7 +240,7 @@ public class ClinicianProfile extends CommonView {
             searchTab.setContent(loader.load());
             Search userSearchView = loader.getController();
             userSearchView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -251,25 +251,11 @@ public class ClinicianProfile extends CommonView {
     public void handleTransplantWaitingListTabClicked() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserTransplantWaitingListTab.fxml"));
         try {
-            Thread checkOrgan = new Thread(() -> {
-                try {
-                    odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-                    List<Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for(Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            });
-            checkOrgan.setDaemon(true);
-            checkOrgan.start();
             transplantTab.setContent(loader.load());
             TransplantWaitingList userTransplantWaitingListTabView = loader.getController();
             transplantWaitingList = userTransplantWaitingListTabView;
             userTransplantWaitingListTabView.initialize(currentUser, this);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }

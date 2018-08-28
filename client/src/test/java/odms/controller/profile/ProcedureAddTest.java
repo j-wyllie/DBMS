@@ -24,6 +24,7 @@ public class ProcedureAddTest {
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
+        currentProfile.setId(99999);
         controller = new odms.controller.profile.ProcedureAdd(view);
     }
 

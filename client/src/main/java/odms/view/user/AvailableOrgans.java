@@ -282,6 +282,7 @@ public class AvailableOrgans extends CommonView {
         controller.setView(this);
         populateOrgansTable();
         populateMatchesTable();
+        this.currentUser = currentUser;
         parentView = p;
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList());
