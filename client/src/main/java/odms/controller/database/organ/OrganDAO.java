@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
-import odms.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;

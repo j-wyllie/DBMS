@@ -70,7 +70,6 @@ public class Display extends CommonView {
     private Boolean isOpenedByClinician = false;
     private User currentUser;
     private TransplantWaitingList transplantWaitingListView;
-    private User currentUser;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.

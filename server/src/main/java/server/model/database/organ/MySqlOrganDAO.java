@@ -103,44 +103,6 @@ public class MySqlOrganDAO implements OrganDAO {
     }
 
     /**
-     * Gets all organs that have expired from a profile.
-     *
-     * @param profile to get the organs for.
-     */
-    @Override
-    public List<ExpiredOrgan> getExpired(Profile profile) {
-
-        String query = "SELECT * FROM organs JOIN users ON organs.UserId = users.UserId WHERE Expired = ? AND ProfileId = ? ;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        List<ExpiredOrgan> allOrgans = new ArrayList<>();
-
-        try {
-            Connection conn = instance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, 1);
-            stmt.setInt(2, profile.getId());
-
-            ResultSet allOrganRows = stmt.executeQuery();
-
-            while (allOrganRows.next()) {
-                String organName = allOrganRows.getString("Organ");
-                OrganEnum organEnum = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
-                String note = allOrganRows.getString("Note");
-                String clinicianName = allOrganRows.getString("Name");
-                LocalDateTime date = allOrganRows.getTimestamp("ExpiryDate").toLocalDateTime();
-                ExpiredOrgan organ = new ExpiredOrgan(organEnum, note, clinicianName, date);
-
-                allOrgans.add(organ);
-            }
-            conn.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return allOrgans;
-    }
-
-    /**
      * Adds an organ to a profiles past donations.
      *
      * @param profile to add the past donation to.
@@ -439,58 +401,5 @@ public class MySqlOrganDAO implements OrganDAO {
         }
         return allOrgans;
 
-    }
-
-    /**
-     * Updates organ to be expired.
-     *
-     * @param profile to update the organ.
-     * @param organ to update.
-     * @param expired expired boolean.
-     * @param note Clinician's reason to update.
-     * @param userId Clinician's user Id.
-     */
-    @Override
-    public void setExpired(Profile profile, String organ, Integer expired, String note,
-            Integer userId) throws SQLException {
-        String query =
-                "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP "
-                        +
-                        "WHERE ProfileId = ? AND Organ = ? AND ToDonate = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setInt(1, expired);
-        stmt.setInt(2, userId);
-        stmt.setString(3, note);
-        stmt.setInt(4, profile.getId());
-        stmt.setString(5, organ);
-        stmt.setInt(6, 1);
-
-        stmt.executeUpdate();
-        conn.close();
-        stmt.close();
-    }
-
-    /**
-     * Updates organ to be non-expired.
-     *
-     * @param profile to revert organ expired.
-     * @param organ to revert.
-     */
-    @Override
-    public void revertExpired(Integer profile, String organ) throws SQLException {
-        String query = "UPDATE organs SET Expired = NULL , UserId = NULL , Note = NULL WHERE ProfileId = ? AND Organ = ? ;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setInt(1, profile);
-        stmt.setString(2, organ);
-
-        stmt.executeUpdate();
-        conn.close();
-        stmt.close();
     }
 }

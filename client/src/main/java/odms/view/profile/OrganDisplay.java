@@ -70,9 +70,6 @@ public class OrganDisplay extends CommonView {
     @FXML
     private Button donatedButton;
 
-    @FXML
-    private Button expiredButton;
-
     private static OrganSelectEnum windowType;
     private TransplantWaitingList transplantWaitingListView;
     private User currentUser;
@@ -162,11 +159,6 @@ public class OrganDisplay extends CommonView {
     @FXML
     private void handleBtnRequiredClicked(ActionEvent event) throws IOException {
         showOrgansSelectionWindow(event, OrganSelectEnum.REQUIRED);
-    }
-
-    @FXML
-    private void handleExpiredClicked(ActionEvent event) throws IOException {
-        showExpiredOrgans(event);
     }
 
     /**

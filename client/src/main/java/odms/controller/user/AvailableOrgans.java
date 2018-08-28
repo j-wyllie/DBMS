@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
 
 

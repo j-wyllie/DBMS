@@ -185,19 +185,4 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         mySqlProfileDAO.remove(testProfile1);
         mySqlUserDAO.remove(testUser1);
     }
-
-    @Test
-    public void testSetAndGetExpired() throws  SQLException, UserNotFoundException {
-        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
-        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mysqlUserDAO.get("Bob").getStaffID());
-        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
-    }
-
-    @Test
-    public void testRevertExpired() throws  SQLException, UserNotFoundException{
-        mysqlOrganDao.setExpired(testProfile2, organ2.getNamePlain(), 1, "test_expired", mysqlUserDAO.get("Bob").getStaffID());
-        assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
-        mysqlOrganDao.revertExpired(testProfile2.getId(), organ2.getNamePlain());
-        assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
-    }
 }

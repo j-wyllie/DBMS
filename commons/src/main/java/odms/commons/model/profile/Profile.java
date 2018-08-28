@@ -500,32 +500,6 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-    /**
-     * Add a set of organs to the list of organs that the profile wants to donate
-     *
-     * @param organs the set of organs to donate
-     * @throws IllegalArgumentException if a bad argument is used
-     * @throws OrganConflictException if there is a conflicting organ
-     */
-    public void addOrgansDonating(Set<OrganEnum> organs)
-            throws IllegalArgumentException, OrganConflictException {
-        generateUpdateInfo("organsDonating");
-
-        for (OrganEnum organ : organs) {
-            if (this.organsDonating.contains(organ)) {
-                throw new IllegalArgumentException(
-                        "Organ " + organ + " already exists in donating list"
-                );
-            }
-            this.addOrganDonating(organ);
-
-            odms.model.history.History action = new odms.model.history.History("Profile ",
-                    this.getId(), "set", organ.getNamePlain(),
-                    -1, LocalDateTime.now());
-            CurrentHistory.updateHistory(action);
-        }
-    }
-
     public HashSet<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
