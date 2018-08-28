@@ -208,7 +208,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
-  `Password` varchar(50) DEFAULT NULL,
+  `Password` varchar(100) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,

@@ -36,7 +36,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         User testUser;
         testUser = new User(UserType.CLINICIAN, "Clinician", "Auckland");
         testUser.setUsername("Bob");
-        testUser.setPassword(null);
+        testUser.setPassword("password");
         testUser.setDefault(false);
         testUser.setWorkAddress(null);
         testUser.setPictureName(null);
