@@ -38,51 +38,49 @@ public class ProfileEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
-     *
-     * @return boolean will be true is save was successful, else false
      */
     @FXML
     public void save() throws SQLException, IOException, IllegalArgumentException {
-                // History Generation
-                History action = new History(
-                        "profile",
-                        currentProfile.getId(),
-                        "update",
-                        "previous " + currentProfile.getAttributesSummary(),
-                        -1,
-                        null
-                );
+        // History Generation
+        History action = new History(
+                "profile",
+                currentProfile.getId(),
+                "update",
+                "previous " + currentProfile.getAttributesSummary(),
+                -1,
+                null
+        );
 
-                saveDeathDetails();
+        saveDeathDetails();
 
-                // Required General Fields
-                saveChosenImage();
-                saveDateOfBirth();
-                saveGivenNames();
-                saveLastNames();
-                saveNhi();
+        // Required General Fields
+        saveChosenImage();
+        saveDateOfBirth();
+        saveGivenNames();
+        saveLastNames();
+        saveNhi();
 
-                // Optional General Fields
-                saveAddress();
-                saveDateOfDeath();
-                saveEmail();
-                saveGender();
-                saveHeight();
-                savePhone();
-                savePreferredGender();
-                savePreferredName();
-                saveRegion();
-                saveWeight();
+        // Optional General Fields
+        saveAddress();
+        saveDateOfDeath();
+        saveEmail();
+        saveGender();
+        saveHeight();
+        savePhone();
+        savePreferredGender();
+        savePreferredName();
+        saveRegion();
+        saveWeight();
 
-                // Medical Fields
-                saveAlcoholConsumption();
-                saveBloodPressure();
-                saveBloodType();
-                saveIsSmoker();
+        // Medical Fields
+        saveAlcoholConsumption();
+        saveBloodPressure();
+        saveBloodType();
+        saveIsSmoker();
 
-                saveCity();
-                saveCountry();
-                saveRegion();
+        saveCity();
+        saveCountry();
+        saveRegion();
 
         ProfileDAO server = DAOFactory.getProfileDao();
         server.update(currentProfile);
@@ -550,7 +548,7 @@ public class ProfileEdit extends CommonController {
         isClinician = bool;
     }
 
-    public boolean getManuallyExpiredOrgans() throws SQLException{
+    public boolean getManuallyExpiredOrgans() throws SQLException {
         return !DAOFactory.getOrganDao().getExpired(currentProfile).isEmpty();
     }
 }
