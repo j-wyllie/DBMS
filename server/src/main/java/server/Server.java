@@ -74,6 +74,7 @@ public class Server {
                     patch("", UserController::edit);
                     delete("", UserController::delete);
                 });
+                path("/login", () -> post("", UserController::checkCredentials));
             });
 
             // profile api routes.

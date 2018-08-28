@@ -97,7 +97,7 @@ public class GuiMain extends Application {
         try {
             User clinician = new User(UserType.CLINICIAN, "Doc");
             clinician.setUsername("0");
-            clinician.setPassword("");
+            clinician.setPassword("password");
             clinician.setDefault(true);
             DAOFactory.getUserDao().add(clinician);
         } catch (SQLException e) {

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -390,5 +392,19 @@ public class CommonView {
                 header.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
+     *
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
+     */
+    public static boolean isValidNHI(String nhi) {
+        String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher m = r.matcher(nhi.toUpperCase());
+        return m.find();
     }
 }

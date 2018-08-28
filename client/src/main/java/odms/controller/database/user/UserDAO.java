@@ -69,4 +69,12 @@ public interface UserDAO {
      * @throws SQLException error.
      */
     List<User> search(int id) throws SQLException;
+
+    /**
+     * Checks the credentials of a user.
+     * @param username username entered.
+     * @param password password entered.
+     * @return boolean based on success or failure.
+     */
+    Boolean checkCredentials(String username, String password);
 }

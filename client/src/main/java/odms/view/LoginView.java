@@ -50,19 +50,30 @@ public class LoginView extends CommonController {
             String username = usernameField.getText();
 
             try {
-                try {
-                    currentUser = loadUser(username);
-
-                    loadUserView(currentUser);
-                } catch (UserNotFoundException u) {
+                if (CommonView.isValidNHI(usernameField.getText())) {
                     Profile currentProfile = loadProfile(username);
 
                     loadProfileView(currentProfile);
+                } else if (checkUser()) {
+                    currentUser = loadUser(username);
+                    loadUserView(currentUser);
+                } else {
+                    AlertController.invalidUsernameOrPassword();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (UserNotFoundException | SQLException u) {
+                u.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Checks the users credentials with the database.
+     *
+     * @return Boolean based on if the credentials are correct. True if valid.
+     */
+    private Boolean checkUser() {
+        UserDAO database = DAOFactory.getUserDao();
+        return database.checkCredentials(usernameField.getText(), passwordField.getText());
     }
 
     /**
@@ -88,9 +99,9 @@ public class LoginView extends CommonController {
                 fxmlLoader.setLocation(
                         getClass().getResource("/view/ProfileDisplay.fxml"));
 
-                        Scene scene = new Scene(fxmlLoader.load());
-                        Display controller = fxmlLoader.getController();
-                        controller.initialize(profile, false, null, null);
+                Scene scene = new Scene(fxmlLoader.load());
+                Display controller = fxmlLoader.getController();
+                controller.initialize(profile, false, null, null);
 
                 Stage stage = new Stage();
                 if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
@@ -131,28 +142,25 @@ public class LoginView extends CommonController {
      * Load the user view.
      */
     private void loadUserView(User user) {
-        if (user.getPassword() != null && passwordField.getText().equals(user.getPassword())) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(
-                        getClass().getResource("/view/ClinicianProfile.fxml")
-                );
 
-                Scene scene = new Scene(fxmlLoader.load());
-                ClinicianProfile v = fxmlLoader.getController();
-                v.setCurrentUser(user);
-                v.initialize();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(
+                    getClass().getResource("/view/ClinicianProfile.fxml")
+            );
 
-                Stage stage = new Stage();
-                stage.setTitle(user.getUserType().getName());
-                stage.setScene(scene);
-                stage.show();
-                closeCurrentStage();
-            } catch (IOException e) {
-                invalidUsername();
-            }
-        } else {
-            invalidUsernameOrPassword();
+            Scene scene = new Scene(fxmlLoader.load());
+            ClinicianProfile v = fxmlLoader.getController();
+            v.setCurrentUser(user);
+            v.initialize();
+
+            Stage stage = new Stage();
+            stage.setTitle(user.getUserType().getName());
+            stage.setScene(scene);
+            stage.show();
+            closeCurrentStage();
+        } catch (IOException e) {
+            invalidUsername();
         }
     }
 

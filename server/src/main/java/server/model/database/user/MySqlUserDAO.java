@@ -1,5 +1,7 @@
 package server.model.database.user;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +13,7 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DatabaseConnection;
+import server.model.database.PasswordUtilities;
 
 public class MySqlUserDAO implements UserDAO {
 
@@ -107,6 +110,34 @@ public class MySqlUserDAO implements UserDAO {
         return user;
     }
 
+    @Override
+    public Boolean checkCredentials(String username, String password)
+            throws SQLException, UserNotFoundException {
+        String query = "SELECT Username, Password FROM users WHERE Username = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            rs.next();
+            String hashedPassword = rs.getString("Password");
+            return PasswordUtilities.check(password, hashedPassword);
+
+        } catch (SQLException e) {
+            throw new UserNotFoundException("Not found", username);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return false;
+    }
+
     /**
      * Parses a single row of the user table and converts it to a user object.
      *
@@ -157,7 +188,7 @@ public class MySqlUserDAO implements UserDAO {
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
@@ -167,7 +198,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new SQLException();
         } finally {
             conn.close();

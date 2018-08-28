@@ -53,4 +53,12 @@ public interface UserDAO {
      */
     void update(User user) throws SQLException;
 
+    /**
+     * Checks a users credentials.
+     * @param username username.
+     * @param password password.
+     * @return True if user is valid.
+     */
+    Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException;
+
 }
