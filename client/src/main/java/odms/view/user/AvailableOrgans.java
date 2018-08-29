@@ -1,8 +1,5 @@
 package odms.view.user;
 
-import static odms.controller.user.AvailableOrgans.getExpiryLength;
-import static odms.controller.user.AvailableOrgans.getTimeRemaining;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +25,8 @@ import odms.commons.model.user.User;
 import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
+
+import static odms.controller.user.AvailableOrgans.*;
 
 public class AvailableOrgans extends CommonView {
 
@@ -137,28 +136,24 @@ public class AvailableOrgans extends CommonView {
         TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownCol = new TableColumn<>(
                 "Countdown"
         );
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownStdCol = new TableColumn<>(
-                "Standard"
-        );
-
-        TableColumn<Map.Entry<Profile, OrganEnum>, String> countdownSecCol = new TableColumn<>(
-                "Hours & Seconds"
-        );
-
-        countdownCol.getColumns().addAll(countdownStdCol, countdownSecCol);
-
-        countdownStdCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty((controller.getTimeToExpiryStd(
-                        cdf.getValue().getValue(), cdf.getValue().getKey())
-                ))
-        );
-
-        countdownSecCol.setCellValueFactory(
+        countdownCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((controller.getTimeToExpiryHoursSeconds(
                         cdf.getValue().getValue(), cdf.getValue().getKey())
                 ))
         );
+        Comparator<String> comparatorCountdownHrSec = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (hoursAndSecondsToMs(o1) > hoursAndSecondsToMs(o2)) {
+                    return 1;
+                } else if (hoursAndSecondsToMs(o1) < hoursAndSecondsToMs(o2)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        };
+        countdownCol.setComparator(comparatorCountdownHrSec);
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> nhiCol = new TableColumn<>(
                 "NHI");

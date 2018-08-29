@@ -288,6 +288,34 @@ public class AvailableOrgans {
         return durationFormatted;
     }
 
+    public static int hoursAndSecondsToMs(String timeToExpiry) {
+        int timeRaw = 0;
+        String temp = "";
+
+        for (int i = 0; i < timeToExpiry.length(); i++){
+            char c = timeToExpiry.charAt(i);
+
+            try {
+
+                if (Character.isDigit(c)) {
+                    temp += c;
+                }
+
+                if (timeToExpiry.charAt(i+1) == 'h') {
+                    timeRaw += Integer.parseInt(temp) * ONE_HOUR;
+                    temp = "";
+                } else if (timeToExpiry.charAt(i+1) == 's') {
+                    timeRaw += Integer.parseInt(temp) * ONE_SECOND;
+                    temp = "";
+                }
+            } catch (IndexOutOfBoundsException e) {
+                //System.out.println(timeToExpiry + " " + timeRaw);
+                return Math.abs(timeRaw);
+            }
+        }
+        return Math.abs(timeRaw);
+    }
+
     /**
      * Support function to convert ms to a string representing years, hours, minutes and seconds.
      *
@@ -332,6 +360,46 @@ public class AvailableOrgans {
         }
 
         return durationFormatted;
+    }
+
+    public static int standardToMs(String timeToExpiry) {
+        int timeRaw = 0;
+        String temp = "";
+
+        //TODO edge case: when a time is missing one particular field e.g. hours (3d 1m 1s)
+
+        for (int i = 0; i < timeToExpiry.length(); i++){
+            char c = timeToExpiry.charAt(i);
+
+            try {
+
+                if (Character.isDigit(c)) {
+                    temp += c;
+                }
+
+                if (timeToExpiry.charAt(i+1) == 'y') {
+                    //Integer.parseInt(String.valueOf(timeToExpiry.charAt(i))
+                    timeRaw += Integer.parseInt(temp) * ONE_YEAR;
+                    temp = "";
+                } else if (timeToExpiry.charAt(i+1) == 'd') {
+                    timeRaw += Integer.parseInt(temp) * ONE_DAY;
+                    temp = "";
+                } else if (timeToExpiry.charAt(i+1) == 'h') {
+                    timeRaw += Integer.parseInt(temp) * ONE_HOUR;
+                    temp = "";
+                } else if (timeToExpiry.charAt(i+1) == 'm') {
+                    timeRaw += Integer.parseInt(temp) * ONE_MINUTE;
+                    temp = "";
+                } else if (timeToExpiry.charAt(i+1) == 's') {
+                    timeRaw += Integer.parseInt(temp) * ONE_SECOND;
+                    temp = "";
+                }
+            } catch (IndexOutOfBoundsException e) {
+                //System.out.println(timeToExpiry + " " + timeRaw);
+                return Math.abs(timeRaw);
+            }
+        }
+        return Math.abs(timeRaw);
     }
 
     /**
