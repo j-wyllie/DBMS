@@ -51,10 +51,16 @@ public class LoginView extends CommonController {
             String username = usernameField.getText();
 
             try {
-                if (CommonView.isValidNHI(usernameField.getText()) && checkProfile()) {
-                    Profile currentProfile = loadProfile(username);
+                if (CommonView.isValidNHI(usernameField.getText())) {
+                    if (!hasPassord()) {
+                        Profile currentProfile = loadProfile(username);
 
-                    loadProfileView(currentProfile);
+                        loadProfileView(currentProfile);
+                    } else if (checkProfile()) {
+                        Profile currentProfile = loadProfile(username);
+
+                        loadProfileView(currentProfile);
+                    }
                 } else if (checkUser()) {
                     currentUser = loadUser(username);
                     loadUserView(currentUser);
@@ -66,6 +72,11 @@ public class LoginView extends CommonController {
 
             }
         }
+    }
+
+    private boolean hasPassord() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        return database.hasPassword(usernameField.getText());
     }
 
     private boolean checkProfile() {

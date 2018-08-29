@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
 
 public interface ProfileDAO {
 
@@ -117,5 +118,5 @@ public interface ProfileDAO {
      * @param password password.
      * @return boolean, true if valid.
      */
-    Boolean checkCredentials(String username, String password) throws SQLException;
+    Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException;
 }

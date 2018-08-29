@@ -907,7 +907,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public Boolean checkCredentials(String username, String password) throws SQLException {
+    public Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException {
         String query = "SELECT NHI, Password FROM profiles WHERE NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
