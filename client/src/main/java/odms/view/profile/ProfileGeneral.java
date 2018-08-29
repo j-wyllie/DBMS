@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
@@ -207,14 +211,7 @@ public class ProfileGeneral extends CommonView {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentUser = currentUser;
 
-        ProfileDAO database = DAOFactory.getProfileDao();
-        if (!database.hasPassword(p.getNhi())) {
-            //TODO SETUP PASSWORD PROMPT
-
-        }
-
         currentProfile = p;
         setUpDetails();
     }
-
 }

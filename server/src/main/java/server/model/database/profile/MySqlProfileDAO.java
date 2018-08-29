@@ -1,5 +1,7 @@
 package server.model.database.profile;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -20,8 +22,10 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
+import server.model.database.PasswordUtilities;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
@@ -893,11 +897,39 @@ public class MySqlProfileDAO implements ProfileDAO {
                 hasPassword = true;
             }
             conn.close();
+            System.out.println(stmt);
             stmt.close();
         } catch (SQLException e) {
             throw new SQLException();
         }
 
         return hasPassword;
+    }
+
+    @Override
+    public Boolean checkCredentials(String username, String password) throws SQLException {
+        String query = "SELECT NHI, Password FROM profiles WHERE NHI = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            rs.next();
+            String hashedPassword = rs.getString("Password");
+            return PasswordUtilities.check(password, hashedPassword);
+
+        } catch (SQLException e) {
+            throw new UserNotFoundException("Not found", username);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return false;
     }
 }

@@ -103,5 +103,19 @@ public interface ProfileDAO {
     List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange);
 
+    /**
+     * Checks that a profile has a password.
+     * @param nhi nhi of the profile.
+     * @return true if they have a profile.
+     * @throws SQLException thrown when there is a server error.
+     */
     Boolean hasPassword(String nhi) throws SQLException;
+
+    /**
+     * Checks the credentials of the profile.
+     * @param username username.
+     * @param password password.
+     * @return boolean, true if valid.
+     */
+    Boolean checkCredentials(String username, String password) throws SQLException;
 }

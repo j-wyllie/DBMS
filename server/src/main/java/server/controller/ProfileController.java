@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonArray;
 import org.sonar.api.internal.google.gson.JsonElement;
@@ -14,6 +15,7 @@ import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;
+import server.model.database.user.UserDAO;
 import spark.Request;
 import spark.Response;
 
@@ -304,24 +306,46 @@ public class ProfileController {
      * @return The response body.
      */
 
-    public static Object hasPassword(Request req, Response res) {
+    public static String hasPassword(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Boolean hasPassword = false;
         try {
-            if (req.queryMap().hasKey("id")) {
+            if (req.queryMap().hasKey("nhi")) {
                 hasPassword = database.hasPassword(req.queryParams("nhi"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             res.status(500);
-            return e.getMessage();
+            return "Internal Server Error";
         }
 
-        String responseBody = hasPassword.toString();
-
-        res.type("application/json");
         res.status(200);
 
-        return responseBody;
+        return hasPassword.toString();
+    }
+
+    public static String checkCredentials(Request request, Response response) {
+        ProfileDAO profileDAO = DAOFactory.getProfileDao();
+        Boolean valid;
+
+        try {
+            valid = profileDAO.checkCredentials(request.queryParams("username"),
+                    request.queryParams("password"));
+        }catch (SQLException e) {
+            response.status(500);
+            return e.getMessage();
+        } catch (UserNotFoundException e) {
+            response.status(404);
+            return "Profile not found.";
+        }
+
+        if (valid) {
+            response.type("application/json");
+            response.status(200);
+        } else {
+            response.status(404);
+        }
+
+        return "User validated.";
+
     }
 }

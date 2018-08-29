@@ -13,6 +13,7 @@ import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -23,13 +24,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 
 import odms.view.user.TransplantWaitingList;import  odms.view.user.TransplantWaitingList;
+import sun.security.util.Password;
 
 public class Display extends CommonView {
 
@@ -257,14 +263,47 @@ public class Display extends CommonView {
             TransplantWaitingList transplantWaitingList, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentUser = currentUser;
-        if (isOpenedByClinician) {
-            logoutButton.setVisible(false);
-        }
-        if (transplantWaitingList != null) {
-            transplantWaitingListView = transplantWaitingList;
-        }
+        ProfileDAO database = DAOFactory.getProfileDao();
+
         currentProfile = profile;
         setPage(profile);
         onTabGeneralSelected();
+        if (transplantWaitingList != null) {
+            transplantWaitingListView = transplantWaitingList;
+        }
+        if (isOpenedByClinician) {
+            logoutButton.setVisible(false);
+        } else if (!database.hasPassword(profile.getNhi())) {
+            //TODO SETUP PASSWORD PROMPT
+            try {
+                showPasswordPromptWindow();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+    private void showPasswordPromptWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/PasswordPrompt.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+
+        PasswordPrompt view = fxmlLoader.getController();
+        view.initialize(currentProfile);
+
+        Stage stage = new Stage();
+        stage.setTitle("Set up password.");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(nhiLabel.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
+
+        stage.show();
     }
 }

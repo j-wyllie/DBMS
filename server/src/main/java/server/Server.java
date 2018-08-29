@@ -84,6 +84,7 @@ public class Server {
                 get("", ProfileController::get);
                 post("", ProfileController::create);
                 get("/password", ProfileController::hasPassword);
+                post("/login", ProfileController::checkCredentials);
 
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);

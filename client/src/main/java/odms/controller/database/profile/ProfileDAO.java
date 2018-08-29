@@ -110,4 +110,12 @@ public interface ProfileDAO {
      * @return true if password is set.
      */
     Boolean hasPassword(String nhi);
+
+    /**
+     * Checks the username and password of the profile.
+     * @param username username to check.
+     * @param password password to check.
+     * @return boolean, true if credentials are valid.
+     */
+    Boolean checkCredentials(String username, String password);
 }

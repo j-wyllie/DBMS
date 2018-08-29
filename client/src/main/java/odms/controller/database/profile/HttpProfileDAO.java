@@ -242,9 +242,39 @@ public class HttpProfileDAO implements ProfileDAO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (response.getStatus() == 200) {
+        System.out.println(response.getBody());
+        if (response.getBody() == "true") {
             return true;
         } else
-            return response.getStatus() != 404;
+            return false;
+    }
+
+    @Override
+    public Boolean checkCredentials(String username, String password) {
+        String url = "http://localhost:6969/api/v1/profile/login";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("username", username);
+        queryParams.put("password", password);
+
+
+        Request request = new Request(url, 0, queryParams, "{}");
+        Response response = null;
+        try {
+            response = request.post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response.getStatus() == 200) {
+            return true;
+        }
+
+        if (response.getStatus() == 400) {
+            throw new IllegalArgumentException("Invalid details.");
+        }
+        if (response.getStatus() == 403) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
+        return false;
     }
 }

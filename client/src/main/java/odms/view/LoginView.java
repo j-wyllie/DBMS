@@ -16,6 +16,7 @@ import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
 import odms.controller.user.UserNotFoundException;
 import odms.view.profile.Display;
@@ -50,7 +51,7 @@ public class LoginView extends CommonController {
             String username = usernameField.getText();
 
             try {
-                if (CommonView.isValidNHI(usernameField.getText())) {
+                if (CommonView.isValidNHI(usernameField.getText()) && checkProfile()) {
                     Profile currentProfile = loadProfile(username);
 
                     loadProfileView(currentProfile);
@@ -60,10 +61,16 @@ public class LoginView extends CommonController {
                 } else {
                     AlertController.invalidUsernameOrPassword();
                 }
-            } catch (UserNotFoundException | SQLException u) {
-                u.printStackTrace();
+            } catch (UserNotFoundException | SQLException | IllegalArgumentException u) {
+                AlertController.invalidUsernameOrPassword();
+
             }
         }
+    }
+
+    private boolean checkProfile() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        return database.checkCredentials(usernameField.getText(), passwordField.getText());
     }
 
     /**

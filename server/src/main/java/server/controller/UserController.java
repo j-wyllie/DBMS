@@ -200,7 +200,5 @@ public class UserController {
         }
 
         return "User validated.";
-
     }
-
 }
