@@ -247,13 +247,13 @@ public class AvailableOrgans extends CommonView {
         listOfFilteredAvailableOrgans = FXCollections.observableArrayList();
         listOfFilteredAvailableOrgans.clear();
         for(Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
-            if(organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegion())) {
+            if(organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
             } else if(organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
                 listOfFilteredAvailableOrgans.add(m);
             }  else if(organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
                 listOfFilteredAvailableOrgans.add(m);
-            }   else if(organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegion())) {
+            }   else if(organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
             }
         }
