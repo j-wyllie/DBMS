@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 
 public class ProfileGeneral extends CommonView {
@@ -204,6 +206,13 @@ public class ProfileGeneral extends CommonView {
     public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentUser = currentUser;
+
+        ProfileDAO database = DAOFactory.getProfileDao();
+        if (!database.hasPassword(p.getNhi())) {
+            //TODO SETUP PASSWORD PROMPT
+
+        }
+
         currentProfile = p;
         setUpDetails();
     }
