@@ -876,4 +876,28 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         return receivers;
     }
+
+    @Override
+    public Boolean hasPassword(String nhi) throws SQLException {
+        String query = "SELECT Username FROM profiles WHERE nhi = ? AND PASSWORD != ''";
+        Boolean hasPassword = false;
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, nhi);
+            ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                hasPassword = true;
+            }
+            conn.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+
+        return hasPassword;
+    }
 }

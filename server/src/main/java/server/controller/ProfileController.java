@@ -296,4 +296,32 @@ public class ProfileController {
 
         return responseBody;
     }
+
+    /**
+     * Checks that a profile has a password.
+     * @param req the request fields.
+     * @param res the response from the server.
+     * @return The response body.
+     */
+
+    public static Object hasPassword(Request req, Response res) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Boolean hasPassword = false;
+        try {
+            if (req.queryMap().hasKey("id")) {
+                hasPassword = database.hasPassword(req.queryParams("nhi"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            res.status(500);
+            return e.getMessage();
+        }
+
+        String responseBody = hasPassword.toString();
+
+        res.type("application/json");
+        res.status(200);
+
+        return responseBody;
+    }
 }

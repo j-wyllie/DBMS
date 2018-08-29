@@ -228,4 +228,23 @@ public class HttpProfileDAO implements ProfileDAO {
         }
         return profiles;
     }
+
+    @Override
+    public Boolean hasPassword(String nhi) {
+        Response response = null;
+        String url = "http://localhost:6969/api/v1/profiles/password";
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("nhi", nhi);
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.getStatus() == 200) {
+            return true;
+        } else
+            return response.getStatus() != 404;
+    }
 }

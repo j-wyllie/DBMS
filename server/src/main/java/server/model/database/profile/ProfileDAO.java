@@ -102,4 +102,6 @@ public interface ProfileDAO {
      */
     List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange);
+
+    Boolean hasPassword(String nhi) throws SQLException;
 }
