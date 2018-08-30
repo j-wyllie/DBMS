@@ -119,4 +119,6 @@ public interface ProfileDAO {
      * @return boolean, true if valid.
      */
     Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException;
+
+    Boolean savePassword(String nhi, String password) throws SQLException, UserNotFoundException;
 }

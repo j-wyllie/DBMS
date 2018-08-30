@@ -1,7 +1,6 @@
 package odms.view;
 
 import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.invalidUsernameOrPassword;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,7 +51,7 @@ public class LoginView extends CommonController {
 
             try {
                 if (CommonView.isValidNHI(usernameField.getText())) {
-                    if (!hasPassord()) {
+                    if (!hasPassword()) {
                         Profile currentProfile = loadProfile(username);
 
                         loadProfileView(currentProfile);
@@ -74,7 +73,7 @@ public class LoginView extends CommonController {
         }
     }
 
-    private boolean hasPassord() {
+    private boolean hasPassword() {
         ProfileDAO database = DAOFactory.getProfileDao();
         return database.hasPassword(usernameField.getText());
     }

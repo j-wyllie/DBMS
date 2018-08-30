@@ -118,4 +118,12 @@ public interface ProfileDAO {
      * @return boolean, true if credentials are valid.
      */
     Boolean checkCredentials(String username, String password);
+
+    /**
+     * Saves a profiles password.
+     * @param nhi nhi of the profile.
+     * @param password password to be saved.
+     * @return Boolean, true if successful.
+     */
+    Boolean savePassword(String nhi, String password);
 }

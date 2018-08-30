@@ -872,6 +872,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         return null;
     }
 
+    @Override
+    public Boolean savePassword(String nhi, String password) {
+        return null;
+    }
+
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();

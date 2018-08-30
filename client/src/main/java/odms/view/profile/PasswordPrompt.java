@@ -17,7 +17,7 @@ public class PasswordPrompt {
 
     @FXML
     public void handleConfirmBtnPressed(ActionEvent actionEvent) {
-        if (passwordField.getText().equals(confirmPasswordField.getText())) {
+        if (passwordField.getText().length() >= 5 && passwordField.getText().equals(confirmPasswordField.getText())) {
             controller.savePassword();
         } else {
             errorLabel.setVisible(true);

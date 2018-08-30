@@ -348,4 +348,21 @@ public class ProfileController {
         return "User validated.";
 
     }
+
+    public static String savePassword(Request request, Response response) {
+        ProfileDAO profileDAO = DAOFactory.getProfileDao();
+        Boolean valid;
+        try {
+            valid = profileDAO.savePassword(request.queryParams("nhi"), request.queryParams("password"));
+        } catch (SQLException | UserNotFoundException e) {
+            response.status(500);
+            return e.getMessage();
+        }
+        if (valid) {
+            response.status(200);
+        } else {
+            response.status(400);
+        }
+        return "Password Set";
+    }
 }
