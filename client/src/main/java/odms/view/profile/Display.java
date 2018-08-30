@@ -263,7 +263,6 @@ public class Display extends CommonView {
             TransplantWaitingList transplantWaitingList, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentUser = currentUser;
-        ProfileDAO database = DAOFactory.getProfileDao();
 
         currentProfile = profile;
         setPage(profile);
@@ -273,37 +272,6 @@ public class Display extends CommonView {
         }
         if (isOpenedByClinician) {
             logoutButton.setVisible(false);
-        } else if (!database.hasPassword(profile.getNhi())) {
-            //TODO SETUP PASSWORD PROMPT
-            try {
-                showPasswordPromptWindow();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-
-
-    }
-
-
-    private void showPasswordPromptWindow() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/view/PasswordPrompt.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load());
-
-        PasswordPrompt view = fxmlLoader.getController();
-        view.initialize(currentProfile);
-
-        Stage stage = new Stage();
-        stage.setTitle("Set up password.");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.initOwner(nhiLabel.getScene().getWindow());
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.setAlwaysOnTop(true);
-        stage.centerOnScreen();
-
-        stage.show();
     }
 }

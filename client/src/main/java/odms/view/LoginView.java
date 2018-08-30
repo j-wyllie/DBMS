@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -19,6 +21,7 @@ import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
 import odms.controller.user.UserNotFoundException;
 import odms.view.profile.Display;
+import odms.view.profile.PasswordPrompt;
 import odms.view.user.ClinicianProfile;
 
 public class LoginView extends CommonController {
@@ -45,18 +48,22 @@ public class LoginView extends CommonController {
      * Scene change to profile profile view if log in credentials are valid.
      */
     @FXML
-    private void handleLoginButtonClicked() {
+    private void handleLoginButtonClicked(ActionEvent event) {
         if (!usernameField.getText().equals("")) {
             String username = usernameField.getText();
 
             try {
                 if (CommonView.isValidNHI(usernameField.getText())) {
-                    if (!hasPassword()) {
-                        Profile currentProfile = loadProfile(username);
+                    Profile currentProfile = loadProfile(username);
 
-                        loadProfileView(currentProfile);
+                    if (!hasPassword()) {
+                        try {
+                            showPasswordPromptWindow(currentProfile, event);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     } else if (checkProfile()) {
-                        Profile currentProfile = loadProfile(username);
 
                         loadProfileView(currentProfile);
                     } else {
@@ -201,11 +208,34 @@ public class LoginView extends CommonController {
         showScene(event, scene, title, false);
     }
 
+
+
+    private void showPasswordPromptWindow(Profile currentProfile, ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/PasswordPrompt.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+
+        PasswordPrompt view = fxmlLoader.getController();
+        view.initialize(currentProfile);
+
+        Stage stage = new Stage();
+        stage.setTitle("Set up password.");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
+
+        stage.show();
+    }
+
     /**
      * Handle enter button being used to login.
      */
     @FXML
-    private void onEnter() {
-        handleLoginButtonClicked();
+    private void onEnter(ActionEvent event) {
+        handleLoginButtonClicked(event);
     }
 }
