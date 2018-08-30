@@ -59,6 +59,9 @@ public class LoginView extends CommonController {
                         Profile currentProfile = loadProfile(username);
 
                         loadProfileView(currentProfile);
+                    } else {
+                        AlertController.invalidUsernameOrPassword();
+
                     }
                 } else if (checkUser()) {
                     currentUser = loadUser(username);
