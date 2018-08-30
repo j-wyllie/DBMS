@@ -407,10 +407,19 @@ public class AvailableOrgans {
      *
      * @param organAvailable the available organ
      * @param donorProfile the donor the organ came from
+     * @param nameFieldText
+     * @param checkedItems
+     * @param items
+     * @param text
+     * @param ageRangeFieldText
+     * @param selected
      * @return a list of potential organ matches
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
-            Profile donorProfile, OrganEnum selectedOrgan) {
+            Profile donorProfile, OrganEnum selectedOrgan,
+            String nameFieldText, ObservableList checkedItems, ObservableList items,
+            String text,
+            String ageRangeFieldText, boolean selected) {
         System.out.println("rec");
         // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
@@ -493,8 +502,8 @@ public class AvailableOrgans {
         allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
 
-            // for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
-            for (OrganEnum organ : DAOFactory.getOrganDao().getDonating(profile)) {
+            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
+            //for (OrganEnum organ : DAOFactory.getOrganDao().getDonating(profile)) {
 
                 // System.out.println(organ.getNamePlain() + " " + profile.getGivenNames());
 

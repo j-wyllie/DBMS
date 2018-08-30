@@ -15,9 +15,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
@@ -30,6 +33,22 @@ import static odms.controller.user.AvailableOrgans.*;
 
 public class AvailableOrgans extends CommonView {
 
+    @FXML
+    private CheckBox ageRangeCheckbox;
+    @FXML
+    private TextField ageField;
+    @FXML
+    private TextField ageRangeField;
+
+    // To add to fxml ^^^^
+
+
+    @FXML
+    private TextField nameSearchField;
+    @FXML
+    private CheckComboBox bloodTypeComboboxMatchesTable;
+    @FXML
+    private CheckComboBox regionsComboboxMatchesTable;
     @FXML
     private CheckComboBox organsCombobox;
     @FXML
@@ -53,6 +72,24 @@ public class AvailableOrgans extends CommonView {
 
     private Thread importTask;
     private User currentUser;
+
+
+    /**
+     * Called if the age range is toggled.
+     */
+    @FXML
+    private void handleAgeRangeCheckboxChecked() {
+        if (ageRangeCheckbox.isSelected()) {
+            ageRangeField.setDisable(false);
+            ageField.setPromptText("Lower Age");
+            ageRangeField.setPromptText("Upper Age");
+            ageRangeField.clear();
+        } else {
+            ageRangeField.setDisable(true);
+            ageField.setPromptText("Age");
+        }
+        // update
+    }
 
     public void populateMatchesTable() {
 
@@ -232,7 +269,10 @@ public class AvailableOrgans extends CommonView {
             OrganEnum organToMatch = selectedOrgan;
             Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getKey();
 
-            potentialOrganMatches = controller.getSuitableRecipientsSorted(organToMatch, donorProfile, selectedOrgan);
+            potentialOrganMatches = controller.getSuitableRecipientsSorted(
+                    organToMatch, donorProfile, selectedOrgan, nameSearchField.getText(), bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
+                    regionsComboboxMatchesTable.getCheckModel().getCheckedItems(), ageField.getText(), ageRangeField.getText(),
+                    ageRangeCheckbox.isSelected());
 
         } catch (NullPointerException e) {
             // No organ selected in table
@@ -297,6 +337,25 @@ public class AvailableOrgans extends CommonView {
                 performOrganSearchFromFilters();
             }
         });
+
+
+        regionsComboboxMatchesTable.getItems().setAll(NewZealandRegionsEnum.toArrayList());
+        regionsComboboxMatchesTable.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                performOrganSearchFromFilters();
+            }
+        });
+
+        bloodTypeComboboxMatchesTable.getItems().setAll(BloodTypeEnum.toArrayList());
+        bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                performOrganSearchFromFilters();
+            }
+        });
+
+
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
