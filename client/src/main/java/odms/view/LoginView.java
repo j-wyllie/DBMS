@@ -83,11 +83,19 @@ public class LoginView extends CommonController {
         }
     }
 
+    /**
+     * Checks the profile has a password.
+     * @return True if they do.
+     */
     private boolean hasPassword() {
         ProfileDAO database = DAOFactory.getProfileDao();
         return database.hasPassword(usernameField.getText());
     }
 
+    /**
+     * Checks the profiles credentials.
+     * @return boolean if valid creds.
+     */
     private boolean checkProfile() {
         ProfileDAO database = DAOFactory.getProfileDao();
         return database.checkCredentials(usernameField.getText(), passwordField.getText());
