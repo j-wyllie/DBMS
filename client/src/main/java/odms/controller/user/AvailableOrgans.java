@@ -492,22 +492,36 @@ public class AvailableOrgans {
 
         allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
-            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
-                for (ExpiredOrgan expiredOrgan : DAOFactory.getOrganDao().getExpired(profile)) {
-                    if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
-                        Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
-                                organ);
-                        if (!donaters.contains(pair)) {
-                            donaters.add(pair);
+
+            // for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
+            for (OrganEnum organ : DAOFactory.getOrganDao().getDonating(profile)) {
+
+                // System.out.println(organ.getNamePlain() + " " + profile.getGivenNames());
+
+                if (DAOFactory.getOrganDao().getExpired(profile).size() == 0) {
+                    Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
+                            organ);
+                    if (!donaters.contains(pair)) {
+                        donaters.add(pair);
+                    }
+                } else {
+                    // TODO this only returns available organs if the given profile already has at least one expired organ
+                    for (ExpiredOrgan expiredOrgan : DAOFactory.getOrganDao().getExpired(profile)) {
+                        if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
+                            Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
+                                    organ);
+                            if (!donaters.contains(pair)) {
+                                donaters.add(pair);
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-
             }
         }
         return donaters;
     }
+
 
     /**
      * Returns a list of available organs as per the filters provided
