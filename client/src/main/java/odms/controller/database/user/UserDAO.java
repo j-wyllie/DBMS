@@ -1,15 +1,20 @@
 package odms.controller.database.user;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import odms.commons.model.user.User;
 import odms.controller.user.UserNotFoundException;
 
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * Defines all the methods for the UserDAO.
+ */
 public interface UserDAO {
 
     /**
      * Gets all users from the database.
+     * @return list of all the users.
+     * @throws SQLException thrown when there is an error querying the db.
      */
     List<User> getAll() throws SQLException;
 
@@ -18,6 +23,7 @@ public interface UserDAO {
      * @param userId of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
+     * @throws SQLException thrown when there is an error querying the db.
      */
     User get(int userId) throws UserNotFoundException, SQLException;
 
@@ -26,31 +32,29 @@ public interface UserDAO {
      * @param username of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
+     * @throws SQLException thrown when there is an error querying the db.
      */
     User get(String username) throws UserNotFoundException, SQLException;
 
     /**
      * Adds a new user to the database.
      * @param user to add.
+     * @throws SQLException thrown when there is an error querying the db.
      */
     void add(User user) throws SQLException;
 
     /**
-     * Checks if a username already exists in the database.
-     * @param username to check.
-     * @return true is the username does not already exist.
-     */
-    boolean isUniqueUsername(String username) throws SQLException;
-
-    /**
      * Removes a user from the database.
      * @param user to remove.
+     * @throws SQLException thrown when there is an error querying the db.
      */
     void remove(User user) throws SQLException;
 
     /**
      * Updates a users information in the database.
      * @param user to update.
+     * @throws SQLException thrown when there is an error querying the db.
+     * @throws IllegalArgumentException thrown when an argument is incorrect.
      */
     void update(User user) throws SQLException, IllegalArgumentException;
 

@@ -24,9 +24,12 @@ import odms.view.profile.Display;
 import odms.view.profile.PasswordPrompt;
 import odms.view.user.ClinicianProfile;
 
+/**
+ * Login view.
+ */
 public class LoginView extends CommonController {
 
-    private static User currentUser;
+    private User currentUser;
 
     /**
      * TextField to input username.
@@ -40,12 +43,9 @@ public class LoginView extends CommonController {
     @FXML
     private TextField passwordField;
 
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     * @param event the login button clicked event.
      */
     @FXML
     private void handleLoginButtonClicked(ActionEvent event) {
@@ -54,22 +54,7 @@ public class LoginView extends CommonController {
 
             try {
                 if (CommonView.isValidNHI(usernameField.getText())) {
-                    Profile currentProfile = loadProfile(username);
-
-                    if (!hasPassword()) {
-                        try {
-                            showPasswordPromptWindow(currentProfile, event);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else if (checkProfile()) {
-
-                        loadProfileView(currentProfile);
-                    } else {
-                        AlertController.invalidUsernameOrPassword();
-
-                    }
+                    tryLoginProfile(event, username);
                 } else if (checkUser()) {
                     currentUser = loadUser(username);
                     loadUserView(currentUser);
@@ -84,6 +69,31 @@ public class LoginView extends CommonController {
     }
 
     /**
+     * Attempts to log the profile in with their credentials.
+     * @param event login button clicked event.
+     * @param username Username entered.
+     * @throws SQLException thrown when there is an error in the sql.
+     */
+    private void tryLoginProfile(ActionEvent event, String username) throws SQLException {
+        Profile currentProfile = loadProfile(username);
+
+        if (!hasPassword()) {
+            try {
+                showPasswordPromptWindow(currentProfile, event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (checkProfile()) {
+
+            loadProfileView(currentProfile);
+        } else {
+            AlertController.invalidUsernameOrPassword();
+
+        }
+    }
+
+    /**
      * Checks the profile has a password.
      * @return True if they do.
      */
@@ -94,7 +104,7 @@ public class LoginView extends CommonController {
 
     /**
      * Checks the profiles credentials.
-     * @return boolean if valid creds.
+     * @return boolean if valid credentials.
      */
     private boolean checkProfile() {
         ProfileDAO database = DAOFactory.getProfileDao();
@@ -124,7 +134,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load the profile view.
-     *
      * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {
@@ -153,8 +162,7 @@ public class LoginView extends CommonController {
             }
         } catch (NumberFormatException e) {
             AlertController.invalidEntry();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             invalidUsername();
         }
     }
@@ -175,6 +183,7 @@ public class LoginView extends CommonController {
 
     /**
      * Load the user view.
+     * @param user user to be loaded.
      */
     private void loadUserView(User user) {
 
@@ -199,6 +208,9 @@ public class LoginView extends CommonController {
         }
     }
 
+    /**
+     * Closes the current stage.
+     */
     private void closeCurrentStage() {
         Stage currentStage = (Stage) usernameField.getScene().getWindow();
         currentStage.close();
@@ -206,8 +218,8 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to create account view.
-     *
      * @param event clicking on the create new account link.
+     * @throws IOException thrown when the window can not be created.
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
@@ -216,9 +228,14 @@ public class LoginView extends CommonController {
         showScene(event, scene, title, false);
     }
 
-
-
-    private void showPasswordPromptWindow(Profile currentProfile, ActionEvent event) throws IOException {
+    /**
+     * Displays a password prompt window when a user logs in and doesn't have a password set.
+     * @param currentProfile the current profile being logged in.
+     * @param event login button clicked mouse event.
+     * @throws IOException thrown when the window can not be created.
+     */
+    private void showPasswordPromptWindow(Profile currentProfile, ActionEvent event)
+            throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/PasswordPrompt.fxml"));
 
@@ -231,7 +248,7 @@ public class LoginView extends CommonController {
         stage.setTitle("Set up password.");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+        stage.initOwner(((Node) event.getSource()).getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
@@ -241,6 +258,7 @@ public class LoginView extends CommonController {
 
     /**
      * Handle enter button being used to login.
+     * @param event enter key pressed event.
      */
     @FXML
     private void onEnter(ActionEvent event) {

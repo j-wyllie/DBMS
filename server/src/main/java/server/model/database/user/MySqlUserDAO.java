@@ -15,6 +15,9 @@ import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
 
+/**
+ * Handles all of the database queries to do with the /users endpoint.
+ */
 public class MySqlUserDAO implements UserDAO {
 
     /**

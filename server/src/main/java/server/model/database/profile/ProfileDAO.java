@@ -1,27 +1,38 @@
 package server.model.database.profile;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
+/**
+ * Interface to define all of the ProfileDAO methods.
+ */
 public interface ProfileDAO {
 
     /**
      * Gets all profiles from the database.
+     * @return a list of all the profiles in the db.
+     * @throws SQLException thrown on invalid sql.
      */
     List<Profile> getAll() throws SQLException;
 
+    /**
+     * Gets all of the dead profiles in the db.
+     * @return a list of all the dead profiles.
+     * @throws SQLException thrown when there is an error in the sql.
+     */
     List<Profile> getDead() throws SQLException;
 
     /**
      * Get a single profile from the database by id.
      * @param profileId of the profile.
      * @return a profile.
+     * @throws SQLException thrown on invalid sql.
      */
     Profile get(int profileId) throws SQLException;
 
@@ -29,12 +40,14 @@ public interface ProfileDAO {
      * Get a single profile from the database by username.
      * @param username of the profile.
      * @return a profile.
+     * @throws SQLException thrown on invalid sql.
      */
     Profile get(String username) throws SQLException;
 
     /**
      * Adds a new profile to the database.
      * @param profile to add.
+     * @throws SQLException thrown on invalid sql.
      */
     void add(Profile profile) throws SQLException;
 
@@ -42,20 +55,29 @@ public interface ProfileDAO {
      * Checks if a username already exists in the database.
      * @param username to check.
      * @return true is the username does not already exist.
+     * @throws SQLException thrown on invalid sql.
      */
     boolean isUniqueUsername(String username) throws SQLException;
 
+    /**
+     * checks that an nhi is unique in the database.
+     * @param nhi nhi to be checked.
+     * @return 0 if not unique, 1 if unique.
+     * @throws SQLException thrown on invalid sql.
+     */
     int isUniqueNHI(String nhi) throws SQLException;
 
     /**
      * Removes a profile from the database.
      * @param profile to remove.
+     * @throws SQLException thrown on invalid sql.
      */
     void remove(Profile profile) throws SQLException;
 
     /**
      * Updates a profiles information in the database.
      * @param profile to update.
+     * @throws SQLException thrown on invalid sql.
      */
     void update(Profile profile) throws SQLException;
 
@@ -69,6 +91,7 @@ public interface ProfileDAO {
      * @param type filter based on profile type.
      * @param organs filter based on organs selected.
      * @return a sublist of profiles.
+     * @throws SQLException thrown on invalid sql.
      */
     List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region,
@@ -77,6 +100,7 @@ public interface ProfileDAO {
     /**
      * Gets the number of profiles in the database.
      * @return the number of profiles.
+     * @throws SQLException thrown on invalid sql.
      */
     Integer size() throws SQLException;
 
@@ -117,8 +141,20 @@ public interface ProfileDAO {
      * @param username username.
      * @param password password.
      * @return boolean, true if valid.
+     * @throws SQLException thrown on invalid sql.
+     * @throws UserNotFoundException thrown when a profile is not found in the database.
      */
-    Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException;
+    Boolean checkCredentials(String username, String password) throws
+            SQLException, UserNotFoundException;
 
-    Boolean savePassword(String nhi, String password) throws SQLException, UserNotFoundException;
+    /**
+     * Saves a password to the database for a certain profile.
+     * @param nhi nhi of the profile.
+     * @param password password to be set.
+     * @return true if successfully set, false otherwise.
+     * @throws SQLException thrown on invalid sql.
+     * @throws UserNotFoundException thrown when a user is not found in the database.
+     */
+    Boolean savePassword(String nhi, String password) throws
+            SQLException, UserNotFoundException;
 }

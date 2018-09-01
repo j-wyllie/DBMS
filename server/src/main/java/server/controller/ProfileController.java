@@ -1,24 +1,23 @@
 package server.controller;
 
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
+import org.sonar.api.internal.google.gson.Gson;
+import server.model.database.DAOFactory;
+import server.model.database.profile.ProfileDAO;
+import spark.Request;
+import spark.Response;
+
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Profile;
-import odms.commons.model.user.UserNotFoundException;
-import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonArray;
-import org.sonar.api.internal.google.gson.JsonElement;
-import org.sonar.api.internal.google.gson.JsonObject;
-import org.sonar.api.internal.google.gson.JsonParser;
-import server.model.database.DAOFactory;
-import server.model.database.profile.ProfileDAO;
-import server.model.database.user.UserDAO;
-import spark.Request;
-import spark.Response;
 
+/**
+ * The profile server controller.
+ */
 public class ProfileController {
 
     /**
@@ -228,7 +227,7 @@ public class ProfileController {
             return "Bad Request";
         }
 
-        if (!(profile == null)) {
+        if (profile != null) {
             try {
                 database.update(profile);
             } catch (SQLException e) {
@@ -260,7 +259,7 @@ public class ProfileController {
             return "Bad Request";
         }
 
-        if (!(profile == null)) {
+        if (profile != null) {
             try {
                 database.remove(profile);
             } catch (SQLException e) {
@@ -305,7 +304,6 @@ public class ProfileController {
      * @param res the response from the server.
      * @return The response body.
      */
-
     public static String hasPassword(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Boolean hasPassword = false;
@@ -323,6 +321,12 @@ public class ProfileController {
         return hasPassword.toString();
     }
 
+    /**
+     * Checks the credentials of a profile logging in,
+     * @param request request containg password and username.
+     * @param response response from the server.
+     * @return String displaying success of validation.
+     */
     public static String checkCredentials(Request request, Response response) {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
@@ -330,7 +334,7 @@ public class ProfileController {
         try {
             valid = profileDAO.checkCredentials(request.queryParams("username"),
                     request.queryParams("password"));
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             response.status(500);
             return e.getMessage();
         } catch (UserNotFoundException e) {
@@ -349,11 +353,18 @@ public class ProfileController {
 
     }
 
+    /**
+     * Saves the profiles password.
+     * @param request request being sent with url and password.
+     * @param response the server response.
+     * @return String confirming success.
+     */
     public static String savePassword(Request request, Response response) {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
         try {
-            valid = profileDAO.savePassword(request.queryParams("nhi"), request.queryParams("password"));
+            valid = profileDAO.savePassword(request.queryParams("nhi"),
+                    request.queryParams("password"));
         } catch (SQLException | UserNotFoundException e) {
             response.status(500);
             return e.getMessage();

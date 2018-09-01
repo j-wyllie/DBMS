@@ -1,19 +1,10 @@
 package server.model.database.common;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import odms.commons.model.user.UserNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
-import server.model.database.PasswordUtilities;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class MySqlCommonDAO implements CommonDAO {
 

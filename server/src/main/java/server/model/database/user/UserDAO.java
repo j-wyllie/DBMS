@@ -1,10 +1,14 @@
 package server.model.database.user;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+/**
+ * Interface containg UserDAO methods.
+ */
 public interface UserDAO {
 
     /**
@@ -58,7 +62,10 @@ public interface UserDAO {
      * @param username username.
      * @param password password.
      * @return True if user is valid.
+     * @throws SQLException thrown on sql error.
+     * @throws UserNotFoundException thrown when the user is not found.
      */
-    Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException;
+    Boolean checkCredentials(String username, String password) throws
+            SQLException, UserNotFoundException;
 
 }

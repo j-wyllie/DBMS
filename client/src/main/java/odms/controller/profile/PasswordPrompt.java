@@ -3,6 +3,9 @@ package odms.controller.profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 
+/**
+ * Controller for the password prompt window.
+ */
 public class PasswordPrompt {
 
     private odms.view.profile.PasswordPrompt view;
@@ -15,6 +18,9 @@ public class PasswordPrompt {
         this.view = v;
     }
 
+    /**
+     * Saves the users password by calling the profileDAO.
+     */
     public void savePassword() {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         profileDAO.savePassword(view.currentProfile.getNhi(), view.passwordField.getText());

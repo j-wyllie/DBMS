@@ -1,23 +1,17 @@
 package odms.view.profile;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 
+import java.io.IOException;
+
+/**
+ * The general profile view.
+ */
 public class ProfileGeneral extends CommonView {
 
     @FXML
@@ -57,7 +51,8 @@ public class ProfileGeneral extends CommonView {
 
     private Profile currentProfile;
     // init controller corresponding to this view
-    private odms.controller.profile.ProfileGeneral controller = new odms.controller.profile.ProfileGeneral(this);
+    private odms.controller.profile.ProfileGeneral controller =
+            new odms.controller.profile.ProfileGeneral(this);
     private Boolean isOpenedByClinician;
     private User currentUser;
 
@@ -202,11 +197,22 @@ public class ProfileGeneral extends CommonView {
         controller.setLabels();
     }
 
+    /**
+     * calls the controller method when the edit button is clicked.
+     * @param event edit button clicked event.
+     * @throws IOException thrown when edit window cannot be opened.
+     */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
         handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
+    /**
+     * initializes the general profile view.
+     * @param p the profile being viewed.
+     * @param isOpenedByClinician true if a clinician opened the profile.
+     * @param currentUser the current user viewing the profile.
+     */
     public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
         this.currentUser = currentUser;

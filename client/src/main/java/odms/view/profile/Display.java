@@ -1,42 +1,29 @@
 package odms.view.profile;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import static odms.controller.AlertController.invalidUsername;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-
-import java.io.IOException;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
+import odms.view.user.TransplantWaitingList;
 
-import odms.view.user.TransplantWaitingList;import  odms.view.user.TransplantWaitingList;
-import sun.security.util.Password;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
+import static odms.controller.AlertController.invalidUsername;
+
+/**
+ * The profile display view.
+ */
 public class Display extends CommonView {
 
     private Profile currentProfile;
@@ -92,24 +79,25 @@ public class Display extends CommonView {
      * Scene change to log in view.
      *
      * @param event clicking on the logout button.
+     * @throws IOException error displaying login window.
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
-        //todo showLoginScene(event);
         currentProfile = null;
         changeScene(event, "/view/Login.fxml", "Login");
     }
 
 
     /**
-     * sets all of the items in the fxml to their respective values
+     * sets all of the items in the fxml to their respective values.
      *
      * @param currentProfile donors profile
      */
     @FXML
     private void setPage(Profile currentProfile) {
         try {
-            if (currentProfile.getPreferredName() != null && !currentProfile.getPreferredName().isEmpty()) {
+            if (currentProfile.getPreferredName() != null &&
+                    !currentProfile.getPreferredName().isEmpty()) {
                 donorFullNameLabel.setText(currentProfile.getPreferredName());
             } else {
                 donorFullNameLabel.setText(currentProfile.getFullName());
@@ -140,7 +128,7 @@ public class Display extends CommonView {
 
             setProfileImage();
 
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
             invalidUsername();
         }
@@ -166,11 +154,13 @@ public class Display extends CommonView {
 
     @FXML
     private void onTabOrgansSelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileOrganOverview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileOrganOverview.fxml"));
         try {
             tabOrgans.setContent(loader.load());
             OrganDisplay organsView = loader.getController();
-            organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+            organsView.initialize(
+                    currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -180,7 +170,8 @@ public class Display extends CommonView {
 
     @FXML
     public void onTabMedicalSelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileMedicalTab.fxml"));
         try {
             tabMedical.setContent(loader.load());
             ProfileMedical profileMedicalViewTODO = loader.getController();
@@ -192,7 +183,8 @@ public class Display extends CommonView {
 
     @FXML
     public void onTabHistorySelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileHistoryTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileHistoryTab.fxml"));
         try {
             tabHistory.setContent(loader.load());
             ProfileHistory profileHistoryViewTODO = loader.getController();
@@ -204,7 +196,8 @@ public class Display extends CommonView {
 
     @FXML
     public void onTabMedicationsSelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicationsTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileMedicationsTab.fxml"));
         try {
             tabMedications.setContent(loader.load());
             MedicationsGeneral profileMedicationsView = loader.getController();
@@ -216,7 +209,8 @@ public class Display extends CommonView {
 
     @FXML
     public void onTabMedicalHistorySelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileMedicalHistoryTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileMedicalHistoryTab.fxml"));
         try {
             tabMedicalHistory.setContent(loader.load());
             ProfileMedicalHistory profileMedicalHistoryView = loader.getController();
@@ -228,7 +222,8 @@ public class Display extends CommonView {
 
     @FXML
     public void onTabProceduresSelected() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileProceduresTab.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/ProfileProceduresTab.fxml"));
         try {
             tabProcedures.setContent(loader.load());
             ProceduresDisplay profileProceduresView = loader.getController();

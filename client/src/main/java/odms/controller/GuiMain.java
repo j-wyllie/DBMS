@@ -14,19 +14,20 @@ import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main class. GUI boots from here.
  */
 public class GuiMain extends Application {
 
-    private static final String DONOR_DATABASE = "example/example.json";
-    private static final String USER_DATABASE = "example/users.json";
     private static final String APP_NAME = "ODMS";
     private static final String ADMIN = "admin";
+    private static final String CLINICIAN = "0";
 
-    private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
+    private odms.controller.user.AvailableOrgans controller =
+            new odms.controller.user.AvailableOrgans();
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
@@ -44,7 +45,7 @@ public class GuiMain extends Application {
             e.printStackTrace();
         }
         try {
-            DAOFactory.getUserDao().get("0");
+            DAOFactory.getUserDao().get(CLINICIAN);
         } catch (UserNotFoundException e) {
             createDefaultClinician();
         } catch (SQLException e) {
@@ -52,19 +53,17 @@ public class GuiMain extends Application {
         }
 
         //thread that runs in the background to check if organs have expired since last launch
-        Thread checkOrgan = new Thread() {
-            public void run() {
-                try {
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+        Thread checkOrgan = new Thread(() -> {
+            try {
+                List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                        .getAllOrgansAvailable();
+                for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                    controller.checkOrganExpired(m.getValue(), m.getKey(), m);
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        };
+        });
         checkOrgan.setDaemon(true);
         checkOrgan.start();
 
@@ -96,7 +95,7 @@ public class GuiMain extends Application {
     private static void createDefaultClinician() {
         try {
             User clinician = new User(UserType.CLINICIAN, "Doc");
-            clinician.setUsername("0");
+            clinician.setUsername(CLINICIAN);
             clinician.setPassword("password");
             clinician.setDefault(true);
             DAOFactory.getUserDao().add(clinician);
