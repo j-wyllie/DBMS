@@ -4,6 +4,7 @@ import static odms.controller.AlertController.invalidUsername;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,6 +46,7 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     *
      * @param event the login button clicked event.
      */
     @FXML
@@ -70,7 +72,8 @@ public class LoginView extends CommonController {
 
     /**
      * Attempts to log the profile in with their credentials.
-     * @param event login button clicked event.
+     *
+     * @param event    login button clicked event.
      * @param username Username entered.
      * @throws SQLException thrown when there is an error in the sql.
      */
@@ -83,18 +86,16 @@ public class LoginView extends CommonController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } else if (checkProfile()) {
-
             loadProfileView(currentProfile);
         } else {
             AlertController.invalidUsernameOrPassword();
-
         }
     }
 
     /**
      * Checks the profile has a password.
+     *
      * @return True if they do.
      */
     private boolean hasPassword() {
@@ -104,6 +105,7 @@ public class LoginView extends CommonController {
 
     /**
      * Checks the profiles credentials.
+     *
      * @return boolean if valid credentials.
      */
     private boolean checkProfile() {
@@ -134,6 +136,7 @@ public class LoginView extends CommonController {
 
     /**
      * Load the profile view.
+     *
      * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {
@@ -172,7 +175,7 @@ public class LoginView extends CommonController {
      *
      * @param username the username to load
      * @return a user object
-     * @throws SQLException if a SQL error occurs
+     * @throws SQLException          if a SQL error occurs
      * @throws UserNotFoundException if a user cannot be found
      */
     private User loadUser(String username) throws SQLException, UserNotFoundException {
@@ -183,6 +186,7 @@ public class LoginView extends CommonController {
 
     /**
      * Load the user view.
+     *
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
@@ -218,6 +222,7 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to create account view.
+     *
      * @param event clicking on the create new account link.
      * @throws IOException thrown when the window can not be created.
      */
@@ -230,8 +235,9 @@ public class LoginView extends CommonController {
 
     /**
      * Displays a password prompt window when a user logs in and doesn't have a password set.
+     *
      * @param currentProfile the current profile being logged in.
-     * @param event login button clicked mouse event.
+     * @param event          login button clicked mouse event.
      * @throws IOException thrown when the window can not be created.
      */
     private void showPasswordPromptWindow(Profile currentProfile, ActionEvent event)
@@ -258,6 +264,7 @@ public class LoginView extends CommonController {
 
     /**
      * Handle enter button being used to login.
+     *
      * @param event enter key pressed event.
      */
     @FXML

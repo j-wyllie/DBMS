@@ -350,7 +350,6 @@ public class ProfileController {
         }
 
         return "User validated.";
-
     }
 
     /**

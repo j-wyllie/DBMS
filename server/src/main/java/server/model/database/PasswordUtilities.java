@@ -19,6 +19,7 @@ public final class PasswordUtilities {
     private static final int ITERATIONS = 20 * 1000;
     private static final int SALT_LEN = 32;
     private static final int DESIRED_KEY_LEN = 256;
+    private static final String ALGORITHM = "SHA1PRNG";
 
     /**
      * Private constructor that isn't called for checkstyle rules.
@@ -38,7 +39,7 @@ public final class PasswordUtilities {
      */
     public static String getSaltedHash(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(SALT_LEN);
+        byte[] salt = SecureRandom.getInstance(ALGORITHM).generateSeed(SALT_LEN);
         // store the salt with the password
         return Base64.encodeBase64String(salt) + "$" + hash(password, salt);
     }
