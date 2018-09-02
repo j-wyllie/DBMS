@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -251,7 +252,8 @@ public class LoginView extends CommonController {
         view.initialize(currentProfile);
 
         Stage stage = new Stage();
-        stage.setTitle("Set up password.");
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("Set up password");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initOwner(((Node) event.getSource()).getScene().getWindow());
