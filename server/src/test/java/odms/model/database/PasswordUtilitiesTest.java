@@ -42,4 +42,9 @@ public class PasswordUtilitiesTest {
         assertNotEquals(PasswordUtilities.getSaltedHash(PASSWORD), PasswordUtilities.getSaltedHash(PASSWORD));
     }
 
+    @Test
+    public void testPasswordHashed() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        assertNotEquals(PasswordUtilities.getSaltedHash(PASSWORD), PASSWORD);
+    }
+
 }
