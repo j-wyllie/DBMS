@@ -1,6 +1,7 @@
 package odms.view.profile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
 import javafx.collections.FXCollections;
@@ -11,10 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -47,9 +46,6 @@ public class OrganDisplay extends CommonView {
     private ListView<String> listViewDonating;
 
     @FXML
-    private ListView<String> listViewReceiving;
-
-    @FXML
     private Button donatingButton;
 
     @FXML
@@ -70,6 +66,15 @@ public class OrganDisplay extends CommonView {
     @FXML
     private Button donatedButton;
 
+    @FXML
+    private TableView tableViewReceiving;
+
+    @FXML
+    private TableColumn tableColumnOrgan;
+
+    @FXML
+    private TableColumn tableColumnDate;
+
     private static OrganSelectEnum windowType;
     private TransplantWaitingList transplantWaitingListView;
     private User currentUser;
@@ -88,12 +93,18 @@ public class OrganDisplay extends CommonView {
         currentProfile = controller.getUpdatedProfileDetails(p);
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
-        listViewReceiving.setCellFactory(param -> new OrganDisplay.HighlightedCell());
+        //tableColumnOrgan.setCellFactory(param -> new OrganDisplay.HighlightedCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
-        listViewReceiving.setItems(observableListReceiving);
-        refreshListViews();
+
+//        this.hideTableHeader(tableViewReceiving);
+        tableViewReceiving.setPlaceholder(new Label(""));
+        tableViewReceiving.setItems(observableListReceiving);
+        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
+        tableColumnDate.setCellValueFactory(new PropertyValueFactory<String, LocalDate>("date"));
+        tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
+
         try {
             if (!currentProfile.getDateOfDeath().equals(null)) {
                 donatingButton.setDisable(true);
@@ -111,9 +122,14 @@ public class OrganDisplay extends CommonView {
                 visibilityLists(listViewDonated, donatedLabel, donatedButton, 2, true);
             }
             if (DAOFactory.getOrganDao().getRequired(currentProfile).isEmpty()) {
-                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, false);
-            } else {
-                visibilityLists(listViewReceiving, receivingLabel, receivingButton, 1, true);
+                ColumnConstraints zeroWidth = new ColumnConstraints();
+                zeroWidth.setPrefWidth(0);
+                organGridPane.getColumnConstraints().set(1, zeroWidth);
+
+                tableViewReceiving.setPrefWidth(0);
+                receivingLabel.setVisible(false);
+                tableViewReceiving.setVisible(false);
+
             }
             receivingButton.setVisible(false);
             donatedButton.setVisible(false);
@@ -210,7 +226,7 @@ public class OrganDisplay extends CommonView {
 
         listViewDonated.refresh();
         listViewDonating.refresh();
-        listViewReceiving.refresh();
+        tableViewReceiving.refresh();
     }
 
     /**
