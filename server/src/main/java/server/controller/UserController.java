@@ -49,6 +49,7 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
+
             if (req.queryMap().hasKey("id")) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
@@ -67,7 +68,7 @@ public class UserController {
 
         res.type("application/json");
         res.status(200);
-
+        System.out.println(responseBody);
         return responseBody;
     }
 

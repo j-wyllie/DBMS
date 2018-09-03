@@ -85,6 +85,7 @@ public class LoginView extends CommonController {
         try {
             if (profile != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
+
                 fxmlLoader.setLocation(
                         getClass().getResource("/view/ProfileDisplay.fxml"));
 

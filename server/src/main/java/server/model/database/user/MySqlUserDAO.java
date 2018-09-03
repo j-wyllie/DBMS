@@ -85,13 +85,13 @@ public class MySqlUserDAO implements UserDAO {
      */
     public User get(String username) throws UserNotFoundException, SQLException {
         String query = "SELECT * FROM users WHERE Username = ?;";
+        System.out.println("gets to this line but not any further");
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        User user;
+        User user = null;
         Connection conn = instance.getConnection();
-
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
+            System.out.println("db getting "+username);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
