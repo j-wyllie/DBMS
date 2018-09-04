@@ -29,6 +29,7 @@ import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.view.CommonView;
 
+import odms.view.SocialFeedTab;
 import odms.view.user.TransplantWaitingList;import  odms.view.user.TransplantWaitingList;
 
 public class Display extends CommonView {
@@ -62,6 +63,8 @@ public class Display extends CommonView {
     private Tab tabHistory;
     @FXML
     private Tab tabProcedures;
+    @FXML
+    private Tab tabSocialFeed;
     @FXML
     private Button logoutButton;
     @FXML
@@ -165,6 +168,19 @@ public class Display extends CommonView {
             tabOrgans.setContent(loader.load());
             OrganDisplay organsView = loader.getController();
             organsView.initialize(currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    @FXML
+    private void onTabSocialFeedSelected() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SocialFeedTab.fxml"));
+        try {
+            tabSocialFeed.setContent(loader.load());
+            SocialFeedTab socialFeed = loader.getController();
+            socialFeed.initialise();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

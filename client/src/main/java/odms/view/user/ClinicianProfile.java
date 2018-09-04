@@ -24,6 +24,7 @@ import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
+import odms.view.SocialFeedTab;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class ClinicianProfile extends CommonView {
     private Tab transplantTab;
     @FXML
     private Tab availableOrgansTab;
+    @FXML
+    private Tab socialFeedTab;
     @FXML
     private ImageView profileImage;
     @FXML
@@ -171,6 +174,19 @@ public class ClinicianProfile extends CommonView {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleSocialFeedTabClicked() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SocialFeedTab.fxml"));
+        try {
+            socialFeedTab.setContent(loader.load());
+            SocialFeedTab socialFeed = loader.getController();
+            socialFeed.initialise();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     /**
