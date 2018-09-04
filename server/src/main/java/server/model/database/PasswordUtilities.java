@@ -18,7 +18,7 @@ public final class PasswordUtilities {
     // also for an attacker.
     private static final int ITERATIONS = 20 * 100;
     private static final int SALT_LEN = 32;
-    private static final int DESIRED_KEY_LEN = 256;
+    private static final int DESIRED_KEY_LEN = 128;
     private static final String ALGORITHM = "SHA1PRNG";
 
     /**
