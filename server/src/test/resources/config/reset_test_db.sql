@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
-  `Password` VARCHAR(100) DEFAULT NULL,
+  `Password` varchar(100) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
   `GivenNames` varchar(50) DEFAULT NULL,
