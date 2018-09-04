@@ -7,16 +7,25 @@ import static org.junit.Assert.assertTrue;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.PasswordUtilities;
 
 public class PasswordUtilitiesTest {
 
-    String PASSWORD = "password";
+    static String PASSWORD = "password";
+    static String hashedPassword;
+
+    /**
+     * Creates a hashed password to be used in the tests. Saves computing power.
+     */
+    @BeforeClass
+    public static void setup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        hashedPassword = PasswordUtilities.getSaltedHash(PASSWORD);
+    }
 
     @Test
-    public void testGetSaltedHash() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        String hashedPassword = PasswordUtilities.getSaltedHash(PASSWORD);
+    public void testGetSaltedHash() {
         assertEquals(2, hashedPassword.split("\\$").length);
     }
 
@@ -33,18 +42,17 @@ public class PasswordUtilitiesTest {
 
     @Test
     public void testCheckValid() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        Boolean valid = PasswordUtilities.check(PASSWORD, PasswordUtilities.getSaltedHash(PASSWORD));
-        assertTrue(valid);
+        assertTrue(PasswordUtilities.check(PASSWORD, hashedPassword));
     }
 
     @Test
     public void testCheckHash() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        assertNotEquals(PasswordUtilities.getSaltedHash(PASSWORD), PasswordUtilities.getSaltedHash(PASSWORD));
+        assertNotEquals(hashedPassword, PasswordUtilities.getSaltedHash(PASSWORD));
     }
 
     @Test
-    public void testPasswordHashed() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        assertNotEquals(PasswordUtilities.getSaltedHash(PASSWORD), PASSWORD);
+    public void testPasswordHashed() {
+        assertNotEquals(hashedPassword, PASSWORD);
     }
 
 }
