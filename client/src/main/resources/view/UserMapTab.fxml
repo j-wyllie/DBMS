@@ -23,8 +23,8 @@
         </rowConstraints>
          <children>
              <ClusteredGoogleMapView fx:id="mapView" GridPane.columnIndex="2" GridPane.rowSpan="3"  prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-             <ListView fx:id="donorListView" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="3" />
-             <ListView fx:id="receiverListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="3" />
+             <ListView fx:id="matchesListView" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="3" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+             <!--<ListView fx:id="receiverListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="3" />-->
          </children>
       </GridPane>
    </children>

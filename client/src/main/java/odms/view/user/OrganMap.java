@@ -6,16 +6,23 @@ import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import javafx.collections.ListChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import odms.commons.model.enums.NewZealandRegionsEnum;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Profile;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
+import javafx.util.Callback;
 import odms.commons.model.user.User;
 
 import java.net.URL;
 import java.util.*;
+import odms.controller.user.ExpandableListElement;
 
 public class OrganMap implements Initializable, MapComponentInitializedListener{
 
@@ -24,8 +31,11 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
 
     @FXML
     private GoogleMapView mapView;
-
     private GoogleMap map;
+
+    @FXML
+    private ListView matchesListView;
+    private ObservableList<ExpandableListElement> listViewContent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -55,5 +65,25 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
     public void initialize(User currentUser) {
         this.currentUser = currentUser;
         controller.setView(this);
+        initListView();
+    }
+
+    private void initListView() {
+        // populate matchesListView with donor and receiver columns and their initial values
+        ListView<String> donorsList = new ListView<String>(controller.getDeadDonors());
+        ListView<String> receiversList = new ListView<String>();    // empty as no receiver selected
+        ExpandableListElement donors = new ExpandableListElement("Donors", donorsList);
+        ExpandableListElement receivers = new ExpandableListElement("Receivers", receiversList);
+        listViewContent = FXCollections.observableArrayList();
+        listViewContent.add(donors);
+        listViewContent.add(receivers);
+        matchesListView.setItems(listViewContent);
+
+        // set cell factory callback function
+        matchesListView.setCellFactory(controller.getListViewCallback());
+    }
+
+    public double getMatchesListViewWidth() {
+        return matchesListView.getWidth();
     }
 }
