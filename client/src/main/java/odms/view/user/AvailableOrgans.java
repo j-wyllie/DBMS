@@ -30,16 +30,13 @@ import static odms.controller.user.AvailableOrgans.*;
  */
 public class AvailableOrgans extends CommonView {
 
+    // Matches table
     @FXML
     private CheckBox ageRangeCheckbox;
     @FXML
     private TextField ageField;
     @FXML
     private TextField ageRangeField;
-
-    // To add to fxml ^^^^
-
-
     @FXML
     private TextField nameSearchField;
     @FXML
@@ -47,13 +44,16 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private CheckComboBox regionsComboboxMatchesTable;
     @FXML
+    private TableView<Profile> potentialOrganMatchTable;
+
+    //Organs table
+    @FXML
     private CheckComboBox organsCombobox;
     @FXML
     private CheckComboBox regionsCombobox;
     @FXML
     private TableView availableOrgansTable;
-    @FXML
-    private TableView<Profile> potentialOrganMatchTable;
+
 
     private boolean filtered = false;
     private OrganEnum selectedOrgan;

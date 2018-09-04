@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import odms.commons.model.enums.BloodTypeEnum;
+import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Profile;
@@ -408,21 +410,22 @@ public class AvailableOrgans {
      * @param organAvailable the available organ
      * @param donorProfile the donor the organ came from
      * @param nameFieldText
-     * @param checkedItems
-     * @param items
-     * @param text
-     * @param ageRangeFieldText
-     * @param selected
+     * @param checkedBloodTypes
+     * @param checkedRegions
+     * @param ageLower
+     * @param ageUpper
+     * @param ageRangeChecked
      * @return a list of potential organ matches
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
             Profile donorProfile, OrganEnum selectedOrgan,
-            String nameFieldText, ObservableList checkedItems, ObservableList items,
-            String text,
-            String ageRangeFieldText, boolean selected) {
+            String nameFieldText, ObservableList checkedBloodTypes, ObservableList checkedRegions,
+            String ageLower, String ageUpper, boolean ageRangeChecked) {
         System.out.println("rec");
         // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
+        ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections.observableArrayList();
+
         List<Profile> receivingProfiles = new ArrayList<>();
 
         String organLocation = donorProfile.getRegionOfDeath();
@@ -442,8 +445,8 @@ public class AvailableOrgans {
 
         receivingProfiles = DAOFactory.getProfileDao()
                 .getOrganReceivers(organAvailable.getName(), reqBloodType, minAge, maxAge);
-        potentialOrganMatches.addAll(receivingProfiles);
-        SortedList<Profile> sortedByCountry = new SortedList<>(potentialOrganMatches,
+        potentialOrganMatchesUnfiltered.addAll(receivingProfiles);
+        SortedList<Profile> sortedByCountry = new SortedList<>(potentialOrganMatchesUnfiltered,
                 (Profile profile1, Profile profile2) -> {
                     if (profile1.getCountry().equals(donorProfile.getCountryOfDeath())
                             && !profile2
@@ -483,9 +486,69 @@ public class AvailableOrgans {
                     }
                 });
         for (Profile p : sortedByCity) {
-            potentialOrganMatches.remove(p);
-            potentialOrganMatches.add(p);
+            potentialOrganMatchesUnfiltered.remove(p);
+            potentialOrganMatchesUnfiltered.add(p);
         }
+
+        // No point filtering
+        if (ageLower.equals("") && checkedRegions.size() == 0 && checkedBloodTypes.size() == 0 && nameFieldText.equals("")) {
+            return potentialOrganMatchesUnfiltered;
+        }
+
+
+        // Name filtering
+        // TODO
+
+
+        // Blood type filtering
+        if (checkedBloodTypes.size() > 0) {
+            potentialOrganMatches.clear();
+            for (Profile p : potentialOrganMatchesUnfiltered) {
+                if (checkedBloodTypes.contains(p.getBloodType())) {
+                    potentialOrganMatches.add(p);
+                }
+            }
+            potentialOrganMatchesUnfiltered.clear();
+            potentialOrganMatchesUnfiltered.addAll(potentialOrganMatches);
+        }
+
+        // Regions filtering
+        if (checkedRegions.size() > 0) {
+            potentialOrganMatches.clear();
+            for (Profile p : potentialOrganMatchesUnfiltered) {
+                if (checkedRegions.contains(p.getRegion())) {
+                    potentialOrganMatches.add(p);
+                }
+            }
+            potentialOrganMatchesUnfiltered.clear();
+            potentialOrganMatchesUnfiltered.addAll(potentialOrganMatches);
+        }
+
+        // Age filtering
+        if (!ageLower.equals("")) {
+            if (ageRangeChecked) {
+                if (!ageUpper.equals("")) {
+                    potentialOrganMatches.clear();
+                    for (Profile p : potentialOrganMatchesUnfiltered) {
+                        if (p.getAge() > Integer.parseInt(ageLower) && p.getAge() < Integer.parseInt(ageUpper)) {
+                            potentialOrganMatches.add(p);
+                        }
+                    }
+                    potentialOrganMatchesUnfiltered.clear();
+                    potentialOrganMatchesUnfiltered.addAll(potentialOrganMatches);
+                }
+            } else {
+                potentialOrganMatches.clear();
+                for (Profile p : potentialOrganMatchesUnfiltered) {
+                    if (p.getAge() == Integer.parseInt(ageLower)) {
+                        potentialOrganMatches.add(p);
+                    }
+                }
+                potentialOrganMatchesUnfiltered.clear();
+                potentialOrganMatchesUnfiltered.addAll(potentialOrganMatches);
+            }
+        }
+
         return potentialOrganMatches;
     }
 
