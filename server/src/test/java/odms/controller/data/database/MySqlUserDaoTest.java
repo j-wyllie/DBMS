@@ -20,18 +20,15 @@ import server.model.database.user.MySqlUserDAO;
 public class MySqlUserDaoTest extends MySqlCommonTests {
     private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
-    private static User testUser0 = new User(1, "Username", "password", "Tim Hamblin", UserType.ADMIN, "69 Yeetville", "Yeetus",
-            LocalDateTime.now(), LocalDateTime.now(), null);
-    private static User testUser1 = new User(1, "Pleb", "password2", "Brooke rasdasdk", UserType.ADMIN, "68 Yeetville", "Yeetskeet",
-            LocalDateTime.now(), LocalDateTime.now(), null);
+    private static User testUser0;
+    private static User testUser1;
 
     @BeforeClass
     public static void addUser() throws SQLException, UserNotFoundException {
-        mySqlUserDAO.add(testUser0);
-        mySqlUserDAO.add(testUser1);
         testUser0 = mySqlUserDAO.get("username");
         testUser1 = mySqlUserDAO.get("Pleb");
     }
+
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {

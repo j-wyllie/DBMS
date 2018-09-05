@@ -391,6 +391,10 @@ ALTER TABLE `procedures`
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
+  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
+  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
+
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
   (2, 'AF', 1),
