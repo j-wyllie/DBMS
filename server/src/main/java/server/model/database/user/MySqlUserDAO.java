@@ -191,7 +191,11 @@ public class MySqlUserDAO implements UserDAO {
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
+            if (user.getPassword() != null) {
+                stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
+            } else {
+                stmt.setString(2, "");
+            }
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
