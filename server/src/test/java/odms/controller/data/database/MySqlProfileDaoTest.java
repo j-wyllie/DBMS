@@ -132,33 +132,6 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
                 "Bone", "O-", 12, 42).get(0).getFullName());
     }
 
-    @Test
-    public void testHasPassword() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertTrue(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
-    }
-
-    @Test
-    public void testDoesntHavePassword() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        assertFalse(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
-    }
-
-    @Test
-    public void testCheckCredentialsCorrect() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertTrue(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "password"));
-    }
-
-    @Test
-    public void testCheckCredentialsIncorrect() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertFalse(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "wrong"));
-    }
-
     @After
     public void cleanup() throws SQLException {
         ArrayList<Profile> profiles = (ArrayList<Profile>) mySqlProfileDAO.getAll();
