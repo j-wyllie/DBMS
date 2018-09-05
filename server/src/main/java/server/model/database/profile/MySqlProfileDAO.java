@@ -39,7 +39,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = connectionInstance.getConnection();
         Statement stmt = conn.createStatement();
         try {
 
@@ -68,7 +68,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
 
@@ -339,7 +339,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public void add(Profile profile) throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(insertQuery);
         try {
@@ -411,7 +411,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     public boolean isUniqueUsername(String username) throws SQLException {
         String query = "select Username from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -441,7 +441,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         int id = 0;
         String query = "select * from profiles where NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -472,7 +472,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "delete from profiles where ProfileId = ?;";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
 
@@ -861,7 +861,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setString(1, nhi);
@@ -883,7 +883,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Boolean checkCredentials(String username, String password) throws SQLException, UserNotFoundException {
         String query = "SELECT NHI, Password FROM profiles WHERE NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -928,5 +928,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.close();
             stmt.close();
         }
-        return false;    }
+        return false;
+    }
 }
