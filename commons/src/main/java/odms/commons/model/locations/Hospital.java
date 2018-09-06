@@ -12,6 +12,7 @@ public class Hospital {
     private Double longitude;
     private String address;
     private List programs;
+    private Integer id;
 
     /**
      * Constructor for hospital objects.
@@ -20,13 +21,16 @@ public class Hospital {
      * @param lon longitude of hte hospital
      * @param address address of the hospital
      * @param programs list of transplant programs that the hospital provides
+     * @param id the unique id for the hospital
      */
-    public Hospital(String name, Double lat, Double lon, String address, List programs) {
+    public Hospital(String name, Double lat, Double lon, String address, List programs,
+            Integer id) {
         this.name = name;
         this.latitude = lat;
         this.longitude = lon;
         this.address = address;
         this.programs = programs;
+        this.id = id;
     }
 
     public String getName() {
@@ -47,6 +51,10 @@ public class Hospital {
 
     public List getPrograms() {
         return programs;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public void setName(String name) {

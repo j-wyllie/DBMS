@@ -46,11 +46,10 @@ public class MySqlProfileDAO implements ProfileDAO {
             ResultSet allProfiles = stmt.executeQuery(query);
 
             while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
+                Profile newProfile = parseProfile(allProfiles);
                 result.add(newProfile);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -78,8 +77,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             rs.next();
             profile = parseProfile(rs);
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -108,8 +106,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             while(rs.next()) {
                 profile = parseProfile(rs);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             stmt.close();
@@ -245,8 +242,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         stmt.setString(7, profile.getDateOfBirth().toString());
         if (profile.getDateOfDeath() == null) {
             stmt.setString(8, null);
-        }
-        else {
+        } else {
             stmt.setString(8, profile.getDateOfDeath().toString());
         }
         stmt.setString(9, profile.getGender());
@@ -255,8 +251,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         stmt.setString(12, profile.getBloodType());
         if (profile.getIsSmoker() == null) {
             stmt.setBoolean(13, false);
-        }
-        else {
+        } else {
             stmt.setBoolean(13, profile.getIsSmoker());
         }
         stmt.setString(14, profile.getAlcoholConsumption());
@@ -345,11 +340,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
             stmt = prepareStatement(profile, stmt);
             stmt.executeUpdate();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             stmt.close();
             conn.close();
         }
@@ -610,8 +603,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 if (index > 0) {
                     query += " or o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
-                }
-                else {
+                } else {
                     query += " and (o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 }
@@ -628,8 +620,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
                 query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
-            }
-            else {
+            } else {
                 query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
                         + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
@@ -668,8 +659,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                     index++;
                     stmt.setInt(index, ageSearchInt);
                     index++;
-                }
-                else {
+                } else {
                     stmt.setInt(index, ageSearchInt);
                     index++;
                     stmt.setInt(index, ageSearchInt);
@@ -707,8 +697,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conn.close();
@@ -802,8 +791,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                     result.add(newProfile);
                     existingIds.add(newProfile.getId());}
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
