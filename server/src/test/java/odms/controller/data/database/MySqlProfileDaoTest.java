@@ -1,6 +1,8 @@
 package odms.controller.data.database;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,8 +14,10 @@ import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
@@ -90,7 +94,6 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
 
     @Test
     public void testSearch() throws SQLException, OrganConflictException {
-
         mySqlProfileDAO.add(testProfileLong0);
         Profile newProfile = mySqlProfileDAO.get("DSF5422");
         MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
@@ -127,6 +130,33 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlOrganDAO.addRequired(newProfile, OrganEnum.BONE);
         assertEquals(testProfileLong0.getFullName(), mySqlProfileDAO.getOrganReceivers(
                 "Bone", "O-", 12, 42).get(0).getFullName());
+    }
+
+    @Ignore
+    public void testHasPassword() throws SQLException, UserNotFoundException {
+        mySqlProfileDAO.add(testProfile0);
+        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
+        assertTrue(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
+    }
+
+    @Test
+    public void testDoesntHavePassword() throws SQLException {
+        mySqlProfileDAO.add(testProfile0);
+        assertFalse(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
+    }
+
+    @Ignore
+    public void testCheckCredentialsCorrect() throws SQLException, UserNotFoundException {
+        mySqlProfileDAO.add(testProfile0);
+        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
+        assertTrue(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "password"));
+    }
+
+    @Ignore
+    public void testCheckCredentialsIncorrect() throws SQLException, UserNotFoundException {
+        mySqlProfileDAO.add(testProfile0);
+        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
+        assertFalse(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "wrong"));
     }
 
     @After
