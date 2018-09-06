@@ -896,6 +896,8 @@ public class MySqlProfileDAO implements ProfileDAO {
             return PasswordUtilities.check(password, hashedPassword);
 
         } catch (SQLException e) {
+            System.out.println(stmt);
+
             throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             e.printStackTrace();
