@@ -11,13 +11,13 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 
 import java.net.URL;
@@ -34,8 +34,9 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
     private GoogleMap map;
 
     @FXML
-    private ListView matchesListView;
-    private ObservableList<ExpandableListElement> listViewContent;
+    private TableView donorListView;
+    @FXML
+    private TableColumn donorColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,21 +70,18 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
     }
 
     private void initListView() {
-        // populate matchesListView with donor and receiver columns and their initial values
-        ListView<String> donorsList = new ListView<String>(controller.getDeadDonors());
-        ListView<String> receiversList = new ListView<String>();    // empty as no receiver selected
-        ExpandableListElement donors = new ExpandableListElement("Donors", donorsList);
-        ExpandableListElement receivers = new ExpandableListElement("Receivers", receiversList);
-        listViewContent = FXCollections.observableArrayList();
-        listViewContent.add(donors);
-        listViewContent.add(receivers);
-        matchesListView.setItems(listViewContent);
+        donorListView.setItems(controller.getDeadDonors());
+        donorColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
 
-        // set cell factory callback function
-        matchesListView.setCellFactory(controller.getListViewCallback());
+        donorListView.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    donorListView.getSelectionModel().getSelectedItem() != null) {
+                controller.displayPointOnMap((Profile) donorListView.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
     public double getMatchesListViewWidth() {
-        return matchesListView.getWidth();
+        return donorListView.getWidth();
     }
 }

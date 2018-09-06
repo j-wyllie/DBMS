@@ -26,8 +26,8 @@ public class OrganMap {
         view = v;
     }
 
-    public ObservableList<String> getDeadDonors() {
-        ArrayList<String> deadDonors = new ArrayList<>();
+    public ObservableList<Profile> getDeadDonors() {
+        ArrayList<Profile> deadDonors = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
         List<Profile> allDonors = null;
         try {
@@ -39,7 +39,7 @@ public class OrganMap {
         for (Profile profile : allDonors) {
             // If the profile has organs to donate
             if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
-                deadDonors.add(profile.getFullName());
+                deadDonors.add(profile);
             }
         }
         return FXCollections.observableArrayList(deadDonors);
@@ -105,5 +105,12 @@ public class OrganMap {
         }
 
         return svg;
+    }
+
+    public void displayPointOnMap(Profile profile){
+        String address = profile.getRegion();
+        //todo Display given profile's address or maybe return the long/lat.
+
+
     }
 }
