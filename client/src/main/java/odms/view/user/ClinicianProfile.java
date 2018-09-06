@@ -19,6 +19,7 @@ import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
+import odms.view.SettingsPopup;
 
 /**
  * Handles all of the tabs for the user profile view.
@@ -57,7 +58,6 @@ public class ClinicianProfile extends CommonView {
 
     /**
      * Scene change to log in view.
-     *
      * @param event clicking on the logout button.
      * @throws IOException if the scene cannot be changed.
      */
@@ -94,6 +94,8 @@ public class ClinicianProfile extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingsPopup.fxml"));
         stage.setTitle("Settings");
         stage.setScene(new Scene(loader.load()));
+        SettingsPopup controller = loader.getController();
+        controller.initialize(currentUser);
         stage.show();
     }
 

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.country.CountryDAO;
 import odms.view.SettingsPopup;
 
 public class SettingsPopupController {

@@ -41,20 +41,11 @@ public class UserGeneral {
     private Label addressLabel;
     @FXML
     private Label regionLabel;
-    @FXML
-    private TableView countriesTable;
-    @FXML
-    private TableColumn<CountriesEnum, String> countriesColumn;
-    @FXML
-    private TableColumn<CountriesEnum, Boolean> allowedColumn;
 
     //private Redo redoController = new Redo();
     //private Undo undoController = new Undo();
     private User currentUser;
-    private CountryDAO server = DAOFactory.getCountryDAO();
-    private ObservableList<CountriesEnum> countriesEnumObservableList = FXCollections
-            .observableArrayList(
-                    param -> new Observable[]{param.getValidProperty()});
+
 
 
     /**
@@ -111,95 +102,6 @@ public class UserGeneral {
     }
 
     /**
-     * Populates the countries table with a list of countries. Populates a column with a checkbox
-     * that is ticked if the country is valid.
-     */
-    private void setupCountriesTable() {
-        List<String> allCountries = server.getAll();
-
-        List<String> validCountries = server.getAll(true);
-        for (String country : allCountries) {
-            CountriesEnum countryEnum = CountriesEnum.getEnumByString(country);
-            if (countryEnum != null && validCountries.contains(country)) {
-                countryEnum.setValid(true);
-                countriesEnumObservableList.add(countryEnum);
-            } else {
-                if (countryEnum != null) {
-                    countryEnum.setValid(false);
-                    countriesEnumObservableList.add(countryEnum);
-                }
-            }
-        }
-        countriesColumn.setSortable(false);
-        allowedColumn.setSortable(false);
-        countriesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        countriesTable.setItems(countriesEnumObservableList);
-        countriesColumn.setCellValueFactory(
-                cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        allowedColumn.setCellValueFactory(
-                cellData -> new SimpleBooleanProperty(cellData.getValue().getValid()));
-    }
-
-    /**
-     * Adds listeners to the valid countries checkboxes. One for key pressed and one for mouse
-     * pressed.
-     */
-    private void addAllowedColumnListeners() {
-        allowedColumn.setCellFactory(p -> {
-            CheckBox checkBox = new CheckBox();
-            TableCell<CountriesEnum, Boolean> tableCell = new TableCell<CountriesEnum, Boolean>() {
-
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(checkBox);
-                        checkBox.setSelected(item);
-                    }
-                }
-            };
-
-            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-                CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
-                countriesEnum.setValid(!countriesEnum.getValid());
-                countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
-
-                Integer count = 0;
-                for (CountriesEnum country : countriesEnumObservableList) {
-                    if (country.getValid()) {
-                        count++;
-                        if (count > 1) {
-                            break;
-                        }
-                    }
-                }
-                if (count == 0) {
-                    checkBox.setSelected(checkBox.isSelected());
-                    countriesEnum.setValid(!countriesEnum.getValid());
-                    countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
-                }
-
-                server.update(countriesEnum,
-                        countriesEnum.getValid());
-            });
-
-            checkBox.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.getCode() == KeyCode.SPACE) {
-                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
-                    checkBox.setSelected(!countriesEnum.getValid());
-                }
-            });
-
-            tableCell.setAlignment(Pos.CENTER);
-            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            return tableCell;
-        });
-    }
-
-    /**
      * Initializes all of the labels and checks the user type.
      * @param currentUser The current user logged in.
      */
@@ -219,12 +121,5 @@ public class UserGeneral {
                 regionLabel.getText() +
                         (currentUser.getRegion() != null ? currentUser.getRegion() : "")
         );
-
-        if (currentUser.getUserType().equals(UserType.CLINICIAN)) {
-            countriesTable.setVisible(false);
-        } else {
-            setupCountriesTable();
-            addAllowedColumnListeners();
-        }
     }
 }
