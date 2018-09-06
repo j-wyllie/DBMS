@@ -220,9 +220,30 @@ CREATE TABLE IF NOT EXISTS `users` (
   `ImageName` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `affected_organs`
@@ -294,6 +315,11 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for dumped tables
 --
 
+--
+-- AUTO_INCREMENT for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --
