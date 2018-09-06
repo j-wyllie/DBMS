@@ -16,7 +16,7 @@ public final class PasswordUtilities {
     // The higher the number of ITERATIONS the more
     // expensive computing the hash is for us and
     // also for an attacker.
-    private static final int ITERATIONS = 2;
+    private static final int ITERATIONS = 1;
     private static final int SALT_LEN = 16;
     private static final int DESIRED_KEY_LEN = 64;
     private static final String ALGORITHM = "SHA1PRNG";

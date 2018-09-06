@@ -911,7 +911,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             throws SQLException, UserNotFoundException {
         String query = "UPDATE profiles SET Password = ? WHERE NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
