@@ -2,6 +2,9 @@ package odms.commons.model.locations;
 
 import java.util.List;
 
+/**
+ * Hospital class. Objects describe details about a hospital.
+ */
 public class Hospital {
 
     private String name;
@@ -10,6 +13,14 @@ public class Hospital {
     private String address;
     private List programs;
 
+    /**
+     * Constructor for hospital objects.
+     * @param name Name of hte hospital
+     * @param lat latitude of hte hospital
+     * @param lon longitude of hte hospital
+     * @param address address of the hospital
+     * @param programs list of transplant programs that the hospital provides
+     */
     public Hospital(String name, Double lat, Double lon, String address, List programs) {
         this.name = name;
         this.latitude = lat;
