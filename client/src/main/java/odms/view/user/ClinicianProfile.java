@@ -3,13 +3,10 @@ package odms.view.user;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -17,17 +14,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.UserType;
-import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * Handles all of the tabs for the user profile view.
@@ -98,8 +89,12 @@ public class ClinicianProfile extends CommonView {
      * Opens settings popup on click.
      */
     @FXML
-    private void handleSettingsButtonAction() {
-
+    private void handleSettingsButtonAction() throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingsPopup.fxml"));
+        stage.setTitle("Settings");
+        stage.setScene(new Scene(loader.load()));
+        stage.show();
     }
 
     /**
@@ -110,8 +105,7 @@ public class ClinicianProfile extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
         try {
             consoleTab.setContent(loader.load());
-            ConsoleTab console = loader.getController();
-            // don't initialize as it will double print.
+            loader.getController();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

@@ -36,7 +36,7 @@ public class ProcedureGeneralTest {
         testProcedure.setId(1);
         currentProfile.getAllProcedures().add(testProcedure);
         int initial_size = currentProfile.getAllProcedures().size();
-        controller.removeProcedure(testProcedure, currentProfile);
+        controller.removeProcedure(testProcedure);
         assertNotEquals(initial_size, currentProfile.getAllProcedures());
     }
 

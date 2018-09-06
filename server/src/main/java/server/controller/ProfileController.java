@@ -58,20 +58,27 @@ public class ProfileController {
             }
             else if (req.queryMap().hasKey("organ")) {
                 String organ = req.queryParams("organ");
+                System.out.println(organ);
                 String bloodType = req.queryParams("bloodType");
+                System.out.println(bloodType);
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
+                System.out.println(lowerAgeRange);
                 Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
+                System.out.println(upperAgeRange);
                 List<Profile> result = database.getOrganReceivers(organ, bloodType,
                         lowerAgeRange, upperAgeRange);
+                System.out.println(result.size());
                 profiles = gson.toJson(result);
             }
             else {
                 profiles = gson.toJson(database.getAllReceiving());
             }
         } catch (NumberFormatException e) {
+            e.printStackTrace();
             res.status(400);
             return "Bad Request";
         } catch (Exception e) {
+            e.printStackTrace();
             res.status(500);
             return "Internal Server Error";
         }

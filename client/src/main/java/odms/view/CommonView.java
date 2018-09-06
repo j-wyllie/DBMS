@@ -305,9 +305,7 @@ public class CommonView {
             stage.setScene(scene);
             parentView.addToOpenProfileStages(stage);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> {
-                parentView.closeStage(stage);
-            });
+            stage.setOnCloseRequest((WindowEvent event) -> parentView.closeStage(stage));
         } catch (IOException e) {
             e.printStackTrace();
         }
