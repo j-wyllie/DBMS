@@ -38,8 +38,9 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
      * Sets the Database to the test database and Initialises the DBO
      */
     @Before
-    public void setUp() {
+    public void setUp() throws InterruptedException {
         mySqlProfileDAO = new MySqlProfileDAO();
+        Thread.sleep(1000);
     }
 
     @Test
