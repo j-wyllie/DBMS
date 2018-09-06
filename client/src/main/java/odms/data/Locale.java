@@ -8,7 +8,7 @@ public class Locale {
         throw new UnsupportedOperationException();
     }
 
-    public void setLocale(String currentLocale) { this.locale = new Locale(); }
+    public void setLocale(Locale currentLocale) { this.locale = new Locale(); }
 
     public Locale getLocale() { return this.locale; }
 }

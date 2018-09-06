@@ -95,6 +95,14 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
+     * Opens settings popup on click.
+     */
+    @FXML
+    private void handleSettingsButtonAction() {
+
+    }
+
+    /**
      * Initializes the controller for the console tab.
      */
     public void handleConsoleTabClicked() {
