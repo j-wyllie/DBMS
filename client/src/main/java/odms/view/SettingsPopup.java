@@ -1,6 +1,7 @@
 package odms.view;
 
 import java.util.List;
+import java.util.Locale;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,12 +23,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.SettingsPopupController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.country.CountryDAO;
+import odms.data.DefaultLocale;
 
 public class SettingsPopup {
 
@@ -173,9 +176,8 @@ public class SettingsPopup {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
 
-        ObservableList<String> observableLanguageSelect = FXCollections.observableArrayList();
-        observableLanguageSelect.addAll(controller.getLanguageOptions());
-        languageSelect.(observableLanguageSelect);
+        languageSelect.getItems().addAll(controller.getLanguageOptions());
+        languageSelect.setValue(DefaultLocale.getLocale().getDisplayLanguage());
 
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);

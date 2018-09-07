@@ -1,14 +1,16 @@
 package odms.data;
 
-public class Locale {
+import java.util.Locale;
+
+public class DefaultLocale {
 
     private static Locale locale;
 
-    public Locale() {
+    private DefaultLocale() {
         throw new UnsupportedOperationException();
     }
 
     public static void setLocale(Locale currentLocale) { locale = currentLocale; }
 
-    public Locale getLocale() { return locale; }
+    public static Locale getLocale() { return locale; }
 }
