@@ -5,9 +5,11 @@ import java.text.NumberFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import odms.controller.database.DAOFactory;
@@ -24,14 +26,21 @@ public class SettingsPopupController {
      * Gets a list of available languages the user can select.
      * @return a list of languages.
      */
-    public List<Entry<String, String>> getLanguageOptions() {
-        List<Entry<String, String>> availableLanguages = new ArrayList<>();
+    public Map<String, String> getLanguageOptions() {
+        Map<String, String> availableLanguages = new HashMap<>();
         List<Locale> numberLocales = Arrays.asList(NumberFormat.getAvailableLocales());
         List<Locale> dateLocales = Arrays.asList(DateFormat.getAvailableLocales());
 
         for (Locale locale : numberLocales) {
-            if (dateLocales.contains(locale)) {
-                availableLanguages.add(new SimpleEntry<>(locale.getDisplayLanguage(), locale.getLanguage()));
+            if (dateLocales.contains(locale) && locale != null) {
+                String display = locale.getDisplayLanguage();
+                if (locale.getDisplayCountry() != "") {
+                    display += ", " + locale.getDisplayCountry();
+                }
+                String value = locale.toString();
+                if (display != "") {
+                    availableLanguages.put(display, value);
+                }
             }
         }
         return availableLanguages;

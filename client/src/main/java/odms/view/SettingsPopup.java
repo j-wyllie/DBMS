@@ -2,6 +2,7 @@ package odms.view;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,6 +38,7 @@ public class SettingsPopup {
     private SettingsPopupController controller = new SettingsPopupController(this);
     private CountryDAO server = DAOFactory.getCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList;
+    private Map<String, String> languages;
 
     @FXML private TableView countriesTable;
     @FXML private TableColumn<CountriesEnum, String> countriesColumn;
@@ -168,6 +170,16 @@ public class SettingsPopup {
         });
     }
 
+    private void initLanguageSelection() {
+        languages = controller.getLanguageOptions();
+        languageSelect.getItems().addAll(FXCollections.observableArrayList(languages.keySet()).sorted());
+        String defaultDisplay = DefaultLocale.getLocale().getDisplayLanguage();
+        if (DefaultLocale.getLocale().getDisplayCountry() != "") {
+            defaultDisplay += ", " + DefaultLocale.getLocale().getDisplayCountry();
+        }
+        languageSelect.setValue(defaultDisplay);
+    }
+
     /**
      * Initializes the content displayed by the view.
      * @param currentUser the user currently logged in.
@@ -176,8 +188,7 @@ public class SettingsPopup {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
 
-        languageSelect.getItems().addAll(controller.getLanguageOptions());
-        languageSelect.setValue(DefaultLocale.getLocale().getDisplayLanguage());
+        initLanguageSelection();
 
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);

@@ -4,7 +4,7 @@ import java.util.Locale;
 
 public class DefaultLocale {
 
-    private static Locale locale;
+    private static Locale locale = new Locale("en", "US");
 
     private DefaultLocale() {
         throw new UnsupportedOperationException();
