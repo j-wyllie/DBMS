@@ -1,8 +1,6 @@
 package odms.view.profile;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,18 +14,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.enums.OrganSelectEnum;
 import odms.view.CommonView;
 import odms.view.user.TransplantWaitingList;
 
@@ -74,7 +78,7 @@ public class OrganDisplay extends CommonView {
     private TableView tableViewReceiving;
 
     @FXML
-    private TableColumn tableColumnOrgan;
+    private TableColumn<OrganEnum, String> tableColumnOrgan;
 
     @FXML
     private TableColumn<OrganEnum, String> tableColumnDate;
@@ -97,7 +101,7 @@ public class OrganDisplay extends CommonView {
         currentProfile = controller.getUpdatedProfileDetails(p);
         currentUser = user;
         listViewDonating.setCellFactory(param -> new OrganDisplay.HighlightedCell());
-        //tableColumnOrgan.setCellFactory(param -> new OrganDisplay.HighlightedCell());
+        tableColumnOrgan.setCellFactory(param -> new OrganDisplay.HighlightedTableCell());
 
         listViewDonated.setItems(observableListDonated);
         listViewDonating.setItems(observableListDonating);
@@ -105,7 +109,8 @@ public class OrganDisplay extends CommonView {
 //        this.hideTableHeader(tableViewReceiving);
         tableViewReceiving.setPlaceholder(new Label(""));
         tableViewReceiving.setItems(observableListReceiving);
-        tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
+        tableColumnOrgan.setCellValueFactory(cdf -> new SimpleStringProperty(
+                (cdf.getValue().getNamePlain())));
         tableColumnDate.setCellValueFactory(cdf -> new SimpleStringProperty(
                 (cdf.getValue().getDate(currentProfile).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))));
         tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
@@ -195,9 +200,9 @@ public class OrganDisplay extends CommonView {
 
         checkList.clear();
 
-        for (String organ : observableListDonating) {
-            if (observableListReceiving.contains(organ)) {
-                checkList.add(organ);
+        for (OrganEnum organ : observableListReceiving) {
+            if (observableListDonating.contains(organ.getNamePlain())) {
+                checkList.add(organ.getNamePlain());
             }
         }
 
@@ -346,6 +351,35 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(highlight);
+
+            } else {
+                getStyleClass().remove(highlight);
+            }
+        }
+    }
+
+    /**
+     * Override the Cell Formatting for colour highlighting.
+     */
+    class HighlightedTableCell extends TableCell<OrganEnum, String> {
+
+        private final String highlight = "cell-highlighted";
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            // Handle null item case
+            if (item == null) {
+                setText("");
+                getStyleClass().remove(highlight);
+                return;
+            }
+
+            setText(item);
+            if (checkList.contains(item)) {
+                this.getStyleClass().add(highlight);
+                this.getTableRow().getStyleClass().add(highlight);
 
             } else {
                 getStyleClass().remove(highlight);
