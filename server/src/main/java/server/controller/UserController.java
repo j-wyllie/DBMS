@@ -179,4 +179,33 @@ public class UserController {
         return "user Deleted";
     }
 
+    /**
+     * Checks the credentials of a user logging in.
+     * @param req request containing the username and password.
+     * @param res response from the server.
+     * @return String containg successful user validation.
+     */
+    public static String checkCredentials(Request req, Response res) {
+        UserDAO database = DAOFactory.getUserDao();
+        Boolean valid;
+
+        try {
+            valid = database.checkCredentials(req.queryParams("username"), req.queryParams("password"));
+        } catch (UserNotFoundException e) {
+            res.status(400);
+            return e.getMessage();
+        } catch (SQLException e) {
+            res.status(500);
+            return e.getMessage();
+        }
+
+        if (valid) {
+            res.type("application/json");
+            res.status(200);
+        } else {
+            res.status(404);
+        }
+
+        return "User validated.";
+    }
 }
