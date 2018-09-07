@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.country.CountryDAO;
 import odms.view.SettingsPopup;
@@ -20,14 +22,14 @@ public class SettingsPopupController {
      * Gets a list of available languages the user can select.
      * @return a list of languages.
      */
-    public List<String> getLanguageOptions() {
-        List<String> availableLanguages = new ArrayList<>();
+    public Set<Locale> getLanguageOptions() {
+        Set<Locale> availableLanguages = new HashSet<>();
         List<Locale> numberLocales = Arrays.asList(NumberFormat.getAvailableLocales());
         List<Locale> dateLocales = Arrays.asList(DateFormat.getAvailableLocales());
 
         for (Locale locale : numberLocales) {
             if (dateLocales.contains(locale)) {
-                availableLanguages.add(locale.getDisplayLanguage());
+                availableLanguages.add(locale);
             }
         }
         return availableLanguages;

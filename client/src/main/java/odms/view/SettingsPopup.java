@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
@@ -37,10 +38,17 @@ public class SettingsPopup {
     @FXML private TableView countriesTable;
     @FXML private TableColumn<CountriesEnum, String> countriesColumn;
     @FXML private TableColumn<CountriesEnum, Boolean> allowedColumn;
-    @FXML private ChoiceBox languageSelect;
+    @FXML private ComboBox languageSelect;
+    @FXML private ComboBox timeZoneSelect;
+    @FXML private ComboBox datetimeSelect;
+    @FXML private ComboBox numberSelect;
     @FXML private Tab countriesTab;
 
 
+    /**
+     * Confirms the changes to the settings made by the user.
+     * @param event of the confirm button being clicked.
+     */
     @FXML
     private void handleConfirmButtonClicked(ActionEvent event) {
         Node source = (Node) event.getSource();
@@ -48,11 +56,19 @@ public class SettingsPopup {
         stage.close();
     }
 
+    /**
+     * Applies the changes to the settings selected by the user.
+     * @param event of the apply button being clicked.
+     */
     @FXML
     private void handleApplyButtonClicked(ActionEvent event) {
 
     }
 
+    /**
+     * Closes the settings popup on click.
+     * @param event of the cancel button being clicked.
+     */
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) {
         Node source = (Node) event.getSource();
@@ -149,13 +165,17 @@ public class SettingsPopup {
         });
     }
 
+    /**
+     * Initializes the content displayed by the view.
+     * @param currentUser the user currently logged in.
+     */
     public void initialize(User currentUser) {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
 
         ObservableList<String> observableLanguageSelect = FXCollections.observableArrayList();
         observableLanguageSelect.addAll(controller.getLanguageOptions());
-        languageSelect.setItems(observableLanguageSelect);
+        languageSelect.(observableLanguageSelect);
 
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);
