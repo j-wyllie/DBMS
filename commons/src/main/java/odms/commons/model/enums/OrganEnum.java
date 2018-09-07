@@ -29,8 +29,14 @@ public enum OrganEnum {
         return name;
     }
 
-    public LocalDateTime getDate(Profile p) { return p.getOrganDate(this.name); }
-    public void setDate(LocalDateTime date, Profile p) { p.setOrganDate(this.name, date); }
+    public LocalDateTime getDate(Profile p) {
+        return p.getOrganDate(this.name);
+    }
+
+    public void setDate(LocalDateTime date, Profile p) {
+        dateOfRegistration = date;
+        p.setOrganDate(this.name, date);
+    }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.
@@ -80,6 +86,7 @@ public enum OrganEnum {
 
     /**
      * Take a HashSet of Organ objects and return a sorted comma delimited string
+     *
      * @param organs Organ HashSet to be converted
      * @return comma delimited string
      */

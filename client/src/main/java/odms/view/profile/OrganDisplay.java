@@ -2,8 +2,12 @@ package odms.view.profile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,7 +41,7 @@ public class OrganDisplay extends CommonView {
 
     private ObservableList<String> observableListDonated = FXCollections.observableArrayList();
     private ObservableList<String> observableListDonating = FXCollections.observableArrayList();
-    private ObservableList<String> observableListReceiving = FXCollections.observableArrayList();
+    private ObservableList<OrganEnum> observableListReceiving = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> listViewDonated;
@@ -73,7 +77,7 @@ public class OrganDisplay extends CommonView {
     private TableColumn tableColumnOrgan;
 
     @FXML
-    private TableColumn tableColumnDate;
+    private TableColumn<OrganEnum, String> tableColumnDate;
 
     private static OrganSelectEnum windowType;
     private TransplantWaitingList transplantWaitingListView;
@@ -102,7 +106,8 @@ public class OrganDisplay extends CommonView {
         tableViewReceiving.setPlaceholder(new Label(""));
         tableViewReceiving.setItems(observableListReceiving);
         tableColumnOrgan.setCellValueFactory(new PropertyValueFactory("name"));
-        tableColumnDate.setCellValueFactory(new PropertyValueFactory<String, LocalDate>("date"));
+        tableColumnDate.setCellValueFactory(cdf -> new SimpleStringProperty(
+                (cdf.getValue().getDate(currentProfile).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))));
         tableViewReceiving.getColumns().setAll(tableColumnOrgan, tableColumnDate);
 
         try {
@@ -182,10 +187,11 @@ public class OrganDisplay extends CommonView {
      * conflicting organs. Populates the checklist with donating organs for highlighting.
      */
     private void populateOrganLists() {
+        currentProfile = controller.getUpdatedProfileDetails(currentProfile);
 
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
         populateOrganList(observableListDonating, currentProfile.getOrgansDonatingNotExpired());
-        populateOrganList(observableListReceiving, currentProfile.getOrgansRequired());
+        populateListReceiving(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
 
@@ -193,6 +199,19 @@ public class OrganDisplay extends CommonView {
             if (observableListReceiving.contains(organ)) {
                 checkList.add(organ);
             }
+        }
+
+    }
+
+    private void populateListReceiving(ObservableList<OrganEnum> listReceiving,
+            HashSet<OrganEnum> organs) {
+        listReceiving.clear();
+
+        if (organs != null) {
+            for (OrganEnum organ : organs) {
+                listReceiving.add(organ);
+            }
+            Collections.sort(listReceiving);
         }
     }
 
@@ -223,6 +242,10 @@ public class OrganDisplay extends CommonView {
      */
     private void refreshListViews() {
         populateOrganLists();
+
+        if (currentProfile.getDateOfDeath() != null) {
+            receivingButton.setDisable(true);
+        }
 
         listViewDonated.refresh();
         listViewDonating.refresh();

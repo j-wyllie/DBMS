@@ -1136,7 +1136,12 @@ public class Profile implements Comparable<Profile> {
         return null;
     }
 
+    public HashSet<Organ> getOrganTimeStamps() {
+        return organTimeStamps;
+    }
+
     public void setOrganDate(String organDate, LocalDateTime date) {
         organTimeStamps.add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-","_")), date));
     }
+
 }
