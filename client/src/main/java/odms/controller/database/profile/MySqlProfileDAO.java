@@ -1,5 +1,6 @@
 package odms.controller.database.profile;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,8 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
@@ -26,6 +29,8 @@ import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
+import odms.controller.http.Request;
+import odms.controller.http.Response;
 
 public class MySqlProfileDAO implements ProfileDAO {
     String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
@@ -855,6 +860,21 @@ public class MySqlProfileDAO implements ProfileDAO {
             e.printStackTrace();
         }
         return receivers;
+    }
+
+    @Override
+    public Boolean hasPassword(String nhi) {
+        return null;
+    }
+
+    @Override
+    public Boolean checkCredentials(String username, String password) {
+        return null;
+    }
+
+    @Override
+    public Boolean savePassword(String nhi, String password) {
+        return null;
     }
 
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {

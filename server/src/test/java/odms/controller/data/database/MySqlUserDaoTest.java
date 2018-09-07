@@ -11,29 +11,29 @@ import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.user.MySqlUserDAO;
 
 public class MySqlUserDaoTest extends MySqlCommonTests {
-    MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
+    private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
-    private User testUser0 = new User(1, "Username", "password", "Tim Hamblin", UserType.ADMIN, "69 Yeetville", "Yeetus",
-            LocalDateTime.now(), LocalDateTime.now(), null);
-    private User testUser1 = new User(1, "Pleb", "password", "Brooke rasdasdk", UserType.ADMIN, "68 Yeetville", "Yeetskeet",
-            LocalDateTime.now(), LocalDateTime.now(), null);
+    private static User testUser0;
+    private static User testUser1;
 
-    @Before
-    public void setUp() throws SQLException, UserNotFoundException {
-        mySqlUserDAO.add(testUser0);
+    @BeforeClass
+    public static void addUser() throws SQLException, UserNotFoundException {
         testUser0 = mySqlUserDAO.get("username");
+        testUser1 = mySqlUserDAO.get("Pleb");
     }
+
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
-        mySqlUserDAO.add(testUser1);
 
-        assertEquals(testUser1.getUsername(), mySqlUserDAO.get("Pleb").getUsername());
+        assertEquals(testUser0.getUsername(), mySqlUserDAO.get("Username").getUsername());
     }
 
     @Test (expected = UserNotFoundException.class)
@@ -43,15 +43,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testGetAll() throws SQLException {
-        mySqlUserDAO.add(testUser1);
-
         assertEquals(2, mySqlUserDAO.getAll().size());
     }
 
     @Test
     public void testRemove() throws SQLException {
-        mySqlUserDAO.remove(testUser0);
-        assertEquals(0, mySqlUserDAO.getAll().size());
+        mySqlUserDAO.remove(testUser1);
+        assertEquals(1, mySqlUserDAO.getAll().size());
     }
 
     @Test
@@ -63,17 +61,17 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testIsUniqueUsernameFalse() throws SQLException {
+    public void testIsUniqueUsernameTrue() throws SQLException {
         assertTrue(mySqlUserDAO.isUniqueUsername("ree"));
     }
 
     @Test
-    public void testIsUniqueUsernameTrue() throws SQLException {
+    public void testIsUniqueUsernameFalse() throws SQLException {
         assertFalse(mySqlUserDAO.isUniqueUsername("Username"));
     }
 
-    @After
-    public void cleanup() throws SQLException {
+    @AfterClass
+    public static void cleanup() throws SQLException {
         List<User> users = mySqlUserDAO.getAll();
         for (User user : users) {
             mySqlUserDAO.remove(user);

@@ -103,4 +103,27 @@ public interface ProfileDAO {
      */
     List<Profile> getOrganReceivers(String organ, String bloodType,
             Integer lowerAgeRange, Integer upperAgeRange);
+
+    /**
+     * Checks that a profile has a password set.
+     * @param nhi nhi to check.
+     * @return true if password is set.
+     */
+    Boolean hasPassword(String nhi);
+
+    /**
+     * Checks the username and password of the profile.
+     * @param username username to check.
+     * @param password password to check.
+     * @return boolean, true if credentials are valid.
+     */
+    Boolean checkCredentials(String username, String password);
+
+    /**
+     * Saves a profiles password.
+     * @param nhi nhi of the profile.
+     * @param password password to be saved.
+     * @return Boolean, true if successful.
+     */
+    Boolean savePassword(String nhi, String password);
 }
