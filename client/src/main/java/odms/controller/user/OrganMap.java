@@ -15,10 +15,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import odms.commons.model.profile.Profile;
+import odms.controller.CommonController;
+import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 
-public class OrganMap {
+public class OrganMap extends CommonController{
 
     private odms.view.user.OrganMap view;
 
@@ -107,10 +109,9 @@ public class OrganMap {
         return svg;
     }
 
-    public void displayPointOnMap(Profile profile){
-        String address = profile.getRegion();
-        //todo Display given profile's address or maybe return the long/lat.
+    public ArrayList<Double> displayPointOnMap(Profile profile){
 
+        return AddressIO.getLongLatRegion(profile.getRegion(), profile.getCountry());
 
     }
 }

@@ -2,10 +2,7 @@ package odms.view.user;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -28,6 +25,7 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
 
     private odms.controller.user.OrganMap controller = new odms.controller.user.OrganMap();
     private User currentUser;
+    private Marker currentDonorMarker;
 
     @FXML
     private GoogleMapView mapView;
@@ -76,9 +74,22 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
         donorListView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     donorListView.getSelectionModel().getSelectedItem() != null) {
-                controller.displayPointOnMap((Profile) donorListView.getSelectionModel().getSelectedItem());
+                addSingleMarker((Profile) donorListView.getSelectionModel().getSelectedItem());
             }
         });
+    }
+
+    public void addSingleMarker(Profile profile){
+        ArrayList<Double> latLng = controller.displayPointOnMap(profile);
+        LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(donorLocation);
+        Marker marker = new Marker(markerOptions);
+        if(currentDonorMarker != null){
+            map.removeMarker(currentDonorMarker);
+        }
+        map.addMarker(marker);
+        currentDonorMarker = marker;
     }
 
     public double getMatchesListViewWidth() {
