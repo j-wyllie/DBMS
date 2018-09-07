@@ -170,6 +170,9 @@ public class SettingsPopup {
         });
     }
 
+    /**
+     * Initializes the language selection combobox.
+     */
     private void initLanguageSelection() {
         languages = controller.getLanguageOptions();
         languageSelect.getItems().addAll(FXCollections.observableArrayList(languages.keySet()).sorted());
