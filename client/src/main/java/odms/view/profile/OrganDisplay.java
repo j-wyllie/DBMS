@@ -164,7 +164,6 @@ public class OrganDisplay extends CommonView {
             tableViewReceiving.setPrefWidth(0);
             receivingLabel.setVisible(false);
             tableViewReceiving.setVisible(false);
-
         }
         receivingButton.setVisible(false);
         donatedButton.setVisible(false);
@@ -216,7 +215,7 @@ public class OrganDisplay extends CommonView {
      * @throws IOException if an IOException occurs.
      */
     @FXML
-    private void handleExpiredClicked(ActionEvent event) throws IOException {
+    private void handleBtnExpiredClicked(ActionEvent event) throws IOException {
         showExpiredOrgans(event);
     }
 
@@ -445,7 +444,6 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(item)) {
                 getStyleClass().add(HIGHLIGHT);
-
             } else {
                 getStyleClass().remove(HIGHLIGHT);
             }
@@ -473,7 +471,6 @@ public class OrganDisplay extends CommonView {
             setText(item);
 
             if (checkList.contains(item)) {
-
                 this.getStyleClass().add(HIGHLIGHT);
 
             } else {
@@ -512,7 +509,6 @@ public class OrganDisplay extends CommonView {
 
             if (checkList.contains(associatedOrgan)) {
                 this.getStyleClass().add(HIGHLIGHT);
-
             } else {
                 this.getStyleClass().remove(HIGHLIGHT);
             }
