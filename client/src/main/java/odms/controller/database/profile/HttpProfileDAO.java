@@ -228,4 +228,68 @@ public class HttpProfileDAO implements ProfileDAO {
         }
         return profiles;
     }
+
+    @Override
+    public Boolean hasPassword(String nhi) {
+        Response response = null;
+        String url = "http://localhost:6969/api/v1/profiles/password";
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("nhi", nhi);
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response.getBody().equals("true");
+    }
+
+    @Override
+    public Boolean checkCredentials(String username, String password) {
+        String url = "http://localhost:6969/api/v1/profiles/login";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("username", username);
+        queryParams.put("password", password);
+
+
+        Request request = new Request(url, 0, queryParams, "{}");
+        Response response = null;
+        try {
+            response = request.post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.getStatus() == 200) {
+            return true;
+        }
+        if (response.getStatus() == 400) {
+            throw new IllegalArgumentException("Invalid details.");
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean savePassword(String nhi, String password) {
+        String url = "http://localhost:6969/api/v1/profiles/password";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("nhi", nhi);
+        queryParams.put("password", password);
+
+
+        Request request = new Request(url, 0, queryParams, "{}");
+        Response response = null;
+        try {
+            response = request.post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.getStatus() == 200) {
+            return true;
+        }
+        if (response.getStatus() == 400) {
+            return false;
+        }
+        return false;
+    }
 }
