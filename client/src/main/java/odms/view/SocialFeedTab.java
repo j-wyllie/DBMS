@@ -29,13 +29,13 @@ public class SocialFeedTab {
         getTweets();
 
         tweetTable.getColumns().clear();
-        TableColumn<String, String> tweetCol = new TableColumn(
-                "Tweets");
+        TableColumn<String, String> tweetCol = new TableColumn();
         tweetCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(cdf.getValue())
         );
         tweetCol.setCellFactory(WebViewCell.forTableColumn()
         );
+        System.out.println(tweetCol.getWidth());
         tweetTable.getColumns().add(tweetCol);
     }
 
@@ -45,7 +45,7 @@ public class SocialFeedTab {
                     "https://api.twitter.com/1.1/search/tweets.json?q=humanfarm&result_type=recent");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization","OAuth oauth_consumer_key=\"Xb4pAluzJ0KjfN7npvkX0J0yf\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"1536276871\",oauth_nonce=\"51u4CiB8U3W\",oauth_version=\"1.0\",oauth_signature=\"y0QalxKTnm9KbXmlI2xZbtuyHtY%3D\"");
+            con.setRequestProperty("Authorization","OAuth oauth_consumer_key=\"Xb4pAluzJ0KjfN7npvkX0J0yf\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"1536440321\",oauth_nonce=\"oPXGuVQFN90\",oauth_version=\"1.0\",oauth_signature=\"iBiwE07i%2BQYkJR6rFdciXGLCJPA%3D\"");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;

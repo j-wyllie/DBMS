@@ -20,7 +20,7 @@ public class WebViewCell<S> extends TableCell<S, String> {
     @Override
     public void updateItem(String item, boolean empty) {
         if(!empty && !item.equals(null)) {
-            webView.setPrefSize(500,200);
+            webView.setPrefSize(500,180);
             String html = "<html lang=\"en\">\n"
                     + "<div id=\"tweet\" tweetID=\""+item+"\"></div>\n"
                     + "\n"
