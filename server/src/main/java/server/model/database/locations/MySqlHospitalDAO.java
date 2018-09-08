@@ -146,13 +146,13 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * @throws SQLException thrown when there is a server error.
      */
     @Override
-    public void remove(Hospital hospital) throws SQLException {
+    public void remove(Integer id) throws SQLException {
         String query = "DELETE FROM hospitals WHERE Id = ?";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         Connection conn = connectionInstance.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, hospital.getId());
+            stmt.setInt(1, id);
             stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();

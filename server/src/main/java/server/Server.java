@@ -8,28 +8,13 @@ import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
-import server.controller.ConditionController;
-import server.controller.CountriesController;
-import server.controller.DrugController;
-import server.controller.OrganController;
-import server.controller.ProcedureController;
-import server.controller.ProfileController;
-import server.controller.UserController;
+import server.controller.*;
 
 /**
  * Main entry point for server application.
  */
 public class Server {
     private static Integer port = 6969;
-
-    private static UserController userController;
-    private static ProfileController profileController;
-    private static ProcedureController procedureController;
-    private static OrganController organController;
-    private static DrugController drugController;
-    private static CountriesController countriesController;
-    private static ConditionController conditionController;
-
 
     /**
      * Server class should not be instantiated.
@@ -59,7 +44,6 @@ public class Server {
             System.out.println(e.getMessage());
         });
         initRoutes();
-        initControllers();
     }
 
     private static void initRoutes() {
@@ -167,17 +151,18 @@ public class Server {
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
             });
+
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("", HospitalController::getAll);
+
+                path("/:id", () -> {
+                    get("", HospitalController::get);
+                    post("", HospitalController::create);
+                    patch("", HospitalController::edit);
+                    delete("", HospitalController::delete);
+                });
+            });
         });
     }
-
-    private static void initControllers() {
-
-        userController = new UserController();
-        profileController = new ProfileController();
-        organController = new OrganController();
-        drugController = new DrugController();
-        countriesController = new CountriesController();
-        conditionController = new ConditionController();
-    }
-
 }
