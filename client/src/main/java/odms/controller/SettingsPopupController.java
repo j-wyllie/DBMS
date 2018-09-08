@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.country.CountryDAO;
 import odms.view.SettingsPopup;
@@ -46,14 +48,43 @@ public class SettingsPopupController {
         return availableLanguages;
     }
 
+
     /**
      * Gives a list of time zones for the user to select from.
      * @return a list of available time zones.
      */
     public List<String> getTimeZoneOptions() {
-        return new ArrayList<>();
+        List<String> timezones = new ArrayList<>();
+        for (String id : TimeZone.getAvailableIDs()) {
+            timezones.add(formatTimeZone(TimeZone.getTimeZone(id)));
+        }
+        timezones.sort(String::compareToIgnoreCase);
+        return timezones;
     }
 
+    /**
+     * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City
+     * @param tz timezone id.
+     * @return formatted string value.
+     */
+    private static String formatTimeZone(TimeZone tz) {
+
+        long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
+                - TimeUnit.HOURS.toMinutes(hours);
+        // avoid -4:-30 issue
+        minutes = Math.abs(minutes);
+
+        String result;
+        if (hours > 0) {
+            result = String.format("(GMT+%d:%02d) %s", hours, minutes, tz.getID());
+        } else {
+            result = String.format("(GMT%d:%02d) %s", hours, minutes, tz.getID());
+        }
+
+        return result;
+
+    }
     /**
      * Gives a list of date time formats for the user to select from.
      * @return a list of available date time formats.

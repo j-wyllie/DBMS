@@ -39,19 +39,29 @@ public class SettingsPopup {
     private CountryDAO server = DAOFactory.getCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList;
     private Map<String, String> languages;
+    private ObservableList<String> timezoneObservableList;
 
-    @FXML private TableView countriesTable;
-    @FXML private TableColumn<CountriesEnum, String> countriesColumn;
-    @FXML private TableColumn<CountriesEnum, Boolean> allowedColumn;
-    @FXML private ComboBox languageSelect;
-    @FXML private ComboBox timeZoneSelect;
-    @FXML private ComboBox datetimeSelect;
-    @FXML private ComboBox numberSelect;
-    @FXML private Tab countriesTab;
+    @FXML
+    private TableView countriesTable;
+    @FXML
+    private TableColumn<CountriesEnum, String> countriesColumn;
+    @FXML
+    private TableColumn<CountriesEnum, Boolean> allowedColumn;
+    @FXML
+    private ComboBox languageSelect;
+    @FXML
+    private ComboBox timeZoneSelect;
+    @FXML
+    private ComboBox datetimeSelect;
+    @FXML
+    private ComboBox numberSelect;
+    @FXML
+    private Tab countriesTab;
 
 
     /**
      * Confirms the changes to the settings made by the user.
+     *
      * @param event of the confirm button being clicked.
      */
     @FXML
@@ -63,6 +73,7 @@ public class SettingsPopup {
 
     /**
      * Applies the changes to the settings selected by the user.
+     *
      * @param event of the apply button being clicked.
      */
     @FXML
@@ -72,6 +83,7 @@ public class SettingsPopup {
 
     /**
      * Closes the settings popup on click.
+     *
      * @param event of the cancel button being clicked.
      */
     @FXML
@@ -150,7 +162,8 @@ public class SettingsPopup {
                 if (count == 0) {
                     checkBox.setSelected(checkBox.isSelected());
                     countriesEnum.setValid(!countriesEnum.getValid());
-                    countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
+                    countriesEnumObservableList
+                            .set(tableCell.getTableRow().getIndex(), countriesEnum);
                 }
 
                 server.update(countriesEnum,
@@ -159,7 +172,8 @@ public class SettingsPopup {
 
             checkBox.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.SPACE) {
-                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
+                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow()
+                            .getItem());
                     checkBox.setSelected(!countriesEnum.getValid());
                 }
             });
@@ -175,7 +189,8 @@ public class SettingsPopup {
      */
     private void initLanguageSelection() {
         languages = controller.getLanguageOptions();
-        languageSelect.getItems().addAll(FXCollections.observableArrayList(languages.keySet()).sorted());
+        languageSelect.getItems()
+                .addAll(FXCollections.observableArrayList(languages.keySet()).sorted());
         String defaultDisplay = DefaultLocale.getLocale().getDisplayLanguage();
         if (DefaultLocale.getLocale().getDisplayCountry() != "") {
             defaultDisplay += ", " + DefaultLocale.getLocale().getDisplayCountry();
@@ -185,19 +200,24 @@ public class SettingsPopup {
 
     /**
      * Initializes the content displayed by the view.
+     *
      * @param currentUser the user currently logged in.
      */
     public void initialize(User currentUser) {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
-
         initLanguageSelection();
-
+        initTimezoneSelection();
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);
         } else {
             setupCountriesTable();
             addAllowedColumnListeners();
         }
+    }
+
+    private void initTimezoneSelection() {
+        timezoneObservableList = FXCollections.observableArrayList(controller.getTimeZoneOptions());
+        timeZoneSelect.setItems(timezoneObservableList);
     }
 }
