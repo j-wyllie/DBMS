@@ -54,6 +54,8 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab availableOrgansTab;
     @FXML
+    private Tab hospitalMapTab;
+    @FXML
     private ImageView profileImage;
     @FXML
     private GridPane bannerPane;
@@ -127,6 +129,23 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
+     * Initializes the controller for the hospital map tab.
+     */
+    public void handleTabHospitalMapClicked() {
+        setTransplantWaitingListNull();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HospitalMapTab.fxml"));
+        try {
+            hospitalMapTab.setContent(loader.load());
+            HospitalMap hospitalMapTabView = loader.getController();
+            System.out.println(hospitalMapTabView);
+            hospitalMapTabView.initialize(currentUser);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    /**
      * Initializes the controller for the general details Tab
      */
     public void handleGeneralTabClicked() {
@@ -159,7 +178,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for available organs.
+     * Initializes the controller for available organs tab.
      */
     public void handleTabAvailableClicked() {
         setTransplantWaitingListNull();
