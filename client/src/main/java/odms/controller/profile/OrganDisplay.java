@@ -39,7 +39,7 @@ public class OrganDisplay extends CommonController {
             List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                     .getAllOrgansAvailable();
             for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                controller.checkOrganExpired(m.getValue(), m.getKey());
             }
             profile = DAOFactory.getProfileDao().get(p.getId());
         } catch (SQLException e) {

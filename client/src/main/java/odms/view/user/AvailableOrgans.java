@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Timer;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -275,7 +274,7 @@ public class AvailableOrgans extends CommonView {
                     .getSelectionModel().getSelectedItem()).getKey();
 
             potentialOrganMatches = controller.getSuitableRecipientsSorted(
-                    organToMatch, donorProfile, selectedOrgan, nameSearchField.getText(),
+                    organToMatch, donorProfile, nameSearchField.getText(),
                     bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
                     regionsComboboxMatchesTable.getCheckModel().getCheckedItems(),
                     ageField.getText(), ageRangeField.getText(),
