@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,12 +55,18 @@ public class SettingsPopupController {
      * @return a list of available time zones.
      */
     public List<String> getTimeZoneOptions() {
-        List<String> timezones = new ArrayList<>();
+        List<TimeZone> timezones = new ArrayList<>();
+        List<String> formattedTimeZones = new ArrayList<>();
+
         for (String id : TimeZone.getAvailableIDs()) {
-            timezones.add(formatTimeZone(TimeZone.getTimeZone(id)));
+            timezones.add(TimeZone.getTimeZone(id));
         }
-        timezones.sort(String::compareToIgnoreCase);
-        return timezones;
+        timezones.sort(Comparator.comparingInt(TimeZone::getRawOffset));
+
+        for (TimeZone tz: timezones) {
+            formattedTimeZones.add(formatTimeZone(tz));
+        }
+        return formattedTimeZones;
     }
 
     /**
