@@ -2,31 +2,28 @@ package odms.controller;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
 import odms.view.SettingsPopup;
 
 public class SettingsPopupController {
 
     private SettingsPopup view;
 
-    public SettingsPopupController(SettingsPopup view) { this.view = view; }
+    public SettingsPopupController(SettingsPopup view) {
+        this.view = view;
+    }
 
     /**
      * Gets a list of available languages the user can select.
+     *
      * @return a list of languages.
      */
     public Map<String, String> getLanguageOptions() {
@@ -52,6 +49,7 @@ public class SettingsPopupController {
 
     /**
      * Gives a list of time zones for the user to select from.
+     *
      * @return a list of available time zones.
      */
     public List<String> getTimeZoneOptions() {
@@ -63,7 +61,7 @@ public class SettingsPopupController {
         }
         timezones.sort(Comparator.comparingInt(TimeZone::getRawOffset));
 
-        for (TimeZone tz: timezones) {
+        for (TimeZone tz : timezones) {
             formattedTimeZones.add(formatTimeZone(tz));
         }
         return formattedTimeZones;
@@ -71,6 +69,7 @@ public class SettingsPopupController {
 
     /**
      * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City
+     *
      * @param tz timezone id.
      * @return formatted string value.
      */
@@ -92,8 +91,10 @@ public class SettingsPopupController {
         return result;
 
     }
+
     /**
      * Gives a list of date time formats for the user to select from.
+     *
      * @return a list of available date time formats.
      */
     public List<String> getDateTimeFormatOptions() {
@@ -103,6 +104,7 @@ public class SettingsPopupController {
 
     /**
      * Gives a list of number formats for the user to select from.
+     *
      * @return a list of available number formats.
      */
     public List<String> getNumberFormatOptions() {

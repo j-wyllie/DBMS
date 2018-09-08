@@ -1,7 +1,6 @@
 package odms.view;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Tab;
@@ -24,7 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
@@ -42,15 +39,15 @@ public class SettingsPopup {
     private ObservableList<String> timezoneObservableList;
 
     @FXML
-    private TableView countriesTable;
+    private TableView<CountriesEnum> countriesTable;
     @FXML
     private TableColumn<CountriesEnum, String> countriesColumn;
     @FXML
     private TableColumn<CountriesEnum, Boolean> allowedColumn;
     @FXML
-    private ComboBox languageSelect;
+    private ComboBox<String> languageSelect;
     @FXML
-    private ComboBox timeZoneSelect;
+    private ComboBox<String> timeZoneSelect;
     @FXML
     private ComboBox datetimeSelect;
     @FXML
@@ -199,6 +196,14 @@ public class SettingsPopup {
     }
 
     /**
+     * Initializes the time zone selection combobox.
+     */
+    private void initTimeZoneSelection() {
+        timezoneObservableList = FXCollections.observableArrayList(controller.getTimeZoneOptions());
+        timeZoneSelect.setItems(timezoneObservableList);
+    }
+
+    /**
      * Initializes the content displayed by the view.
      *
      * @param currentUser the user currently logged in.
@@ -207,17 +212,12 @@ public class SettingsPopup {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
         initLanguageSelection();
-        initTimezoneSelection();
+        initTimeZoneSelection();
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);
         } else {
             setupCountriesTable();
             addAllowedColumnListeners();
         }
-    }
-
-    private void initTimezoneSelection() {
-        timezoneObservableList = FXCollections.observableArrayList(controller.getTimeZoneOptions());
-        timeZoneSelect.setItems(timezoneObservableList);
     }
 }
