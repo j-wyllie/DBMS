@@ -7,13 +7,10 @@ import static odms.controller.user.AvailableOrgans.getWaitTime;
 import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
-import java.util.TimerTask;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -77,9 +74,6 @@ public class AvailableOrgans extends CommonView {
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
     private User currentUser;
-
-    private Timer timer = new Timer(true);
-
 
     /**
      * Called if the age range is toggled.

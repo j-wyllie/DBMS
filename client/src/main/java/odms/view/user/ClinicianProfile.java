@@ -65,7 +65,6 @@ public class ClinicianProfile extends CommonView {
 
     private TransplantWaitingList transplantWaitingList;
 
-    Timer timer = new Timer();
     private AvailableOrgans availableOrgansTabView;
 
     /**
@@ -107,10 +106,17 @@ public class ClinicianProfile extends CommonView {
         try {
             consoleTab.setContent(loader.load());
             ConsoleTab console = loader.getController();
-            // don't initialize as it will double print.
+            consoleTab.setOnSelectionChanged(event -> {
+                if (!consoleTab.isSelected()) {
+                    console.stopInputCapture();
+                } else {
+                    console.captureInput();
+                }
+            });
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
     }
 
     /**
@@ -164,6 +170,7 @@ public class ClinicianProfile extends CommonView {
 
     /**
      * Initializes the controller for available organs.
+     * Adds onSelectionChange listeners to the tab to pause and commence the timers.
      */
     public void handleTabAvailableClicked() {
         setTransplantWaitingListNull();
@@ -276,8 +283,8 @@ public class ClinicianProfile extends CommonView {
      * Adds a profile stage from the open stage list.
      * @param s the stage to add
      */
-    public boolean addToOpenProfileStages(Stage s) {
-        return userProfileController.addToOpenProfileStages(s);
+    public void addToOpenProfileStages(Stage s) {
+        userProfileController.addToOpenProfileStages(s);
     }
 
     /**
