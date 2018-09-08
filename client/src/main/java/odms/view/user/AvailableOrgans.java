@@ -1,5 +1,19 @@
 package odms.view.user;
 
+import static odms.controller.user.AvailableOrgans.getExpiryLength;
+import static odms.controller.user.AvailableOrgans.getTimeRemaining;
+import static odms.controller.user.AvailableOrgans.getTimeToExpiryHoursSeconds;
+import static odms.controller.user.AvailableOrgans.getWaitTime;
+import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,12 +33,6 @@ import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
-import java.sql.SQLException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static odms.controller.user.AvailableOrgans.*;
-
 /**
  * Available organs view.
  */
@@ -40,26 +48,26 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private TextField nameSearchField;
     @FXML
-    private CheckComboBox bloodTypeComboboxMatchesTable;
+    private CheckComboBox<String> bloodTypeComboboxMatchesTable;
     @FXML
-    private CheckComboBox regionsComboboxMatchesTable;
+    private CheckComboBox<String> regionsComboboxMatchesTable;
     @FXML
-    private TableView<Profile> potentialOrganMatchTable;
+    public TableView<Profile> potentialOrganMatchTable;
 
-    //Organs table
+    // Organs table
     @FXML
-    private CheckComboBox organsCombobox;
+    private CheckComboBox<OrganEnum> organsCombobox;
     @FXML
-    private CheckComboBox regionsCombobox;
+    private CheckComboBox<String> regionsCombobox;
     @FXML
-    private TableView availableOrgansTable;
+    public TableView availableOrgansTable;
 
 
     private boolean filtered = false;
     private OrganEnum selectedOrgan;
     private Profile selectedProfile;
 
-    private ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
+    public ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile, OrganEnum>> listOfFilteredAvailableOrgans;
     private ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
     private ClinicianProfile parentView;
@@ -69,6 +77,8 @@ public class AvailableOrgans extends CommonView {
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
     private User currentUser;
+
+    private Timer timer = new Timer(true);
 
 
     /**
@@ -101,7 +111,8 @@ public class AvailableOrgans extends CommonView {
         );
         waitTimeColumn.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                        getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired(), cdf.getValue())));
+                        getWaitTime(selectedOrgan, cdf.getValue().getOrgansRequired(),
+                                cdf.getValue())));
 
         TableColumn<Profile, String> ageColumn = new TableColumn<>(
                 "Age"
@@ -134,9 +145,9 @@ public class AvailableOrgans extends CommonView {
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Profile> comparator1 = (o1, o2) -> {
             if (getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(), o1) >
-                    getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(), o2))
+                    getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(), o2)) {
                 return 1;
-            else if (getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(), o1).equals(
+            } else if (getWaitTimeRaw(selectedOrgan, o1.getOrgansRequired(), o1).equals(
                     getWaitTimeRaw(selectedOrgan, o2.getOrgansRequired(), o2))) {
                 return 0;
             } else {
@@ -148,7 +159,8 @@ public class AvailableOrgans extends CommonView {
         potentialOrganMatchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     potentialOrganMatchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
+                createNewDonorWindow(potentialOrganMatchTable.getSelectionModel().getSelectedItem(),
+                        parentView, currentUser);
             }
         });
 
@@ -202,7 +214,6 @@ public class AvailableOrgans extends CommonView {
                 this.getClass().getResource("/styles/Common.css").toExternalForm())
         );
 
-
         availableOrgansTable.getColumns().add(organCol);
         availableOrgansTable.getColumns().add(dateOfDeathNameCol);
         availableOrgansTable.getColumns().add(countdownCol);
@@ -217,9 +228,11 @@ public class AvailableOrgans extends CommonView {
         }
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Map.Entry<Profile, OrganEnum>> comparator = (o1, o2) -> {
-            if (getTimeRemaining(o1.getValue(), o1.getKey()) < getTimeRemaining(o2.getValue(), o2.getKey())) {
+            if (getTimeRemaining(o1.getValue(), o1.getKey()) < getTimeRemaining(o2.getValue(),
+                    o2.getKey())) {
                 return -1;
-            } else if (getTimeRemaining(o2.getValue(), o2.getKey()) < getTimeRemaining(o1.getValue(), o1.getKey())) {
+            } else if (getTimeRemaining(o2.getValue(), o2.getKey()) < getTimeRemaining(
+                    o1.getValue(), o1.getKey())) {
                 return 1;
             } else {
                 return 0;
@@ -229,12 +242,15 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel()
-                        .getSelectedItem()).getKey(), parentView, currentUser);
+                createNewDonorWindow(
+                        ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel()
+                                .getSelectedItem()).getKey(), parentView, currentUser);
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
-                selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getValue();
-                selectedProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getKey();
+                selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
+                        .getSelectionModel().getSelectedItem()).getValue();
+                selectedProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
+                        .getSelectionModel().getSelectedItem()).getKey();
 
                 setPotentialOrganMatchesList();
                 updateMatchesTable();
@@ -248,7 +264,8 @@ public class AvailableOrgans extends CommonView {
      * @throws SQLException exception thrown when accessing DB to get all available organs
      */
     private void setAvailableOrgansList() throws SQLException {
-        listOfAvailableOrgans = FXCollections.observableArrayList(controller.getAllOrgansAvailable());
+        listOfAvailableOrgans = FXCollections
+                .observableArrayList(controller.getAllOrgansAvailable());
         availableOrgansTable.setItems(listOfAvailableOrgans);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
@@ -260,11 +277,14 @@ public class AvailableOrgans extends CommonView {
 
         try {
             OrganEnum organToMatch = selectedOrgan;
-            Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable.getSelectionModel().getSelectedItem()).getKey();
+            Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
+                    .getSelectionModel().getSelectedItem()).getKey();
 
             potentialOrganMatches = controller.getSuitableRecipientsSorted(
-                    organToMatch, donorProfile, selectedOrgan, nameSearchField.getText(), bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
-                    regionsComboboxMatchesTable.getCheckModel().getCheckedItems(), ageField.getText(), ageRangeField.getText(),
+                    organToMatch, donorProfile, selectedOrgan, nameSearchField.getText(),
+                    bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
+                    regionsComboboxMatchesTable.getCheckModel().getCheckedItems(),
+                    ageField.getText(), ageRangeField.getText(),
                     ageRangeCheckbox.isSelected());
 
         } catch (NullPointerException e) {
@@ -279,17 +299,25 @@ public class AvailableOrgans extends CommonView {
         listOfFilteredAvailableOrgans = FXCollections.observableArrayList();
         listOfFilteredAvailableOrgans.clear();
         for (Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
-            if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegionOfDeath())) {
+            if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue())
+                    && regionsCombobox.getCheckModel().getCheckedItems()
+                    .contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
+            } else if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue())
+                    && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
                 listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
+            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0
+                    && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
                 listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0 && regionsCombobox.getCheckModel().getCheckedItems().contains(m.getKey().getRegionOfDeath())) {
+            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0
+                    && regionsCombobox.getCheckModel().getCheckedItems()
+                    .contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
             }
         }
-        if (listOfFilteredAvailableOrgans.size() != 0 || organsCombobox.getCheckModel().getCheckedItems().size() != 0 || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
+        if (listOfFilteredAvailableOrgans.size() != 0
+                || organsCombobox.getCheckModel().getCheckedItems().size() != 0
+                || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
             availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
         } else {
             availableOrgansTable.setItems(listOfAvailableOrgans);
@@ -304,11 +332,10 @@ public class AvailableOrgans extends CommonView {
     }
 
     /**
-     * Initializes the Available organs view. Sets the current user and
-     * the clinician profile parent view.
-     *
+     * Initializes the Available organs view. Sets the current user and the clinician profile parent
+     * view.
      * @param currentUser current user logged in.
-     * @param p           parent view.
+     * @param p parent view.
      */
     public void initialize(User currentUser, ClinicianProfile p) {
         this.currentUser = currentUser;
@@ -318,32 +345,32 @@ public class AvailableOrgans extends CommonView {
         parentView = p;
 
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList());
-        regionsCombobox.getCheckModel().getCheckedItems().addListener((ListChangeListener) c -> performOrganSearchFromFilters());
+        regionsCombobox.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> performOrganSearchFromFilters());
 
         organsStrings.clear();
         organsStrings.addAll(OrganEnum.toArrayList());
         organsCombobox.getItems().setAll(OrganEnum.values());
-        organsCombobox.getCheckModel().getCheckedItems().addListener((ListChangeListener) c -> performOrganSearchFromFilters());
-
+        organsCombobox.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> performOrganSearchFromFilters());
 
         regionsComboboxMatchesTable.getItems().setAll(NewZealandRegionsEnum.toArrayList());
-        regionsComboboxMatchesTable.getCheckModel().getCheckedItems().addListener((ListChangeListener) c -> performOrganSearchFromFilters());
+        regionsComboboxMatchesTable.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> performOrganSearchFromFilters());
 
         bloodTypeComboboxMatchesTable.getItems().setAll(BloodTypeEnum.toArrayList());
-        bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems().addListener((ListChangeListener) c -> performOrganSearchFromFilters());
+        bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> performOrganSearchFromFilters());
 
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                availableOrgansTable.refresh();
-                potentialOrganMatchTable.refresh();
-                List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(listOfAvailableOrgans);
-                for (Map.Entry<Profile, OrganEnum> m : toRemove) {
-                    controller.checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
-                }
-            }
-        }, 0, 1);
+        controller.startTimers();
+    }
 
+    public void startTimers() {
+        controller.startTimers();
+    }
+
+    public void pauseTimers() {
+        controller.pauseTimers();
     }
 
     public ObservableList<Map.Entry<Profile, OrganEnum>> getListOfAvailableOrgans() {

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -63,6 +64,9 @@ public class ClinicianProfile extends CommonView {
     private Display userProfileController = new Display(this);
 
     private TransplantWaitingList transplantWaitingList;
+
+    Timer timer = new Timer();
+    private AvailableOrgans availableOrgansTabView;
 
     /**
      * Scene change to log in view.
@@ -166,11 +170,19 @@ public class ClinicianProfile extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserAvailableOrgansTab.fxml"));
         try {
             availableOrgansTab.setContent(loader.load());
-            AvailableOrgans availableOrgansTabView = loader.getController();
+            availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        availableOrgansTab.setOnSelectionChanged(event -> {
+            if (!availableOrgansTab.isSelected()) {
+                availableOrgansTabView.pauseTimers();
+            } else {
+                availableOrgansTabView.startTimers();
+            }
+        });
     }
 
     /**

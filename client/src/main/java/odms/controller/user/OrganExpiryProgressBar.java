@@ -24,7 +24,7 @@ public final class OrganExpiryProgressBar<S> extends TableCell<S, Double> {
     private OrganExpiryProgressBar(String style) {
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
-        this.progressBar.setPadding(new Insets(5));
+        this.progressBar.setPadding(new Insets(0, 2, 0, 2));
 
         progressBar.getStylesheets().clear();
         progressBar.getStylesheets().add(style);

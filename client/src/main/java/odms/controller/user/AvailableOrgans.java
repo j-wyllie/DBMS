@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -33,6 +35,9 @@ public class AvailableOrgans {
     public final static long ONE_YEAR = ONE_DAY * 365;
     private List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
     private List<Profile> allDonaters = new ArrayList<>();
+    private List<ExpiredOrgan> expiredList = new ArrayList<>();
+    private Timer timer;
+
 
     private odms.view.user.AvailableOrgans view;
 
@@ -56,6 +61,7 @@ public class AvailableOrgans {
         }
         return abs(Duration.between(LocalDateTime.now(), dateOrganRegistered).toMillis());
     }
+
 
     public static String getWaitTime(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired,
             Profile p) {
@@ -125,7 +131,6 @@ public class AvailableOrgans {
             setOrganExpired(organ, profile);
         }
         if(!profile.getDateOfDeath().equals(null)){
-            List<ExpiredOrgan> expiredList = null;
             try {
                 expiredList = DAOFactory.getOrganDao().getExpired(profile);
             } catch (SQLException e) {
@@ -137,6 +142,14 @@ public class AvailableOrgans {
                 }
             }
         }
+    }
+
+    public void setExpiredOrganList() {
+//        try {
+//            expiredList = DAOFactory.getOrganDao().getExpired(profile);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
@@ -421,7 +434,6 @@ public class AvailableOrgans {
             Profile donorProfile, OrganEnum selectedOrgan,
             String nameFieldText, ObservableList checkedBloodTypes, ObservableList checkedRegions,
             String ageLower, String ageUpper, boolean ageRangeChecked) {
-        System.out.println("rec");
         // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
         ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections.observableArrayList();
@@ -607,5 +619,30 @@ public class AvailableOrgans {
 
         ObservableList<Map.Entry<Profile, OrganEnum>> searchResults = null;
         return searchResults;
+    }
+
+    public void startTimers() {
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                view.availableOrgansTable.refresh();
+                view.potentialOrganMatchTable.refresh();
+
+            }
+        }, 0, 5);
+
+        timer.schedule(new TimerTask() {
+            public void run() {
+                List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(view.listOfAvailableOrgans);
+
+                for (Map.Entry<Profile, OrganEnum> m : toRemove) {
+                    checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                }
+            }
+        }, 0, 15000);
+    }
+
+    public void pauseTimers() {
+        timer.cancel();
     }
 }
