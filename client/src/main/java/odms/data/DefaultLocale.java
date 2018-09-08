@@ -1,16 +1,68 @@
 package odms.data;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DefaultLocale {
 
-    private static Locale locale = new Locale("en", "US");
+    private static Locale languageLocale;
+    private static Locale datetimeLocale;
+    private static Locale numberLocale;
+    private static TimeZone timeZoneLocale;
 
     private DefaultLocale() {
         throw new UnsupportedOperationException();
     }
 
-    public static void setLocale(Locale currentLocale) { locale = currentLocale; }
+    private static Locale getDefaultLanguage() { return new Locale("en", "US"); }
+    private static Locale getDefaultDatetime() { return new Locale("en", "US"); }
+    private static Locale getDefaultNumber() { return new Locale("en", "US"); }
+    private static TimeZone getDefaultTimeZone() { return null; }
 
-    public static Locale getLocale() { return locale; }
+
+    public static void setLanguageLocale(Locale locale) { languageLocale = locale; }
+
+    public static Locale getLanguageLocale() {
+        if (languageLocale == null) {
+            return getDefaultLanguage();
+        } else {
+            return languageLocale;
+        }
+    }
+
+    public static Locale getDatetimeLocale() {
+        if (datetimeLocale == null) {
+            return getDefaultDatetime();
+        }
+        else {
+            return datetimeLocale;
+        }
+    }
+
+    public static void setDatetimeLocale(Locale locale) { datetimeLocale = locale; }
+
+    public static Locale getNumberLocale() {
+        if (numberLocale == null) {
+            return getDefaultNumber();
+        }
+        else {
+            return numberLocale;
+        }
+    }
+
+    public static void setNumberLocale(Locale locale) { numberLocale = locale; }
+
+    public static TimeZone getTimeZoneLocale() {
+        if (timeZoneLocale == null) {
+            return getDefaultTimeZone();
+        }
+        else {
+            return timeZoneLocale;
+        }
+    }
+
+    public static void setTimeZoneLocale(TimeZone locale) {
+        timeZoneLocale = locale;
+    }
+
 }

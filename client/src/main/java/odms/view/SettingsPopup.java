@@ -1,7 +1,9 @@
 package odms.view;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -36,33 +39,26 @@ public class SettingsPopup {
     private CountryDAO server = DAOFactory.getCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList;
     private Map<String, String> languages;
-    private ObservableList<String> timezoneObservableList;
+    private Map<String, TimeZone> timeZones;
 
-    @FXML
-    private TableView<CountriesEnum> countriesTable;
-    @FXML
-    private TableColumn<CountriesEnum, String> countriesColumn;
-    @FXML
-    private TableColumn<CountriesEnum, Boolean> allowedColumn;
-    @FXML
-    private ComboBox<String> languageSelect;
-    @FXML
-    private ComboBox<String> timeZoneSelect;
-    @FXML
-    private ComboBox datetimeSelect;
-    @FXML
-    private ComboBox numberSelect;
-    @FXML
-    private Tab countriesTab;
+    @FXML private TableView<CountriesEnum> countriesTable;
+    @FXML private TableColumn<CountriesEnum, String> countriesColumn;
+    @FXML private TableColumn<CountriesEnum, Boolean> allowedColumn;
+    @FXML private ComboBox<String> languageSelect;
+    @FXML private ComboBox<String> timeZoneSelect;
+    @FXML private ComboBox datetimeSelect;
+    @FXML private ComboBox numberSelect;
+    @FXML private Tab countriesTab;
+    @FXML private Button applyButton;
 
 
     /**
      * Confirms the changes to the settings made by the user.
-     *
      * @param event of the confirm button being clicked.
      */
     @FXML
     private void handleConfirmButtonClicked(ActionEvent event) {
+        updateLocales();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -70,17 +66,28 @@ public class SettingsPopup {
 
     /**
      * Applies the changes to the settings selected by the user.
-     *
      * @param event of the apply button being clicked.
      */
     @FXML
     private void handleApplyButtonClicked(ActionEvent event) {
+        updateLocales();
+        applyButton.setDisable(true);
+    }
 
+    private void updateLocales() {
+        String language = languages.get(languageSelect.getValue());
+        String datetime = languages.get(datetimeSelect.getValue());
+        String number = languages.get(numberSelect.getValue());
+        TimeZone timeZone = timeZones.get(timeZoneSelect.getValue());
+
+        DefaultLocale.setLanguageLocale(new Locale(language));
+        DefaultLocale.setDatetimeLocale(new Locale(datetime));
+        DefaultLocale.setNumberLocale(new Locale(number));
+        DefaultLocale.setTimeZoneLocale(null);
     }
 
     /**
      * Closes the settings popup on click.
-     *
      * @param event of the cancel button being clicked.
      */
     @FXML
@@ -184,23 +191,67 @@ public class SettingsPopup {
     /**
      * Initializes the language selection combobox.
      */
-    private void initLanguageSelection() {
+    private void initLocaleSelection() {
         languages = controller.getLanguageOptions();
-        languageSelect.getItems()
-                .addAll(FXCollections.observableArrayList(languages.keySet()).sorted());
-        String defaultDisplay = DefaultLocale.getLocale().getDisplayLanguage();
-        if (DefaultLocale.getLocale().getDisplayCountry() != "") {
-            defaultDisplay += ", " + DefaultLocale.getLocale().getDisplayCountry();
+        ObservableList<String> selection = FXCollections.observableArrayList(languages.keySet()).sorted();
+        languageSelect.getItems().addAll(selection);
+        datetimeSelect.getItems().addAll(selection);
+        numberSelect.getItems().addAll(selection);
+
+        applyButton.setDisable(true);
+        languageSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != oldValue) {
+                applyButton.setDisable(false);
+            }
+        });
+        datetimeSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != oldValue) {
+                applyButton.setDisable(false);
+            }
+        });
+        numberSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != oldValue) {
+                applyButton.setDisable(false);
+            }
+        });
+        initDefaultValues();
+    }
+
+    /**
+     * Initializes the default values displayed in the combo boxes.
+     */
+    private void initDefaultValues() {
+        String defaultDisplay = DefaultLocale.getLanguageLocale().getDisplayLanguage();
+        if (DefaultLocale.getLanguageLocale().getDisplayCountry() != "") {
+            defaultDisplay += ", " + DefaultLocale.getLanguageLocale().getDisplayCountry();
         }
         languageSelect.setValue(defaultDisplay);
+
+        defaultDisplay = DefaultLocale.getDatetimeLocale().getDisplayLanguage();
+        if (DefaultLocale.getDatetimeLocale().getDisplayCountry() != "") {
+            defaultDisplay += ", " + DefaultLocale.getDatetimeLocale().getDisplayCountry();
+        }
+        datetimeSelect.setValue(defaultDisplay);
+
+        defaultDisplay = DefaultLocale.getNumberLocale().getDisplayLanguage();
+        if (DefaultLocale.getNumberLocale().getDisplayCountry() != "") {
+            defaultDisplay += ", " + DefaultLocale.getNumberLocale().getDisplayCountry();
+        }
+        numberSelect.setValue(defaultDisplay);
     }
 
     /**
      * Initializes the time zone selection combobox.
      */
     private void initTimeZoneSelection() {
-        timezoneObservableList = FXCollections.observableArrayList(controller.getTimeZoneOptions());
-        timeZoneSelect.setItems(timezoneObservableList);
+        timeZones = controller.getTimeZoneOptions();
+        timeZoneSelect.setItems(FXCollections.observableArrayList(timeZones.keySet()));
+
+        timeZoneSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != oldValue) {
+                applyButton.setDisable(false);
+            }
+        });
     }
 
     /**
@@ -211,7 +262,7 @@ public class SettingsPopup {
     public void initialize(User currentUser) {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
-        initLanguageSelection();
+        initLocaleSelection();
         initTimeZoneSelection();
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);

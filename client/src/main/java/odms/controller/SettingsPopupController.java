@@ -23,23 +23,25 @@ public class SettingsPopupController {
 
     /**
      * Gets a list of available languages the user can select.
-     *
      * @return a list of languages.
      */
     public Map<String, String> getLanguageOptions() {
         Map<String, String> availableLanguages = new HashMap<>();
         List<Locale> numberLocales = Arrays.asList(NumberFormat.getAvailableLocales());
         List<Locale> dateLocales = Arrays.asList(DateFormat.getAvailableLocales());
+        StringBuilder builder = new StringBuilder();
 
         for (Locale locale : numberLocales) {
             if (dateLocales.contains(locale) && locale != null) {
-                String display = locale.getDisplayLanguage();
+
+                builder.append(locale.getDisplayLanguage());
                 if (locale.getDisplayCountry() != "") {
-                    display += ", " + locale.getDisplayCountry();
+                    builder.append(String.format(", %s", locale.getDisplayCountry()));
+
                 }
                 String value = locale.toString();
-                if (display != "") {
-                    availableLanguages.put(display, value);
+                if (builder.toString() != "") {
+                    availableLanguages.put(builder.toString(), value);
                 }
             }
         }
@@ -48,13 +50,12 @@ public class SettingsPopupController {
 
 
     /**
-     * Gives a list of time zones for the user to select from.
-     *
+     * Gives a list of time zones for the user to select from.     *
      * @return a list of available time zones.
      */
-    public List<String> getTimeZoneOptions() {
+    public Map<String, TimeZone> getTimeZoneOptions() {
         List<TimeZone> timezones = new ArrayList<>();
-        List<String> formattedTimeZones = new ArrayList<>();
+        Map<String, TimeZone> formattedTimeZones = new HashMap<>();
 
         for (String id : TimeZone.getAvailableIDs()) {
             timezones.add(TimeZone.getTimeZone(id));
@@ -62,14 +63,13 @@ public class SettingsPopupController {
         timezones.sort(Comparator.comparingInt(TimeZone::getRawOffset));
 
         for (TimeZone tz : timezones) {
-            formattedTimeZones.add(formatTimeZone(tz));
+            formattedTimeZones.put(formatTimeZone(tz), tz);
         }
         return formattedTimeZones;
     }
 
     /**
-     * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City
-     *
+     * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City.     *
      * @param tz timezone id.
      * @return formatted string value.
      */
@@ -90,25 +90,5 @@ public class SettingsPopupController {
 
         return result;
 
-    }
-
-    /**
-     * Gives a list of date time formats for the user to select from.
-     *
-     * @return a list of available date time formats.
-     */
-    public List<String> getDateTimeFormatOptions() {
-        // todo datetime format options.
-        return new ArrayList<>();
-    }
-
-    /**
-     * Gives a list of number formats for the user to select from.
-     *
-     * @return a list of available number formats.
-     */
-    public List<String> getNumberFormatOptions() {
-        // todo number format options.
-        return new ArrayList<>();
     }
 }
