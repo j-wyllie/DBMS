@@ -5,6 +5,7 @@ import static odms.controller.user.AvailableOrgans.getTimeRemaining;
 import static odms.controller.user.AvailableOrgans.getTimeToExpiryHoursSeconds;
 import static odms.controller.user.AvailableOrgans.getWaitTime;
 import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
+import static odms.view.user.Search.numeric_Validation;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
@@ -80,6 +82,7 @@ public class AvailableOrgans extends CommonView {
             ageRangeField.clear();
         } else {
             ageRangeField.setDisable(true);
+            ageRangeField.clear();
             ageField.setPromptText("Age");
         }
         // update
@@ -329,6 +332,34 @@ public class AvailableOrgans extends CommonView {
         populateMatchesTable();
         parentView = p;
 
+
+        // Potential matches table
+        bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> {
+                    setPotentialOrganMatchesList();
+                    updateMatchesTable();
+                });
+
+        regionsComboboxMatchesTable.getCheckModel().getCheckedItems()
+                .addListener((ListChangeListener) c -> {
+                    setPotentialOrganMatchesList();
+                    updateMatchesTable();
+                });
+
+        ageRangeField.setDisable(true);
+        ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+
+        ageField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setPotentialOrganMatchesList();
+            updateMatchesTable();
+        });
+        ageRangeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setPotentialOrganMatchesList();
+            updateMatchesTable();
+        });
+
+        // Available organs table
         regionsCombobox.getItems().setAll(NewZealandRegionsEnum.toArrayList());
         regionsCombobox.getCheckModel().getCheckedItems()
                 .addListener((ListChangeListener) c -> performOrganSearchFromFilters());
