@@ -39,26 +39,16 @@ public class Profile extends CommandUtils {
             ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
             odms.commons.model.profile.Profile newProfile = new odms.commons.model.profile.Profile(
                     attrArray);
-            if (database.isUniqueNHI(newProfile.getNhi()) == 0) {
-                database.add(newProfile);
-                addProfileHistory(newProfile.getId());
-                System.out.println("profile created.");
-            } else {
-                throw new NHIConflictException("NHI already in use.",
-                        String.valueOf(database.isUniqueNHI(newProfile.getNhi())));
-            }
+            database.add(newProfile);
+            System.out.println("profile created.");
         } catch (IllegalArgumentException e) {
             System.out.println("Please enter the required attributes correctly.");
 
         } catch (NHIConflictException e) {
             String errorNhiNumber = e.getNHI();
-            odms.commons.model.profile.Profile errorProfile = database.get(database
-                    .isUniqueNHI(errorNhiNumber));
 
             System.out.println("Error: NHI " + errorNhiNumber +
-                    " already in use by profile " +
-                    errorProfile.getGivenNames() + " " +
-                    errorProfile.getLastNames());
+                    " already in use by a profile.");
 
         } catch (Exception e) {
             System.out.println("Please enter a valid command.");
