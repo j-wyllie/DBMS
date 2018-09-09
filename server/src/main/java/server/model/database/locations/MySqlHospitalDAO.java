@@ -142,7 +142,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
     /**
      * Remove a hospital from the database.
      *
-     * @param hospital the hospital object to remove
+     * @param id the id of the hospital object to remove
      * @throws SQLException thrown when there is a server error.
      */
     @Override
