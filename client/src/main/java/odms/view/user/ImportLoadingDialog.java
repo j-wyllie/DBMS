@@ -4,20 +4,18 @@ import java.io.File;
 import java.sql.SQLException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
-import odms.controller.database.profile.MySqlProfileDAO;
 
+import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 

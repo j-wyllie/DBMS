@@ -5,6 +5,7 @@ import java.util.List;
 import odms.cli.CommandUtils;
 import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
 import odms.controller.history.CurrentHistory;
 import odms.commons.model.enums.UserType;
@@ -63,6 +64,8 @@ public class User extends CommandUtils {
         odms.commons.model.user.User users = get(expression, type);
         deleteUsers(users);
     }
+
+
 
     /**
      * Delete users.

@@ -252,8 +252,7 @@ public class ProfileController {
         Profile profile = null;
 
         try {
-            profile = gson.fromJson(req.body(), Profile.class);
-            profile.setId(Integer.valueOf(req.params("id")));
+            profile = new Profile(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
@@ -269,7 +268,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "profile Deleted";
+        return "Profile Deleted";
     }
 
     /**

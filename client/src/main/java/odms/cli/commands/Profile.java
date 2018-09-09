@@ -70,6 +70,21 @@ public class Profile extends CommandUtils {
     }
 
     /**
+     * Delete a user from the database by their NHI.
+     */
+    public static void deleteProfileByNHI(String NHI) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        try {
+            // We can do this because the username == NHI.
+            odms.commons.model.profile.Profile profile = get(NHI);
+            database.remove(profile);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
      * Delete profiles.
      *
      * @param profileList list of profiles.
