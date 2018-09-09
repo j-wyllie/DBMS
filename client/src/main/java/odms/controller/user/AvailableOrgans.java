@@ -441,7 +441,6 @@ public class AvailableOrgans {
      *
      * @param organAvailable the available organ
      * @param donorProfile the donor the organ came from
-     * @param nameFieldText the name field text.
      * @param checkedBloodTypes the checked blood types.
      * @param checkedRegions the checked regions.
      * @param ageLower the lower age range.
@@ -451,7 +450,7 @@ public class AvailableOrgans {
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
             Profile donorProfile,
-            String nameFieldText, ObservableList checkedBloodTypes, ObservableList checkedRegions,
+            ObservableList checkedBloodTypes, ObservableList checkedRegions,
             String ageLower, String ageUpper, boolean ageRangeChecked) {
         // sort by longest wait time first,
         // then weight by closest location to where the donor profiles region of death
@@ -489,12 +488,10 @@ public class AvailableOrgans {
         }
 
         // No point filtering
-        if ("".equals(ageLower) && checkedRegions.size() == 0 && checkedBloodTypes.size() == 0 &&
-                "".equals(nameFieldText)) {
+        if ("".equals(ageLower) && checkedRegions.size() == 0 && checkedBloodTypes.size() == 0) {
             return potentialOrganMatchesUnfiltered;
         }
 
-        // TODO add name filtering.
         filterBloodType(checkedBloodTypes, potentialOrganMatches, potentialOrganMatchesUnfiltered);
         filterRegions(checkedRegions, potentialOrganMatches, potentialOrganMatchesUnfiltered);
 

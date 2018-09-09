@@ -42,15 +42,11 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private TextField ageRangeField;
     @FXML
-    private TextField nameSearchField;
-    @FXML
     private CheckComboBox<String> bloodTypeComboboxMatchesTable;
     @FXML
     private CheckComboBox<String> regionsComboboxMatchesTable;
     @FXML
     public TableView<Profile> potentialOrganMatchTable;
-
-    // Organs table
     @FXML
     private CheckComboBox<OrganEnum> organsCombobox;
     @FXML
@@ -59,9 +55,7 @@ public class AvailableOrgans extends CommonView {
     public TableView availableOrgansTable;
 
 
-    private boolean filtered = false;
     private OrganEnum selectedOrgan;
-    private Profile selectedProfile;
 
     public ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile, OrganEnum>> listOfFilteredAvailableOrgans;
@@ -195,7 +189,7 @@ public class AvailableOrgans extends CommonView {
         nhiCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty((cdf.getValue().getKey().getNhi())));
 
-        TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn(
+        TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn<>(
                 "Expiry");
         expiryProgressBarCol.setCellValueFactory(
                 cdf -> new SimpleDoubleProperty(
@@ -242,8 +236,6 @@ public class AvailableOrgans extends CommonView {
                     availableOrgansTable.getSelectionModel().getSelectedItem() != null) {
                 selectedOrgan = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
                         .getSelectionModel().getSelectedItem()).getValue();
-                selectedProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
-                        .getSelectionModel().getSelectedItem()).getKey();
 
                 setPotentialOrganMatchesList();
                 updateMatchesTable();
@@ -273,12 +265,13 @@ public class AvailableOrgans extends CommonView {
             Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
                     .getSelectionModel().getSelectedItem()).getKey();
 
-            potentialOrganMatches = controller.getSuitableRecipientsSorted(
-                    organToMatch, donorProfile, nameSearchField.getText(),
-                    bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
-                    regionsComboboxMatchesTable.getCheckModel().getCheckedItems(),
-                    ageField.getText(), ageRangeField.getText(),
-                    ageRangeCheckbox.isSelected());
+            potentialOrganMatches = odms.controller.user.AvailableOrgans
+                    .getSuitableRecipientsSorted(
+                            organToMatch, donorProfile,
+                            bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems(),
+                            regionsComboboxMatchesTable.getCheckModel().getCheckedItems(),
+                            ageField.getText(), ageRangeField.getText(),
+                            ageRangeCheckbox.isSelected());
 
         } catch (NullPointerException e) {
             // No organ selected in table
@@ -286,31 +279,29 @@ public class AvailableOrgans extends CommonView {
     }
 
     /**
-     * Updates the available organs list according to the active filters
+     * Updates the available organs list according to the active filters.
      */
     private void performOrganSearchFromFilters() {
         listOfFilteredAvailableOrgans = FXCollections.observableArrayList();
         listOfFilteredAvailableOrgans.clear();
         for (Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
-            if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue())
-                    && regionsCombobox.getCheckModel().getCheckedItems()
+            if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) &&
+                    regionsCombobox.getCheckModel().getCheckedItems()
                     .contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue())
-                    && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
-                listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0
-                    && regionsCombobox.getCheckModel().getCheckedItems().size() == 0) {
-                listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().size() == 0
-                    && regionsCombobox.getCheckModel().getCheckedItems()
-                    .contains(m.getKey().getRegionOfDeath())) {
+            } else if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) &&
+                    regionsCombobox.getCheckModel().getCheckedItems().size() == 0 ||
+                    organsCombobox.getCheckModel().getCheckedItems().size() == 0 &&
+                    regionsCombobox.getCheckModel().getCheckedItems().size() == 0 ||
+                    organsCombobox.getCheckModel().getCheckedItems().size() == 0 &&
+                    regionsCombobox.getCheckModel().getCheckedItems()
+                            .contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
             }
         }
-        if (listOfFilteredAvailableOrgans.size() != 0
-                || organsCombobox.getCheckModel().getCheckedItems().size() != 0
-                || regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
+        if (listOfFilteredAvailableOrgans.size() != 0 ||
+                organsCombobox.getCheckModel().getCheckedItems().size() != 0 ||
+                regionsCombobox.getCheckModel().getCheckedItems().size() != 0) {
             availableOrgansTable.setItems(listOfFilteredAvailableOrgans);
         } else {
             availableOrgansTable.setItems(listOfAvailableOrgans);
@@ -318,7 +309,7 @@ public class AvailableOrgans extends CommonView {
     }
 
     /**
-     * Clears the potential organ match table and updates with the updated profiles
+     * Clears the potential organ match table and updates with the updated profiles.
      */
     private void updateMatchesTable() {
         potentialOrganMatchTable.setItems(potentialOrganMatches);
@@ -327,6 +318,7 @@ public class AvailableOrgans extends CommonView {
     /**
      * Initializes the Available organs view. Sets the current user and the clinician profile parent
      * view.
+     *
      * @param currentUser current user logged in.
      * @param p parent view.
      */
@@ -358,16 +350,18 @@ public class AvailableOrgans extends CommonView {
         controller.startTimers();
     }
 
+    /**
+     * Starts the timers.
+     */
     public void startTimers() {
         controller.startTimers();
     }
 
+    /**
+     * Pauses the timers.
+     */
     public void pauseTimers() {
         controller.pauseTimers();
-    }
-
-    public ObservableList<Map.Entry<Profile, OrganEnum>> getListOfAvailableOrgans() {
-        return listOfAvailableOrgans;
     }
 
     /**

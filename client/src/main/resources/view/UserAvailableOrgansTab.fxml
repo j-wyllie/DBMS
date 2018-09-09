@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
    <children>
        <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
@@ -20,11 +20,11 @@
                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="160.0" />
                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="99.0" prefWidth="165.0" />
                <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="72.0" />
-               <ColumnConstraints hgrow="NEVER" maxWidth="321.0" minWidth="-Infinity" prefWidth="167.0" />
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="332.0" minWidth="10.0" prefWidth="173.0" />
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="330.0" minWidth="10.0" prefWidth="156.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="133.0" minWidth="10.0" prefWidth="64.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="122.0" minWidth="10.0" prefWidth="65.0" />
+               <ColumnConstraints hgrow="NEVER" maxWidth="321.0" minWidth="-Infinity" prefWidth="176.0" />
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="332.0" minWidth="10.0" prefWidth="166.0" />
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="330.0" minWidth="10.0" prefWidth="82.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="167.0" minWidth="10.0" prefWidth="75.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="133.0" minWidth="10.0" prefWidth="133.0" />
            </columnConstraints>
            <rowConstraints>
                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="NEVER" />
@@ -63,23 +63,31 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
               </columnResizePolicy>
            </TableView>
-           <Label text="Potential Organ Receivers" GridPane.columnIndex="4" />
+         <Label text="Region" GridPane.columnIndex="4" />
            <Label text="Organ" />
            <Label text="Region" GridPane.columnIndex="1">
               <GridPane.margin>
                   <Insets left="10.0" />
               </GridPane.margin>
            </Label>
-           <CheckComboBox fx:id="regionsComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1">
+           <CheckComboBox fx:id="regionsComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1">
             <GridPane.margin>
                <Insets right="10.0" />
             </GridPane.margin></CheckComboBox>
-           <CheckComboBox fx:id="bloodTypeComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-           <TextField fx:id="nameSearchField" maxWidth="1.7976931348623157E308" promptText="Name" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-         <TextField fx:id="ageField" layoutX="501.0" layoutY="60.0" maxWidth="1.7976931348623157E308" promptText="Age" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-         <TextField fx:id="ageRangeField" disable="true" layoutX="926.0" layoutY="60.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-         <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" text="Range" GridPane.columnIndex="7" />
-         <TextField fx:id="ageRangeField1" disable="true" layoutX="1135.0" layoutY="60.0" maxWidth="1.7976931348623157E308" />
+           <CheckComboBox fx:id="bloodTypeComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1">
+            <padding>
+               <Insets right="10.0" />
+            </padding></CheckComboBox>
+         <TextField fx:id="ageField" layoutX="501.0" layoutY="60.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="158.0" promptText="Age" GridPane.columnIndex="6" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets right="10.0" />
+            </GridPane.margin></TextField>
+         <TextField fx:id="ageRangeField" disable="true" layoutX="926.0" layoutY="60.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="7" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets right="10.0" />
+            </GridPane.margin></TextField>
+         <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" prefHeight="18.0" prefWidth="84.0" text="Range" GridPane.columnIndex="6" />
+         <Label text="Blood Type" GridPane.columnIndex="5" />
        </GridPane>
    </children>
 </AnchorPane>
