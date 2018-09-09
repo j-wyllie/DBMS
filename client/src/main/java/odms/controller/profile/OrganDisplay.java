@@ -1,13 +1,12 @@
 package odms.controller.profile;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Controller class for the organ display view.
@@ -35,13 +34,14 @@ public class OrganDisplay extends CommonController {
     public Profile getUpdatedProfileDetails(Profile p) {
         Profile profile = null;
         try {
+            profile = DAOFactory.getProfileDao().get(p.getId());
+
             odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
-            List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                    .getAllOrgansAvailable();
+            List<Map.Entry<Profile, OrganEnum>> availableOrgans =
+                    controller.getAllOrgansAvailable();
             for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
                 controller.checkOrganExpired(m.getValue(), m.getKey(), m);
             }
-            profile = DAOFactory.getProfileDao().get(p.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }

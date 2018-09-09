@@ -274,6 +274,7 @@ public class OrganEdit extends CommonController {
         ProfileDAO database = DAOFactory.getProfileDao();
         try {
             database.update(p);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
