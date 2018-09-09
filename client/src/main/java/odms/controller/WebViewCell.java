@@ -2,6 +2,7 @@ package odms.controller;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
@@ -14,6 +15,8 @@ public class WebViewCell<S> extends TableCell<S, String> {
 
     public WebViewCell() {
         this.webView = new WebView();
+        webView.setDisable(true);
+        this.addEventFilter(MouseEvent.MOUSE_CLICKED, new WebViewCellHandler());
 
     }
 
