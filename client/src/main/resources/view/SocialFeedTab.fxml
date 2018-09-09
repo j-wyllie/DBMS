@@ -26,6 +26,7 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
              </TableView>
+            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/refresh.png); -fx-background-size: stretch;" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
          </children>
       </GridPane>
    </children>

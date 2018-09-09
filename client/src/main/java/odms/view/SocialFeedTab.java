@@ -3,7 +3,9 @@ package odms.view;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.web.WebEngine;
@@ -22,9 +24,14 @@ import java.util.List;
 public class SocialFeedTab {
     @FXML
     TableView tweetTable;
+    @FXML
+    Button refreshButton;
 
     private ObservableList<String> tweetList;
 
+    /**
+     * Populates the table with tweets and adds a column that constructs a WebViewCell factory
+     */
     private void populateTweetTable() {
         getTweets();
 
@@ -35,10 +42,21 @@ public class SocialFeedTab {
         );
         tweetCol.setCellFactory(WebViewCell.forTableColumn()
         );
-        System.out.println(tweetCol.getWidth());
         tweetTable.getColumns().add(tweetCol);
     }
 
+    /**
+     * Handles the action for the refresh button to refresh the table
+     * @param event
+     */
+    @FXML
+    private void handleRefreshButtonClicked(ActionEvent event) {
+        populateTweetTable();
+    }
+
+    /**
+     * Calls the twitter API in order to get all tweets with the hashtag humanfarm
+     */
     private void getTweets() {
         try {
             URL url = new URL(
