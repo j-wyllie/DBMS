@@ -74,6 +74,7 @@ public class Server {
                     patch("", UserController::edit);
                     delete("", UserController::delete);
                 });
+                path("/login", () -> post("", UserController::checkCredentials));
             });
 
             // profile api routes.
@@ -82,7 +83,10 @@ public class Server {
                 get("/all", ProfileController::getAll);
                 get("", ProfileController::get);
                 post("", ProfileController::create);
+                get("/password", ProfileController::hasPassword);
+                post("/password", ProfileController::savePassword);
 
+                post("/login", ProfileController::checkCredentials);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
 

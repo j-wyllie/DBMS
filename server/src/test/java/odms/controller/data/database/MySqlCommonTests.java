@@ -1,6 +1,5 @@
 package odms.controller.data.database;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import server.model.database.DatabaseConnection;

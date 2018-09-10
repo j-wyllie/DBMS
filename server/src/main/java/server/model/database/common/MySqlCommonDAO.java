@@ -1,14 +1,10 @@
 package server.model.database.common;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class MySqlCommonDAO implements CommonDAO {
 
