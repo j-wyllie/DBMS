@@ -38,7 +38,6 @@ public class SettingsPopup {
     private SettingsPopupController controller = new SettingsPopupController(this);
     private CountryDAO server = DAOFactory.getCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList;
-    private Map<String, String> languages;
     private Map<String, TimeZone> timeZones;
 
     @FXML private TableView<CountriesEnum> countriesTable;
@@ -58,7 +57,7 @@ public class SettingsPopup {
      */
     @FXML
     private void handleConfirmButtonClicked(ActionEvent event) {
-        updateLocales();
+        controller.updateLocales();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -70,20 +69,8 @@ public class SettingsPopup {
      */
     @FXML
     private void handleApplyButtonClicked(ActionEvent event) {
-        updateLocales();
+        controller.updateLocales();
         applyButton.setDisable(true);
-    }
-
-    private void updateLocales() {
-        String language = languages.get(languageSelect.getValue());
-        String datetime = languages.get(datetimeSelect.getValue());
-        String number = languages.get(numberSelect.getValue());
-        TimeZone timeZone = timeZones.get(timeZoneSelect.getValue());
-
-        DefaultLocale.setLanguageLocale(new Locale(language));
-        DefaultLocale.setDatetimeLocale(new Locale(datetime));
-        DefaultLocale.setNumberLocale(new Locale(number));
-        DefaultLocale.setTimeZoneLocale(null);
     }
 
     /**
@@ -192,13 +179,12 @@ public class SettingsPopup {
      * Initializes the language selection combobox.
      */
     private void initLocaleSelection() {
-        languages = controller.getLanguageOptions();
+        Map<String, Locale> languages = controller.getLanguageOptions();
         ObservableList<String> selection = FXCollections.observableArrayList(languages.keySet()).sorted();
         languageSelect.getItems().addAll(selection);
         datetimeSelect.getItems().addAll(selection);
         numberSelect.getItems().addAll(selection);
 
-        applyButton.setDisable(true);
         languageSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != oldValue) {
                 applyButton.setDisable(false);
@@ -215,6 +201,7 @@ public class SettingsPopup {
             }
         });
         initDefaultValues();
+        applyButton.setDisable(true);
     }
 
     /**
@@ -254,6 +241,14 @@ public class SettingsPopup {
         });
     }
 
+    public ComboBox getLanguageSelector() { return languageSelect; }
+
+    public ComboBox getDatetimeSelector() { return datetimeSelect; }
+
+    public ComboBox getNumberSelector() { return numberSelect; }
+
+    public ComboBox getTimeZoneSelector() { return timeZoneSelect; }
+
     /**
      * Initializes the content displayed by the view.
      *
@@ -262,8 +257,10 @@ public class SettingsPopup {
     public void initialize(User currentUser) {
         countriesEnumObservableList = FXCollections.observableArrayList(
                 param -> new Observable[]{param.getValidProperty()});
+
         initLocaleSelection();
         initTimeZoneSelection();
+
         if (!(currentUser.getUserType().equals(UserType.ADMIN))) {
             countriesTab.setDisable(true);
         } else {

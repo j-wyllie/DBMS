@@ -3,13 +3,19 @@ package odms.data;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class DefaultLocale {
+/**
+ * Defines the locale settings for the application instance.
+ */
+public final class DefaultLocale {
 
     private static Locale languageLocale;
     private static Locale datetimeLocale;
     private static Locale numberLocale;
     private static TimeZone timeZoneLocale;
 
+    /**
+     * Constructor - throws UnsupportedOperationException due to the static structure.
+     */
     private DefaultLocale() {
         throw new UnsupportedOperationException();
     }
@@ -33,8 +39,7 @@ public class DefaultLocale {
     public static Locale getDatetimeLocale() {
         if (datetimeLocale == null) {
             return getDefaultDatetime();
-        }
-        else {
+        } else {
             return datetimeLocale;
         }
     }
@@ -44,8 +49,7 @@ public class DefaultLocale {
     public static Locale getNumberLocale() {
         if (numberLocale == null) {
             return getDefaultNumber();
-        }
-        else {
+        } else {
             return numberLocale;
         }
     }
@@ -55,8 +59,7 @@ public class DefaultLocale {
     public static TimeZone getTimeZoneLocale() {
         if (timeZoneLocale == null) {
             return getDefaultTimeZone();
-        }
-        else {
+        } else {
             return timeZoneLocale;
         }
     }

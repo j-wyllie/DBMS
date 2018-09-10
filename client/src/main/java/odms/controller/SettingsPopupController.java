@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import odms.data.DefaultLocale;
 import odms.view.SettingsPopup;
 
 public class SettingsPopupController {
@@ -25,13 +26,14 @@ public class SettingsPopupController {
      * Gets a list of available languages the user can select.
      * @return a list of languages.
      */
-    public Map<String, String> getLanguageOptions() {
-        Map<String, String> availableLanguages = new HashMap<>();
+    public Map<String, Locale> getLanguageOptions() {
+        Map<String, Locale> availableLanguages = new HashMap<>();
         List<Locale> numberLocales = Arrays.asList(NumberFormat.getAvailableLocales());
         List<Locale> dateLocales = Arrays.asList(DateFormat.getAvailableLocales());
-        StringBuilder builder = new StringBuilder();
 
         for (Locale locale : numberLocales) {
+            StringBuilder builder = new StringBuilder();
+
             if (dateLocales.contains(locale) && locale != null) {
 
                 builder.append(locale.getDisplayLanguage());
@@ -39,9 +41,8 @@ public class SettingsPopupController {
                     builder.append(String.format(", %s", locale.getDisplayCountry()));
 
                 }
-                String value = locale.toString();
-                if (builder.toString() != "") {
-                    availableLanguages.put(builder.toString(), value);
+                if (builder.toString().trim() != "") {
+                    availableLanguages.put(builder.toString(), locale);
                 }
             }
         }
@@ -50,7 +51,7 @@ public class SettingsPopupController {
 
 
     /**
-     * Gives a list of time zones for the user to select from.     *
+     * Gives a list of time zones for the user to select from.
      * @return a list of available time zones.
      */
     public Map<String, TimeZone> getTimeZoneOptions() {
@@ -60,7 +61,8 @@ public class SettingsPopupController {
         for (String id : TimeZone.getAvailableIDs()) {
             timezones.add(TimeZone.getTimeZone(id));
         }
-        timezones.sort(Comparator.comparingInt(TimeZone::getRawOffset));
+//        timezones.sort(Comparator.comparingInt(TimeZone::getRawOffset));
+        timezones.sort(Comparator.comparing(TimeZone::getDisplayName));
 
         for (TimeZone tz : timezones) {
             formattedTimeZones.put(formatTimeZone(tz), tz);
@@ -69,7 +71,7 @@ public class SettingsPopupController {
     }
 
     /**
-     * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City.     *
+     * Formats a time zone from the timezone id in the format (GMT+ X:XX) Country/City.
      * @param tz timezone id.
      * @return formatted string value.
      */
@@ -82,13 +84,33 @@ public class SettingsPopupController {
         minutes = Math.abs(minutes);
 
         String result;
-        if (hours > 0) {
-            result = String.format("(GMT+%d:%02d) %s", hours, minutes, tz.getID());
+        if (hours >= 0) {
+            result = String.format("(GMT +%d:%02d) %s", hours, minutes, tz.getID());
         } else {
-            result = String.format("(GMT%d:%02d) %s", hours, minutes, tz.getID());
+            result = String.format("(GMT %d:%02d) %s", hours, minutes, tz.getID());
         }
 
         return result;
 
+    }
+
+    /**
+     * Updates the users default locale settings.
+     */
+    public void updateLocales() {
+        Map<String, Locale> languages = getLanguageOptions();
+        Map<String, TimeZone> timeZones = getTimeZoneOptions();
+
+        Locale value = languages.get(view.getLanguageSelector().getValue().toString());
+        DefaultLocale.setLanguageLocale(value);
+
+        value = languages.get(view.getDatetimeSelector().getValue().toString());
+        DefaultLocale.setDatetimeLocale(value);
+
+        value = languages.get(view.getNumberSelector().getValue().toString());
+        DefaultLocale.setNumberLocale(value);
+
+        TimeZone timeZone = timeZones.get(view.getTimeZoneSelector().getValue().toString());
+        DefaultLocale.setTimeZoneLocale(timeZone);
     }
 }

@@ -84,7 +84,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApplyButtonClicked" text="Apply" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                    <Button fx:id="applyButton" disable="true" mnemonicParsing="false" onAction="#handleApplyButtonClicked" text="Apply" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
