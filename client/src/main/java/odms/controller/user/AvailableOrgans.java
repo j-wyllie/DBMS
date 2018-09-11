@@ -16,6 +16,7 @@ import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Profile;
@@ -460,7 +461,7 @@ public class AvailableOrgans {
 
         List<Profile> receivingProfiles;
 
-        String reqBloodType = donorProfile.getBloodType();
+        String organBloodType = donorProfile.getBloodType();
         Integer minAge;
         Integer maxAge;
         if (donorProfile.getAge() < 12) {
@@ -474,8 +475,20 @@ public class AvailableOrgans {
             maxAge = donorProfile.getAge() + 15;
         }
 
+        // Initialize this profiles by getting the profiles with matching blood types.
         receivingProfiles = DAOFactory.getProfileDao()
-                .getOrganReceivers(organAvailable.getName(), reqBloodType, minAge, maxAge);
+            .getOrganReceivers(organAvailable.getName(), organBloodType, minAge, maxAge);
+
+        // Get the compatible donation blood types then retrieve any profiles that match.
+        List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
+        for (String bloodType : compatibleBloodTypes) {
+            // Don't need to get the original blood type again.
+            if (!bloodType.equals(organBloodType)) {
+                receivingProfiles.addAll(DAOFactory.getProfileDao()
+                        .getOrganReceivers(organAvailable.getName(), bloodType, minAge, maxAge));
+            }
+        }
+
         potentialOrganMatchesUnfiltered.addAll(receivingProfiles);
         SortedList<Profile> sortedByCountry = sortCountry(donorProfile,
                 potentialOrganMatchesUnfiltered);
@@ -681,6 +694,41 @@ public class AvailableOrgans {
                         return 0;
                     }
                 });
+    }
+
+    /**
+     * Get's a list of compatible blood types for organ donation
+     * @param bloodType the blood type of the donated organ
+     * @return a list of compatible blood type strings
+     */
+    private static List<String> getCompatibleOrganBloodTypes(String bloodType) {
+        List<String> compatibleTypes = new ArrayList<>();
+
+        // Positives and negatives don't matter for organ donation.
+        bloodType = bloodType.replace("+", "");
+        bloodType = bloodType.replace("-", "");
+        switch (bloodType) {
+            case "A":
+                compatibleTypes.add(BloodTypeEnum.A_POSITIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.A_NEGATIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.AB_POSITIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.AB_NEGATIVE.getName());
+                break;
+            case "B":
+                compatibleTypes.add(BloodTypeEnum.B_POSITIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.B_NEGATIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.AB_POSITIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.AB_NEGATIVE.getName());
+                break;
+            case "AB":
+                compatibleTypes.add(BloodTypeEnum.AB_POSITIVE.getName());
+                compatibleTypes.add(BloodTypeEnum.AB_NEGATIVE.getName());
+                break;
+            case "O":
+                compatibleTypes = BloodTypeEnum.toArrayList();
+                break;
+        }
+        return compatibleTypes;
     }
 
     /**

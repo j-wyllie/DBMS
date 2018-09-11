@@ -49,14 +49,12 @@ public class ProfileController {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
-
         try {
             if (req.queryMap().hasKey("searchString")) {
                 String searchString = req.queryParams("searchString");
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
-            }
-            else if (req.queryMap().hasKey("organ")) {
+            } else if (req.queryMap().hasKey("organ")) {
                 String organ = req.queryParams("organ");
                 String bloodType = req.queryParams("bloodType");
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
@@ -64,8 +62,7 @@ public class ProfileController {
                 List<Profile> result = database.getOrganReceivers(organ, bloodType,
                         lowerAgeRange, upperAgeRange);
                 profiles = gson.toJson(result);
-            }
-            else {
+            } else {
                 profiles = gson.toJson(database.getAllReceiving());
             }
         } catch (NumberFormatException e) {
