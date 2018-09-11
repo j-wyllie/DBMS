@@ -46,22 +46,23 @@ public class MySqlHospitalDAO implements HospitalDAO {
     /**
      * Get a hospital from database.
      *
-     * @param id the id of the hospital to retrieve
+     * @param name the name of the hospital to retrieve
      * @return hospital object
      * @throws SQLException thrown when there is a server error.
      */
     @Override
-    public Hospital get(int id) throws SQLException {
-        String query = "SELECT * FROM hospitals WHERE id = ?";
+    public Hospital get(String name) throws SQLException {
+        String query = "SELECT * FROM hospitals WHERE Name = ?";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         Connection conn = connectionInstance.getConnection();
         Hospital result = null;
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
+            stmt.setString(1, name);
             ResultSet allHospitals = stmt.executeQuery();
 
-            result = parseHospital(allHospitals);
-
+            while (allHospitals.next()) {
+                result = parseHospital(allHospitals);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -100,14 +101,22 @@ public class MySqlHospitalDAO implements HospitalDAO {
 
             stmt.setString(1, hospital.getName());
             stmt.setString(2, hospital.getAddress());
-            stmt.setDouble(3, hospital.getLatitude());
-            stmt.setDouble(4, hospital.getLongitude());
+            setDouble(3, stmt, hospital.getLatitude());
+            setDouble(4, stmt, hospital.getLongitude());
 
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conn.close();
+        }
+    }
+
+    private void setDouble(int index, PreparedStatement preparedStatement, Double val) throws SQLException {
+        if (val == null ) {
+            preparedStatement.setNull(index, java.sql.Types.NULL);
+        } else {
+            preparedStatement.setDouble(index, val);
         }
     }
 
@@ -131,7 +140,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.setDouble(4, hospital.getLongitude());
             stmt.setInt(5, hospital.getId());
 
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -142,18 +151,18 @@ public class MySqlHospitalDAO implements HospitalDAO {
     /**
      * Remove a hospital from the database.
      *
-     * @param id the id of the hospital object to remove
+     * @param name the name of the hospital object to remove
      * @throws SQLException thrown when there is a server error.
      */
     @Override
-    public void remove(Integer id) throws SQLException {
-        String query = "DELETE FROM hospitals WHERE Id = ?";
+    public void remove(String name) throws SQLException {
+        String query = "DELETE FROM hospitals WHERE Name = ?";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         Connection conn = connectionInstance.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, id);
-            stmt.executeQuery();
+            stmt.setString(1, name);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

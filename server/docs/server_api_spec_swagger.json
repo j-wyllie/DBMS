@@ -1180,6 +1180,15 @@
             "schema": {
               "$ref": "#/components/schemas/id"
             }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Name of the hospital.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1217,6 +1226,15 @@
             "description": "Id of the object.",
             "schema": {
               "$ref": "#/components/schemas/id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Name of the hospital.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],

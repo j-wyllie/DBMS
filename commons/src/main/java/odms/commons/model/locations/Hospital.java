@@ -39,6 +39,20 @@ public class Hospital {
      * @param lat latitude of hte hospital
      * @param lon longitude of hte hospital
      * @param address address of the hospital
+     */
+    public Hospital(String name, Double lat, Double lon, String address) {
+        this.name = name;
+        this.latitude = lat;
+        this.longitude = lon;
+        this.address = address;
+    }
+
+    /**
+     * Constructor for hospital objects.
+     * @param name Name of hte hospital
+     * @param lat latitude of hte hospital
+     * @param lon longitude of hte hospital
+     * @param address address of the hospital
      * @param id the unique id for the hospital
      */
     public Hospital(String name, Double lat, Double lon, String address, Integer id) {

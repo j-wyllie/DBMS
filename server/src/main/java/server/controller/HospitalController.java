@@ -50,7 +50,7 @@ public class HospitalController {
         HospitalDAO database = DAOFactory.getHospitalDAO();
         Hospital hospital;
         try {
-            hospital = database.get(Integer.valueOf(req.queryParams("id")));
+            hospital = database.get(req.queryParams("name"));
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -114,17 +114,17 @@ public class HospitalController {
      */
     public static String delete(Request req, Response res) {
         HospitalDAO database = DAOFactory.getHospitalDAO();
-        Integer id;
+        String name;
 
         try {
-            id = Integer.parseInt(req.params("id"));
+            name = req.queryParams("name");
         } catch (Exception e) {
             res.status(400);
             return "Bad Request";
         }
         try {
 
-            database.remove(id);
+            database.remove(name);
         } catch (Exception e) {
             res.status(500);
             return "Internal Server Error";
