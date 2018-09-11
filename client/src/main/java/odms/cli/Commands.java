@@ -38,6 +38,7 @@ public enum Commands {
     // Admin Commands
     ADMINCREATE,
     ADMINDELETE,
+    ADMINUPDATE,
 
     // user commands TODO need to replace most clinician stuff with user, works for now
 

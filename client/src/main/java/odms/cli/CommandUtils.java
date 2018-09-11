@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
+import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.profile.ProfileDAO;
@@ -110,6 +111,9 @@ public class CommandUtils {
                         case "delete":
                             return Commands.ADMINDELETE;
                     }
+                } else if (rawInput.matches(CMD_REGEX_PROFILE_UPDATE) &&
+                        cmd.get(0).equals("admin")) {
+                    return Commands.ADMINUPDATE;
                 }
                 break;
             case "profile":

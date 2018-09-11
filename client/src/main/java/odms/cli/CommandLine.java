@@ -237,8 +237,13 @@ public class CommandLine implements Runnable {
                 break;
 
             case ADMINDELETE:
-                // Delete and admin
+                // Delete an admin
                 User.deleteUserBySearch(rawInput, UserType.ADMIN.getName());
+                break;
+
+            case ADMINUPDATE:
+                // Update an admin
+                User.updateUserBySearch(rawInput, UserType.ADMIN.getName());
                 break;
 
             case ORGANADD:
