@@ -129,12 +129,7 @@ public class UserController {
         }
 
         try {
-            if (database.isUniqueUsername(user.getUsername())) {
-                database.update(user);
-            } else {
-                res.status(403);
-                return "Forbidden";
-            }
+            database.update(user);
         } catch (SQLException e) {
             res.status(500);
             return "Internal Server Error";

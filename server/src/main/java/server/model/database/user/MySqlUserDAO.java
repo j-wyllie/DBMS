@@ -274,7 +274,7 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public void update(User user) throws SQLException {
-        String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
+        String query = "UPDATE users SET Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
@@ -282,17 +282,15 @@ public class MySqlUserDAO implements UserDAO {
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getName());
-            stmt.setString(4, user.getUserType().toString());
-            stmt.setString(5, user.getWorkAddress());
-            stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getLastUpdated().toString());
-            stmt.setBoolean(8, user.getDefault());
-            stmt.setString(9, user.getPictureName());
-            stmt.setString(10, user.getPictureName());
-            stmt.setInt(10, user.getStaffID());
+            stmt.setString(1, user.getPassword());
+            stmt.setString(2, user.getName());
+            stmt.setString(3, user.getUserType().toString());
+            stmt.setString(4, user.getWorkAddress());
+            stmt.setString(5, user.getRegion());
+            stmt.setString(6, user.getLastUpdated().toString());
+            stmt.setBoolean(7, user.getDefault());
+            stmt.setString(8, user.getPictureName());
+            stmt.setInt(9, user.getStaffID());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

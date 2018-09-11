@@ -81,7 +81,7 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public void update(User user) throws IllegalArgumentException {
         Gson gson = new Gson();
-        String url = USERS + user.getStaffID();
+        String url = USERS + '/' + user.getStaffID();
         String body = gson.toJson(user);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
