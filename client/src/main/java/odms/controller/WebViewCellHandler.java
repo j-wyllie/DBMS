@@ -1,10 +1,9 @@
 package odms.controller;
 
+import java.awt.Desktop;
+import java.net.URI;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
-import java.awt.*;
-import java.net.URI;
 
 public class WebViewCellHandler implements EventHandler<MouseEvent> {
     @Override
