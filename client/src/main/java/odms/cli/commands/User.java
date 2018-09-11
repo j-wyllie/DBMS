@@ -55,6 +55,34 @@ public class User extends CommandUtils {
     }
 
     /**
+     * Create admin.
+     *
+     * @param rawInput raw command input.
+     */
+    public static void createAdmin(String rawInput) {
+        try {
+            String[] attrList = rawInput.substring(12).split("\"\\s");
+            ArrayList<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
+            UserType userType = UserType.ADMIN;
+            odms.commons.model.user.User newUser = new odms.commons.model.user.User(userType,
+                    attrArray);
+            if ((newUser.getUsername() != null && !newUser.getUsername().equals("")) &&
+                    (newUser.getPassword() != null && !newUser.getPassword().equals("")) &&
+                    (newUser.getName() != null && !newUser.getName().equals(""))) {
+                DAOFactory.getUserDao().add(newUser);
+                System.out.println("Admin created.");
+            } else {
+                throw new IllegalArgumentException("Please enter all fields.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Please enter a valid command.");
+        }
+    }
+
+    /**
      * Delete user from the database by search.
      *
      * @param expression search expression.

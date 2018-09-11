@@ -102,6 +102,8 @@ public class CommandUtils {
                     return Commands.CLINICIANCREATE;
                 }
                 break;
+            case "create-admin":
+                return Commands.ADMINCREATE;
             case "profile":
                 if (rawInput.matches(CMD_REGEX_PROFILE_VIEW)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {

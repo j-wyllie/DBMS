@@ -35,6 +35,10 @@ public enum Commands {
     CLINICIANUPDATE,
     CLINICIANEVIEW,
 
+    // Admin Commands
+    ADMINCREATE,
+    ADMINDELETE,
+
     // user commands TODO need to replace most clinician stuff with user, works for now
 
     // Organ Commands
@@ -55,9 +59,11 @@ public enum Commands {
 
                 new StringsCompleter("create-clinician"),
                 new StringsCompleter("create-profile"),
+                new StringsCompleter("create-admin"),
 
                 new StringsCompleter("delete-clinician"),
                 new StringsCompleter("delete-profile"),
+                new StringsCompleter("delete-admin"),
 
                 new StringsCompleter("help"),
                 new StringsCompleter("print all"),

@@ -33,7 +33,7 @@ public final class Help {
         System.out.println("create-profile {attributes (given-names, last-names, dob and ird is "
                 + "required)}");
         System.out.println("e.g. create-profile given-names=\"Abby Rose\" last-names=\"Walker\" "
-                + "dob=\"03-03-1998\" ird=\"123456789\"");
+                + "dob=\"03-03-1998\" nhi=\"123456789\"");
 
         System.out.println("\n-View a profile:");
         System.out.println("profile {attributes to search profiles by} > view");

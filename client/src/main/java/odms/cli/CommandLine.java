@@ -230,6 +230,11 @@ public class CommandLine implements Runnable {
                 User.viewAttrBySearch(rawInput, "clinician");
                 break;
 
+            case ADMINCREATE:
+                // Create a new admin
+                User.createAdmin(rawInput);
+                break;
+
             case ORGANADD:
                 // Add organs to a profile.
                 CommandUtils.addOrgansBySearch(rawInput);
