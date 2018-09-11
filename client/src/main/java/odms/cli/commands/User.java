@@ -231,6 +231,9 @@ public class User extends CommandUtils {
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
+        if (type.equals(UserType.ADMIN.getName())) {
+            lengthToSkip = "admin".length() + 1;
+        }
 
         UserDAO database = DAOFactory.getUserDao();
         odms.commons.model.user.User user;

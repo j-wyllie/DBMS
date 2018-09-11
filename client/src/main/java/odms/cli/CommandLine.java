@@ -5,6 +5,7 @@ import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
 import odms.cli.commands.User;
+import odms.commons.model.enums.UserType;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.DatabaseConnection;
 import odms.controller.database.organ.OrganDAO;
@@ -233,6 +234,11 @@ public class CommandLine implements Runnable {
             case ADMINCREATE:
                 // Create a new admin
                 User.createAdmin(rawInput);
+                break;
+
+            case ADMINDELETE:
+                // Delete and admin
+                User.deleteUserBySearch(rawInput, UserType.ADMIN.getName());
                 break;
 
             case ORGANADD:

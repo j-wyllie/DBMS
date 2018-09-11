@@ -104,6 +104,14 @@ public class CommandUtils {
                 break;
             case "create-admin":
                 return Commands.ADMINCREATE;
+            case "admin":
+                if(rawInput.matches(CMD_REGEX_PROFILE_VIEW)) {
+                    switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
+                        case "delete":
+                            return Commands.ADMINDELETE;
+                    }
+                }
+                break;
             case "profile":
                 if (rawInput.matches(CMD_REGEX_PROFILE_VIEW)) {
                     switch (rawInput.substring(rawInput.indexOf('>') + 2)) {
