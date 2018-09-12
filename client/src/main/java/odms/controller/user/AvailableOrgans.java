@@ -294,10 +294,10 @@ public class AvailableOrgans {
      * @param timeToExpiry in ms
      * @return formatted string
      */
-    private static String msToStandard(Long timeToExpiry) {
+    public static String msToStandard(Long timeToExpiry) {
         String durationFormatted = "";
 
-        long temp;
+        Long temp;
         if (timeToExpiry >= ONE_SECOND) {
 
             temp = timeToExpiry / ONE_YEAR;

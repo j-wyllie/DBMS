@@ -6,7 +6,6 @@ import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
-import com.lynden.gmapsfx.shapes.PolylineOptions;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -19,15 +18,15 @@ import odms.commons.model.locations.Hospital;
 import odms.commons.model.user.User;
 
 import javafx.event.ActionEvent;
-import odms.controller.database.DAOFactory;
 import odms.data.GoogleDistanceMatrix;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static odms.controller.user.AvailableOrgans.msToStandard;
 
 
 public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
@@ -185,14 +184,14 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         DirectionsLeg ourRoute = directionsResult.getRoutes().get(0).getLegs().get(0);
 
-        String time = "Yeeeeeeeeeet"; // TODO need to add API key to method, then uncomment this block
-//        try {
-//            // Using the google distance matrix API
-//            time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(hospitalSelected1, hospitalSelected2) / 60);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            time = "";
-//        }
+        String time;
+        try {
+            // Using the google distance matrix API
+            time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(hospitalSelected1, hospitalSelected2));
+        } catch (IOException e) {
+            e.printStackTrace();
+            time = "NA";
+        }
 
         showTravelDetails(hospitalSelected1, hospitalSelected2, ourRoute.getDistance().getText(), time);
     }
@@ -208,8 +207,15 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private void showTravelDetails(Hospital hospital1, Hospital hospital2, String distance, String duration) {
         String travelMethodGiven = String.valueOf(travelMethod.getSelectionModel().getSelectedItem());
 
+        try {
+            double durationNumber = (Double.parseDouble(duration) * 1000);
+            duration = msToStandard((long) durationNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         String travel = travelMethodGiven + " journey between " + hospital1.getName() + " and " + hospital2.getName() + ":\n" +
-                "Distance: " + distance + "\n Travel Time: " + duration + " minutes.";
+                "Distance: " + distance + "\n Travel Time: " + duration;
         travelInfo.setText(travel);
     }
 
@@ -221,10 +227,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         Hospital hospitalTest = new Hospital("HospitalTest1", -39.07, 174.05, null, 10);
         Hospital hospitalTest2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 13);
         Hospital hospitalTest3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 15);
+        Hospital hospitalTest4 = new Hospital("HospitalTest4", -38.20, 177.31, null, 16);
 
         addHospitalMarker(hospitalTest);
         addHospitalMarker(hospitalTest2);
         addHospitalMarker(hospitalTest3);
+        addHospitalMarker(hospitalTest4);
 
     }
 

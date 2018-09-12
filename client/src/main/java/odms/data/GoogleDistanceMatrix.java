@@ -19,8 +19,10 @@ public class GoogleDistanceMatrix {
 
     public double getDuration(Hospital origin, Hospital destination) throws IOException {
 
+        String apiKey = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
+
         URL url = new URL(BASE_URL + "origins=" + origin.getLatitude() + "," + origin.getLongitude() + "&destinations=" +
-                destination.getLatitude() + "," + destination.getLongitude() + "YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET"); // TODO api key
+                destination.getLatitude() + "," + destination.getLongitude() + "&key=" + apiKey);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(2000);
         request.setReadTimeout(2000);
