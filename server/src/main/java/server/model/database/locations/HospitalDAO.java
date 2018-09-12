@@ -18,11 +18,11 @@ public interface HospitalDAO {
 
     /**
      * Get a hospital from database.
-     * @param id the id of the hospital to retrieve
+     * @param name the name of the hospital to retrieve
      * @return hospital object
      * @throws SQLException thrown when there is a server error.
      */
-    Hospital get(int id) throws SQLException;
+    Hospital get(String name) throws SQLException;
 
     /**
      * Add a hospital to the database.
@@ -40,8 +40,8 @@ public interface HospitalDAO {
 
     /**
      * Remove a hospital from the database.
-     * @param id the id of the hospital to remove
+     * @param name the name of the hospital to remove
      * @throws SQLException thrown when there is a server error.
      */
-    void remove(Integer id) throws SQLException;
+    void remove(String name) throws SQLException;
 }

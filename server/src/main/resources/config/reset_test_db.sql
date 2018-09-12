@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 DROP TABLE IF EXISTS `hospitals`;
 CREATE TABLE IF NOT EXISTS `hospitals` (
   `Id` INT(11),
-  `Name` VARCHAR(50) DEFAULT NULL,
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
   `Address` VARCHAR(100) DEFAULT NULL,
   `Latitude` DOUBLE DEFAULT NULL,
   `Longitude` DOUBLE DEFAULT NULL
@@ -243,7 +243,8 @@ CREATE TABLE IF NOT EXISTS `hospitals` (
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Name` (`Name`);
 
 --
 -- Indexes for table `affected_organs`
