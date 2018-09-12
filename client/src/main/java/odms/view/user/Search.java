@@ -21,6 +21,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
@@ -32,6 +33,7 @@ import org.controlsfx.control.CheckComboBox;
 /**
  * Search view. Contains all GUI accessor methods for the profile search tab.
  */
+@Slf4j
 public class Search extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
@@ -377,7 +379,7 @@ public class Search extends CommonView {
             searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));
             labelResultCount.setText(profileCount + " results found");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

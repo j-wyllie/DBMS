@@ -12,13 +12,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
-import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 
+@Slf4j
 public class HttpOrganDAO implements OrganDAO {
 
     @Override
@@ -107,7 +108,7 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -164,12 +165,12 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     @Override
-    public void revertExpired(Integer profileId, String organ) throws SQLException {
+    public void revertExpired(Integer profileId, String organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profileId);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ);
@@ -178,7 +179,7 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -187,7 +188,7 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -199,11 +200,11 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         Set<OrganEnum> organs = new HashSet<>();
-        if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+        if (response != null && response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 organs.add(gson.fromJson(result, OrganEnum.class));
             }
@@ -219,11 +220,11 @@ public class HttpOrganDAO implements OrganDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         List<ExpiredOrgan> organs = new ArrayList<>();
-        if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+        if (response != null && response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 organs.add(gson.fromJson(result, ExpiredOrgan.class));
             }

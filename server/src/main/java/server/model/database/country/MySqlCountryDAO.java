@@ -7,9 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import server.model.database.DatabaseConnection;
 
+@Slf4j
 public class MySqlCountryDAO implements CountryDAO {
 
     @Override
@@ -31,7 +33,7 @@ public class MySqlCountryDAO implements CountryDAO {
             connection.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return countries;
     }
@@ -55,7 +57,7 @@ public class MySqlCountryDAO implements CountryDAO {
             connection.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return countries;
     }
@@ -77,7 +79,7 @@ public class MySqlCountryDAO implements CountryDAO {
             connection.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -112,7 +114,7 @@ public class MySqlCountryDAO implements CountryDAO {
                 connection.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
 

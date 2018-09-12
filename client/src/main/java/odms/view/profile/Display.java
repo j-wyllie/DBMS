@@ -9,6 +9,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -25,6 +26,7 @@ import static odms.controller.AlertController.invalidUsername;
 /**
  * The profile display view.
  */
+@Slf4j
 public class Display extends CommonView {
 
     private Profile currentProfile;
@@ -149,7 +151,7 @@ public class Display extends CommonView {
                 ProfileGeneral profileGeneralView = loader.getController();
                 profileGeneralView.initialize(currentProfile, isOpenedByClinician, currentUser);
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -165,7 +167,7 @@ public class Display extends CommonView {
             organsView.initialize(
                     currentProfile, isOpenedByClinician, transplantWaitingListView, currentUser);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
 
     }
@@ -181,7 +183,7 @@ public class Display extends CommonView {
             ProfileMedical profileMedicalViewTODO = loader.getController();
             profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -195,7 +197,7 @@ public class Display extends CommonView {
             ProfileHistory profileHistoryViewTODO = loader.getController();
             profileHistoryViewTODO.initialize(currentProfile);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -209,7 +211,7 @@ public class Display extends CommonView {
             MedicationsGeneral profileMedicationsView = loader.getController();
             profileMedicationsView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -223,7 +225,7 @@ public class Display extends CommonView {
             ProfileMedicalHistory profileMedicalHistoryView = loader.getController();
             profileMedicalHistoryView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -237,7 +239,7 @@ public class Display extends CommonView {
             ProceduresDisplay profileProceduresView = loader.getController();
             profileProceduresView.initialize(currentProfile, isOpenedByClinician);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
