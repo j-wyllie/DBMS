@@ -31,7 +31,7 @@ public class MySqlCommonDAO implements CommonDAO {
                 stmt.close();
 
             } catch (SQLException e) {
-                log.error("Please enter a valid read-only query.");
+                System.out.println("Please enter a valid read-only query.");
 
             }
         }
@@ -48,7 +48,7 @@ public class MySqlCommonDAO implements CommonDAO {
             return true;
         }
         else {
-            log.error("Please enter a valid read-only query.");
+            System.out.println("Please enter a valid read-only query.");
             return false;
         }
     }
