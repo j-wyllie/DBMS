@@ -1,9 +1,8 @@
 package server.controller;
 
-import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
-import odms.commons.model.enums.OrganEnum;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
@@ -12,6 +11,7 @@ import server.model.database.country.CountryDAO;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class CountriesController {
 
     /**
@@ -54,7 +54,6 @@ public class CountriesController {
      * @return The response body
      */
     public static String edit(Request req, Response res) {
-        System.out.print("here");
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
         JsonParser parser = new JsonParser();
         String name;
@@ -65,7 +64,7 @@ public class CountriesController {
             name = body.get("name").getAsString();
             valid = body.get("valid").getAsBoolean();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(400);
             return "Bad Request";
         }

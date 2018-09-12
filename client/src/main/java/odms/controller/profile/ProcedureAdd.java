@@ -42,7 +42,6 @@ public class ProcedureAdd {
             organEnums.add(organ);
         });
         procedure.setOrgansAffected(organEnums);
-        System.out.println(procedure.getOrgansAffected().size());
         addProcedure(procedure, p);
     }
 

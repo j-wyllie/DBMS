@@ -1,17 +1,19 @@
 package server.model.database.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
 
+@Slf4j
 public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Establishes a connection with the database and executes the supplied query,
-     * before outputing the result set returned.
-     * @param query
+     * before outputting the result set returned.
+     * @param query the query to execute.
      */
     @Override
     public void queryDatabase(String query) {
@@ -29,7 +31,7 @@ public class MySqlCommonDAO implements CommonDAO {
                 stmt.close();
 
             } catch (SQLException e) {
-                System.out.println("Please enter a valid read-only query.");
+                log.error("Please enter a valid read-only query.");
 
             }
         }
@@ -46,7 +48,7 @@ public class MySqlCommonDAO implements CommonDAO {
             return true;
         }
         else {
-            System.out.println("Please enter a valid read-only query.");
+            log.error("Please enter a valid read-only query.");
             return false;
         }
     }
