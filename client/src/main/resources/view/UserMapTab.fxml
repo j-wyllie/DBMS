@@ -9,12 +9,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.OrganMap">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.OrganMap">
    <children>
       <GridPane prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1075.0" minWidth="10.0" prefWidth="238.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="962.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1075.0" minWidth="10.0" prefWidth="242.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="730.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1075.0" minWidth="10.0" prefWidth="242.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -22,12 +23,17 @@
           <RowConstraints maxHeight="196.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView fx:id="donorListView" prefHeight="600.0" prefWidth="252.0" GridPane.rowSpan="2">
+            <TableView fx:id="receiverListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
               <columns>
-                <TableColumn fx:id="donorColumn" prefWidth="237.0" text="Donors" />
+                <TableColumn fx:id="receiverColumn" prefWidth="237.0" text="Receivers" />
               </columns>
             </TableView>
-            <GoogleMapView fx:id="mapView" prefHeight="600.0" prefWidth="987.0" GridPane.columnIndex="1" GridPane.rowSpan="3" />
+            <TableView fx:id="donorListView" prefHeight="600.0" prefWidth="252.0" GridPane.rowSpan="2">
+              <columns>
+                <TableColumn fx:id="donorColumn" prefWidth="251.0" text="Donors" />
+              </columns>
+            </TableView>
+            <GoogleMapView fx:id="mapView" prefHeight="603.0" prefWidth="883.0" GridPane.columnIndex="1" GridPane.rowSpan="3" />
             <Button fx:id="showAllDonorsButton" mnemonicParsing="false" onAction="#showAllDonors" text="Show All Donors" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
       </GridPane>
