@@ -56,7 +56,7 @@ public final class AddressIO {
      * Checks that a region is within a country.
      *
      * @param address Address to check.
-     * @param region Region to check.
+     * @param region  Region to check.
      * @param country Country to check against.
      * @return True if the region is within the country.
      */
@@ -78,7 +78,7 @@ public final class AddressIO {
      * Checks that the address is valid in that region within a country.
      *
      * @param address Address to check.
-     * @param city City to check.
+     * @param city    City to check.
      * @param country Country to check against.
      * @return True if the address is in the region.
      */
@@ -132,22 +132,27 @@ public final class AddressIO {
         return rootobj;
     }
 
-    public static ArrayList<Double> getLongLatRegion (String region, String country){
+    public static ArrayList<Double> getLongLatRegion(String region, String country) {
         ArrayList<Double> longLat = new ArrayList<>();
-        if(checkValidRegion(null, region, country)){
-            try{
-                JsonObject json =  getGeocodeLocation(region, country);
-                JsonObject longLatJson = json.get("results").getAsJsonArray().get(0).getAsJsonObject().get("geometry")
+        try {
+            JsonObject jsonString = getGeocodeLocation(region, country);
+
+            if (jsonString.getAsJsonArray("results").get(0).getAsJsonObject()
+                    .getAsJsonArray("address_components").get(0).getAsJsonObject().toString().contains(region)) {
+                JsonObject longLatJson = jsonString.get("results").getAsJsonArray().get(0).getAsJsonObject().get("geometry")
                         .getAsJsonObject().get("location").getAsJsonObject();
                 longLat.add(longLatJson.get("lat").getAsDouble());
                 longLat.add(longLatJson.get("lng").getAsDouble());
-
-            } catch (IOException e){
-                System.out.println("Geocode Error");
+                return longLat;
             }
+
+        } catch (IOException e) {
+            System.out.println("Geocode Error");
         }
 
-        return longLat;
+        return null;
     }
-
 }
+
+
+

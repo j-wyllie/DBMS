@@ -3,6 +3,7 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -25,7 +26,8 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
 
     private odms.controller.user.OrganMap controller = new odms.controller.user.OrganMap();
     private User currentUser;
-    private Marker currentDonorMarker;
+    private Collection<Marker> currentDonorMarkers = new ArrayList<Marker>();
+    private ObservableList<Profile> donorsList;
 
     @FXML
     private GoogleMapView mapView;
@@ -35,6 +37,8 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
     private TableView donorListView;
     @FXML
     private TableColumn donorColumn;
+    @FXML
+    private Button showAllDonorsButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,7 +72,8 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
     }
 
     private void initListView() {
-        donorListView.setItems(controller.getDeadDonors());
+        donorsList = controller.getDeadDonors();
+        donorListView.setItems(donorsList);
         donorColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
 
         donorListView.setOnMousePressed(event -> {
@@ -83,13 +88,39 @@ public class OrganMap implements Initializable, MapComponentInitializedListener{
         ArrayList<Double> latLng = controller.displayPointOnMap(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(donorLocation);
+        String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
+                .getResource("/icons/mapMarker.png").toString(), "png");
+        markerImage = markerImage.replace("(", "");
+        markerImage = markerImage.replace(")", "");
+        markerOptions.position(donorLocation).icon(markerImage);
         Marker marker = new Marker(markerOptions);
-        if(currentDonorMarker != null){
-            map.removeMarker(currentDonorMarker);
+        System.out.println(currentDonorMarkers.isEmpty());
+        if(!currentDonorMarkers.isEmpty()){
+            map.removeMarkers(currentDonorMarkers);
+            currentDonorMarkers.clear();
         }
         map.addMarker(marker);
-        currentDonorMarker = marker;
+        currentDonorMarkers.add(marker);
+    }
+
+
+
+    public void showAllDonors(){
+        map.removeMarkers(currentDonorMarkers);
+        currentDonorMarkers.clear();
+        for(Profile profile : donorsList){
+            ArrayList<Double> latLng = controller.displayPointOnMap(profile);
+            LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
+            MarkerOptions markerOptions = new MarkerOptions();
+            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
+                    .getResource("/icons/mapMarker.png").toString(), "png");
+            markerImage = markerImage.replace("(", "");
+            markerImage = markerImage.replace(")", "");
+            markerOptions.position(donorLocation).icon(markerImage);
+            Marker marker = new Marker(markerOptions);
+            currentDonorMarkers.add(marker);
+            map.addMarker(marker);
+        }
     }
 
     public double getMatchesListViewWidth() {
