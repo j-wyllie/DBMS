@@ -1,6 +1,8 @@
 package odms.controller.user;
 
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.shapes.Polyline;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
 import javafx.scene.shape.SVGPath;
 import odms.commons.model.locations.Hospital;
 
@@ -11,20 +13,6 @@ public class HospitalMap {
 
     public void setView(odms.view.user.HospitalMap v) {
         view = v;
-    }
-
-    private SVGPath createArrowPath(int height, boolean up) {
-        SVGPath svg = new SVGPath();
-        int width = height / 4;
-
-        if (up) {
-            svg.setContent(
-                    "M" + width + " 0 L" + (width * 2) + " " + width + " L0 " + width + " Z");
-        } else {
-            svg.setContent("M0 0 L" + (width * 2) + " 0 L" + width + " " + width + " Z");
-        }
-
-        return svg;
     }
 
     /**
@@ -66,35 +54,45 @@ public class HospitalMap {
         return infoWindow;
     }
 
-    public ArrayList<Hospital> getHospitalsWithinDistance(LatLong latLong, int distance) {
-        ArrayList<Hospital> hospitals = new ArrayList<>();
-
-        return hospitals;
-    }
-
     /**
-     * Calculates the time in seconds between two given hospitals
+     * Calculates the distance between two lat long coordinates, using the Haversine method
      *
-     * @param hospital1 hospital one
-     * @param hospital2 hospital two
-     * @return the time in seconds between the hospitals
+     * @param lat1 Latitude of first coordinate
+     * @param lon1 Longitude of first coordinate
+     * @param lat2 Latitude of second coordinate
+     * @param lon2 Longitude of second coordinate
+     * @return Distance between the two coordinates in km
      */
-    public long calculateTimeBetweenHospitalsSec(Hospital hospital1, Hospital hospital2) {
+    public double calcDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
+        final int EARTH_RADIUS = 6371; // Radius of the earth
 
-        return 0;
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = EARTH_RADIUS * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance) / 1000;
     }
 
-    /**
-     * Calculates the distance in km between two given hospitals
-     *
-     * @param hospital1 hospital one
-     * @param hospital2 hospital two
-     * @return the distance in km between the hospitals
-     */
-    public long calculateDistBetweenHospitalsKm(Hospital hospital1, Hospital hospital2) {
 
-        return 0;
+    public Polyline createHelicopterRoute(Hospital hospitalSelected1, Hospital hospitalSelected2) {
+
+        LatLong originLatLong = new LatLong(hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude());
+        LatLong destinationLatLong = new LatLong(hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude());
+        LatLong[] coordinatesList = new LatLong[]{originLatLong, destinationLatLong};
+
+        MVCArray pointsOnMap = new MVCArray(coordinatesList);
+        PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap).strokeColor("blue").strokeWeight(2);
+
+        Polyline helicopterRoute = new Polyline(polyOpts);
+
+        return helicopterRoute;
     }
-
-
 }
