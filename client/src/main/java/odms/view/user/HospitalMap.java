@@ -19,6 +19,7 @@ import odms.commons.model.locations.Hospital;
 import odms.commons.model.user.User;
 
 import javafx.event.ActionEvent;
+import odms.controller.database.DAOFactory;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -265,6 +266,5 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             addHospitalMarker(hospital);
         }
     }
-
 
 }

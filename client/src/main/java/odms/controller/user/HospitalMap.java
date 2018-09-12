@@ -47,7 +47,6 @@ public class HospitalMap {
         // Hospital tooltip generated and added
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
         infoWindowOptions.content(hospital.getName() + "\n" +
-                "X kms from your destination \n" +
                 "Services offered: " + hospital.getPrograms());
         InfoWindow infoWindow = new InfoWindow(infoWindowOptions);
 
@@ -92,6 +91,8 @@ public class HospitalMap {
         PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap).strokeColor("blue").strokeWeight(2);
 
         Polyline helicopterRoute = new Polyline(polyOpts);
+
+        System.out.println(String.valueOf(helicopterRoute.getPath().getArray()));
 
         return helicopterRoute;
     }
