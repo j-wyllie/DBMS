@@ -1,10 +1,12 @@
 package odms;
 
 import javafx.application.Application;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandLine;
 import odms.controller.GuiMain;
 import odms.controller.history.CurrentHistory;
 
+@Slf4j
 public class App {
 
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class App {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
     }

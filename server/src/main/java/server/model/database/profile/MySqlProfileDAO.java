@@ -1,5 +1,24 @@
 package server.model.database.profile;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -12,18 +31,7 @@ import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
+@Slf4j
 public class MySqlProfileDAO implements ProfileDAO {
     String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
             + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
@@ -51,7 +59,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -80,7 +88,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -110,7 +118,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             stmt.close();
             conn.close();
@@ -185,7 +193,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             profile = setProcedures(profile);
             profile = setConditions(profile);
         } catch (OrganConflictException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return profile;
@@ -347,7 +355,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.executeUpdate();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         finally {
             stmt.close();
@@ -398,7 +406,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.rollback();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -422,7 +430,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 return (result.next());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -455,7 +463,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 return id;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -486,7 +494,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -581,7 +589,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -709,7 +717,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -738,7 +746,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -777,7 +785,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return receivers;
     }
@@ -804,7 +812,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -849,7 +857,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return receivers;
     }
@@ -870,8 +878,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                 hasPassword = true;
             }
             conn.close();
-            System.out.println(stmt);
-            stmt.close();
         } catch (SQLException e) {
             throw new SQLException();
         }
@@ -898,7 +904,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         } catch (SQLException e) {
             throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -923,7 +929,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         } catch (SQLException e) {
             throw new UserNotFoundException("Not found", nhi);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();

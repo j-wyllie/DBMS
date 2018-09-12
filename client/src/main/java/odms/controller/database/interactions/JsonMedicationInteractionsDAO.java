@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Interaction;
 import odms.controller.data.MedicationDataIO;
 
+@Slf4j
 public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO {
 
     private Map<Integer, Interaction> interactionMap = new HashMap<>();
@@ -110,10 +112,10 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
                 this.interactionMap.put(Integer.valueOf(key), value);
             });
         } catch (FileNotFoundException e) {
-            System.out.println("No default cache file was found");
-            System.out.println("A new cache will be created after an interaction is retrieved");
+            log.error("No default cache file was found");
+            log.error("A new cache will be created after an interaction is retrieved");
         } catch (Exception e) {
-            System.out.println("There was an error opening the medication interactions JSON file.");
+            log.error("There was an error opening the medication interactions JSON file.");
         }
     }
 
@@ -132,12 +134,12 @@ public class JsonMedicationInteractionsDAO implements MedicationInteractionsDAO 
 
             writeFile.write(gson.toJson(interactionMap));
 
-            System.out.println("Cache exported successfully!");
+            log.info("Cache exported successfully!");
             return true;
 
         } catch (IOException e) {
-            System.out.println("IO exception, please check the specified cache location.");
-            System.out.println("Cache requested: " + file.getPath());
+            log.info("IO exception, please check the specified cache location.");
+            log.info("Cache requested: " + file.getPath());
             return false;
         }
     }

@@ -11,9 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Profile;
@@ -21,16 +23,14 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
 
-
+@Slf4j
 public class AvailableOrgans {
 
-    public final static long ONE_SECOND = 1000;
-    public final static long ONE_MINUTE = ONE_SECOND * 60;
-    public final static long ONE_HOUR = ONE_MINUTE * 60;
-    public final static long ONE_DAY = ONE_HOUR * 24;
-    public final static long ONE_YEAR = ONE_DAY * 365;
-    private List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
-    private List<Profile> allDonaters = new ArrayList<>();
+    private static final long ONE_SECOND = 1000;
+    private static final long ONE_MINUTE = ONE_SECOND * 60;
+    private static final long ONE_HOUR = ONE_MINUTE * 60;
+    private static final long ONE_DAY = ONE_HOUR * 24;
+    private static final long ONE_YEAR = ONE_DAY * 365;
 
     private odms.view.user.AvailableOrgans view;
 
@@ -39,7 +39,7 @@ public class AvailableOrgans {
     }
 
 
-    public static Long getWaitTimeRaw(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired,
+    public static Long getWaitTimeRaw(OrganEnum selectedOrgan, Set<OrganEnum> organsRequired,
             Profile p) {
         LocalDateTime dateOrganRegistered = LocalDateTime.now();
 
@@ -48,17 +48,16 @@ public class AvailableOrgans {
                 if (organ.getDate(p) != null) {
                     dateOrganRegistered = organ.getDate(p);
                 } else {
-                    return Long.valueOf(-1);
+                    return (long) -1;
                 }
             }
         }
         return abs(Duration.between(LocalDateTime.now(), dateOrganRegistered).toMillis());
     }
 
-    public static String getWaitTime(OrganEnum selectedOrgan, HashSet<OrganEnum> organsRequired,
+    public static String getWaitTime(OrganEnum selectedOrgan, Set<OrganEnum> organsRequired,
             Profile p) {
 
-        LocalDateTime dateOrganRegistered = null;
         String durationFormatted = "";
 
         Long waitTime = getWaitTimeRaw(selectedOrgan, organsRequired, p);
@@ -71,7 +70,7 @@ public class AvailableOrgans {
             return "Registered today";
         }
 
-        long temp = 0;
+        long temp;
         if (waitTime >= ONE_SECOND) {
             temp = waitTime / ONE_DAY;
             if (temp > 0) {
@@ -127,7 +126,7 @@ public class AvailableOrgans {
             try {
                 expiredList = DAOFactory.getOrganDao().getExpired(profile);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             for(ExpiredOrgan currentOrgan: expiredList){
                 if(currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())){
@@ -137,7 +136,7 @@ public class AvailableOrgans {
         }
     }
 
-    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    private static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
@@ -343,7 +342,6 @@ public class AvailableOrgans {
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
             Profile donorProfile, OrganEnum selectedOrgan) {
-        System.out.println("rec");
         // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
         List<Profile> receivingProfiles = new ArrayList<>();
@@ -419,10 +417,10 @@ public class AvailableOrgans {
      * @return Collection of Profile and Organ that match
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
-        donaters = new ArrayList<>();
+        List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
 
-        allDonaters = database.getDead();
+        List<Profile> allDonaters = database.getDead();
         for (Profile profile : allDonaters) {
             for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
                 for (ExpiredOrgan expiredOrgan : DAOFactory.getOrganDao().getExpired(profile)) {

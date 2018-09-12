@@ -10,23 +10,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains methods to obtain a connection the database, as well as setting db config.
  */
+@Slf4j
 public final class DatabaseConnection {
 
     private static DataSource connectionSource;
     private static ComboPooledDataSource source;
 
-    private String DEFAULT_CONFIG = "/config/db.config";
-    private static String TEST_CONFIG = "/config/db_test.config";
-    private static String CONFIG = null;
+    private static final String DEFAULT_CONFIG = "/config/db.config";
+    private static final String TEST_CONFIG = "/config/db_test.config";
+    private static String CONFIG = DEFAULT_CONFIG;
 
-    private String RESET_SQL = "/config/reset.sql";
-    private String RESAMPLE_SQL = "/config/resample.sql";
+    private static final String RESET_SQL = "/config/reset.sql";
+    private static final String RESAMPLE_SQL = "/config/resample.sql";
 
-    private String RESET_TEST_SQL = "/config/reset_test_db.sql";
+    private static final String RESET_TEST_SQL = "/config/reset_test_db.sql";
 
     /**
      * Constructor to create the singleton database connection class.
@@ -34,10 +36,6 @@ public final class DatabaseConnection {
     private DatabaseConnection() {
         try {
             source = new ComboPooledDataSource();
-
-            if (CONFIG == null) {
-                CONFIG = DEFAULT_CONFIG;
-            }
 
             // load in config file
             Properties prop = new Properties();
@@ -54,7 +52,7 @@ public final class DatabaseConnection {
             try {
                 source.setDriverClass(driver);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             source.setJdbcUrl(host + '/' + database);
             source.setUser(username);
@@ -65,7 +63,7 @@ public final class DatabaseConnection {
 
             connectionSource = source;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -78,7 +76,7 @@ public final class DatabaseConnection {
         try {
             prop.load(ClassLoader.class.getResourceAsStream(TEST_CONFIG));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         // set config string
@@ -92,7 +90,7 @@ public final class DatabaseConnection {
         try {
             source.setDriverClass(driver);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         source.setJdbcUrl(host + '/' + database);
         source.setUser(username);
@@ -166,7 +164,7 @@ public final class DatabaseConnection {
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -25,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.profile.Profile;
@@ -36,6 +37,7 @@ import odms.view.user.TransplantWaitingList;
 /**
  * Organ Display list and table views for profiles.
  */
+@Slf4j
 public class OrganDisplay extends CommonView {
 
     private static OrganSelectEnum windowType;
@@ -204,7 +206,7 @@ public class OrganDisplay extends CommonView {
             stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

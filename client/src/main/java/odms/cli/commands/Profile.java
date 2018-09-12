@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandUtils;
 import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
@@ -13,7 +14,7 @@ import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.data.NHIConflictException;
 
-
+@Slf4j
 public class Profile extends CommandUtils {
 
     /**
@@ -75,7 +76,7 @@ public class Profile extends CommandUtils {
         try {
             deleteProfiles(profiles);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -180,7 +181,7 @@ public class Profile extends CommandUtils {
                     profiles = database.search(attr, 0,
                             0, null, null, null, null);
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         } else {
@@ -208,7 +209,7 @@ public class Profile extends CommandUtils {
                     return profiles;
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         } else {

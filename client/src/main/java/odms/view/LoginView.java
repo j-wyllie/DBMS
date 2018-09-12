@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -29,6 +30,7 @@ import odms.view.user.ClinicianProfile;
 /**
  * Login view.
  */
+@Slf4j
 public class LoginView extends CommonController {
 
     private User currentUser;
@@ -85,7 +87,7 @@ public class LoginView extends CommonController {
             try {
                 showPasswordPromptWindow(currentProfile, event);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         } else if (checkProfile()) {
             loadProfileView(currentProfile);

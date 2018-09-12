@@ -6,15 +6,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.profile.UndoRedoCLIService;
-import odms.commons.model.profile.Profile;
 
-
+@Slf4j
 public class CommandUtils {
 
     public CommandUtils() {
@@ -169,7 +169,7 @@ public class CommandUtils {
         try {
             profiles = search(expression);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         addOrgans(profiles, organList);
     }
@@ -185,7 +185,7 @@ public class CommandUtils {
         try {
             profiles = search(expression);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         addReceiverOrgans(profiles, organList);
     }
@@ -202,7 +202,7 @@ public class CommandUtils {
         try {
             profiles = search(expression);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         removeOrgansDonating(profiles, organList);
 
@@ -219,7 +219,7 @@ public class CommandUtils {
         try {
             profiles = search(expression);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
                 .replace("\"", "")
@@ -236,7 +236,7 @@ public class CommandUtils {
         try {
             profiles = search(expression);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         String[] organList = expression.substring(expression.lastIndexOf("=") + 1)
                 .replace("\"", "").split(",");
