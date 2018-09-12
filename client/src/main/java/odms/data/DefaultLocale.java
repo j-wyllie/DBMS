@@ -14,6 +14,7 @@ public final class DefaultLocale {
     private static Locale numberLocale;
     private static TimeZone timeZoneLocale;
 
+
     /**
      * Constructor - throws UnsupportedOperationException due to the static structure.
      */
@@ -21,17 +22,21 @@ public final class DefaultLocale {
         throw new UnsupportedOperationException();
     }
 
-    private static Locale getDefaultLanguage() { return new Locale("en", "US"); }
-    private static Locale getDefaultDatetime() { return new Locale("en", "US"); }
-    private static Locale getDefaultNumber() { return new Locale("en", "US"); }
-    private static TimeZone getDefaultTimeZone() { return null; }
+    private static Locale getDefaultLocale() {
+        return new Locale("en", "US");
+    }
 
+    private static TimeZone getDefaultTimeZone() {
+        return null;
+    }
 
-    public static void setLanguageLocale(Locale locale) { languageLocale = locale; }
+    public static void setLanguageLocale(Locale locale) {
+        languageLocale = locale;
+    }
 
     public static Locale getLanguageLocale() {
         if (languageLocale == null) {
-            return getDefaultLanguage();
+            return getDefaultLocale();
         } else {
             return languageLocale;
         }
@@ -39,28 +44,37 @@ public final class DefaultLocale {
 
     public static Locale getDatetimeLocale() {
         if (datetimeLocale == null) {
-            return getDefaultDatetime();
+            return getDefaultLocale();
         } else {
             return datetimeLocale;
         }
     }
 
-    public static void setDatetimeLocale(Locale locale) { datetimeLocale = locale; }
+    public static void setDatetimeLocale(Locale locale) {
+        datetimeLocale = locale;
+    }
 
     public static Locale getNumberLocale() {
         if (numberLocale == null) {
-            return getDefaultNumber();
+            return getDefaultLocale();
         } else {
             return numberLocale;
         }
     }
 
+    /**
+     * Returns the number formatted by the locale set by the user.
+     * @param num the number to be formatted.
+     * @return the number formatted.
+     */
     public static String format(Number num) {
         NumberFormat formatter = NumberFormat.getNumberInstance(getNumberLocale());
         return formatter.format(num);
     }
 
-    public static void setNumberLocale(Locale locale) { numberLocale = locale; }
+    public static void setNumberLocale(Locale locale) {
+        numberLocale = locale;
+    }
 
     public static TimeZone getTimeZoneLocale() {
         if (timeZoneLocale == null) {
