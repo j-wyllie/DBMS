@@ -1,6 +1,8 @@
 package odms.controller.user;
 
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -15,6 +17,7 @@ import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.user.UserDAO;
+import odms.data.DefaultLocale;
 
 /**
  * The users list tab controller.
@@ -23,7 +26,6 @@ public class UsersList {
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
-    private UserDAO userDAO= DAOFactory.getUserDao();
 
     /**
      * Public constructor for the ViewUsersController class.
@@ -41,25 +43,27 @@ public class UsersList {
         fetchData();
         view.getViewUsersTable().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         view.getViewUsersTable().getColumns().clear();
-        TableColumn nameCol = new TableColumn("Name");
-        TableColumn usernameCol = new TableColumn("Username");
-        TableColumn userTypeCol = new TableColumn("user Type");
-        TableColumn staffIdCol = new TableColumn("Staff Id");
+        TableColumn<User, String> nameCol = new TableColumn<>("Name");
+        TableColumn<User, String> usernameCol = new TableColumn<>("Username");
+        TableColumn<User, String> userTypeCol = new TableColumn<>("User Type");
+        TableColumn<User, String> staffIdCol = new TableColumn<>("Staff Id");
 
-        view.getViewUsersTable().getColumns().addAll(nameCol, usernameCol, userTypeCol, staffIdCol);
         nameCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("name")
+                new PropertyValueFactory<>("name")
         );
         usernameCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("username")
+                new PropertyValueFactory<>("username")
         );
         userTypeCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("userType")
+                new PropertyValueFactory<>("userType")
         );
         staffIdCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("staffId")
+                user -> new SimpleStringProperty(
+                        (DefaultLocale.format(user.getValue().getStaffID()))
+                )
         );
 
+        view.getViewUsersTable().getColumns().addAll(nameCol, usernameCol, userTypeCol, staffIdCol);
         view.getViewUsersTable().setItems(usersObservableList);
         createContextMenu();
 

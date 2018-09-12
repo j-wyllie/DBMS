@@ -90,7 +90,7 @@
         </GridPane>
             <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="3">
               <items>
-                <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleSettingsButtonAction" text="Settings" />
+                <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction" text="Settings" />
                   <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Import" />
               </items>
             </ToolBar>

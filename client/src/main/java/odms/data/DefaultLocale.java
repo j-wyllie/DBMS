@@ -1,5 +1,6 @@
 package odms.data;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -52,6 +53,11 @@ public final class DefaultLocale {
         } else {
             return numberLocale;
         }
+    }
+
+    public static String format(Number num) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(getNumberLocale());
+        return formatter.format(num);
     }
 
     public static void setNumberLocale(Locale locale) { numberLocale = locale; }

@@ -2,7 +2,9 @@ package odms.view.user;
 
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,11 +27,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javax.swing.text.NumberFormatter;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.country.CountryDAO;
+import odms.data.DefaultLocale;
 
 public class UserGeneral {
 
@@ -107,12 +111,12 @@ public class UserGeneral {
      */
     public void initialize(User currentUser) {
         this.currentUser = currentUser;
-        givenNamesLabel.setText(
-                givenNamesLabel.getText() + (
+        givenNamesLabel.setText(givenNamesLabel.getText() + (
                         currentUser.getName() != null ? currentUser.getName() : ""));
         staffIdLabel.setText(
                 staffIdLabel.getText() + (
-                        currentUser.getStaffID() != null ? currentUser.getStaffID() : ""));
+                        currentUser.getStaffID() != null ?
+                                DefaultLocale.format(currentUser.getStaffID()) : ""));
         addressLabel.setText(
                 addressLabel.getText() +
                         (currentUser.getWorkAddress() != null ? currentUser.getWorkAddress() : "")

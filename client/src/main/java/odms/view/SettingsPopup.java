@@ -239,6 +239,8 @@ public class SettingsPopup {
                 applyButton.setDisable(false);
             }
         });
+        //todo: set to default set time zone.
+        timeZoneSelect.setValue(timeZoneSelect.getItems().get(0));
     }
 
     public ComboBox getLanguageSelector() { return languageSelect; }
@@ -251,7 +253,6 @@ public class SettingsPopup {
 
     /**
      * Initializes the content displayed by the view.
-     *
      * @param currentUser the user currently logged in.
      */
     public void initialize(User currentUser) {
