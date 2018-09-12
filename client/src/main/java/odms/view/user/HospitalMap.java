@@ -20,7 +20,9 @@ import odms.commons.model.user.User;
 
 import javafx.event.ActionEvent;
 import odms.controller.database.DAOFactory;
+import odms.data.GoogleDistanceMatrix;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
@@ -109,24 +111,30 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
 
     /**
-     * Clears all routes from map, just initializes map again on click of clear routes button
+     * Clears all routes from map, also 'deselects' any hospitals, accessed via button
      *
      * @param event Event of clear button being clicked
      */
     @FXML
     private void handleClearRoutesButtonClicked(ActionEvent event) {
-        // TODO instead of initializing the map again just remove routes?
+        clearRoutesAndSelection();
+    }
+
+    /**
+     * Clears all routes from map, also 'deselects' any hospitals
+     */
+    private void clearRoutesAndSelection() {
+        hospitalSelected1 = null;
+        hospitalSelected2 = null;
 
         if(helicopterRoute != null) {
             map.removeMapShape(helicopterRoute);
         }
 
-        hospitalSelected1 = null;
-        hospitalSelected2 = null;
         travelInfo.clear();
 
-        mapInitialized();
-
+        directionsRenderer.clearDirections();
+        directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
     }
 
     /**
@@ -137,6 +145,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      */
     private void createRouteBetweenHospitals(Hospital origin, Hospital destination) {
         final double HELICOPTER_SPEED_KMH = 222;
+
+        // clearRoutesAndSelection();
 
         boolean isCarTrip = false;
         if (travelMethod.getSelectionModel().getSelectedItem().equals("Car")) {
@@ -153,15 +163,11 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         } else {
 
-            if(helicopterRoute != null) {
-                map.removeMapShape(helicopterRoute);
-            }
-
-            Double distance = controller.calcDistanceHaversine(hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude());
+            Double distance = controller.calcDistanceHaversine(origin.getLatitude(), origin.getLongitude(), destination.getLatitude(), destination.getLongitude());
             Double duration = distance / HELICOPTER_SPEED_KMH * 60;
-            showTravelDetails(hospitalSelected1, hospitalSelected2, decimalFormat.format(distance), decimalFormat.format(duration));
+            showTravelDetails(origin, destination, decimalFormat.format(distance), decimalFormat.format(duration));
 
-            helicopterRoute = controller.createHelicopterRoute(hospitalSelected1, hospitalSelected2);
+            helicopterRoute = controller.createHelicopterRoute(origin, destination);
 
             map.addMapShape(helicopterRoute);
         }
@@ -178,25 +184,34 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     public void directionsReceived(DirectionsResult directionsResult, DirectionStatus directionStatus) {
 
         DirectionsLeg ourRoute = directionsResult.getRoutes().get(0).getLegs().get(0);
-        String time = "";
 
-        // TODO might have to use google matrix api to get duration
-        if (directionStatus == DirectionStatus.OK) {
-            System.out.println(ourRoute.getDuration().getText());
-            time = String.valueOf(ourRoute.getDuration().getText());
-        }
+        String time = "Yeeeeeeeeeet"; // TODO need to add API key to method, then uncomment this block
+//        try {
+//            // Using the google distance matrix API
+//            time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(hospitalSelected1, hospitalSelected2) / 60);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            time = "";
+//        }
 
         showTravelDetails(hospitalSelected1, hospitalSelected2, ourRoute.getDistance().getText(), time);
     }
 
+    /**
+     * Displays information about a given route/journey
+     *
+     * @param hospital1 The hospital at the start of the journey
+     * @param hospital2 The hospital at the end of the journey
+     * @param distance The distance between the hospitals on the given route in km
+     * @param duration The time between the two hospitals on the given route in minutes
+     */
     private void showTravelDetails(Hospital hospital1, Hospital hospital2, String distance, String duration) {
         String travelMethodGiven = String.valueOf(travelMethod.getSelectionModel().getSelectedItem());
 
         String travel = travelMethodGiven + " journey between " + hospital1.getName() + " and " + hospital2.getName() + ":\n" +
-                "Distance: " + distance + "km "+ "\n Travel Time: " + duration + " minutes.";
+                "Distance: " + distance + "\n Travel Time: " + duration + " minutes.";
         travelInfo.setText(travel);
     }
-
 
     @FXML
     public void handleAddHospitalMarker(ActionEvent event) {
@@ -230,19 +245,18 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         map.addUIEventHandler(marker, UIEventType.click, (JSObject obj) -> {
 
-            System.out.println("Hospital " + hospital.getId() + " selected");
+            travelInfo.setText("Hospital " + hospital.getId() + " selected");
 
-
-            if (this.hospitalSelected1 == null) {
-                this.hospitalSelected1 = hospital;
+            if (hospitalSelected1 == null) {
+                hospitalSelected1 = hospital;
                 if (hospitalSelected2 != null) {
-                    createRouteBetweenHospitals(this.hospitalSelected1, hospitalSelected2);
+                    createRouteBetweenHospitals(hospitalSelected1, hospitalSelected2);
                 }
 
             } else {
                 hospitalSelected2 = hospital;
-                if (this.hospitalSelected1 != null) {
-                    createRouteBetweenHospitals(this.hospitalSelected1, hospitalSelected2);
+                if (hospitalSelected1 != null) {
+                    createRouteBetweenHospitals(hospitalSelected1, hospitalSelected2);
                 }
             }
 

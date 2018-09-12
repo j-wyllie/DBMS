@@ -39,8 +39,8 @@ public class HospitalMap {
     /**
      * Creates hospital info window containing a hospitals details
      *
-     * @param hospital the hospital to create a info window for
-     * @return a info window object for the given hospital
+     * @param hospital The hospital to create a info window for
+     * @return A info window object for the given hospital containing hospital details
      */
     public InfoWindow createHospitalInfoWindow(Hospital hospital) {
 
@@ -80,7 +80,14 @@ public class HospitalMap {
         return Math.sqrt(distance) / 1000;
     }
 
-
+    /**
+     * Creates a line object that can be added to the map, the line goes from the given hospital 1 to the given hospital 2
+     * Represents a route between the hospitals
+     *
+     * @param hospitalSelected1 The given hospital the line starts at
+     * @param hospitalSelected2 The given hospital the line ends at
+     * @return A Polyline object that can be added to a map to represent a line
+     */
     public Polyline createHelicopterRoute(Hospital hospitalSelected1, Hospital hospitalSelected2) {
 
         LatLong originLatLong = new LatLong(hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude());
