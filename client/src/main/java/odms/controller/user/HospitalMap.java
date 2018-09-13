@@ -5,8 +5,12 @@ import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import javafx.scene.shape.SVGPath;
 import odms.commons.model.locations.Hospital;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.locations.HospitalDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HospitalMap {
     private odms.view.user.HospitalMap view;
@@ -21,7 +25,7 @@ public class HospitalMap {
      * @param hospital the hospital to create a marker for
      * @return a marker object for the given hospital
      */
-    public Marker createHospitalMarker(Hospital hospital){
+    public Marker createHospitalMarker(Hospital hospital) {
 
         ArrayList<Double> latLong = new ArrayList<>();
         latLong.add(hospital.getLatitude());
@@ -54,7 +58,7 @@ public class HospitalMap {
     }
 
     /**
-     * Calculates the distance between two lat long coordinates, using the Haversine method
+     * Calculates the distance between two lat long coordinates, using the Haversine method.
      *
      * @param lat1 Latitude of first coordinate
      * @param lon1 Longitude of first coordinate
@@ -81,8 +85,8 @@ public class HospitalMap {
     }
 
     /**
-     * Creates a line object that can be added to the map, the line goes from the given hospital 1 to the given hospital 2
-     * Represents a route between the hospitals
+     * Creates a line object that can be added to the map, the line goes from the given hospital 1
+     * to the given hospital 2 represents a route between the hospitals.
      *
      * @param hospitalSelected1 The given hospital the line starts at
      * @param hospitalSelected2 The given hospital the line ends at
@@ -102,5 +106,14 @@ public class HospitalMap {
         System.out.println(String.valueOf(helicopterRoute.getPath().getArray()));
 
         return helicopterRoute;
+    }
+
+    public List<Hospital> getHospitals() {
+        HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+        try {
+            return hospitalDAO.getAll();
+        } catch (SQLException e) {
+            return new ArrayList<>();
+        }
     }
 }

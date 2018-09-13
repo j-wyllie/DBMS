@@ -11,19 +11,26 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.user.User;
 
 import javafx.event.ActionEvent;
 import odms.data.GoogleDistanceMatrix;
+import odms.view.profile.OrganOverride;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static odms.controller.user.AvailableOrgans.msToStandard;
@@ -38,7 +45,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private DirectionsPane directionsPane;
     private DirectionsRenderer directionsRenderer = null;
 
-    private ArrayList<Hospital> hospitalArrayList = new ArrayList<>();
+    private List<Hospital> hospitalList;
 
     protected StringProperty origin = new SimpleStringProperty();
     protected StringProperty destination = new SimpleStringProperty();
@@ -50,6 +57,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private Polyline helicopterRoute;
 
     private GoogleMap map;
+    private List<Marker> markers;
 
     @FXML
     private GoogleMapView mapView;
@@ -65,6 +73,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mapView.addMapInializedListener(this);
+        hospitalList = new ArrayList<>();
+        markers = new ArrayList<>();
 
         if (hospitalSelected1 != null && hospitalSelected2 != null) {
             createRouteBetweenHospitals(hospitalSelected1, hospitalSelected2);
@@ -110,7 +120,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
 
     /**
-     * Clears all routes from map, also 'deselects' any hospitals, accessed via button
+     * Clears all routes from map, also 'deselects' any hospitals, accessed via button.
      *
      * @param event Event of clear button being clicked
      */
@@ -120,7 +130,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Clears all routes from map, also 'deselects' any hospitals
+     * Clears all routes from map, also 'deselects' any hospitals.
      */
     private void clearRoutesAndSelection() {
         hospitalSelected1 = null;
@@ -137,7 +147,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Creates route between two given hospitals and displays on given map
+     * Creates route between two given hospitals and displays on given map.
      *
      * @param origin hospital the route starts from
      * @param destination hospital the route ends at
@@ -174,7 +184,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
 
     /**
-     * Called when a directions result returns, displays results of the request if the request was successful
+     * Called when a directions result returns, displays results of the request if the request was successful.
      *
      * @param directionsResult The returned direction result
      * @param directionStatus  Status of request
@@ -197,7 +207,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Displays information about a given route/journey
+     * Displays information about a given route/journey.
      *
      * @param hospital1 The hospital at the start of the journey
      * @param hospital2 The hospital at the end of the journey
@@ -224,26 +234,47 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         // TEMPORARY, used for testing, just adds a random hospital created here to the map
 
-        Hospital hospitalTest = new Hospital("HospitalTest1", -39.07, 174.05, null, 10);
-        Hospital hospitalTest2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 13);
-        Hospital hospitalTest3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 15);
-        Hospital hospitalTest4 = new Hospital("HospitalTest4", -38.20, 177.31, null, 16);
+//        Hospital hospitalTest = new Hospital("HospitalTest1", -39.07, 174.05, null, 10);
+//        Hospital hospitalTest2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 13);
+//        Hospital hospitalTest3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 15);
+//        Hospital hospitalTest4 = new Hospital("HospitalTest4", -38.20, 177.31, null, 16);
+//
+//        addHospitalMarker(hospitalTest);
+//        addHospitalMarker(hospitalTest2);
+//        addHospitalMarker(hospitalTest3);
+//        addHospitalMarker(hospitalTest4);
 
-        addHospitalMarker(hospitalTest);
-        addHospitalMarker(hospitalTest2);
-        addHospitalMarker(hospitalTest3);
-        addHospitalMarker(hospitalTest4);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/HospitalCreate.fxml"));
+
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            HospitalCreate hospitalCreate = fxmlLoader.getController();
+            hospitalCreate.initialize();
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Add new Hospital");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding(ob -> populateHospitals());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
-     * Adds a given hospital to the map object, as a marker with a tooltip containing hospital details
+     * Adds a given hospital to the map object, as a marker with a tooltip containing hospital details.
      *
      * @param hospital hospital to add to the map
      */
-    public void addHospitalMarker(Hospital hospital){
+    public void addHospitalMarker(Hospital hospital) {
 
         Marker marker = controller.createHospitalMarker(hospital);
+        markers.add(marker);
         InfoWindow infoWindow = controller.createHospitalInfoWindow(hospital);
 
         map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) -> {
@@ -277,16 +308,22 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Populates the map object with all hospitals in database
+     * Populates the map object with all hospitals in database, removes all existing hospitals
+     * and markers.
      */
-    public void populateHospitals() {
-        ArrayList<Hospital> hospitals = new ArrayList<>();
+    private void populateHospitals() {
 
-        // use to be created getAllHospitals method here TODO
+        for(Marker marker : markers) {
+            map.removeMarker(marker);
+        }
+        hospitalList.clear();
+        markers.clear();
+        hospitalList = controller.getHospitals();
 
-        for (Hospital hospital : hospitals) {
+        for (Hospital hospital : hospitalList) {
             addHospitalMarker(hospital);
         }
+
     }
 
 }

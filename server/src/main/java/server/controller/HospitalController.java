@@ -24,8 +24,9 @@ public class HospitalController {
         List<Hospital> hospitals;
 
         try {
-            hospitals = getHospitals();
-        } catch (Exception e) {
+            HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+            hospitals = hospitalDAO.getAll();
+        } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
         }
@@ -99,9 +100,9 @@ public class HospitalController {
             hospitalDAO.edit(hospital);
             res.status(200);
             return "Hospital Updated";
-        } catch (Exception e) {
-            res.status(400);
-            return "Bad Request";
+        } catch (SQLException e) {
+            res.status(500);
+            return e.getMessage();
         }
     }
 
@@ -125,9 +126,9 @@ public class HospitalController {
         try {
 
             database.remove(name);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return e.getMessage();
         }
 
         res.status(200);
@@ -158,19 +159,10 @@ public class HospitalController {
                 database.add(newHospital);
             } catch (SQLException e) {
                 res.status(500);
-                return "Internal Server Error";
+                return e.getMessage();
             }
         }
         res.status(201);
         return "Hospital Created";
-    }
-
-    /**
-     * Gets the hospitals from the database.
-     * @return A set of country names
-     */
-    private static List<Hospital> getHospitals() throws SQLException {
-        HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
-        return hospitalDAO.getAll();
     }
 }
