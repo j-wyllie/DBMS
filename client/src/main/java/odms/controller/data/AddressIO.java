@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Validates addresses against the google places api.
@@ -46,8 +47,8 @@ public final class AddressIO {
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Invalid Address");
+            log.error("Invalid Address");
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -84,13 +85,9 @@ public final class AddressIO {
      */
     public static boolean checkValidCity(String address, String city, String country) {
         try {
-            System.out.println(address);
             if (address != null) {
                 String[] components = address.split(",");
                 JsonObject jsonString = getGeocodeLocation(address.replace(",", "+"), country.replace(" ", "+"));
-                System.out.println(components[1]);
-                System.out.println(jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(1).getAsJsonObject().toString());
                 return (jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(0).getAsJsonObject().toString()
                         .contains("locality") && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
@@ -124,7 +121,6 @@ public final class AddressIO {
                 "&components=country:" + country.replace(" ", "+") + "&key=" + key;
         URL url = new URL(query);
         URLConnection request = url.openConnection();
-        System.out.println(query.toString());
         request.connect();
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
@@ -132,7 +128,7 @@ public final class AddressIO {
         return rootobj;
     }
 
-    public static ArrayList<Double> getLongLatRegion(String region, String country) {
+public static ArrayList<Double> getLongLatRegion(String region, String country) {
         ArrayList<Double> longLat = new ArrayList<>();
         try {
             JsonObject jsonString = getGeocodeLocation(region, country);
@@ -147,8 +143,8 @@ public final class AddressIO {
             }
 
         } catch (IOException e) {
-            System.out.println("Geocode Error");
-        }
+            log.error("Geocode Error");
+            log.error(e.getMessage(), e);
 
         return null;
     }

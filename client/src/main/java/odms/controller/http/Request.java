@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Request {
 
     private String urlString;
@@ -132,7 +134,7 @@ public class Request {
                 urlString += ("&" + key + "=" + queryParams.get(key));
             }
         }
-        System.out.println(urlString);
+        log.info(urlString);
         return urlString;
     }
 

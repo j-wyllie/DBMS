@@ -4,7 +4,6 @@ import static odms.controller.user.AvailableOrgans.getExpiryLength;
 import static odms.controller.user.AvailableOrgans.getTimeRemaining;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -18,9 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
@@ -29,6 +28,7 @@ import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
+@Slf4j
 public class AvailableOrgans extends CommonView {
 
     @FXML
@@ -188,7 +188,7 @@ public class AvailableOrgans extends CommonView {
         try {
             setAvailableOrgansList();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
             Comparator<Map.Entry<Profile, OrganEnum>> comparator = (o1, o2) -> {

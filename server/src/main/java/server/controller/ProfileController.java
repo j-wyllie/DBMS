@@ -1,5 +1,11 @@
 package server.controller;
 
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
@@ -9,15 +15,10 @@ import server.model.database.profile.ProfileDAO;
 import spark.Request;
 import spark.Response;
 
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 /**
  * The profile server controller.
  */
+@Slf4j
 public class ProfileController {
 
     /**
@@ -156,7 +157,7 @@ public class ProfileController {
                 profile = database.get(req.queryParams("username"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(500);
             return e.getMessage();
         }

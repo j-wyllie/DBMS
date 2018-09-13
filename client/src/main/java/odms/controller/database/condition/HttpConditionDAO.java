@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
@@ -14,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+@Slf4j
 public class HttpConditionDAO implements ConditionDAO {
 
     @Override
@@ -35,7 +37,7 @@ public class HttpConditionDAO implements ConditionDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -47,7 +49,7 @@ public class HttpConditionDAO implements ConditionDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -61,7 +63,7 @@ public class HttpConditionDAO implements ConditionDAO {
         try {
             request.patch();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -73,11 +75,11 @@ public class HttpConditionDAO implements ConditionDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         List<Condition> conditions = new ArrayList<>();
-        if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+        if (response != null && response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 conditions.add(gson.fromJson(result, Condition.class));
             }

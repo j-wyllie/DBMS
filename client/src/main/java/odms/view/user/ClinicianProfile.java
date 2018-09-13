@@ -3,10 +3,6 @@ package odms.view.user;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,21 +13,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.commons.model.enums.OrganEnum;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
-import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 /**
  * Handles all of the tabs for the user profile view.
  */
+@Slf4j
 public class ClinicianProfile extends CommonView {
     private User currentUser;
 
@@ -107,7 +99,7 @@ public class ClinicianProfile extends CommonView {
             ConsoleTab console = loader.getController();
             // don't initialize as it will double print.
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -122,9 +114,7 @@ public class ClinicianProfile extends CommonView {
             UsersList listUsersView = loader.getController();
             listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
         } catch (IOException e) {
-            e.printStackTrace();
-
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -140,7 +130,7 @@ public class ClinicianProfile extends CommonView {
                 UserGeneral userGeneralTabView = loader.getController();
                 userGeneralTabView.initialize(currentUser);
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -156,7 +146,7 @@ public class ClinicianProfile extends CommonView {
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -171,7 +161,7 @@ public class ClinicianProfile extends CommonView {
             AvailableOrgans availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -239,7 +229,7 @@ public class ClinicianProfile extends CommonView {
             try {
                 setProfileImage();
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -259,7 +249,7 @@ public class ClinicianProfile extends CommonView {
             Search userSearchView = loader.getController();
             userSearchView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -274,7 +264,7 @@ public class ClinicianProfile extends CommonView {
             transplantWaitingList = userTransplantWaitingListTabView;
             userTransplantWaitingListTabView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
