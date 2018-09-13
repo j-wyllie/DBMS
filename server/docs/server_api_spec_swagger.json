@@ -1136,7 +1136,7 @@
         }
       }
     },
-    "/hospitals": {
+    "/hospitals/all": {
       "get": {
         "tags": [
           "hospitals"
@@ -1165,22 +1165,13 @@
         }
       }
     },
-    "/hospitals/{id}": {
+    "/hospitals": {
       "get": {
         "tags": [
           "hospitals"
         ],
         "summary": "Gets the hospital from the database with the provided id",
         "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "Id of the object.",
-            "schema": {
-              "$ref": "#/components/schemas/id"
-            }
-          },
           {
             "in": "query",
             "name": "name",
@@ -1220,15 +1211,6 @@
         "summary": "Deletes the hospital from the database with the provided id",
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "Id of the object.",
-            "schema": {
-              "$ref": "#/components/schemas/id"
-            }
-          },
-          {
             "in": "query",
             "name": "name",
             "description": "Name of the hospital.",
@@ -1258,17 +1240,6 @@
           "hospitals"
         ],
         "summary": "Adds a new hospital object to the database",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "Id of the object.",
-            "schema": {
-              "$ref": "#/components/schemas/id"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1285,9 +1256,6 @@
           "401": {
             "description": "Unauthorized"
           },
-          "404": {
-            "description": "Not Found"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -1300,7 +1268,7 @@
         "summary": "Update a hospital object in the database",
         "parameters": [
           {
-            "in": "path",
+            "in": "query",
             "name": "id",
             "required": true,
             "description": "Id of the object.",

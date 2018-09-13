@@ -154,14 +154,11 @@ public class Server {
 
             // hospitals api endpoints.
             path("/hospitals", () -> {
-                get("", HospitalController::getAll);
-
-                path("/:id", () -> {
-                    get("", HospitalController::get);
-                    post("", HospitalController::create);
-                    patch("", HospitalController::edit);
-                    delete("", HospitalController::delete);
-                });
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
+                post("", HospitalController::create);
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
             });
         });
     }
