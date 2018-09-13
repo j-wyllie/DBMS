@@ -160,7 +160,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
         String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                .getResource("/icons/mapMarker_40x40.png").toString(), "png");
+                .getResource("/icons/receiverMarker.png").toString(), "png");
         markerImage = markerImage.replace("(", "");
         markerImage = markerImage.replace(")", "");
         markerOptions.position(donorLocation).icon(markerImage);
@@ -198,7 +198,7 @@ if(!currentReceiverMarkers.isEmpty()){
             LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
             MarkerOptions markerOptions = new MarkerOptions();
             String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                    .getResource("/icons/mapMarker_40x40.png").toString(), "png");
+                    .getResource("/icons/receiverMarker.png").toString(), "png");
             markerImage = markerImage.replace("(", "");
             markerImage = markerImage.replace(")", "");
             markerOptions.position(donorLocation).icon(markerImage);
