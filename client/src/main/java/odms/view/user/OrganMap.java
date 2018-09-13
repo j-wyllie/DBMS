@@ -36,8 +36,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();
     private ObservableList<Profile> receiversList;
 
-    private final String receiverMarker = "/icons/red_marker.png";
-    private final String donorMarker = "/icons/blue_marker.png";
+    private final String receiverMarker = "/icons/receiverMarker.png";
+    private final String donorMarker = "/icons/deadDonorMarker.png";
 
     @FXML
     private GoogleMapView mapView;
@@ -128,7 +128,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
         String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                .getResource("/icons/deadDonorMarker.png").toString(), "png");
+                .getResource(donorMarker).toString(), "png");
         markerImage = markerImage.replace("(", "");
         markerImage = markerImage.replace(")", "");
         markerOptions.position(donorLocation).icon(markerImage);
@@ -185,30 +185,24 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     public void showAllDonors(){
         map.removeMarkers(currentDonorMarkers);
         currentDonorMarkers.clear();
-        for (Profile profile : donorsList) {
-            ArrayList<Double> latLng = controller.displayPointOnMap(profile);
-            LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
-            MarkerOptions markerOptions = new MarkerOptions();
-            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                    .getResource("/icons/deadDonorMarker.png").toString(), "png");
-            markerImage = markerImage.replace("(", "");
-            markerImage = markerImage.replace(")", "");
-            markerOptions.position(donorLocation).icon(markerImage);
-            Marker marker = new Marker(markerOptions);
-            currentDonorMarkers.add(marker);
-            map.addMarker(marker);
-        }
+        showAllOnMap(donorsList, donorMarker);
+        showAllOnMap(donorsList, donorMarker);
     }
 
     public void showAllReceivers() {
         map.removeMarkers(currentReceiverMarkers);
         currentReceiverMarkers.clear();
-        for(Profile profile : receiversList) {
+        showAllOnMap(receiversList,receiverMarker);
+
+    }
+
+    private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker){
+        for(Profile profile : profileList) {
             ArrayList<Double> latLng = controller.displayPointOnMap(profile);
             LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
             MarkerOptions markerOptions = new MarkerOptions();
             String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                    .getResource(receiverMarker).toString(), "png");
+                    .getResource(mapMarker).toString(), "png");
             markerImage = markerImage.replace("(", "");
             markerImage = markerImage.replace(")", "");
             markerOptions.position(donorLocation).icon(markerImage);
