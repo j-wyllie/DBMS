@@ -121,7 +121,7 @@ public class Display extends CommonView {
                 currentProfile.setReceiver(true);
             }
 
-            if (currentProfile.getReceiver()) {
+            if (currentProfile.isReceiver()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
