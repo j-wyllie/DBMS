@@ -162,9 +162,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         } else {
 
-            Double distance = controller.calcDistanceHaversine(origin.getLatitude(), origin.getLongitude(), destination.getLatitude(), destination.getLongitude());
-            Double duration = distance / HELICOPTER_SPEED_KMH * 60;
-            showTravelDetails(origin, destination, decimalFormat.format(distance), decimalFormat.format(duration));
+            Double distance = controller.calcDistanceHaversine(origin.getLatitude(), origin.getLongitude(), destination.getLatitude(), destination.getLongitude()); // km
+            Double duration = distance / HELICOPTER_SPEED_KMH * 3600; // seconds
+            showTravelDetails(origin, destination, decimalFormat.format(distance) + "km", decimalFormat.format(duration));
 
             helicopterRoute = controller.createHelicopterRoute(origin, destination);
 
@@ -202,7 +202,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      * @param hospital1 The hospital at the start of the journey
      * @param hospital2 The hospital at the end of the journey
      * @param distance The distance between the hospitals on the given route in km
-     * @param duration The time between the two hospitals on the given route in minutes
+     * @param duration The time between the two hospitals on the given route in seconds
      */
     private void showTravelDetails(Hospital hospital1, Hospital hospital2, String distance, String duration) {
         String travelMethodGiven = String.valueOf(travelMethod.getSelectionModel().getSelectedItem());
