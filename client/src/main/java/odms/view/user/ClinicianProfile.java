@@ -185,7 +185,7 @@ public class ClinicianProfile extends CommonView {
             organMapTab.setContent(loader.load());
             OrganMap organMapTabView = loader.getController();
             System.out.println(organMapTabView);
-            organMapTabView.initialize(currentUser);
+            organMapTabView.initialize(currentUser, this);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

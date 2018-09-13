@@ -112,6 +112,5 @@ public class OrganMap extends CommonController{
     public ArrayList<Double> displayPointOnMap(Profile profile){
 
         return AddressIO.getLongLatRegion(profile.getRegion(), profile.getCountry());
-
     }
 }
