@@ -13,6 +13,7 @@ import com.lynden.gmapsfx.util.MarkerImageFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -151,7 +152,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profile profile to add.
      */
     private void addDonorMarker(Profile profile) {
-        ArrayList<Double> latLng = controller.displayPointOnMap(profile);
+        List<Double> latLng = controller.getProfileLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
         formatMarkerImage(DONOR_MARKER, donorLocation, markerOptions);
@@ -178,7 +179,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profile The profile to be added to the map.
      */
     private void addReceiverMarker(Profile profile) {
-        ArrayList<Double> latLng = controller.displayPointOnMap(profile);
+        List<Double> latLng = controller.getProfileLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
         formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
@@ -231,7 +232,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      */
     private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker) {
         for (Profile profile : profileList) {
-            ArrayList<Double> latLng = controller.displayPointOnMap(profile);
+            List<Double> latLng = controller.getProfileLatLong(profile);
             LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
             MarkerOptions markerOptions = new MarkerOptions();
             formatMarkerImage(mapMarker, donorLocation, markerOptions);
