@@ -15,7 +15,7 @@
       <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
             <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
         </columnConstraints>
         <rowConstraints>
@@ -24,7 +24,7 @@
           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <TableView fx:id="receiverListView" prefHeight="600.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
+            <TableView fx:id="receiverListView" prefHeight="600.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
               <columns>
                 <TableColumn fx:id="receiverColumn" prefWidth="249.0" text="Receivers" />
               </columns>
@@ -32,7 +32,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TableView fx:id="donorListView" prefHeight="600.0" prefWidth="250.0" GridPane.rowSpan="2">
+            <TableView fx:id="donorListView" prefHeight="600.0" prefWidth="200.0" GridPane.rowSpan="2">
               <columns>
                 <TableColumn fx:id="donorColumn" prefWidth="251.0" text="Donors" />
               </columns>
@@ -45,6 +45,11 @@
                <GridPane.margin>
                   <Insets bottom="10.0" top="10.0" />
                </GridPane.margin></Button>
+            <Button fx:id="showAllReceiversButton" mnemonicParsing="false" onAction="#showAllReceivers" text="Show All Receivers" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </GridPane.margin>
+            </Button>
          </children>
       </GridPane>
    </children>

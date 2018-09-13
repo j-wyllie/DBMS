@@ -4,6 +4,8 @@ package odms.controller.user;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,6 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Organ;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
@@ -47,8 +51,16 @@ public class OrganMap extends CommonController{
         return FXCollections.observableArrayList(deadDonors);
     }
 
-    public ObservableList<String> getReceivers() {
-        return null;
+    public ObservableList<Profile> getReceivers(Profile donatingProfile) {
+        List<Profile> receivingProfiles = new ArrayList<>();
+
+        Set<OrganEnum> donatingOrgans = donatingProfile.getOrgansDonatingNotExpired();
+
+        for (OrganEnum organ : donatingOrgans) {
+            receivingProfiles.addAll(AvailableOrgans.getSuitableRecipientsSorted(organ, donatingProfile, organ));
+        }
+
+        return FXCollections.observableArrayList(receivingProfiles);
     }
 
     public Callback<ListView<ExpandableListElement>, ListCell<ExpandableListElement>> getListViewCallback() {
