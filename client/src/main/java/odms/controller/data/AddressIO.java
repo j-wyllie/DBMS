@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Validates addresses against the google places api.
  */
+@Slf4j
 public final class AddressIO {
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/";
@@ -129,7 +130,7 @@ public final class AddressIO {
         return rootobj;
     }
 
-public static ArrayList<Double> getLongLatRegion(String region, String country) {
+    public static ArrayList<Double> getLongLatRegion(String region, String country) {
         ArrayList<Double> longLat = new ArrayList<>();
         try {
             JsonObject jsonString = getGeocodeLocation(region, country);
@@ -146,10 +147,12 @@ public static ArrayList<Double> getLongLatRegion(String region, String country) 
         } catch (IOException e) {
             log.error("Geocode Error");
             log.error(e.getMessage(), e);
+        }
 
         return null;
     }
 }
+
 
 
 
