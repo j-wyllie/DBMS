@@ -35,8 +35,9 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private static final String RECEIVER_MARKER = "/icons/receiverMarker.png";
     private static final String DONOR_MARKER = "/icons/deadDonorMarker.png";
     private static final Integer ZOOM_LEVEL = 5;
-    private static final LatLong LAT_LONG = new LatLong(-41, 172.6362);
     private static final String FULL_PREFERRED_NAME = "fullPreferredName";
+    private static final Double LAT = -41.0;
+    private static final Double LONG = 172.6362;
 
     private odms.controller.user.OrganMap controller = new odms.controller.user.OrganMap();
     private User currentUser;
@@ -59,6 +60,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TableColumn<Object, Object> receiverColumn;
 
     private ClinicianProfile parentView;
+
 
     /**
      * Sets the current user and parent view.
@@ -93,7 +95,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
 
-        mapOptions.center(LAT_LONG)
+        mapOptions.center(new LatLong(LAT, LONG)
+)
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .overviewMapControl(false)
                 .panControl(false)

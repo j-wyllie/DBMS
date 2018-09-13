@@ -96,7 +96,7 @@ public class ClinicianProfile extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserConsoleTab.fxml"));
         try {
             consoleTab.setContent(loader.load());
-            ConsoleTab console = loader.getController();
+            loader.getController();
             // don't initialize as it will double print.
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -174,10 +174,9 @@ public class ClinicianProfile extends CommonView {
         try {
             organMapTab.setContent(loader.load());
             OrganMap organMapTabView = loader.getController();
-            System.out.println(organMapTabView);
             organMapTabView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
