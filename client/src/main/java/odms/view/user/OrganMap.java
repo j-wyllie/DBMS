@@ -96,7 +96,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         MapOptions mapOptions = new MapOptions();
 
         mapOptions.center(new LatLong(LAT, LONG)
-)
+        )
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .overviewMapControl(false)
                 .panControl(false)
@@ -119,21 +119,29 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         donorColumn.setCellValueFactory(new PropertyValueFactory<>(FULL_PREFERRED_NAME));
 
         donorListView.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     donorListView.getSelectionModel().getSelectedItem() != null) {
                 Profile selectedDonor = donorListView.getSelectionModel()
                         .getSelectedItem();
                 addDonorMarker(selectedDonor);
                 populateReceivers(selectedDonor);
+            } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    donorListView.getSelectionModel().getSelectedItem() != null) {
+                createNewDonorWindow(donorListView.getSelectionModel()
+                        .getSelectedItem(), parentView, currentUser);
             }
         });
 
         receiverListView.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     receiverListView.getSelectionModel().getSelectedItem() != null) {
                 Profile selectedReceiver = receiverListView.getSelectionModel()
                         .getSelectedItem();
                 addReceiverMarker(selectedReceiver);
+            } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    receiverListView.getSelectionModel().getSelectedItem() != null) {
+                createNewDonorWindow(donorListView.getSelectionModel()
+                        .getSelectedItem(), parentView, currentUser);
             }
         });
     }
@@ -171,7 +179,11 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         map.addMarker(marker);
 
         map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> createNewDonorWindow(profile, parentView, currentUser));
+                jsObject -> {
+                    populateReceivers(profile);
+                    showAllReceivers();
+                    clearDonorMarkers();
+                });
 
         currentDonorMarkers.add(marker);
     }
