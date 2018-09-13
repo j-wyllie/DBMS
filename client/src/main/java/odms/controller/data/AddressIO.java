@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 
+
 /**
  * Validates addresses against the google places api.
  */
