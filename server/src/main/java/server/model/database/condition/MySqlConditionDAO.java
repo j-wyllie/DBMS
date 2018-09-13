@@ -5,13 +5,14 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import server.model.database.DatabaseConnection;
 
+@Slf4j
 public class MySqlConditionDAO implements ConditionDAO {
 
     /**
@@ -39,7 +40,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return allConditions;
@@ -99,7 +100,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -123,7 +124,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -159,7 +160,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

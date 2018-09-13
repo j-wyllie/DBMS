@@ -17,12 +17,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.profile.ProcedureGeneral;
 import odms.view.CommonView;
 
+@Slf4j
 public class ProceduresDisplay extends CommonView {
     //todo separate fxml files
     @FXML
@@ -111,7 +113,7 @@ public class ProceduresDisplay extends CommonView {
                     createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
                             .getSelectedItem());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         });
@@ -122,7 +124,7 @@ public class ProceduresDisplay extends CommonView {
                     createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
                             .getSelectedItem());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         });
@@ -143,7 +145,7 @@ public class ProceduresDisplay extends CommonView {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

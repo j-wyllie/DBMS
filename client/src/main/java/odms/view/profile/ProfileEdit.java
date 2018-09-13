@@ -17,9 +17,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Profile;
@@ -33,6 +40,7 @@ import odms.view.CommonView;
 /**
  * profile edit window.
  */
+@Slf4j
 public class ProfileEdit extends CommonView {
 
     private static final String MAINCOUNTRY = "New Zealand";
@@ -335,7 +343,7 @@ public class ProfileEdit extends CommonView {
 
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
     }

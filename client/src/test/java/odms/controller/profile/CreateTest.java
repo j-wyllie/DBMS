@@ -21,7 +21,6 @@ public class CreateTest {
                 getClass().getResource("/view/ProfileCreate.fxml"));
         fxmlLoader.load();
         view = fxmlLoader.getController();
-        System.out.println(view);
         controller = view.getController();
     }
 

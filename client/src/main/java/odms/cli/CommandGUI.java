@@ -9,8 +9,9 @@ import java.nio.charset.Charset;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class CommandGUI {
 
     private final PrintStream out;
@@ -68,8 +69,8 @@ public class CommandGUI {
                         displayTextArea.appendText(commandLine.getHistory().current());
                         break;
                 }
-            } catch (IndexOutOfBoundsException exception) {
-                exception.printStackTrace();
+            } catch (IndexOutOfBoundsException e) {
+                log.error(e.getMessage(), e);
             }
         });
     }

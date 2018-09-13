@@ -8,12 +8,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.view.user.UserGeneral;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+@Slf4j
 public class UserTest extends TestFXTest {
 
     protected User testUserAdmin;
@@ -51,7 +53,7 @@ public class UserTest extends TestFXTest {
                 stage.show();
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

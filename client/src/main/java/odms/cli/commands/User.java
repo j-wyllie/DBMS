@@ -2,6 +2,7 @@ package odms.cli.commands;
 
 import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandUtils;
 import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import odms.controller.user.UserNotFoundException;
 
+@Slf4j
 public class User extends CommandUtils {
 
     /**
@@ -75,7 +77,7 @@ public class User extends CommandUtils {
             try {
                 database.remove(user);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -182,7 +184,7 @@ public class User extends CommandUtils {
                 System.out.println(searchErrorText);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return user;
     }
@@ -218,7 +220,7 @@ public class User extends CommandUtils {
                 System.out.println(searchErrorText);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } catch (UserNotFoundException e) {
             System.out.println("user not found");
         }

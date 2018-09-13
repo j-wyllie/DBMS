@@ -88,7 +88,6 @@ public class ProcedureDetailed extends CommonView {
             profile.getOrgansDonated().forEach(organEnum -> {
                 organs.add(organEnum.getNamePlain());
             });
-            System.out.println(organs.size());
             organsDonated.addAll(organs);
             affectedOrgansListView.setItems(organsDonated);
             editButton.setVisible(true);
