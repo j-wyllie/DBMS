@@ -103,8 +103,6 @@ public class HospitalMap {
 
         Polyline helicopterRoute = new Polyline(polyOpts);
 
-        System.out.println(String.valueOf(helicopterRoute.getPath().getArray()));
-
         return helicopterRoute;
     }
 
