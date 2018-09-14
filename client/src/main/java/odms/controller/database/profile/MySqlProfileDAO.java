@@ -93,6 +93,44 @@ public class MySqlProfileDAO implements ProfileDAO {
         return result;
     }
 
+    /**
+     * Gets all profiles from the database where the person is dead and matches the given search string
+     */
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+
+        String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
+                "PreferredName IS NOT NULL AND ((CONCAT(GivenNames, PreferredName, LastNames) LIKE ?) OR (CONCAT(GivenNames, LastNames) LIKE ?)) " +
+                "AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        List<Profile> result = new ArrayList<>();
+        Connection conn = connectionInstance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        stmt.setString(1, "%" + searchString + "%");
+        stmt.setString(2, "%" + searchString + "%");
+
+        System.out.println(stmt);
+
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery(query);
+            while (allProfiles.next()) {
+                Profile newProfile  = parseProfile(allProfiles);
+                if(!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());}
+            }
+        }
+        catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return result;
+    }
 
 
     /**
@@ -645,46 +683,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.close();
             stmt.close();
         }
-    }
-
-    /**
-     * Gets all profiles from the database where the person is dead and matches the given search string
-     */
-    @Override
-    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
-
-        String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
-                "PreferredName IS NOT NULL AND CONCAT(GivenNames, PreferredName, LastNames) LIKE ?) OR (CONCAT(GivenNames, LastNames) LIKE ?" +
-                "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        List<Profile> result = new ArrayList<>();
-        Connection conn = connectionInstance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-
-        stmt.setString(1, "%" + searchString + "%");
-        stmt.setString(2, "%" + searchString + "%");
-
-        System.out.println(stmt);
-
-
-        ArrayList<Integer> existingIds = new ArrayList<>();
-        try {
-            ResultSet allProfiles = stmt.executeQuery(query);
-            while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
-                if(!existingIds.contains(newProfile.getId())) {
-                    result.add(newProfile);
-                    existingIds.add(newProfile.getId());}
-            }
-        }
-        catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            conn.close();
-            stmt.close();
-        }
-        return result;
     }
 
     /**

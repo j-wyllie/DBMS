@@ -29,6 +29,13 @@ public interface ProfileDAO {
     List<Profile> getDead() throws SQLException;
 
     /**
+     * Gets all of the dead profiles in the db.
+     * @return a list of all the dead profiles.
+     * @throws SQLException thrown when there is an error in the sql.
+     */
+    List<Profile> getDeadFiltered(String searchString) throws SQLException;
+
+    /**
      * Get a single profile from the database by id.
      * @param profileId of the profile.
      * @return a profile.

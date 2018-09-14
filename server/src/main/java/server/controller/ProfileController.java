@@ -83,7 +83,7 @@ public class ProfileController {
     }
 
     /**
-     * Gets all profiles stored.
+     * Gets all dead profiles stored, possibly with search criteria.
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -93,7 +93,14 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            profiles = gson.toJson(database.getDead());
+            if (req.queryMap().hasKey("searchString")) {
+                String searchString = req.queryParams("searchString");
+                List<Profile> result = database.getDeadFiltered(searchString);
+                profiles = gson.toJson(result);
+            } else {
+                profiles = gson.toJson(database.getDead());
+            }
+
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
