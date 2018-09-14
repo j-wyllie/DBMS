@@ -1,9 +1,5 @@
 package odms.controller.user;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -19,6 +15,12 @@ import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
+import org.controlsfx.control.PopOver;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Organ map controller.
@@ -43,6 +45,32 @@ public class OrganMap extends CommonController {
         List<Profile> allDonors = null;
         try {
             allDonors = database.getDead();
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
+
+        if (allDonors != null) {
+            for (Profile profile : allDonors) {
+                // If the profile has organs to donate
+                if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
+                    deadDonors.add(profile);
+                }
+            }
+        }
+        return FXCollections.observableArrayList(deadDonors);
+    }
+
+    /**
+     * Gets all of the dead donors according to a given search string
+     *
+     * @return Observable list of dead donors.
+     */
+    public ObservableList<Profile> getDeadDonorsFiltered(String searchString) {
+        ArrayList<Profile> deadDonors = new ArrayList<>();
+        ProfileDAO database = DAOFactory.getProfileDao();
+        List<Profile> allDonors = null;
+        try {
+            allDonors = database.getDeadFiltered(searchString);
         } catch (SQLException e) {
             log.error(e.getMessage());
         }
@@ -121,7 +149,7 @@ public class OrganMap extends CommonController {
      * Creates an arrow path.
      *
      * @param height height.
-     * @param up true if up.
+     * @param up     true if up.
      * @return an SVG path.
      */
     private SVGPath createArrowPath(int height, boolean up) {
@@ -136,6 +164,34 @@ public class OrganMap extends CommonController {
         }
 
         return svg;
+    }
+
+    /**
+     * Creates a new pop over containing profile info and a match and open profile button.
+     *
+     * @param profile Profile marker clicked on.
+     * @return a pop over.
+     */
+    public PopOver createNewPopOver(Profile profile) {
+
+        VBox vbox = createVbox(profile);
+
+        PopOver popOver = new PopOver(vbox);
+        popOver.animatedProperty().setValue(true);
+
+        return popOver;
+    }
+
+    /**
+     * Creates a vbox containing the PopOver content.
+     *
+     * @param profile Profile marker clicked on.
+     * @return VBox.
+     */
+    private VBox createVbox(Profile profile) {
+        Label lblName = new Label(profile.getFullPreferredName());
+
+        return new VBox(lblName, view.getOpenProfileBtn(), view.getMatchBtn());
     }
 
     /**
