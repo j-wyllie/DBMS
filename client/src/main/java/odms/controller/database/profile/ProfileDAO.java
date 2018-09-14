@@ -16,7 +16,16 @@ public interface ProfileDAO {
      */
     List<Profile> getAll() throws SQLException;
 
+    /**
+     * Gets all profiles from the database where the person is dead.
+     */
     List<Profile> getDead() throws SQLException;
+
+    /**
+     * Gets all profiles from the database where the person is dead and matches the given search string
+     */
+    List<Profile> getDeadFiltered(String searchString) throws SQLException;
+
 
     /**
      * Get a single profile from the database by id.

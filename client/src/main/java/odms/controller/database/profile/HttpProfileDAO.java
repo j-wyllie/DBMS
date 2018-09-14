@@ -176,6 +176,14 @@ public class HttpProfileDAO implements ProfileDAO {
         return getArrayRequest(url, queryParams);
     }
 
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+        String url = "http://localhost:6969/api/v1/profiles/dead";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("searchString", searchString);
+        return getArrayRequest(url, queryParams);
+    }
+
     private Profile getSingleRequest(String url, Map<String, Object> queryParams) {
         Gson parser = new Gson();
         Response response = null;

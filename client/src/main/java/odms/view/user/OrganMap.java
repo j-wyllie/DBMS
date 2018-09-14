@@ -15,12 +15,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -58,6 +62,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TableView<Profile> receiverListView;
     @FXML
     private TableColumn<Object, Object> receiverColumn;
+    @FXML
+    private TextField searchDonorsText;
 
     private ClinicianProfile parentView;
 
@@ -114,9 +120,19 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Initializes the list views.
      */
     private void initListViews() {
-        donorsList = controller.getDeadDonors();
+        if (!searchDonorsText.getText().equals("")) {
+            donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText().toString());
+        } else {
+            donorsList = controller.getDeadDonors();
+        }
         donorListView.setItems(donorsList);
         donorColumn.setCellValueFactory(new PropertyValueFactory<>(FULL_PREFERRED_NAME));
+
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
+        searchDonorsText.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(ae -> initListViews());
+            pauseTransition.playFromStart();
+        });
 
         donorListView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
