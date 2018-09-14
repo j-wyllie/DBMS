@@ -21,10 +21,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
+import org.controlsfx.control.PopOver;
 
 /**
  * Tab containing the organ map.
@@ -60,7 +62,9 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TableColumn<Object, Object> receiverColumn;
 
     private ClinicianProfile parentView;
-
+    private PopOver popOver;
+    private Boolean hasClickedMarker = false;
+    private Profile clickedProfile;
 
     /**
      * Sets the current user and parent view.
@@ -83,7 +87,20 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         mapView.addMapInializedListener(this);
+
+        mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (popOver != null) {
+                popOver.hide();
+                popOver = null;
+            }
+            if (hasClickedMarker) {
+                popOver = controller.createNewPopOver(clickedProfile);
+                popOver.show(mapView.getParent(), event.getScreenX(), event.getScreenY());
+                hasClickedMarker = false;
+            }
+        });
     }
 
     /**
@@ -207,7 +224,10 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
         map.addMarker(marker);
         map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> createNewDonorWindow(profile, parentView, currentUser));
+                jsObject -> {
+                    hasClickedMarker = true;
+                    clickedProfile = profile;
+                });
 
         currentReceiverMarkers.add(marker);
     }
@@ -261,7 +281,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                             showAllReceivers();
                             clearDonorMarkers();
                         } else {
-                            createNewDonorWindow(profile, parentView, currentUser);
+                            hasClickedMarker = true;
+                            clickedProfile = profile;
                         }
                     });
             map.addMarker(marker);

@@ -19,6 +19,7 @@ import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
+import org.controlsfx.control.PopOver;
 
 /**
  * Organ map controller.
@@ -136,6 +137,31 @@ public class OrganMap extends CommonController {
         }
 
         return svg;
+    }
+
+    /**
+     * Creates a new pop over containing profile info and a match and open profile button.
+     * @param profile Profile marker clicked on.
+     * @return a pop over.
+     */
+    public PopOver createNewPopOver(Profile profile) {
+
+        VBox vbox = createVbox(profile);
+
+        PopOver popOver = new PopOver(vbox);
+        popOver.animatedProperty().setValue(true);
+
+        return popOver;
+    }
+
+    /**
+     * Creates a vbox containing the PopOver content.
+     * @param profile Profile marker clicked on.
+     * @return VBox.
+     */
+    private VBox createVbox(Profile profile) {
+        Label lblName = new Label(profile.getFullPreferredName());
+        return new VBox(lblName);
     }
 
     /**
