@@ -3,32 +3,30 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
+import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Tab containing the organ map.
@@ -66,13 +64,17 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TextField searchDonorsText;
 
     private ClinicianProfile parentView;
-
+    private PopOver popOver;
+    private Boolean hasClickedMarker = false;
+    private Profile clickedProfile;
+    private Button matchBtn = new Button("Match");
+    private Button openProfileBtn = new Button("View Profile");
 
     /**
      * Sets the current user and parent view.
      *
      * @param currentUser the current user.
-     * @param parentView the parent view.
+     * @param parentView  the parent view.
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.currentUser = currentUser;
@@ -84,12 +86,27 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     /**
      * Initializes the map view by adding a listener.
      *
-     * @param location location.
+     * @param location  location.
      * @param resources resource bundle.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         mapView.addMapInializedListener(this);
+
+        mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (popOver != null) {
+                popOver.hide();
+                popOver = null;
+            }
+            if (hasClickedMarker) {
+                popOver = controller.createNewPopOver(clickedProfile);
+                popOver.show(mapView.getParent(), event.getScreenX(), event.getScreenY());
+                hasClickedMarker = false;
+            }
+        });
+        openProfileBtn.setOnAction(event -> createNewDonorWindow(donorListView.getSelectionModel()
+                .getSelectedItem(), parentView, currentUser));
     }
 
     /**
@@ -102,7 +119,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         MapOptions mapOptions = new MapOptions();
 
         mapOptions.center(new LatLong(LAT, LONG)
-)
+        )
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .overviewMapControl(false)
                 .panControl(false)
@@ -121,7 +138,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      */
     private void initListViews() {
         if (!searchDonorsText.getText().equals("")) {
-            donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText().toString());
+            donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText());
         } else {
             donorsList = controller.getDeadDonors();
         }
@@ -135,21 +152,29 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         });
 
         donorListView.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     donorListView.getSelectionModel().getSelectedItem() != null) {
                 Profile selectedDonor = donorListView.getSelectionModel()
                         .getSelectedItem();
                 addDonorMarker(selectedDonor);
                 populateReceivers(selectedDonor);
+            } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    donorListView.getSelectionModel().getSelectedItem() != null) {
+                createNewDonorWindow(donorListView.getSelectionModel()
+                        .getSelectedItem(), parentView, currentUser);
             }
         });
 
         receiverListView.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1 &&
                     receiverListView.getSelectionModel().getSelectedItem() != null) {
                 Profile selectedReceiver = receiverListView.getSelectionModel()
                         .getSelectedItem();
                 addReceiverMarker(selectedReceiver);
+            } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                    receiverListView.getSelectionModel().getSelectedItem() != null) {
+                createNewDonorWindow(donorListView.getSelectionModel()
+                        .getSelectedItem(), parentView, currentUser);
             }
         });
     }
@@ -187,7 +212,11 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         map.addMarker(marker);
 
         map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> createNewDonorWindow(profile, parentView, currentUser));
+                jsObject -> {
+                    populateReceivers(profile);
+                    showAllReceivers();
+                    clearDonorMarkers();
+                });
 
         currentDonorMarkers.add(marker);
     }
@@ -211,7 +240,10 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
         map.addMarker(marker);
         map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> createNewDonorWindow(profile, parentView, currentUser));
+                jsObject -> {
+                    hasClickedMarker = true;
+                    clickedProfile = profile;
+                });
 
         currentReceiverMarkers.add(marker);
     }
@@ -247,7 +279,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Displays a list of profiles on the map.
      *
      * @param profileList Profiles to display.
-     * @param mapMarker image to use as marker.
+     * @param mapMarker   image to use as marker.
      */
     private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker) {
         for (Profile profile : profileList) {
@@ -265,7 +297,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                             showAllReceivers();
                             clearDonorMarkers();
                         } else {
-                            createNewDonorWindow(profile, parentView, currentUser);
+                            hasClickedMarker = true;
+                            clickedProfile = profile;
                         }
                     });
             map.addMarker(marker);
@@ -275,12 +308,12 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     /**
      * Formats the marker image.
      *
-     * @param mapMarker The current map marker.
+     * @param mapMarker     The current map marker.
      * @param donorLocation Donors location as a LatLong.
      * @param markerOptions The markers options.
      */
     private void formatMarkerImage(String mapMarker, LatLong donorLocation,
-            MarkerOptions markerOptions) {
+                                   MarkerOptions markerOptions) {
         String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
                 .getResource(mapMarker).toString(), "png");
         markerImage = markerImage.replace("(", "");
@@ -290,5 +323,13 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
     public double getMatchesListViewWidth() {
         return donorListView.getWidth();
+    }
+
+    public Button getOpenProfileBtn() {
+        return openProfileBtn;
+    }
+
+    public Button getMatchBtn() {
+        return matchBtn;
     }
 }
