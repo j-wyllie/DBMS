@@ -3,33 +3,30 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Tab containing the organ map.
@@ -70,12 +67,14 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private PopOver popOver;
     private Boolean hasClickedMarker = false;
     private Profile clickedProfile;
+    private Button matchBtn = new Button("Match");
+    private Button openProfileBtn = new Button("View Profile");
 
     /**
      * Sets the current user and parent view.
      *
      * @param currentUser the current user.
-     * @param parentView the parent view.
+     * @param parentView  the parent view.
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.currentUser = currentUser;
@@ -87,7 +86,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     /**
      * Initializes the map view by adding a listener.
      *
-     * @param location location.
+     * @param location  location.
      * @param resources resource bundle.
      */
     @Override
@@ -106,6 +105,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 hasClickedMarker = false;
             }
         });
+        openProfileBtn.setOnAction(event -> createNewDonorWindow(donorListView.getSelectionModel()
+                .getSelectedItem(), parentView, currentUser));
     }
 
     /**
@@ -137,7 +138,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      */
     private void initListViews() {
         if (!searchDonorsText.getText().equals("")) {
-            donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText().toString());
+            donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText());
         } else {
             donorsList = controller.getDeadDonors();
         }
@@ -278,7 +279,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Displays a list of profiles on the map.
      *
      * @param profileList Profiles to display.
-     * @param mapMarker image to use as marker.
+     * @param mapMarker   image to use as marker.
      */
     private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker) {
         for (Profile profile : profileList) {
@@ -307,12 +308,12 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     /**
      * Formats the marker image.
      *
-     * @param mapMarker The current map marker.
+     * @param mapMarker     The current map marker.
      * @param donorLocation Donors location as a LatLong.
      * @param markerOptions The markers options.
      */
     private void formatMarkerImage(String mapMarker, LatLong donorLocation,
-            MarkerOptions markerOptions) {
+                                   MarkerOptions markerOptions) {
         String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
                 .getResource(mapMarker).toString(), "png");
         markerImage = markerImage.replace("(", "");
@@ -322,5 +323,13 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
     public double getMatchesListViewWidth() {
         return donorListView.getWidth();
+    }
+
+    public Button getOpenProfileBtn() {
+        return openProfileBtn;
+    }
+
+    public Button getMatchBtn() {
+        return matchBtn;
     }
 }

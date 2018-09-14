@@ -1,9 +1,5 @@
 package odms.controller.user;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -20,6 +16,11 @@ import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import org.controlsfx.control.PopOver;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Organ map controller.
@@ -148,7 +149,7 @@ public class OrganMap extends CommonController {
      * Creates an arrow path.
      *
      * @param height height.
-     * @param up true if up.
+     * @param up     true if up.
      * @return an SVG path.
      */
     private SVGPath createArrowPath(int height, boolean up) {
@@ -167,6 +168,7 @@ public class OrganMap extends CommonController {
 
     /**
      * Creates a new pop over containing profile info and a match and open profile button.
+     *
      * @param profile Profile marker clicked on.
      * @return a pop over.
      */
@@ -182,12 +184,14 @@ public class OrganMap extends CommonController {
 
     /**
      * Creates a vbox containing the PopOver content.
+     *
      * @param profile Profile marker clicked on.
      * @return VBox.
      */
     private VBox createVbox(Profile profile) {
         Label lblName = new Label(profile.getFullPreferredName());
-        return new VBox(lblName);
+
+        return new VBox(lblName, view.getOpenProfileBtn(), view.getMatchBtn());
     }
 
     /**
