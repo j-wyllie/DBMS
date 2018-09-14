@@ -60,6 +60,32 @@ public class OrganMap extends CommonController {
     }
 
     /**
+     * Gets all of the dead donors according to a given search string
+     *
+     * @return Observable list of dead donors.
+     */
+    public ObservableList<Profile> getDeadDonorsFiltered(String searchString) {
+        ArrayList<Profile> deadDonors = new ArrayList<>();
+        ProfileDAO database = DAOFactory.getProfileDao();
+        List<Profile> allDonors = null;
+        try {
+            allDonors = database.getDeadFiltered(searchString);
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
+
+        if (allDonors != null) {
+            for (Profile profile : allDonors) {
+                // If the profile has organs to donate
+                if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
+                    deadDonors.add(profile);
+                }
+            }
+        }
+        return FXCollections.observableArrayList(deadDonors);
+    }
+
+    /**
      * Gets all of the receivers for a particular donor.
      *
      * @param donatingProfile The donor that was selected.
