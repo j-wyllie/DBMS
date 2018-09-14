@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 
 public enum CountriesEnum {
     NZ("New Zealand"),

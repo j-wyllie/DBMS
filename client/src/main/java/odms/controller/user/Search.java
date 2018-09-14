@@ -99,12 +99,12 @@ public class Search {
     public SimpleStringProperty donorReceiverProperty(Profile profile) {
         SimpleStringProperty result = new SimpleStringProperty();
         if ((profile.getDonor() != null) && profile.getDonor()) {
-            if ((profile.getReceiver() != null) && profile.getReceiver()) {
+            if (profile.isReceiver()) {
                 result.setValue("Donor/Receiver");
             } else {
                 result.setValue("Donor");
             }
-        } else if ((profile.getReceiver() != null) && profile.getReceiver()) {
+        } else if (profile.isReceiver()) {
             result.setValue("Receiver");
 
         }

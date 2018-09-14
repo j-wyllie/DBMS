@@ -72,8 +72,8 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         //todo Change how setExtraAttributes works
         String attrName = parts[0];
         String value = null;
-        if (!parts[1].equals(null)) {
-            value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        if (parts[1] != null) {
+            value = parts[1].replace("\"", "");
         }
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
             profile.setGivenNames(value);
