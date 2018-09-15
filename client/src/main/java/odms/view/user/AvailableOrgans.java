@@ -1,17 +1,5 @@
 package odms.view.user;
 
-import static odms.controller.user.AvailableOrgans.getExpiryLength;
-import static odms.controller.user.AvailableOrgans.getTimeRemaining;
-import static odms.controller.user.AvailableOrgans.getTimeToExpiryHoursSeconds;
-import static odms.controller.user.AvailableOrgans.getWaitTime;
-import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
-import static odms.view.user.Search.numeric_Validation;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,8 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import odms.commons.model.enums.BloodTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
@@ -32,6 +20,14 @@ import odms.commons.model.user.User;
 import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
+
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static odms.controller.user.AvailableOrgans.*;
+import static odms.view.user.Search.numeric_Validation;
 
 /**
  * Available organs view.
@@ -51,18 +47,18 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private CheckComboBox<String> regionsComboboxMatchesTable;
     @FXML
-    public TableView<Profile> potentialOrganMatchTable;
+    private TableView<Profile> potentialOrganMatchTable;
     @FXML
     private CheckComboBox<OrganEnum> organsCombobox;
     @FXML
     private CheckComboBox<String> regionsCombobox;
     @FXML
-    public TableView availableOrgansTable;
+    private TableView availableOrgansTable;
 
 
     private OrganEnum selectedOrgan;
 
-    public ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
+    private ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile, OrganEnum>> listOfFilteredAvailableOrgans;
     private ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
     private ClinicianProfile parentView;
@@ -193,14 +189,14 @@ public class AvailableOrgans extends CommonView {
         TableColumn<Map.Entry<Profile, OrganEnum>, String> nhiCol = new TableColumn<>(
                 "NHI");
         nhiCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty((cdf.getValue().getKey().getNhi())));
+                cdf -> new SimpleStringProperty(cdf.getValue().getKey().getNhi()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, Double> expiryProgressBarCol = new TableColumn<>(
                 "Expiry");
         expiryProgressBarCol.setCellValueFactory(
                 cdf -> new SimpleDoubleProperty(
-                        getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey())
-                                / getExpiryLength(cdf.getValue().getValue())).asObject()
+                        getTimeRemaining(cdf.getValue().getValue(), cdf.getValue().getKey()) /
+                                getExpiryLength(cdf.getValue().getValue())).asObject()
         );
 
         expiryProgressBarCol.setCellFactory(OrganExpiryProgressBar.forTableColumn(
@@ -250,9 +246,9 @@ public class AvailableOrgans extends CommonView {
     }
 
     /**
-     * Populates available organs table with ALL available organs in database
+     * Populates available organs table with ALL available organs in database.
      *
-     * @throws SQLException exception thrown when accessing DB to get all available organs
+     * @throws SQLException exception thrown when accessing DB to get all available organs.
      */
     private void setAvailableOrgansList() throws SQLException {
         listOfAvailableOrgans = FXCollections
@@ -262,7 +258,7 @@ public class AvailableOrgans extends CommonView {
     }
 
     /**
-     * Populates available organs table with ALL available organs in database
+     * Populates available organs table with ALL available organs in database.
      */
     private void setPotentialOrganMatchesList() {
 
@@ -293,15 +289,13 @@ public class AvailableOrgans extends CommonView {
         for (Map.Entry<Profile, OrganEnum> m : listOfAvailableOrgans) {
             if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) &&
                     regionsCombobox.getCheckModel().getCheckedItems()
-                    .contains(m.getKey().getRegionOfDeath())) {
-                listOfFilteredAvailableOrgans.add(m);
-            } else if (organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) &&
+                            .contains(m.getKey().getRegionOfDeath()) || organsCombobox.getCheckModel().getCheckedItems().contains(m.getValue()) &&
                     regionsCombobox.getCheckModel().getCheckedItems().size() == 0 ||
                     organsCombobox.getCheckModel().getCheckedItems().size() == 0 &&
-                    regionsCombobox.getCheckModel().getCheckedItems().size() == 0 ||
+                            regionsCombobox.getCheckModel().getCheckedItems().size() == 0 ||
                     organsCombobox.getCheckModel().getCheckedItems().size() == 0 &&
-                    regionsCombobox.getCheckModel().getCheckedItems()
-                            .contains(m.getKey().getRegionOfDeath())) {
+                            regionsCombobox.getCheckModel().getCheckedItems()
+                                    .contains(m.getKey().getRegionOfDeath())) {
                 listOfFilteredAvailableOrgans.add(m);
             }
         }
@@ -334,7 +328,6 @@ public class AvailableOrgans extends CommonView {
         populateOrgansTable();
         populateMatchesTable();
         parentView = p;
-
 
         // Potential matches table
         bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems()
@@ -387,14 +380,14 @@ public class AvailableOrgans extends CommonView {
     /**
      * Starts the timers.
      */
-    public void startTimers() {
+    void startTimers() {
         controller.startTimers();
     }
 
     /**
      * Pauses the timers.
      */
-    public void pauseTimers() {
+    void pauseTimers() {
         controller.pauseTimers();
     }
 
@@ -405,5 +398,17 @@ public class AvailableOrgans extends CommonView {
      */
     public void removeItem(Map.Entry<Profile, OrganEnum> m) {
         listOfAvailableOrgans.remove(m);
+    }
+
+    public TableView getAvailableOrgansTable() {
+        return availableOrgansTable;
+    }
+
+    public TableView getPotentialOrganMatchTable() {
+        return potentialOrganMatchTable;
+    }
+
+    public ObservableList<Entry<Profile, OrganEnum>> getListOfAvailableOrgans() {
+        return listOfAvailableOrgans;
     }
 }

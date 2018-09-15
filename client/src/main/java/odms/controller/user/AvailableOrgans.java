@@ -1,19 +1,5 @@
 package odms.controller.user;
 
-import static java.lang.Math.abs;
-
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -25,6 +11,14 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static java.lang.Math.abs;
 
 /**
  * Controller for the available organs tab.
@@ -53,13 +47,13 @@ public class AvailableOrgans {
     /**
      * Retrieves the raw unformatted wait time.
      *
-     * @param selectedOrgan Organ with the wait time.
+     * @param selectedOrgan  Organ with the wait time.
      * @param organsRequired Set of organs required.
-     * @param p Current profile.
+     * @param p              Current profile.
      * @return A list of unformatted wait times.
      */
     public static Long getWaitTimeRaw(OrganEnum selectedOrgan, Set<OrganEnum> organsRequired,
-            Profile p) {
+                                      Profile p) {
         LocalDateTime dateOrganRegistered = LocalDateTime.now();
 
         for (OrganEnum organ : organsRequired) {
@@ -77,13 +71,13 @@ public class AvailableOrgans {
     /**
      * Gets the wait time for an expired organ.
      *
-     * @param selectedOrgan Selected organ.
+     * @param selectedOrgan  Selected organ.
      * @param organsRequired Set of organs required.
-     * @param p Current profile.
+     * @param p              Current profile.
      * @return Organs wait time.
      */
     public static String getWaitTime(OrganEnum selectedOrgan, Set<OrganEnum> organsRequired,
-            Profile p) {
+                                     Profile p) {
 
         String durationFormatted = "";
 
@@ -153,7 +147,7 @@ public class AvailableOrgans {
     /**
      * Sets the expired organs in the profile.
      *
-     * @param organ Organ to add.
+     * @param organ   Organ to add.
      * @param profile Current profile.
      */
     private void setOrganExpired(OrganEnum organ, Profile profile) {
@@ -167,7 +161,7 @@ public class AvailableOrgans {
     /**
      * Checks the expired organs in the profile.
      *
-     * @param organ Organ to check.
+     * @param organ   Organ to check.
      * @param profile Current profile.
      */
     public void checkOrganExpired(OrganEnum organ, Profile profile) {
@@ -180,12 +174,12 @@ public class AvailableOrgans {
     /**
      * Removes for organs in the expired organ list.
      *
-     * @param organ Organ to remove.
+     * @param organ   Organ to remove.
      * @param profile Current profile.
-     * @param m Expired organs list.
+     * @param m       Expired organs list.
      */
     private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
-            Map.Entry<Profile, OrganEnum> m) {
+                                              Map.Entry<Profile, OrganEnum> m) {
         if (LocalDateTime.now()
                 .isAfter(getExpiryTime(organ, profile))) {
             view.removeItem(m);
@@ -206,7 +200,7 @@ public class AvailableOrgans {
     /**
      * Gets the expiry time for an organ.
      *
-     * @param organ Expired organ.
+     * @param organ   Expired organ.
      * @param profile Current profile.
      * @return LocalDateTime of the expiry time.
      */
@@ -241,7 +235,7 @@ public class AvailableOrgans {
     /**
      * Gives remaining time in milliseconds that a organ has until it expires.
      *
-     * @param organ the given organ object
+     * @param organ   the given organ object
      * @param profile the donor that the organ belongs to
      * @return the time a organ has til it expires in milliseconds
      */
@@ -293,7 +287,7 @@ public class AvailableOrgans {
     /**
      * Get remaining time in standard '5y 4d 3h 2m 1s' format.
      *
-     * @param organ the organ being checked against.
+     * @param organ   the organ being checked against.
      * @param profile the selected profile.
      * @return formatted string.
      */
@@ -304,7 +298,7 @@ public class AvailableOrgans {
     /**
      * Get remaining time in standard '2h 1s' format.
      *
-     * @param organ the organ being checked against.
+     * @param organ   the organ being checked against.
      * @param profile the selected profile.
      * @return formatted string.
      */
@@ -315,9 +309,9 @@ public class AvailableOrgans {
     /**
      * Calculates how long a Organ has til expiry, returns in formatted string
      *
-     * @param organ Given organ
+     * @param organ   Given organ
      * @param profile Given profile the organ belongs to
-     * @param isStd true if it's standard time.
+     * @param isStd   true if it's standard time.
      * @return How long the organ has til expiry in days, minutes, hours and seconds
      */
     private static String getTimeToExpiryFormatted(OrganEnum organ, Profile profile, Boolean
@@ -453,8 +447,11 @@ public class AvailableOrgans {
      * @return A list of potential organ matches
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
-            Profile donorProfile, OrganEnum selectedOrgan) {
-        // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
+            Profile donorProfile,
+            ObservableList checkedBloodTypes, ObservableList checkedRegions,
+            String ageLower, String ageUpper, boolean ageRangeChecked) {
+        // sort by longest wait time first,
+        // then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
         ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
                 .observableArrayList();
@@ -517,13 +514,13 @@ public class AvailableOrgans {
     /**
      * Filters the region.
      *
-     * @param checkedRegions Regions being checked.
-     * @param potentialOrganMatches The potential organ matches.
+     * @param checkedRegions                  Regions being checked.
+     * @param potentialOrganMatches           The potential organ matches.
      * @param potentialOrganMatchesUnfiltered The unfiltered potential organ matches.
      */
     private static void filterRegions(ObservableList checkedRegions,
-            ObservableList<Profile> potentialOrganMatches,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                      ObservableList<Profile> potentialOrganMatches,
+                                      ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         // Regions filtering
         if (checkedRegions.size() > 0) {
             potentialOrganMatches.clear();
@@ -540,13 +537,13 @@ public class AvailableOrgans {
     /**
      * Filters the checked blood types.
      *
-     * @param checkedBloodTypes the checked blood types.
-     * @param potentialOrganMatches The potential organ matches.
+     * @param checkedBloodTypes               the checked blood types.
+     * @param potentialOrganMatches           The potential organ matches.
      * @param potentialOrganMatchesUnfiltered The unfiltered potential organ matches.
      */
     private static void filterBloodType(ObservableList checkedBloodTypes,
-            ObservableList<Profile> potentialOrganMatches,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                        ObservableList<Profile> potentialOrganMatches,
+                                        ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         // Blood type filtering
         if (checkedBloodTypes.size() > 0) {
             potentialOrganMatches.clear();
@@ -563,15 +560,15 @@ public class AvailableOrgans {
     /**
      * Filters the age range.
      *
-     * @param ageLower lower age range.
-     * @param ageUpper upper age range.
-     * @param ageRangeChecked need to filter by age range.
-     * @param potentialOrganMatches The potential organ matches.
+     * @param ageLower                        lower age range.
+     * @param ageUpper                        upper age range.
+     * @param ageRangeChecked                 need to filter by age range.
+     * @param potentialOrganMatches           The potential organ matches.
      * @param potentialOrganMatchesUnfiltered The unfiltered potential organ matches.
      */
     private static void filterAgeRange(String ageLower, String ageUpper, boolean ageRangeChecked,
-            ObservableList<Profile> potentialOrganMatches,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                       ObservableList<Profile> potentialOrganMatches,
+                                       ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         // Age filtering
         if (!"".equals(ageLower)) {
             if (ageRangeChecked) {
@@ -588,13 +585,13 @@ public class AvailableOrgans {
     /**
      * Filters the lower age limit.
      *
-     * @param ageLower lower age limit.
-     * @param potentialOrganMatches potential matches.
+     * @param ageLower                        lower age limit.
+     * @param potentialOrganMatches           potential matches.
      * @param potentialOrganMatchesUnfiltered unfiltered organ matches list.
      */
     private static void filterLowerAge(String ageLower,
-            ObservableList<Profile> potentialOrganMatches,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                       ObservableList<Profile> potentialOrganMatches,
+                                       ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         potentialOrganMatches.clear();
         for (Profile p : potentialOrganMatchesUnfiltered) {
             if (p.getAge() == Integer.parseInt(ageLower)) {
@@ -608,14 +605,14 @@ public class AvailableOrgans {
     /**
      * Filters the upper age limit.
      *
-     * @param ageLower lower age limit.
-     * @param ageUpper upper age limit.
-     * @param potentialOrganMatches potential matches.
+     * @param ageLower                        lower age limit.
+     * @param ageUpper                        upper age limit.
+     * @param potentialOrganMatches           potential matches.
      * @param potentialOrganMatchesUnfiltered unfiltered organ matches list.
      */
     private static void filterUpperAge(String ageLower, String ageUpper,
-            ObservableList<Profile> potentialOrganMatches,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                       ObservableList<Profile> potentialOrganMatches,
+                                       ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         potentialOrganMatches.clear();
         for (Profile p : potentialOrganMatchesUnfiltered) {
             if (p.getAge() > Integer.parseInt(ageLower) && p.getAge() < Integer
@@ -630,12 +627,12 @@ public class AvailableOrgans {
     /**
      * Filters by the city.
      *
-     * @param donorProfile Current profile.
+     * @param donorProfile   Current profile.
      * @param sortedByRegion region list.
      * @return Regions.
      */
     private static SortedList<Profile> filterCity(Profile donorProfile,
-            SortedList<Profile> sortedByRegion) {
+                                                  SortedList<Profile> sortedByRegion) {
         return new SortedList<>(sortedByRegion,
                 (Profile profile1, Profile profile2) -> {
                     if (profile1.getCity().equals(donorProfile.getCityOfDeath()) && !profile2
@@ -653,12 +650,12 @@ public class AvailableOrgans {
     /**
      * Sorts list of profiles based on region.
      *
-     * @param donorProfile current donor profile.
+     * @param donorProfile    current donor profile.
      * @param sortedByCountry sorted list of profiles by country.
      * @return a sorted list of profiles.
      */
     private static SortedList<Profile> sortRegion(Profile donorProfile,
-            SortedList<Profile> sortedByCountry) {
+                                                  SortedList<Profile> sortedByCountry) {
         return new SortedList<>(sortedByCountry,
                 (Profile profile1, Profile profile2) -> {
                     if (profile1.getRegion().equals(donorProfile.getRegionOfDeath()) &&
@@ -676,12 +673,12 @@ public class AvailableOrgans {
     /**
      * Sorts by the country.
      *
-     * @param donorProfile current profile.
+     * @param donorProfile                    current profile.
      * @param potentialOrganMatchesUnfiltered unfiltered list of potential organ matches.
      * @return sorted list of profiles based on country.
      */
     private static SortedList<Profile> sortCountry(Profile donorProfile,
-            ObservableList<Profile> potentialOrganMatchesUnfiltered) {
+                                                   ObservableList<Profile> potentialOrganMatchesUnfiltered) {
         return new SortedList<>(potentialOrganMatchesUnfiltered,
                 (Profile profile1, Profile profile2) -> {
                     if (profile1.getCountry().equals(donorProfile.getCountryOfDeath()) &&
@@ -697,9 +694,10 @@ public class AvailableOrgans {
     }
 
     /**
-     * Get's a list of compatible blood types for organ donation
-     * @param bloodType the blood type of the donated organ
-     * @return a list of compatible blood type strings
+     * Get's a list of compatible blood types for organ donation.
+     *
+     * @param bloodType the blood type of the donated organ.
+     * @return a list of compatible blood type strings.
      */
     private static List<String> getCompatibleOrganBloodTypes(String bloodType) {
         List<String> compatibleTypes = new ArrayList<>();
@@ -727,6 +725,8 @@ public class AvailableOrgans {
             case "O":
                 compatibleTypes = BloodTypeEnum.toArrayList();
                 break;
+            default:
+                compatibleTypes = BloodTypeEnum.toArrayList();
         }
         return compatibleTypes;
     }
@@ -739,11 +739,10 @@ public class AvailableOrgans {
      * @throws SQLException error in sql.
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
-        List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
 
-        List<Profile> allDonaters = database.getDead();
-        for (Profile profile : allDonaters) {
+        List<Profile> allDonators = database.getDead();
+        for (Profile profile : allDonators) {
 
             for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
                 final List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
@@ -766,11 +765,11 @@ public class AvailableOrgans {
      * Adds the expired organs to the pair.
      *
      * @param profile profile with expired organs.
-     * @param organ Organ to check.
+     * @param organ   Organ to check.
      * @param expired list of expired organs.
      */
     private void addExpiredOrganToPair(Profile profile, OrganEnum organ,
-            List<ExpiredOrgan> expired) {
+                                       List<ExpiredOrgan> expired) {
         for (ExpiredOrgan expiredOrgan : expired) {
             if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
                 Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
@@ -790,8 +789,8 @@ public class AvailableOrgans {
         timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                view.availableOrgansTable.refresh();
-                view.potentialOrganMatchTable.refresh();
+                view.getAvailableOrgansTable().refresh();
+                view.getPotentialOrganMatchTable().refresh();
 
             }
         }, 0, COUNTDOWN_PERIOD);
@@ -799,7 +798,7 @@ public class AvailableOrgans {
         timer.schedule(new TimerTask() {
             public void run() {
                 List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(
-                        view.listOfAvailableOrgans);
+                        view.getListOfAvailableOrgans());
 
                 for (Map.Entry<Profile, OrganEnum> m : toRemove) {
                     checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
