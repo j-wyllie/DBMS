@@ -3,18 +3,28 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
@@ -22,6 +32,7 @@ import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.PopOver;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +51,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private static final String FULL_PREFERRED_NAME = "fullPreferredName";
     private static final Double LAT = -41.0;
     private static final Double LONG = 172.6362;
+    private static final Double HALF_SECOND = 0.5;
 
     private odms.controller.user.OrganMap controller = new odms.controller.user.OrganMap();
     private User currentUser;
@@ -66,9 +78,10 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private ClinicianProfile parentView;
     private PopOver popOver;
     private Boolean hasClickedMarker = false;
-    private Profile clickedProfile;
-    private Button matchBtn = new Button("Match");
+    private Profile currentReceiver;
+    private Profile currentDonor;
     private Button openProfileBtn = new Button("View Profile");
+    private Button matchBtn = new Button("Match");
 
     /**
      * Sets the current user and parent view.
@@ -100,13 +113,36 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 popOver = null;
             }
             if (hasClickedMarker) {
-                popOver = controller.createNewPopOver(clickedProfile);
+                popOver = controller.createNewPopOver(currentReceiver);
                 popOver.show(mapView.getParent(), event.getScreenX(), event.getScreenY());
                 hasClickedMarker = false;
             }
         });
+
         openProfileBtn.setOnAction(event -> createNewDonorWindow(donorListView.getSelectionModel()
                 .getSelectedItem(), parentView, currentUser));
+
+        matchBtn.setOnAction(event -> {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/UserScheduleProcedure.fxml"));
+
+            try {
+                Scene scene = new Scene(fxmlLoader.load());
+                ScheduleProcedure scheduleProcedure = fxmlLoader.getController();
+                scheduleProcedure.initialize(this);
+
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Schedule Procedure");
+                stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.centerOnScreen();
+                stage.show();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+
+        });
     }
 
     /**
@@ -145,7 +181,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         donorListView.setItems(donorsList);
         donorColumn.setCellValueFactory(new PropertyValueFactory<>(FULL_PREFERRED_NAME));
 
-        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.5));
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(HALF_SECOND));
         searchDonorsText.textProperty().addListener((observable, oldValue, newValue) -> {
             pauseTransition.setOnFinished(ae -> initListViews());
             pauseTransition.playFromStart();
@@ -157,6 +193,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 Profile selectedDonor = donorListView.getSelectionModel()
                         .getSelectedItem();
                 addDonorMarker(selectedDonor);
+                currentDonor = selectedDonor;
                 populateReceivers(selectedDonor);
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     donorListView.getSelectionModel().getSelectedItem() != null) {
@@ -242,7 +279,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         map.addUIEventHandler(marker, UIEventType.click,
                 jsObject -> {
                     hasClickedMarker = true;
-                    clickedProfile = profile;
+                    currentReceiver = profile;
                 });
 
         currentReceiverMarkers.add(marker);
@@ -293,12 +330,14 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
             map.addUIEventHandler(marker, UIEventType.click,
                     jsObject -> {
                         if (mapMarker.equals(DONOR_MARKER)) {
+                            currentDonor = profile;
                             populateReceivers(profile);
                             showAllReceivers();
                             clearDonorMarkers();
                         } else {
+                            currentReceiver = profile;
                             hasClickedMarker = true;
-                            clickedProfile = profile;
+                            currentReceiver = profile;
                         }
                     });
             map.addMarker(marker);
@@ -331,5 +370,13 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
     public Button getMatchBtn() {
         return matchBtn;
+    }
+
+    public Profile getCurrentReceiver() {
+        return currentReceiver;
+    }
+
+    public Profile getCurrentDonor() {
+        return currentDonor;
     }
 }

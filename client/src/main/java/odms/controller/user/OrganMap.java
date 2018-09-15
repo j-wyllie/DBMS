@@ -2,6 +2,8 @@ package odms.controller.user;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -27,6 +29,8 @@ import java.util.Set;
  */
 @Slf4j
 public class OrganMap extends CommonController {
+
+    private static final double VBOX_PADDING = 10.0;
 
     private odms.view.user.OrganMap view;
 
@@ -61,8 +65,9 @@ public class OrganMap extends CommonController {
     }
 
     /**
-     * Gets all of the dead donors according to a given search string
+     * Gets all of the dead donors according to a given search string.
      *
+     * @param searchString The string to search by
      * @return Observable list of dead donors.
      */
     public ObservableList<Profile> getDeadDonorsFiltered(String searchString) {
@@ -190,8 +195,12 @@ public class OrganMap extends CommonController {
      */
     private VBox createVbox(Profile profile) {
         Label lblName = new Label(profile.getFullPreferredName());
+        VBox vBox = new VBox(lblName, view.getOpenProfileBtn(), view.getMatchBtn());
+        vBox.setSpacing(VBOX_PADDING);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setPadding(new Insets(VBOX_PADDING));
 
-        return new VBox(lblName, view.getOpenProfileBtn(), view.getMatchBtn());
+        return vBox;
     }
 
     /**
