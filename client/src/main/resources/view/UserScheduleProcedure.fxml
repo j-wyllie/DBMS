@@ -1,120 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-
-<AnchorPane prefHeight="400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="odms.view.user.ScheduleProcedure">
-    <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0"
-              AnchorPane.topAnchor="-1.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="NEVER"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        </rowConstraints>
-        <GridPane GridPane.rowIndex="1">
-            <columnConstraints>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            </rowConstraints>
-            <Label text="Donor: " GridPane.halignment="LEFT">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <Label fx:id="donorNameLabel" text="Donor Name" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <Label text="Receiver: " GridPane.columnIndex="2" GridPane.halignment="LEFT">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <Label fx:id="receiverNameLabel" text="Receiver Name" GridPane.columnIndex="2"
-                   GridPane.halignment="LEFT" GridPane.rowIndex="1">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <CheckBox fx:id="donorEmailCheck" mnemonicParsing="false" text="Notify by email"
-                      GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </CheckBox>
-            <CheckBox fx:id="recieverEmailCheck" mnemonicParsing="false" text="Notify by email"
-                      GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT"
-                      GridPane.rowIndex="2">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </CheckBox>
-            <Label text="Organ:" GridPane.rowIndex="3">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <ChoiceBox fx:id="organDropdown" prefWidth="200.0" GridPane.columnIndex="1"
-                       GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
-            <Label text="Date:" GridPane.halignment="LEFT" GridPane.rowIndex="4">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <DatePicker fx:id="dateOfProcedurePicker" prefWidth="200.0" promptText="Date of procedure"
-                        GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER"
-                        GridPane.rowIndex="4"/>
-            <Label text="Location:" GridPane.halignment="LEFT" GridPane.rowIndex="5">
-                <GridPane.margin>
-                    <Insets left="10.0"/>
-                </GridPane.margin>
-            </Label>
-            <ChoiceBox prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
-                       GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
-            <Button fx:id="scheduleButton" mnemonicParsing="false" text="Schedule"
-                    GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="6">
-                <GridPane.margin>
-                    <Insets right="10.0"/>
-                </GridPane.margin>
-            </Button>
-        </GridPane>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-               stylesheets="@../styles/Common.css" text="Schedule Procedure" GridPane.columnSpan="2147483647"
-               GridPane.halignment="CENTER">
-            <styleClass>
-                <String fx:value="banner"/>
-                <String fx:value="banner-default"/>
-            </styleClass>
-            <GridPane.margin>
-                <Insets/>
-            </GridPane.margin>
-            <padding>
-                <Insets left="10.0" right="10.0"/>
-            </padding>
-        </Label>
-    </GridPane>
+<AnchorPane prefHeight="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ScheduleProcedure">
+   <children>
+       <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+           <columnConstraints>
+               <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="NEVER" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+          <children>
+              <GridPane GridPane.rowIndex="1">
+                  <columnConstraints>
+                      <ColumnConstraints hgrow="NEVER" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="NEVER" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                 <children>
+                     <Label text="Donor: " GridPane.halignment="LEFT">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <Label fx:id="donorNameLabel" text="Donor Name" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <Label text="Receiver: " GridPane.columnIndex="2" GridPane.halignment="LEFT">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <Label fx:id="receiverNameLabel" text="Receiver Name" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <CheckBox fx:id="donorEmailCheck" mnemonicParsing="false" text="Notify by email" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </CheckBox>
+                     <CheckBox fx:id="recieverEmailCheck" mnemonicParsing="false" text="Notify by email" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </CheckBox>
+                     <Label text="Organ:" GridPane.rowIndex="3">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <ChoiceBox fx:id="organDropdown" prefWidth="250.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                     <Label text="Date:" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <DatePicker fx:id="dateOfProcedurePicker" prefWidth="250.0" promptText="Date of procedure" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                     <Label text="Location:" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                         <GridPane.margin>
+                             <Insets left="10.0" />
+                         </GridPane.margin>
+                     </Label>
+                     <ChoiceBox prefWidth="250.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                     <Button fx:id="scheduleButton" mnemonicParsing="false" text="Schedule" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+                         <GridPane.margin>
+                             <Insets right="10.0" />
+                         </GridPane.margin>
+                     </Button>
+                 </children>
+              </GridPane>
+              <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" text="Schedule Procedure" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+                  <styleClass>
+                      <String fx:value="banner" />
+                      <String fx:value="banner-default" />
+                  </styleClass>
+                  <GridPane.margin>
+                      <Insets />
+                  </GridPane.margin>
+                  <padding>
+                      <Insets left="10.0" right="10.0" />
+                  </padding>
+              </Label>
+          </children>
+       </GridPane>
+   </children>
 </AnchorPane>
