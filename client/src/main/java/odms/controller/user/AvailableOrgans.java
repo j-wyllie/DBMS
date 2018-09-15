@@ -11,11 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
@@ -27,6 +29,7 @@ import odms.controller.database.profile.ProfileDAO;
 /**
  * Controller for the available organs tab.
  */
+@Slf4j
 public class AvailableOrgans {
 
     private static final long ONE_SECOND = 1000;
@@ -191,7 +194,7 @@ public class AvailableOrgans {
         try {
             expiredList = DAOFactory.getOrganDao().getExpired(profile);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         for (ExpiredOrgan currentOrgan : expiredList) {
             if (currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())) {
@@ -450,11 +453,8 @@ public class AvailableOrgans {
      * @return A list of potential organ matches
      */
     public static ObservableList<Profile> getSuitableRecipientsSorted(OrganEnum organAvailable,
-            Profile donorProfile,
-            ObservableList checkedBloodTypes, ObservableList checkedRegions,
-            String ageLower, String ageUpper, boolean ageRangeChecked) {
-        // sort by longest wait time first,
-        // then weight by closest location to where the donor profiles region of death
+            Profile donorProfile, OrganEnum selectedOrgan) {
+        // sort by longest wait time first, then weight by closest location to where the donor profiles region of death
         ObservableList<Profile> potentialOrganMatches = FXCollections.observableArrayList();
         ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
                 .observableArrayList();
@@ -739,7 +739,7 @@ public class AvailableOrgans {
      * @throws SQLException error in sql.
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
-        donaters = new ArrayList<>();
+        List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonaters = database.getDead();

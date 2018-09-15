@@ -8,6 +8,7 @@ import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
 import static odms.view.user.Search.numeric_Validation;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import odms.commons.model.enums.BloodTypeEnum;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
@@ -34,6 +36,7 @@ import org.controlsfx.control.CheckComboBox;
 /**
  * Available organs view.
  */
+@Slf4j
 public class AvailableOrgans extends CommonView {
 
     // Matches table
@@ -214,7 +217,7 @@ public class AvailableOrgans extends CommonView {
         try {
             setAvailableOrgansList();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Map.Entry<Profile, OrganEnum>> comparator = (o1, o2) -> {

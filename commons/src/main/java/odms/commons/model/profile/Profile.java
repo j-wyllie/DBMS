@@ -1,6 +1,5 @@
 package odms.commons.model.profile;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -20,9 +19,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 public class Profile implements Comparable<Profile> {
 
-    //TODO do we want regions as enum? Or stored somewhere else at least
-    //TODO merge must have taken all the old useless methods need to get rid of them
-    public List<String> regionsNZ = Arrays
+    private List<String> regionsNZ = Arrays
             .asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay",
                     "Taranaki", "Manawatu-Wanganui", "Wellington", "Tasman", "Nelson",
                     "Marlborough", "West Coast", "Canterbury", "Otago", "Southland");
@@ -64,7 +61,6 @@ public class Profile implements Comparable<Profile> {
     private String alcoholConsumption;
     private Integer bloodPressureSystolic;
     private Integer bloodPressureDiastolic;
-    private HashSet<String> chronicDiseases = new HashSet<>();
 
     private List<String> updateActions = new ArrayList<>();
 
@@ -176,7 +172,6 @@ public class Profile implements Comparable<Profile> {
     }
 
 
-
     public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker,
@@ -261,8 +256,9 @@ public class Profile implements Comparable<Profile> {
     private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
         String value = null;
+
         if (!parts[1].equals(null)) {
-            value = parts[1].replace("\"", ""); // get rid of the speech marks;
+            value = parts[1].replace("\"", "");
         }
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
@@ -330,15 +326,12 @@ public class Profile implements Comparable<Profile> {
             }
             setCountry(value);
         } else if (attrName.equals(Attribute.REGION.getText())) {
-            if (getCountry() != null) {
-                if (getCountry().toLowerCase().equals(CountriesEnum.NZ.getName().toLowerCase())
-                        ||
-                        getCountry().toLowerCase()
-                        .equals(CountriesEnum.NZ.toString().toLowerCase())) {
-                    if (!regionsNZ.contains(value.toString())) {
-                        throw new IllegalArgumentException("Must be a region within New Zealand");
-                    }
-                }
+            if (getCountry() != null && !regionsNZ.contains(value) &&
+                    (getCountry().equalsIgnoreCase(CountriesEnum.NZ.getName().toLowerCase()) ||
+                            getCountry()
+                                    .equalsIgnoreCase(CountriesEnum.NZ.toString().toLowerCase()))) {
+
+                throw new IllegalArgumentException("Must be a region within New Zealand");
             }
             setRegion(value);
         } else if (attrName.equals(Attribute.NHI.getText())) {
@@ -402,7 +395,6 @@ public class Profile implements Comparable<Profile> {
         this.previousProcedures = previous;
     }
 
-    // TODO abstract printing method to console tools
     public String getAttributesSummary() {
         String summary = "";
         summary = summary + ("nhi=" + nhi);
@@ -467,8 +459,8 @@ public class Profile implements Comparable<Profile> {
             }
             this.addOrganDonating(organ);
 
-            History action = new History("profile ", this.getId(),"set",organ.getNamePlain(),
-                    -1,LocalDateTime.now());
+            History action = new History("profile ", this.getId(), "set", organ.getNamePlain(),
+                    -1, LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
     }
@@ -478,7 +470,7 @@ public class Profile implements Comparable<Profile> {
      *
      * @param organ the organ the profile requires
      */
-    public void addOrganRequired(OrganEnum organ) {//TODO Error Check
+    public void addOrganRequired(OrganEnum organ) {
         this.setReceiver(true);
         this.organsRequired.add(organ);
     }
@@ -488,19 +480,19 @@ public class Profile implements Comparable<Profile> {
      *
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(HashSet<OrganEnum> organs) {
+    public void addOrgansRequired(Set<OrganEnum> organs) {
         generateUpdateInfo("organsRequired");
 
         for (OrganEnum organ : organs) {
             addOrganRequired(organ);
             LocalDateTime now = LocalDateTime.now();
-            History action = new History("profile", this.getId(),"required organ",
-                    ""+organ.getNamePlain(),-1,now);
+            History action = new History("profile", this.getId(), "required organ",
+                    "" + organ.getNamePlain(), -1, now);
             CurrentHistory.updateHistory(action);
         }
     }
 
-    public HashSet<OrganEnum> getOrgansRequired() {
+    public Set<OrganEnum> getOrgansRequired() {
         return organsRequired;
     }
 
@@ -535,7 +527,7 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
-    public HashSet<OrganEnum> getOrgansReceived() {
+    public Set<OrganEnum> getOrgansReceived() {
         return organsReceived;
     }
 
@@ -614,7 +606,7 @@ public class Profile implements Comparable<Profile> {
      *
      * @return profile age
      */
-    public int calculateAge() {
+    private int calculateAge() {
         if (dateOfDeath == null) {
             return Period.between(dateOfBirth, LocalDate.now()).getYears();
         } else {
@@ -652,24 +644,21 @@ public class Profile implements Comparable<Profile> {
         return medicationTimestamps;
     }
 
-    public HashSet<OrganEnum> getOrgansDonated() {
+    public Set<OrganEnum> getOrgansDonated() {
         return organsDonated;
     }
 
-    public HashSet<OrganEnum> getOrgansDonating() {
+    public Set<OrganEnum> getOrgansDonating() {
         return organsDonating;
     }
 
-    public HashSet<OrganEnum> getOrgansDonatingNotExpired() {
-        //TODO implement
-        return organsDonating;
+    public Set<OrganEnum> getOrgansDonatingNotExpired() {
+        return getOrgansDonating();
     }
 
-    public HashSet<OrganEnum> getOrgansExpired() {
+    public Set<OrganEnum> getOrgansExpired() {
         return organsExpired;
     }
-
-    // Condition functions
 
     /**
      * Gets all the current conditions of the user
@@ -863,10 +852,6 @@ public class Profile implements Comparable<Profile> {
 
     public void setDonor(Boolean donor) {
         this.donor = donor;
-    }
-
-    public Boolean getReceiver() {
-        return receiver;
     }
 
     public Integer getId() {
@@ -1128,15 +1113,21 @@ public class Profile implements Comparable<Profile> {
     }
 
     public LocalDateTime getOrganDate(String name) {
-        for(Organ o: organTimeStamps) {
-            if(o.getOrganEnum().getName().equals(name)) {
+        for (Organ o : organTimeStamps) {
+            if (o.getOrganEnum().getName().equals(name)) {
                 return o.getDate();
             }
         }
         return null;
     }
 
-    public void setOrganDate(String organDate, LocalDateTime date) {
-        organTimeStamps.add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-","_")), date));
+    public HashSet<Organ> getOrganTimeStamps() {
+        return organTimeStamps;
     }
+
+    public void setOrganDate(String organDate, LocalDateTime date) {
+        organTimeStamps
+                .add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-", "_")), date));
+    }
+
 }

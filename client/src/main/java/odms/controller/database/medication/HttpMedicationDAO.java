@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 
+@Slf4j
 public class HttpMedicationDAO implements MedicationDAO {
 
     @Override
@@ -36,7 +38,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -48,7 +50,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -64,7 +66,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         try {
             request.patch();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -76,11 +78,11 @@ public class HttpMedicationDAO implements MedicationDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         List<Drug> drugs = new ArrayList<>();
-        if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+        if (response != null && response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 drugs.add(gson.fromJson(result, Drug.class));
             }
