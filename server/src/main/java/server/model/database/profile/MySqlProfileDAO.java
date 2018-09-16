@@ -12,17 +12,16 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
@@ -869,16 +868,25 @@ public class MySqlProfileDAO implements ProfileDAO {
      * Get list of receivers that could be recipients of a selected organ.
      *
      * @param organ type of organ that is being donated
-     * @param bloodType blood type recipient needs to have
+     * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType,
-            Integer lowerAgeRange, Integer upperAgeRange) {
-        organ = organ.replace("-", " ");
-        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
+    public List<Profile> getOrganReceivers(String organ, String bloodTypes,
+                                           Integer lowerAgeRange, Integer upperAgeRange) {
+        List<String> blood = Arrays.asList(bloodTypes.split("\\s*,\\s*"));
+        StringBuilder bloodQuery = new StringBuilder("");
+        for (int i = 0; i < blood.size(); i++) {
+            if (i != blood.size() - 1) {
+                bloodQuery.append("?,");
+            } else {
+                bloodQuery.append("?");
+            }
+        }
+
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType in ("+ bloodQuery.toString() +") AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
                 + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
@@ -886,22 +894,30 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-        try {
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = instance.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, bloodType);
-            stmt.setInt(2, lowerAgeRange);
-            stmt.setInt(3, upperAgeRange);
-            stmt.setString(4, organ);
-            stmt.setString(5, organ);
-            ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                Profile profile = parseProfile(result);
-                receivers.add(profile);
+            int count = 1;
+            for (String type : blood) {
+                stmt.setString(count, type);
+                count++;
             }
-            conn.close();
-            stmt.close();
+            stmt.setInt(count, lowerAgeRange);
+            count++;
+            stmt.setInt(count, upperAgeRange);
+            count++;
+            stmt.setString(count, organ.toString());
+            count++;
+            stmt.setString(count, organ.toString());
+
+            System.out.println(stmt.toString());
+
+            try (ResultSet result = stmt.executeQuery()) {
+                while (result.next()) {
+                    Profile profile = parseProfile(result);
+                    receivers.add(profile);
+                }
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

@@ -127,12 +127,12 @@ public interface ProfileDAO {
     /**
      * Get list of receivers that could be recipients of a selected organ.
      * @param organ type of organ that is being donated
-     * @param bloodType blood type recipient needs to have
+     * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
-    List<Profile> getOrganReceivers(String organ, String bloodType,
+    List<Profile> getOrganReceivers(String organ, String bloodTypes,
             Integer lowerAgeRange, Integer upperAgeRange);
 
     /**

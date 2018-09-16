@@ -202,7 +202,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 addReceiverMarker(selectedReceiver);
             } else if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     receiverListView.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(donorListView.getSelectionModel()
+                createNewDonorWindow(receiverListView.getSelectionModel()
                         .getSelectedItem(), parentView, currentUser);
             }
         });

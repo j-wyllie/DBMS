@@ -11,6 +11,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -456,8 +457,6 @@ public class AvailableOrgans {
         ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
                 .observableArrayList();
 
-        List<Profile> receivingProfiles;
-
         String organBloodType = donorProfile.getBloodType();
         Integer minAge;
         Integer maxAge;
@@ -472,21 +471,11 @@ public class AvailableOrgans {
             maxAge = donorProfile.getAge() + 15;
         }
 
-        // Initialize this profiles by getting the profiles with matching blood types.
-        receivingProfiles = DAOFactory.getProfileDao()
-            .getOrganReceivers(organAvailable.getName(), organBloodType, minAge, maxAge);
-
-        // Get the compatible donation blood types then retrieve any profiles that match.
         List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
-        for (String bloodType : compatibleBloodTypes) {
-            // Don't need to get the original blood type again.
-            if (!bloodType.equals(organBloodType)) {
-                receivingProfiles.addAll(DAOFactory.getProfileDao()
-                        .getOrganReceivers(organAvailable.getName(), bloodType, minAge, maxAge));
-            }
-        }
+        String bloodTypes = StringUtils.join(compatibleBloodTypes, ',');
 
-        potentialOrganMatchesUnfiltered.addAll(receivingProfiles);
+        potentialOrganMatchesUnfiltered.addAll(DAOFactory.getProfileDao()
+                .getOrganReceivers(organAvailable.getName(), bloodTypes, minAge, maxAge));
         SortedList<Profile> sortedByCountry = sortCountry(donorProfile,
                 potentialOrganMatchesUnfiltered);
 
@@ -509,6 +498,43 @@ public class AvailableOrgans {
                 potentialOrganMatchesUnfiltered);
 
         return potentialOrganMatches;
+    }
+
+    /**
+     * Returns list of donors who meet the are able to receive the organ.
+     *
+     * @param organAvailable the organ up for donation
+     * @param donorProfile the donor profile
+     * @return the list of profiles that match this organ donation
+     */
+    public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
+        ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
+                .observableArrayList();
+
+        String organBloodType = donorProfile.getBloodType();
+
+        Integer minAge;
+        Integer maxAge;
+
+        if (donorProfile.getAge() >= 12) {
+            minAge = donorProfile.getAge() - 15;
+
+            if (minAge < 12) {
+                minAge = 12;
+            }
+            maxAge = donorProfile.getAge() + 15;
+        } else {
+            minAge = 0;
+            maxAge = 12;
+        }
+
+        List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
+        String bloodTypes = StringUtils.join(compatibleBloodTypes, ',');
+
+        potentialOrganMatchesUnfiltered.addAll(DAOFactory.getProfileDao()
+                .getOrganReceivers(organAvailable.getName(), bloodTypes, minAge, maxAge));
+
+        return potentialOrganMatchesUnfiltered;
     }
 
     /**

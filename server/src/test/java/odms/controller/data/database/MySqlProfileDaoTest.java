@@ -129,7 +129,7 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         MySqlOrganDAO mySqlOrganDAO = new MySqlOrganDAO();
         mySqlOrganDAO.addRequired(newProfile, OrganEnum.BONE);
         assertEquals(testProfileLong0.getFullName(), mySqlProfileDAO.getOrganReceivers(
-                "Bone", "O-", 12, 42).get(0).getFullName());
+                "Bone", "B+", 12, 42).get(0).getFullName());
     }
 
     @Ignore

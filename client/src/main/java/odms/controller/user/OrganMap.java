@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
@@ -104,7 +105,7 @@ public class OrganMap extends CommonController {
 
         for (OrganEnum organ : donatingOrgans) {
             receivingProfiles.addAll(AvailableOrgans
-                    .getSuitableRecipientsSorted(organ, donatingProfile, organ));
+                    .getSuitableRecipients(organ, donatingProfile));
         }
 
         return FXCollections.observableArrayList(receivingProfiles);

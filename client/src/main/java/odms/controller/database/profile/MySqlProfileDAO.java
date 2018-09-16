@@ -28,6 +28,7 @@ import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class MySqlProfileDAO implements ProfileDAO {
@@ -828,15 +829,15 @@ public class MySqlProfileDAO implements ProfileDAO {
      * Get list of receivers that could be recipients of a selected organ.
      *
      * @param organ type of organ that is being donated
-     * @param bloodType blood type recipient needs to have
+     * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType,
-            Integer lowerAgeRange, Integer upperAgeRange) {
-        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
+    public List<Profile> getOrganReceivers(String organ, String bloodTypes,
+                                           Integer lowerAgeRange, Integer upperAgeRange) {
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType in ? AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
                 + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
@@ -847,7 +848,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, bloodType.toString());
+            stmt.setString(1, bloodTypes);
             stmt.setInt(2, lowerAgeRange);
             stmt.setInt(3, upperAgeRange);
             stmt.setString(4, organ.toString());
