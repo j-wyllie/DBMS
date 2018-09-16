@@ -244,7 +244,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 jsObject -> {
                     populateReceivers(profile);
                     showAllReceivers();
-                    clearDonorMarkers();
                 });
 
         currentDonorMarkers.add(marker);
@@ -281,9 +280,18 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Shows all the donors on the map.
      */
     public void showAllDonors() {
-        map.removeMarkers(currentDonorMarkers);
-        currentDonorMarkers.clear();
+        clearDonorMarkers();
+        clearReceiverMarkers();
         showAllOnMap(donorsList, DONOR_MARKER);
+    }
+
+    /**
+     * Adds a marker on the map for each receiver.
+     */
+    public void showAllReceivers() {
+        clearDonorMarkers();
+        clearReceiverMarkers();
+        showAllOnMap(receiversList, RECEIVER_MARKER);
     }
 
     /**
@@ -295,13 +303,11 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     }
 
     /**
-     * Adds a marker on the map for each receiver.
+     * Removes all the receiver markers currently on the map.
      */
-    public void showAllReceivers() {
+    private void clearReceiverMarkers() {
         map.removeMarkers(currentReceiverMarkers);
         currentReceiverMarkers.clear();
-        showAllOnMap(receiversList, RECEIVER_MARKER);
-
     }
 
     /**
@@ -329,7 +335,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                         } else {
                             currentReceiver = profile;
                             hasClickedMarker = true;
-                            currentReceiver = profile;
                         }
                     });
             map.addMarker(marker);
