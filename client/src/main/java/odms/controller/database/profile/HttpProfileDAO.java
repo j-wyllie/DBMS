@@ -157,11 +157,11 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodTypes,
+    public List<Profile> getOrganReceivers(String organs, String bloodTypes,
            Integer lowerAgeRange, Integer upperAgeRange) {
         String url = "http://localhost:6969/api/v1/profiles/receivers";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
+        queryParams.put("organs", organs);
         queryParams.put("bloodTypes", bloodTypes.replace("+", "%2B"));
         queryParams.put("lowerAgeRange", lowerAgeRange);
         queryParams.put("upperAgeRange", upperAgeRange);

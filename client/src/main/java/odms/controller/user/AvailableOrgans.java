@@ -503,11 +503,11 @@ public class AvailableOrgans {
     /**
      * Returns list of donors who meet the are able to receive the organ.
      *
-     * @param organAvailable the organ up for donation
+     * @param organsAvailable the organs up for donation
      * @param donorProfile the donor profile
      * @return the list of profiles that match this organ donation
      */
-    public static ObservableList<Profile> getSuitableRecipients(OrganEnum organAvailable, Profile donorProfile) {
+    public static ObservableList<Profile> getSuitableRecipients(Set<OrganEnum> organsAvailable, Profile donorProfile) {
         ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
                 .observableArrayList();
 
@@ -531,8 +531,20 @@ public class AvailableOrgans {
         List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
         String bloodTypes = StringUtils.join(compatibleBloodTypes, ',');
 
+        StringBuilder organs = new StringBuilder("");
+        int count = 1;
+        for (OrganEnum o : organsAvailable) {
+            if (count == organsAvailable.size()) {
+                organs.append(o.getName());
+            } else {
+                organs.append(o.getName());
+                organs.append(",");
+            }
+            count++;
+        }
+
         potentialOrganMatchesUnfiltered.addAll(DAOFactory.getProfileDao()
-                .getOrganReceivers(organAvailable.getName(), bloodTypes, minAge, maxAge));
+                .getOrganReceivers(organs.toString(), bloodTypes, minAge, maxAge));
 
         return potentialOrganMatchesUnfiltered;
     }

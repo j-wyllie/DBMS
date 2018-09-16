@@ -867,14 +867,14 @@ public class MySqlProfileDAO implements ProfileDAO {
     /**
      * Get list of receivers that could be recipients of a selected organ.
      *
-     * @param organ type of organ that is being donated
+     * @param organs type of organ that is being donated
      * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodTypes,
+    public List<Profile> getOrganReceivers(String organs, String bloodTypes,
                                            Integer lowerAgeRange, Integer upperAgeRange) {
         List<String> blood = Arrays.asList(bloodTypes.split("\\s*,\\s*"));
         StringBuilder bloodQuery = new StringBuilder("");
@@ -886,11 +886,21 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
         }
 
+        List<String> orgs = Arrays.asList(organs.split("\\s*,\\s*"));
+        StringBuilder organQuery = new StringBuilder("");
+        for (int i = 0; i < orgs.size(); i++) {
+            if (i != orgs.size() - 1) {
+                organQuery.append("?,");
+            } else {
+                organQuery.append("?");
+            }
+        }
+
         String query = "SELECT p.* FROM profiles p WHERE p.BloodType in ("+ bloodQuery.toString() +") AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
-                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
-                + "o.Required) = ?;";
+                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ in (" +
+                organQuery.toString() + ") AND o.Required GROUP BY o.ProfileId) in (" + organQuery.toString() + ")";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
@@ -906,9 +916,16 @@ public class MySqlProfileDAO implements ProfileDAO {
             count++;
             stmt.setInt(count, upperAgeRange);
             count++;
-            stmt.setString(count, organ.toString());
-            count++;
-            stmt.setString(count, organ.toString());
+
+            for (String type : orgs) {
+                stmt.setString(count, type);
+                count++;
+            }
+
+            for (String type : orgs) {
+                stmt.setString(count, type);
+                count++;
+            }
 
             try (ResultSet result = stmt.executeQuery()) {
                 while (result.next()) {

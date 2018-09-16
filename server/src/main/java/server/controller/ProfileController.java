@@ -57,13 +57,12 @@ public class ProfileController {
                 String searchString = req.queryParams("searchString");
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
-            } else if (req.queryMap().hasKey("organ")) {
-                String organ = req.queryParams("organ");
+            } else if (req.queryMap().hasKey("organs")) {
+                String organs = req.queryParams("organs");
                 String bloodTypes = req.queryParams("bloodTypes");
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
                 Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
-;
-                List<Profile> result = database.getOrganReceivers(organ, bloodTypes,
+                List<Profile> result = database.getOrganReceivers(organs, bloodTypes,
                         lowerAgeRange, upperAgeRange);
                 profiles = gson.toJson(result);
             } else {
