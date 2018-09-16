@@ -801,7 +801,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query =
                 "SELECT DISTINCT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE "
                         +
-                        "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
+                        "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -831,9 +831,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getDeadFiltered(String searchString) throws SQLException {
 
-        String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
-                "PreferredName IS NOT NULL AND ((CONCAT(GivenNames, PreferredName, LastNames) LIKE ?) OR (CONCAT(GivenNames, LastNames) LIKE ?)) " +
-                "AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
+        String query = "SELECT * FROM profiles JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
+                "CONCAT(GivenNames, LastNames) LIKE ? AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
         Connection conn = connectionInstance.getConnection();
@@ -841,7 +840,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                 ResultSet.CONCUR_READ_ONLY);
 
         stmt.setString(1, "%" + searchString + "%");
-        stmt.setString(2, "%" + searchString + "%");
 
         System.out.println(stmt);
 
