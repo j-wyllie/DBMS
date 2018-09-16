@@ -7,11 +7,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 /**
@@ -22,6 +25,7 @@ public class ScheduleProcedure extends CommonView {
 
     private odms.controller.user.ScheduleProcedure controller;
     private ObservableList<OrganEnum> organsToDonate = FXCollections.observableArrayList();
+    private ObservableList<Hospital> hospitals = FXCollections.observableArrayList();
 
     private Profile donor;
     private Profile receiver;
@@ -32,6 +36,8 @@ public class ScheduleProcedure extends CommonView {
     private Label receiverNameLabel;
     @FXML
     private ChoiceBox<OrganEnum> organDropdown;
+    @FXML
+    private ChoiceBox<Hospital> locationDropdown;
     @FXML
     private DatePicker dateOfProcedurePicker;
     @FXML
@@ -49,6 +55,7 @@ public class ScheduleProcedure extends CommonView {
         this.receiver = parentView.getCurrentReceiver();
         setLabels();
         setOrganDropdown();
+        setLocationDropdown();
     }
 
     /**
@@ -68,6 +75,33 @@ public class ScheduleProcedure extends CommonView {
         organsToDonate.addAll(controller.getDonatingOrgans());
         organDropdown.setItems(organsToDonate);
         organDropdown.setValue(organsToDonate.get(0));
+    }
+
+    /**
+     * Populates the location dropdown with hospitals from the database.
+     *
+     */
+    private void setLocationDropdown() {
+        try {
+            hospitals.addAll(controller.getHospitals());
+            locationDropdown.setItems(hospitals);
+            locationDropdown.setValue(hospitals.get(0));
+            locationDropdown.setConverter(new StringConverter<Hospital>() {
+                @Override
+                public String toString(Hospital object) {
+                    return object.getName();
+                }
+
+                @Override
+                public Hospital fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+            log.error(e.getMessage());
+        }
     }
 
     /**

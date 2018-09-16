@@ -1,9 +1,13 @@
 package odms.controller.user;
 
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.locations.HospitalDAO;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,8 +45,8 @@ public class ScheduleProcedure extends CommonController {
     }
 
     /**
-     *
      * Schedules the organ donation between the two profiles.
+     *
      * @throws IllegalArgumentException When data is incorrectly entered.
      */
     public void scheduleProcedure() {
@@ -55,5 +59,16 @@ public class ScheduleProcedure extends CommonController {
         if (date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Date can not be before today");
         }
+    }
+
+    /**
+     * Gets a list of hospitals from the database.
+     *
+     * @return the list of hospitals
+     * @throws SQLException When an SQL error occurs
+     */
+    public List<Hospital> getHospitals() throws SQLException {
+        HospitalDAO database = DAOFactory.getHospitalDAO();
+        return database.getAll();
     }
 }
