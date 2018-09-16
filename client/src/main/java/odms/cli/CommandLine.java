@@ -109,8 +109,8 @@ public class CommandLine implements Runnable {
 
             ParsedLine parsedInput = reader.getParser().parse(input, 0);
 
-            if (parsedInput.word().toLowerCase().equals("exit") ||
-                    parsedInput.word().toLowerCase().equals("quit")) {
+            if (parsedInput.word().equalsIgnoreCase("exit") ||
+                    parsedInput.word().equalsIgnoreCase("quit")) {
                 exit = true;
             } else {
                 reader.getHighlighter();

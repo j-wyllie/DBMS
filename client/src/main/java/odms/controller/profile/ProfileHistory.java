@@ -12,7 +12,7 @@
 //    public String getHistory() {
 //        String history = ProfileDataIO.getHistory();
 //        history = history.replace(",", " ").replace("]", "")
-//                .replace("[", "").replace("\\u003d", "=");
+//                .replace("[", "").replace("\\u003d", '=');
 //        String[] histories = history.split("\"");
 //
 //        String historyDisplay = "";

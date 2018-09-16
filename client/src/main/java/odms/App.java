@@ -11,7 +11,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        CurrentHistory.currentSessionHistory.add(null);
+        CurrentHistory.getCurrentSessionHistory() .add(null);
         try {
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);
@@ -22,6 +22,8 @@ public class App {
                         CommandLine commandLine = new CommandLine();
                         commandLine.initialiseConsole();
                         break;
+                    default:
+                        // noop
                 }
             }
         } catch (Exception e) {

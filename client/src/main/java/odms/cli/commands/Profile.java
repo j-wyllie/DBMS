@@ -92,7 +92,7 @@ public class Profile extends CommandUtils {
         if (profileList.size() > 0) {
             for (odms.commons.model.profile.Profile profile : profileList) {
                 database.remove(profile);
-                CurrentHistory.deletedProfiles.add(profile);
+                CurrentHistory.getDeletedProfiles().add(profile);
                 CurrentHistory.updateHistory(
                         new odms.commons.model.history.History("profile", profile.getId(),
                                 "deleted", "", -1, LocalDateTime.now()));
@@ -171,7 +171,7 @@ public class Profile extends CommandUtils {
     private static List<odms.commons.model.profile.Profile> search(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
         List<odms.commons.model.profile.Profile> profiles = new ArrayList<>();
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+        if (expression.lastIndexOf('=') == expression.indexOf('=')) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
@@ -198,7 +198,7 @@ public class Profile extends CommandUtils {
      */
     private static odms.commons.model.profile.Profile get(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+        if (expression.lastIndexOf('=') == expression.indexOf('=')) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
