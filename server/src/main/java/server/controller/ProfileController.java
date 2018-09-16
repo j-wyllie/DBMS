@@ -344,7 +344,7 @@ public class ProfileController {
 
         if (valid) {
             try {
-                int token = AuthenticationController.authenticateProfile(database.get(username).getId());
+                long token = Middleware.authenticateProfile(database.get(username).getId());
                 response.type("application/json");
                 response.status(200);
                 return gson.toJson(token);

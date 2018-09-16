@@ -203,7 +203,7 @@ public class UserController {
 
         if (valid) {
             try {
-                int token = AuthenticationController.authenticateUser(
+                long token = Middleware.authenticateUser(
                         database.get(username).getStaffID());
                 res.type("application/json");
                 res.status(200);
