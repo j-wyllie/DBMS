@@ -4,18 +4,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
+import odms.controller.DateTimePicker;
 import odms.view.CommonView;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * The view for scheduling an organ donation.
@@ -39,7 +39,7 @@ public class ScheduleProcedure extends CommonView {
     @FXML
     private ChoiceBox<Hospital> locationDropdown;
     @FXML
-    private DatePicker dateOfProcedurePicker;
+    private DateTimePicker dateOfProcedurePicker;
     @FXML
     private Label errorLabel;
 
@@ -130,7 +130,7 @@ public class ScheduleProcedure extends CommonView {
         return receiver;
     }
 
-    public LocalDate getDatePickerValue() {
-        return dateOfProcedurePicker.getValue();
+    public LocalDateTime getDatePickerValue() {
+        return dateOfProcedurePicker.getDateTimeValue();
     }
 }

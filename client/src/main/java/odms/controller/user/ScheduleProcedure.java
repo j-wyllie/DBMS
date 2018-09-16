@@ -8,7 +8,7 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,13 +50,13 @@ public class ScheduleProcedure extends CommonController {
      * @throws IllegalArgumentException When data is incorrectly entered.
      */
     public void scheduleProcedure() {
-        LocalDate date = view.getDatePickerValue();
+        LocalDateTime date = view.getDatePickerValue();
 
         if (date == null) {
             throw new IllegalArgumentException("A valid date must be entered");
         }
 
-        if (date.isBefore(LocalDate.now())) {
+        if (date.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Date can not be before today");
         }
     }
