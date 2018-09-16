@@ -182,14 +182,17 @@ public class UserController {
      * Checks the credentials of a user logging in.
      * @param req request containing the username and password.
      * @param res response from the server.
-     * @return String containg successful user validation.
+     * @return String containing successful user validation.
      */
     public static String checkCredentials(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
+        Gson gson = new Gson();
         Boolean valid;
 
+        String username = req.queryParams("username");
+        String password = req.queryParams("password");
         try {
-            valid = database.checkCredentials(req.queryParams("username"), req.queryParams("password"));
+            valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
             res.status(400);
             return e.getMessage();
@@ -199,12 +202,19 @@ public class UserController {
         }
 
         if (valid) {
-            res.type("application/json");
-            res.status(200);
+            try {
+                int token = AuthenticationController.authenticateUser(
+                        database.get(username).getStaffID());
+                res.type("application/json");
+                res.status(200);
+                return gson.toJson(token);
+            } catch (Exception e) {
+                res.status(500);
+                return e.getMessage();
+            }
         } else {
             res.status(404);
+            return "Error.";
         }
-
-        return "User validated.";
     }
 }

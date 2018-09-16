@@ -326,12 +326,14 @@ public class ProfileController {
      * @return String displaying success of validation.
      */
     public static String checkCredentials(Request request, Response response) {
-        ProfileDAO profileDAO = DAOFactory.getProfileDao();
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
         Boolean valid;
 
+        String username = request.queryParams("username");
+        String password = request.queryParams("password");
         try {
-            valid = profileDAO.checkCredentials(request.queryParams("username"),
-                    request.queryParams("password"));
+            valid = database.checkCredentials(username, password);
         } catch (SQLException e) {
             response.status(500);
             return e.getMessage();
@@ -341,13 +343,19 @@ public class ProfileController {
         }
 
         if (valid) {
-            response.type("application/json");
-            response.status(200);
+            try {
+                int token = AuthenticationController.authenticateProfile(database.get(username).getId());
+                response.type("application/json");
+                response.status(200);
+                return gson.toJson(token);
+            } catch (SQLException e) {
+                response.status(500);
+                return e.getMessage();
+            }
         } else {
             response.status(404);
+            return "Error.";
         }
-
-        return "User validated.";
     }
 
     /**
