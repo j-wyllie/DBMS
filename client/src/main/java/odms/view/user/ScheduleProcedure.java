@@ -111,12 +111,14 @@ public class ScheduleProcedure extends CommonView {
     @FXML
     private void scheduleProcedure() {
         try {
+            log.error("Clicked");
             controller.scheduleProcedure();
             Stage stage = (Stage) donorNameLabel.getScene().getWindow();
             stage.close();
         } catch (IllegalArgumentException e) {
             errorLabel.setText(e.getMessage());
             errorLabel.setVisible(true);
+
             log.error(e.getMessage());
         }
 
@@ -132,5 +134,13 @@ public class ScheduleProcedure extends CommonView {
 
     public LocalDateTime getDatePickerValue() {
         return dateOfProcedurePicker.getDateTimeValue();
+    }
+
+    public Hospital getSelectedHospital() {
+        return locationDropdown.getValue();
+    }
+
+    public OrganEnum getSelectedOrgan() {
+        return organDropdown.getValue();
     }
 }

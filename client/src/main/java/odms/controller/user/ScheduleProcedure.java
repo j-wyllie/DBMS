@@ -2,10 +2,12 @@ package odms.controller.user;
 
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
+import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
+import odms.controller.database.procedure.ProcedureDAO;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -50,16 +52,51 @@ public class ScheduleProcedure extends CommonController {
      * @throws IllegalArgumentException When data is incorrectly entered.
      */
     public void scheduleProcedure() {
-        LocalDateTime date = view.getDatePickerValue();
+        LocalDateTime dateTime = view.getDatePickerValue();
+        OrganEnum organ = view.getSelectedOrgan();
+        Hospital hospital = view.getSelectedHospital();
+        Profile donor = view.getDonor();
+        Profile receiver = view.getReceiver();
+        ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
 
-        if (date == null) {
-            throw new IllegalArgumentException("A valid date must be entered");
+        if (dateTime == null || organ == null || hospital == null) {
+            throw new IllegalArgumentException("All values must be entered");
         }
 
-        if (date.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Date can not be before today");
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Date can not be before the current time");
         }
+
+        Procedure procedure = new Procedure(
+                generateSummary(), dateTime, generateDescription(), organ);
+        procedureDAO.add(donor, procedure);
+        procedureDAO.add(receiver, procedure);
     }
+
+    /**
+     * Generates a summary for the procedure.
+     *
+     * @return the summary string
+     */
+    private String generateSummary() {
+        OrganEnum organ = view.getSelectedOrgan();
+        return organ.getName() + " donation";
+    }
+
+    /**
+     * Generates a description for the procedure.
+     *
+     * @return the description string
+     */
+    private String generateDescription() {
+        Profile donor = view.getDonor();
+        Profile receiver = view.getReceiver();
+        OrganEnum organ = view.getSelectedOrgan();
+
+        return donor.getFullName() + " is donating their " +
+            organ.getName() + " to " + receiver.getFullName() + ".";
+    }
+
 
     /**
      * Gets a list of hospitals from the database.

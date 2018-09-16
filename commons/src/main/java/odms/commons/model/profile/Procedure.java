@@ -1,6 +1,7 @@
 package odms.commons.model.profile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.enums.OrganEnum;
@@ -15,6 +16,7 @@ public class Procedure {
     private Integer procedureId;
     private String summary;
     private LocalDate date;
+    private LocalDateTime dateTime;
     private String longDescription;
     private List<OrganEnum> organsAffected = new ArrayList<>();
     private String affectsOrgansText = "Affects Donations";
@@ -46,6 +48,20 @@ public class Procedure {
         this.organsAffected = new ArrayList<>(organs);
     }
 
+    /**
+     * Constructor to be used when matching an organ donor and a receiver.
+     *
+     * @param summary A summary of the procedure
+     * @param dateTime The time of the procedure
+     * @param longDescription A description of the procedure
+     * @param organ The organ that is being transplanted
+     */
+    public Procedure(String summary, LocalDateTime dateTime, String longDescription, OrganEnum organ) {
+        this.summary = summary;
+        this.dateTime = dateTime;
+        this.longDescription = longDescription;
+        this.organsAffected.add(organ);
+    }
 
     public Procedure(String summary, LocalDate date) {
         this(summary, date, "");
@@ -122,5 +138,9 @@ public class Procedure {
 
     public void setId(Integer id) {
         this.procedureId = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 }

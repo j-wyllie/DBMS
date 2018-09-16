@@ -3,19 +3,13 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -119,8 +113,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
             }
         });
 
-        openProfileBtn.setOnAction(event -> createNewDonorWindow(donorListView.getSelectionModel()
-                .getSelectedItem(), parentView, currentUser));
+        openProfileBtn.setOnAction(event -> createNewDonorWindow(currentReceiver, parentView, currentUser));
 
         matchBtn.setOnAction(event -> {
             FXMLLoader fxmlLoader = new FXMLLoader();

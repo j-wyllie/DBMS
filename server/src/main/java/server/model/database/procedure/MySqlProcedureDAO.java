@@ -1,11 +1,6 @@
 package server.model.database.procedure;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,12 +78,17 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(1, profile);
             stmt.setString(2, procedure.getSummary());
             stmt.setString(3, procedure.getLongDescription());
-            stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            if (LocalDate.now().isBefore(procedure.getDate())) {
-                stmt.setInt(5, 1);
-            } else {
+            if (procedure.getDateTime() != null) {
+                stmt.setTimestamp(4, Timestamp.valueOf(procedure.getDateTime()));
                 stmt.setInt(5, 0);
+            } else {
+                stmt.setDate(4, Date.valueOf(procedure.getDate()));
+                if (LocalDate.now().isBefore(procedure.getDate())) {
+                    stmt.setInt(5, 1);
+                } else {
+                    stmt.setInt(5, 0);
+                }
             }
 
             //todo: return and update procedure id.

@@ -102,7 +102,7 @@
                     <Insets right="10.0"/>
                 </GridPane.margin>
             </ChoiceBox>
-            <Button fx:id="scheduleButton" mnemonicParsing="false" onAction="#scheduleProcedure" text="Schedule"
+            <Button mnemonicParsing="false" onAction="#scheduleProcedure" text="Schedule"
                     GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT"
                     GridPane.rowIndex="6">
                 <GridPane.margin>
@@ -110,7 +110,11 @@
                 </GridPane.margin>
             </Button>
             <Label fx:id="errorLabel" maxWidth="1.7976931348623157E308" text="Error Message" textFill="#f70202"
-                   visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+                   visible="false" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                <GridPane.margin>
+                    <Insets left="10.0"/>
+                </GridPane.margin>
+            </Label>
         </GridPane>
         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                stylesheets="@../styles/Common.css" text="Schedule Procedure" GridPane.columnSpan="2147483647"
