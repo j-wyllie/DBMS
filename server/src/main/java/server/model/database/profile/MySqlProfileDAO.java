@@ -910,8 +910,6 @@ public class MySqlProfileDAO implements ProfileDAO {
             count++;
             stmt.setString(count, organ.toString());
 
-            System.out.println(stmt.toString());
-
             try (ResultSet result = stmt.executeQuery()) {
                 while (result.next()) {
                     Profile profile = parseProfile(result);
