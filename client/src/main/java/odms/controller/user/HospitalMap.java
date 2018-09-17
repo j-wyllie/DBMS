@@ -1,18 +1,22 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MVCArray;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import javafx.scene.shape.SVGPath;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class HospitalMap {
+
     private odms.view.user.HospitalMap view;
 
     public void setView(odms.view.user.HospitalMap v) {
@@ -35,9 +39,8 @@ public class HospitalMap {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(hospitalLocation);
         markerOptions.label(hospital.getId().toString());
-        Marker marker = new Marker(markerOptions);
 
-        return marker;
+        return new Marker(markerOptions);
     }
 
     /**
@@ -52,9 +55,8 @@ public class HospitalMap {
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
         infoWindowOptions.content(hospital.getName() + "\n" +
                 "Services offered: " + hospital.getPrograms());
-        InfoWindow infoWindow = new InfoWindow(infoWindowOptions);
 
-        return infoWindow;
+        return new InfoWindow(infoWindowOptions);
     }
 
     /**
@@ -101,9 +103,7 @@ public class HospitalMap {
         MVCArray pointsOnMap = new MVCArray(coordinatesList);
         PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap).strokeColor("blue").strokeWeight(2);
 
-        Polyline helicopterRoute = new Polyline(polyOpts);
-
-        return helicopterRoute;
+        return new Polyline(polyOpts);
     }
 
     public List<Hospital> getHospitals() {

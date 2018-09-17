@@ -1,41 +1,53 @@
 package odms.view.user;
 
+import static odms.controller.user.AvailableOrgans.msToStandard;
+
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.service.directions.*;
+import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.service.directions.DirectionStatus;
+import com.lynden.gmapsfx.service.directions.DirectionsLeg;
+import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
+import com.lynden.gmapsfx.service.directions.DirectionsRequest;
+import com.lynden.gmapsfx.service.directions.DirectionsResult;
+import com.lynden.gmapsfx.service.directions.DirectionsService;
+import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
+import com.lynden.gmapsfx.service.directions.TravelModes;
 import com.lynden.gmapsfx.shapes.Polyline;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import netscape.javascript.JSObject;
-import odms.commons.model.locations.Hospital;
-import odms.commons.model.user.User;
-
-import javafx.event.ActionEvent;
-import odms.data.GoogleDistanceMatrix;
-import odms.view.profile.OrganOverride;
-
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
+import netscape.javascript.JSObject;
+import odms.commons.model.locations.Hospital;
+import odms.commons.model.user.User;
+import odms.data.GoogleDistanceMatrix;
 
-import static odms.controller.user.AvailableOrgans.msToStandard;
-
-
+@Slf4j
 public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
 
     private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap();
@@ -155,8 +167,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private void createRouteBetweenHospitals(Hospital origin, Hospital destination) {
         final double HELICOPTER_SPEED_KMH = 222;
 
-        // clearRoutesAndSelection();
-
         boolean isCarTrip = false;
         if (travelMethod.getSelectionModel().getSelectedItem().equals("Car")) {
             isCarTrip = true;
@@ -199,7 +209,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             // Using the google distance matrix API
             time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(hospitalSelected1, hospitalSelected2));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Invalid duration for travel, duration set to string: 'NA' ");
+            log.error(e.getMessage(), e);
             time = "NA";
         }
 
@@ -221,7 +232,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             double durationNumber = (Double.parseDouble(duration) * 1000);
             duration = msToStandard((long) durationNumber);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to parse travel duration, must not be applicable");
+            log.error(e.getMessage(), e);
         }
 
         String travel = travelMethodGiven + " journey between " + hospital1.getName() + " and " + hospital2.getName() + ":\n" +
@@ -232,7 +244,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @FXML
     public void handleAddHospitalMarker(ActionEvent event) {
 
-        // TEMPORARY, used for testing, just adds a random hospital created here to the map
+        // TEMPORARY, used for testing, just adds random hospitals created here to the map
 
 //        Hospital hospitalTest = new Hospital("HospitalTest1", -39.07, 174.05, null, 10);
 //        Hospital hospitalTest2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 13);
@@ -261,7 +273,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             stage.setOnHiding(ob -> populateHospitals());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to populate hospitals");
+            log.error(e.getMessage(), e);
         }
 
     }
@@ -277,9 +290,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         markers.add(marker);
         InfoWindow infoWindow = controller.createHospitalInfoWindow(hospital);
 
-        map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) -> {
-            infoWindow.open(map, marker);
-        });
+        map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) ->
+                infoWindow.open(map, marker)
+        );
 
 
         map.addUIEventHandler(marker, UIEventType.click, (JSObject obj) -> {
@@ -298,11 +311,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                     createRouteBetweenHospitals(hospitalSelected1, hospitalSelected2);
                 }
             }
-
-            System.out.println("HospitalSelectedOne: " + hospitalSelected1.getId());
-            System.out.println("HospitalSelectedTwo: " + hospitalSelected2.getId());
-
         });
+
+        log.error("Hospital selected one: " + hospitalSelected1.getId());
+        log.error("Hospital selected two: " + hospitalSelected2.getId());
 
         map.addMarker(marker);
     }
