@@ -1,5 +1,6 @@
 package odms.view;
 
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import odms.controller.WebViewCell;
+import com.google.api.client.auth.oauth.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,8 +20,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SocialFeedTab {
     @FXML
@@ -60,10 +65,36 @@ public class SocialFeedTab {
     private void getTweets() {
         try {
             URL url = new URL(
-                    "https://api.twitter.com/1.1/search/tweets.json?q=humanfarm&result_type=recent");
+                    "https://api.twitter.com/1.1/search/tweets.json?q=%23humanfarm&result_type=recent");
+            URL url2 = new URL(
+                    "https://api.twitter.com/oauth2/token");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            HttpURLConnection con2 = (HttpURLConnection) url2.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization","OAuth oauth_consumer_key=\"Xb4pAluzJ0KjfN7npvkX0J0yf\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"1536440321\",oauth_nonce=\"oPXGuVQFN90\",oauth_version=\"1.0\",oauth_signature=\"iBiwE07i%2BQYkJR6rFdciXGLCJPA%3D\"");
+            con2.setRequestMethod("POST");
+            con2.setDoOutput(true);
+            try {
+                String s = Base64.encodeBase64String("Xb4pAluzJ0KjfN7npvkX0J0yf:Nkj95xtQMbrwgkvWUiWaQzX59T0LrepBG3iYZPbRBhxeAM6htL".getBytes());
+                con2.setRequestProperty("Authorization", "Basic WGI0cEFsdXpKMEtqZk43bnB2a1gwSjB5ZjpOa2o5NXh0UU1icndna3ZXVWlXYVF6WDU5VDBMcmVwQkczaVlaUGJSQmh4ZUFNNmh0TA==");
+                con2.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                con2.setRequestProperty("Content-Length", Integer.toString("grant_type=client_credentials".length()));
+                con2.getOutputStream().write("grant_type=client_credentials".getBytes("UTF8"));
+                con2.getOutputStream().flush();
+                con2.getOutputStream().close();
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con2.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                String s2 = content.toString();
+                s2 = s2.substring(s2.indexOf("token\":\"")+8,s2.indexOf("\"}"));
+                con.setRequestProperty("Authorization", "Bearer "+s2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -81,6 +112,7 @@ public class SocialFeedTab {
             }
             in.close();
             con.disconnect();
+            con2.disconnect();
             tweetList = FXCollections.observableArrayList(ids);
             tweetTable.setItems(tweetList);
         } catch (MalformedURLException e) {
