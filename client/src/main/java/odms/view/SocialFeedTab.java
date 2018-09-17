@@ -9,8 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import odms.controller.WebViewCell;
 import com.google.api.client.auth.oauth.*;
 
@@ -27,6 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 public class SocialFeedTab {
+
     @FXML
     TableView tweetTable;
     @FXML
@@ -52,7 +51,6 @@ public class SocialFeedTab {
 
     /**
      * Handles the action for the refresh button to refresh the table
-     * @param event
      */
     @FXML
     private void handleRefreshButtonClicked(ActionEvent event) {
@@ -105,9 +103,9 @@ public class SocialFeedTab {
             }
             String s = content.toString();
             String[] strings = s.split(",");
-            for(int i=0; i <= strings.length - 1; i++) {
-                if(strings[i].contains("\"id\":") && !strings[i].contains("user")) {
-                    ids.add(strings[i].replace("\"id\":",""));
+            for (int i = 0; i <= strings.length - 1; i++) {
+                if (strings[i].contains("\"id\":") && !strings[i].contains("user")) {
+                    ids.add(strings[i].replace("\"id\":", ""));
                 }
             }
             in.close();
@@ -117,7 +115,7 @@ public class SocialFeedTab {
             tweetTable.setItems(tweetList);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

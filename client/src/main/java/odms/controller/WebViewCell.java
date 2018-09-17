@@ -7,25 +7,26 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
 public class WebViewCell<S> extends TableCell<S, String> {
+
     private final WebView webView;
 
     public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-        return param -> new WebViewCell();
+        return param -> new WebViewCell<>();
     }
 
     public WebViewCell() {
         this.webView = new WebView();
+        webView.setMinWidth(999);
         webView.setDisable(true);
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, new WebViewCellHandler());
-
     }
 
     @Override
     public void updateItem(String item, boolean empty) {
-        if(!empty && !item.equals(null)) {
-            webView.setPrefSize(500,180);
+        if (!empty) {
+            webView.setPrefSize(500, 180);
             String html = "<html lang=\"en\">\n"
-                    + "<div id=\"tweet\" tweetID=\""+item+"\"></div>\n"
+                    + "<div id=\"tweet\" tweetID=\"" + item + "\"></div>\n"
                     + "\n"
                     + "\n"
                     + "<script sync src=\"https://platform.twitter.com/widgets.js\"></script>\n"
@@ -43,7 +44,8 @@ public class WebViewCell<S> extends TableCell<S, String> {
                     + "                conversation : 'none',\n"
                     + "                cards        : 'hidden',\n"
                     + "                linkColor    : '#cc0000',\n"
-                    + "                theme        : 'light'\n"
+                    + "                theme        : 'light',\n"
+                    + "                align        : 'center'\n"
                     + "            })\n"
                     + "        .then (function (el) {\n"
                     + "            el.contentDocument.querySelector(\".footer\").style.display = \"none\";\n"
@@ -56,6 +58,7 @@ public class WebViewCell<S> extends TableCell<S, String> {
             webView.getEngine().loadContent(html);
             setGraphic(webView);
         }
+
     }
 
 }
