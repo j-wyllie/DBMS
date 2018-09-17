@@ -1,6 +1,6 @@
 package odms.view;
 
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import odms.controller.WebViewCell;
-import com.google.api.client.auth.oauth.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,11 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class SocialFeedTab {
 
@@ -72,7 +67,6 @@ public class SocialFeedTab {
             con2.setRequestMethod("POST");
             con2.setDoOutput(true);
             try {
-                String s = Base64.encodeBase64String("Xb4pAluzJ0KjfN7npvkX0J0yf:Nkj95xtQMbrwgkvWUiWaQzX59T0LrepBG3iYZPbRBhxeAM6htL".getBytes());
                 con2.setRequestProperty("Authorization", "Basic WGI0cEFsdXpKMEtqZk43bnB2a1gwSjB5ZjpOa2o5NXh0UU1icndna3ZXVWlXYVF6WDU5VDBMcmVwQkczaVlaUGJSQmh4ZUFNNmh0TA==");
                 con2.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
