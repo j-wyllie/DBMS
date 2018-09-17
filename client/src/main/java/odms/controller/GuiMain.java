@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
@@ -20,6 +21,7 @@ import java.util.Map;
 /**
  * Main class. GUI boots from here.
  */
+@Slf4j
 public class GuiMain extends Application {
 
     private static final String APP_NAME = "ODMS";
@@ -42,26 +44,26 @@ public class GuiMain extends Application {
         } catch (UserNotFoundException e) {
             createDefaultAdmin();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         try {
             DAOFactory.getUserDao().get(CLINICIAN);
         } catch (UserNotFoundException e) {
             createDefaultClinician();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
-        //thread that runs in the background to check if organs have expired since last launch
+        // Thread that runs in the background to check if organs have expired since last launch
         Thread checkOrgan = new Thread(() -> {
             try {
                 List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
                         .getAllOrgansAvailable();
                 for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                    controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                    controller.checkOrganExpired(m.getValue(), m.getKey());
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         });
         checkOrgan.setDaemon(true);
@@ -85,7 +87,7 @@ public class GuiMain extends Application {
             admin.setDefault(true);
             DAOFactory.getUserDao().add(admin);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -100,7 +102,7 @@ public class GuiMain extends Application {
             clinician.setDefault(true);
             DAOFactory.getUserDao().add(clinician);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -112,6 +114,4 @@ public class GuiMain extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }

@@ -8,12 +8,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.commons.model.profile.Condition;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.condition.ConditionDAO;
 import odms.view.CommonView;
 
+@Slf4j
 public class ConditionAdd extends CommonView {
     private static Profile searchedDonor;
     private static ProfileMedicalHistory parent;
@@ -48,7 +47,7 @@ public class ConditionAdd extends CommonView {
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             warningLabel.setVisible(true);
         }
     }

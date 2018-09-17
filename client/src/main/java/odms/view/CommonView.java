@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.profile.Display;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 /**
  * Contains common methods between the views.
  */
+@Slf4j
 public class CommonView {
     private static boolean isEdited = false;
 
@@ -71,8 +73,7 @@ public class CommonView {
             stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -92,7 +93,7 @@ public class CommonView {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -309,7 +310,7 @@ public class CommonView {
                 parentView.closeStage(stage);
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

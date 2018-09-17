@@ -8,11 +8,13 @@ import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
+import lombok.extern.slf4j.Slf4j;
 import server.controller.*;
 
 /**
  * Main entry point for server application.
  */
+@Slf4j
 public class Server {
     private static Integer port = 6969;
 
@@ -28,20 +30,13 @@ public class Server {
      * @param args parameters for application
      */
     public static void main (String[] args) {
-        System.out.println("Server is alive!");
-        System.out.println("Listening on port: " + port);
+        log.info("Server is alive!");
+        log.info("Listening on port: " + port);
 
-        for (String arg : args) {
-            arg = arg.toLowerCase();
-            switch (arg) {
-                case "-port":
-                    System.out.println("Example to set a custom port.");
-            }
-        }
         port(port);
         initExceptionHandler((e) -> {
-            System.out.println("Server init failed");
-            System.out.println(e.getMessage());
+            log.error("Server init failed");
+            log.error(e.getMessage(), e);
         });
         initRoutes();
     }
@@ -152,14 +147,15 @@ public class Server {
                 patch("", CountriesController::edit);
             });
 
-            // hospitals api endpoints.
-            path("/hospitals", () -> {
-                get("/all", HospitalController::getAll);
-                get("", HospitalController::get);
+    // hospitals api endpoints.
+path("/hospitals", () -> {
+    get("/all", HospitalController::getAll) ;
+
+        get("", HospitalController::get);
                 post("", HospitalController::create);
-                patch("", HospitalController::edit);
-                delete("", HospitalController::delete);
-            });
+        patch("", HospitalController::edit);
+        delete("", HospitalController::delete);
+        });
         });
     }
 }

@@ -24,4 +24,11 @@ public class ConsoleTab {
         controller.setupConsole(commandGUI);
     }
 
+    public void captureInput() {
+        controller.setupConsole(commandGUI);
+    }
+
+    public void stopInputCapture() {
+        controller.stopInputCapture();
+    }
 }

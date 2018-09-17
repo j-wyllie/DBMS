@@ -2,6 +2,7 @@ package odms.cli.commands;
 
 import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandUtils;
 import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import odms.controller.user.UserNotFoundException;
 
+@Slf4j
 public class User extends CommandUtils {
 
     /**
@@ -75,7 +77,7 @@ public class User extends CommandUtils {
             try {
                 database.remove(user);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         } else {
             System.out.println(searchNotFoundText);
@@ -158,17 +160,17 @@ public class User extends CommandUtils {
      */
     private static List<odms.commons.model.user.User> search(String expression, String type) {
         // Depending what type of user, the length to skip will change accordingly
-        Integer lengthToSkip = 10;   //for clinician
+        int lengthToSkip = 10;   //for clinician
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
 
         UserDAO database = DAOFactory.getUserDao();
         List<odms.commons.model.user.User> user = new ArrayList<>();
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
+        String attr = expression.substring(expression.indexOf('\"') + 1,
+                expression.lastIndexOf('\"'));
         try {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            if (expression.lastIndexOf('=') == expression.indexOf('=')) {
                 if (expression.substring(lengthToSkip, lengthToSkip + "name".length())
                         .equals("name")) {
                     user = database.search(attr);
@@ -182,7 +184,7 @@ public class User extends CommandUtils {
                 System.out.println(searchErrorText);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return user;
     }
@@ -203,10 +205,10 @@ public class User extends CommandUtils {
 
         UserDAO database = DAOFactory.getUserDao();
         odms.commons.model.user.User user;
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
+        String attr = expression.substring(expression.indexOf('\"') + 1,
+                expression.lastIndexOf('\"'));
         try {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            if (expression.lastIndexOf('=') == expression.indexOf('=')) {
                 if (expression.substring(lengthToSkip, lengthToSkip + "username".length())
                         .equals("username")) {
                     user = database.get(attr);
@@ -218,7 +220,7 @@ public class User extends CommandUtils {
                 System.out.println(searchErrorText);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } catch (UserNotFoundException e) {
             System.out.println("user not found");
         }

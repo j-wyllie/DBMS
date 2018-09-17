@@ -10,10 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains methods to obtain a connection the database, as well as setting db config.
  */
+@Slf4j
 public final class DatabaseConnection {
 
     private static DataSource connectionSource;
@@ -54,7 +56,7 @@ public final class DatabaseConnection {
             try {
                 source.setDriverClass(driver);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             source.setJdbcUrl(host + '/' + database);
             source.setUser(username);
@@ -65,7 +67,7 @@ public final class DatabaseConnection {
 
             connectionSource = source;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -78,7 +80,7 @@ public final class DatabaseConnection {
         try {
             prop.load(ClassLoader.class.getResourceAsStream(TEST_CONFIG));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         // set config string
@@ -92,7 +94,7 @@ public final class DatabaseConnection {
         try {
             source.setDriverClass(driver);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         source.setJdbcUrl(host + '/' + database);
         source.setUser(username);
@@ -166,7 +168,7 @@ public final class DatabaseConnection {
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

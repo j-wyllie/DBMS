@@ -14,9 +14,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.enums.OrganEnum;
 
+@Slf4j
 public class ProcedureAdd {
 
     private static ProceduresDisplay parentView;
@@ -52,7 +54,7 @@ public class ProcedureAdd {
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             warningLabel.setVisible(true);
         }
     }

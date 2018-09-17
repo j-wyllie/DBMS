@@ -179,7 +179,8 @@ public class UserGeneral {
                 if (count == 0) {
                     checkBox.setSelected(checkBox.isSelected());
                     countriesEnum.setValid(!countriesEnum.getValid());
-                    countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
+                    countriesEnumObservableList
+                            .set(tableCell.getTableRow().getIndex(), countriesEnum);
                 }
 
                 server.update(countriesEnum,
@@ -188,7 +189,8 @@ public class UserGeneral {
 
             checkBox.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.SPACE) {
-                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow().getItem());
+                    CountriesEnum countriesEnum = ((CountriesEnum) tableCell.getTableRow()
+                            .getItem());
                     checkBox.setSelected(!countriesEnum.getValid());
                 }
             });
@@ -201,6 +203,7 @@ public class UserGeneral {
 
     /**
      * Initializes all of the labels and checks the user type.
+     *
      * @param currentUser The current user logged in.
      */
     public void initialize(User currentUser) {

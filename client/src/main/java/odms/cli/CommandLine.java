@@ -1,6 +1,7 @@
 package odms.cli;
 
 import java.sql.SQLException;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
 import odms.cli.commands.Profile;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 import static odms.cli.CommandUtils.validateCommandType;
 
+@Slf4j
 public class CommandLine implements Runnable {
 
     private ProfileDAO profileDatabase;
@@ -53,7 +55,7 @@ public class CommandLine implements Runnable {
                     .build();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -80,7 +82,7 @@ public class CommandLine implements Runnable {
                     .build();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -107,15 +109,15 @@ public class CommandLine implements Runnable {
 
             ParsedLine parsedInput = reader.getParser().parse(input, 0);
 
-            if (parsedInput.word().toLowerCase().equals("exit") ||
-                    parsedInput.word().toLowerCase().equals("quit")) {
+            if (parsedInput.word().equalsIgnoreCase("exit") ||
+                    parsedInput.word().equalsIgnoreCase("quit")) {
                 exit = true;
             } else {
                 reader.getHighlighter();
                 try {
                     processInput(new ArrayList<>(parsedInput.words()), input);
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
 
