@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>odms-server</artifactId>
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.2</version>
     <name>Organ Donor Management System Server</name>
     <url>https://eng-git.canterbury.ac.nz/seng302-2018/team-200</url>
 
     <parent>
         <artifactId>odms</artifactId>
         <groupId>odms</groupId>
-        <version>0.6</version>
+        <version>0.7</version>
     </parent>
 
     <properties>

@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Request {
 
     private String urlString;
@@ -126,13 +128,13 @@ public class Request {
         for (int i = 0; i < queryParams.size(); i++) {
             String key = (String) keys[i];
             if (i == 0) {
-                urlString += ("?" + key + "=" + queryParams.get(key));
+                urlString += ("?" + key + '=' + queryParams.get(key));
             }
             else {
-                urlString += ("&" + key + "=" + queryParams.get(key));
+                urlString += ("&" + key + '=' + queryParams.get(key));
             }
         }
-        System.out.println(urlString);
+        log.info(urlString);
         return urlString;
     }
 

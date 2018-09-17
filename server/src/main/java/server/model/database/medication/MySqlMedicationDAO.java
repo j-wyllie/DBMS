@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Drug;
 import server.model.database.DatabaseConnection;
 
+@Slf4j
 public class MySqlMedicationDAO implements MedicationDAO {
 
     /**
@@ -39,7 +41,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return result;
@@ -82,7 +84,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -106,7 +108,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -134,7 +136,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

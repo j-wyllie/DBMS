@@ -16,11 +16,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 
+@Slf4j
 public class OrganExpired extends OrganCommon {
 
     private ObservableList<ExpiredOrgan> observableExpiredOrganList =
@@ -57,7 +59,7 @@ public class OrganExpired extends OrganCommon {
         try {
             organs = controller.getExpiredOrgans(profile);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         observableExpiredOrganList.addAll(organs);
 
@@ -130,7 +132,7 @@ public class OrganExpired extends OrganCommon {
             stage.setOnHiding(ob -> refreshTableView());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -141,7 +143,7 @@ public class OrganExpired extends OrganCommon {
         try {
             organs = controller.getExpiredOrgans(currentProfile);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         observableExpiredOrganList.clear();
         observableExpiredOrganList.addAll(organs);

@@ -8,10 +8,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Validates addresses against the google places api.
  */
+@Slf4j
 public final class AddressIO {
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/";
@@ -44,8 +46,8 @@ public final class AddressIO {
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Invalid Address");
+            log.error("Invalid Address");
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -82,13 +84,9 @@ public final class AddressIO {
      */
     public static boolean checkValidCity(String address, String city, String country) {
         try {
-            System.out.println(address);
             if (address != null) {
                 String[] components = address.split(",");
                 JsonObject jsonString = getGeocodeLocation(address.replace(",", "+"), country.replace(" ", "+"));
-                System.out.println(components[1]);
-                System.out.println(jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(1).getAsJsonObject().toString());
                 return (jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
                         "address_components").get(0).getAsJsonObject().toString()
                         .contains("locality") && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
@@ -122,12 +120,10 @@ public final class AddressIO {
                 "&components=country:" + country + "&key=" + key;
         URL url = new URL(query);
         URLConnection request = url.openConnection();
-        System.out.println(query.toString());
         request.connect();
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
         JsonObject rootobj = root.getAsJsonObject();
         return rootobj;
     }
-
 }

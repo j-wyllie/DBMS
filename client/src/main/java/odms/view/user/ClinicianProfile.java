@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,22 +18,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import odms.commons.model.enums.OrganEnum;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
-import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
 import odms.controller.user.Display;
 import odms.view.CommonView;
 import odms.view.SocialFeedTab;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 /**
  * Handles all of the tabs for the user profile view.
  */
+@Slf4j
 public class ClinicianProfile extends CommonView {
     private User currentUser;
 
@@ -66,6 +63,8 @@ public class ClinicianProfile extends CommonView {
     private Display userProfileController = new Display(this);
 
     private TransplantWaitingList transplantWaitingList;
+
+    private AvailableOrgans availableOrgansTabView;
 
     /**
      * Scene change to log in view.
@@ -106,10 +105,17 @@ public class ClinicianProfile extends CommonView {
         try {
             consoleTab.setContent(loader.load());
             ConsoleTab console = loader.getController();
-            // don't initialize as it will double print.
+            consoleTab.setOnSelectionChanged(event -> {
+                if (!consoleTab.isSelected()) {
+                    console.stopInputCapture();
+                } else {
+                    console.captureInput();
+                }
+            });
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
+
     }
 
     /**
@@ -123,9 +129,7 @@ public class ClinicianProfile extends CommonView {
             UsersList listUsersView = loader.getController();
             listUsersView.initialize((Stage) clinicianFullName.getScene().getWindow());
         } catch (IOException e) {
-            e.printStackTrace();
-
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -141,7 +145,7 @@ public class ClinicianProfile extends CommonView {
                 UserGeneral userGeneralTabView = loader.getController();
                 userGeneralTabView.initialize(currentUser);
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -157,23 +161,32 @@ public class ClinicianProfile extends CommonView {
             DataManagement userDataManagementTabView = loader.getController();
             userDataManagementTabView.initialize(currentUser);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
     /**
      * Initializes the controller for available organs.
+     * Adds onSelectionChange listeners to the tab to pause and commence the timers.
      */
     public void handleTabAvailableClicked() {
         setTransplantWaitingListNull();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserAvailableOrgansTab.fxml"));
         try {
             availableOrgansTab.setContent(loader.load());
-            AvailableOrgans availableOrgansTabView = loader.getController();
+            availableOrgansTabView = loader.getController();
             availableOrgansTabView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
+
+        availableOrgansTab.setOnSelectionChanged(event -> {
+            if (!availableOrgansTab.isSelected()) {
+                availableOrgansTabView.pauseTimers();
+            } else {
+                availableOrgansTabView.startTimers();
+            }
+        });
     }
 
     @FXML
@@ -237,7 +250,7 @@ public class ClinicianProfile extends CommonView {
             try {
                 setProfileImage();
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -257,7 +270,7 @@ public class ClinicianProfile extends CommonView {
             Search userSearchView = loader.getController();
             userSearchView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -272,7 +285,7 @@ public class ClinicianProfile extends CommonView {
             transplantWaitingList = userTransplantWaitingListTabView;
             userTransplantWaitingListTabView.initialize(currentUser, this);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -280,8 +293,8 @@ public class ClinicianProfile extends CommonView {
      * Adds a profile stage from the open stage list.
      * @param s the stage to add
      */
-    public boolean addToOpenProfileStages(Stage s) {
-        return userProfileController.addToOpenProfileStages(s);
+    public void addToOpenProfileStages(Stage s) {
+        userProfileController.addToOpenProfileStages(s);
     }
 
     /**

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -18,6 +19,7 @@ import server.model.database.PasswordUtilities;
 /**
  * Handles all of the database queries to do with the /users endpoint.
  */
+@Slf4j
 public class MySqlUserDAO implements UserDAO {
 
     /**
@@ -42,7 +44,7 @@ public class MySqlUserDAO implements UserDAO {
                 allUsers.add(user);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -133,7 +135,7 @@ public class MySqlUserDAO implements UserDAO {
         } catch (SQLException e) {
             throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -233,7 +235,7 @@ public class MySqlUserDAO implements UserDAO {
                 return !result.next();
             }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -260,7 +262,7 @@ public class MySqlUserDAO implements UserDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -295,7 +297,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setInt(10, user.getStaffID());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();

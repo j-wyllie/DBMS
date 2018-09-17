@@ -3,6 +3,7 @@ package odms.controller.profile;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
@@ -11,6 +12,7 @@ import odms.controller.database.DAOFactory;
 /**
  * Controller class for the organ display view.
  */
+@Slf4j
 public class OrganDisplay extends CommonController {
 
     private final odms.view.profile.OrganDisplay view;
@@ -40,10 +42,10 @@ public class OrganDisplay extends CommonController {
             List<Map.Entry<Profile, OrganEnum>> availableOrgans =
                     controller.getAllOrgansAvailable();
             for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                controller.checkOrganExpired(m.getValue(), m.getKey(), m);
+                controller.checkOrganExpired(m.getValue(), m.getKey());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return profile;

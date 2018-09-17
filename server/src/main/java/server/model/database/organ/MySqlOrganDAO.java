@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.ExpiredOrgan;
 import server.model.database.DatabaseConnection;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 
+@Slf4j
 public class MySqlOrganDAO implements OrganDAO {
 
     /**
@@ -76,7 +78,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return allOrgans;
@@ -132,7 +134,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -201,7 +203,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -235,7 +237,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -313,7 +315,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -397,7 +399,7 @@ public class MySqlOrganDAO implements OrganDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return allOrgans;
 
