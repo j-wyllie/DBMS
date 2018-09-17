@@ -17,12 +17,12 @@ public class GoogleDistanceMatrix {
 
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&";
 
-    public double getDuration(Hospital origin, Hospital destination) throws IOException {
+    public double getDuration(Double originLat, Double originLong, Double destinationLat, Double destinationLong) throws IOException {
 
         String apiKey = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
-        URL url = new URL(BASE_URL + "origins=" + origin.getLatitude() + "," + origin.getLongitude() + "&destinations=" +
-                destination.getLatitude() + "," + destination.getLongitude() + "&key=" + apiKey);
+        URL url = new URL(BASE_URL + "origins=" + originLat + "," + originLong + "&destinations=" +
+                destinationLat + "," + destinationLong + "&key=" + apiKey);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
         request.setConnectTimeout(2000);
         request.setReadTimeout(2000);

@@ -37,7 +37,7 @@ public class HospitalMapTest {
 
     @Ignore
     public void testCreateHelicopterRoute() {
-        Polyline route = controller.createHelicopterRoute(hospital1, hospital2);
+        Polyline route = controller.createHelicopterRoute(hospital1.getLatitude(), hospital1.getLongitude(), hospital2.getLatitude(), hospital2.getLongitude());
         assertEquals(2, route.getPath().getLength());
         assertEquals("(-40.57, 175.26999999999998)", String.valueOf(route.getPath().getArray().getSlot(0)));
         assertEquals("(-39.07, 174.04999999999995)", String.valueOf(route.getPath().getArray().getSlot(0)));

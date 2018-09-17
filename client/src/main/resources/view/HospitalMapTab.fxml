@@ -23,10 +23,10 @@
         </rowConstraints>
         <children>
             <GoogleMapView fx:id="mapView" prefHeight="600.0" prefWidth="962.0" GridPane.columnIndex="1" GridPane.rowSpan="4" />
-            <Button fx:id="addHospitalButton" onAction="#handleAddHospitalMarker" prefHeight="50" prefWidth="159.0" text="Add markers (temp)" GridPane.rowIndex="3" GridPane.rowSpan="1" />
+            <Button fx:id="addHospitalButton" onAction="#handleAddHospital" prefHeight="50" prefWidth="159.0" text="Add Hospital" GridPane.rowIndex="3" GridPane.rowSpan="1" />
             <TextArea fx:id="travelInfo" prefHeight="50" prefWidth="100" GridPane.rowIndex="2" GridPane.rowSpan="1" />
-         <ComboBox fx:id="travelMethod" prefWidth="150.0" promptText="Travel method" GridPane.rowIndex="1" />
-         <Button fx:id="clearRoutesButton" layoutX="10.0" layoutY="68.0" onAction="#handleClearRoutesButtonClicked" prefHeight="50" prefWidth="100" text="Clear routes" />
+         <ComboBox fx:id="travelMethod" prefWidth="150.0" promptText="Travel method" GridPane.rowIndex="1" onAction="#handleTravelMethodToggled" />
+         <Button fx:id="clearRoutesButton" layoutX="10.0" layoutY="68.0" onAction="#handleClearRoutesButtonClicked" prefHeight="50" prefWidth="100" text="Clear" />
         </children>
     </GridPane>
 </AnchorPane>

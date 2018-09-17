@@ -53,8 +53,16 @@ public class HospitalMap {
 
         // Hospital tooltip generated and added
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-        infoWindowOptions.content(hospital.getName() + "\n" +
-                "Services offered: " + hospital.getPrograms());
+
+        String hospitalInfo = hospital.getName() + " \n";
+        if (hospital.getAddress() != null) {
+            hospitalInfo += "Address: " + hospital.getAddress() + " \n";
+        }
+        if (hospital.getPrograms() != null) {
+            hospitalInfo += "Services offered: " + hospital.getPrograms();
+        }
+
+        infoWindowOptions.content(hospitalInfo);
 
         return new InfoWindow(infoWindowOptions);
     }
@@ -87,17 +95,19 @@ public class HospitalMap {
     }
 
     /**
-     * Creates a line object that can be added to the map, the line goes from the given hospital 1
-     * to the given hospital 2 represents a route between the hospitals.
+     * Creates a line object that can be added to the map, the line goes from the given location 1
+     * to the given location 2 represents a route between the locations.
      *
-     * @param hospitalSelected1 The given hospital the line starts at
-     * @param hospitalSelected2 The given hospital the line ends at
+     * @param originLat latitude the route starts from
+     * @param originLong latitude the route starts from
+     * @param destinationLat latitude the route ends at
+     * @param destinationLong longitude the route ends at
      * @return A Polyline object that can be added to a map to represent a line
      */
-    public Polyline createHelicopterRoute(Hospital hospitalSelected1, Hospital hospitalSelected2) {
+    public Polyline createHelicopterRoute(Double originLat, Double originLong, Double destinationLat, Double destinationLong) {
 
-        LatLong originLatLong = new LatLong(hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude());
-        LatLong destinationLatLong = new LatLong(hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude());
+        LatLong originLatLong = new LatLong(originLat, originLong);
+        LatLong destinationLatLong = new LatLong(destinationLat, destinationLong);
         LatLong[] coordinatesList = new LatLong[]{originLatLong, destinationLatLong};
 
         MVCArray pointsOnMap = new MVCArray(coordinatesList);
