@@ -135,7 +135,7 @@ public class ScheduleProcedure extends CommonController {
      */
     private String generateMessage(Boolean donor) {
         String newLine = "\n";
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
         String role;
 
         if (donor) {
@@ -144,9 +144,13 @@ public class ScheduleProcedure extends CommonController {
             role = "donor.";
         }
 
-        return "Congratulations you have been matched with an organ " + role + newLine +
-                "Time: " + view.getDatePickerValue().format(format) + newLine +
-                "Location: " + view.getSelectedHospital().getName() + newLine +
-                "Organ: " + view.getSelectedOrgan();
+        return "Hi " + view.getDonor().getFullName() + newLine + newLine +
+                "Congratulations you have been matched with an organ " + role + newLine + newLine +
+                "Procedure Details:" + newLine +
+                "\tTime: " + view.getDatePickerValue().format(format) + newLine +
+                "\tLocation: " + view.getSelectedHospital().getName() + newLine +
+                "\tOrgan: " + view.getSelectedOrgan() + newLine + newLine +
+                "Many Thanks" + newLine +
+                "The Team at Human Farm";
     }
 }
