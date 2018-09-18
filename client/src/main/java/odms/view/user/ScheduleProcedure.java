@@ -3,6 +3,7 @@ package odms.view.user;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -42,6 +43,11 @@ public class ScheduleProcedure extends CommonView {
     private DateTimePicker dateOfProcedurePicker;
     @FXML
     private Label errorLabel;
+    @FXML
+    private CheckBox receiverEmailCheck;
+    @FXML
+    private CheckBox donorEmailCheck;
+
 
     /**
      * Initialize the component and use the parent view to get donor and receiver.
@@ -60,7 +66,6 @@ public class ScheduleProcedure extends CommonView {
 
     /**
      * Sets the name labels.
-     *
      */
     private void setLabels() {
         donorNameLabel.setText(donor.getFullName());
@@ -69,7 +74,6 @@ public class ScheduleProcedure extends CommonView {
 
     /**
      * Populates the organ dropdown with the possible organs and selects the first one.
-     *
      */
     private void setOrganDropdown() {
         organsToDonate.addAll(controller.getDonatingOrgans());
@@ -79,7 +83,6 @@ public class ScheduleProcedure extends CommonView {
 
     /**
      * Populates the location dropdown with hospitals from the database.
-     *
      */
     private void setLocationDropdown() {
         try {
@@ -106,7 +109,6 @@ public class ScheduleProcedure extends CommonView {
 
     /**
      * Schedules the procedure and closes the window.
-     *
      */
     @FXML
     private void scheduleProcedure() {
@@ -118,7 +120,6 @@ public class ScheduleProcedure extends CommonView {
         } catch (IllegalArgumentException e) {
             errorLabel.setText(e.getMessage());
             errorLabel.setVisible(true);
-
             log.error(e.getMessage());
         }
 
@@ -142,5 +143,13 @@ public class ScheduleProcedure extends CommonView {
 
     public OrganEnum getSelectedOrgan() {
         return organDropdown.getValue();
+    }
+
+    public Boolean getDonorCheck() {
+        return donorEmailCheck.isSelected();
+    }
+
+    public Boolean getReceiverCheck() {
+        return receiverEmailCheck.isSelected();
     }
 }

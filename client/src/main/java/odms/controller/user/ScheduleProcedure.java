@@ -8,9 +8,11 @@ import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
 import odms.controller.database.procedure.ProcedureDAO;
+import odms.controller.email.Email;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +73,18 @@ public class ScheduleProcedure extends CommonController {
                 generateSummary(), dateTime, generateDescription(), organ);
         procedureDAO.add(donor, procedure);
         procedureDAO.add(receiver, procedure);
+        sendEmails();
+    }
+
+    /**
+     * Gets a list of hospitals from the database.
+     *
+     * @return the list of hospitals
+     * @throws SQLException When an SQL error occurs
+     */
+    public List<Hospital> getHospitals() throws SQLException {
+        HospitalDAO database = DAOFactory.getHospitalDAO();
+        return database.getAll();
     }
 
     /**
@@ -97,15 +111,42 @@ public class ScheduleProcedure extends CommonController {
             organ.getName() + " to " + receiver.getFullName() + ".";
     }
 
+    /**
+     * Generates and sends an email to the people in the match.
+     *
+     */
+    private void sendEmails() {
+        String subject = "Organ Donation Match";
+        if (view.getDonorCheck()) {
+            String message = generateMessage(true);
+            Email.sendMessage(view.getDonor().getEmail(), message, subject);
+        }
+        if (view.getReceiverCheck()) {
+            String message = generateMessage(false);
+            Email.sendMessage(view.getReceiver().getEmail(), message, subject);
+        }
+    }
 
     /**
-     * Gets a list of hospitals from the database.
+     * Generates an email for the specified role.
      *
-     * @return the list of hospitals
-     * @throws SQLException When an SQL error occurs
+     * @param donor true if the message is for a donor.
+     * @return The message string.
      */
-    public List<Hospital> getHospitals() throws SQLException {
-        HospitalDAO database = DAOFactory.getHospitalDAO();
-        return database.getAll();
+    private String generateMessage(Boolean donor) {
+        String newLine = "\n";
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+        String role;
+
+        if (donor) {
+            role = "receiver.";
+        } else {
+            role = "donor.";
+        }
+
+        return "Congratulations you have been matched with an organ " + role + newLine +
+                "Time: " + view.getDatePickerValue().format(format) + newLine +
+                "Location: " + view.getSelectedHospital().getName() + newLine +
+                "Organ: " + view.getSelectedOrgan();
     }
 }

@@ -60,7 +60,7 @@
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </CheckBox>
-            <CheckBox fx:id="recieverEmailCheck" mnemonicParsing="false" text="Notify by email"
+            <CheckBox fx:id="receiverEmailCheck" mnemonicParsing="false" text="Notify by email"
                       GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT"
                       GridPane.rowIndex="2">
                 <GridPane.margin>
