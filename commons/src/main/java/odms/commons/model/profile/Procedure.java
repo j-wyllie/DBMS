@@ -5,13 +5,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.locations.Hospital;
 
 /**
- * A specific procedure for use in medical history
+ * A specific procedure for use in medical history.
  */
 public class Procedure {
 
-    private final String AFFECTED_ORGAN_TEXT = "Affects Donations";
+    private static final String AFFECTED_ORGAN_TEXT = "Affects Donations";
 
     private Integer procedureId;
     private String summary;
@@ -19,8 +20,16 @@ public class Procedure {
     private LocalDateTime dateTime;
     private String longDescription;
     private List<OrganEnum> organsAffected = new ArrayList<>();
-    private String affectsOrgansText = "Affects Donations";
+    private String affectsOrgansText = AFFECTED_ORGAN_TEXT;
+    private Hospital hospital;
 
+    /**
+     * Instantiates the procedure object.
+     *
+     * @param summary summary of the procedure
+     * @param date the date of the procedure in string form
+     * @param longDescription A longer description of the procedure
+     */
     public Procedure(String summary, String date, String longDescription) {
         this.summary = summary;
         String[] dates = date.split("-");
@@ -29,16 +38,37 @@ public class Procedure {
         this.longDescription = longDescription;
     }
 
+    /**
+     * Instantiates the procedure object.
+     * @param summary summary of the procedure
+     * @param date the date of the procedure
+     */
     public Procedure(String summary, String date) {
         this(summary, date, "");
     }
 
+    /**
+     * Instantiates the procedure object.
+     *
+     * @param summary summary of the procedure
+     * @param date the date of the procedure in date form
+     * @param longDescription A longer description of the procedure
+     */
     public Procedure(String summary, LocalDate date, String longDescription) {
         this.summary = summary;
         this.date = date;
         this.longDescription = longDescription;
     }
 
+    /**
+     * Instantiates the procedure object.
+     *
+     * @param id the id of the procedure
+     * @param summary summary of the procedure
+     * @param date the date of the procedure in date form
+     * @param longDescription A longer description of the procedure
+     * @param organs the affected organs of the procedure
+     */
     public Procedure(int id, String summary, LocalDate date, String longDescription,
             List<OrganEnum> organs) {
         this.procedureId = id;
@@ -55,28 +85,69 @@ public class Procedure {
      * @param dateTime The time of the procedure
      * @param longDescription A description of the procedure
      * @param organ The organ that is being transplanted
+     * @param hospital The location of the procedure.
      */
-    public Procedure(String summary, LocalDateTime dateTime, String longDescription, OrganEnum organ) {
+    public Procedure(String summary, LocalDateTime dateTime, String longDescription,
+                     OrganEnum organ, Hospital hospital) {
         this.summary = summary;
         this.dateTime = dateTime;
         this.longDescription = longDescription;
         this.organsAffected.add(organ);
+        this.hospital = hospital;
     }
 
+    /**
+     * Instantiates the procedure object.
+     *
+     * @param summary A summary of the procedure
+     * @param date The date of the procedure
+     */
     public Procedure(String summary, LocalDate date) {
         this(summary, date, "");
     }
 
+    /**
+     * Instantiates the procedure object.
+     *
+     * @param id the id of the procedure
+     */
     public Procedure(Integer id) {
         this.procedureId = id;
     }
 
+    /**
+     * Updates the affects organ text.
+     */
     public void update() {
         if (organsAffected.size() == 0) {
             this.affectsOrgansText = "";
         } else {
             this.affectsOrgansText = AFFECTED_ORGAN_TEXT;
         }
+    }
+
+    /**
+     * Adds an organ to the list of affected organs for this procedure.
+     *
+     * @param profile The profile that contains the organ
+     * @param organ The organ to remove
+     * @throws IllegalArgumentException if the organ is not a donated organ
+     */
+    public void addAffectedOrgan(Profile profile, OrganEnum organ) throws IllegalArgumentException {
+        if (profile.getOrgansDonating().contains(organ)) {
+            organsAffected.add(organ);
+        } else {
+            throw new IllegalArgumentException("Not an organ with donor status on this profile");
+        }
+    }
+
+    /**
+     * Removes an affected organ from the procedure.
+     *
+     * @param organ The organ to remove
+     */
+    public void removeAffectedOrgan(OrganEnum organ) {
+        organsAffected.remove(organ);
     }
 
     public int getId() {
@@ -119,22 +190,6 @@ public class Procedure {
         this.organsAffected = organs;
     }
 
-    /**
-     * Adds an organ to the list of affected organs for this procedure
-     *
-     * @throws IllegalArgumentException if the organ is not a donated organ
-     */
-    public void addAffectedOrgan(Profile profile, OrganEnum organ) throws IllegalArgumentException {
-        if (profile.getOrgansDonating().contains(organ)) {
-            organsAffected.add(organ);
-        } else {
-            throw new IllegalArgumentException("Not an organ with donor status on this profile");
-        }
-    }
-
-    public void removeAffectedOrgan(OrganEnum organ) {
-        organsAffected.remove(organ);
-    }
 
     public void setId(Integer id) {
         this.procedureId = id;
@@ -142,5 +197,9 @@ public class Procedure {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
     }
 }
