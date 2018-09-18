@@ -39,6 +39,7 @@ public class HospitalMap {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(hospitalLocation);
         markerOptions.label(hospital.getId().toString());
+        markerOptions.title(hospital.getName());
 
         return new Marker(markerOptions);
     }

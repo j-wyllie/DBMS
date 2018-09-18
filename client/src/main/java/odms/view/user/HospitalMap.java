@@ -1,45 +1,25 @@
 package odms.view.user;
 
-import static odms.controller.user.AvailableOrgans.msToStandard;
-
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.DirectionsPane;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.InfoWindow;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.service.directions.DirectionStatus;
-import com.lynden.gmapsfx.service.directions.DirectionsLeg;
-import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
-import com.lynden.gmapsfx.service.directions.DirectionsRequest;
-import com.lynden.gmapsfx.service.directions.DirectionsResult;
-import com.lynden.gmapsfx.service.directions.DirectionsService;
-import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
-import com.lynden.gmapsfx.service.directions.TravelModes;
+import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
-import java.io.IOException;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -49,8 +29,15 @@ import odms.commons.model.locations.Hospital;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
-import org.w3c.dom.events.MouseEvent;
-import org.w3c.dom.events.UIEvent;
+
+import java.io.IOException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static odms.controller.user.AvailableOrgans.msToStandard;
 
 @Slf4j
 public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
@@ -67,6 +54,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     protected StringProperty origin = new SimpleStringProperty();
     protected StringProperty destination = new SimpleStringProperty();
 
+    private int numCustomMarkers = 0;
+
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
 
@@ -80,7 +69,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private GoogleMapView mapView;
 
     @FXML
-    private TextArea mapInfo;
+    private TableView markersTable;
 
     @FXML
     private TextArea travelInfo;
@@ -140,17 +129,100 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         // Creates a hospital object for a custom location added by the user, is cleared using the clear button
         // TODO do we limit it to only one custom marker allowed on the map?
         map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent e) -> {
-            int numCustomMarkers = markers.size() - hospitalList.size();
+            numCustomMarkers += 1;
 
-            Hospital customLocation = new Hospital("custom marker " + (numCustomMarkers + 1) +
+            Hospital customLocation = new Hospital("custom marker " + (numCustomMarkers) +
                     " (" + Double.valueOf(decimalFormat.format(e.getLatLong().getLatitude())) + ", " +
                     Double.valueOf(decimalFormat.format(e.getLatLong().getLongitude())) + ")",
-                    e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1 - numCustomMarkers);
+                    e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, - numCustomMarkers);
             addHospitalMarker(customLocation);
             travelInfo.setText("Created: " + customLocation.getName());
+            hospitalList.add(customLocation);
+            setMarkersTable();
         });
 
         populateHospitals();
+        setMarkersTable();
+    }
+
+    /**
+     * Populates the markers table with the current locations available to the map
+     */
+    private void setMarkersTable() {
+
+        TableColumn<Hospital, String> nameColumn = new TableColumn<>(
+                "Location"
+        );
+        nameColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(
+                        cdf.getValue().getName()
+                )
+        );
+        nameColumn.setMaxWidth(150);
+
+        TableColumn<Hospital, String> idColumn = new TableColumn<>(
+                "ID"
+        );
+        idColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(
+                        String.valueOf(cdf.getValue().getId())
+                )
+        );
+
+
+//        TableColumn<Map.Entry<Marker, Hospital>, String> nameColumn = new TableColumn<>(
+//                "Name"
+//        );
+//        nameColumn.setCellValueFactory(
+//                cdf -> new SimpleStringProperty(
+//                        cdf.getValue().getValue().getName()
+//                )
+//        );
+//
+//
+//        TableColumn<Map.Entry<Marker, Hospital>, String> idColumn = new TableColumn<>(
+//                "ID"
+//        );
+//        idColumn.setCellValueFactory(
+//                cdf -> new SimpleStringProperty(
+//                        String.valueOf(cdf.getValue().getValue().getId())
+//                )
+//        );
+
+        markersTable.getColumns().clear();
+        markersTable.getColumns().add(nameColumn);
+        markersTable.getColumns().add(idColumn);
+
+        markersTable.setOnMousePressed(event -> {
+                    if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                            markersTable.getSelectionModel().getSelectedItem() != null) {
+
+//                         Marker selectedMarker;
+                        Hospital selectedLocation;
+
+//                        selectedMarker = (Marker) markersTable.getSelectionModel().getSelectedItem();
+                        selectedLocation = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+
+//                        MarkerOptions markerOptions = new MarkerOptions();
+//                        markerOptions.colour();
+//                        selectedMarker.setOptions();
+
+                        // Center on selected marker
+                        map.setCenter(new LatLong(selectedLocation.getLatitude(), selectedLocation.getLongitude()));
+                        map.setZoom(10);
+
+                    }
+                });
+
+
+        markersTable.getItems().clear();
+        markersTable.setItems(FXCollections.observableArrayList(hospitalList));
+
+    }
+
+    @FXML
+    private void handleShowClosestHospital(ActionEvent event) {
+
     }
 
 
@@ -191,6 +263,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         }
 
         travelInfo.clear();
+
+        setMarkersTable();
 
         directionsRenderer.clearDirections();
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
