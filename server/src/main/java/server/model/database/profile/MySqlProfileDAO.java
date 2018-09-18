@@ -12,17 +12,16 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
@@ -31,28 +30,24 @@ import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
 
-/**
- * Handles all of the Profile queries.
- */
 @Slf4j
 public class MySqlProfileDAO implements ProfileDAO {
 
-    private String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, " +
-            "GivenNames, LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, " +
-            "AlcoholConsumption, BloodPressureSystolic, BloodPressureDiastolic, Address, " +
-            "StreetNo, StreetName, Neighbourhood, City, ZipCode, Region, Country, BirthCountry, " +
-            "Phone, Email, Created, LastUpdated) values " +
-            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
-            " ?, ?, ?, ?, ?, ?);";
+    String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
+            + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
+            + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
+            + " City, ZipCode, Region, Country, BirthCountry, Phone, Email, Created, LastUpdated) values "
+            + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     /**
      * Gets all profiles from the database.
      */
     @Override
-    public List<Profile> getAll() {
+    public List<Profile> getAll() throws SQLException {
         String query = "select * from profiles;";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = connectionInstance.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet allProfiles = stmt.executeQuery(query)) {
 
@@ -75,8 +70,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public Profile get(int profileId) throws SQLException {
         String query = "select * from profiles where ProfileId = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             try {
 
@@ -104,20 +100,20 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public Profile get(String username) throws SQLException {
         String query = "select * from profiles where Username = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
+            ResultSet rs = stmt.executeQuery();
 
-                try {
-                    while (rs.next()) {
-                        profile = parseProfile(rs);
-                    }
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-
+            try {
+                while (rs.next()) {
+                    profile = parseProfile(rs);
                 }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+
             }
         }
 
@@ -132,7 +128,6 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws SQLException error.
      */
     private Profile parseProfile(ResultSet profiles) throws SQLException {
-        final String createdCol = "created";
         int id = profiles.getInt("ProfileId");
         String nhi = profiles.getString("NHI");
         String username = profiles.getString("Username");
@@ -141,7 +136,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String givenNames = profiles.getString("GivenNames");
         String lastNames = profiles.getString("LastNames");
         LocalDate dob = null;
-        if (profiles.getDate("Dob") != null) {
+        if ((profiles.getDate("Dob") != null)) {
             dob = profiles.getDate("Dob").toLocalDate();
         }
 
@@ -174,11 +169,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         String cityOfDeath = profiles.getString("CityOfDeath");
 
         LocalDateTime created = null;
-        if (profiles.getTimestamp(createdCol) != null) {
-            created = profiles.getTimestamp(createdCol).toLocalDateTime();
+        if (profiles.getTimestamp("Created") != null) {
+            created = profiles.getTimestamp("Created").toLocalDateTime();
         }
         LocalDateTime updated = null;
-        if (profiles.getTimestamp(createdCol) != null) {
+        if (profiles.getTimestamp("Created") != null) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
@@ -204,7 +199,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         profile.addOrgansDonating(database.getDonating(profile.getId()));
         profile.addOrgansDonated(database.getDonations(profile.getId()));
-        profile.addOrgansRequired(database.getRequired(profile));
+        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
         profile.addOrgansReceived(database.getReceived(profile.getId()));
 
         return profile;
@@ -236,18 +231,124 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
+     * Prepares a statement for adding a profile to the database.
+     *
+     * @param profile profile to be added.
+     * @param stmt statement with the connection to be handled.
+     * @return The prepared statement.
+     * @throws SQLException thrown if the statement can't be populated.
+     */
+    private PreparedStatement prepareStatement(Profile profile, PreparedStatement stmt)
+            throws SQLException {
+        stmt.setString(1, profile.getNhi());
+        stmt.setString(2, profile.getNhi());
+        stmt.setBoolean(3, profile.getDonor());
+        stmt.setBoolean(4, profile.isReceiver());
+        stmt.setString(5, profile.getGivenNames());
+        stmt.setString(6, profile.getLastNames());
+        stmt.setString(7, profile.getDateOfBirth().toString());
+        if (profile.getDateOfDeath() == null) {
+            stmt.setString(8, null);
+        } else {
+            stmt.setString(8, profile.getDateOfDeath().toString());
+        }
+        stmt.setString(9, profile.getGender());
+        stmt.setDouble(10, profile.getHeight());
+        stmt.setDouble(11, profile.getWeight());
+        stmt.setString(12, profile.getBloodType());
+        if (profile.getIsSmoker() == null) {
+            stmt.setBoolean(13, false);
+        } else {
+            stmt.setBoolean(13, profile.getIsSmoker());
+        }
+        stmt.setString(14, profile.getAlcoholConsumption());
+        try {
+            stmt.setInt(15, profile.getBloodPressureSystolic());
+        } catch (NullPointerException e) {
+            stmt.setNull(15, Types.INTEGER);
+        }
+        try {
+            stmt.setInt(16, profile.getBloodPressureDiastolic());
+        } catch (NullPointerException e) {
+            stmt.setNull(16, Types.INTEGER);
+        }
+        if (profile.getAddress() != null) {
+            stmt.setString(17, profile.getAddress());
+        } else {
+            stmt.setNull(17, Types.VARCHAR);
+        }
+        if (profile.getStreetNumber() != null) {
+            stmt.setString(18, (profile.getStreetNumber()));
+        } else {
+            stmt.setNull(18, Types.VARCHAR);
+        }
+        if (profile.getStreetName() != null) {
+            stmt.setString(19, profile.getStreetName());
+        } else {
+            stmt.setNull(19, Types.VARCHAR);
+        }
+        if (profile.getNeighbourhood() != null) {
+            stmt.setString(20, profile.getNeighbourhood());
+        } else {
+            stmt.setNull(20, Types.VARCHAR);
+        }
+        if (profile.getCity() != null) {
+            stmt.setString(21, profile.getCity());
+        } else {
+            stmt.setNull(21, Types.VARCHAR);
+        }
+        if (profile.getZipCode() != null) {
+            stmt.setInt(22, Integer.valueOf(profile.getZipCode()));
+        } else {
+            stmt.setNull(22, Types.INTEGER);
+        }
+        if (profile.getRegion() != null) {
+            stmt.setString(23, profile.getRegion());
+        } else {
+            stmt.setNull(23, Types.VARCHAR);
+        }
+        if (profile.getCountry() != null) {
+            stmt.setString(24, profile.getCountry());
+        } else {
+            stmt.setNull(24, Types.VARCHAR);
+        }
+        if (profile.getBirthCountry() != null) {
+            stmt.setString(25, profile.getBirthCountry());
+        } else {
+            stmt.setNull(25, Types.VARCHAR);
+        }
+        if (profile.getPhone() != null) {
+            stmt.setString(26, profile.getPhone());
+        } else {
+            stmt.setNull(26, Types.VARCHAR);
+        }
+        if (profile.getEmail() != null) {
+            stmt.setString(27, profile.getEmail());
+        } else {
+            stmt.setNull(27, Types.VARCHAR);
+        }
+
+        stmt.setString(28, LocalDateTime.now().toString());
+        stmt.setString(29, LocalDateTime.now().toString());
+
+        return stmt;
+    }
+
+    /**
      * Adds a new profile to the database.
      *
      * @param profile to add.
      */
     @Override
     public void add(Profile profile) throws SQLException {
-        Connection conn = DatabaseConnection.getConnection();
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(insertQuery);
         try {
+            stmt = prepareStatement(profile, stmt);
             stmt.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             stmt.close();
@@ -263,9 +364,9 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws SQLException thrown if you can't add the profile.
      */
     public void addToTransaction(Connection conn, Profile profile) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
-            stmt.executeUpdate();
-        }
+        PreparedStatement stmt = conn.prepareStatement(insertQuery);
+        stmt = prepareStatement(profile, stmt);
+        stmt.executeUpdate();
     }
 
     /**
@@ -314,22 +415,22 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public boolean isUniqueUsername(String username) throws SQLException {
         String query = "select Username from profiles where Username = ?;";
-        Connection conn = DatabaseConnection.getConnection();
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
-                stmt.setString(1, username);
-                try (ResultSet result = stmt.executeQuery()) {
-                    if (result.last()) {
-                        result.beforeFirst();
-                        return result.next();
-                    }
-                }
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
+            stmt.setString(1, username);
+            ResultSet result = stmt.executeQuery();
+            if (result.last()) {
+                result.beforeFirst();
+                return (result.next());
             }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return false;
     }
@@ -345,25 +446,25 @@ public class MySqlProfileDAO implements ProfileDAO {
     public int isUniqueNHI(String nhi) throws SQLException {
         int id = 0;
         String query = "select * from profiles where NHI = ?;";
-        Connection conn = DatabaseConnection.getConnection();
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
 
-                stmt.setString(1, nhi);
+            stmt.setString(1, nhi);
 
-                try (ResultSet result = stmt.executeQuery()) {
+            ResultSet result = stmt.executeQuery();
 
-                    if (result.next()) {
-                        id = result.getInt("ProfileId");
-                        return id;
-                    }
-                }
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
+            while (result.next()) {
+                id = result.getInt("ProfileId");
+                return id;
             }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return id;
     }
@@ -377,32 +478,28 @@ public class MySqlProfileDAO implements ProfileDAO {
     public void remove(Profile profile) throws SQLException {
         String query = "delete from profiles where ProfileId = ?;";
 
-        Connection conn = DatabaseConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
 
-                stmt.setInt(1, profile.getId());
+            stmt.setInt(1, profile.getId());
 
-                removeOrgans(profile);
-                removeMedications(profile);
-                removeProcedures(profile);
-                removeConditions(profile);
+            removeOrgans(profile);
+            removeMedications(profile);
+            removeProcedures(profile);
+            removeConditions(profile);
 
-                stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
-            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
     }
 
-    /**
-     * Removes all organs from a profile.
-     *
-     * @param profile profile having organs removed.
-     */
     private void removeOrgans(Profile profile) {
         OrganDAO database = DAOFactory.getOrganDao();
 
@@ -412,40 +509,25 @@ public class MySqlProfileDAO implements ProfileDAO {
         profile.getOrgansRequired().forEach(organ -> database.removeRequired(profile, organ));
     }
 
-    /**
-     * Removes all medications from a profile.
-     *
-     * @param profile profile having medications removed.
-     */
     private void removeMedications(Profile profile) {
         MedicationDAO database = DAOFactory.getMedicationDao();
 
-        profile.getCurrentMedications().forEach(database::remove);
-        profile.getHistoryOfMedication().forEach(database::remove);
+        profile.getCurrentMedications().forEach(medication -> database.remove(medication));
+        profile.getHistoryOfMedication().forEach(medication -> database.remove(medication));
     }
 
-    /**
-     * Removes all procedures from a profile.
-     *
-     * @param profile profile having procedures removed.
-     */
     private void removeProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.getPendingProcedures().forEach(database::remove);
-        profile.getPreviousProcedures().forEach(database::remove);
+        profile.getPendingProcedures().forEach(procedure -> database.remove(procedure));
+        profile.getPreviousProcedures().forEach(procedure -> database.remove(procedure));
     }
 
-    /**
-     * Removes all conditions from a profile.
-     *
-     * @param profile profile having conditions removed.
-     */
     private void removeConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
 
-        profile.getCurrentConditions().forEach(database::remove);
-        profile.getCuredConditions().forEach(database::remove);
+        profile.getCurrentConditions().forEach(condition -> database.remove(condition));
+        profile.getCuredConditions().forEach(condition -> database.remove(condition));
     }
 
     /**
@@ -455,61 +537,61 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public void update(Profile profile) throws SQLException {
-        String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, " +
-                "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight " +
-                "= ?, BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic" +
-                " = ?, BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, " +
-                "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, " +
-                "CityOfDeath = ?, StreetNo = ?, StreetName = ?, Neighbourhood = ?, " +
-                "Created = ?, LastUpdated = ?, City = ? where ProfileId = ?;";
+        String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
+                + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
+                + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
+                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
+                + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
+                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
+                + "Created = ?, LastUpdated = ?, City = ? where ProfileId = ?;";
         Connection conn = DatabaseConnection.getConnection();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
 
-                stmt.setString(1, profile.getNhi());
-                stmt.setString(2, profile.getNhi());
-                stmt.setBoolean(3, profile.getDonor());
-                stmt.setBoolean(4, profile.isReceiver());
-                stmt.setString(5, profile.getGivenNames());
-                stmt.setString(6, profile.getLastNames());
-                stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
-                if (profile.getDateOfDeath() != null) {
-                    stmt.setTimestamp(8, Timestamp.valueOf(profile.getDateOfDeath()));
-                } else {
-                    stmt.setDate(8, null);
-                }
-                stmt.setString(9, profile.getGender());
-                stmt.setDouble(10, profile.getHeight());
-                stmt.setDouble(11, profile.getWeight());
-                stmt.setString(12, profile.getBloodType());
-                stmt.setBoolean(13, profile.getIsSmoker());
-                stmt.setString(14, profile.getAlcoholConsumption());
-                stmt.setInt(15, profile.getBloodPressureDiastolic());
-                stmt.setInt(16, profile.getBloodPressureSystolic());
-                stmt.setString(17, profile.getAddress());
-                stmt.setString(18, profile.getRegion());
-                stmt.setString(19, profile.getPhone());
-                stmt.setString(20, profile.getEmail());
-                stmt.setString(21, profile.getCountry());
-                stmt.setString(22, profile.getBirthCountry());
-                stmt.setString(23, profile.getCountryOfDeath());
-                stmt.setString(24, profile.getRegionOfDeath());
-                stmt.setString(25, profile.getCityOfDeath());
-                stmt.setString(26, profile.getStreetNumber());
-                stmt.setString(27, profile.getStreetName());
-                stmt.setString(28, profile.getNeighbourhood());
-                stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
-                stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
-                stmt.setString(31, profile.getCity());
-                stmt.setInt(32, profile.getId());
-                stmt.executeUpdate();
-
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
+            stmt.setString(1, profile.getNhi());
+            stmt.setString(2, profile.getNhi());
+            stmt.setBoolean(3, profile.getDonor());
+            stmt.setBoolean(4, profile.isReceiver());
+            stmt.setString(5, profile.getGivenNames());
+            stmt.setString(6, profile.getLastNames());
+            stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
+            if (profile.getDateOfDeath() != null) {
+                stmt.setTimestamp(8, Timestamp.valueOf(profile.getDateOfDeath()));
+            } else {
+                stmt.setDate(8, null);
             }
+            stmt.setString(9, profile.getGender());
+            stmt.setDouble(10, profile.getHeight());
+            stmt.setDouble(11, profile.getWeight());
+            stmt.setString(12, profile.getBloodType());
+            stmt.setBoolean(13, profile.getIsSmoker());
+            stmt.setString(14, profile.getAlcoholConsumption());
+            stmt.setInt(15, profile.getBloodPressureDiastolic());
+            stmt.setInt(16, profile.getBloodPressureSystolic());
+            stmt.setString(17, profile.getAddress());
+            stmt.setString(18, profile.getRegion());
+            stmt.setString(19, profile.getPhone());
+            stmt.setString(20, profile.getEmail());
+            stmt.setString(21, profile.getCountry());
+            stmt.setString(22, profile.getBirthCountry());
+            stmt.setString(23, profile.getCountryOfDeath());
+            stmt.setString(24, profile.getRegionOfDeath());
+            stmt.setString(25, profile.getCityOfDeath());
+            stmt.setString(26, profile.getStreetNumber());
+            stmt.setString(27, profile.getStreetName());
+            stmt.setString(28, profile.getNeighbourhood());
+            stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
+            stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
+            stmt.setString(31, profile.getCity());
+            stmt.setInt(32, profile.getId());
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
     }
 
@@ -528,118 +610,115 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
-        StringBuilder query = new StringBuilder("select distinct p.* from profiles p");
-        if (organs.isEmpty()) {
-            query.append(" join organs o on p.ProfileId = o.ProfileId");
+        String query = "select distinct p.* from profiles p";
+        if (organs.size() > 0) {
+            query += " join organs o on p.ProfileId = o.ProfileId";
             int index = 0;
             for (OrganEnum organ : organs) {
                 if (index > 0) {
-                    query.append(" or o.Organ = '").append(organ.getNamePlain()).append("'");
+                    query += " or o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 } else {
-                    query.append(" and (o.Organ = '").append(organ.getNamePlain()).append("'");
+                    query += " and (o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 }
             }
             if (index > 0) {
-                query.append(")");
+                query += ")";
             }
         }
-        query.append(
-                " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, "
-                        + "p.LastNames) LIKE ?) or (CONCAT(p.GivenNames, p.LastNames) LIKE ?)) "
-                        + "and p.Region like ?");
+        query +=
+                " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, p.LastNames) LIKE ?) or "
+                        + "(CONCAT(p.GivenNames, p.LastNames) LIKE ?)) and p.Region like ?";
         if (!gender.equals("any")) {
-            query.append(" and p.Gender = ?");
+            query += " and p.Gender = ?";
         }
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
-                query.append(" and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and "
-                        + "p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))");
+                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
             } else {
-                query.append(
+                query +=
                         " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
-                                + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))");
+                                + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
-            query.append(" and p.IsDonor = ?");
+            query += " and p.IsDonor = ?";
         }
         if (type.equalsIgnoreCase("receiver")) {
-            query.append(" and p.IsReceiver = ?");
+            query += " and p.IsReceiver = ?";
         }
 
-        query.append(";");
+        query += ";";
 
         List<Profile> result = new ArrayList<>();
 
         Connection conn = DatabaseConnection.getConnection();
 
-        try (PreparedStatement stmt = conn
-                .prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY)) {
+        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
 
-            try {
-                stmt.setString(1, "%" + searchString + "%");
-                stmt.setString(2, "%" + searchString + "%");
-                stmt.setString(3, "%" + region + "%");
+        try {
+            stmt.setString(1, "%" + searchString + "%");
+            stmt.setString(2, "%" + searchString + "%");
+            stmt.setString(3, "%" + region + "%");
 
-                int index = 4;
-                if (!"any".equals(gender)) {
-                    stmt.setString(index, gender);
-                    index++;
-                }
-
-                if (ageSearchInt > 0) {
-                    if (ageRangeSearchInt == -999) {
-                        stmt.setInt(index, ageSearchInt);
-                        index++;
-                        stmt.setInt(index, ageSearchInt);
-                        index++;
-                    } else {
-                        stmt.setInt(index, ageSearchInt);
-                        index++;
-                        stmt.setInt(index, ageSearchInt);
-                        index++;
-                        stmt.setInt(index, ageRangeSearchInt);
-                        index++;
-                        stmt.setInt(index, ageRangeSearchInt);
-                        index++;
-                    }
-                }
-                if ("donor".equalsIgnoreCase(type)) {
-                    stmt.setBoolean(index, true);
-                    index++;
-                }
-                if ("receiver".equalsIgnoreCase(type)) {
-                    stmt.setBoolean(index, true);
-                    index++;
-                }
-
-                try (ResultSet allProfiles = stmt.executeQuery()) {
-                    int size;
-                    allProfiles.last();
-                    size = allProfiles.getRow();
-                    allProfiles.beforeFirst();
-
-                    if (size > 250) {
-                        for (int i = 0; i < 250; i++) {
-                            allProfiles.next();
-                            Profile newProfile = parseProfile(allProfiles);
-                            result.add(newProfile);
-                        }
-                    } else {
-                        while (allProfiles.next()) {
-                            Profile newProfile = parseProfile(allProfiles);
-                            result.add(newProfile);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
+            int index = 4;
+            if (!gender.equals("any")) {
+                stmt.setString(index, gender);
+                index++;
             }
+
+            if (ageSearchInt > 0) {
+                if (ageRangeSearchInt == -999) {
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                } else {
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageSearchInt);
+                    index++;
+                    stmt.setInt(index, ageRangeSearchInt);
+                    index++;
+                    stmt.setInt(index, ageRangeSearchInt);
+                    index++;
+                }
+            }
+            if (type.equalsIgnoreCase("donor")) {
+                stmt.setBoolean(index, true);
+                index++;
+            }
+            if (type.equalsIgnoreCase("receiver")) {
+                stmt.setBoolean(index, true);
+                index++;
+            }
+
+            ResultSet allProfiles = stmt.executeQuery();
+            int size;
+            allProfiles.last();
+            size = allProfiles.getRow();
+            allProfiles.beforeFirst();
+
+            if (size > 250) {
+                for (int i = 0; i < 250; i++) {
+                    allProfiles.next();
+                    Profile newProfile = parseProfile(allProfiles);
+                    result.add(newProfile);
+                }
+            } else {
+                while (allProfiles.next()) {
+                    Profile newProfile = parseProfile(allProfiles);
+                    result.add(newProfile);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
+
         }
         return result;
     }
@@ -653,21 +732,20 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Integer size() throws SQLException {
         String query = "select count(*) from profiles;";
         Connection conn = DatabaseConnection.getConnection();
-        try (Statement stmt = conn.createStatement()) {
-            try {
+        Statement stmt = conn.createStatement();
+        try {
 
-                try (ResultSet result = stmt.executeQuery(query)) {
+            ResultSet result = stmt.executeQuery(query);
 
-                    if (result.next()) {
-                        return result.getInt(1);
-                    }
-                }
-                conn.close();
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
+            if (result.next()) {
+                return result.getInt(1);
             }
+            conn.close();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return 0;
     }
@@ -696,11 +774,9 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         try {
             Connection conn = DatabaseConnection.getConnection();
-            ResultSet result;
-            try (Statement stmt = conn.createStatement()) {
+            Statement stmt = conn.createStatement();
 
-                result = stmt.executeQuery(query);
-            }
+            ResultSet result = stmt.executeQuery(query);
 
             while (result.next()) {
                 Profile profile = parseProfile(result);
@@ -726,23 +802,22 @@ public class MySqlProfileDAO implements ProfileDAO {
                         "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
         List<Profile> result = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
-        try (Statement stmt = conn.createStatement()) {
-            ArrayList<Integer> existingIds = new ArrayList<>();
-            try {
-                try (ResultSet allProfiles = stmt.executeQuery(query)) {
-                    while (allProfiles.next()) {
-                        Profile newProfile = parseProfile(allProfiles);
-                        if (!existingIds.contains(newProfile.getId())) {
-                            result.add(newProfile);
-                            existingIds.add(newProfile.getId());
-                        }
-                    }
+        Statement stmt = conn.createStatement();
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery(query);
+            while (allProfiles.next()) {
+                Profile newProfile = parseProfile(allProfiles);
+                if (!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());
                 }
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
             }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return result;
     }
@@ -759,26 +834,27 @@ public class MySqlProfileDAO implements ProfileDAO {
                         "CONCAT(GivenNames, LastNames) LIKE ? AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
         List<Profile> result = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        PreparedStatement stmt = conn.prepareStatement(query);
 
-            stmt.setString(1, "%" + searchString + "%");
+        stmt.setString(1, "%" + searchString + "%");
 
-            ArrayList<Integer> existingIds = new ArrayList<>();
-            try {
-                try (ResultSet allProfiles = stmt.executeQuery()) {
-                    while (allProfiles.next()) {
-                        Profile newProfile = parseProfile(allProfiles);
-                        if (!existingIds.contains(newProfile.getId())) {
-                            result.add(newProfile);
-                            existingIds.add(newProfile.getId());
-                        }
-                    }
+        System.out.println(stmt);
+
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery();
+            while (allProfiles.next()) {
+                Profile newProfile = parseProfile(allProfiles);
+                if (!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());
                 }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return result;
     }
@@ -823,8 +899,9 @@ public class MySqlProfileDAO implements ProfileDAO {
                 organQuery.toString() + ") AND o.Required GROUP BY o.ProfileId) in (" + organQuery
                 .toString() + ")";
 
+        DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
 
             int count = 1;
@@ -863,15 +940,14 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Boolean hasPassword(String nhi) throws SQLException {
         String query = "SELECT Username FROM profiles WHERE nhi = ? AND PASSWORD != ''";
         Boolean hasPassword = false;
+        DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
-            ResultSet result;
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            Connection conn = instance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
 
-                stmt.setString(1, nhi);
-                result = stmt.executeQuery();
-            }
+            stmt.setString(1, nhi);
+            ResultSet result = stmt.executeQuery();
             if (result.next()) {
                 hasPassword = true;
             }
@@ -887,27 +963,26 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Boolean checkCredentials(String username, String password)
             throws SQLException, UserNotFoundException {
         String query = "SELECT NHI, Password FROM profiles WHERE NHI = ?;";
-        Connection conn = DatabaseConnection.getConnection();
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
 
-                stmt.setString(1, username);
-                String hashedPassword;
-                try (ResultSet rs = stmt.executeQuery()) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
 
-                    rs.next();
-                    hashedPassword = rs.getString("Password");
-                }
-                return PasswordUtilities.check(password, hashedPassword);
+            rs.next();
+            String hashedPassword = rs.getString("Password");
+            return PasswordUtilities.check(password, hashedPassword);
 
-            } catch (SQLException e) {
-                throw new UserNotFoundException("Not found", username);
-            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
-            }
+        } catch (SQLException e) {
+            throw new UserNotFoundException("Not found", username);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return false;
     }
@@ -916,22 +991,23 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Boolean savePassword(String nhi, String password)
             throws SQLException, UserNotFoundException {
         String query = "UPDATE profiles SET Password = ? WHERE NHI = ?;";
-        Connection conn = DatabaseConnection.getConnection();
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        Connection conn = instance.getConnection();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            try {
+        PreparedStatement stmt = conn.prepareStatement(query);
+        try {
 
-                stmt.setString(1, PasswordUtilities.getSaltedHash(password));
-                stmt.setString(2, nhi);
-                stmt.executeUpdate();
+            stmt.setString(1, PasswordUtilities.getSaltedHash(password));
+            stmt.setString(2, nhi);
+            stmt.executeUpdate();
 
-            } catch (SQLException e) {
-                throw new UserNotFoundException("Not found", nhi);
-            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                conn.close();
-            }
+        } catch (SQLException e) {
+            throw new UserNotFoundException("Not found", nhi);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
         }
         return false;
     }
