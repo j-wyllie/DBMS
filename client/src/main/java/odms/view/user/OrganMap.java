@@ -3,7 +3,12 @@ package odms.view.user;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
@@ -113,7 +118,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
             }
         });
 
-        openProfileBtn.setOnAction(event -> createNewDonorWindow(currentReceiver, parentView, currentUser));
+        openProfileBtn.setOnAction(event ->
+                createNewDonorWindow(currentReceiver, parentView, currentUser));
 
         matchBtn.setOnAction(event -> {
             FXMLLoader fxmlLoader = new FXMLLoader();
