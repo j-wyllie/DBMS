@@ -147,15 +147,14 @@ public class Server {
                 patch("", CountriesController::edit);
             });
 
-    // hospitals api endpoints.
-path("/hospitals", () -> {
-    get("/all", HospitalController::getAll) ;
-
-        get("", HospitalController::get);
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
                 post("", HospitalController::create);
-        patch("", HospitalController::edit);
-        delete("", HospitalController::delete);
-        });
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
+            });
         });
     }
 }

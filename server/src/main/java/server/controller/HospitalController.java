@@ -28,7 +28,7 @@ public class HospitalController {
             hospitals = hospitalDAO.getAll();
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         Gson gson = new Gson();
@@ -54,7 +54,7 @@ public class HospitalController {
             hospital = database.get(req.queryParams("name"));
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         Gson gson = new Gson();
@@ -102,7 +102,7 @@ public class HospitalController {
             return "Hospital Updated";
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
     }
 
@@ -128,7 +128,7 @@ public class HospitalController {
             database.remove(name);
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         res.status(200);
@@ -159,7 +159,7 @@ public class HospitalController {
                 database.add(newHospital);
             } catch (SQLException e) {
                 res.status(500);
-                return e.getMessage();
+                return "Database Error";
             }
         }
         res.status(201);

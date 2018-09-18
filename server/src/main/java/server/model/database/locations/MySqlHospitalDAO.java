@@ -37,6 +37,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             conn.close();
         }
@@ -65,6 +66,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             conn.close();
         }
@@ -107,6 +109,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             conn.close();
         }
@@ -143,6 +146,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             conn.close();
         }
@@ -165,6 +169,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             conn.close();
         }

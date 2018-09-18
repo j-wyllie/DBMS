@@ -95,7 +95,6 @@ public class HttpHospitalDAO implements HospitalDAO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         if (response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
