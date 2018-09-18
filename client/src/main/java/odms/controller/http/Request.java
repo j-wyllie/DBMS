@@ -129,8 +129,7 @@ public class Request {
             String key = (String) keys[i];
             if (i == 0) {
                 urlString += ("?" + key + '=' + queryParams.get(key));
-            }
-            else {
+            } else {
                 urlString += ("&" + key + '=' + queryParams.get(key));
             }
         }

@@ -1,5 +1,6 @@
 package odms.controller.user;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for create hospital scene.
@@ -20,45 +23,39 @@ import java.sql.SQLException;
 public class HospitalCreate {
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/";
-    private static String key;
+    private static final String KEY = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
-    private final odms.view.user.HospitalCreate view;
-
-    public HospitalCreate(odms.view.user.HospitalCreate view) {
-        this.view = view;
-    }
-
-    public void addHospital(String name, String address, Double lat, Double lon) throws IOException, SQLException {
-        getGeoLocation(address, lat, lon);
-
-        Hospital newHospital = new Hospital(name, lat, lon, address);
-
+    public void addHospital(String name, String address) throws IOException, SQLException {
+        List<Double> latlong = getGeoLocation(address);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         hospitalDAO.add(newHospital);
     }
 
-    private void getGeoLocation(String address, Double lat, Double lon) throws IOException {
-
-
-        String query = API_URL + buildGMapsURL(address, lat, lon);
+    private List<Double> getGeoLocation(String address) throws IOException {
+        List<Double> locationList = new ArrayList<>();
+        String query = API_URL + "geocode/json?address=" + address.replace(" ", "+") + "&key=" + KEY;
         URL url = new URL(query);
-        URLConnection request = url.openConnection();
+        URLConnection request;
 
-        System.out.println(query);
-
-        request.connect();
-        JsonParser jp = new JsonParser();
-        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-        JsonObject rootobj = root.getAsJsonObject();
-    }
-
-    private String buildGMapsURL(String address, Double lat, Double lon) {
-        key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
-
-        if (address == null) {
-            return API_URL + "geocode/json?latlng=" + lat + "," + lon + "&key=" + key;
-        } else {
-            return API_URL + "geocode/json?address=" + address + "&key=" + key;
+        try {
+            request = url.openConnection();
+            request.connect();
+        } catch (IOException e) {
+            throw new IOException("Couldn't validate address");
         }
+
+        try {
+            JsonParser jp = new JsonParser();
+            JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+            JsonArray results = root.getAsJsonObject().getAsJsonArray("results");
+            JsonObject location = results.get(0).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+            locationList.add(Double.parseDouble(location.get("lat").getAsString()));
+            locationList.add(Double.parseDouble(location.get("lng").getAsString()));
+        } catch (Exception e) {
+            throw new IOException("Invalid Address");
+        }
+
+        return locationList;
     }
 }
