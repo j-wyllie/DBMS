@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.user.User;
+import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
 import org.w3c.dom.events.MouseEvent;
 import org.w3c.dom.events.UIEvent;
@@ -79,6 +80,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private GoogleMapView mapView;
 
     @FXML
+    private TextArea mapInfo;
+
+    @FXML
     private TextArea travelInfo;
 
     @FXML
@@ -105,6 +109,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     public void initialize(User currentUser) {
         this.currentUser = currentUser;
         controller.setView(this);
+
     }
 
 
@@ -142,12 +147,25 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                     Double.valueOf(decimalFormat.format(e.getLatLong().getLongitude())) + ")",
                     e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1 - numCustomMarkers);
             addHospitalMarker(customLocation);
+            travelInfo.setText("Created: " + customLocation.getName());
         });
-
 
         populateHospitals();
     }
 
+
+    @FXML
+    private void handleShowHelp(ActionEvent event) {
+
+        String helpText = "Welcome! \n" +
+                "To route between two hospitals, click on each and a route will appear, " +
+                "to change the travel method use the dropdown menu. \n" +
+                "To add a custom marker, double click on the map where you want the marker, " +
+                "this marker can be used just like a hospital. \n" +
+                "To add a hospital to the map, click 'Add Hospital," +
+                "and fill out the required info'";
+        AlertController.guiPopupInfo(helpText);
+    }
 
     /**
      * Clears all routes from map, also 'deselects' any hospitals, accessed via button.
@@ -279,6 +297,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         String travel = travelMethodGiven + " journey between " + originName + ", and " + destinationName + ".\n" +
                 "Distance: " + distance + "\n Travel Time: " + duration;
+
         travelInfo.setText(travel);
     }
 

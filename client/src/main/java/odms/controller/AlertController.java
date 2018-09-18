@@ -134,6 +134,23 @@ public class AlertController {
     }
 
     /**
+     * Creates a info popup with a personalized message from the controller
+     * @param message the message to be displayed
+     */
+    public static void guiPopupInfo(String message) {
+        Alert invalidAlert = new Alert(
+                AlertType.INFORMATION,
+                message,
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
      * Creates a popup with a personalized message from the controller
      */
     public static void uniqueUsername() {
