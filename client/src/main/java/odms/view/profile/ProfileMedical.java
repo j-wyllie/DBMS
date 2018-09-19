@@ -31,6 +31,8 @@ public class ProfileMedical extends CommonView {
     private Label bmiLabel;
     @FXML
     private Button bloodDonationButton;
+    @FXML
+    private Label bloodDonationLabel;
 
     private Profile currentProfile;
     // init controller corresponding to this view
@@ -62,6 +64,7 @@ public class ProfileMedical extends CommonView {
         if (currentProfile.getIsSmoker() != null) {
             smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
         }
+        updateBloodDonationLabel();
     }
 
     public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
@@ -78,6 +81,10 @@ public class ProfileMedical extends CommonView {
         handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
+    public void updateBloodDonationLabel() {
+        bloodDonationLabel.setText("Blood Donation Points: "+currentProfile.getBloodDonationPoints());
+    }
+
 
     @FXML
     public void onBtnDonationClicked(ActionEvent actionEvent) throws IOException{
@@ -88,7 +95,7 @@ public class ProfileMedical extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         BloodDonation view = fxmlLoader.getController();
-        view.initialize(currentProfile);
+        view.initialize(currentProfile, this);
 
         Stage stage = new Stage();
         stage.setTitle("Blood Donation");

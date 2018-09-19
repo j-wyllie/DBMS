@@ -169,6 +169,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 
+        int bloodDonationPoints = profiles.getInt("BloodDonationPoints");
+
         LocalDateTime created = null;
         if (profiles.getTimestamp("Created") != null) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -177,11 +179,16 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (profiles.getTimestamp("Created") != null) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
+
+        LocalDateTime lastBloodDonation = null;
+        if (profiles.getTimestamp("LastBloodDonation") != null) {
+            lastBloodDonation = profiles.getTimestamp("LastBloodDonation").toLocalDateTime();
+        }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
                 dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,
                 bpSystolic, bpDiastolic, address, region, phone, email, country, city,
                 countryOfDeath, regionOfDeath, cityOfDeath, created, updated,
-                preferredName, preferredGender, imageName);
+                preferredName, preferredGender, imageName, lastBloodDonation, bloodDonationPoints);
 
         try {
             profile = setOrgans(profile);
@@ -544,7 +551,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
                 + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
                 + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ?, City = ? where ProfileId = ?;";
+                + "Created = ?, LastUpdated = ?, City = ? , BloodDonationPoints = ?, LastBloodDonation = ? where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = DatabaseConnection.getConnection();
 
@@ -586,7 +593,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
             stmt.setString(31, profile.getCity());
-            stmt.setInt(32, profile.getId());
+            stmt.setInt(34, profile.getId());
+            stmt.setInt(32,profile.getBloodDonationPoints());
+            stmt.setTimestamp(33, Timestamp.valueOf(profile.getLastBloodDonation()));
             stmt.executeUpdate();
 
         } catch (Exception e) {

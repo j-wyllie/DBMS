@@ -87,6 +87,8 @@ public class Profile implements Comparable<Profile> {
     private LocalDateTime lastUpdated;
     private LocalDateTime lastBloodDonation;
 
+    private int bloodDonationPoints = 0;
+
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
     private List<String> medicationTimestamps = new ArrayList<>();
@@ -168,7 +170,9 @@ public class Profile implements Comparable<Profile> {
                 null, // updated
                 null, // preferredName
                 null, // preferredGender
-                null // imageName
+                null, // imageName
+                LocalDateTime.parse("1900-01-01 00:00:00"), // LastBloodDonation
+                0 //bloodDonationPoints
         );
     }
 
@@ -179,7 +183,7 @@ public class Profile implements Comparable<Profile> {
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String region, String phone, String email, String country, String city,
             String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName) {
+            LocalDateTime updated, String preferredName, String preferredGender, String imageName, LocalDateTime lastBloodDonation, int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -211,6 +215,8 @@ public class Profile implements Comparable<Profile> {
         this.preferredName = preferredName;
         this.preferredGender = preferredGender;
         this.pictureName = imageName;
+        this.bloodDonationPoints=bloodDonationPoints;
+        this.lastBloodDonation=lastBloodDonation;
     }
 
     public Profile(int profileId) {
@@ -1138,5 +1144,15 @@ public class Profile implements Comparable<Profile> {
     public LocalDateTime getLastBloodDonation(){
         return lastBloodDonation;
     }
+
+    public void addBloodDonationPoints(int points) {
+        bloodDonationPoints += points;
+    }
+
+    public int getBloodDonationPoints() {
+        return bloodDonationPoints;
+    }
+
+
 
 }

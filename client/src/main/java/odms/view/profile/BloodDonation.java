@@ -7,7 +7,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class BloodDonation {
@@ -24,7 +27,10 @@ public class BloodDonation {
 
     private int bloodTypePoints;
 
+    private ProfileMedical parent;
+
     public void onBtnCancelClicked(ActionEvent actionEvent) {
+
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
 
@@ -35,7 +41,15 @@ public class BloodDonation {
             bloodTypePoints+= 2;
         }
         LocalDateTime timestamp = LocalDateTime.now();
-        System.out.println(bloodTypePoints);
+        profile.addBloodDonationPoints(bloodTypePoints);
+        profile.setLastBloodDonation(timestamp);
+        ProfileDAO server = DAOFactory.getProfileDao();
+        try {
+            server.update(profile);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        parent.updateBloodDonationLabel();
         Stage stage = (Stage) btnDonate.getScene().getWindow();
         stage.close();
     }
@@ -76,8 +90,9 @@ public class BloodDonation {
         }
     }
 
-    public void initialize(Profile currentProfile) {
+    public void initialize(Profile currentProfile, ProfileMedical view) {
         profile = currentProfile;
+        parent = view;
         setPoints();
         setLabel();
     }
