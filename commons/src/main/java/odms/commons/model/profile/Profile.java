@@ -85,6 +85,7 @@ public class Profile implements Comparable<Profile> {
 
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
+    private LocalDateTime lastBloodDonation;
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
@@ -1128,6 +1129,14 @@ public class Profile implements Comparable<Profile> {
     public void setOrganDate(String organDate, LocalDateTime date) {
         organTimeStamps
                 .add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-", "_")), date));
+    }
+
+    public void setLastBloodDonation(LocalDateTime date) {
+        lastBloodDonation = date;
+    }
+
+    public LocalDateTime getLastBloodDonation(){
+        return lastBloodDonation;
     }
 
 }

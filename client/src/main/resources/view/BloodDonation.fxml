@@ -39,14 +39,14 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </opaqueInsets>
                     <children>
-                        <Label text="Points Earnable:" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" prefHeight="83.0" prefWidth="188.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                        <Label fx:id="lblPoints" text="Points Earnable:" />
+                        <Button fx:id="btnCancel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBtnCancelClicked" prefHeight="83.0" prefWidth="188.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets top="10.0" />
                             </GridPane.margin>
                         </Button>
-                  <Button fx:id="btnDonate" mnemonicParsing="false" prefHeight="25.0" prefWidth="268.0" text="Donate" GridPane.rowIndex="2" />
-                  <CheckBox fx:id="plasmaCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="216.0" text="Donate Plasma" GridPane.rowIndex="1" />
+                  <Button fx:id="btnDonate" mnemonicParsing="false" onAction="#onBtnDonateClicked" prefHeight="25.0" prefWidth="268.0" text="Donate" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="plasmaCheckBox" onAction="#onCheckBoxChecked" mnemonicParsing="false" prefHeight="17.0" prefWidth="216.0" text="Donate Plasma" GridPane.rowIndex="1" />
                     </children>
                     <GridPane.margin>
                         <Insets />

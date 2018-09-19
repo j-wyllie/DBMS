@@ -87,8 +87,8 @@ public class ProfileMedical extends CommonView {
 
         Scene scene = new Scene(fxmlLoader.load());
 
-        //OrganEdit view = fxmlLoader.getController();
-        //view.initialize(currentProfile);
+        BloodDonation view = fxmlLoader.getController();
+        view.initialize(currentProfile);
 
         Stage stage = new Stage();
         stage.setTitle("Blood Donation");
