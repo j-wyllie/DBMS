@@ -171,7 +171,7 @@ public class Profile implements Comparable<Profile> {
                 null, // preferredName
                 null, // preferredGender
                 null, // imageName
-                LocalDateTime.parse("1900-01-01 00:00:00"), // LastBloodDonation
+                LocalDateTime.now().minusYears(100), // LastBloodDonation
                 0 //bloodDonationPoints
         );
     }
