@@ -1,14 +1,15 @@
 package server.model.database.medication;
 
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.medications.Drug;
+import server.model.database.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.medications.Drug;
-import server.model.database.DatabaseConnection;
 
 @Slf4j
 public class MySqlMedicationDAO implements MedicationDAO {
@@ -26,7 +27,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
         List<Drug> result = new ArrayList<>();
 
         try {
-            Connection conn = connectionInstance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
             stmt.setBoolean(2, current);
@@ -71,7 +72,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
@@ -98,7 +99,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, drug.getId());
@@ -123,7 +124,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, drug.getDrugName());

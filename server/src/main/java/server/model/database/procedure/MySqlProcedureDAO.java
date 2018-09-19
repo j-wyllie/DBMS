@@ -1,18 +1,14 @@
 package server.model.database.procedure;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import server.model.database.DatabaseConnection;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class MySqlProcedureDAO implements ProcedureDAO {
@@ -30,7 +26,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         List<Procedure> result = new ArrayList<>();
 
         try {
-            Connection conn = connectionInstance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
             stmt.setBoolean(2, pending);
@@ -77,7 +73,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, profile);
@@ -120,7 +116,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(procedureIdQuery);
             stmt.setInt(1, procedure.getId());
@@ -150,7 +146,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, procedure.getId());
@@ -178,7 +174,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, procedure.getSummary());
@@ -209,7 +205,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         List<OrganEnum> organs = new ArrayList<>();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, procedureId);
@@ -241,7 +237,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, procedure.getId());

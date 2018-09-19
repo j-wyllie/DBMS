@@ -1,16 +1,12 @@
 package server.model.database.condition;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import server.model.database.DatabaseConnection;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Slf4j
 public class MySqlConditionDAO implements ConditionDAO {
@@ -27,7 +23,7 @@ public class MySqlConditionDAO implements ConditionDAO {
         ArrayList<Condition> allConditions = new ArrayList<>();
 
         try {
-            Connection conn = connectionInstance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
             ResultSet allConditionRows = stmt.executeQuery();
@@ -79,7 +75,7 @@ public class MySqlConditionDAO implements ConditionDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
@@ -114,7 +110,7 @@ public class MySqlConditionDAO implements ConditionDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, condition.getId());
@@ -139,7 +135,7 @@ public class MySqlConditionDAO implements ConditionDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = DatabaseConnection.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, condition.getName());
