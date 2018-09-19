@@ -3,7 +3,6 @@ package odms.controller.data;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import odms.controller.data.AddressIO;
 import org.junit.Test;
 
 public class AddressIOTest {
