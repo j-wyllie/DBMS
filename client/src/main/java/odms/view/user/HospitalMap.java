@@ -57,8 +57,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
     private int numCustomMarkers = 0;
 
-    private Location userLocation;
-    private Marker userLocationMarker;
+    private Location userLocationObject;
+    private Hospital userLocation;
+
 
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
@@ -152,21 +153,24 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         setUsersLocation();
         populateHospitals();
         setMarkersTable();
-        map.addMarker(userLocationMarker);
 
     }
 
     private void setUsersLocation() {
 
+        // controller.getUsersLocation(); // todo
+
+
         // Get the users IP address
-        InetAddress inetAddress = null;
-        try {
-            inetAddress = InetAddress.getLocalHost();
-            System.out.println("IP Address:- " + inetAddress.getHostAddress());
-            System.out.println("Host Name:- " + inetAddress.getHostName());
-        } catch (UnknownHostException e) {
-            log.error(e.getMessage());
-        }
+//        InetAddress inetAddress = null;
+//        try {
+//            inetAddress = InetAddress.getLocalHost();
+//            System.out.println("IP Address:- " + inetAddress.getHostAddress());
+//            System.out.println("Host Name:- " + inetAddress.getHostName());
+//        } catch (UnknownHostException e) {
+//            // log.error(e.getMessage());
+//            e.printStackTrace();
+//        }
 
         // Get the location related to the IP address
         LookupService cl = null;
@@ -177,28 +181,24 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             log.error(e.getMessage());
         }
 
-        userLocation = cl.getLocation("27.127.223.255");
+        userLocationObject = cl.getLocation("27.127.223.255");
 //        userLocation = cl.getLocation(inetAddress.getHostAddress());   // TODO this is the proper way to do it, just sometimes cant get the location
 
-        if (userLocation == null) {
+        if (userLocationObject == null) {
             // Couldn't find a location for that IP address
             findClosestHospitalBtn.setDisable(true);
         } else {
             findClosestHospitalBtn.setDisable(false);
 
-            System.out.println(userLocation);
-            System.out.println(userLocation.countryName);
-            System.out.println(userLocation.longitude);
-            System.out.println(userLocation.latitude);
-            System.out.println(userLocation.city);
+            System.out.println(userLocationObject);
+            System.out.println(userLocationObject.countryName);
+            System.out.println(userLocationObject.longitude);
+            System.out.println(userLocationObject.latitude);
+            System.out.println(userLocationObject.city);
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(new LatLong(userLocation.latitude, userLocation.longitude));
-            markerOptions.label("You");
+            userLocation = new Hospital("You",  (double) userLocationObject.latitude, (double) userLocationObject.longitude, null, -999);
 
-            userLocationMarker = new Marker(markerOptions);
-
-            travelInfo.setText("Your approximate location: " + userLocation.latitude + ", " + userLocation.longitude);
+            travelInfo.setText("Your approximate location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
         }
     }
 
@@ -284,10 +284,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), userLocation.latitude, userLocation.longitude);
-            if (temp < distance) {
-                distance = temp;
-                closest = location;
+            if (location.getId() != -999) {
+                temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), userLocation.getLatitude(), userLocation.getLongitude());
+                if (temp < distance) {
+                    distance = temp;
+                    closest = location;
+                }
             }
         }
 
@@ -295,8 +297,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             map.setCenter(new LatLong(closest.getLatitude(), closest.getLongitude()));
             map.setZoom(8);
 
-//            travelInfo.setText("Closest hospital to " + userLocation.countryName + ", " +  userLocation.city + ", " +
-//                    userLocation.region + ": " + closest.getName() + ", " + closest.getAddress() +
+//            travelInfo.setText("Closest hospital to " + userLocationObject.countryName + ", " +  userLocationObject.city + ", " +
+//                    userLocationObject.region + ": " + closest.getName() + ", " + closest.getAddress() +
 //                    ".\n Approximately " + decimalFormat.format(distance) + "km away.");
 
             travelInfo.setText("Closest hospital to you: " + closest.getName() + ", " + closest.getAddress() +
@@ -538,6 +540,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         hospitalList.clear();
         markers.clear();
         hospitalList = controller.getHospitals();
+        if (userLocation != null) {
+            hospitalList.add(userLocation);
+        }
 
         // TODO
         // TEMPORARY, used for testing, just adds random hospitals created here to the map, until we have more hospitals in database
