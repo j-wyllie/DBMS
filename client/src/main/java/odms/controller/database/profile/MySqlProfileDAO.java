@@ -1,8 +1,26 @@
 package odms.controller.database.profile;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.DatabaseConnection;
@@ -10,15 +28,6 @@ import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
-
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 @Slf4j
 public class MySqlProfileDAO implements ProfileDAO {
@@ -37,7 +46,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = connectionInstance.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet allProfiles = stmt.executeQuery(query)) {
 
@@ -59,9 +68,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = connectionInstance.getConnection();
                 Statement stmt = conn.createStatement();
-                ResultSet allProfiles = stmt.executeQuery(query)) {
+                ResultSet allProfiles = stmt.executeQuery(query);) {
             ArrayList<Integer> existingIds = new ArrayList<>();
 
             while (allProfiles.next()) {
@@ -87,7 +96,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             try {
                 stmt.setInt(1, profileId);
@@ -116,7 +125,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -360,7 +369,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public void add(Profile profile) throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
             try {
                 PreparedStatement statement = prepareStatement(profile, stmt);
@@ -391,7 +400,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     public Connection getConnection() throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
         conn.setAutoCommit(false);
         return conn;
     }
@@ -431,7 +440,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     public boolean isUniqueUsername(String username) throws SQLException {
         String query = "select Username from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             try {
                 stmt.setString(1, username);
@@ -459,7 +468,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         int id = 0;
         String query = "select * from profiles where NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             try {
                 stmt.setString(1, nhi);
@@ -485,7 +494,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "delete from profiles where ProfileId = ?;";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             try {
                 stmt.setInt(1, profile.getId());
@@ -570,7 +579,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, profile.getNhi());
@@ -679,7 +688,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = connectionInstance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_READ_ONLY)) {
@@ -753,7 +762,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     public Integer size() {
         String query = "select count(*) from profiles;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(query)) {
             result.next();
@@ -801,7 +810,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, bloodType.toString());
@@ -840,7 +849,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = instance.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(query)) {
 

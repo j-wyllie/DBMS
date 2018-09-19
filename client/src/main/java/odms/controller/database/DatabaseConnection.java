@@ -1,9 +1,6 @@
 package odms.controller.database;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +9,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains methods to obtain a connection the database, as well as setting db config.
@@ -161,7 +160,7 @@ public final class DatabaseConnection {
     private void executeQuery(String filePath) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         try {
-            Connection conn = getConnection();
+            Connection conn = instance.getConnection();
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {

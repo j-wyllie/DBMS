@@ -1,12 +1,5 @@
 package server.model.database.organ;
 
-import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.ExpiredOrgan;
-import odms.commons.model.profile.OrganConflictException;
-import odms.commons.model.profile.Profile;
-import server.model.database.DatabaseConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +12,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.profile.ExpiredOrgan;
+import server.model.database.DatabaseConnection;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.OrganConflictException;
+import odms.commons.model.profile.Profile;
 
 @Slf4j
 public class MySqlOrganDAO implements OrganDAO {
@@ -55,7 +54,7 @@ public class MySqlOrganDAO implements OrganDAO {
         Set<OrganEnum> allOrgans = new HashSet<>();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -120,7 +119,7 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -155,7 +154,7 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -189,7 +188,7 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -223,7 +222,7 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -305,7 +304,7 @@ public class MySqlOrganDAO implements OrganDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
@@ -338,7 +337,7 @@ public class MySqlOrganDAO implements OrganDAO {
                         "WHERE ProfileId = ? AND Organ = ? AND ToDonate = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, expired);
         stmt.setInt(2, userId);
@@ -363,7 +362,7 @@ public class MySqlOrganDAO implements OrganDAO {
         String query = "UPDATE organs SET Expired = 0 , UserId = NULL , Note = NULL WHERE ProfileId = ? AND Organ = ? ;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, profile);
         stmt.setString(2, organ);
@@ -380,7 +379,7 @@ public class MySqlOrganDAO implements OrganDAO {
         List<ExpiredOrgan> allOrgans = new ArrayList<>();
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
+            Connection conn = instance.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, 1);
             stmt.setInt(2, profile.getId());

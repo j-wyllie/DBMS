@@ -1,12 +1,15 @@
 package server.model.database.country;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import server.model.database.DatabaseConnection;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 public class MySqlCountryDAO implements CountryDAO {
@@ -17,7 +20,7 @@ public class MySqlCountryDAO implements CountryDAO {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "select * from countries;";
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = connectionInstance.getConnection();
 
             Statement stmt = connection.createStatement();
             ResultSet result = stmt.executeQuery(query);
@@ -41,7 +44,7 @@ public class MySqlCountryDAO implements CountryDAO {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "select * from countries where Valid = ?;";
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = connectionInstance.getConnection();
 
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setBoolean(1, valid);
@@ -64,7 +67,7 @@ public class MySqlCountryDAO implements CountryDAO {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "update countries set Valid = ? where Name = ?;";
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = connectionInstance.getConnection();
 
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setBoolean(1, valid);
@@ -87,7 +90,7 @@ public class MySqlCountryDAO implements CountryDAO {
      */
     public void populateCountriesTable() throws SQLException {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection connection = DatabaseConnection.getConnection();
+        Connection connection = connectionInstance.getConnection();
         PreparedStatement stmt = null;
 
         String query = "TRUNCATE TABLE countries";
@@ -97,7 +100,7 @@ public class MySqlCountryDAO implements CountryDAO {
             stmt.close();
             connection.close();
             for (CountriesEnum country: CountriesEnum.values()) {
-                connection = DatabaseConnection.getConnection();
+                connection = connectionInstance.getConnection();
 
                 query = "insert into countries (Name) VALUES (?)";
 

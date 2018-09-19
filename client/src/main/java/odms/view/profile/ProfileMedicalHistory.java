@@ -1,11 +1,23 @@
 package odms.view.profile;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -16,12 +28,6 @@ import odms.controller.EditDateCell;
 import odms.controller.EditingConditionsCell;
 import odms.controller.profile.ConditionGeneral;
 import odms.view.CommonView;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class ProfileMedicalHistory extends CommonView {
 
@@ -147,7 +153,7 @@ public class ProfileMedicalHistory extends CommonView {
         pastDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
 
         pastDateOfDiagnosisColumn.setOnEditCommit(
-                t -> {
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (!(t.getNewValue().isAfter(
                             t.getTableView().getItems().get(t.getTablePosition().getRow())
                                     .getDateCured())
@@ -172,7 +178,7 @@ public class ProfileMedicalHistory extends CommonView {
         pastDateCuredColumn.setCellFactory(cellFactoryDate);
 
         pastDateCuredColumn.setOnEditCommit(
-                t -> {
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (t.getNewValue().isBefore(
                             t.getTableView().getItems().get(t.getTablePosition().getRow())
                                     .getDateOfDiagnosis())
@@ -197,7 +203,7 @@ public class ProfileMedicalHistory extends CommonView {
         pastDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         pastDescriptionColumn.setCellFactory(cellFactory);
         pastDescriptionColumn.setOnEditCommit(
-                t -> (t.getTableView().getItems()
+                (EventHandler<CellEditEvent<Condition, String>>) t -> (t.getTableView().getItems()
                         .get(
                                 t.getTablePosition().getRow())).setName(t.getNewValue()));
     }
@@ -212,7 +218,7 @@ public class ProfileMedicalHistory extends CommonView {
         curDateOfDiagnosisColumn.setCellFactory(cellFactoryDate);
 
         curDateOfDiagnosisColumn.setOnEditCommit(
-                t -> {
+                (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
                     if (!t.getNewValue().isAfter(LocalDate.now())) {
                         controller.removeCondition(t.getTableView().getItems().get(
                                 t.getTablePosition().getRow()),currentProfile);
@@ -257,7 +263,7 @@ public class ProfileMedicalHistory extends CommonView {
         curDescriptionColumn.setCellValueFactory(new PropertyValueFactory("name"));
         curDescriptionColumn.setCellFactory(cellFactory);
         curDescriptionColumn.setOnEditCommit(
-                t -> {
+                (EventHandler<CellEditEvent<Condition, String>>) t -> {
                     controller.removeCondition(t.getTableView().getItems().get(
                             t.getTablePosition().getRow()),currentProfile);
                     (t.getTableView().getItems().get(

@@ -1,5 +1,14 @@
 package odms.commons.model.profile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
@@ -7,12 +16,6 @@ import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.medications.Drug;
 import org.apache.commons.validator.routines.EmailValidator;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 public class Profile implements Comparable<Profile> {
 
@@ -1149,4 +1152,7 @@ public class Profile implements Comparable<Profile> {
     public int getBloodDonationPoints() {
         return bloodDonationPoints;
     }
+
+
+
 }

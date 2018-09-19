@@ -1,17 +1,20 @@
 package server.model.database.user;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * Handles all of the database queries to do with the /users endpoint.
@@ -30,7 +33,7 @@ public class MySqlUserDAO implements UserDAO {
 
         String query = "SELECT * FROM users;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = connectionInstance.getConnection();
         Statement stmt = conn.createStatement();
         try {
 
@@ -61,7 +64,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT * FROM users WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user;
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -92,7 +95,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT * FROM users WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         User user;
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -117,7 +120,7 @@ public class MySqlUserDAO implements UserDAO {
             throws SQLException, UserNotFoundException {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -185,7 +188,7 @@ public class MySqlUserDAO implements UserDAO {
                 " Region, Created, LastUpdated, IsDefault, ImageName) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -222,7 +225,7 @@ public class MySqlUserDAO implements UserDAO {
     public boolean isUniqueUsername(String username) throws SQLException {
         String query = "SELECT Username FROM users WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -250,7 +253,7 @@ public class MySqlUserDAO implements UserDAO {
     public void remove(User user) throws SQLException {
         String query = "DELETE FROM users WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
@@ -277,7 +280,7 @@ public class MySqlUserDAO implements UserDAO {
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {

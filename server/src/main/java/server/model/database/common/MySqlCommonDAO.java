@@ -21,7 +21,7 @@ public class MySqlCommonDAO implements CommonDAO {
 
         if (isReadOnlyQuery(query)) {
             try {
-                Connection connection = DatabaseConnection.getConnection();
+                Connection connection = connectionInstance.getConnection();
 
                 Statement stmt = connection.createStatement();
                 ResultSet result = stmt.executeQuery(query);

@@ -7,5 +7,5 @@ public interface CommonDAO {
      * platforms.
      * @param query
      */
-    void queryDatabase(String query);
+    public void queryDatabase(String query);
 }

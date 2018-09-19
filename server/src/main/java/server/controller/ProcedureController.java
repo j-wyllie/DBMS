@@ -1,14 +1,15 @@
 package server.controller;
 
+import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
+import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
+import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.procedure.ProcedureDAO;
 import spark.Request;
 import spark.Response;
-
-import java.util.List;
 
 public class ProcedureController {
 
@@ -131,6 +132,7 @@ public class ProcedureController {
             res.status(400);
             return "Bad Request";
         }
+;
         try {
 
             database.remove(newProcedure);
