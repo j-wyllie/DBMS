@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import server.model.database.DatabaseConnection;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
@@ -87,8 +88,8 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         testProfile0 = mySqlProfileDAO.get("ABC1234");
         //todo way to set time of death
         testProfile0.setDateOfDeath(LocalDateTime.now());
+        testProfile0.setLastBloodDonation(LocalDateTime.now());
         mySqlProfileDAO.update(testProfile0);
-
         assertEquals(LocalDate.now(), LocalDate.from(mySqlProfileDAO.get("ABC1234").getDateOfDeath()));
     }
 

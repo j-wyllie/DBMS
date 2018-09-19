@@ -483,7 +483,9 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `Phone` varchar(30) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP
+  `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `LastBloodDonation` datetime DEFAULT _CURRENT_TIMESTAMP,
+  `BloodDonationPoints` int(11) DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=11222 DEFAULT CHARSET=utf8;
 
 --
