@@ -1152,7 +1152,4 @@ public class Profile implements Comparable<Profile> {
     public int getBloodDonationPoints() {
         return bloodDonationPoints;
     }
-
-
-
 }

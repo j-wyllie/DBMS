@@ -190,9 +190,8 @@ public class MySqlProfileDAO implements ProfileDAO {
                 lastBloodDonation = profiles.getTimestamp("LastBloodDonation").toLocalDateTime();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
-
 
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
                 dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,

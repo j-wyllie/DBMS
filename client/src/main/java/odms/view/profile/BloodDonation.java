@@ -37,7 +37,7 @@ public class BloodDonation {
     }
 
     public void onBtnDonateClicked(ActionEvent actionEvent) {
-        if(plasmaCheckBox.isSelected()) {
+        if (plasmaCheckBox.isSelected()) {
             bloodTypePoints+= 2;
         }
         LocalDateTime timestamp = LocalDateTime.now();
@@ -47,7 +47,7 @@ public class BloodDonation {
         try {
             server.update(profile);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         parent.updateBloodDonationLabel();
         Stage stage = (Stage) btnDonate.getScene().getWindow();
@@ -80,13 +80,16 @@ public class BloodDonation {
             case "AB-":
                 bloodTypePoints = 5;
                 break;
+            default:
+                bloodTypePoints = 0;
+                break;
         }
         try {
             if (LocalDateTime.now().minusDays(365).isBefore(profile.getLastBloodDonation())) {
                 bloodTypePoints += 1;
             }
         } catch (NullPointerException e) {
-
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -102,7 +105,7 @@ public class BloodDonation {
     }
 
     public void onCheckBoxChecked(ActionEvent actionEvent) {
-        if(plasmaCheckBox.isSelected()) {
+        if (plasmaCheckBox.isSelected()) {
             lblPoints.setText("Points Earnable: " + (bloodTypePoints+2));
         } else {
             setLabel();
