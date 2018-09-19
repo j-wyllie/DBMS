@@ -257,7 +257,7 @@ public class Profile implements Comparable<Profile> {
         String attrName = parts[0];
         String value = null;
 
-        if (!parts[1].equals(null)) {
+        if (null != parts[1]) {
             value = parts[1].replace("\"", "");
         }
 
