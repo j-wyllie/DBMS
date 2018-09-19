@@ -1,6 +1,12 @@
 package odms.cli;
 
+import static odms.cli.CommandUtils.validateCommandType;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
@@ -8,7 +14,6 @@ import odms.cli.commands.Profile;
 import odms.cli.commands.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.DatabaseConnection;
-import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
 import org.jline.reader.History;
@@ -20,19 +25,11 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import static odms.cli.CommandUtils.validateCommandType;
-
 @Slf4j
 public class CommandLine implements Runnable {
 
     private ProfileDAO profileDatabase;
     private UserDAO userDatabase;
-    private OrganDAO organDatabase;
     private LineReader reader;
     private Terminal terminal;
 
@@ -42,7 +39,6 @@ public class CommandLine implements Runnable {
     public CommandLine() {
         this.profileDatabase = DAOFactory.getProfileDao();
         this.userDatabase = DAOFactory.getUserDao();
-        this.organDatabase = DAOFactory.getOrganDao();
 
         try {
             terminal = TerminalBuilder.terminal();
@@ -61,8 +57,9 @@ public class CommandLine implements Runnable {
 
     /**
      * Create a virtual terminal command line
-     * @param input
-     * @param output
+     *
+     * @param input the command input
+     * @param output the resulting output
      */
     public CommandLine(InputStream input, OutputStream output) {
         this.profileDatabase = DAOFactory.getProfileDao();
@@ -89,13 +86,15 @@ public class CommandLine implements Runnable {
     /**
      * Run implementation so command line can be run in an alternate thread.
      */
-    public void run() { initialiseConsole(); }
+    public void run() {
+        initialiseConsole();
+    }
 
     /**
      * Initialise the commandline/console interface.
      */
     public void initialiseConsole() {
-        Boolean exit = false;
+        boolean exit = false;
         String input;
         this.userDatabase = DAOFactory.getUserDao();
 
@@ -130,6 +129,7 @@ public class CommandLine implements Runnable {
 
     /**
      * Take the input from the console commands and process them accordingly.
+     *
      * @param input commands entered from console
      */
     private void processInput(ArrayList<String> input, String rawInput) throws SQLException {
@@ -274,16 +274,6 @@ public class CommandLine implements Runnable {
             case RESAMPLE:
                 instance.resample();
                 break;
-//
-//            case UNDO:
-//                // Undoes the previously done action
-//                CommandUtils.undo(currentDatabase);
-//                break;
-//
-//            case REDO:
-//                //Redoes the previously undone action
-//                CommandUtils.redo(currentDatabase);
-//                break;
         }
     }
 }
