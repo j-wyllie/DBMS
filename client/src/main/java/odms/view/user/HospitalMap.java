@@ -7,6 +7,8 @@ import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
+import com.maxmind.geoip.Location;
+import com.maxmind.geoip.LookupService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -17,10 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,9 @@ import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
     private int numCustomMarkers = 0;
 
+    private Location userLocation;
+    private Marker userLocationMarker;
+
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
 
@@ -77,9 +81,13 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @FXML
     private ComboBox travelMethod;
 
+    @FXML
+    private Button findClosestHospitalBtn;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         mapView.addMapInializedListener(this);
         hospitalList = new ArrayList<>();
         markers = new ArrayList<>();
@@ -93,12 +101,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         ObservableList<String> travelMethods = FXCollections.observableArrayList("Car", "Helicopter");
         travelMethod.setItems(travelMethods);
         travelMethod.setValue("Car");
+
     }
 
     public void initialize(User currentUser) {
         this.currentUser = currentUser;
         controller.setView(this);
-
     }
 
 
@@ -141,8 +149,57 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             setMarkersTable();
         });
 
+        setUsersLocation();
         populateHospitals();
         setMarkersTable();
+        map.addMarker(userLocationMarker);
+
+    }
+
+    private void setUsersLocation() {
+
+        // Get the users IP address
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+            System.out.println("IP Address:- " + inetAddress.getHostAddress());
+            System.out.println("Host Name:- " + inetAddress.getHostName());
+        } catch (UnknownHostException e) {
+            log.error(e.getMessage());
+        }
+
+        // Get the location related to the IP address
+        LookupService cl = null;
+        try {
+            cl = new LookupService("client/src/main/resources/geolite/GeoLiteCity.dat",
+                    LookupService.GEOIP_MEMORY_CACHE | LookupService.GEOIP_CHECK_CACHE);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        userLocation = cl.getLocation("27.127.223.255");
+//        userLocation = cl.getLocation(inetAddress.getHostAddress());   // TODO this is the proper way to do it, just sometimes cant get the location
+
+        if (userLocation == null) {
+            // Couldn't find a location for that IP address
+            findClosestHospitalBtn.setDisable(true);
+        } else {
+            findClosestHospitalBtn.setDisable(false);
+
+            System.out.println(userLocation);
+            System.out.println(userLocation.countryName);
+            System.out.println(userLocation.longitude);
+            System.out.println(userLocation.latitude);
+            System.out.println(userLocation.city);
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(new LatLong(userLocation.latitude, userLocation.longitude));
+            markerOptions.label("You");
+
+            userLocationMarker = new Marker(markerOptions);
+
+            travelInfo.setText("Your approximate location: " + userLocation.latitude + ", " + userLocation.longitude);
+        }
     }
 
     /**
@@ -223,6 +280,31 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @FXML
     private void handleShowClosestHospital(ActionEvent event) {
 
+        Hospital closest = null;
+        Double distance = Double.POSITIVE_INFINITY;
+        Double temp;
+        for (Hospital location : hospitalList) {
+            temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), userLocation.latitude, userLocation.longitude);
+            if (temp < distance) {
+                distance = temp;
+                closest = location;
+            }
+        }
+
+        if (closest != null) {
+            map.setCenter(new LatLong(closest.getLatitude(), closest.getLongitude()));
+            map.setZoom(8);
+
+//            travelInfo.setText("Closest hospital to " + userLocation.countryName + ", " +  userLocation.city + ", " +
+//                    userLocation.region + ": " + closest.getName() + ", " + closest.getAddress() +
+//                    ".\n Approximately " + decimalFormat.format(distance) + "km away.");
+
+            travelInfo.setText("Closest hospital to you: " + closest.getName() + ", " + closest.getAddress() +
+                    ".\n Approximately " + decimalFormat.format(distance) + "km away.");
+
+            }
+
+
     }
 
 
@@ -265,6 +347,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         travelInfo.clear();
 
         setMarkersTable();
+
+        setUsersLocation();
 
         directionsRenderer.clearDirections();
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);

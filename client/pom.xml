@@ -23,6 +23,13 @@
 
     <dependencies>
 
+        <!-- https://dev.maxmind.com/geoip/legacy/geolite/  -->
+        <dependency>
+            <groupId>com.maxmind.geoip</groupId>
+            <artifactId>geoip-api</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.lynden/GMapsFX -->
         <dependency>
             <groupId>com.lynden</groupId>
