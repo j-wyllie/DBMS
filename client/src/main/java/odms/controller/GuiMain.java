@@ -25,11 +25,11 @@ import java.util.Map;
 @Slf4j
 public class GuiMain extends Application {
 
-    private static final String APP_NAME = "ODMS";
     private static final String ADMIN = "admin";
+    private static final String APP_NAME = "ODMS";
+    private static final String DOMAIN = "localhost";
     private static final String CLINICIAN = "0";
     private static final Integer PORT = 6969;
-    private static final String DOMAIN = "localhost";
 
     private odms.controller.user.AvailableOrgans controller =
             new odms.controller.user.AvailableOrgans();
@@ -42,9 +42,7 @@ public class GuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        boolean serverStatus = checkServer();
-
-        if (serverStatus) {
+        if (checkServer()) {
             Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);
@@ -68,11 +66,9 @@ public class GuiMain extends Application {
             checkOrgan.setDaemon(true);
             checkOrgan.start();
         } else {
-            AlertController.guiPopup("Connection to the server could not be established.\n" +
-                    "Please check your internet connection.\n\n" +
-                    "If that doesn't resolve the issue the Human Farm\n" +
-                    "server may be experiencing issues. Apologies for\n" +
-                    "the inconvenience.");
+            AlertController.guiPopup("Connection to the server could not be established.\n\n" +
+                    "Human Farm servers may be experiencing\ntechnical difficulties. " +
+                    "Please check your internet\nconnection and try again.");
         }
     }
 
