@@ -46,7 +46,7 @@ public final class Email {
             message.setText(messageContent);
             Transport.send(message);
 
-            log.info("Email message successfully.");
+            log.info("Email sent successfully.");
         } catch (MessagingException e) {
             log.error(e.getMessage());
         }

@@ -1,5 +1,6 @@
 package odms.controller.user;
 
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Procedure;
@@ -7,6 +8,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
+import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
 import odms.controller.email.Email;
 
@@ -21,6 +23,7 @@ import java.util.Set;
 /**
  * The controller for the scheduling a donation.
  */
+@Slf4j
 public class ScheduleProcedure extends CommonController {
 
     private odms.view.user.ScheduleProcedure view;
@@ -73,7 +76,21 @@ public class ScheduleProcedure extends CommonController {
                 generateSummary(), dateTime, generateDescription(), organ, hospital);
         procedureDAO.add(donor, procedure);
         procedureDAO.add(receiver, procedure);
+        updateOrgans();
         sendEmails();
+    }
+
+    /**
+     * Updates the profiles donating and required organs accordingly.
+     */
+    private void updateOrgans() {
+        OrganEnum organ = view.getSelectedOrgan();
+        Profile donor = view.getDonor();
+        Profile receiver = view.getReceiver();
+        OrganDAO organDAO = DAOFactory.getOrganDao();
+        organDAO.removeDonating(donor, organ);
+        organDAO.removeRequired(receiver, organ);
+        organDAO.addReceived(receiver, organ);
     }
 
     /**

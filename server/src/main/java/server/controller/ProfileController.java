@@ -224,7 +224,7 @@ public class ProfileController {
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
-        Profile profile = null;
+        Profile profile;
 
         try {
             profile = gson.fromJson(req.body(), Profile.class);
@@ -234,13 +234,11 @@ public class ProfileController {
             return "Bad Request";
         }
 
-        if (profile != null) {
-            try {
-                database.update(profile);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.update(profile);
+        } catch (SQLException e) {
+            res.status(500);
+            return "Internal Server Error";
         }
 
         res.status(200);

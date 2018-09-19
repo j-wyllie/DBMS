@@ -113,7 +113,6 @@ public class ScheduleProcedure extends CommonView {
     @FXML
     private void scheduleProcedure() {
         try {
-            log.error("Clicked");
             controller.scheduleProcedure();
             Stage stage = (Stage) donorNameLabel.getScene().getWindow();
             stage.close();

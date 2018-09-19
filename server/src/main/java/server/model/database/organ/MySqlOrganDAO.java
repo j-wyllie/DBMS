@@ -262,7 +262,7 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public void removeDonating(Profile profile, OrganEnum organ) {
-        String query = "delete from organs where ProfileId = ? and Organ = ? and toDonate = ?;";
+        String query = "delete from organs where ProfileId = ? and Organ = ? and ToDonate = ?;";
         profile.removeOrganDonating(organ);
         removeOrgan(profile, organ, query);
     }
@@ -310,6 +310,8 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, true);
+
+            System.out.println(stmt);
 
             stmt.executeUpdate();
             conn.close();
