@@ -1,21 +1,19 @@
 package server.model.database.common;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
 
+import java.sql.*;
+import java.util.ArrayList;
+
+@Slf4j
 public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Establishes a connection with the database and executes the supplied query,
-     * before outputing the result set returned.
-     * @param query
+     * before outputting the result set returned.
+     * @param query the query to execute.
      */
     @Override
     public void queryDatabase(String query) {

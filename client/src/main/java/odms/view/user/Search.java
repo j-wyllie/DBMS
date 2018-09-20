@@ -21,6 +21,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
@@ -32,6 +33,7 @@ import org.controlsfx.control.CheckComboBox;
 /**
  * Search view. Contains all GUI accessor methods for the profile search tab.
  */
+@Slf4j
 public class Search extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
@@ -95,7 +97,7 @@ public class Search extends CommonView {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable() {
+    private void makeSearchTable(User currentUser) {
         searchTable.getItems().clear();
         donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
@@ -112,7 +114,7 @@ public class Search extends CommonView {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 
@@ -287,17 +289,13 @@ public class Search extends CommonView {
         }
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
     /**
      * Limits the characters entered in textfield to only digits and maxLength
      *
      * @param maxLength that can be entered in the textfield
      * @return
      */
-    private EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public static EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
         return e -> {
             TextField txt_TextField = (TextField) e.getSource();
             if (txt_TextField.getText().length() >= maxLength) {
@@ -322,7 +320,9 @@ public class Search extends CommonView {
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
+        this.currentUser = currentUser;
         if (currentUser != null) {
+            this.currentUser = currentUser;
             ageRangeField.setDisable(true);
             ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
             ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
@@ -361,7 +361,7 @@ public class Search extends CommonView {
                 performSearchFromFilters();
             });
 
-            makeSearchTable();
+            makeSearchTable(currentUser);
             setSearchTablePlaceholder();
         }
 
@@ -373,13 +373,13 @@ public class Search extends CommonView {
      */
     public void setSearchTablePlaceholder() {
         try {
-            makeSearchTable();
+            makeSearchTable(currentUser);
             searchTable.getItems().clear();
             String profileCount = controller.getNumberOfProfiles();
             searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));
             labelResultCount.setText(profileCount + " results found");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

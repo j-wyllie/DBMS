@@ -10,11 +10,13 @@ import odms.commons.model.enums.OrganEnum;
  * Organ common support functions.
  */
 public class OrganCommon {
+
     protected ObservableList<String> observableListOrgansAvailable;
 
     /**
-     * Populate the ListView with the organs that are available and that are not in the
-     * required list.
+     * Populate the ListView with the organs that are available and that are not in the required
+     * list.
+     *
      * @param removeStrings organ strings to remove
      */
     protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
@@ -30,8 +32,8 @@ public class OrganCommon {
      * @param organs source list of organs to populate from
      */
     protected void populateOrganList(
-        ObservableList<String> destinationList,
-        Set<OrganEnum> organs) {
+            ObservableList<String> destinationList,
+            Set<OrganEnum> organs) {
 
         destinationList.clear();
 
@@ -41,20 +43,5 @@ public class OrganCommon {
             }
             Collections.sort(destinationList);
         }
-    }
-
-    /**
-     * Support function to populate an observable list with organs from an organ set.
-     *
-     * @param destinationList list to populate
-     * @param organs source list of organs to populate from
-     */
-    protected void populateOrganReceivingList(
-        ObservableList<OrganEnum> destinationList,
-        Set<OrganEnum> organs) {
-
-        destinationList.clear();
-        destinationList.addAll(organs);
-        Collections.sort(destinationList);
     }
 }

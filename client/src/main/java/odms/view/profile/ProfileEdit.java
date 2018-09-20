@@ -22,11 +22,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.DAOFactory;
@@ -36,6 +40,7 @@ import odms.view.CommonView;
 /**
  * profile edit window.
  */
+@Slf4j
 public class ProfileEdit extends CommonView {
 
     private static final String MAINCOUNTRY = "New Zealand";
@@ -60,6 +65,9 @@ public class ProfileEdit extends CommonView {
 
     @FXML
     private DateTimePicker dodDateTimePicker;
+
+    @FXML
+    private SplitPane dodPane;
 
     @FXML
     private TextField heightField;
@@ -136,6 +144,7 @@ public class ProfileEdit extends CommonView {
 
     private File chosenFile;
     private Boolean removePhoto = false;
+    private User currentUser;
 
     /**
      * Button handler to undo last action.
@@ -204,7 +213,7 @@ public class ProfileEdit extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         Display v = fxmlLoader.getController();
-        v.initialize(currentProfile, isOpenedByClinician, null);
+        v.initialize(currentProfile, isOpenedByClinician, null, currentUser);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(scene);
         appStage.show();
@@ -302,8 +311,9 @@ public class ProfileEdit extends CommonView {
      * @param isOpenedByClinician Boolean, true if the window was opened by a clinician.
      */
     @FXML
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         this.currentProfile = p;
         this.controller.setCurrentProfile(currentProfile);
         this.controller.setIsClinician(isOpenedByClinician);
@@ -321,6 +331,19 @@ public class ProfileEdit extends CommonView {
             if (currentProfile.getDateOfDeath() == null) {
                 deathDetailsSetDisable(true);
                 clearDodField();
+            }
+            try {
+                if(controller.getManuallyExpiredOrgans()) {
+                    disableItems();
+                    dodPane.hoverProperty().addListener(observable -> {
+                        if (dodPane.isHover()) {
+                            dodPane.setTooltip(new Tooltip("Profile has manually expired organ(s)."));
+                        }
+                    });
+
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
             }
         }
     }

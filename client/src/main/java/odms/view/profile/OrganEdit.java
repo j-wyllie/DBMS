@@ -21,6 +21,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.profile.Profile;
@@ -28,9 +29,9 @@ import odms.commons.model.profile.Profile;
 /**
  * Control Organ view tab pane.
  */
+@Slf4j
 public class OrganEdit extends OrganCommon {
-    protected ObservableList<String> observableListOrgansSelected = FXCollections
-        .observableArrayList();
+    protected ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
     private Profile currentProfile;
     private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(this);
 
@@ -282,7 +283,7 @@ public class OrganEdit extends OrganCommon {
             stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.view.profile.ProfileEdit;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,7 +33,7 @@ public class EditTest {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         view = new ProfileEdit();
-        view.initialize(currentProfile, false);
+        view.initialize(currentProfile, false, null);
         controller = new odms.controller.profile.ProfileEdit(view);
     }
 

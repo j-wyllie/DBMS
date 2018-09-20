@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -17,6 +18,7 @@ import odms.commons.model.enums.OrganEnum;
 /**
  * Control access for items around the organ lists.
  */
+@Slf4j
 public class OrganEdit extends CommonController {
     private odms.view.profile.OrganEdit view;
 
@@ -118,7 +120,6 @@ public class OrganEdit extends CommonController {
                     view.getOrgansAdded()
             );
 
-//            view.getOrgansAdded().removeAll(p.getOrgansDonating());
             addOrgansDonating(view.getOrgansAdded(), p);
             removeOrgansDonating(organsRemoved, p);
         } catch (OrganConflictException e) {
@@ -274,8 +275,9 @@ public class OrganEdit extends CommonController {
         ProfileDAO database = DAOFactory.getProfileDao();
         try {
             database.update(p);
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

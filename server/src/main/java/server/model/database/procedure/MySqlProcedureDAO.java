@@ -9,10 +9,12 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import server.model.database.DatabaseConnection;
 
+@Slf4j
 public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
@@ -42,7 +44,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -102,7 +104,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             conn.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -133,7 +135,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt2.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -160,7 +162,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -190,7 +192,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -223,7 +225,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return organs;
     }
@@ -251,7 +253,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

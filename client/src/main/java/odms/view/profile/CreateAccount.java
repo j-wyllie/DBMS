@@ -44,7 +44,7 @@ public class CreateAccount extends CommonView {
         Display v = loader.getController();
         Profile profile = controller.createAccount();
         if (profile != null) {
-            v.initialize(profile, false, null);
+            v.initialize(profile, false, null, null);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(scene);
             appStage.show();

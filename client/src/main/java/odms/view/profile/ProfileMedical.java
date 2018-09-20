@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class ProfileMedical extends CommonView {
     // init controller corresponding to this view
     private odms.controller.profile.ProfileMedical controller = new odms.controller.profile.ProfileMedical(this);
     private Boolean isOpenedByClinician;
+    private User currentUser;
 
     private void setUpDetails() {
         if (currentProfile.getAlcoholConsumption() != null) {
@@ -54,8 +56,9 @@ public class ProfileMedical extends CommonView {
         }
     }
 
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         currentProfile = p;
         if (currentProfile != null) {
             setUpDetails();
@@ -64,7 +67,7 @@ public class ProfileMedical extends CommonView {
 
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician);
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
 

@@ -1,9 +1,5 @@
 package odms.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,16 +17,25 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.GuiMain;
 import odms.commons.model.user.User;
 import odms.view.profile.Display;
 import odms.view.profile.ProfileEdit;
 import odms.view.user.ClinicianProfile;
 import org.controlsfx.control.Notifications;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Contains common methods between the views.
+ */
+@Slf4j
 public class CommonView {
     private static boolean isEdited = false;
 
@@ -68,8 +73,7 @@ public class CommonView {
             stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -89,7 +93,7 @@ public class CommonView {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -108,11 +112,11 @@ public class CommonView {
      *
      * @param event clicking on the edit button.
      */
-    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
+    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician, User currentUser) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEdit controller = fxmlLoader.getController();
-        controller.initialize(currentProfile, isOpenedByClinician);
+        controller.initialize(currentProfile, isOpenedByClinician, currentUser);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -281,16 +285,17 @@ public class CommonView {
      *
      * @param profile The donor object that has been clicked on
      * @param parentView The parent view of the stage being created
+     * @param user the current logged in clin/admin
      */
     @FXML
-    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView, User user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(profile, true, parentView.getTransplantWaitingList());
+            controller.initialize(profile, true, parentView.getTransplantWaitingList(), user);
 
             Stage stage = new Stage();
             if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
@@ -305,7 +310,7 @@ public class CommonView {
                 parentView.closeStage(stage);
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -389,5 +394,18 @@ public class CommonView {
                 header.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
+     */
+    static boolean isValidNHI(String nhi) {
+        String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher m = r.matcher(nhi.toUpperCase());
+        return m.find();
     }
 }

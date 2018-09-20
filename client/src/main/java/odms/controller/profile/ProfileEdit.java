@@ -1,12 +1,5 @@
 package odms.controller.profile;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import javafx.fxml.FXML;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
@@ -18,6 +11,14 @@ import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProfileEdit extends CommonController {
 
@@ -40,56 +41,55 @@ public class ProfileEdit extends CommonController {
      */
     @FXML
     public void save() throws SQLException, IOException, IllegalArgumentException {
-                // History Generation
-                History action = new History(
-                        "profile",
-                        currentProfile.getId(),
-                        "update",
-                        "previous " + currentProfile.getAttributesSummary(),
-                        -1,
-                        null
-                );
+        // History Generation
+        History action = new History(
+                "profile",
+                currentProfile.getId(),
+                "update",
+                "previous " + currentProfile.getAttributesSummary(),
+                -1,
+                null
+        );
 
-                saveDeathDetails();
+        saveDeathDetails();
 
-                // Required General Fields
-                saveChosenImage();
-                saveDateOfBirth();
-                saveGivenNames();
-                saveLastNames();
-                saveNhi();
+        // Required General Fields
+        saveChosenImage();
+        saveDateOfBirth();
+        saveGivenNames();
+        saveLastNames();
+        saveNhi();
 
-                // Optional General Fields
-                saveAddress();
-                saveDateOfDeath();
-                saveEmail();
-                saveGender();
-                saveHeight();
-                savePhone();
-                savePreferredGender();
-                savePreferredName();
-                saveRegion();
-                saveWeight();
+        // Optional General Fields
+        saveAddress();
+        saveDateOfDeath();
+        saveEmail();
+        saveGender();
+        saveHeight();
+        savePhone();
+        savePreferredGender();
+        savePreferredName();
+        saveRegion();
+        saveWeight();
 
-                // Medical Fields
-                saveAlcoholConsumption();
-                saveBloodPressure();
-                saveBloodType();
-                saveIsSmoker();
+        // Medical Fields
+        saveAlcoholConsumption();
+        saveBloodPressure();
+        saveBloodType();
+        saveIsSmoker();
 
-                saveCity();
-                saveCountry();
-                saveRegion();
+        saveCity();
+        saveCountry();
+        saveRegion();
 
-                ProfileDAO server = DAOFactory.getProfileDao();
-                server.update(currentProfile);
+        ProfileDAO server = DAOFactory.getProfileDao();
+        server.update(currentProfile);
 
-                // history Changes
-                action.setHistoryData(
-                        action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-                action.setHistoryTimestamp(LocalDateTime.now());
-                CurrentHistory.updateHistory(action);
-
+        // history Changes
+        action.setHistoryData(
+                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+        action.setHistoryTimestamp(LocalDateTime.now());
+        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -546,5 +546,9 @@ public class ProfileEdit extends CommonController {
 
     public void setIsClinician(Boolean bool) {
         isClinician = bool;
+    }
+
+    public boolean getManuallyExpiredOrgans() throws SQLException {
+        return !DAOFactory.getOrganDao().getExpired(currentProfile).isEmpty();
     }
 }

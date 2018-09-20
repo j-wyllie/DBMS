@@ -1,10 +1,13 @@
 package server.controller;
 
-import java.time.LocalDate;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
@@ -15,6 +18,7 @@ import server.model.database.organ.OrganDAO;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class OrganController {
 
     /**
@@ -172,5 +176,55 @@ public class OrganController {
         if (req.queryMap().hasKey("received")) {
             database.removeReceived(profile, organEnum);
         }
+    }
+
+    public static String getExpired(Request req, Response res) {
+        OrganDAO database = DAOFactory.getOrganDao();
+        int profileId = Integer.valueOf(req.params("id"));
+        List<ExpiredOrgan> organs;
+
+        try {
+            organs = database.getExpired(new Profile(profileId));
+        } catch (SQLException e) {
+            res.status(500);
+            return "Internal Server Error";
+        }
+
+        Gson gson = new Gson();
+        String responseBody = gson.toJson(organs);
+
+        res.type("application/json");
+        res.status(200);
+
+        return responseBody;
+    }
+
+
+    public static String setExpired(Request req, Response res) {
+        OrganDAO database = DAOFactory.getOrganDao();
+        int profileId = Integer.valueOf(req.params("id"));
+        String organ = req.queryParams("organ").toLowerCase().replace("_", " ");
+
+        try {
+            if (Integer.valueOf(req.queryParams("expired")) == 1) {
+                String note = req.queryParams("note");
+                int userId = Integer.valueOf(req.queryParams("userId"));
+                database.setExpired(new Profile(profileId), organ, 1, note, userId);
+            }
+            else {
+                database.revertExpired(profileId, organ);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            res.status(500);
+            return "Internal Server Error";
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.status(400);
+            return "Bad Request";
+        }
+
+        res.status(200);
+        return "Expiry set";
     }
 }

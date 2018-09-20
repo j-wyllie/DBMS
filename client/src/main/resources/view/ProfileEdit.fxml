@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -19,10 +20,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <?import odms.controller.DateTimePicker?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileEdit">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileEdit">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
             <columnConstraints>
@@ -385,11 +385,6 @@
                                                     <Insets left="20.0" />
                                                 </GridPane.margin>
                                             </Label>
-                                            <DateTimePicker fx:id="dodDateTimePicker" prefHeight="25.0" prefWidth="527.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </DateTimePicker>
                                             <Label layoutX="30.0" layoutY="99.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Gender : " GridPane.columnSpan="3" GridPane.rowIndex="7">
                                                 <GridPane.margin>
                                                     <Insets left="20.0" />
@@ -442,6 +437,11 @@
                                                     <Insets right="20.0" />
                                                 </GridPane.margin>
                                             </TextField>
+                                             <SplitPane fx:id="dodPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="6">
+                                                <items>
+                                                  <DateTimePicker fx:id="dodDateTimePicker" prefHeight="26.0" prefWidth="433.0" />
+                                                </items>
+                                             </SplitPane>
                                             </children>
                                         </GridPane>
                                         </children>

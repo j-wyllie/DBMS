@@ -1,6 +1,5 @@
 package odms.view.user;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -23,6 +23,7 @@ import odms.view.CommonView;
  * View for the transplant waiting list. Contains all GUI element accessors for the transplant
  * waiting view scene.
  */
+@Slf4j
 public class TransplantWaitingList extends CommonView {
 
     private User currentUser;
@@ -84,7 +85,7 @@ public class TransplantWaitingList extends CommonView {
 
                 createNewDonorWindow(
                         ((Map.Entry<Profile, OrganEnum>) transplantTable.getSelectionModel()
-                                .getSelectedItem()).getKey(), parentView);
+                                .getSelectedItem()).getKey(), parentView, currentUser);
             }
         });
     }
@@ -97,7 +98,7 @@ public class TransplantWaitingList extends CommonView {
         try {
             makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -113,7 +114,7 @@ public class TransplantWaitingList extends CommonView {
             makeTransplantWaitingList(DAOFactory.getProfileDao().getAllReceiving());
             makeTransplantWaitingList(controller.getWaitingList());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

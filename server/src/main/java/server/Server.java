@@ -8,6 +8,7 @@ import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
+import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;
@@ -19,6 +20,7 @@ import server.controller.UserController;
 /**
  * Main entry point for server application.
  */
+@Slf4j
 public class Server {
     private static Integer port = 6969;
 
@@ -43,20 +45,13 @@ public class Server {
      * @param args parameters for application
      */
     public static void main (String[] args) {
-        System.out.println("Server is alive!");
-        System.out.println("Listening on port: " + port);
+        log.info("Server is alive!");
+        log.info("Listening on port: " + port);
 
-        for (String arg : args) {
-            arg = arg.toLowerCase();
-            switch (arg) {
-                case "-port":
-                    System.out.println("Example to set a custom port.");
-            }
-        }
         port(port);
         initExceptionHandler((e) -> {
-            System.out.println("Server init failed");
-            System.out.println(e.getMessage());
+            log.error("Server init failed");
+            log.error(e.getMessage(), e);
         });
         initRoutes();
         initControllers();
@@ -74,6 +69,7 @@ public class Server {
                     patch("", UserController::edit);
                     delete("", UserController::delete);
                 });
+                path("/login", () -> post("", UserController::checkCredentials));
             });
 
             // profile api routes.
@@ -82,7 +78,10 @@ public class Server {
                 get("/all", ProfileController::getAll);
                 get("", ProfileController::get);
                 post("", ProfileController::create);
+                get("/password", ProfileController::hasPassword);
+                post("/password", ProfileController::savePassword);
 
+                post("/login", ProfileController::checkCredentials);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
 
@@ -101,6 +100,13 @@ public class Server {
                         get("", OrganController::getAll);
                         post("", OrganController::add);
                         delete("", OrganController::delete);
+
+                        // organs api endpoints.
+                        path("/expired", () -> {
+                            get("", OrganController::getExpired);
+                            post("", OrganController::setExpired);
+                            delete("", OrganController::delete);
+                        });
                     });
 
                     // condition api endpoints.
@@ -160,7 +166,6 @@ public class Server {
     }
 
     private static void initControllers() {
-
         userController = new UserController();
         profileController = new ProfileController();
         organController = new OrganController();
