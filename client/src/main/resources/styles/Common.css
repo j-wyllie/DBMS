@@ -84,7 +84,6 @@
 
 .progress-bar > .bar {
     -fx-background-color: linear-gradient(#71aee1, #135c94);
-    /*-fx-background-color: #000000;*/
 }
 
 .progress-bar-green > .bar {

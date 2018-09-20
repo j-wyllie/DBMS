@@ -1,8 +1,7 @@
 package odms.commons.model.history;
 
 import java.util.ArrayList;
-import odms.commons.model.profile.Profile;
-import odms.commons.model.user.User;
+import java.util.List;
 
 public final class CurrentHistory {
 
@@ -10,35 +9,27 @@ public final class CurrentHistory {
         throw new UnsupportedOperationException();
     }
 
-    public static ArrayList<History> currentSessionHistory = new ArrayList<>();
-    public static int historyPosition;
-    public static ArrayList<Profile> deletedProfiles = new ArrayList<>();
-    public static ArrayList<User> deletedUsers = new ArrayList<User>();
-
+    private static List<History> currentSessionHistory = new ArrayList<>();
+    private static int historyPosition;
 
     /**
      * Adds a new history to current session history and removed undone ones
      *
-     * @param history
+     * @param history the history item
      */
     public static void updateHistory(History history) {
-        if (getHistory().size() != 0 &&
-                getPosition() != getHistory().size() - 1) {
+        if (!getHistory().isEmpty() &&
+                historyPosition != getHistory().size() - 1) {
             currentSessionHistory
-                    .subList(getPosition(),
+                    .subList(historyPosition,
                             getHistory().size() - 1).clear();
         }
         currentSessionHistory.add(history);
         historyPosition = currentSessionHistory.size() - 1;
     }
 
-    public static ArrayList<History> getHistory() {
+    public static List<History> getHistory() {
         return currentSessionHistory;
-    }
-
-
-    public static int getPosition() {
-        return historyPosition;
     }
 
     public static void setPosition(int num) {
