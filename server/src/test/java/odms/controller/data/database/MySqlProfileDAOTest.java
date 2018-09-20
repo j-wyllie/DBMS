@@ -22,7 +22,7 @@ import org.junit.Test;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class MySqlProfileDaoTest extends MySqlCommonTests {
+public class MySqlProfileDAOTest extends MySqlCommonTests {
     private MySqlProfileDAO mySqlProfileDAO;
 
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,

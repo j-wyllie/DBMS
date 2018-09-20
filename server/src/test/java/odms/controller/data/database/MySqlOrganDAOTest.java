@@ -19,7 +19,7 @@ import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 import server.model.database.user.MySqlUserDAO;
 
-public class MySqlOrganDaoTest extends MySqlCommonTests {
+public class MySqlOrganDAOTest extends MySqlCommonTests {
 
     private Profile testProfile1;
     private Profile testProfile2;

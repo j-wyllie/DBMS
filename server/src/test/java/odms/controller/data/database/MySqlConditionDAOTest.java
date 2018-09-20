@@ -15,7 +15,7 @@ import server.model.database.DAOFactory;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 
-public class MySqlConditionDaoTest extends MySqlCommonTests {
+public class MySqlConditionDAOTest extends MySqlCommonTests {
 
     private Profile testProfile1;
     private Profile testProfile2;

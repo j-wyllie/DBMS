@@ -17,7 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.user.MySqlUserDAO;
 
-public class MySqlUserDaoTest extends MySqlCommonTests {
+public class MySqlUserDAOTest extends MySqlCommonTests {
     private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private static User testUser0;
