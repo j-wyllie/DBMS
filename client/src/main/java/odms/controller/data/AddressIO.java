@@ -141,6 +141,7 @@ public final class AddressIO {
                         .getAsJsonObject().get("location").getAsJsonObject();
                 longLat.add(longLatJson.get("lat").getAsDouble());
                 longLat.add(longLatJson.get("lng").getAsDouble());
+                System.out.println(longLat);
                 return longLat;
             }
 

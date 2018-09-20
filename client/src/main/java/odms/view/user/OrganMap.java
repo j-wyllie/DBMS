@@ -46,6 +46,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
     private static final String RECEIVER_MARKER = "/icons/receiverMarker.png";
     private static final String DONOR_MARKER = "/icons/deadDonorMarker.png";
+    private static final String BOTH_MARKER = "/icons/red_marker.png";
     private static final Integer ZOOM_LEVEL = 5;
     private static final String FULL_PREFERRED_NAME = "fullPreferredName";
     private static final Double LAT = -41.0;
@@ -58,6 +59,9 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private Collection<Marker> currentReceiverMarkers = new ArrayList<>();
     private ObservableList<Profile> donorsList;
     private ObservableList<Profile> receiversList;
+    private ArrayList<List<Double>> donorPositionList = new ArrayList<>();
+    private ArrayList<List<Double>> receiverPositionList = new ArrayList<>();
+    private Boolean sameBoolean;
 
     @FXML
     private GoogleMapView mapView;
@@ -234,16 +238,29 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         List<Double> latLng = controller.getProfileLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
-        formatMarkerImage(DONOR_MARKER, donorLocation, markerOptions);
+
+        sameBoolean = false;
+
+        for(List<Double> position : receiverPositionList) {
+            if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
+                System.out.println("SAME");
+                sameBoolean = true;
+                break;
+            }
+        }
+        if(sameBoolean){
+            formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
+        } else {
+            formatMarkerImage(DONOR_MARKER, donorLocation, markerOptions);
+        }
 
         Marker marker = new Marker(markerOptions);
-        if (!currentDonorMarkers.isEmpty()) {
             clearDonorMarkers();
-        }
         if (!currentReceiverMarkers.isEmpty()) {
-            map.removeMarkers(currentReceiverMarkers);
-            currentReceiverMarkers.clear();
+            clearReceiverMarkers();
         }
+
+
         map.addMarker(marker);
 
         map.addUIEventHandler(marker, UIEventType.click,
@@ -253,6 +270,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 });
 
         currentDonorMarkers.add(marker);
+        donorPositionList.add(latLng);
+
     }
 
     /**
@@ -264,12 +283,27 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         List<Double> latLng = controller.getProfileLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
-        formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
+        sameBoolean = false;
+        for(List<Double> position : donorPositionList) {
+            System.out.println(position.get(0) + "" + position.get(1));
+            System.out.println(latLng.get(0) + "" + latLng.get(1));
+            if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
+                System.out.println("SAME");
+                sameBoolean = true;
+                break;
+            }
+        }
+        if(sameBoolean){
+            formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
+        } else {
+            System.out.println("here");
+            formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
+        }
+
         Marker marker = new Marker(markerOptions);
 
-        if (!currentReceiverMarkers.isEmpty()) {
-            map.removeMarkers(currentReceiverMarkers);
-            currentReceiverMarkers.clear();
+        if (currentDonorMarkers.size() != 1) {
+            clearDonorMarkers();
         }
 
         map.addMarker(marker);
@@ -280,6 +314,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 });
 
         currentReceiverMarkers.add(marker);
+        receiverPositionList.add(latLng);
     }
 
     /**
@@ -306,6 +341,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private void clearDonorMarkers() {
         map.removeMarkers(currentDonorMarkers);
         currentDonorMarkers.clear();
+        donorPositionList.clear();
     }
 
     /**
@@ -314,7 +350,9 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private void clearReceiverMarkers() {
         map.removeMarkers(currentReceiverMarkers);
         currentReceiverMarkers.clear();
+        receiverPositionList.clear();
     }
+
 
     /**
      * Displays a list of profiles on the map.
@@ -329,7 +367,11 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
             MarkerOptions markerOptions = new MarkerOptions();
             formatMarkerImage(mapMarker, donorLocation, markerOptions);
             Marker marker = new Marker(markerOptions);
-            currentReceiverMarkers.add(marker);
+            if(mapMarker == DONOR_MARKER) {
+                currentDonorMarkers.add(marker);
+            } else{
+                currentReceiverMarkers.add(marker);
+            }
 
             map.addUIEventHandler(marker, UIEventType.click,
                     jsObject -> {

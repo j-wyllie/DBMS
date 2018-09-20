@@ -1,10 +1,13 @@
 package odms.controller.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import odms.controller.data.AddressIO;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class AddressIOTest {
 
@@ -58,4 +61,17 @@ public class AddressIOTest {
         assertFalse(AddressIO.checkValidCity(null, "Australian Capital Territory", "Australia"));
 
     }
+
+    @Test
+    public void checkLatLongRegion() {
+        ArrayList<Double> wellingtonCheck = new ArrayList<>();
+        ArrayList<Double> aucklandCheck = new ArrayList<>();
+        wellingtonCheck.add(-41.2864603);
+        wellingtonCheck.add(174.776236);
+        assertEquals(AddressIO.getLongLatRegion("Wellington", "New Zealand"), wellingtonCheck);
+        aucklandCheck.add(-36.8484597);
+        aucklandCheck.add(174.7633315);
+        assertEquals(AddressIO.getLongLatRegion("Auckland", "New Zealand"), aucklandCheck);
+    }
+
 }
