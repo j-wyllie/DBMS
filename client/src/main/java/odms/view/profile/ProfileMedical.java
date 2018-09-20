@@ -81,10 +81,13 @@ public class ProfileMedical extends CommonView {
         handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
 
+    /**
+     * Updates the blood donation label after donating blood in order to display the correct number of points.
+     */
     public void updateBloodDonationLabel() {
-        bloodDonationLabel.setText("Blood Donation Points: "+currentProfile.getBloodDonationPoints());
+        bloodDonationLabel.setText("Blood Donation Points: "+
+                currentProfile.getBloodDonationPoints());
     }
-
 
     @FXML
     public void onBtnDonationClicked(ActionEvent actionEvent) throws IOException{

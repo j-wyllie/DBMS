@@ -215,8 +215,8 @@ public class Profile implements Comparable<Profile> {
         this.preferredName = preferredName;
         this.preferredGender = preferredGender;
         this.pictureName = imageName;
-        this.bloodDonationPoints=bloodDonationPoints;
-        this.lastBloodDonation=lastBloodDonation;
+        this.bloodDonationPoints = bloodDonationPoints;
+        this.lastBloodDonation = lastBloodDonation;
     }
 
     public Profile(int profileId) {

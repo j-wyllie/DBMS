@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 @Slf4j
+/**
+ * View for the blood donation tab.
+ */
 public class BloodDonation {
     @FXML
     private Button btnDonate;
@@ -31,16 +34,22 @@ public class BloodDonation {
 
     private ProfileMedical parent;
 
-    public void onBtnCancelClicked(ActionEvent actionEvent) {
+    /**
+     * Method that is called when cancel button is clicked to close the window.
+     */
+    public void onBtnCancelClicked() {
 
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
 
     }
 
-    public void onBtnDonateClicked(ActionEvent actionEvent) {
+    /**
+     * Method that is called when donate button is clicked to increment points and close window.
+     */
+    public void onBtnDonateClicked() {
         if (plasmaCheckBox.isSelected()) {
-            bloodTypePoints+= 2;
+            bloodTypePoints += 2;
         }
         LocalDateTime timestamp = LocalDateTime.now();
         profile.addBloodDonationPoints(bloodTypePoints);
@@ -56,8 +65,11 @@ public class BloodDonation {
         stage.close();
     }
 
-    public void setPoints() {
-        switch (profile.getBloodType()){
+    /**
+     * Method that sets the base amount of points a person can earn in this donation.
+     */
+    private void setPoints() {
+        switch (profile.getBloodType()) {
             case "O+":
                 bloodTypePoints = 2;
                 break;
@@ -95,6 +107,11 @@ public class BloodDonation {
         }
     }
 
+    /**
+     * Method that sets up the view.
+     * @param currentProfile
+     * @param view
+     */
     public void initialize(Profile currentProfile, ProfileMedical view) {
         profile = currentProfile;
         parent = view;
@@ -102,13 +119,19 @@ public class BloodDonation {
         setLabel();
     }
 
+    /**
+     * Sets the label with the number of earnable points
+     */
     private void setLabel() {
         lblPoints.setText("Points Earnable: " + bloodTypePoints);
     }
 
-    public void onCheckBoxChecked(ActionEvent actionEvent) {
+    /**
+     * Updates label with correct text if checkbox is checked.
+     */
+    public void onCheckBoxChecked() {
         if (plasmaCheckBox.isSelected()) {
-            lblPoints.setText("Points Earnable: " + (bloodTypePoints+2));
+            lblPoints.setText("Points Earnable: " + (bloodTypePoints + 2));
         } else {
             setLabel();
         }
