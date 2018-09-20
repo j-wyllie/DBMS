@@ -36,7 +36,8 @@ public class ProfileMedical extends CommonView {
 
     private Profile currentProfile;
     // init controller corresponding to this view
-    private odms.controller.profile.ProfileMedical controller = new odms.controller.profile.ProfileMedical(this);
+    private odms.controller.profile.ProfileMedical controller =
+            new odms.controller.profile.ProfileMedical(this);
     private Boolean isOpenedByClinician;
     private User currentUser;
 
@@ -69,6 +70,11 @@ public class ProfileMedical extends CommonView {
 
     public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        if (isOpenedByClinician) {
+            bloodDonationButton.setVisible(false);
+        } else {
+            bloodDonationButton.setVisible(true);
+        }
         this.currentUser = currentUser;
         currentProfile = p;
         if (currentProfile != null) {
@@ -78,19 +84,24 @@ public class ProfileMedical extends CommonView {
 
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician,
+                currentUser);
     }
 
     /**
-     * Updates the blood donation label after donating blood in order to display the correct number of points.
+     * Updates the blood donation label after donating blood
+     * in order to display the correct number of points.
      */
     public void updateBloodDonationLabel() {
-        bloodDonationLabel.setText("Blood Donation Points: "+
+        bloodDonationLabel.setText("Blood Donation Points: " +
                 currentProfile.getBloodDonationPoints());
     }
 
+    /**
+     * Opens a window for donating blood.
+     */
     @FXML
-    public void onBtnDonationClicked(ActionEvent actionEvent) throws IOException{
+    public void onBtnDonationClicked(ActionEvent actionEvent) throws IOException {
         Node source = (Node) actionEvent.getSource();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/BloodDonation.fxml"));

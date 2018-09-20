@@ -1,23 +1,19 @@
 package odms.view.profile;
 
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 
-@Slf4j
 /**
  * View for the blood donation tab.
  */
+@Slf4j
 public class BloodDonation {
     @FXML
     private Button btnDonate;
@@ -34,6 +30,8 @@ public class BloodDonation {
 
     private ProfileMedical parent;
 
+    private odms.controller.profile.BloodDonation controller = new odms.controller.profile.BloodDonation(this);
+
     /**
      * Method that is called when cancel button is clicked to close the window.
      */
@@ -48,74 +46,20 @@ public class BloodDonation {
      * Method that is called when donate button is clicked to increment points and close window.
      */
     public void onBtnDonateClicked() {
-        if (plasmaCheckBox.isSelected()) {
-            bloodTypePoints += 2;
-        }
-        LocalDateTime timestamp = LocalDateTime.now();
-        profile.addBloodDonationPoints(bloodTypePoints);
-        profile.setLastBloodDonation(timestamp);
-        ProfileDAO server = DAOFactory.getProfileDao();
-        try {
-            server.update(profile);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+        controller.updatePoints();
         parent.updateBloodDonationLabel();
         Stage stage = (Stage) btnDonate.getScene().getWindow();
         stage.close();
     }
 
     /**
-     * Method that sets the base amount of points a person can earn in this donation.
-     */
-    private void setPoints() {
-        switch (profile.getBloodType()) {
-            case "O+":
-                bloodTypePoints = 2;
-                break;
-            case "O-":
-                bloodTypePoints = 3;
-                break;
-            case "A+":
-                bloodTypePoints = 2;
-                break;
-            case "A-":
-                bloodTypePoints = 4;
-                break;
-            case "B+":
-                bloodTypePoints = 3;
-                break;
-            case "B-":
-                bloodTypePoints = 5;
-                break;
-            case "AB+":
-                bloodTypePoints = 4;
-                break;
-            case "AB-":
-                bloodTypePoints = 5;
-                break;
-            default:
-                bloodTypePoints = 0;
-                break;
-        }
-        try {
-            if (LocalDateTime.now().minusDays(365).isBefore(profile.getLastBloodDonation())) {
-                bloodTypePoints += 1;
-            }
-        } catch (NullPointerException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
      * Method that sets up the view.
-     * @param currentProfile
-     * @param view
+     * @param currentProfile the profile that is currently selected.
+     * @param view The parent view.
      */
     public void initialize(Profile currentProfile, ProfileMedical view) {
         profile = currentProfile;
         parent = view;
-        setPoints();
         setLabel();
     }
 
@@ -123,7 +67,7 @@ public class BloodDonation {
      * Sets the label with the number of earnable points
      */
     private void setLabel() {
-        lblPoints.setText("Points Earnable: " + bloodTypePoints);
+        lblPoints.setText("Points Earnable: " + controller.setPoints());
     }
 
     /**
@@ -131,9 +75,17 @@ public class BloodDonation {
      */
     public void onCheckBoxChecked() {
         if (plasmaCheckBox.isSelected()) {
-            lblPoints.setText("Points Earnable: " + (bloodTypePoints + 2));
+            lblPoints.setText("Points Earnable: " + (controller.setPoints() + 2));
         } else {
             setLabel();
         }
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public boolean getPlasmaChecked() {
+        return plasmaCheckBox.isSelected();
     }
 }
