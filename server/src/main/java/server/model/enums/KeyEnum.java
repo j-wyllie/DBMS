@@ -1,5 +1,8 @@
 package server.model.enums;
 
+/**
+ * Common keys for json requests/responses.
+ */
 public enum KeyEnum {
     ID("id"),
     NAME("name"),

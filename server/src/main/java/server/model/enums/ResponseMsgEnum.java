@@ -1,5 +1,8 @@
 package server.model.enums;
 
+/**
+ * Common message responses.
+ */
 public enum ResponseMsgEnum {
     BAD_REQUEST("Bad Request"),
     FORBIDDEN("Forbidden"),
