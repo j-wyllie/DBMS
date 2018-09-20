@@ -238,12 +238,12 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         List<Double> latLng = controller.getProfileLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
-
+        clearDonorMarkers();
+        clearReceiverMarkers();
         sameBoolean = false;
 
         for(List<Double> position : receiverPositionList) {
             if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
-                System.out.println("SAME");
                 sameBoolean = true;
                 break;
             }
@@ -255,11 +255,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         }
 
         Marker marker = new Marker(markerOptions);
-            clearDonorMarkers();
-        if (!currentReceiverMarkers.isEmpty()) {
-            clearReceiverMarkers();
-        }
-
 
         map.addMarker(marker);
 
@@ -285,18 +280,15 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         MarkerOptions markerOptions = new MarkerOptions();
         sameBoolean = false;
         for(List<Double> position : donorPositionList) {
-            System.out.println(position.get(0) + "" + position.get(1));
-            System.out.println(latLng.get(0) + "" + latLng.get(1));
             if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
-                System.out.println("SAME");
                 sameBoolean = true;
                 break;
             }
         }
         if(sameBoolean){
             formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
+            map.removeMarkers(currentDonorMarkers);
         } else {
-            System.out.println("here");
             formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
         }
 
