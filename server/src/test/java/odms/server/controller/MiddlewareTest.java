@@ -1,5 +1,7 @@
 package odms.server.controller;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -11,6 +13,9 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import odms.server.model.database.MySqlCommonTests;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import server.Server;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
@@ -39,6 +44,7 @@ public class MiddlewareTest extends MySqlCommonTests {
 
     // Request variables.
     private Request requestA;
+    private Request requestB;
 
     // Token variables.
     int validToken = 32873;
@@ -80,21 +86,26 @@ public class MiddlewareTest extends MySqlCommonTests {
         userC = userDAO.get(userC.getUsername());
 
         requestA = mock(Request.class);
-        when(requestA.headers("id")).thenReturn(profileA.getId());
-        when(requestA.headers("userType")).thenReturn(UserType.PROFILE);
+        when(requestA.headers("id")).thenReturn(profileA.getId().toString());
+        when(requestA.headers("userType")).thenReturn(UserType.PROFILE.getName());
+
+        requestB = mock(Request.class);
     }
 
     @Test
     public void testProfileAuthenticateValid() throws SQLException {
         int token = Middleware.authenticate(profileA.getId(), UserType.PROFILE);
         // Add token to mocked request.
-        when(requestA.headers("token")).thenReturn(token);
-        assertTrue(Middleware.isAuthenticated(requestA);
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAuthenticated(requestA));
     }
 
     @Test
-    public void testProfileAuthenticateInvalid() {
-
+    public void testProfileAuthenticateInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.PROFILE);
+        // Add token to mocked request.
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        assertFalse(Middleware.isAuthenticated(requestA));
     }
 
     @Test

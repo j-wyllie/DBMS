@@ -70,7 +70,6 @@ public class Server {
         // user api routes.
         path("/api/v1", () -> {
             path("/users", () -> {
-
                 path("/login", () -> post("", UserController::checkCredentials));
 
                 before("/*", (request, response) -> {
