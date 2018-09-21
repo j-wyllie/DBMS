@@ -1,7 +1,6 @@
 package odms.controller.data.database;
 
 import static org.junit.Assert.assertTrue;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.enums.UserType;
@@ -10,7 +9,6 @@ import odms.commons.model.user.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
@@ -29,6 +27,7 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
 
     // User variables.
     private User userA;
+    private User userB;
 
     // Token variables.
     long validToken = 32873;
@@ -49,6 +48,9 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
 
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
         userDAO.add(userA);
+
+        userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
+        userDAO.add(userB);
     }
 
     @Test
@@ -66,33 +68,37 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
     @Test
     public void testSetProfileTokenInvalid() throws SQLException {
         middleware.setProfileToken(invalidId, validToken);
-        assertTrue(middleware.isProfileAuthenticated(invalidId, validToken));
+        assertFalse(middleware.isProfileAuthenticated(invalidId, validToken));
     }
 
     @Test
     public void testSetUserTokenInvalid() throws SQLException {
         middleware.setUserToken(invalidId, validToken);
-        assertTrue(middleware.isUserAuthenticated(invalidId, validToken));
+        assertFalse(middleware.isUserAuthenticated(invalidId, validToken));
     }
 
     @Test
-    public void testIsProfileAuthenticatedValid() {
-
+    public void testIsProfileAuthenticatedValid() throws SQLException {
+        middleware.setProfileToken(profileB.getId(), validToken);
+        assertTrue(middleware.isProfileAuthenticated(profileB.getId(), validToken));
     }
 
     @Test
-    public void testIsUserAuthenticatedValid() {
-
+    public void testIsUserAuthenticatedValid() throws SQLException {
+        middleware.setUserToken(userB.getStaffID(), validToken);
+        assertTrue(middleware.isUserAuthenticated(userB.getStaffID(), validToken));
     }
 
     @Test
-    public void testIsProfileAuthenticatedInvalid() {
-
+    public void testIsProfileAuthenticatedInvalid() throws SQLException {
+        middleware.setProfileToken(profileB.getId(), validToken);
+        assertFalse(middleware.isProfileAuthenticated(profileB.getId(), invalidToken));
     }
 
     @Test
     public void testIsUserAuthenticatedInvalid() {
-
+        middleware.setUserToken(userB.getStaffID(), validToken);
+        assertFalse(middleware.isUserAuthenticated(userB.getStaffID(), invalidToken));
     }
 
     @Test
