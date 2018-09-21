@@ -21,6 +21,13 @@ public class Request {
     private static String domain = "localhost";
     private static String url = "http://" + domain + ":" + port + "/api/v1/";
 
+    /**
+     * Constructor for a request.
+     * @param urlString of the request to be made.
+     * @param token of the current user for authentication.
+     * @param queryParams to be attached to the url.
+     * @param body of the request.
+     */
     public Request(String urlString, int token, Map<String, Object> queryParams, String body) {
         this.urlString = urlString;
         this.token = token;
@@ -28,12 +35,23 @@ public class Request {
         this.body = body;
     }
 
+    /**
+     * Constructor for a request that does not require a body.
+     * @param urlString of the request to be made.
+     * @param token of the current user for authentication.
+     * @param queryParams to be attached to the url.
+     */
     public Request(String urlString, int token, Map<String, Object> queryParams) {
         this.urlString = urlString;
         this.token = token;
         this.queryParams = queryParams;
     }
 
+    /**
+     * Executes a GET request to the server.
+     * @return the response from the server.
+     * @throws IOException error.
+     */
     public Response get() throws IOException {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
         //Creating the connection to the server.
@@ -48,6 +66,11 @@ public class Request {
         return new Response(this.token, body, status);
     }
 
+    /**
+     * Executes a POST request to the server.
+     * @return the response from the server.
+     * @throws IOException error.
+     */
     public Response post() throws IOException {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
         //Creating the connection to the server.
@@ -66,6 +89,11 @@ public class Request {
         return new Response(this.token, body, status);
     }
 
+    /**
+     * Executes a PATCH request to the server.
+     * @return the response from the server.
+     * @throws IOException error.
+     */
     public Response patch() throws IOException {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
         //Creating the connection to the server.
@@ -85,6 +113,11 @@ public class Request {
         return new Response(this.token, body, status);
     }
 
+    /**
+     * Executes a DELETE request to the server.
+     * @return the response from the server.
+     * @throws IOException error.
+     */
     public Response delete() throws IOException {
         URL url = new URL(constructUrl(this.urlString, this.queryParams));
         //Creating the connection to the server.
@@ -99,6 +132,12 @@ public class Request {
         return new Response(this.token, body, status);
     }
 
+    /**
+     * Executes a particular request.
+     * @param con the connection to the server.
+     * @return the response from the server.
+     * @throws IOException error.
+     */
     private String execute(HttpURLConnection con) throws IOException {
         con.setConnectTimeout(60000);
         con.setReadTimeout(60000);
@@ -123,14 +162,19 @@ public class Request {
         return body;
     }
 
+    /**
+     * Constructs the url string with the query parameters supplied.
+     * @param urlString base url.
+     * @param queryParams to add to the base url.
+     * @return the constructed url.
+     */
     private String constructUrl(String urlString, Map<String, Object> queryParams) {
         Object[] keys = queryParams.keySet().toArray();
         for (int i = 0; i < queryParams.size(); i++) {
             String key = (String) keys[i];
             if (i == 0) {
                 urlString += ("?" + key + '=' + queryParams.get(key));
-            }
-            else {
+            } else {
                 urlString += ("&" + key + '=' + queryParams.get(key));
             }
         }
@@ -138,6 +182,10 @@ public class Request {
         return urlString;
     }
 
+    /**
+     * Gets the url of the particular request.
+     * @return the url string.
+     */
     public static String getUrl() {
         return url;
     }
