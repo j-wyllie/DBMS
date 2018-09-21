@@ -98,6 +98,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         ObservableList<String> travelMethods = FXCollections.observableArrayList("Car", "Helicopter");
         travelMethod.setItems(travelMethods);
         travelMethod.setValue("Car");
+    }
+
+    public void initialize() {
 
     }
 
@@ -143,7 +146,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             setMarkersTable();
         });
 
-        setUsersLocation();
+        //setUsersLocation();
         populateHospitals();
         setMarkersTable();
     }
@@ -487,7 +490,37 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             log.error("Failed to populate hospitals");
             log.error(e.getMessage(), e);
         }
+    }
 
+    /**
+     * Event handler, when edit hospital button is clicked a new window is opened.
+     * @param event button click event
+     */
+    @FXML
+    public void handleEditHospital(ActionEvent event) {
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/HospitalCreate.fxml"));
+
+        try {
+            Hospital hospital = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+
+            Scene scene = new Scene(fxmlLoader.load());
+            HospitalCreate hospitalCreate = fxmlLoader.getController();
+            hospitalCreate.initialize(hospital);
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Edit Hospital");
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.setOnHiding(ob -> populateHospitals());
+            stage.show();
+        } catch (IOException e) {
+            log.error("Failed to populate hospitals");
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**

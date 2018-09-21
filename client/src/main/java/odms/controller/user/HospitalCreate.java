@@ -25,6 +25,13 @@ public class HospitalCreate {
     private static final String API_URL = "https://maps.googleapis.com/maps/api/";
     private static final String KEY = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
+    /**
+     * Makes a request to add a new hospital to the database.
+     * @param name name of hospital
+     * @param address address of hospital
+     * @throws IOException thrown if there is an error validating the address
+     * @throws SQLException thrown if there is a database error
+     */
     public void addHospital(String name, String address) throws IOException, SQLException {
         List<Double> latlong = getGeoLocation(address);
         Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address);
@@ -32,6 +39,27 @@ public class HospitalCreate {
         hospitalDAO.add(newHospital);
     }
 
+    /**
+     * Makes a request to edit an existing hospital in the database.
+     * @param name name of hospital
+     * @param address address of hospital
+     * @param hospitalId the id of the hospital that has been edited
+     * @throws IOException thrown if there is an error validating the address
+     * @throws SQLException thrown if there is a database error
+     */
+    public void editHospital(String name, String address, Integer hospitalId) throws SQLException, IOException {
+        List<Double> latlong = getGeoLocation(address);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address, null, hospitalId);
+        HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+        hospitalDAO.edit(newHospital);
+    }
+
+    /**
+     * Gets the lat and long of hospital address, this also validated the address is real.
+     * @param address address to be geolocated
+     * @return List that contains the lat and long of the address
+     * @throws IOException thrown if there is an error validating the address
+     */
     private List<Double> getGeoLocation(String address) throws IOException {
         List<Double> locationList = new ArrayList<>();
         String query = API_URL + "geocode/json?address=" + address.replace(" ", "+") + "&key=" + KEY;

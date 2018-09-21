@@ -84,7 +84,7 @@ public class HospitalController {
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            id = Integer.valueOf(req.queryParams("id"));
+            id = body.get("id").getAsInt();
             name = body.get("name").getAsString();
             address = body.get("address").getAsString();
             lat = body.get("latitude").getAsDouble();

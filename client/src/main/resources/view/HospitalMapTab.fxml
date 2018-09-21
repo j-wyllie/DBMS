@@ -11,13 +11,14 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.HospitalMap">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.162-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.HospitalMap">
     <GridPane prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1075.0" minWidth="10.0" prefWidth="274.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="191.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="4.0" prefWidth="186.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="182.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="214.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="214.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="189.0" />
          <ColumnConstraints />
@@ -29,9 +30,9 @@
          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
         </rowConstraints>
         <children>
-            <TableView fx:id="markersTable" prefHeight="482.0" prefWidth="176.0" GridPane.columnIndex="5" GridPane.columnSpan="1" />
-            <GoogleMapView fx:id="mapView" prefHeight="600.0" prefWidth="962.0" GridPane.columnIndex="0" GridPane.columnSpan="5" />
-            <Button fx:id="addHospitalButton" onAction="#handleAddHospital" prefHeight="46.0" prefWidth="130.0" text="Add Hospital" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="1">
+            <TableView fx:id="markersTable" prefHeight="482.0" prefWidth="176.0" GridPane.columnIndex="6" GridPane.columnSpan="1" />
+            <GoogleMapView fx:id="mapView" prefHeight="600.0" prefWidth="962.0" GridPane.columnIndex="0" GridPane.columnSpan="6" />
+            <Button fx:id="addHospitalButton" onAction="#handleAddHospital" prefHeight="46.0" prefWidth="130.0" text="Add Hospital" GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.rowSpan="1">
             <GridPane.margin>
                <Insets left="20.0" right="20.0" />
             </GridPane.margin></Button>
@@ -44,16 +45,21 @@
             <GridPane.margin>
                <Insets left="20.0" right="20.0" />
             </GridPane.margin></Button>
-         <Button fx:id="helpButton" layoutX="728.0" layoutY="539.0" onAction="#handleShowHelp" prefHeight="46.0" prefWidth="130.0" text="Help!" GridPane.columnIndex="5" GridPane.rowIndex="1">
+         <Button fx:id="helpButton" layoutX="728.0" layoutY="539.0" onAction="#handleShowHelp" prefHeight="46.0" prefWidth="130.0" text="Help!" GridPane.columnIndex="4" GridPane.rowIndex="1">
             <GridPane.margin>
                <Insets left="20.0" />
             </GridPane.margin>
          </Button>
-            <Button fx:id="findClosestHospitalBtn" layoutX="10.0" layoutY="68.0" onAction="#handleShowClosestHospital" prefHeight="46.0" prefWidth="130.0" text="Find nearest hospital" GridPane.columnIndex="4" GridPane.rowIndex="1">
+            <Button fx:id="findClosestHospitalBtn" layoutX="10.0" layoutY="68.0" onAction="#handleShowClosestHospital" prefHeight="46.0" prefWidth="130.0" text="Find nearest hospital" GridPane.columnIndex="3" GridPane.rowIndex="1">
                 <GridPane.margin>
                     <Insets left="20.0" />
                 </GridPane.margin>
             </Button>
+         <Button fx:id="editHospitalButton" onAction="#handleEditHospital" prefHeight="46.0" prefWidth="130.0" text="Edit Hospital" GridPane.columnIndex="6" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="20.0" right="20.0" />
+            </GridPane.margin>
+         </Button>
         </children>
     </GridPane>
 </AnchorPane>

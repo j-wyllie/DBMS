@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.locations.Hospital;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,6 +37,8 @@ public class HospitalCreate {
     private ListView<String> programList;
 
     private odms.controller.user.HospitalCreate controller = new odms.controller.user.HospitalCreate();
+    private boolean isEdit;
+    private Integer hospitalId;
 
     /**
      * Button handler called when the add button is clicked.
@@ -57,7 +60,11 @@ public class HospitalCreate {
         }
 
         try {
-            controller.addHospital(name, address);
+            if (!isEdit) {
+                controller.addHospital(name, address);
+            } else {
+                controller.editHospital(name, address, hospitalId);
+            }
         } catch (IOException e) {
             warningAddressLabel.setText(e.getMessage());
             warningAddressLabel.setVisible(true);
@@ -74,10 +81,32 @@ public class HospitalCreate {
     }
 
     /**
+     * Button handler called when the cancel button is clicked.
+     * @param event button clicked event
+     */
+    public void handleCancelButtonClicked(ActionEvent event) {
+        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        appStage.close();
+    }
+
+    /**
      * Init the listView to contain radio buttons.
      */
     public void initialize() {
+        isEdit = false;
         initListView();
+    }
+
+    /**
+     * Init the listView to contain radio buttons.
+     * @param hospital The hospital object to be edited.
+     */
+    public void initialize(Hospital hospital) {
+        hospitalId = hospital.getId();
+        isEdit = true;
+        initListView();
+        nameField.setText(hospital.getName());
+        addressField.setText(hospital.getAddress());
     }
 
     /**
