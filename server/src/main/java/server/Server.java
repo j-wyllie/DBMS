@@ -26,8 +26,10 @@ import server.controller.UserController;
 @Slf4j
 public class Server {
 
+    // Server running port.
     private static Integer port = 6969;
 
+    // Functional controllers.
     private static UserController userController;
     private static ProfileController profileController;
     private static ProcedureController procedureController;
@@ -45,7 +47,7 @@ public class Server {
     }
 
     /**
-     *
+     * The main server start.
      * @param args parameters for application
      */
     public static void main (String[] args) {
@@ -61,6 +63,9 @@ public class Server {
         initControllers();
     }
 
+    /**
+     * Initialises the server endpoints.
+     */
     private static void initRoutes() {
         // user api routes.
         path("/api/v1", () -> {
@@ -68,11 +73,11 @@ public class Server {
 
                 path("/login", () -> post("", UserController::checkCredentials));
 
-                before(((request, response) -> {
+                before("/*", (request, response) -> {
                     if(!(Middleware.isAdminAuthenticated(request))) {
                         halt(401, "Unauthorized");
                     }
-                }));
+                });
                 get("/all", UserController::getAll);
                 get("", UserController::get);
                 post("", UserController::create);
@@ -87,22 +92,49 @@ public class Server {
             // profile api routes.
             path("/profiles", () -> {
 
+                // No authentication required.
                 post("/login", ProfileController::checkCredentials);
-
-                before(((request, response) -> {
-                    if(!(Middleware.isAdminAuthenticated(request))) {
-                        if(!(Middleware.isAuthenticated(request))) {
-                            halt(401, "Unauthorized");
-                        }
-                    }
-                }));
-                get("/all", ProfileController::getAll);
-                get("", ProfileController::get);
                 post("", ProfileController::create);
 
+                // Profile authentication required.
+                before("/*", (request, response) -> {
+                    if(!(Middleware.isAuthenticated(request))) {
+                        halt(401, "Unauthorized");
+                    }
+                });
+
+                get("", ProfileController::get);
                 get("/password", ProfileController::hasPassword);
                 post("/password", ProfileController::savePassword);
 
+                path("/:id", () -> {
+                    patch("", ProfileController::edit);
+
+                    // organs api endpoints.
+                    path("/organs", () -> {
+                        get("", OrganController::getAll);
+                        post("", OrganController::add);
+                        delete("", OrganController::delete);
+                    });
+
+                    // condition api endpoints.
+                    path("/conditions", () -> {
+                        get("", ConditionController::getAll);
+                    });
+
+                    // procedure api endpoints.
+                    path("/procedures", () -> {
+                        get("", ProcedureController::getAll);
+                    });
+                });
+
+                // Admin or clinician authentication required.
+                before((request, response) -> {
+                    if (!(Middleware.isAdminAuthenticated(request))) {
+                        halt(401, "Unauthorized");
+                    }
+                });
+                get("/all", ProfileController::getAll);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
 
@@ -146,13 +178,11 @@ public class Server {
                 get("/count", ProfileController::count);
             });
 
-            before(((request, response) -> {
-                if(!(Middleware.isAdminAuthenticated(request))) {
-                    if(!(Middleware.isAuthenticated(request))) {
+            before("/*", (request, response) -> {
+                if (!(Middleware.isAdminAuthenticated(request))) {
                         halt(401, "Unauthorized");
-                    }
                 }
-            }));
+            });
 
             // condition api endpoints.
             path("/conditions", () -> {
@@ -195,6 +225,9 @@ public class Server {
         });
     }
 
+    /**
+     * Initialises the functional controllers.
+     */
     private static void initControllers() {
         userController = new UserController();
         profileController = new ProfileController();

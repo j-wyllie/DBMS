@@ -7,7 +7,6 @@ import odms.commons.model.enums.UserType;
 import org.sonar.api.server.authentication.UnauthorizedException;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
-import spark.Response;
 
 public class Middleware {
 
@@ -39,8 +38,14 @@ public class Middleware {
         return token;
     }
 
+    /**
+     * Checks if a request has the correct general authentication.
+     * @param req the request.
+     * @return true if the request is authenticated, false otherwise.
+     * @throws SQLException internal error.
+     */
     public static boolean isAuthenticated(Request req) throws SQLException {
-        UserType userType = UserType.valueOf(req.headers("UserType"));
+        UserType userType = UserType.valueOf(req.headers("userType"));
         int id = Integer.valueOf(req.headers("id"));
         int token = Integer.valueOf(req.headers("token"));
 
@@ -53,6 +58,13 @@ public class Middleware {
         }
     }
 
+    /**
+     * Checks if a request has the correct authentication appropriate for
+     * an admin or clinician.
+     * @param req the request.
+     * @return true if the request is authenticated, false otherwise.
+     * @throws SQLException internal error.
+     */
     public static boolean isAdminAuthenticated(Request req) throws SQLException {
         int id = Integer.valueOf(req.headers("id"));
         int token = Integer.valueOf(req.headers("token"));
@@ -76,8 +88,7 @@ public class Middleware {
             } else {
                 throw new UnauthorizedException("User unauthorized.");
             }
-        }
-        else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
+        } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
             if (database.isUserAuthenticated(id, token)) {
                 database.deleteUserToken(id);
             } else {

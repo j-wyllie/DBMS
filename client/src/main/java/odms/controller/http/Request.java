@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Request {
 
+    // Base request variables.
     private String urlString;
     private int token;
     private Map<String, Object> queryParams;
     private String body;
 
+    // Base server variables.
     private static Integer port = 6969;
     private static String domain = "localhost";
     private static String url = "http://" + domain + ":" + port + "/api/v1/";
