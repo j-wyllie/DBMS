@@ -9,13 +9,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.medications.Drug;
-import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  * The profile model class.
@@ -30,6 +32,8 @@ public class Profile implements Comparable<Profile> {
     private static final String SPACE = " ";
     private static final String DOD_STRING = "dod=";
     private static final String ZERO_STRING = "0";
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private List<String> regionsNZ = Arrays
             .asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay",
@@ -1038,12 +1042,21 @@ public class Profile implements Comparable<Profile> {
     }
 
     public void setEmail(String email) {
-        EmailValidator validator = EmailValidator.getInstance();
-        if (validator.isValid(email)) {
+        if (validate(email)) {
             this.email = email;
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * Validates an email address string.
+     * @param emailStr the string to be validated
+     * @return true if valid
+     */
+    private static boolean validate(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        return matcher.find();
     }
 
     public void setPreferredGender(String preferredGender) {
