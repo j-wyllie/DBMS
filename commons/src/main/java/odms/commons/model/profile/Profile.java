@@ -101,6 +101,9 @@ public class Profile implements Comparable<Profile> {
 
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
+    private LocalDateTime lastBloodDonation;
+
+    private int bloodDonationPoints = 0;
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
@@ -190,7 +193,9 @@ public class Profile implements Comparable<Profile> {
                 null, // updated
                 null, // preferredName
                 null, // preferredGender
-                null // imageName
+                null, // imageName
+                LocalDateTime.now().minusYears(100), // LastBloodDonation
+                0 //bloodDonationPoints
         );
     }
 
@@ -234,7 +239,7 @@ public class Profile implements Comparable<Profile> {
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String region, String phone, String email, String country, String city,
             String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName) {
+            LocalDateTime updated, String preferredName, String preferredGender, String imageName, LocalDateTime lastBloodDonation, int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -266,6 +271,8 @@ public class Profile implements Comparable<Profile> {
         this.preferredName = preferredName;
         this.preferredGender = preferredGender;
         this.pictureName = imageName;
+        this.bloodDonationPoints = bloodDonationPoints;
+        this.lastBloodDonation = lastBloodDonation;
     }
 
     /**
@@ -1247,4 +1254,19 @@ public class Profile implements Comparable<Profile> {
                         .replace(HYPHEN, "_")), date));
     }
 
+    public void setLastBloodDonation(LocalDateTime date) {
+        lastBloodDonation = date;
+    }
+
+    public LocalDateTime getLastBloodDonation(){
+        return lastBloodDonation;
+    }
+
+    public void addBloodDonationPoints(int points) {
+        bloodDonationPoints += points;
+    }
+
+    public int getBloodDonationPoints() {
+        return bloodDonationPoints;
+    }
 }

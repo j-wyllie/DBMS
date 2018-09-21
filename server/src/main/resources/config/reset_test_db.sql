@@ -196,7 +196,9 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
   `PreferredGender` varchar(30) DEFAULT NULL,
-  `ImageName` varchar(50) DEFAULT NULL
+  `ImageName` varchar(50) DEFAULT NULL,
+  `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
+  `BloodDonationPoints` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
