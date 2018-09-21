@@ -75,8 +75,6 @@ public class SocialFeedTab {
             tweetTable.setItems(tweetList);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-        } catch (TimeoutException e) {
-            log.error(e.getMessage(), e);
         }
     }
 
