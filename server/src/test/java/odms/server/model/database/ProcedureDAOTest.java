@@ -9,13 +9,14 @@ import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.procedure.MySqlProcedureDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class MySqlProcedureDAOTest extends MySqlCommonTests {
+public class ProcedureDAOTest extends CommonTestUtils {
 
     private MySqlProcedureDAO mySqlProcedureDAO;
     private MySqlProfileDAO mySqlProfileDAO;

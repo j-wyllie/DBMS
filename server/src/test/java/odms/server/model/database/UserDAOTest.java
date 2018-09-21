@@ -8,14 +8,13 @@ import java.sql.SQLException;
 import java.util.List;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
-import org.junit.After;
+import odms.server.CommonTestUtils;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.user.MySqlUserDAO;
 
-public class MySqlUserDAOTest extends MySqlCommonTests {
+public class UserDAOTest extends CommonTestUtils {
     private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private static User testUser0;

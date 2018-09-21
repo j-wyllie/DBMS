@@ -10,25 +10,23 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
-import odms.server.model.database.MySqlCommonTests;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.server.authentication.UnauthorizedException;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
-import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 import spark.Request;
 
 
-public class MiddlewareTest extends MySqlCommonTests {
+public class MiddlewareTest extends CommonTestUtils {
 
     // Data access objects required.
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();
     private UserDAO userDAO = DAOFactory.getUserDao();
-    private MiddlewareDAO middleware = DAOFactory.getMiddlewareDAO();
 
     // Profile variables.
     private Profile profileA;
@@ -45,10 +43,6 @@ public class MiddlewareTest extends MySqlCommonTests {
     private Request requestA;
     private Request requestB;
     private Request requestC;
-
-    // Token variables.
-    int validToken = 32873;
-    int invalidToken = 784834;
 
     // General variables.
     private int invalidId = 0;

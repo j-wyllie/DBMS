@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DrugControllerTest extends CommonTestUtils{
+public class UserControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() {

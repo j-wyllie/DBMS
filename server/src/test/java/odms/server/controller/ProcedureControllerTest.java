@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DrugControllerTest extends CommonTestUtils{
+public class ProcedureControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() {
@@ -29,6 +29,21 @@ public class DrugControllerTest extends CommonTestUtils{
 
     @Test
     public void testDelete() {
+
+    }
+
+    @Test
+    public void testGetOrgans() {
+
+    }
+
+    @Test
+    public void testDeleteOrgan() {
+
+    }
+
+    @Test
+    public void testAddOrgan() {
 
     }
 

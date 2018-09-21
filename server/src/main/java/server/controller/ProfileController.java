@@ -141,8 +141,7 @@ public class ProfileController {
             List<Profile> result = database.search(searchString, ageSearchInt,
                     ageRangeSearchInt, region, gender, type, organs);
             profiles = gson.toJson(result);
-        }
-        else {
+        } else {
             profiles = gson.toJson(database.getAll());
         }
         return profiles;
@@ -161,8 +160,7 @@ public class ProfileController {
         try {
             if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
                 profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
-            }
-            else {
+            } else {
                 profile = database.get(req.queryParams("username"));
             }
         } catch (SQLException e) {

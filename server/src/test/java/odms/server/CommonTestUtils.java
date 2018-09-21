@@ -1,10 +1,10 @@
-package odms.server.model.database;
+package odms.server;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import server.model.database.DatabaseConnection;
 
-public abstract class MySqlCommonTests {
+public abstract class CommonTestUtils {
 
     @BeforeClass
     public static void configureDatabase() {

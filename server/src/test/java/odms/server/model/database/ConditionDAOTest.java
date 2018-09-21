@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import server.model.database.DAOFactory;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 
-public class MySqlConditionDAOTest extends MySqlCommonTests {
+public class ConditionDAOTest extends CommonTestUtils {
 
     private Profile testProfile1;
     private Profile testProfile2;

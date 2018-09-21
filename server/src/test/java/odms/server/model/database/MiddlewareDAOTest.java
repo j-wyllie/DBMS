@@ -8,16 +8,16 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 
-public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
+public class MiddlewareDAOTest extends CommonTestUtils {
 
     // Data access objects required.
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();
