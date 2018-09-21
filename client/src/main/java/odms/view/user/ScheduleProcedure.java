@@ -28,6 +28,8 @@ public class ScheduleProcedure extends CommonView {
     private ObservableList<OrganEnum> organsToDonate = FXCollections.observableArrayList();
     private ObservableList<Hospital> hospitals = FXCollections.observableArrayList();
 
+    private OrganMap parentView;
+
     private Profile donor;
     private Profile receiver;
 
@@ -59,6 +61,7 @@ public class ScheduleProcedure extends CommonView {
         controller.setView(this);
         this.donor = parentView.getCurrentDonor();
         this.receiver = parentView.getCurrentReceiver();
+        this.parentView = parentView;
         setLabels();
         setOrganDropdown();
         setLocationDropdown();
@@ -123,6 +126,7 @@ public class ScheduleProcedure extends CommonView {
         }
 
     }
+
 
     public Profile getDonor() {
         return donor;

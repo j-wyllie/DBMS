@@ -838,8 +838,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         stmt.setString(1, "%" + searchString + "%");
 
-        System.out.println(stmt);
-
         ArrayList<Integer> existingIds = new ArrayList<>();
         try {
             ResultSet allProfiles = stmt.executeQuery();
@@ -920,13 +918,17 @@ public class MySqlProfileDAO implements ProfileDAO {
             }
 
             for (String type : orgs) {
-                stmt.setString(count, type);
+                stmt.setString(count, type.replace('-', ' '));
                 count++;
             }
+
+            System.out.println(stmt);
 
             try (ResultSet result = stmt.executeQuery()) {
                 while (result.next()) {
                     Profile profile = parseProfile(result);
+                    OrganDAO organDAO = DAOFactory.getOrganDao();
+                    profile.addOrgansRequired(organDAO.getRequired(profile));
                     receivers.add(profile);
                 }
             }

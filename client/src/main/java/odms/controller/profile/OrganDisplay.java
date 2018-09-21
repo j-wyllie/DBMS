@@ -37,7 +37,7 @@ public class OrganDisplay extends CommonController {
         Profile profile = null;
         try {
             profile = DAOFactory.getProfileDao().get(p.getId());
-
+            profile.addOrgansRequired(DAOFactory.getOrganDao().getRequired(p));
             odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
             List<Map.Entry<Profile, OrganEnum>> availableOrgans =
                     controller.getAllOrgansAvailable();

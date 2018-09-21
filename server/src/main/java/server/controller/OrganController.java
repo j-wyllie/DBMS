@@ -161,7 +161,6 @@ public class OrganController {
      */
     private static void removeOrgan(Profile profile, String organ, Request req) {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
-        organEnum.setDate(LocalDateTime.parse(req.queryParams("date")), profile);
         OrganDAO database = DAOFactory.getOrganDao();
 
         if (req.queryMap().hasKey("donated")) {

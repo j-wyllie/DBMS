@@ -89,6 +89,7 @@ public class ScheduleProcedure extends CommonController {
         Profile receiver = view.getReceiver();
         OrganDAO organDAO = DAOFactory.getOrganDao();
         organDAO.removeDonating(donor, organ);
+        organDAO.addDonation(donor, organ);
         organDAO.removeRequired(receiver, organ);
         organDAO.addReceived(receiver, organ);
     }
