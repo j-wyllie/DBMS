@@ -69,7 +69,7 @@ public class Server {
                 path("/login", () -> post("", UserController::checkCredentials));
 
                 before(((request, response) -> {
-                    if(!(Middleware.isAdminAuthenticated(request, response))) {
+                    if(!(Middleware.isAdminAuthenticated(request))) {
                         halt(401, "Unauthorized");
                     }
                 }));
