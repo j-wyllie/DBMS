@@ -2,12 +2,10 @@ package odms.server.controller;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.HashSet;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -16,13 +14,13 @@ import odms.server.model.database.MySqlCommonTests;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import server.Server;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 import spark.Request;
+
 
 public class MiddlewareTest extends MySqlCommonTests {
 
@@ -45,6 +43,7 @@ public class MiddlewareTest extends MySqlCommonTests {
     // Request variables.
     private Request requestA;
     private Request requestB;
+    private Request requestC;
 
     // Token variables.
     int validToken = 32873;
@@ -70,12 +69,12 @@ public class MiddlewareTest extends MySqlCommonTests {
         profileDAO.add(profileC);
         profileC = profileDAO.get(profileC.getNhi());
 
-        userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
+        userA = new User(UserType.ADMIN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
 
-        userB = new User(UserType.ADMIN, "Tim", "Hamblin");
+        userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
@@ -87,9 +86,15 @@ public class MiddlewareTest extends MySqlCommonTests {
 
         requestA = mock(Request.class);
         when(requestA.headers("id")).thenReturn(profileA.getId().toString());
-        when(requestA.headers("userType")).thenReturn(UserType.PROFILE.getName());
+        when(requestA.headers("userType")).thenReturn(String.valueOf(UserType.PROFILE));
 
         requestB = mock(Request.class);
+        when(requestB.headers("id")).thenReturn(userA.getStaffID().toString());
+        when(requestB.headers("userType")).thenReturn(String.valueOf(UserType.ADMIN));
+
+        requestC = mock(Request.class);
+        when(requestC.headers("id")).thenReturn(userB.getStaffID().toString());
+        when(requestC.headers("userType")).thenReturn(String.valueOf(UserType.CLINICIAN));
     }
 
     @Test
@@ -105,17 +110,45 @@ public class MiddlewareTest extends MySqlCommonTests {
         int token = Middleware.authenticate(invalidId, UserType.PROFILE);
         // Add token to mocked request.
         when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestA.headers("id")).thenReturn(String.valueOf(invalidId));
         assertFalse(Middleware.isAuthenticated(requestA));
     }
 
     @Test
-    public void testUserAuthenticateValid() {
-
+    public void testAdminAuthenticateValid() throws SQLException {
+        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAdminAuthenticated(requestB));
     }
 
     @Test
-    public void testUserAuthenticateInvalid() {
+    public void testAdminAuthenticateInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestB.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAdminAuthenticated(requestB));
+    }
 
+    @Test
+    public void testClinicianAuthenticateValid() throws SQLException {
+        int token = Middleware.authenticate(userB.getStaffID(), UserType.CLINICIAN);
+        // Add token to mocked request.
+        when(requestC.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAdminAuthenticated(requestC));
+    }
+
+    @Test
+    public void testClinicianAuthenticateInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.CLINICIAN);
+        // Add token to mocked request.
+        when(requestC.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestC.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAdminAuthenticated(requestC));
     }
 
     @Test
