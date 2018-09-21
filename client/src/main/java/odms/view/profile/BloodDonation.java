@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import lombok.extern.slf4j.Slf4j;
+import odms.controller.AlertController;
 
 
 /**
@@ -26,8 +27,6 @@ public class BloodDonation {
 
     private Profile profile;
 
-    private int bloodTypePoints;
-
     private ProfileMedical parent;
 
     private odms.controller.profile.BloodDonation controller = new odms.controller.profile.BloodDonation();
@@ -36,10 +35,8 @@ public class BloodDonation {
      * Method that is called when cancel button is clicked to close the window.
      */
     public void onBtnCancelClicked() {
-
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
-
     }
 
     /**

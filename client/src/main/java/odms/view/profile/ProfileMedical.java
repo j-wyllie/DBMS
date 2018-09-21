@@ -13,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.AlertController;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -109,15 +110,20 @@ public class ProfileMedical extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         BloodDonation view = fxmlLoader.getController();
-        view.initialize(currentProfile, this);
+        try {
+            view.initialize(currentProfile, this);
+            Stage stage = new Stage();
+            stage.setTitle("Blood Donation");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initOwner(source.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (NullPointerException e) {
+            AlertController.guiPopup("You have not set a blood type yet.");
+        }
 
-        Stage stage = new Stage();
-        stage.setTitle("Blood Donation");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.initOwner(source.getScene().getWindow());
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.centerOnScreen();
-        stage.show();
+
     }
 }

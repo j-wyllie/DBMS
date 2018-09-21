@@ -2,6 +2,7 @@ package odms.controller.profile;
 
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
+import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 
@@ -17,8 +18,8 @@ public class BloodDonation {
      * Method that sets the base amount of points a person can earn in this donation.
      * @param profile The profile that is currently selected
      */
-    public int setPoints(Profile profile) {
-        int bloodTypePoints;
+    public int setPoints(Profile profile) throws NullPointerException{
+        int bloodTypePoints = 0;
         switch (profile.getBloodType()) {
             case "O+":
                 bloodTypePoints = 2;
