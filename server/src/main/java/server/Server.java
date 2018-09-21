@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;
+import server.controller.Middleware;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
 import server.controller.ProfileController;
@@ -22,6 +23,7 @@ import server.controller.UserController;
  */
 @Slf4j
 public class Server {
+
     private static Integer port = 6969;
 
     private static UserController userController;
@@ -61,27 +63,34 @@ public class Server {
         // user api routes.
         path("/api/v1", () -> {
             path("/users", () -> {
-                get("/all", UserController::getAll);
-                get("", UserController::get);
-                post("", UserController::create);
 
-                path("/:id", () -> {
-                    patch("", UserController::edit);
-                    delete("", UserController::delete);
-                });
                 path("/login", () -> post("", UserController::checkCredentials));
+
+                if (Middleware::isAdminAutheticated) {
+
+                    get("/all", UserController::getAll);
+                    get("", UserController::get);
+                    post("", UserController::create);
+
+                    path("/:id", () -> {
+                        patch("", UserController::edit);
+                        delete("", UserController::delete);
+                    });
+                }
             });
 
             // profile api routes.
             path("/profiles", () -> {
 
+                post("/login", ProfileController::checkCredentials);
+
                 get("/all", ProfileController::getAll);
                 get("", ProfileController::get);
                 post("", ProfileController::create);
+
                 get("/password", ProfileController::hasPassword);
                 post("/password", ProfileController::savePassword);
 
-                post("/login", ProfileController::checkCredentials);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
 

@@ -2,10 +2,12 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.Random;
+import spark.Request;
 import odms.commons.model.enums.UserType;
 import org.sonar.api.server.authentication.UnauthorizedException;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
+import spark.Response;
 
 public class Middleware {
 
@@ -31,11 +33,24 @@ public class Middleware {
         int token = generateToken();
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             database.setProfileToken(id, token);
-        }
-        else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
+        } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
             database.setUserToken(id, token);
         }
         return token;
+    }
+
+    public static boolean isAutheticated(Request req, Response res) throws SQLException {
+
+
+        if (userType == UserType.PROFILE || userType == UserType.DONOR) {
+            return database.isProfileAuthenticated(id, token);
+        } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
+            return database.isUserAuthenticated(id, token);
+        }
+    }
+
+    public static boolean isAdminAuthenticated(Request req, Response res) {
+
     }
 
     /**
