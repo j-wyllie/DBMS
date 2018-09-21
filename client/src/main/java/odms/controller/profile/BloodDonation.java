@@ -23,8 +23,7 @@ public class BloodDonation {
     /**
      * Method that sets the base amount of points a person can earn in this donation.
      */
-    public int setPoints() {
-        Profile profile = view.getProfile();
+    public int setPoints(Profile profile) {
         int bloodTypePoints;
         switch (profile.getBloodType()) {
             case "O+":
@@ -68,10 +67,9 @@ public class BloodDonation {
     /**
      * Method that is called when donate button is clicked to increment points on profile.
      */
-    public void updatePoints() {
-        Profile profile = view.getProfile();
-        int bloodTypePoints = setPoints();
-        if (view.getPlasmaChecked()) {
+    public void updatePoints(Profile profile, Boolean plasmaChecked) {
+        int bloodTypePoints = setPoints(profile);
+        if (plasmaChecked) {
             bloodTypePoints += 2;
         }
         LocalDateTime timestamp = LocalDateTime.now();

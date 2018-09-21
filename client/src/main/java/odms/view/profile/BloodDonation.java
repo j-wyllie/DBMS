@@ -46,7 +46,7 @@ public class BloodDonation {
      * Method that is called when donate button is clicked to increment points and close window.
      */
     public void onBtnDonateClicked() {
-        controller.updatePoints();
+        controller.updatePoints(profile, getPlasmaChecked());
         parent.updateBloodDonationLabel();
         Stage stage = (Stage) btnDonate.getScene().getWindow();
         stage.close();
@@ -67,7 +67,7 @@ public class BloodDonation {
      * Sets the label with the number of earnable points
      */
     private void setLabel() {
-        lblPoints.setText("Points Earnable: " + controller.setPoints());
+        lblPoints.setText("Points Earnable: " + controller.setPoints(profile));
     }
 
     /**
@@ -75,7 +75,7 @@ public class BloodDonation {
      */
     public void onCheckBoxChecked() {
         if (plasmaCheckBox.isSelected()) {
-            lblPoints.setText("Points Earnable: " + (controller.setPoints() + 2));
+            lblPoints.setText("Points Earnable: " + (controller.setPoints(profile) + 2));
         } else {
             setLabel();
         }
