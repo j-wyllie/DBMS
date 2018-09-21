@@ -14,6 +14,7 @@ import odms.server.model.database.MySqlCommonTests;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.sonar.api.server.authentication.UnauthorizedException;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
@@ -152,33 +153,87 @@ public class MiddlewareTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testIsAuthenticateValid() {
-
+    public void testIsAuthenticatedValid() throws SQLException {
+        int token = Middleware.authenticate(profileA.getId(), UserType.PROFILE);
+        // Add token to mocked request.
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAuthenticated(requestA));
     }
 
     @Test
-    public void testIsAuthenticateInvalid() {
-
+    public void testIsAuthenticatedInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.PROFILE);
+        // Add token to mocked request.
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestA.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAuthenticated(requestA));
     }
 
     @Test
-    public void testIsAdminAuthenticateValid() {
-
+    public void testIsAdminAuthenticatedValid() throws SQLException {
+        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAdminAuthenticated(requestB));
     }
 
     @Test
-    public void testIsAdminAuthenticateInvalid() {
-
+    public void testIsAdminAuthenticatedInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestB.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAdminAuthenticated(requestB));
     }
 
     @Test
-    public void testLogoutValid() {
+    public void testLogoutProfileValid() throws SQLException {
+        int token = Middleware.authenticate(profileA.getId(), UserType.PROFILE);
+        // Add token to mocked request.
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAuthenticated(requestA));
 
+        Middleware.logout(profileA.getId(), UserType.PROFILE, token);
+        assertFalse(Middleware.isAuthenticated(requestA));
+    }
+
+    @Test (expected = UnauthorizedException.class)
+    public void testLogoutProfileInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.PROFILE);
+        // Add token to mocked request.
+        when(requestA.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestA.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAuthenticated(requestA));
+
+        Middleware.logout(invalidId, UserType.PROFILE, token);
+        assertFalse(Middleware.isAuthenticated(requestA));
     }
 
     @Test
-    public void testLogoutInvalid() {
+    public void testLogoutAdminValid() throws SQLException {
+        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        assertTrue(Middleware.isAuthenticated(requestB));
 
+        Middleware.logout(userA.getStaffID(), UserType.ADMIN, token);
+        assertFalse(Middleware.isAuthenticated(requestB));
+    }
+
+    @Test (expected = UnauthorizedException.class)
+    public void testLogoutAdminInvalid() throws SQLException {
+        int token = Middleware.authenticate(invalidId, UserType.ADMIN);
+        // Add token to mocked request.
+        when(requestB.headers("token")).thenReturn(String.valueOf(token));
+        // Set id to invalid id.
+        when(requestB.headers("id")).thenReturn(String.valueOf(invalidId));
+        assertFalse(Middleware.isAuthenticated(requestB));
+
+        Middleware.logout(invalidId, UserType.ADMIN, token);
+        assertFalse(Middleware.isAuthenticated(requestB));
     }
 
     @After
