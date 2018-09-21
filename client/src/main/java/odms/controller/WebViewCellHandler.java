@@ -15,8 +15,10 @@ public class WebViewCellHandler implements EventHandler<MouseEvent> {
     public void handle(MouseEvent t) {
         WebViewCell cell = (WebViewCell) t.getSource();
         try {
-            String value = String.valueOf(cell.getTableView().getItems().get(cell.getIndex()));
-            openWebpage("www.twitter.com/statuses/" + value);
+            if (cell.getIndex() < cell.getTableView().getItems().size()) {
+                String value = String.valueOf(cell.getTableView().getItems().get(cell.getIndex()));
+                openWebpage("www.twitter.com/statuses/" + value);
+            }
         } catch (IndexOutOfBoundsException e) {
             log.error(e.getMessage(), e);
         }
