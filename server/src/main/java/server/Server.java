@@ -38,6 +38,7 @@ public class Server {
             log.error("Server init failed");
             log.error(e.getMessage(), e);
         });
+
         initRoutes();
     }
 

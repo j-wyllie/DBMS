@@ -8,11 +8,21 @@ import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
 @Slf4j
 public class CountriesController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private CountriesController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all the countries in the database
@@ -27,8 +37,8 @@ public class CountriesController {
         List<String> countries;
 
         // This query is optional so only assign it if it exists
-        if (req.queryMap().hasKey("valid")) {
-            valid = Boolean.valueOf(req.queryParams("valid"));
+        if (req.queryMap().hasKey(KeyEnum.VALID.toString())) {
+            valid = Boolean.valueOf(req.queryParams(KeyEnum.VALID.toString()));
         }
 
         try {
@@ -41,7 +51,7 @@ public class CountriesController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(countries);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -61,12 +71,12 @@ public class CountriesController {
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            name = body.get("name").getAsString();
-            valid = body.get("valid").getAsBoolean();
+            name = body.get(KeyEnum.NAME.toString()).getAsString();
+            valid = body.get(KeyEnum.VALID.toString()).getAsBoolean();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
             countryDAO.update(CountriesEnum.valueOf(name), valid);
@@ -75,7 +85,7 @@ public class CountriesController {
         }
         catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
     }
 

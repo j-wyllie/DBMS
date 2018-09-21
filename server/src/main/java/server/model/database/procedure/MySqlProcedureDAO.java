@@ -218,7 +218,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
             while (allOrgans.next()) {
                 String organName = allOrgans.getString("Organ");
-                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
+                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace("-", "_"));
                 organs.add(organ);
             }
             conn.close();
