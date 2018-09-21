@@ -11,21 +11,11 @@ import javafx.util.Callback;
  *
  * @param <S> The twitter cell string.
  */
-public class WebViewCell<S> extends TableCell<S, String> {
+public final class WebViewCell<S> extends TableCell<S, String> {
 
     private static final int PREFWIDTH = 500;
     private static final int PREFHEIGHT = 180;
     private final WebView webView;
-
-    /**
-     * Creates a new web view cell for each new item.
-     *
-     * @param <S> Cell to be created.
-     * @return A new cell.
-     */
-    public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-        return param -> new WebViewCell<>();
-    }
 
     /**
      * Constructor when creating a new web view cell.
@@ -35,6 +25,16 @@ public class WebViewCell<S> extends TableCell<S, String> {
         webView.setMinWidth(999);
         webView.setDisable(true);
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, new WebViewCellHandler());
+    }
+
+    /**
+     * Creates a new web view cell for each new item.
+     *
+     * @param <S> Cell to be created.
+     * @return A new cell.
+     */
+    public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
+        return param -> new WebViewCell<>();
     }
 
     @Override
