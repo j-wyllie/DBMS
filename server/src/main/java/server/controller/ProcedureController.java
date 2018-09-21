@@ -1,17 +1,27 @@
 package server.controller;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
-import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.procedure.ProcedureDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class ProcedureController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private ProcedureController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all procedures.
@@ -27,16 +37,18 @@ public class ProcedureController {
         boolean pending;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
-            pending = Boolean.valueOf(req.queryParams("pending"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
+            pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             procedures = database.getAll(profileId, pending);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
             return e.getMessage();
         }
@@ -44,7 +56,7 @@ public class ProcedureController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(procedures);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -64,18 +76,20 @@ public class ProcedureController {
         int profileId;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
             newProcedure = gson.fromJson(req.body(), Procedure.class);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.add(profileId, newProcedure);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(201);
@@ -97,17 +111,19 @@ public class ProcedureController {
 
         try {
             newProcedure = gson.fromJson(req.body(), Procedure.class);
-            pending = Boolean.valueOf(req.queryParams("pending"));
+            pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.update(newProcedure, pending);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(201);
@@ -122,23 +138,25 @@ public class ProcedureController {
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         ProcedureDAO database = DAOFactory.getProcedureDao();
         Procedure newProcedure;
 
         try {
-            newProcedure = new Procedure(Integer.parseInt(req.params("id")));
+            newProcedure = new Procedure(Integer.parseInt(
+                    req.params(KeyEnum.ID.toString()))
+            );
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-;
-        try {
 
+        try {
             database.remove(newProcedure);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -158,23 +176,25 @@ public class ProcedureController {
         int id;
 
         try {
-            id = Integer.valueOf(req.params("id"));
+            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             organs = database.getAffectedOrgans(id);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         Gson gson = new Gson();
         String responseBody = gson.toJson(organs);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -192,18 +212,20 @@ public class ProcedureController {
         String organ;
 
         try {
-            id = Integer.valueOf(req.params("id"));
-            organ = req.queryParams("name");
+            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
+            organ = req.queryParams(KeyEnum.NAME.toString());
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.removeAffectedOrgan(new Procedure(id), OrganEnum.valueOf(organ));
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -223,18 +245,20 @@ public class ProcedureController {
         OrganEnum organ;
 
         try {
-            id = Integer.valueOf(req.params("id"));
+            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
             organ = OrganEnum.valueOf(gson.toJson(req.body(), OrganEnum.class));
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.addAffectedOrgan(new Procedure(id), organ);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
