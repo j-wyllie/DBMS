@@ -39,18 +39,25 @@ public class Middleware {
         return token;
     }
 
-    public static boolean isAutheticated(Request req, Response res) throws SQLException {
-
+    public static boolean isAuthenticated(Request req) throws SQLException {
+        UserType userType = UserType.valueOf(req.headers("UserType"));
+        int id = Integer.valueOf(req.headers("id"));
+        int token = Integer.valueOf(req.headers("token"));
 
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             return database.isProfileAuthenticated(id, token);
         } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
             return database.isUserAuthenticated(id, token);
+        } else {
+            return false;
         }
     }
 
-    public static boolean isAdminAuthenticated(Request req, Response res) {
+    public static boolean isAdminAuthenticated(Request req) throws SQLException {
+        int id = Integer.valueOf(req.headers("id"));
+        int token = Integer.valueOf(req.headers("token"));
 
+        return database.isUserAuthenticated(id, token);
     }
 
     /**

@@ -1,7 +1,9 @@
 package server;
 
+import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
+import static spark.Spark.halt;
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.patch;
 import static spark.Spark.path;
@@ -66,17 +68,20 @@ public class Server {
 
                 path("/login", () -> post("", UserController::checkCredentials));
 
-                if (Middleware::isAdminAutheticated) {
+                before(((request, response) -> {
+                    if(!(Middleware.isAdminAuthenticated(request, response))) {
+                        halt(401, "Unauthorized");
+                    }
+                }));
+                get("/all", UserController::getAll);
+                get("", UserController::get);
+                post("", UserController::create);
 
-                    get("/all", UserController::getAll);
-                    get("", UserController::get);
-                    post("", UserController::create);
+                path("/:id", () -> {
+                    patch("", UserController::edit);
+                    delete("", UserController::delete);
+                });
 
-                    path("/:id", () -> {
-                        patch("", UserController::edit);
-                        delete("", UserController::delete);
-                    });
-                }
             });
 
             // profile api routes.
@@ -84,6 +89,13 @@ public class Server {
 
                 post("/login", ProfileController::checkCredentials);
 
+                before(((request, response) -> {
+                    if(!(Middleware.isAdminAuthenticated(request))) {
+                        if(!(Middleware.isAuthenticated(request))) {
+                            halt(401, "Unauthorized");
+                        }
+                    }
+                }));
                 get("/all", ProfileController::getAll);
                 get("", ProfileController::get);
                 post("", ProfileController::create);
@@ -134,8 +146,17 @@ public class Server {
                 get("/count", ProfileController::count);
             });
 
+            before(((request, response) -> {
+                if(!(Middleware.isAdminAuthenticated(request))) {
+                    if(!(Middleware.isAuthenticated(request))) {
+                        halt(401, "Unauthorized");
+                    }
+                }
+            }));
+
             // condition api endpoints.
             path("/conditions", () -> {
+
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
