@@ -42,15 +42,15 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
     @Before
     public void setup() throws SQLException {
         profileA = new Profile("Brooke", "Rakowitz",
-                LocalDate.of(1998, 3, 3), "YSK726");
+                LocalDate.of(1998, 3, 3), "YSK7268");
         profileDAO.add(profileA);
 
         profileB = new Profile("Bob", "Dylan",
-                LocalDate.of(1998, 3, 3), "YSL999");
+                LocalDate.of(1998, 3, 3), "YSL9997");
         profileDAO.add(profileB);
 
         profileC = new Profile("Bob", "Marshall",
-                LocalDate.of(1998, 3, 3), "GSK726");
+                LocalDate.of(1998, 3, 3), "GSK7269");
         profileDAO.add(profileC);
 
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
