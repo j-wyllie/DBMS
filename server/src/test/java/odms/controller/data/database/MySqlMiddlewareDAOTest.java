@@ -24,10 +24,12 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
     // Profile variables.
     private Profile profileA;
     private Profile profileB;
+    private Profile profileC;
 
     // User variables.
     private User userA;
     private User userB;
+    private User userC;
 
     // Token variables.
     long validToken = 32873;
@@ -46,11 +48,18 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
                 LocalDate.of(1998, 3, 3), "YSL999");
         profileDAO.add(profileB);
 
+        profileC = new Profile("Bob", "Marshall",
+                LocalDate.of(1998, 3, 3), "GSK726");
+        profileDAO.add(profileC);
+
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
         userDAO.add(userA);
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userDAO.add(userB);
+
+        userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
+        userDAO.add(userC);
     }
 
     @Test
@@ -96,34 +105,54 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testIsUserAuthenticatedInvalid() {
+    public void testIsUserAuthenticatedInvalid() throws SQLException {
         middleware.setUserToken(userB.getStaffID(), validToken);
         assertFalse(middleware.isUserAuthenticated(userB.getStaffID(), invalidToken));
     }
 
     @Test
-    public void testDeleteProfileTokenValid() {
-
+    public void testDeleteProfileTokenValid() throws SQLException {
+        middleware.setProfileToken(profileC.getId(), validToken);
+        assertTrue(middleware.isProfileAuthenticated(profileC.getId(), validToken));
+        middleware.deleteProfileToken(profileC.getId());
+        assertFalse(middleware.isProfileAuthenticated(profileC.getId(), validToken));
     }
 
     @Test
-    public void testDeleteUserTokenValid() {
-
+    public void testDeleteUserTokenValid() throws SQLException {
+        middleware.setUserToken(userC.getStaffID(), validToken);
+        assertTrue(middleware.isUserAuthenticated(userC.getStaffID(), validToken));
+        middleware.deleteUserToken(userC.getStaffID());
+        assertFalse(middleware.isUserAuthenticated(userC.getStaffID(), validToken));
     }
 
     @Test
-    public void testDeleteProfileTokenInvalid() {
-
+    public void testDeleteProfileTokenInvalid() throws SQLException {
+        middleware.setProfileToken(invalidId, validToken);
+        assertFalse(middleware.isProfileAuthenticated(invalidId, validToken));
+        middleware.deleteProfileToken(invalidId);
+        assertFalse(middleware.isProfileAuthenticated(invalidId, validToken));
     }
 
     @Test
-    public void testDeleteUserTokenInvalid() {
-
+    public void testDeleteUserTokenInvalid() throws SQLException {
+        middleware.setUserToken(invalidId, validToken);
+        assertFalse(middleware.isUserAuthenticated(invalidId, validToken));
+        middleware.deleteUserToken(invalidId);
+        assertFalse(middleware.isUserAuthenticated(invalidId, validToken));
     }
 
     @After
     public void tearDown() throws SQLException {
+        // Profile teardown.
+        profileDAO.remove(profileA);
+        profileDAO.remove(profileB);
+        profileDAO.remove(profileC);
 
+        // User teardown.
+        userDAO.remove(userA);
+        userDAO.remove(userB);
+        userDAO.remove(userC);
     }
 
 }
