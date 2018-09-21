@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,6 +64,8 @@ public class SocialFeedTab {
             con.setRequestMethod("GET");
             con2.setRequestMethod("POST");
             con2.setDoOutput(true);
+            con.setConnectTimeout(5000);
+            con2.setConnectTimeout(5000);
 
             setupConAuthorization(con, con2);
 
@@ -69,6 +74,8 @@ public class SocialFeedTab {
             ObservableList<String> tweetList = FXCollections.observableArrayList(ids);
             tweetTable.setItems(tweetList);
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } catch (TimeoutException e) {
             log.error(e.getMessage(), e);
         }
     }
