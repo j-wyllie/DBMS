@@ -1,13 +1,10 @@
 package odms.controller.profile;
 
-import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.profile.Profile;
-import odms.controller.AlertController;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.profile.ProfileDAO;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
 
 /**
  * Class that controls all model interactions for the blood donation view.
@@ -17,9 +14,10 @@ public class BloodDonation {
     /**
      * Method that sets the base amount of points a person can earn in this donation.
      * @param profile The profile that is currently selected
+     * @return the blood donation points.
      */
-    public int setPoints(Profile profile) throws NullPointerException{
-        int bloodTypePoints = 0;
+    public int setPoints(Profile profile) {
+        int bloodTypePoints;
         switch (profile.getBloodType()) {
             case "O+":
                 bloodTypePoints = 2;
@@ -50,7 +48,8 @@ public class BloodDonation {
                 break;
         }
         try {
-            if (LocalDateTime.now().minusYears(1).isBefore(profile.getLastBloodDonation())) {
+            if (profile.getLastBloodDonation() != null &&
+                    LocalDateTime.now().minusYears(1).isBefore(profile.getLastBloodDonation())) {
                 bloodTypePoints += 1;
             }
         } catch (NullPointerException e) {
@@ -62,18 +61,17 @@ public class BloodDonation {
     /**
      * Method that is called when donate button is clicked to increment points on profile.
      * @param profile The profile that is currently selected
+     * @param plasmaChecked if the plasma check has taken place.
      */
     public void updatePoints(Profile profile, Boolean plasmaChecked) {
         int bloodTypePoints = setPoints(profile);
         if (plasmaChecked) {
             bloodTypePoints += 2;
         }
-        LocalDateTime timestamp = LocalDateTime.now();
         profile.addBloodDonationPoints(bloodTypePoints);
-        profile.setLastBloodDonation(timestamp);
-        ProfileDAO server = DAOFactory.getProfileDao();
+        profile.setLastBloodDonation(LocalDateTime.now());
         try {
-            server.update(profile);
+            DAOFactory.getProfileDao().update(profile);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

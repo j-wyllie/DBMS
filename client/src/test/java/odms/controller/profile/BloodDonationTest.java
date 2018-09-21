@@ -1,22 +1,29 @@
 package odms.controller.profile;
 
-import odms.commons.model.profile.Profile;
-import odms.view.profile.BloodDonation;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.profile.HttpProfileDAO;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpProfileDAO.class)
 public class BloodDonationTest {
-
     public odms.controller.profile.BloodDonation controller;
-    public Profile currentProfile;
+    private Profile currentProfile;
 
     @Before
     public void setup() {
+        PowerMockito.stub(PowerMockito.method(HttpProfileDAO.class, "update"))
+                .toReturn(null);
+
         List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");

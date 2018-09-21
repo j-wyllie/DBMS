@@ -1,21 +1,20 @@
 package odms.view.profile;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import odms.commons.model.profile.Profile;
 import lombok.extern.slf4j.Slf4j;
-import odms.controller.AlertController;
-
+import odms.commons.model.profile.Profile;
 
 /**
  * View for the blood donation tab.
  */
 @Slf4j
 public class BloodDonation {
+    private static final String POINTS_EARNABLE = "Points Earnable: ";
+
     @FXML
     private Button btnDonate;
     @FXML
@@ -29,7 +28,8 @@ public class BloodDonation {
 
     private ProfileMedical parent;
 
-    private odms.controller.profile.BloodDonation controller = new odms.controller.profile.BloodDonation();
+    private odms.controller.profile.BloodDonation controller =
+            new odms.controller.profile.BloodDonation();
 
     /**
      * Method that is called when cancel button is clicked to close the window.
@@ -61,10 +61,10 @@ public class BloodDonation {
     }
 
     /**
-     * Sets the label with the number of earnable points
+     * Sets the label with the number of earnable points.
      */
     private void setLabel() {
-        lblPoints.setText("Points Earnable: " + controller.setPoints(profile));
+        lblPoints.setText(POINTS_EARNABLE + controller.setPoints(profile));
     }
 
     /**
@@ -72,7 +72,7 @@ public class BloodDonation {
      */
     public void onCheckBoxChecked() {
         if (plasmaCheckBox.isSelected()) {
-            lblPoints.setText("Points Earnable: " + (controller.setPoints(profile) + 2));
+            lblPoints.setText(POINTS_EARNABLE + (controller.setPoints(profile) + 2));
         } else {
             setLabel();
         }
@@ -82,7 +82,7 @@ public class BloodDonation {
         return profile;
     }
 
-    public boolean getPlasmaChecked() {
+    private boolean getPlasmaChecked() {
         return plasmaCheckBox.isSelected();
     }
 }
