@@ -25,14 +25,11 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
 import odms.commons.model.locations.Hospital;
-import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +41,10 @@ import static odms.controller.user.AvailableOrgans.msToStandard;
 public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
 
     private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap();
-    private User currentUser;
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
-    private DirectionsRenderer directionsRenderer = null;
+    private DirectionsRenderer directionsRenderer;
 
     private List<Hospital> hospitalList;
 
@@ -105,12 +101,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
     }
 
-    public void initialize(User currentUser) {
-        this.currentUser = currentUser;
-        controller.setView(this);
-    }
-
-
+    /**
+     * Initializes the map.
+     */
     @Override
     public void mapInitialized() {
 
@@ -153,9 +146,11 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         setUsersLocation();
         populateHospitals();
         setMarkersTable();
-
     }
 
+    /**
+     * Sets users location.
+     */
     private void setUsersLocation() {
 
         // controller.getUsersLocation(); // todo
@@ -203,7 +198,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Populates the markers table with the current locations available to the map
+     * Populates the markers table with the current locations available to the map.
      */
     private void setMarkersTable() {
 
@@ -277,8 +272,11 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
     }
 
+    /**
+     * Shows the closest hospital to the user.
+     */
     @FXML
-    private void handleShowClosestHospital(ActionEvent event) {
+    private void handleShowClosestHospital() {
 
         Hospital closest = null;
         Double distance = Double.POSITIVE_INFINITY;
@@ -304,12 +302,13 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             travelInfo.setText("Closest hospital to you: " + closest.getName() + ", " + closest.getAddress() +
                     ".\n Approximately " + decimalFormat.format(distance) + "km away.");
 
-            }
-
-
+        }
     }
 
-
+    /**
+     * Create popup with help text about hospital tab.
+     * @param event button click event
+     */
     @FXML
     private void handleShowHelp(ActionEvent event) {
 
@@ -342,7 +341,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         hospitalSelected1 = null;
         hospitalSelected2 = null;
 
-        if(helicopterRoute != null) {
+        if (helicopterRoute != null) {
             map.removeMapShape(helicopterRoute);
         }
 
@@ -379,7 +378,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             isCarTrip = true;
         }
 
-        if(isCarTrip) {
+        if (isCarTrip) {
 
             String originLatLong = originLat + "," + originLong;
             String destinationLatLong = destinationLat + "," + destinationLong;
@@ -448,7 +447,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         String travelMethodGiven = String.valueOf(travelMethod.getSelectionModel().getSelectedItem());
 
         try {
-            double durationNumber = (Double.parseDouble(duration) * 1000);
+            double durationNumber = Double.parseDouble(duration) * 1000;
             duration = msToStandard((long) durationNumber);
         } catch (Exception e) {
             log.error("Failed to parse travel duration, must not be applicable");
@@ -461,6 +460,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         travelInfo.setText(travel);
     }
 
+    /**
+     * Event handler, when add hospital button is clicked a new window is opened.
+     * @param event button click event
+     */
     @FXML
     public void handleAddHospital(ActionEvent event) {
 
@@ -492,7 +495,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      *
      * @param location location to be to added to the map
      */
-    public void addHospitalMarker(Hospital location) {
+    private void addHospitalMarker(Hospital location) {
 
         Marker marker = controller.createHospitalMarker(location);
         markers.add(marker);
@@ -544,26 +547,17 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             hospitalList.add(userLocation);
         }
 
-        // TODO
-        // TEMPORARY, used for testing, just adds random hospitals created here to the map, until we have more hospitals in database
-        Hospital hospitalTest = new Hospital("HospitalTest1", -39.07, 174.05, null, 10);
-        Hospital hospitalTest2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 13);
-        Hospital hospitalTest3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 15);
-        Hospital hospitalTest4 = new Hospital("HospitalTest4", -38.20, 177.31, null, 16);
-        hospitalList.add(hospitalTest);
-        hospitalList.add(hospitalTest2);
-        hospitalList.add(hospitalTest3);
-        hospitalList.add(hospitalTest4);
-        // ------------------------------------------------------------------------------------------------------------
-
         for (Hospital hospital : hospitalList) {
             addHospitalMarker(hospital);
         }
 
     }
 
+    /**
+     * Creates directions between two markers.
+     */
     @FXML
-    private void handleTravelMethodToggled(ActionEvent event) {
+    private void handleTravelMethodToggled() {
 
         if (hospitalSelected1 != null && hospitalSelected2 != null) {
             if (helicopterRoute != null) {
