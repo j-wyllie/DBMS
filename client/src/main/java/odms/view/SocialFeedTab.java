@@ -35,6 +35,7 @@ public class SocialFeedTab {
     private TableView tweetTable;
     private int tweetListSize;
     private ObservableList<String> tweetList;
+    private Timer timer;
 
     /**
      * Populates the table with tweets and adds a column that constructs a WebViewCell factory.
@@ -183,18 +184,27 @@ public class SocialFeedTab {
     /**
      * Starts the timers for fetching expired organs and counting down the expiry date.
      */
-    private void startTimer() {
-        Timer timer = new Timer(true);
+    public void startTimer() {
+        timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
-            private void run2() {
+            private boolean refreshTweetTable() {
                 populateTweetTable();
+                return true;
             }
 
             @Override
             public void run() {
-                Platform.runLater(this::run2);
+                Platform.runLater(this::refreshTweetTable);
             }
         }, 0, REFRESH_PERIOD);
+    }
+
+    /**
+     * Cancels the auto refresh timer for the twitter feed.
+     * Called when the tab gets clicked off.
+     */
+    public void pauseTimer() {
+        timer.cancel();
     }
 
     /**
