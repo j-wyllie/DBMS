@@ -11,7 +11,7 @@ public interface MiddlewareDAO {
      * @param token to set to the profile.
      * @throws SQLException error.
      */
-    void setProfileToken(int profileId, long token) throws SQLException;
+    void setProfileToken(int profileId, int token) throws SQLException;
 
     /**
      * Sets a token to a user for later authentication
@@ -20,7 +20,7 @@ public interface MiddlewareDAO {
      * @param token to set to the user.
      * @throws SQLException error.
      */
-    void setUserToken(int userId, long token) throws SQLException;
+    void setUserToken(int userId, int token) throws SQLException;
 
     /**
      * Checks if the token is correct meaning the profile
@@ -30,7 +30,7 @@ public interface MiddlewareDAO {
      * @return true if the token matches, false otherwise.
      * @throws SQLException error.
      */
-    boolean isProfileAuthenticated(int profileId, long token) throws SQLException;
+    boolean isProfileAuthenticated(int profileId, int token) throws SQLException;
 
     /**
      * Checks if the token is correct meaning the user
@@ -40,7 +40,7 @@ public interface MiddlewareDAO {
      * @return true if the token matches, false otherwise.
      * @throws SQLException error.
      */
-    boolean isUserAuthenticated(int userId, long token) throws SQLException;
+    boolean isUserAuthenticated(int userId, int token) throws SQLException;
 
     /**
      * Resets the profiles token to stop further requests.

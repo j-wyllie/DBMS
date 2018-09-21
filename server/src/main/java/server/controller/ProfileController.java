@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
@@ -344,7 +345,8 @@ public class ProfileController {
 
         if (valid) {
             try {
-                long token = Middleware.authenticateProfile(database.get(username).getId());
+                Profile profile = database.get(username);
+                long token = Middleware.authenticate(profile.getId(), UserType.PROFILE);
                 response.type("application/json");
                 response.status(200);
                 return gson.toJson(token);

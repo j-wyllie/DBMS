@@ -7,8 +7,10 @@ import java.time.LocalDate;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
@@ -33,34 +35,43 @@ public class MySqlMiddlewareDAOTest extends MySqlCommonTests {
     private User userC;
 
     // Token variables.
-    long validToken = 32873;
-    long invalidToken = 784834;
+    int validToken = 32873;
+    int invalidToken = 784834;
 
     // General variables.
     private int invalidId = 0;
 
     @Before
-    public void setup() throws SQLException {
+    public void setup() throws SQLException, UserNotFoundException {
         profileA = new Profile("Brooke", "Rakowitz",
-                LocalDate.of(1998, 3, 3), "YSK7268");
+                LocalDate.of(1998, 3, 3), "LPO7236");
         profileDAO.add(profileA);
+        profileA = profileDAO.get(profileA.getNhi());
 
-        profileB = new Profile("Bob", "Dylan",
-                LocalDate.of(1998, 3, 3), "YSL9997");
+        profileB = new Profile("Tim", "Hamblin",
+                LocalDate.of(1998, 3, 3), "YSL9939");
         profileDAO.add(profileB);
+        profileB = profileDAO.get(profileB.getNhi());
 
         profileC = new Profile("Bob", "Marshall",
-                LocalDate.of(1998, 3, 3), "GSK7269");
+                LocalDate.of(1998, 3, 3), "GSK726");
         profileDAO.add(profileC);
+        profileC = profileDAO.get(profileC.getNhi());
 
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
+        userA.setUsername("brooker");
         userDAO.add(userA);
+        userA = userDAO.get(userA.getUsername());
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
+        userB.setUsername("timh");
         userDAO.add(userB);
+        userB = userDAO.get(userB.getUsername());
 
         userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
+        userC.setUsername("joshw");
         userDAO.add(userC);
+        userC = userDAO.get(userC.getUsername());
     }
 
     @Test

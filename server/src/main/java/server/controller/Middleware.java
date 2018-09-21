@@ -27,8 +27,8 @@ public class Middleware {
      * @return a generated token for future requests.
      * @throws SQLException error.
      */
-    public static long authenticate(int id, UserType userType) throws SQLException {
-        long token = generateToken();
+    public static int authenticate(int id, UserType userType) throws SQLException {
+        int token = generateToken();
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             database.setProfileToken(id, token);
         }
@@ -69,8 +69,8 @@ public class Middleware {
      * a token.
      * @return the generated token.
      */
-    private static long generateToken() {
+    private static int generateToken() {
         Random random = new Random();
-        return random.nextLong();
+        return random.nextInt();
     }
 }

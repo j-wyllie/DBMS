@@ -203,8 +203,9 @@ public class UserController {
 
         if (valid) {
             try {
-                long token = Middleware.authenticateUser(
-                        database.get(username).getStaffID());
+                User user = database.get(username);
+                long token = Middleware.authenticate(
+                        user.getStaffID(), user.getUserType());
                 res.type("application/json");
                 res.status(200);
                 return gson.toJson(token);

@@ -17,7 +17,7 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException error.
      */
     @Override
-    public void setProfileToken(int profileId, long token) throws SQLException {
+    public void setProfileToken(int profileId, int token) throws SQLException {
         String query = "update profiles set Token = ? where ProfileId = ?;";
         setToken(query, profileId, token);
     }
@@ -30,8 +30,8 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException error.
      */
     @Override
-    public void setUserToken(int userId, long token) throws SQLException {
-        String query = "update profiles set Token = ? where ProfileId = ?;";
+    public void setUserToken(int userId, int token) throws SQLException {
+        String query = "update users set Token = ? where UserId = ?;";
         setToken(query, userId, token);
     }
 
@@ -44,7 +44,7 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException error.
      */
     @Override
-    public boolean isProfileAuthenticated(int profileId, long token) throws SQLException {
+    public boolean isProfileAuthenticated(int profileId, int token) throws SQLException {
         String query = "select * from profiles where ProfileId = ? and Token = ?;";
         return isAuthenticated(query, profileId, token);
     }
@@ -58,7 +58,7 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException error.
      */
     @Override
-    public boolean isUserAuthenticated(int userId, long token) throws SQLException {
+    public boolean isUserAuthenticated(int userId, int token) throws SQLException {
         String query = "select * from users where UserId = ? and Token = ?;";
         return isAuthenticated(query, userId, token);
     }
@@ -81,7 +81,7 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      */
     @Override
     public void deleteUserToken(int userId) throws SQLException {
-        String query = "update users set Token = ? where ProfileId = ?;";
+        String query = "update users set Token = ? where UserId = ?;";
         deleteToken(query, userId);
     }
 
@@ -94,14 +94,14 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @return true if it is a valid combination, false otherwise.
      * @throws SQLException internal error.
      */
-    private boolean isAuthenticated(String query, int id, long token) throws SQLException {
+    private boolean isAuthenticated(String query, int id, int token) throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
             stmt.setInt(1,  id);
-            stmt.setLong(2,  token);
+            stmt.setInt(2,  token);
 
             ResultSet set = stmt.executeQuery();
             return set.next();
@@ -121,13 +121,13 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @param token to be set to.
      * @throws SQLException internal error.
      */
-    private void setToken(String query, int id, long token) throws SQLException {
+    private void setToken(String query, int id, int token) throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-            stmt.setLong(1,  token);
+            stmt.setInt(1,  token);
             stmt.setInt(2,  id);
             stmt.execute();
         } catch (SQLException e) {
