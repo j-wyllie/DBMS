@@ -30,7 +30,7 @@ public class BloodDonation {
 
     private ProfileMedical parent;
 
-    private odms.controller.profile.BloodDonation controller = new odms.controller.profile.BloodDonation(this);
+    private odms.controller.profile.BloodDonation controller = new odms.controller.profile.BloodDonation();
 
     /**
      * Method that is called when cancel button is clicked to close the window.

@@ -2,7 +2,6 @@ package odms.controller.profile;
 
 import odms.commons.model.profile.Profile;
 import odms.view.profile.BloodDonation;
-import odms.view.profile.ProfileMedical;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +12,6 @@ import java.util.List;
 
 public class BloodDonationTest {
 
-    public BloodDonation view;
     public odms.controller.profile.BloodDonation controller;
     public Profile currentProfile;
 
@@ -24,15 +22,57 @@ public class BloodDonationTest {
         profileOneAttr.add("last-names=\"Wayne\"");
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
-        view = new BloodDonation();
         currentProfile = new Profile(profileOneAttr);
         currentProfile.setBloodType("O+");
-        controller = new odms.controller.profile.BloodDonation(view);
+        controller = new odms.controller.profile.BloodDonation();
     }
 
     @Test
-    public void testCorrectPointsForBloodType() {
+    public void testCorrectPointsForBloodTypeOPos() {
+        currentProfile.setBloodType("O+");
         Assert.assertEquals(2, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeONeg() {
+        currentProfile.setBloodType("O-");
+        Assert.assertEquals(3, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeAPos() {
+        currentProfile.setBloodType("A+");
+        Assert.assertEquals(2, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeANeg() {
+        currentProfile.setBloodType("A-");
+        Assert.assertEquals(4, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeBPos() {
+        currentProfile.setBloodType("B+");
+        Assert.assertEquals(3, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeBNeg() {
+        currentProfile.setBloodType("B-");
+        Assert.assertEquals(5, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeABPos() {
+        currentProfile.setBloodType("AB+");
+        Assert.assertEquals(4, controller.setPoints(currentProfile));
+    }
+
+    @Test
+    public void testCorrectPointsForBloodTypeABNeg() {
+        currentProfile.setBloodType("AB-");
+        Assert.assertEquals(5, controller.setPoints(currentProfile));
     }
 
     @Test

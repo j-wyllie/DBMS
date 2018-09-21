@@ -1,6 +1,5 @@
 package odms.controller.profile;
 
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
@@ -14,14 +13,9 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class BloodDonation {
-    private odms.view.profile.BloodDonation view;
-
-    public BloodDonation(odms.view.profile.BloodDonation view) {
-        this.view = view;
-    }
-
     /**
      * Method that sets the base amount of points a person can earn in this donation.
+     * @param profile The profile that is currently selected
      */
     public int setPoints(Profile profile) {
         int bloodTypePoints;
@@ -66,6 +60,7 @@ public class BloodDonation {
 
     /**
      * Method that is called when donate button is clicked to increment points on profile.
+     * @param profile The profile that is currently selected
      */
     public void updatePoints(Profile profile, Boolean plasmaChecked) {
         int bloodTypePoints = setPoints(profile);
