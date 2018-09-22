@@ -22,7 +22,6 @@ public class ClinicianEdit extends CommonController {
 
     /**
      * Button handler to save the changes made to the fields.
-     *
      */
     @FXML
     public void save() throws IOException {

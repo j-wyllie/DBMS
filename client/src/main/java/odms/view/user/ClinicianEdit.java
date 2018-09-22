@@ -1,6 +1,5 @@
 package odms.view.user;
 
-import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.AlertController.saveChanges;
 

@@ -69,6 +69,26 @@ public class ClinicianProfile extends CommonView {
     private SocialFeedTab socialFeed;
 
     /**
+     * Button handler to make fields editable.
+     *
+     * @param event clicking on the edit button.
+     */
+    @FXML
+    private void handleEditButtonClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+        ClinicianEdit v = fxmlLoader.getController();
+        v.initialize(currentUser);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Edit profile");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
      * Scene change to log in view.
      *
      * @param event clicking on the logout button.
@@ -254,11 +274,11 @@ public class ClinicianProfile extends CommonView {
      */
     private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
-            importBtn.setVisible(false);
+            importBtn.setDisable(true);
             listUsersTab.setDisable(true);
             consoleTab.setDisable(true);
         } else {
-            importBtn.setVisible(true);
+            importBtn.setDisable(false);
             listUsersTab.setDisable(false);
             consoleTab.setDisable(false);
 
