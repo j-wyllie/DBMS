@@ -1,0 +1,159 @@
+package server.model.database.hlatype;
+
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.profile.HLAType;
+import server.model.database.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+public class MySqlHLATypeDao implements HLATypeDAO{
+    /**
+     * Get the HLA tpye for the profile.
+     * @param profile to get the HLA type for.
+     */
+    @Override
+    public HLAType get(int profile) {
+        String query = "select * from hla_type where ProfileId = ?;";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        HLAType hlaType = new HLAType();
+
+        try {
+            Connection conn = connectionInstance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile);
+            ResultSet hlaResult = stmt.executeQuery();
+            hlaType = parseHLA(hlaResult);
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return hlaType;
+    }
+
+    /**
+     * Parses a single row of the hla_type table and returns a hlatype object
+     * @param rs rows returned by the database.
+     * @return the parsed condition object
+     * @throws SQLException error.
+     */
+    private HLAType parseHLA(ResultSet rs) throws SQLException {
+        HLAType hlaType = new HLAType();
+        hlaType.setGroupX(parseMap(rs.getString("groupX")));
+        hlaType.setGroupY(parseMap(rs.getString("groupY")));
+        hlaType.setSecondaryAntigens(parseMap(rs.getString("secondary")));
+        return hlaType;
+    }
+
+    /**
+     * Parses a string from the database and returns it as a Map<String, Integer>
+     * @param string String to be parsed.
+     * @return the parsed map
+     */
+    private Map<String, Integer> parseMap(String string) {
+        Map<String, Integer> map = new HashMap<>();
+        //todo create method to parse map
+        return map;
+    }
+
+    /**
+     * Converts a map to a string
+     * @param map to be converted
+     * @return
+     */
+    private String mapToString(Map<String, Integer> map) {
+        String string = "";
+        //todo parse map
+        return string;
+    }
+
+
+
+    /**
+     * Add a new hlatype to a profile.
+     * @param profile to add the hla to.
+     * @param hla to add.
+     */
+    @Override
+    public void add(int profile, HLAType hla) {
+        String query = "insert into hla_type (ProfileId, groupX, groupY, secondary"
+                + ") values (?, ?, ?, ?);";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile);
+            stmt.setString(2, mapToString(hla.getGroupX()));
+            stmt.setString(3, mapToString(hla.getGroupY()));
+            stmt.setString(4, mapToString(hla.getSecondaryAntigens()));
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Remove a hlaType from a profile.
+     * @param hlaType to remove.
+     * @param profile of hlatype
+     */
+    @Override
+    public void remove(HLAType hlaType, int profile) {
+        String query = "delete from hla_type where profileId = ?;";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile);
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Update a hlaType for the profile.
+     * @param hlaType to update.
+     * @param profile of hlatype
+     */
+    @Override
+    public void update(HLAType hlaType, int profile) {
+        String query = "update hla_type set groupX = ?, groupY = ?, secondary = ?"
+                + "where profileId = ?";
+        DatabaseConnection instance = DatabaseConnection.getInstance();
+
+        try {
+            Connection conn = instance.getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, mapToString(hlaType.getGroupX()));
+            stmt.setString(2, mapToString(hlaType.getGroupY()));
+            stmt.setString(3, mapToString(hlaType.getSecondaryAntigens()));
+            stmt.setInt(4, profile);
+            stmt.executeUpdate();
+            conn.close();
+            stmt.close();
+        }
+        catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+}

@@ -83,6 +83,10 @@ public class HLAType {
     public Map<String, Integer> getGroupX() { return groupX; }
     public Map<String, Integer> getGroupY() { return groupY; }
 
+    public void setGroupX(Map<String, Integer> map) {groupX = map;}
+    public void setGroupY(Map<String, Integer> map) {groupY = map;}
+    public void setSecondaryAntigens(Map<String, Integer> map) {secondaryAntigens = map;}
+
     public void addSecondaryAntigen(String gene, Integer allele) {
         secondaryAntigens.put(gene, allele);
     }
