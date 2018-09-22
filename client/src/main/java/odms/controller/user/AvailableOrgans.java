@@ -739,13 +739,15 @@ public class AvailableOrgans {
      * @throws SQLException error in sql.
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
+        donaters.clear();
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonators = database.getDead();
         for (Profile profile : allDonators) {
 
+            final List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
+
             for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
-                final List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
 
                 if (expired.isEmpty()) {
                     Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
@@ -797,11 +799,10 @@ public class AvailableOrgans {
 
         timer.schedule(new TimerTask() {
             public void run() {
-                List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(
-                        view.getListOfAvailableOrgans());
-
-                for (Map.Entry<Profile, OrganEnum> m : toRemove) {
-                    checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                try {
+                    view.setAvailableOrgansList();
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
         }, 0, EXPIRED_ORGANS_DELAY);
