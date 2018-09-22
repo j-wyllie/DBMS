@@ -17,16 +17,46 @@
     -fx-background-color: linear-gradient(#71aee1, #135c94);
 }
 
+.button-cancel {
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-background-image: url(/icons/cancel.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.button-confirm {
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-background-image: url(/icons/confirm.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.button-edit {
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-background-image: url(/icons/edit.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
 .button-logout {
     -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
     -fx-background-radius: 4;
-    -fx-background-size: stretch;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #fffbfb;
     -fx-border-color: #1fa98c;
     -fx-border-radius: 4;
     -fx-border-width: 1;
+    -fx-background-image: url(/icons/logout.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .button-logout:hover {
@@ -40,13 +70,16 @@
 .button-admin-logout {
     -fx-background-color: linear-gradient(#e07173, #ae4446);
     -fx-background-radius: 4;
-    -fx-background-size: stretch;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #fffbfb;
     -fx-border-color: #ae4446;
     -fx-border-radius: 4;
     -fx-border-width: 1;
+    -fx-background-image: url(/icons/logout.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .button-admin-logout:hover {
@@ -60,13 +93,16 @@
 .button-clinician-logout {
     -fx-background-color: linear-gradient(#71aee1, #135c94);
     -fx-background-radius: 4;
-    -fx-background-size: stretch;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #fffbfb;
     -fx-border-color: #135c94;
     -fx-border-radius: 4;
     -fx-border-width: 1;
+    -fx-background-image: url(/icons/logout.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 .button-clinician-logout:hover {
