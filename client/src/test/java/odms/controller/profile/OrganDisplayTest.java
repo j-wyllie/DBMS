@@ -3,7 +3,6 @@ package odms.controller.profile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +18,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+/**
+ * Test class for OrganDisplay controller.
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpOrganDAO.class)
 public class OrganDisplayTest {
 
-    private odms.view.profile.OrganDisplay view;
     private Profile currentProfile;
     private OrganDisplay controller;
 
@@ -35,12 +36,12 @@ public class OrganDisplayTest {
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
-        controller = new OrganDisplay(view);
+        controller = new OrganDisplay(new odms.view.profile.OrganDisplay());
         currentProfile.setId(99999);
     }
 
     @Test
-    public void getDonatingOrgans() throws OrganConflictException, SQLException {
+    public void getDonatingOrgans() throws OrganConflictException {
         // Mock makeRequests method, returns ArrayList of Expired Organ objects
         List<ExpiredOrgan> expired = new ArrayList<>();
         expired.add(new ExpiredOrgan(OrganEnum.BONE, "", "", null));
