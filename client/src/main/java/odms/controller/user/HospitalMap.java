@@ -1,19 +1,16 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.InfoWindow;
-import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MVCArray;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HospitalMap {
 
@@ -24,54 +21,93 @@ public class HospitalMap {
     }
 
     /**
-     * Creates hospital marker and adds the relevant details to it.
+     * Creates location marker and adds the relevant details to it.
      *
-     * @param hospital the hospital to create a marker for
-     * @return a marker object for the given hospital
+     * @param location the location to create a marker for
+     * @return a marker object for the given location
      */
-    public Marker createHospitalMarker(Hospital hospital) {
+    public Marker createLocationMarker(Hospital location) {
 
         ArrayList<Double> latLong = new ArrayList<>();
-        latLong.add(hospital.getLatitude());
-        latLong.add(hospital.getLongitude());
+        latLong.add(location.getLatitude());
+        latLong.add(location.getLongitude());
         LatLong hospitalLocation = new LatLong(latLong.get(0), latLong.get(1));
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(hospitalLocation);
-        markerOptions.title(hospital.getName());
+        markerOptions.title(location.getName());
+        markerOptions.label(String.valueOf(location.getId()));
 
-        if (hospital.getId() == -999) {
-            markerOptions.label("You");
+
+        if (location.getId() < 0) {
+
+            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_MarkerA.png").toString(), "png");
+            markerImage = markerImage.replace("(", "");
+            markerImage = markerImage.replace(")", "");
+            markerOptions.icon(markerImage);
+
+
         } else {
-            markerOptions.label(hospital.getId().toString());
+            markerOptions.label(location.getId().toString());
+//            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/red_MarkerA.png").toString(), "png");
+//            markerImage = markerImage.replace("(", "");
+//            markerImage = markerImage.replace(")", "");
+//            markerOptions.icon(markerImage);
         }
 
         return new Marker(markerOptions);
     }
 
     /**
-     * Creates hospital info window containing a hospitals details
+     * Creates Location info window containing a locations details
      *
-     * @param hospital The hospital to create a info window for
-     * @return A info window object for the given hospital containing hospital details
+     * @param location The location to create a info window for
+     * @return A info window object for the given hospital containing locations details
      */
-    public InfoWindow createHospitalInfoWindow(Hospital hospital) {
+    public InfoWindow createLocationInfoWindow(Hospital location) {
 
         // Hospital tooltip generated and added
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
 
-        String hospitalInfo = hospital.getName() + " \n";
-        if (hospital.getAddress() != null) {
-            hospitalInfo += "Address: " + hospital.getAddress() + " \n";
+        String locationInfo = location.getName() + " \n";
+        if (location.getAddress() != null) {
+            locationInfo += "Address: " + location.getAddress() + " \n";
         }
-        if (hospital.getPrograms() != null) {
-            hospitalInfo += "Services offered: " + hospital.getPrograms();
+        if (location.getPrograms() != null) {
+            locationInfo += "Services offered: " + location.getPrograms();
         }
 
-        infoWindowOptions.content(hospitalInfo);
+        infoWindowOptions.content(locationInfo);
 
         return new InfoWindow(infoWindowOptions);
     }
+
+    /**
+     * Creates a marker options object so a marker can change its appearance according to the provided parameters
+     *
+     * @param highlighted if the marker is already highlighted or not
+     * @param location the location object the marker is for
+     * @param selected the ID of the selected marker, can be A - Z
+     * @return A marker options object that allows a marker to change its appearance to a specified look
+     */
+    public MarkerOptions highlightMarker(Boolean highlighted, Hospital location, String selected) {
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(new LatLong(location.getLatitude(), location.getLongitude()));
+        markerOptions.label(String.valueOf(location.getId()));
+
+        if (!highlighted) {
+
+            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_Marker"+ selected + ".png").toString(), "png");
+            markerImage = markerImage.replace("(", "");
+            markerImage = markerImage.replace(")", "");
+            markerOptions.icon(markerImage);
+        }
+
+        return markerOptions;
+
+    }
+
 
     /**
      * Calculates the distance between two lat long coordinates, using the Haversine method.

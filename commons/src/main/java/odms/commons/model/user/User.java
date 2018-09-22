@@ -17,7 +17,7 @@ public class User {
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
     private String username;
-    private String password; //not being used yet, but will be in the future.
+    private String password;
     private boolean isDefault;
     private String pictureName;
 

@@ -7,8 +7,7 @@ import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
-import com.maxmind.geoip.Location;
-import com.maxmind.geoip.LookupService;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -51,11 +50,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     protected StringProperty origin = new SimpleStringProperty();
     protected StringProperty destination = new SimpleStringProperty();
 
-    private int numCustomMarkers = 0;
-
-    private Location userLocationObject;
-    private Hospital userLocation;
-
+    private Hospital customLocation;
 
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
@@ -104,6 +99,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
     }
 
+
     /**
      * Initializes the map.
      */
@@ -132,73 +128,50 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
 
         // Creates a hospital object for a custom location added by the user, is cleared using the clear button
-        // TODO do we limit it to only one custom marker allowed on the map?
         map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent e) -> {
-            numCustomMarkers += 1;
 
-            Hospital customLocation = new Hospital("custom marker " + (numCustomMarkers) +
+            Hospital location = new Hospital("Custom marker " +
                     " (" + Double.valueOf(decimalFormat.format(e.getLatLong().getLatitude())) + ", " +
                     Double.valueOf(decimalFormat.format(e.getLatLong().getLongitude())) + ")",
-                    e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, - numCustomMarkers);
-            addHospitalMarker(customLocation);
-            travelInfo.setText("Created: " + customLocation.getName());
-            hospitalList.add(customLocation);
+                    e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
+
+            // Ensures there is only ever one custom marker
+            if (customLocation != null) {
+                hospitalList.remove(customLocation);
+            }
+            customLocation = location;
+            for (Marker marker : markers) {
+                if (marker.getTitle().startsWith("Custom marker")) {
+                    map.removeMarker(marker);
+                }
+            }
+
+            addHospitalMarker(location);
+            travelInfo.setText("Created: " + location.getName());
+            hospitalList.add(location);
             setMarkersTable();
         });
 
-        //setUsersLocation();
+
+        // Clears selected
+        map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent e) -> {
+
+            hospitalSelected1 = null;
+            hospitalSelected2 = null;
+
+            findClosestHospitalBtn.setDisable(true);
+
+            travelInfo.clear();
+
+        });
+
+
         populateHospitals();
         setMarkersTable();
+        findClosestHospitalBtn.setDisable(true);
+
     }
 
-    /**
-     * Sets users location.
-     */
-    private void setUsersLocation() {
-
-        // controller.getUsersLocation(); // todo
-
-
-        // Get the users IP address
-//        InetAddress inetAddress = null;
-//        try {
-//            inetAddress = InetAddress.getLocalHost();
-//            System.out.println("IP Address:- " + inetAddress.getHostAddress());
-//            System.out.println("Host Name:- " + inetAddress.getHostName());
-//        } catch (UnknownHostException e) {
-//            // log.error(e.getMessage());
-//            e.printStackTrace();
-//        }
-
-        // Get the location related to the IP address
-        LookupService cl = null;
-        try {
-            cl = new LookupService("client/src/main/resources/geolite/GeoLiteCity.dat",
-                    LookupService.GEOIP_MEMORY_CACHE | LookupService.GEOIP_CHECK_CACHE);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        userLocationObject = cl.getLocation("27.127.223.255");
-//        userLocation = cl.getLocation(inetAddress.getHostAddress());   // TODO this is the proper way to do it, just sometimes cant get the location
-
-        if (userLocationObject == null) {
-            // Couldn't find a location for that IP address
-            findClosestHospitalBtn.setDisable(true);
-        } else {
-            findClosestHospitalBtn.setDisable(false);
-
-            System.out.println(userLocationObject);
-            System.out.println(userLocationObject.countryName);
-            System.out.println(userLocationObject.longitude);
-            System.out.println(userLocationObject.latitude);
-            System.out.println(userLocationObject.city);
-
-            userLocation = new Hospital("You",  (double) userLocationObject.latitude, (double) userLocationObject.longitude, null, -999);
-
-            travelInfo.setText("Your approximate location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
-        }
-    }
 
     /**
      * Populates the markers table with the current locations available to the map.
@@ -225,24 +198,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         );
 
 
-//        TableColumn<Map.Entry<Marker, Hospital>, String> nameColumn = new TableColumn<>(
-//                "Name"
-//        );
-//        nameColumn.setCellValueFactory(
-//                cdf -> new SimpleStringProperty(
-//                        cdf.getValue().getValue().getName()
-//                )
-//        );
-//
-//
-//        TableColumn<Map.Entry<Marker, Hospital>, String> idColumn = new TableColumn<>(
-//                "ID"
-//        );
-//        idColumn.setCellValueFactory(
-//                cdf -> new SimpleStringProperty(
-//                        String.valueOf(cdf.getValue().getValue().getId())
-//                )
-//        );
 
         markersTable.getColumns().clear();
         markersTable.getColumns().add(nameColumn);
@@ -252,15 +207,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                     if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                             markersTable.getSelectionModel().getSelectedItem() != null) {
 
-//                         Marker selectedMarker;
                         Hospital selectedLocation;
-
-//                        selectedMarker = (Marker) markersTable.getSelectionModel().getSelectedItem();
                         selectedLocation = (Hospital) markersTable.getSelectionModel().getSelectedItem();
-
-//                        MarkerOptions markerOptions = new MarkerOptions();
-//                        markerOptions.colour();
-//                        selectedMarker.setOptions();
 
                         // Center on selected marker
                         map.setCenter(new LatLong(selectedLocation.getLatitude(), selectedLocation.getLongitude()));
@@ -281,12 +229,16 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @FXML
     private void handleShowClosestHospital() {
 
+        if (hospitalSelected1 == null) {
+            return;
+        }
+
         Hospital closest = null;
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            if (location.getId() != -999) {
-                temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), userLocation.getLatitude(), userLocation.getLongitude());
+            if (location.getId() != hospitalSelected1.getId()) {
+                temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude());
                 if (temp < distance) {
                     distance = temp;
                     closest = location;
@@ -298,11 +250,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             map.setCenter(new LatLong(closest.getLatitude(), closest.getLongitude()));
             map.setZoom(8);
 
-//            travelInfo.setText("Closest hospital to " + userLocationObject.countryName + ", " +  userLocationObject.city + ", " +
-//                    userLocationObject.region + ": " + closest.getName() + ", " + closest.getAddress() +
-//                    ".\n Approximately " + decimalFormat.format(distance) + "km away.");
-
-            travelInfo.setText("Closest hospital to you: " + closest.getName() + ", " + closest.getAddress() +
+            travelInfo.setText("Closest hospital to " + hospitalSelected1.getName() + ": " + closest.getName() + ", " + closest.getAddress() +
                     ".\n Approximately " + decimalFormat.format(distance) + "km away.");
 
         }
@@ -352,7 +300,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         setMarkersTable();
 
-        setUsersLocation();
+        findClosestHospitalBtn.setDisable(true);
 
         directionsRenderer.clearDirections();
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
@@ -369,7 +317,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      * @param destinationName name of the location the route ends at
      */
     private void createRouteBetweenLocations(Double originLat, Double originLong, String originName, Double destinationLat, Double destinationLong, String destinationName) {
-        final double HELICOPTER_SPEED_KMH = 222;
+        final double HELICOPTER_SPEED_KMH = 262;
 
         if (hospitalSelected1.getId() == hospitalSelected2.getId()) {
             clearRoutesAndSelection();
@@ -530,9 +478,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      */
     private void addHospitalMarker(Hospital location) {
 
-        Marker marker = controller.createHospitalMarker(location);
+        Marker marker = controller.createLocationMarker(location);
+        InfoWindow infoWindow = controller.createLocationInfoWindow(location);
         markers.add(marker);
-        InfoWindow infoWindow = controller.createHospitalInfoWindow(location);
+
 
         // For displaying info window
         map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) ->
@@ -545,6 +494,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
             if (hospitalSelected1 == null) {
                 hospitalSelected1 = location;
+
+                // marker.setOptions(controller.highlightMarker(false, location, "A"));
+
+
+                findClosestHospitalBtn.setDisable(false);
+
                 if (hospitalSelected2 != null) {
                     createRouteBetweenLocations(
                             hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
@@ -554,6 +509,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
             } else {
                 hospitalSelected2 = location;
+
+                // marker.setOptions(controller.highlightMarker(false, location, "B"));
+
                 createRouteBetweenLocations(
                         hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
                         hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
@@ -563,6 +521,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         map.addMarker(marker);
     }
+
+
 
     /**
      * Populates the map object with all hospitals in database, removes all existing hospitals
@@ -576,9 +536,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         hospitalList.clear();
         markers.clear();
         hospitalList = controller.getHospitals();
-        if (userLocation != null) {
-            hospitalList.add(userLocation);
-        }
 
         for (Hospital hospital : hospitalList) {
             addHospitalMarker(hospital);
