@@ -69,6 +69,7 @@ public class Display extends CommonView {
     private Boolean isOpenedByClinician = false;
     private User currentUser;
     private TransplantWaitingList transplantWaitingListView;
+    private SocialFeedTab socialFeed;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -90,6 +91,7 @@ public class Display extends CommonView {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         currentProfile = null;
+        socialFeed.pauseTimer();
         changeScene(event, "/view/Login.fxml", "Login");
     }
 
@@ -182,12 +184,20 @@ public class Display extends CommonView {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SocialFeedTab.fxml"));
             try {
                 tabSocialFeed.setContent(loader.load());
-                SocialFeedTab socialFeed = loader.getController();
+                socialFeed = loader.getController();
                 socialFeed.initialise();
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
+
+        tabSocialFeed.setOnSelectionChanged(event -> {
+            if (!tabSocialFeed.isSelected()) {
+                socialFeed.pauseTimer();
+            } else {
+                socialFeed.startTimer();
+            }
+        });
     }
 
 
