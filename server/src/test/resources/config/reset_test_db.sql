@@ -152,6 +152,18 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Previous` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Table structure for table `hla_type`
+--
+
+DROP TABLE IF EXISTS `hla_type`;
+CREATE TABLE IF NOT EXISTS `hla_type` (
+  `groupX` text NOT NULL,
+  `groupY` text NOT NULL,
+  `secondary` mediumtext NOT NULL,
+  `profileId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
@@ -219,6 +231,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `IsDefault` tinyint(1) DEFAULT '0',
   `ImageName` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 --
 -- Indexes for dumped tables
@@ -289,6 +303,12 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`);
+
+--
+-- Indexes for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD PRIMARY KEY (`profileId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -386,6 +406,13 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+
+--
+-- Constraints for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

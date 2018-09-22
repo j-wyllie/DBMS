@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class MySqlHLATypeDao implements HLATypeDAO{
     /**
-     * Get the HLA tpye for the profile.
+     * Get the HLA type for the profile.
      * @param profile to get the HLA type for.
      */
     @Override
@@ -47,6 +47,7 @@ public class MySqlHLATypeDao implements HLATypeDAO{
      */
     private HLAType parseHLA(ResultSet rs) throws SQLException {
         HLAType hlaType = new HLAType();
+        rs.next();
         hlaType.setGroupX(parseMap(rs.getString("groupX")));
         hlaType.setGroupY(parseMap(rs.getString("groupY")));
         hlaType.setSecondaryAntigens(parseMap(rs.getString("secondary")));
@@ -60,22 +61,18 @@ public class MySqlHLATypeDao implements HLATypeDAO{
      */
     private Map<String, Integer> parseMap(String string) {
         Map<String, Integer> map = new HashMap<>();
-        //todo create method to parse map
+        if(!string.equals("{}")) {
+            string = string.replace("{", "");
+            string = string.replace("}", "");
+            string = string.replace(" ", "");
+            String[] strings = string.split(",");
+            for (int i = 0; i < strings.length; i++) {
+                String[] values = strings[i].split("=");
+                map.put(values[0], Integer.parseInt(values[1]));
+            }
+        }
         return map;
     }
-
-    /**
-     * Converts a map to a string
-     * @param map to be converted
-     * @return
-     */
-    private String mapToString(Map<String, Integer> map) {
-        String string = "";
-        //todo parse map
-        return string;
-    }
-
-
 
     /**
      * Add a new hlatype to a profile.
@@ -93,9 +90,9 @@ public class MySqlHLATypeDao implements HLATypeDAO{
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
-            stmt.setString(2, mapToString(hla.getGroupX()));
-            stmt.setString(3, mapToString(hla.getGroupY()));
-            stmt.setString(4, mapToString(hla.getSecondaryAntigens()));
+            stmt.setString(2, hla.getGroupX().toString());
+            stmt.setString(3, hla.getGroupY().toString());
+            stmt.setString(4, hla.getSecondaryAntigens().toString());
             stmt.executeUpdate();
             conn.close();
             stmt.close();
@@ -107,11 +104,10 @@ public class MySqlHLATypeDao implements HLATypeDAO{
 
     /**
      * Remove a hlaType from a profile.
-     * @param hlaType to remove.
-     * @param profile of hlatype
+     * @param profile of hlatype to remove
      */
     @Override
-    public void remove(HLAType hlaType, int profile) {
+    public void remove(int profile) {
         String query = "delete from hla_type where profileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         try {
@@ -143,9 +139,9 @@ public class MySqlHLATypeDao implements HLATypeDAO{
             Connection conn = instance.getConnection();
 
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, mapToString(hlaType.getGroupX()));
-            stmt.setString(2, mapToString(hlaType.getGroupY()));
-            stmt.setString(3, mapToString(hlaType.getSecondaryAntigens()));
+            stmt.setString(1, hlaType.getGroupX().toString());
+            stmt.setString(2, hlaType.getGroupY().toString());
+            stmt.setString(3, hlaType.getSecondaryAntigens().toString());
             stmt.setInt(4, profile);
             stmt.executeUpdate();
             conn.close();

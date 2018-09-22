@@ -20,10 +20,9 @@ public interface HLATypeDAO {
 
     /**
      * Remove a condition from a profile.
-     * @param hla to remove.
-     * @param profile of hla
+     * @param profile of hla to remove
      */
-    void remove(HLAType hla, int profile);
+    void remove(int profile);
 
     /**
      * Update a condition for the profile.
