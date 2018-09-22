@@ -79,6 +79,7 @@ public class UserGeneral {
 
     /**
      * Initializes all of the labels and checks the user type.
+     *
      * @param currentUser The current user logged in.
      */
     public void initialize(User currentUser) {

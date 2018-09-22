@@ -128,10 +128,10 @@ public class Request {
         for (int i = 0; i < queryParams.size(); i++) {
             String key = (String) keys[i];
             if (i == 0) {
-                urlString += ("?" + key + "=" + queryParams.get(key));
+                urlString += ("?" + key + '=' + queryParams.get(key));
             }
             else {
-                urlString += ("&" + key + "=" + queryParams.get(key));
+                urlString += ("&" + key + '=' + queryParams.get(key));
             }
         }
         log.info(urlString);

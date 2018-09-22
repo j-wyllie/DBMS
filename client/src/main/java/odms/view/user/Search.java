@@ -299,7 +299,7 @@ public class Search extends CommonView {
      * @param maxLength that can be entered in the textfield
      * @return
      */
-    private EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public static EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
         return e -> {
             TextField txt_TextField = (TextField) e.getSource();
             if (txt_TextField.getText().length() >= maxLength) {

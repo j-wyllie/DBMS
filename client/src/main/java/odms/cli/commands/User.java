@@ -160,17 +160,17 @@ public class User extends CommandUtils {
      */
     private static List<odms.commons.model.user.User> search(String expression, String type) {
         // Depending what type of user, the length to skip will change accordingly
-        Integer lengthToSkip = 10;   //for clinician
+        int lengthToSkip = 10;   //for clinician
         if (type.equals("clinician")) {
             lengthToSkip = 10;
         }
 
         UserDAO database = DAOFactory.getUserDao();
         List<odms.commons.model.user.User> user = new ArrayList<>();
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
+        String attr = expression.substring(expression.indexOf('\"') + 1,
+                expression.lastIndexOf('\"'));
         try {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            if (expression.lastIndexOf('=') == expression.indexOf('=')) {
                 if (expression.substring(lengthToSkip, lengthToSkip + "name".length())
                         .equals("name")) {
                     user = database.search(attr);
@@ -205,10 +205,10 @@ public class User extends CommandUtils {
 
         UserDAO database = DAOFactory.getUserDao();
         odms.commons.model.user.User user;
-        String attr = expression.substring(expression.indexOf("\"") + 1,
-                expression.lastIndexOf("\""));
+        String attr = expression.substring(expression.indexOf('\"') + 1,
+                expression.lastIndexOf('\"'));
         try {
-            if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+            if (expression.lastIndexOf('=') == expression.indexOf('=')) {
                 if (expression.substring(lengthToSkip, lengthToSkip + "username".length())
                         .equals("username")) {
                     user = database.get(attr);

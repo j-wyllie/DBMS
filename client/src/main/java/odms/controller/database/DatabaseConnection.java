@@ -179,22 +179,23 @@ public final class DatabaseConnection {
     private Statement parseSql(Connection conn, String filepath) throws IOException, SQLException {
         InputStream inputStream = getClass().getResourceAsStream(filepath);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        Statement statement = conn.createStatement();
-        String line;
-        StringBuilder sb = new StringBuilder();
+        try (Statement statement = conn.createStatement()) {
+            String line;
+            StringBuilder sb = new StringBuilder();
 
-        while ((line = br.readLine()) != null) {
-            if ((line.length() != 0 && !line.startsWith("--"))) {
-                sb.append(line);
+            while ((line = br.readLine()) != null) {
+                if ((line.length() != 0 && !line.startsWith("--"))) {
+                    sb.append(line);
+                }
+                if (line.trim().endsWith(";")) {
+                    statement.addBatch(sb.toString());
+                    sb = new StringBuilder();
+                }
             }
-            if (line.trim().endsWith(";")) {
-                statement.addBatch(sb.toString());
-                sb = new StringBuilder();
-            }
+
+            br.close();
+            return statement;
         }
-
-        br.close();
-        return statement;
     }
 
     /**

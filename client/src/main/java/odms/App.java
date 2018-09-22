@@ -11,14 +11,13 @@ public class App {
 
     public static void main(String[] args) {
 
-        CurrentHistory.currentSessionHistory.add(null);
+        CurrentHistory.getCurrentSessionHistory() .add(null);
         try {
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);
 
             } else {
-                String s = args[0].toLowerCase();
-                if ("-cmd".equals(s)) {
+                if ("-cmd".equalsIgnoreCase(args[0])) {
                     CommandLine commandLine = new CommandLine();
                     commandLine.initialiseConsole();
                 }

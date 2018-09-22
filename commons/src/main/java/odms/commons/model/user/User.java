@@ -3,8 +3,7 @@ package odms.commons.model.user;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.List;
 import odms.commons.model.enums.UserType;
 
 public class User {
@@ -22,15 +21,13 @@ public class User {
     private boolean isDefault;
     private String pictureName;
 
-    public static ObservableList<Integer> allowedCountriesIndices = FXCollections.observableArrayList();
-
     /**
      * user constructor
      *
      * @param userType  type of user
      * @param attrArray array containing users attributes
      */
-    public User(UserType userType, ArrayList<String> attrArray) {
+    public User(UserType userType, List<String> attrArray) {
         this.userType = userType;
         setExtraAttributes(attrArray, this);
         timeOfCreation = LocalDateTime.now();
@@ -125,7 +122,7 @@ public class User {
      * @param attributes the attributes given in the constructor.
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
-    public void setExtraAttributes(ArrayList<String> attributes, User user) throws IllegalArgumentException {
+    public void setExtraAttributes(List<String> attributes, User user) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
             setGivenAttribute(parts, user);
@@ -196,7 +193,6 @@ public class User {
 
     public void setStaffID(Integer staffID) {
         this.staffID = staffID;
-        //generateUpdateInfo(staffID.toString());
     }
 
     public String getWorkAddress() {
@@ -226,7 +222,7 @@ public class User {
         generateUpdateInfo(this.username);
     }
 
-    public ArrayList<String> getUpdateActions() {
+    public List<String> getUpdateActions() {
         return updateActions;
     }
 
