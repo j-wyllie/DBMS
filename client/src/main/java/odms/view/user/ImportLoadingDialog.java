@@ -1,7 +1,6 @@
 package odms.view.user;
 
 import java.io.File;
-import java.sql.SQLException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -15,7 +14,6 @@ import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
-import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 
@@ -24,7 +22,8 @@ public class ImportLoadingDialog extends CommonView {
 
     private ProfileImportTask profileImportTask;
 
-    private odms.controller.user.ImportLoadingDialog controller = new odms.controller.user.ImportLoadingDialog(this);
+    private odms.controller.user.ImportLoadingDialog controller = new odms.controller.user.ImportLoadingDialog(
+            this);
 
     @FXML
     private ProgressBar progressBarImport;
@@ -75,7 +74,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Creates the profile import task, adds handlers for the buttons and calls update progress
+     * Creates the profile import task, adds handlers for the buttons and calls update progress.
      *
      * @param file the file being imported
      */
@@ -86,23 +85,18 @@ public class ImportLoadingDialog extends CommonView {
             profileImportTask = new ProfileImportTask(file);
 
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> buttonImportConfirm.setDisable(false));
+                    event -> {
+                        buttonImportConfirm.setDisable(false);
+                        buttonImportCancel.setText("Undo");
+                    });
 
             buttonImportConfirm.setOnAction(event -> {
-                try {
-                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                    mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
                 closeWindows(parentStage);
             });
 
             buttonImportCancel.setOnAction(event -> {
-                importTask.interrupt();
-                MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
-                ((Stage) progressBarImport.getScene().getWindow()).close();
+                profileImportTask.rollback();
+                profileImportTask.setCancelled();
             });
 
             tableStatus.setSelectionModel(null);
@@ -165,9 +159,8 @@ public class ImportLoadingDialog extends CommonView {
 
     public void setOnCloseRequest() {
         this.currentStage.setOnCloseRequest((WindowEvent event) -> {
-            importTask.interrupt();
-            MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-            mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
+            profileImportTask.rollback();
+            profileImportTask.setCancelled();
         });
     }
 

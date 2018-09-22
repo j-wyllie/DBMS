@@ -493,14 +493,21 @@ public class MySqlProfileDAO implements ProfileDAO {
      */
     @Override
     public void remove(Profile profile) throws SQLException {
-        String query = "delete from profiles where ProfileId = ?;";
-
+        String query;
+        if (profile.getId() != null) {
+            query = "delete from profiles where ProfileId = ?;";
+        } else {
+            query = "delete from profiles where NHI = ?;";
+        }
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
-            stmt.setInt(1, profile.getId());
+            if (profile.getId() != null) {
+                stmt.setInt(1, profile.getId());
+            } else {
+                stmt.setString(1, profile.getNhi());
+            }
 
             removeOrgans(profile);
             removeMedications(profile);

@@ -283,6 +283,10 @@ public class Profile implements Comparable<Profile> {
         this.id = profileId;
     }
 
+    public Profile(String Nhi) {
+        this.nhi = Nhi;
+    }
+
     /**
      * Compares the profile object to another profile object. Result is determined by
      * lexicographical order of profile full name.

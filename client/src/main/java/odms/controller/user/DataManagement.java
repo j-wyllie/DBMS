@@ -2,21 +2,21 @@ package odms.controller.user;
 
 import static odms.view.CommonView.checkUnsavedChanges;
 
+import java.io.File;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-
-import java.io.File;
-import java.io.IOException;
+import odms.view.user.ClinicianProfile;
 import odms.view.user.ImportLoadingDialog;
 
 public class DataManagement {
 
-    odms.view.user.DataManagement view;
+    ClinicianProfile view;
 
-    public DataManagement(odms.view.user.DataManagement v) {
+    public DataManagement(ClinicianProfile v) {
         view = v;
     }
 
@@ -34,7 +34,7 @@ public class DataManagement {
         Scene scene = new Scene(fxmlLoader.load());
         ImportLoadingDialog controller = fxmlLoader.getController();
 
-        controller.initialize(file, currentStage, view.currentUser);
+        controller.initialize(file, currentStage, view.getCurrentUser());
 
         Stage stage = new Stage();
         controller.setCurrentStage(stage);

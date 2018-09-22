@@ -126,4 +126,10 @@ public interface ProfileDAO {
      * @return Boolean, true if successful.
      */
     Boolean savePassword(String nhi, String password);
+
+    /**
+     * Removes a profile by their nhi.
+     * @param profile Profile to be removed.
+     */
+    void removeByNhi(Profile profile);
 }
