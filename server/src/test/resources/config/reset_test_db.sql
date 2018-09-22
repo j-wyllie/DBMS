@@ -3,24 +3,16 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 11, 2018 at 02:25 AM
+-- Generation Time: Sep 22, 2018 at 05:04 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Database: `seng302-2018-team200-test`
 --
-CREATE DATABASE IF NOT EXISTS `seng302-2018-team200-test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `seng302-2018-team200-test`;
 
 -- --------------------------------------------------------
 
@@ -101,6 +93,21 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `locale`
+--
+
+DROP TABLE IF EXISTS `locale`;
+CREATE TABLE IF NOT EXISTS `locale` (
+  `LocaleId` int(11) NOT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
+  `DateTimeFormat` varchar(50) DEFAULT NULL,
+  `NumberFormat` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `medical_interactions`
 --
 
@@ -161,10 +168,9 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
   `ProfileId` int(11) NOT NULL,
-  `NHI` varchar(20) UNIQUE DEFAULT NULL,
-  `Username` varchar(50) UNIQUE DEFAULT NULL,
+  `NHI` varchar(20) DEFAULT NULL,
+  `Username` varchar(50) DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
   `GivenNames` varchar(50) DEFAULT NULL,
@@ -211,9 +217,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
-  `Username` varchar(50) UNIQUE DEFAULT NULL,
+  `Username` varchar(50) DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
@@ -263,6 +268,14 @@ ALTER TABLE `history`
   ADD KEY `EntityId` (`EntityId`);
 
 --
+-- Indexes for table `locale`
+--
+ALTER TABLE `locale`
+  ADD PRIMARY KEY (`LocaleId`),
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `UserId` (`UserId`);
+
+--
 -- Indexes for table `medical_interactions`
 --
 ALTER TABLE `medical_interactions`
@@ -273,7 +286,8 @@ ALTER TABLE `medical_interactions`
 --
 ALTER TABLE `organs`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `organs_ibfk_2` (`UserId`);
 
 --
 -- Indexes for table `procedures`
@@ -286,13 +300,16 @@ ALTER TABLE `procedures`
 -- Indexes for table `profiles`
 --
 ALTER TABLE `profiles`
-  ADD PRIMARY KEY (`ProfileId`);
+  ADD PRIMARY KEY (`ProfileId`),
+  ADD UNIQUE KEY `NHI` (`NHI`),
+  ADD UNIQUE KEY `Username` (`Username`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserId`);
+  ADD PRIMARY KEY (`UserId`),
+  ADD UNIQUE KEY `Username` (`Username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -323,6 +340,11 @@ ALTER TABLE `drugs`
 --
 ALTER TABLE `history`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `locale`
+--
+ALTER TABLE `locale`
+  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `medical_interactions`
 --
@@ -378,11 +400,17 @@ ALTER TABLE `history`
   ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
 
 --
+-- Constraints for table `locale`
+--
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`),
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
+--
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
-  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
-ALTER TABLE `organs`
+  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`),
   ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
 
 --
@@ -391,13 +419,10 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
 INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
   ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
   ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
+
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

@@ -1,13 +1,8 @@
 package server.model.database.settings;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
@@ -81,7 +76,6 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Method to be called to repopulate the countries table.
-     * @throws SQLException throws sql exception
      */
     @Override
     public void populateCountriesTable() {
@@ -113,7 +107,7 @@ public class MySqlSettingsDAO implements SettingsDAO {
      * @return the locale setting.
      */
     @Override
-    public String getDateTimeFormat(int id, UserType userType) throws SQLException {
+    public String getDateTimeFormat(int id, UserType userType) {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
             query = "select DateTimeFormat from locale where ProfileId = ?;";
@@ -130,7 +124,7 @@ public class MySqlSettingsDAO implements SettingsDAO {
      * @return the locale setting.
      */
     @Override
-    public String getNumberFormat(int id, UserType userType) throws SQLException {
+    public String getNumberFormat(int id, UserType userType) {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
             query = "select NumberFormat from locale where ProfileId = ?;";
@@ -146,12 +140,8 @@ public class MySqlSettingsDAO implements SettingsDAO {
      * @param id of the user.
      * @return the locale returned by the query.
      */
-    private String getLocale(String query, int id) throws SQLException {
-        ResultSet set = executeSelectById(query, id);
-        set.next();
-        String result = set.getString(1);
-        set.close();
-        return result;
+    private String getLocale(String query, int id) {
+        return executeSelectById(query, id);
     }
 
     /**
@@ -205,13 +195,29 @@ public class MySqlSettingsDAO implements SettingsDAO {
     }
 
     /**
+     * Deletes the locale settings for a user.
+     * @param id the user or profile ID.
+     * @param userType user or profile.
+     */
+    @Override
+    public void deleteLocale(int id, UserType userType) {
+        String query = null;
+        if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
+            query = "delete from locale where ProfileId = ?;";
+        } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
+            query = "delete from locale where UserId = ?;";
+        }
+        executeDeleteById(query, id);
+    }
+
+    /**
      * Check if locale settings exist for ID.
      * @param id the user or profile ID.
      * @param userType user or profile.
      * @return boolean if exists.
      */
-    private boolean hasCustomLocale(int id, UserType userType) throws SQLException {
-        boolean result;
+    private boolean hasCustomLocale(int id, UserType userType) {
+        boolean result = false;
         String query = null;
 
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
@@ -219,9 +225,9 @@ public class MySqlSettingsDAO implements SettingsDAO {
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
             query = "select * from locale where UserId = ?;";
         }
-        ResultSet set =  executeSelectById(query, id);
-        result = set.next();
-        set.close();
+        if (executeSelectById(query, id) != null) {
+            result = true;
+        }
 
         return result;
     }
@@ -230,19 +236,41 @@ public class MySqlSettingsDAO implements SettingsDAO {
      * Executes a select query filtering rows by a user id.
      * @param query to execute.
      * @param id to filter rows by.
-     * @return the result set.
+     * @return the first column's value.
      */
-    private ResultSet executeSelectById(String query, int id) {
+    private String executeSelectById(String query, int id) {
+        String result = null;
+
         try (Connection connection = DatabaseConnection.getConnection()) {
             try (PreparedStatement stmt = connection.prepareStatement(query)) {
                 stmt.setInt(1, id);
 
-                return stmt.executeQuery();
+                ResultSet set = stmt.executeQuery();
+                if (set.next()) {
+                    result = set.getString(1);
+                }
+                set.close();
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
-        return null;
+        return result;
+    }
+
+    /**
+     * Executes a delete query filtering rows by a user id.
+     * @param query to execute.
+     * @param id to filter rows by.
+     */
+    private void executeDeleteById(String query, int id) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                stmt.execute();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**
@@ -251,20 +279,15 @@ public class MySqlSettingsDAO implements SettingsDAO {
      * @param id the user or profile ID.
      * @param locale the locale settings.
      */
-    private void setFormat(String query, int id, String locale) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+    private void setFormat(String query, int id, String locale) throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
 
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setInt(1, id);
-                stmt.setString(2, locale);
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, locale);
+            stmt.setInt(2, id);
 
-                stmt.executeUpdate();
-            }
-            connection.close();
-
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
+            stmt.executeUpdate();
         }
+        connection.close();
     }
 }
