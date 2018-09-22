@@ -124,45 +124,6 @@ public class CommonView {
         appStage.show();
     }
 
-    /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleUserEditButtonClicked(ActionEvent event) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        ProfileEditController controller = fxmlLoader.getController();
-//        controller.setCurrentProfile(currentProfile);
-//        controller.setIsClinician(isOpenedByClinician);
-//        controller.initialize();
-//
-//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//
-//        appStage.setScene(scene);
-//        appStage.show();
-    }
-
-    /**
-     * Button handler to undo last action.
-     */
-    @FXML
-    private void handleUndoButtonClicked() {
-        //undoController.undo(GuiMain.getCurrentDatabase());
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     */
-    @FXML
-    private void handleRedoButtonClicked() {
-        //redoController.redo(GuiMain.getCurrentDatabase());
-    }
-
-    //private Redo redoController = new Redo();
-    //private Undo undoController = new Undo();
-
     public Boolean getEdited() {
         return isEdited;
     }
