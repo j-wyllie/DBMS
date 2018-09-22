@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,13 +7,14 @@ import java.time.LocalDate;
 import java.util.List;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class MySqlMedicationDAOTest extends MySqlCommonTests {
+public class MedicationDAOTest extends CommonTestUtils {
     private MySqlMedicationDAO mySqlMedicationDAO;
     private MySqlProfileDAO mySqlProfileDAO;
 

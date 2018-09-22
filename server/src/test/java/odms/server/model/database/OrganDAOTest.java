@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,7 @@ import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,7 +20,7 @@ import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 import server.model.database.user.MySqlUserDAO;
 
-public class MySqlOrganDaoTest extends MySqlCommonTests {
+public class OrganDAOTest extends CommonTestUtils {
 
     private Profile testProfile1;
     private Profile testProfile2;

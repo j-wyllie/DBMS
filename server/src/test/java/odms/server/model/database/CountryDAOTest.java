@@ -1,14 +1,15 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import odms.commons.model.enums.CountriesEnum;
+import odms.server.CommonTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.settings.MySqlSettingsDAO;
 
-public class MySqlCountryDAOTest extends MySqlCommonTests {
+public class CountryDAOTest extends CommonTestUtils {
     private MySqlSettingsDAO mySqlCountryDAO;
 
     @Before
