@@ -92,6 +92,17 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
+    public void removeByNhi(Profile profile) {
+        String url = "http://localhost:6969/api/v1/profiles/" + profile.getNhi();
+        Request request = new Request(url, 0, new HashMap<>());
+        try {
+            request.delete();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void update(Profile profile) {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();

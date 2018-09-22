@@ -3,15 +3,21 @@ package odms.controller.profile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.beans.Observable;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.profile.MySqlProfileDAO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
+import odms.data.NHIConflictException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -19,17 +25,27 @@ import org.apache.commons.csv.CSVRecord;
 /**
  * Task to import parse a csv file to a user object.
  */
+@Slf4j
 public class ProfileImportTask extends Task<Void> {
 
-    private File file;
-    private MySqlProfileDAO server = new MySqlProfileDAO();
-    private Connection conn;
     private static final int VALID_DOD_LENGTH = 3;
     private static final String DATE_SPLITTER = "/";
+    private File file;
+    private ProfileDAO server = DAOFactory.getProfileDao();
+    private List<Profile> successfulProfiles = new ArrayList<>();
+
+    private int progressCount = 0;
+    private int successCount = 0;
+    private int failedCount = 0;
+    private Integer csvLength;
+    private boolean rollback = false;
+    private Boolean finished = false;
+    private boolean cancelled = false;
 
 
     /**
      * Gives a CSV file to the profile import task.
+     *
      * @param file CSV file to be parsed.
      */
     public ProfileImportTask(File file) {
@@ -56,11 +72,11 @@ public class ProfileImportTask extends Task<Void> {
     private void loadDataFromCSV(File csv) throws InvalidFileException {
         try {
             CSVParser csvParser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv));
-            Integer csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
+            csvLength = CSVFormat.DEFAULT.withHeader().parse(new FileReader(csv))
                     .getRecords().size();
 
             parseCsvRecord(csvParser, csvLength);
-        } catch (IOException | IllegalArgumentException | SQLException e) {
+        } catch (IOException | IllegalArgumentException e) {
             throw new InvalidFileException("CSV file could not be read.", csv);
         }
     }
@@ -71,36 +87,44 @@ public class ProfileImportTask extends Task<Void> {
      *
      * @param csvParser the csv parser to parse each row.
      * @param csvLength the length of the csv.
-     * @throws SQLException thrown when a profile can't be added to the transaction.
      */
-    private void parseCsvRecord(CSVParser csvParser,
-            Integer csvLength) throws SQLException {
-        int progressCount = 0;
-        int successCount = 0;
-        int failedCount = 0;
-        conn = server.getConnection();
+    private void parseCsvRecord(CSVParser csvParser, Integer csvLength) {
+        while (!cancelled) {
 
-        for (CSVRecord csvRecord : csvParser) {
-            if (Thread.currentThread().isInterrupted()) {
-                return;
-            }
+            if (!finished) {
+                for (CSVRecord csvRecord : csvParser) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    } else if (rollback) {
+                        removeProfiles();
+                        Thread.currentThread().interrupt();
+                    } else {
 
-            Profile profile = csvToProfileConverter(csvRecord);
-            if (profile != null) {
-                try {
-                    server.addToTransaction(conn, profile);
-                    successCount++;
-                } catch (SQLException e) {
-                    failedCount++;
+                        Profile profile = csvToProfileConverter(csvRecord);
+                        if (profile != null) {
+                            try {
+                                server.add(profile);
+                                successCount++;
+                                successfulProfiles.add(profile);
+                            } catch (SQLException | NHIConflictException e) {
+                                failedCount++;
+                            }
+                        } else {
+                            failedCount++;
+                        }
+
+                        progressCount++;
+                        this.updateProgress(progressCount, csvLength);
+                        this.updateMessage(
+                                String.format("%d,%d,%d", successCount, failedCount,
+                                        progressCount));
+                    }
                 }
-            } else {
-                failedCount++;
+                finished = true;
             }
-
-            progressCount++;
-            this.updateProgress(progressCount, csvLength);
-            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
+            System.out.println("RREEEEEEE");
         }
+        removeProfiles();
     }
 
     /**
@@ -182,7 +206,47 @@ public class ProfileImportTask extends Task<Void> {
         return m.find();
     }
 
-    public Connection getConnection() {
-        return conn;
+    /**
+     * Sets the rollback boolean value to true.
+     */
+    public void rollback() {
+        rollback = true;
+    }
+
+    /**
+     * Removes the profiles from the database and counts down the progress bar.
+     */
+    private void removeProfiles() {
+        for (Profile profile : successfulProfiles) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+
+            server.removeByNhi(profile);
+            successCount--;
+            progressCount--;
+
+            this.updateProgress(progressCount, csvLength);
+            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
+        }
+        while (failedCount != 0) {
+            progressCount--;
+            failedCount--;
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+
+            this.updateProgress(progressCount, csvLength);
+            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
+        }
+    }
+
+    public void setCancelled() {
+        cancelled = true;
     }
 }
+
+

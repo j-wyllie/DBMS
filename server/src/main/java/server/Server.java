@@ -152,8 +152,8 @@ public class Server {
             path("/settings", () -> {
                 get("/countries", SettingsController::getAllCountries);
                 patch("/countries", SettingsController::editCountries);
-                get("/locale", SettingsController::getLocale);
-                post("/locale", SettingsController::setLocale);
+//                get("/locale", SettingsController::getLocale);
+//                post("/locale", SettingsController::setLocale);
             });
         });
     }

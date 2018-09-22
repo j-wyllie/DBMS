@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
@@ -23,6 +25,7 @@ import spark.Response;
  */
 @Slf4j
 public class ProfileController {
+
     private static final String KEY_SEARCH = "searchString";
 
     /**
@@ -34,6 +37,7 @@ public class ProfileController {
 
     /**
      * Gets all profiles stored.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -54,10 +58,11 @@ public class ProfileController {
 
     /**
      * Gets all receiving profiles (possibly with search criteria).
+     *
      * @param req received.
      * @return json string of profiles.
      */
-    public static String getReceiving(Request req,  Response res) {
+    public static String getReceiving(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
@@ -99,6 +104,7 @@ public class ProfileController {
 
     /**
      * Gets all profiles stored.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -120,8 +126,8 @@ public class ProfileController {
     }
 
     /**
-     /**
-     * Gets all profiles (possibly with search criteria).
+     * /** Gets all profiles (possibly with search criteria).
+     *
      * @param req received.
      * @return json string of profiles.
      * @throws SQLException error.
@@ -147,8 +153,7 @@ public class ProfileController {
             List<Profile> result = database.search(searchString, ageSearchInt,
                     ageRangeSearchInt, region, gender, type, organs);
             profiles = gson.toJson(result);
-        }
-        else {
+        } else {
             profiles = gson.toJson(database.getAll());
         }
         return profiles;
@@ -156,6 +161,7 @@ public class ProfileController {
 
     /**
      * Gets a single profile from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -167,8 +173,7 @@ public class ProfileController {
         try {
             if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
                 profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
-            }
-            else {
+            } else {
                 profile = database.get(req.queryParams("username"));
             }
         } catch (SQLException e) {
@@ -188,6 +193,7 @@ public class ProfileController {
 
     /**
      * Creates and stores a new profile.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -209,8 +215,7 @@ public class ProfileController {
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
                         && !database.isUniqueUsername(newProfile.getUsername())) {
                     database.add(newProfile);
-                }
-                else {
+                } else {
                     res.status(400);
                     return ResponseMsgEnum.BAD_REQUEST.toString();
                 }
@@ -226,6 +231,7 @@ public class ProfileController {
 
     /**
      * Edits a stored profile.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -255,18 +261,23 @@ public class ProfileController {
 
     /**
      * Deletes a profile from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
+        String query = req.params(KeyEnum.ID.toString());
         Profile profile;
 
         try {
-            profile = new Gson().fromJson(req.body(), Profile.class);
-            profile.setId(Integer.valueOf(req.params(KeyEnum.ID.toString())));
-        } catch (Exception e) {
+            if (isValidNHI(query)) {
+                profile = new Profile(query);
+            } else {
+                profile = new Profile(Integer.parseInt(query));
+            }
+        } catch (NumberFormatException e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
@@ -284,6 +295,7 @@ public class ProfileController {
 
     /**
      * Gets a count of all stored profiles.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -310,6 +322,7 @@ public class ProfileController {
 
     /**
      * Checks that a profile has a password.
+     *
      * @param req the request fields.
      * @param res the response from the server.
      * @return The response body.
@@ -333,6 +346,7 @@ public class ProfileController {
 
     /**
      * Checks the credentials of a profile logging in,
+     *
      * @param request request containg password and username.
      * @param res response from the server.
      * @return String displaying success of validation.
@@ -364,6 +378,7 @@ public class ProfileController {
 
     /**
      * Saves the profiles password.
+     *
      * @param request request being sent with url and password.
      * @param response the server response.
      * @return String confirming success.
@@ -384,5 +399,19 @@ public class ProfileController {
             response.status(400);
         }
         return "Password Set";
+    }
+
+    /**
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
+     *
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
+     */
+    private static boolean isValidNHI(String nhi) {
+        String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher m = r.matcher(nhi);
+        return m.find();
     }
 }

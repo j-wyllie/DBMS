@@ -435,9 +435,15 @@ ALTER TABLE `locale`
 --
 -- Constraints for table `locale`
 --
+
 ALTER TABLE `locale`
   ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`),
   ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
+INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
+  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
+  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
+
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

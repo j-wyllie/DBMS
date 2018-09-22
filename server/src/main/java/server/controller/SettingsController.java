@@ -104,11 +104,11 @@ public class SettingsController {
         }
     }
 
-    public static String getLocale() {
-
-    }
-
-    public static String setLocale() {
-
-    }
+//    public static String getLocale() {
+//        return ""
+//    }
+//
+//    public static String setLocale() {
+//        return "";
+//    }
 }

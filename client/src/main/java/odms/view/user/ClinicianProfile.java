@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
+import odms.controller.user.DataManagement;
 import odms.controller.user.Display;
 import odms.view.CommonView;
 import odms.view.SettingsPopup;
@@ -121,7 +122,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     @FXML
-    private void handleImportButtonAction(ActionEvent event) throws IOException {
+    private void handleImportButtonAction() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
@@ -131,7 +132,7 @@ public class ClinicianProfile extends CommonView {
         fileChooser.getExtensionFilters().add(extFilter);
         Stage stage = (Stage) clinicianFullName.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
-        odms.controller.user.DataManagement dataManagementController = new odms.controller.user.DataManagement(
+        DataManagement dataManagementController = new odms.controller.user.DataManagement(
                 this);
         dataManagementController.handleFile(file, (Stage) clinicianFullName.getScene().getWindow());
     }

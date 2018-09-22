@@ -2,14 +2,13 @@ package odms.controller.user;
 
 import static odms.view.CommonView.checkUnsavedChanges;
 
+import java.io.File;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import odms.controller.AlertController;
-
-import java.io.File;
-import java.io.IOException;
 import odms.view.user.ClinicianProfile;
 import odms.view.user.ImportLoadingDialog;
 
