@@ -57,6 +57,7 @@ public class Profile implements Comparable<Profile> {
     private Double height = 0.0;
     private Double weight = 0.0;
     private String bloodType;
+    private HLAType hlaType = new HLAType();
 
     private String address;
 
@@ -932,6 +933,10 @@ public class Profile implements Comparable<Profile> {
             );
         }
     }
+
+    public HLAType getHlaType() { return hlaType; }
+
+    public void setHlaType(HLAType hlaType) { this.hlaType = hlaType; }
 
     public String getAddress() {
         return address;

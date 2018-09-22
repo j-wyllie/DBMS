@@ -55,7 +55,6 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private TableView availableOrgansTable;
 
-
     private OrganEnum selectedOrgan;
 
     private ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
@@ -261,7 +260,6 @@ public class AvailableOrgans extends CommonView {
      * Populates available organs table with ALL available organs in database.
      */
     private void setPotentialOrganMatchesList() {
-
         try {
             OrganEnum organToMatch = selectedOrgan;
             Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable

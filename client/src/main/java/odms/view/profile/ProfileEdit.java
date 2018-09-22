@@ -133,6 +133,42 @@ public class ProfileEdit extends CommonView {
     private TextField cityField;
 
     @FXML
+    private TextField hlaXAField;
+
+    @FXML
+    private TextField hlaXBField;
+
+    @FXML
+    private TextField hlaXCField;
+
+    @FXML
+    private TextField hlaXDPField;
+
+    @FXML
+    private TextField hlaXDQField;
+
+    @FXML
+    private TextField hlaXDRField;
+
+    @FXML
+    private TextField hlaYAField;
+
+    @FXML
+    private TextField hlaYBField;
+
+    @FXML
+    private TextField hlaYCField;
+
+    @FXML
+    private TextField hlaYDPField;
+
+    @FXML
+    private TextField hlaYDQField;
+
+    @FXML
+    private TextField hlaYDRField;
+
+    @FXML
     private Button removePhotoBtn;
 
     private Profile currentProfile;
@@ -532,6 +568,80 @@ public class ProfileEdit extends CommonView {
             }
         });
 
+        // hla listeners
+        hlaXAField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXAField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaXBField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXBField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaXCField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXCField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaXDPField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXDPField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaXDQField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXDQField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaXDRField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaXDRField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYAField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYAField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYBField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYBField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYCField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYCField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYDPField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYDPField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYDQField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYDQField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+        hlaYDRField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(anyDigit)) {
+                hlaYDRField.setText(newValue.replaceAll(notAnyDigit, ""));
+            }
+        });
+
+
         dodDateTimePicker.getEditor().textProperty()
                 .addListener((observable, oldValue, newValue) -> {
 
@@ -757,12 +867,34 @@ public class ProfileEdit extends CommonView {
         return comboCountry;
     }
 
-    public String getCityOfDeathField() {
-        return cityOfDeathField.getText();
-    }
+    public String getCityOfDeathField() { return cityOfDeathField.getText(); }
 
     public String getCityField() {
         return cityField.getText();
     }
+
+    public Integer getHLAXAField() { return Integer.valueOf(hlaXAField.getText()); }
+
+    public Integer getHLAXBField() { return Integer.valueOf(hlaXBField.getText()); }
+
+    public Integer getHLAXCField() { return Integer.valueOf(hlaXCField.getText()); }
+
+    public Integer getHLAXDPField() { return Integer.valueOf(hlaXDPField.getText()); }
+
+    public Integer getHLAXDQField() { return Integer.valueOf(hlaXDQField.getText()); }
+
+    public Integer getHLAXDRField() { return Integer.valueOf(hlaXDRField.getText()); }
+
+    public Integer getHLAYAField() { return Integer.valueOf(hlaYAField.getText()); }
+
+    public Integer getHLAYBField() { return Integer.valueOf(hlaYBField.getText()); }
+
+    public Integer getHLAYCField() { return Integer.valueOf(hlaYCField.getText()); }
+
+    public Integer getHLAYDPField() { return Integer.valueOf(hlaYDPField.getText()); }
+
+    public Integer getHLAYDQField() { return Integer.valueOf(hlaYDQField.getText()); }
+
+    public Integer getHLAYDRField() { return Integer.valueOf(hlaYDRField.getText()); }
 
 }

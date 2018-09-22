@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -77,6 +78,7 @@ public class ProfileEdit extends CommonController {
         saveBloodPressure();
         saveBloodType();
         saveIsSmoker();
+        saveHLAtype();
 
         saveCity();
         saveCountry();
@@ -467,6 +469,23 @@ public class ProfileEdit extends CommonController {
      */
     public void saveIsSmoker() {
         currentProfile.setIsSmoker(view.getIsSmokerCheckBox());
+    }
+
+    public void saveHLAtype() {
+        Integer xa = view.getHLAXAField();
+        Integer xb = view.getHLAXBField();
+        Integer xc = view.getHLAXCField();
+        Integer xdp = view.getHLAXDPField();
+        Integer xdq = view.getHLAXDQField();
+        Integer xdr = view.getHLAXDRField();
+        Integer ya = view.getHLAYAField();
+        Integer yb = view.getHLAYBField();
+        Integer yc = view.getHLAYCField();
+        Integer ydp = view.getHLAYDPField();
+        Integer ydq = view.getHLAYDQField();
+        Integer ydr = view.getHLAYDRField();
+        HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
+        currentProfile.setHlaType(hlaType);
     }
 
     /**

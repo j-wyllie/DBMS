@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileMedical">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileMedical">
    <children>
        <GridPane layoutX="-1.0" layoutY="-3.0" prefHeight="132.0" prefWidth="260.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
@@ -63,6 +64,9 @@
                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                    </rowConstraints>
                    <children>
                        <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -121,6 +125,42 @@
                                <Insets left="20.0" />
                            </GridPane.margin>
                        </Label>
+                       <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="HLA Type:" GridPane.columnIndex="0" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                               <Insets left="20.0" />
+                           </GridPane.margin>
+                           <font>
+                               <Font size="22.0" />
+                           </font>
+                       </Label>
+                       <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group X" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                               <Insets left="20.0" />
+                           </GridPane.margin>
+                           <font>
+                               <Font size="22.0" />
+                           </font>
+                       </Label>
+                       <Label fx:id="hlaXALabel" text="A" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                       <Label fx:id="hlaXBLabel" text="B" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                       <Label fx:id="hlaXCLabel" text="C" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                       <Label fx:id="hlaXDPLabel" text="DP" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                       <Label fx:id="hlaXDQLabel" text="DQ" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                       <Label fx:id="hlaXDRLabel" text="DR" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                       <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group Y" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                               <Insets left="20.0" />
+                           </GridPane.margin>
+                           <font>
+                               <Font size="22.0" />
+                           </font>
+                       </Label>
+                       <Label fx:id="hlaYALabel" text="A" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                       <Label fx:id="hlaYBLabel" text="B" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+                       <Label fx:id="hlaYCLabel" text="C" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="9" />
+                       <Label fx:id="hlaYDPLabel" text="DP" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="10" />
+                       <Label fx:id="hlaYDQLabel" text="DQ" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="11" />
+                       <Label fx:id="hlaYDRLabel" text="DR" textAlignment="LEFT" GridPane.columnIndex="4" GridPane.rowIndex="12" />
                    </children>
                </GridPane>
            </children>

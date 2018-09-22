@@ -58,6 +58,7 @@
                    <TableColumn prefWidth="75.0" text="Wait Time" />
                    <TableColumn prefWidth="75.0" text="Age" />
                    <TableColumn prefWidth="75.0" text="Location" />
+                   <TableColumn prefWidth="75.0" text="HLA Type" />
                </columns>
               <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
