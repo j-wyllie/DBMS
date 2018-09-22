@@ -1,38 +1,15 @@
 package odms.view.user;
 
-
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javax.swing.text.NumberFormatter;
-import odms.commons.model.enums.CountriesEnum;
-import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
 import odms.data.DefaultLocale;
 
 public class UserGeneral {
@@ -46,11 +23,7 @@ public class UserGeneral {
     @FXML
     private Label regionLabel;
 
-    //private Redo redoController = new Redo();
-    //private Undo undoController = new Undo();
     private User currentUser;
-
-
 
     /**
      * Button handler to undo last action.
@@ -91,7 +64,6 @@ public class UserGeneral {
      */
     @FXML
     private void handleEditButtonClicked(ActionEvent event) throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfileEdit.fxml"));
 

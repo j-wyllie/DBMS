@@ -9,11 +9,8 @@ import java.util.TimeZone;
  */
 public final class DefaultLocale {
 
-    private static Locale languageLocale;
     private static Locale datetimeLocale;
     private static Locale numberLocale;
-    private static TimeZone timeZoneLocale;
-
 
     /**
      * Constructor - throws UnsupportedOperationException due to the static structure.
@@ -24,22 +21,6 @@ public final class DefaultLocale {
 
     private static Locale getDefaultLocale() {
         return new Locale("en", "US");
-    }
-
-    private static TimeZone getDefaultTimeZone() {
-        return null;
-    }
-
-    public static void setLanguageLocale(Locale locale) {
-        languageLocale = locale;
-    }
-
-    public static Locale getLanguageLocale() {
-        if (languageLocale == null) {
-            return getDefaultLocale();
-        } else {
-            return languageLocale;
-        }
     }
 
     public static Locale getDatetimeLocale() {
@@ -74,18 +55,6 @@ public final class DefaultLocale {
 
     public static void setNumberLocale(Locale locale) {
         numberLocale = locale;
-    }
-
-    public static TimeZone getTimeZoneLocale() {
-        if (timeZoneLocale == null) {
-            return getDefaultTimeZone();
-        } else {
-            return timeZoneLocale;
-        }
-    }
-
-    public static void setTimeZoneLocale(TimeZone locale) {
-        timeZoneLocale = locale;
     }
 
 }

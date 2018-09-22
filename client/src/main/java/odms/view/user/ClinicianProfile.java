@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -91,10 +92,13 @@ public class ClinicianProfile extends CommonView {
      * Opens settings popup on click.
      */
     @FXML
-    private void handleSettingsButtonAction() throws IOException {
+    private void handleSettingsButtonAction(ActionEvent event) throws IOException {
+        Node source = (Node) event.getSource();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingsPopup.fxml"));
         stage.setTitle("Settings");
+        stage.setResizable(false);
+        stage.initOwner(source.getScene().getWindow());
         stage.setScene(new Scene(loader.load()));
         SettingsPopup controller = loader.getController();
         controller.initialize(currentUser);
