@@ -61,14 +61,6 @@ public class SocialFeedTab {
     }
 
     /**
-     * Handles the action for the refresh button to refresh the table.
-     */
-    @FXML
-    private void handleRefreshButtonClicked() {
-        populateTweetTable();
-    }
-
-    /**
      * Calls the twitter API in order to get all tweets with the hashtag humanfarm.
      */
     private void getTweets() {

@@ -33,7 +33,6 @@
            <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                      <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
                      <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
-                     <Tab fx:id="dataManagementTab" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management" />
                      <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search"/>
                      <Tab fx:id="socialFeedTab" onSelectionChanged="#handleSocialFeedTabClicked" text="Social Feed">
             </Tab>
@@ -89,12 +88,11 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </GridPane>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="3">
-              <items>
-                <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction" text="Settings" />
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Import" />
-              </items>
-            </ToolBar>
+              <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="3">
+                  <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction"
+                      text="Settings"/>
+                  <Button fx:id="importBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleImportButtonAction" text="Import"/>
+              </ToolBar>
           </children>
        </GridPane>
    </children>

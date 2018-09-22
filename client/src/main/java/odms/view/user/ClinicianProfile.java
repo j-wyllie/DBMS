@@ -14,6 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
@@ -41,8 +42,6 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab consoleTab;
     @FXML
-    private Tab dataManagementTab;
-    @FXML
     private Tab generalTab;
     @FXML
     private Tab searchTab;
@@ -58,6 +57,8 @@ public class ClinicianProfile extends CommonView {
     private GridPane bannerPane;
     @FXML
     private Button logoutButton;
+    @FXML
+    private Button importBtn;
 
     private Display userProfileController = new Display(this);
 
@@ -68,6 +69,7 @@ public class ClinicianProfile extends CommonView {
 
     /**
      * Scene change to log in view.
+     *
      * @param event clicking on the logout button.
      * @throws IOException if the scene cannot be changed.
      */
@@ -116,6 +118,22 @@ public class ClinicianProfile extends CommonView {
         SettingsPopup controller = loader.getController();
         controller.initialize(currentUser);
         stage.show();
+    }
+
+    @FXML
+    private void handleImportButtonAction(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Data Files (*.csv)",
+                "*.csv"
+        );
+        fileChooser.getExtensionFilters().add(extFilter);
+        Stage stage = (Stage) clinicianFullName.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+        odms.controller.user.DataManagement dataManagementController = new odms.controller.user.DataManagement(
+                this);
+        dataManagementController.handleFile(file, (Stage) clinicianFullName.getScene().getWindow());
     }
 
     /**
@@ -179,23 +197,6 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the data management tab.
-     */
-    public void handleTabDataManagementClicked() {
-        if (dataManagementTab.isSelected()) {
-            setTransplantWaitingListNull();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DataManagement.fxml"));
-            try {
-                dataManagementTab.setContent(loader.load());
-                DataManagement userDataManagementTabView = loader.getController();
-                userDataManagementTabView.initialize(currentUser);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-    }
-
-    /**
      * Initializes the controller for available organs. Adds onSelectionChange listeners to the tab
      * to pause and commence the timers.
      */
@@ -208,18 +209,18 @@ public class ClinicianProfile extends CommonView {
                 availableOrgansTab.setContent(loader.load());
                 availableOrgansTabView = loader.getController();
                 availableOrgansTabView.initialize(currentUser, this);
+
+                availableOrgansTab.setOnSelectionChanged(event -> {
+                    if (!availableOrgansTab.isSelected()) {
+                        availableOrgansTabView.pauseTimers();
+                    } else {
+                        availableOrgansTabView.startTimers();
+                    }
+                });
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
-
-        availableOrgansTab.setOnSelectionChanged(event -> {
-            if (!availableOrgansTab.isSelected()) {
-                availableOrgansTabView.pauseTimers();
-            } else {
-                availableOrgansTabView.startTimers();
-            }
-        });
     }
 
     /**
@@ -233,18 +234,18 @@ public class ClinicianProfile extends CommonView {
                 socialFeedTab.setContent(loader.load());
                 socialFeed = loader.getController();
                 socialFeed.initialise();
+
+                socialFeedTab.setOnSelectionChanged(event -> {
+                    if (!socialFeedTab.isSelected()) {
+                        socialFeed.pauseTimer();
+                    } else {
+                        socialFeed.startTimer();
+                    }
+                });
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
-
-        socialFeedTab.setOnSelectionChanged(event -> {
-            if (!socialFeedTab.isSelected()) {
-                socialFeed.pauseTimer();
-            } else {
-                socialFeed.startTimer();
-            }
-        });
     }
 
     /**
@@ -252,11 +253,11 @@ public class ClinicianProfile extends CommonView {
      */
     private void setupAdmin() {
         if (currentUser.getUserType() == UserType.CLINICIAN) {
-            dataManagementTab.setDisable(true);
+            importBtn.setVisible(false);
             listUsersTab.setDisable(true);
             consoleTab.setDisable(true);
         } else {
-            dataManagementTab.setDisable(false);
+            importBtn.setVisible(true);
             listUsersTab.setDisable(false);
             consoleTab.setDisable(false);
 
@@ -360,5 +361,9 @@ public class ClinicianProfile extends CommonView {
 
     public TransplantWaitingList getTransplantWaitingList() {
         return transplantWaitingList;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 }
