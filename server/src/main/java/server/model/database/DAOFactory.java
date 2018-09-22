@@ -4,8 +4,8 @@ import server.model.database.common.CommonDAO;
 import server.model.database.common.MySqlCommonDAO;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
-import server.model.database.country.CountryDAO;
-import server.model.database.country.MySqlCountryDAO;
+import server.model.database.settings.SettingsDAO;
+import server.model.database.settings.MySqlSettingsDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.organ.MySqlOrganDAO;
@@ -67,8 +67,8 @@ public class DAOFactory {
      * Gives the data access object class for the Countries enum.
      * @return dao for particular database type.
      */
-    public static CountryDAO getCountryDAO() {
-        return new MySqlCountryDAO();
+    public static SettingsDAO getCountryDAO() {
+        return new MySqlSettingsDAO();
     }
 
 }

@@ -95,10 +95,10 @@ public interface OrganDAO {
     /**
      * Updates organ to be expired.
      *
-     * @param profile to update the organ.
-     * @param organ to update.
+     * @param profile to updateCountries the organ.
+     * @param organ to updateCountries.
      * @param expired expired boolean.
-     * @param note Clinician's reason to update.
+     * @param note Clinician's reason to updateCountries.
      * @param userId Clinician's user Id.
      */
     void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId)

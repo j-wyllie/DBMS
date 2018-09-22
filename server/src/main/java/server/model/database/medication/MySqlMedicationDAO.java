@@ -114,7 +114,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
 
     /**
      * Updates drug information for a profile in the database.
-     * @param drug to update.
+     * @param drug to updateCountries.
      * @param current is true if the profile is currently taking the drug.
      */
     @Override

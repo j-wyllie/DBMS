@@ -243,7 +243,7 @@ public class MySqlUserDAO implements UserDAO {
     /**
      * Updates a users information in the database.
      *
-     * @param user to update.
+     * @param user to updateCountries.
      */
     @Override
     public void update(User user) throws SQLException {

@@ -10,7 +10,7 @@ import static spark.Spark.post;
 
 import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
-import server.controller.CountriesController;
+import server.controller.SettingsController;
 import server.controller.DrugController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
@@ -149,9 +149,11 @@ public class Server {
             });
 
             // countries api endpoints.
-            path("/countries", () -> {
-                get("", CountriesController::getAll);
-                patch("", CountriesController::edit);
+            path("/settings", () -> {
+                get("/countries", SettingsController::getAllCountries);
+                patch("/countries", SettingsController::editCountries);
+                get("/locale", SettingsController::getLocale);
+                post("/locale", SettingsController::setLocale);
             });
         });
     }

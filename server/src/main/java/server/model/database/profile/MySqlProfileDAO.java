@@ -550,7 +550,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     /**
      * Updates a profiles information in the database.
      *
-     * @param profile to update.
+     * @param profile to updateCountries.
      */
     @Override
     public void update(Profile profile) throws SQLException {
