@@ -226,8 +226,7 @@ public class OrganController {
                 String note = req.queryParams("note");
                 int userId = Integer.parseInt(req.queryParams("userId"));
                 database.setExpired(new Profile(profileId), organ, 1, note, userId);
-            }
-            else {
+            } else {
                 database.revertExpired(profileId, organ);
             }
         } catch (SQLException e) {
