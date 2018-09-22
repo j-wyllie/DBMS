@@ -32,14 +32,10 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
 
     // Profile variables.
     private Profile profileA;
-    private Profile profileB;
-    private Profile profileC;
     private LocalDate genericDate = LocalDate.of(1998, 3, 3);
 
     // User variables.
     private User userA;
-    private User userB;
-    private User userC;
 
     // General variables.
     private int invalidId = 0;
@@ -57,31 +53,10 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
         profileDAO.add(profileA);
         profileA = profileDAO.get(profileA.getNhi());
 
-        profileB = new Profile("Ben", "Smith",
-                genericDate, "YSL9939");
-        profileDAO.add(profileB);
-        profileB = profileDAO.get(profileB.getNhi());
-
-        profileC = new Profile("Bob", "Marshall",
-                genericDate, "GSK726");
-        profileDAO.add(profileC);
-        profileC = profileDAO.get(profileC.getNhi());
-
         userA = new User(UserType.ADMIN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
-
-        userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
-        userB.setUsername("timh");
-        userDAO.add(userB);
-        userB = userDAO.get(userB.getUsername());
-
-        userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
-        userC.setUsername("joshw");
-        userDAO.add(userC);
-        userC = userDAO.get(userC.getUsername());
-
     }
 
     @Test
@@ -188,21 +163,12 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
     public void tearDown() throws SQLException {
         // Locale teardown.
         settingsDAO.deleteLocale(profileA.getId(), UserType.PROFILE);
-        settingsDAO.deleteLocale(profileB.getId(), UserType.PROFILE);
-        settingsDAO.deleteLocale(profileC.getId(), UserType.PROFILE);
-
         settingsDAO.deleteLocale(userA.getStaffID(), UserType.ADMIN);
-        settingsDAO.deleteLocale(userB.getStaffID(), UserType.ADMIN);
-        settingsDAO.deleteLocale(userC.getStaffID(), UserType.ADMIN);
 
         // Profile teardown.
         profileDAO.remove(profileA);
-        profileDAO.remove(profileB);
-        profileDAO.remove(profileC);
 
         // User teardown.
         userDAO.remove(userA);
-        userDAO.remove(userB);
-        userDAO.remove(userC);
     }
 }
