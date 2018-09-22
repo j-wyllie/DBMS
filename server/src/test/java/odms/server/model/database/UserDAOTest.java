@@ -1,23 +1,20 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import odms.commons.model.user.User;
-import odms.commons.model.enums.UserType;
 import odms.commons.model.user.UserNotFoundException;
-import org.junit.After;
+import odms.server.CommonTestUtils;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import server.model.database.user.MySqlUserDAO;
 
-public class MySqlUserDaoTest extends MySqlCommonTests {
+public class UserDAOTest extends CommonTestUtils {
     private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private static User testUser0;

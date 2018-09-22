@@ -8,6 +8,8 @@ import server.model.database.settings.SettingsDAO;
 import server.model.database.settings.MySqlSettingsDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
+import server.model.database.middleware.MiddlewareDAO;
+import server.model.database.middleware.MySqlMiddlewareDAO;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.MySqlProcedureDAO;
@@ -67,8 +69,13 @@ public class DAOFactory {
      * Gives the data access object class for the Countries enum.
      * @return dao for particular database type.
      */
-    public static SettingsDAO getCountryDAO() {
+    public static SettingsDAO getSettingsDAO() {
         return new MySqlSettingsDAO();
     }
 
+    /**
+     * Gives the data access object class for the Middleware class attributes.
+     * @return dao for particular database type.
+     */
+    public static MiddlewareDAO getMiddlewareDAO() { return new MySqlMiddlewareDAO(); }
 }

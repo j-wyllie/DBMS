@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
@@ -348,32 +349,41 @@ public class ProfileController {
      * Checks the credentials of a profile logging in,
      *
      * @param request request containg password and username.
-     * @param res response from the server.
+     * @param response response from the server.
      * @return String displaying success of validation.
      */
-    public static String checkCredentials(Request request, Response res) {
-        ProfileDAO profileDAO = DAOFactory.getProfileDao();
+    public static String checkCredentials(Request request, Response response) {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Gson gson = new Gson();
         Boolean valid;
 
+        String username = request.queryParams("username");
+        String password = request.queryParams("password");
         try {
-            valid = profileDAO.checkCredentials(request.queryParams("username"),
-                    request.queryParams("password"));
+            valid = database.checkCredentials(username, password);
         } catch (SQLException e) {
-            res.status(500);
+            response.status(500);
             return e.getMessage();
         } catch (UserNotFoundException e) {
-            res.status(404);
+            response.status(404);
             return "Profile not found.";
         }
 
         if (valid) {
-            res.type(DataTypeEnum.JSON.toString());
-            res.status(200);
+            try {
+                Profile profile = database.get(username);
+                long token = Middleware.authenticate(profile.getId(), UserType.PROFILE);
+                response.type(DataTypeEnum.JSON.toString());
+                response.status(200);
+                return gson.toJson(token);
+            } catch (SQLException e) {
+                response.status(500);
+                return e.getMessage();
+            }
         } else {
-            res.status(404);
+            response.status(404);
+            return "Error.";
         }
-
-        return "User validated.";
     }
 
     /**
