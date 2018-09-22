@@ -135,18 +135,22 @@ public class OrganDisplay extends CommonView {
         }
 
         if (!isClinician) {
-            this.viewAsProfileSetup();
+            viewAsProfileSetup();
         }
 
         populateOrganLists();
 
-        listViewDonating.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    listViewDonating.getSelectionModel().getSelectedItem() != null) {
-                giveReasonForOverride(event,
-                        listViewDonating.getSelectionModel().getSelectedItem());
-            }
-        });
+        if (isClinician) {
+        listViewDonating.setMouseTransparent(false);
+            listViewDonating.setOnMousePressed(event -> {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                        listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                    giveReasonForOverride(event,
+                            listViewDonating.getSelectionModel().getSelectedItem());
+                }
+            });
+        }
+
     }
 
     /**

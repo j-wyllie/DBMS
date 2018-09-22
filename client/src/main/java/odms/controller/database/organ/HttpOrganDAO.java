@@ -157,9 +157,9 @@ public class HttpOrganDAO implements OrganDAO {
             Integer userId) throws SQLException {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
+        queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", expired);
-        queryParams.put("note", note);
+        queryParams.put("note", note. replace(" ", "+"));
         queryParams.put("userId", userId);
         Request request = new Request(url, 0, queryParams,"");
         try {
@@ -173,7 +173,7 @@ public class HttpOrganDAO implements OrganDAO {
     public void revertExpired(Integer profileId, String organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profileId);
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
+        queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", 0);
         Request request = new Request(url, 0, queryParams, "");
         try {
