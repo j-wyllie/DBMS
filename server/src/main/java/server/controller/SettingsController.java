@@ -7,7 +7,7 @@ import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
-import server.model.database.country.CountryDAO;
+import server.model.database.settings.SettingsDAO;
 import server.model.enums.DataTypeEnum;
 import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
@@ -15,12 +15,12 @@ import spark.Request;
 import spark.Response;
 
 @Slf4j
-public class CountriesController {
+public class SettingsController {
 
     /**
      * Prevent instantiation of static class.
      */
-    private CountriesController() {
+    private SettingsController() {
         throw new UnsupportedOperationException();
     }
 
@@ -31,7 +31,7 @@ public class CountriesController {
      * @param res The response sent back
      * @return The response body as a list of Json object of countries
      */
-    public static String getAll(Request req, Response res) {
+    public static String getAllCountries(Request req, Response res) {
         // This boolean is optional so it needs to be null
         Boolean valid = null;
         List<String> countries;
@@ -63,8 +63,8 @@ public class CountriesController {
      * @param res The response sent back
      * @return The response body
      */
-    public static String edit(Request req, Response res) {
-        CountryDAO countryDAO = DAOFactory.getCountryDAO();
+    public static String editCountries(Request req, Response res) {
+        SettingsDAO countryDAO = DAOFactory.getCountryDAO();
         JsonParser parser = new JsonParser();
         String name;
         boolean valid;
@@ -79,7 +79,7 @@ public class CountriesController {
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
-            countryDAO.update(CountriesEnum.valueOf(name), valid);
+            countryDAO.updateCountries(CountriesEnum.valueOf(name), valid);
             res.status(200);
             return "Country Updated";
         }
@@ -95,12 +95,20 @@ public class CountriesController {
      * @return A set of country names
      */
     private static List<String> getCountries(Boolean valid) {
-        CountryDAO countryDAO = DAOFactory.getCountryDAO();
+        SettingsDAO countryDAO = DAOFactory.getCountryDAO();
 
         if (valid == null) {
-            return countryDAO.getAll();
+            return countryDAO.getAllCountries();
         } else {
-            return countryDAO.getAll(valid);
+            return countryDAO.getAllCountries(valid);
         }
+    }
+
+    public static String getLocale() {
+
+    }
+
+    public static String setLocale() {
+
     }
 }

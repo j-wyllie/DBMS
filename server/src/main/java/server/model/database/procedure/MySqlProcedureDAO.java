@@ -91,7 +91,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 stmt.setInt(5, 0);
             }
 
-            //todo: return and update procedure id.
+            //todo: return and updateCountries procedure id.
             stmt.executeUpdate();
             ResultSet keys = stmt.getGeneratedKeys();
             while (keys.next()) {
@@ -169,7 +169,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     /**
      * Update a procedure for the profile.
      *
-     * @param procedure to update.
+     * @param procedure to updateCountries.
      */
     @Override
     public void update(Procedure procedure, boolean pending) {

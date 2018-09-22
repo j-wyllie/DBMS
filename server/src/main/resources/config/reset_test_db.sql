@@ -393,6 +393,52 @@ ALTER TABLE `procedures`
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+
+--
+-- Table structure for table `locale`
+--
+
+DROP TABLE IF EXISTS `locale`;
+CREATE TABLE IF NOT EXISTS `locale` (
+  `LocaleId` int(11) NOT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
+  `DateTimeFormat` varchar(50) DEFAULT NULL,
+  `NumberFormat` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `locale`
+--
+ALTER TABLE `locale`
+  ADD PRIMARY KEY (`LocaleId`),
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `UserId` (`UserId`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `locale`
+--
+ALTER TABLE `locale`
+  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `locale`
+--
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`),
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
   (2, 'AF', 1),

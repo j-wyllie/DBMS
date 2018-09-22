@@ -53,7 +53,7 @@ public interface UserDAO {
 
     /**
      * Updates a users information in the database.
-     * @param user to update.
+     * @param user to updateCountries.
      */
     void update(User user) throws SQLException;
 
