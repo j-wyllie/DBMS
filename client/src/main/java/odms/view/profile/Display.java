@@ -36,8 +36,6 @@ public class Display extends CommonView {
      * Text for showing recent edits.
      */
     @FXML
-    private Text editedText;
-    @FXML
     private Label donorFullNameLabel;
     @FXML
     private Label donorStatusLabel;
@@ -75,12 +73,14 @@ public class Display extends CommonView {
     // The FXML includes operate this way and allow access to the instantiated controller.
 
     /**
-     * Called when there has been an edit to the current profile.
+     * calls the controller method when the edit button is clicked.
+     * @param event edit button clicked event.
+     * @throws IOException thrown when edit window cannot be opened.
      */
-    public void editedTextArea() {
-        editedText.setText("The profile was successfully edited.");
+    @FXML
+    private void handleEditButtonClicked(ActionEvent event) throws IOException {
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
-
 
     /**
      * Scene change to log in view.
@@ -153,7 +153,7 @@ public class Display extends CommonView {
             try {
                 tabGeneral.setContent(loader.load());
                 ProfileGeneral profileGeneralView = loader.getController();
-                profileGeneralView.initialize(currentProfile, isOpenedByClinician, currentUser);
+                profileGeneralView.initialize(currentProfile);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
@@ -210,7 +210,7 @@ public class Display extends CommonView {
             try {
                 tabMedical.setContent(loader.load());
                 ProfileMedical profileMedicalViewTODO = loader.getController();
-                profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
+                profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }

@@ -39,8 +39,6 @@ public class ProfileMedical extends CommonView {
     // init controller corresponding to this view
     private odms.controller.profile.ProfileMedical controller =
             new odms.controller.profile.ProfileMedical(this);
-    private Boolean isOpenedByClinician;
-    private User currentUser;
 
     private void setUpDetails() {
         if (currentProfile.getAlcoholConsumption() != null) {
@@ -69,24 +67,16 @@ public class ProfileMedical extends CommonView {
         updateBloodDonationLabel();
     }
 
-    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
-        this.isOpenedByClinician = isOpenedByClinician;
+    public void initialize(Profile p, Boolean isOpenedByClinician) {
         if (isOpenedByClinician) {
             bloodDonationButton.setVisible(false);
         } else {
             bloodDonationButton.setVisible(true);
         }
-        this.currentUser = currentUser;
         currentProfile = p;
         if (currentProfile != null) {
             setUpDetails();
         }
-    }
-
-    @FXML
-    private void handleEditButtonClicked(ActionEvent event) throws IOException {
-        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician,
-                currentUser);
     }
 
     /**
