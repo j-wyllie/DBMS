@@ -96,7 +96,7 @@ public class OrganExpired extends OrganCommon {
     @FXML
     public void onBtnRevertClicked() {
         if (expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
-            String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
+            String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrganName();
             Integer profileId = currentProfile.getId();
             try {
                 controller.revertExpired(profileId, organ);
@@ -121,7 +121,7 @@ public class OrganExpired extends OrganCommon {
         try {
             Scene scene = new Scene(fxmlLoader.load());
             OrganOverride overrideView = fxmlLoader.getController();
-            overrideView.initialize(organ.getOrgan(), currentProfile, currentUser);
+            overrideView.initialize(organ.getOrganName(), currentProfile, currentUser);
 
             Stage stage = new Stage();
             stage.setScene(scene);

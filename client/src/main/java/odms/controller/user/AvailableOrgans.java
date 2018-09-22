@@ -191,7 +191,7 @@ public class AvailableOrgans {
             log.error(e.getMessage(), e);
         }
         for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())) {
+            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
                 view.removeItem(m);
             }
         }
@@ -771,7 +771,7 @@ public class AvailableOrgans {
     private void addExpiredOrganToPair(Profile profile, OrganEnum organ,
             List<ExpiredOrgan> expired) {
         for (ExpiredOrgan expiredOrgan : expired) {
-            if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
+            if (!expiredOrgan.getOrganName().equals(organ.getNamePlain())) {
                 Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
                         organ);
                 if (!donaters.contains(pair)) {
