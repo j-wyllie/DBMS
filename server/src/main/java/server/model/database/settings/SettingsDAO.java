@@ -1,5 +1,6 @@
 package server.model.database.settings;
 
+import java.sql.SQLException;
 import java.util.List;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
@@ -26,7 +27,13 @@ public interface SettingsDAO {
      */
     void updateCountries(CountriesEnum country, boolean valid);
 
-    void setDateTimeFormat(int id, UserType userType, String locale);
+    void populateCountriesTable();
 
-    void setNumberFormat(int id, UserType userType, String locale);
+    String getDateTimeFormat(int id, UserType userType) throws SQLException;
+
+    String getNumberFormat(int id, UserType userType) throws SQLException;
+
+    void setDateTimeFormat(int id, UserType userType, String locale) throws SQLException;
+
+    void setNumberFormat(int id, UserType userType, String locale) throws SQLException;
 }

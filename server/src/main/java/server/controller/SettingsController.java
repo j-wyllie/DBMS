@@ -64,7 +64,7 @@ public class SettingsController {
      * @return The response body
      */
     public static String editCountries(Request req, Response res) {
-        SettingsDAO countryDAO = DAOFactory.getCountryDAO();
+        SettingsDAO countryDAO = DAOFactory.getSettingsDAO();
         JsonParser parser = new JsonParser();
         String name;
         boolean valid;
@@ -95,7 +95,7 @@ public class SettingsController {
      * @return A set of country names
      */
     private static List<String> getCountries(Boolean valid) {
-        SettingsDAO countryDAO = DAOFactory.getCountryDAO();
+        SettingsDAO countryDAO = DAOFactory.getSettingsDAO();
 
         if (valid == null) {
             return countryDAO.getAllCountries();
@@ -104,11 +104,11 @@ public class SettingsController {
         }
     }
 
-    public static String getLocale() {
-
+    public static String getLocale(Request req, Response res) {
+        return "";
     }
 
-    public static String setLocale() {
-
+    public static String setLocale(Request req, Response res) {
+        return "";
     }
 }

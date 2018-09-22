@@ -206,10 +206,13 @@ public class Server {
                 });
             });
 
-            // countries api endpoints.
+            // settings api endpoints.
             path("/settings", () -> {
+                // countries api endpoints.
                 get("/countries", SettingsController::getAllCountries);
                 patch("/countries", SettingsController::editCountries);
+
+                // locale api endpoints.
                 get("/locale", SettingsController::getLocale);
                 post("/locale", SettingsController::setLocale);
             });
