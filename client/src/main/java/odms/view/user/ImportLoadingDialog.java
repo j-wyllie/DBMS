@@ -1,8 +1,10 @@
 package odms.view.user;
 
 import java.io.File;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -10,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -42,7 +43,7 @@ public class ImportLoadingDialog extends CommonView {
     private Thread importTask;
 
     /**
-     * Binds the progress bar and the text property to the profile import task
+     * Binds the progress bar and the text property to the profile import task.
      */
     private void updateProgress() {
         progressBarImport.setProgress(0);
@@ -80,6 +81,7 @@ public class ImportLoadingDialog extends CommonView {
      */
     @FXML
     public void initialize(File file, Stage parentStage, User user) {
+
         if (user != null) {
             currentUser = user;
             profileImportTask = new ProfileImportTask(file);
@@ -87,8 +89,23 @@ public class ImportLoadingDialog extends CommonView {
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                     event -> {
                         buttonImportConfirm.setDisable(false);
-                        buttonImportCancel.setText("Undo");
                     });
+
+            profileImportTask.finished.addListener((observable, oldValue, newValue) -> {
+                // Only if completed
+                if (newValue) {
+                    buttonImportConfirm.setDisable(false);
+                }
+            });
+
+            profileImportTask.reverted.addListener((observable, oldValue, newValue) -> {
+                // Only if completed
+                if (newValue) {
+                    importTask.interrupt();
+                    Platform.runLater(
+                            () -> ((Stage) progressBarImport.getScene().getWindow()).close());
+                }
+            });
 
             buttonImportConfirm.setOnAction(event -> {
                 closeWindows(parentStage);
@@ -145,7 +162,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Sets the current user of the program
+     * Sets the current user of the program.
      *
      * @param currentUser the current user
      */
@@ -158,10 +175,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     public void setOnCloseRequest() {
-        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
-            profileImportTask.rollback();
-            profileImportTask.setCancelled();
-        });
+        this.currentStage.setOnCloseRequest(Event::consume);
     }
 
     public class ImportResult {

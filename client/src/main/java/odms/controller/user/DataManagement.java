@@ -23,7 +23,8 @@ public class DataManagement {
     private Stage currentStage;
 
     /**
-     * Loads the ImportLoadingDialog pane to import the data from the csv file
+     * Loads the ImportLoadingDialog pane to import the data from the csv file.
+     *
      * @param file the csv file to be imported
      * @throws IOException thrown if the data in the file can not be imported
      */
@@ -48,8 +49,9 @@ public class DataManagement {
     }
 
     /**
-     * Checks that a file is not null and if there are unsaved changes
-     * Then calls the function to import the data from the file
+     * Checks that a file is not null and if there are unsaved changes. Then calls the function to
+     * import the data from the file
+     *
      * @param file The file that is trying to be imported
      */
     public void handleFile(File file, Stage stage) throws IOException {
@@ -66,8 +68,8 @@ public class DataManagement {
     }
 
     /**
-     * Imports new json or csv file.
-     * Closes all open windows and re-initializes the admin view.
+     * Imports new json or csv file. Closes all open windows and re-initializes the admin view.
+     *
      * @param file file to be set as database
      */
     private void handleInputType(File file) throws IOException {

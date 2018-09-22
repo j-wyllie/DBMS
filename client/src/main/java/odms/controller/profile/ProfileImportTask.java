@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.beans.Observable;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
@@ -39,9 +39,10 @@ public class ProfileImportTask extends Task<Void> {
     private int failedCount = 0;
     private Integer csvLength;
     private boolean rollback = false;
-    private Boolean finished = false;
     private boolean cancelled = false;
 
+    public BooleanProperty finished = new SimpleBooleanProperty();
+    public BooleanProperty reverted = new SimpleBooleanProperty();
 
     /**
      * Gives a CSV file to the profile import task.
@@ -54,6 +55,7 @@ public class ProfileImportTask extends Task<Void> {
 
     @Override
     protected Void call() throws InvalidFileException {
+
         try {
             loadDataFromCSV(this.file);
         } catch (InvalidFileException e) {
@@ -91,7 +93,7 @@ public class ProfileImportTask extends Task<Void> {
     private void parseCsvRecord(CSVParser csvParser, Integer csvLength) {
         while (!cancelled) {
 
-            if (!finished) {
+            if (!finished.getValue()) {
                 for (CSVRecord csvRecord : csvParser) {
                     if (Thread.currentThread().isInterrupted()) {
                         return;
@@ -120,9 +122,8 @@ public class ProfileImportTask extends Task<Void> {
                                         progressCount));
                     }
                 }
-                finished = true;
+                finished.setValue(true);
             }
-            System.out.println("RREEEEEEE");
         }
         removeProfiles();
     }
@@ -242,6 +243,8 @@ public class ProfileImportTask extends Task<Void> {
             this.updateProgress(progressCount, csvLength);
             this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
         }
+        reverted.setValue(true);
+        Thread.currentThread().interrupt();
     }
 
     public void setCancelled() {
