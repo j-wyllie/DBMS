@@ -23,6 +23,7 @@ import org.controlsfx.control.CheckComboBox;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -245,9 +246,10 @@ public class AvailableOrgans extends CommonView {
      * @throws SQLException exception thrown when accessing DB to get all available organs.
      */
     public void setAvailableOrgansList() throws SQLException {
+        List<Entry<Profile, OrganEnum>> organsAvailable = controller.getAllOrgansAvailable();
         availableOrgansTable.getItems().removeAll(listOfAvailableOrgans);
         listOfAvailableOrgans = FXCollections
-                .observableArrayList(controller.getAllOrgansAvailable());
+                .observableArrayList(organsAvailable);
         availableOrgansTable.setItems(listOfAvailableOrgans);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
