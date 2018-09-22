@@ -451,7 +451,7 @@
                                             <Insets bottom="30.0" left="20.0" />
                                         </GridPane.margin>
                                         <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
-                                        <Button layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
+                                        <Button layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/cancel.png); -fx-background-size: stretch;" />
                                     </ToolBar>
                                 </GridPane>
                                 </children>
@@ -548,7 +548,7 @@
                                                     <Insets bottom="10.0" left="70.0" right="10.0" />
                                                 </GridPane.margin>
                                                 <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
-                                                <Button layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
+                                                <Button layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/cancel.png); -fx-background-size: stretch;" />
                                             </ToolBar>
                                             <TextField fx:id="bloodTypeField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                                 <GridPane.margin>
