@@ -27,7 +27,7 @@ public class MySQLHLATypeDAOTest {
 
     @Before
     public void setup() throws SQLException {
-        hlaType1 = new HLAType();
+        hlaType1 = new HLAType(5,2,3,4,5,6,7,8,9,10,11,12);
         hlaType2 = new HLAType(1,2,3,4,5,6,7,8,9,10,11,12);
         testProfile1 = new Profile("Jack", "Haaay", LocalDate.of(1998, 2, 27), "ABC1234");
         testProfile2 = new Profile("Tim", "Hamb-lame", LocalDate.of(1998, 2, 27), "ABC2345");
@@ -49,10 +49,23 @@ public class MySQLHLATypeDAOTest {
 
     @Test
     public void testAddHLAType() {
-        hlaTypeDao.add(testProfile2.getId(), hlaType2);
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getGroupX(), hlaType2.getGroupX());
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getGroupY(), hlaType2.getGroupY());
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getSecondaryAntigens(), hlaType2.getSecondaryAntigens());
+    }
+
+    @Test
+    public void testRemoveHLAType() {
+        hlaTypeDao.add(testProfile2.getId(), hlaType2);
+        hlaTypeDao.remove(testProfile2.getId());
+        assertEquals(hlaTypeDao.get(testProfile2.getId()), null);
+    }
+
+    @Test
+    public void testUpdateHLAType() {
+        hlaTypeDao.add(testProfile2.getId(), hlaType2);
+        hlaTypeDao.update(hlaType1, testProfile2.getId());
+        assertNotEquals(hlaTypeDao.get(testProfile2.getId()).getGroupX(), hlaType2.getGroupX());
     }
 
 }

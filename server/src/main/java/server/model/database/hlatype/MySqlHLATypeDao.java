@@ -48,10 +48,14 @@ public class MySqlHLATypeDao implements HLATypeDAO{
     private HLAType parseHLA(ResultSet rs) throws SQLException {
         HLAType hlaType = new HLAType();
         rs.next();
-        hlaType.setGroupX(parseMap(rs.getString("groupX")));
-        hlaType.setGroupY(parseMap(rs.getString("groupY")));
-        hlaType.setSecondaryAntigens(parseMap(rs.getString("secondary")));
-        return hlaType;
+        try {
+            hlaType.setGroupX(parseMap(rs.getString("groupX")));
+            hlaType.setGroupY(parseMap(rs.getString("groupY")));
+            hlaType.setSecondaryAntigens(parseMap(rs.getString("secondary")));
+            return hlaType;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     /**
