@@ -6,6 +6,7 @@ package server.model.enums;
 public enum KeyEnum {
     ID("id"),
     NAME("name"),
+    USERTYPE("UserType"),
     PENDING("pending"),
     VALID("valid");
 

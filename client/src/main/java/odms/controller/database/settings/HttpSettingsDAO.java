@@ -1,13 +1,11 @@
 package odms.controller.database.settings;
 
 import java.io.IOException;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
 import odms.Session;
 import odms.commons.model.enums.CountriesEnum;
@@ -21,6 +19,7 @@ import org.apache.commons.lang3.LocaleUtils;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonArray;
 import org.sonar.api.internal.google.gson.JsonElement;
+import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
 
 @Slf4j
@@ -113,9 +112,9 @@ public class HttpSettingsDAO implements SettingsDAO {
             log.error(e.getMessage(), e);
         }
         if (response != null && response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
-            DefaultLocale.setDatetimeLocale(LocaleUtils.toLocale(results.get(0).toString()));
-            DefaultLocale.setNumberLocale(LocaleUtils.toLocale(results.get(1).toString()));
+            JsonObject results = parser.parse(response.getBody()).getAsJsonObject();
+            DefaultLocale.setDatetimeLocale(LocaleUtils.toLocale(results.get("DateTime Format").toString()));
+            DefaultLocale.setNumberLocale(LocaleUtils.toLocale(results.get("Number Format").toString()));
         }
     }
 

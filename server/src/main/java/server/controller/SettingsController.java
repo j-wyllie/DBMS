@@ -1,8 +1,11 @@
 package server.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
+import odms.commons.model.enums.UserType;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
@@ -105,7 +108,38 @@ public class SettingsController {
     }
 
     public static String getLocale(Request req, Response res) {
-        return "";
+        SettingsDAO database = DAOFactory.getSettingsDAO();
+        int id;
+        UserType userType;
+        Map<String, String> body = new HashMap<>();
+
+        try {
+            id = Integer.valueOf(req.queryParams(KeyEnum.ID.toString()));
+            userType = UserType.valueOf(req.queryParams(KeyEnum.USERTYPE.toString()));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
+        }
+        try {
+            String dateTimeFormat = database.getDateTimeFormat(id, userType);
+            String numberFormat = database.getNumberFormat(id, userType);
+
+            body.put("DateTime Format", dateTimeFormat);
+            body.put("Number Format", numberFormat);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.status(500);
+            return e.getMessage();
+        }
+
+        Gson gson = new Gson();
+        String responseBody = gson.toJson(body);
+
+        res.type(DataTypeEnum.JSON.toString());
+        res.status(200);
+
+        return responseBody;
     }
 
     public static String setLocale(Request req, Response res) {
