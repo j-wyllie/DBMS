@@ -113,8 +113,8 @@ public class HttpSettingsDAO implements SettingsDAO {
         }
         if (response != null && response.getStatus() == 200) {
             JsonObject results = parser.parse(response.getBody()).getAsJsonObject();
-            DefaultLocale.setDatetimeLocale(LocaleUtils.toLocale(results.get("DateTime Format").toString()));
-            DefaultLocale.setNumberLocale(LocaleUtils.toLocale(results.get("Number Format").toString()));
+            DefaultLocale.setDatetimeLocale(LocaleUtils.toLocale(results.get("DateTimeLocale").toString()));
+            DefaultLocale.setNumberLocale(LocaleUtils.toLocale(results.get("NumberLocale").toString()));
         }
     }
 
@@ -128,8 +128,8 @@ public class HttpSettingsDAO implements SettingsDAO {
 
         Gson gson = new Gson();
         Map<String, Object> body = new HashMap<>();
-        body.put("DateTime", dateTimeLocale);
-        body.put("Number", numberLocale);
+        body.put("DateTimeLocale", dateTimeLocale);
+        body.put("NumberLocale", numberLocale);
 
         String requestBody = gson.toJson(body);
 

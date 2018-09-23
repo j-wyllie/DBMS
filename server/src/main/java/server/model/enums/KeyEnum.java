@@ -7,6 +7,8 @@ public enum KeyEnum {
     ID("id"),
     NAME("name"),
     USERTYPE("UserType"),
+    DATETIMELOCALE("DateTimeLocale"),
+    NUMBERLOCALE("NumberLocale"),
     PENDING("pending"),
     VALID("valid");
 

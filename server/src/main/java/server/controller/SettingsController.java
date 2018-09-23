@@ -124,25 +124,49 @@ public class SettingsController {
         try {
             String dateTimeFormat = database.getDateTimeFormat(id, userType);
             String numberFormat = database.getNumberFormat(id, userType);
+            body.put(KeyEnum.DATETIMELOCALE.toString(), dateTimeFormat);
+            body.put(KeyEnum.NUMBERLOCALE.toString(), numberFormat);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.status(500);
+            return e.getMessage();
+        }
+        Gson gson = new Gson();
+        String responseBody = gson.toJson(body);
 
-            body.put("DateTime Format", dateTimeFormat);
-            body.put("Number Format", numberFormat);
+        res.type(DataTypeEnum.JSON.toString());
+        res.status(200);
+        return responseBody;
+    }
+
+    public static String setLocale(Request req, Response res) {
+        int id;
+        UserType userType;
+        String numberFormat;
+        String dateTimeFormat;
+        Map<String, String> body = new HashMap<>();
+        SettingsDAO database = DAOFactory.getSettingsDAO();
+
+        try {
+            id = Integer.valueOf(req.queryParams(KeyEnum.ID.toString()));
+            userType = UserType.valueOf(req.queryParams(KeyEnum.USERTYPE.toString()));
+            dateTimeFormat = body.get(KeyEnum.DATETIMELOCALE.toString());
+            numberFormat = body.get(KeyEnum.NUMBERLOCALE.toString());
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
+        }
+        try {
+            database.setDateTimeFormat(id, userType, dateTimeFormat);
+            database.setNumberFormat(id, userType, numberFormat);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             res.status(500);
             return e.getMessage();
         }
 
-        Gson gson = new Gson();
-        String responseBody = gson.toJson(body);
-
-        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
-
-        return responseBody;
-    }
-
-    public static String setLocale(Request req, Response res) {
-        return "";
+        return "Locale Updated";
     }
 }
