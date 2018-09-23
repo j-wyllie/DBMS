@@ -28,11 +28,11 @@ public class SettingsController {
     }
 
     /**
-     * Gets a list of all the countries in the database
-     * Takes an optional query parameter to define the validity of the country
-     * @param req The request sent to the endpoint
-     * @param res The response sent back
-     * @return The response body as a list of Json object of countries
+     * Gets a list of all the countries in the database.
+     * Takes an optional query parameter to define the validity of the country.
+     * @param req the request sent to the endpoint.
+     * @param res the response sent back.
+     * @return the response body as a list of Json object of countries.
      */
     public static String getAllCountries(Request req, Response res) {
         // This boolean is optional so it needs to be null
@@ -61,10 +61,10 @@ public class SettingsController {
     }
 
     /**
-     * Updates a countries valid field to true or false
-     * @param req The request sent to the endpoint
-     * @param res The response sent back
-     * @return The response body
+     * Updates a countries valid field to true or false.
+     * @param req the request sent to the endpoint.
+     * @param res the response sent back.
+     * @return the response body.
      */
     public static String editCountries(Request req, Response res) {
         SettingsDAO countryDAO = DAOFactory.getSettingsDAO();
@@ -93,9 +93,9 @@ public class SettingsController {
     }
 
     /**
-     * Gets the countries from the database
-     * @param valid optional query to define the validity of the countries
-     * @return A set of country names
+     * Gets the countries from the database.
+     * @param valid optional query to define the validity of the countries.
+     * @return a set of country names.
      */
     private static List<String> getCountries(Boolean valid) {
         SettingsDAO countryDAO = DAOFactory.getSettingsDAO();
@@ -107,6 +107,12 @@ public class SettingsController {
         }
     }
 
+    /**
+     * Gets the current users session locale from the database.
+     * @param req to the server.
+     * @param res from the server.
+     * @return the datetime and number locales for the user.
+     */
     public static String getLocale(Request req, Response res) {
         SettingsDAO database = DAOFactory.getSettingsDAO();
         int id;
@@ -139,6 +145,12 @@ public class SettingsController {
         return responseBody;
     }
 
+    /**
+     * Sets the locales for a user.
+     * @param req to the server.
+     * @param res from the server.
+     * @return to status of the update to the locale settings.
+     */
     public static String setLocale(Request req, Response res) {
         int id;
         UserType userType;
