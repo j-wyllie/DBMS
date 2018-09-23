@@ -11,7 +11,6 @@ import odms.controller.CommonController;
 import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.hlaType.HLATypeDAO;
 import odms.controller.database.profile.ProfileDAO;
 
 import java.io.File;
@@ -488,7 +487,6 @@ public class ProfileEdit extends CommonController {
             Integer ydr = view.getHLAYDRField();
             HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
             currentProfile.setHlaType(hlaType);
-           // HLATypeDAO hlaTypeDAO = DAOFactory.getH();
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("All HLA Antigen values must be entered");
         }

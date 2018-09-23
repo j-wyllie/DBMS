@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class MySqlHLATypeDao implements HLATypeDAO{
+public class MySqlHLATypeDao implements HLATypeDAO {
     /**
      * Get the HLA type for the profile.
      * @param profile to get the HLA type for.

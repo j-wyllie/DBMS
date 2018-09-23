@@ -1,5 +1,7 @@
 package server.controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -250,9 +252,12 @@ public class ProfileController {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-        HLAType hlaType = new HLAType(req.body().toString().substring(req.body().toString().indexOf("\"hlaType\":")+10,req.body().toString().indexOf(",\"city\":")));
+
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(req.body()).getAsJsonObject();
+        HLAType hlaType = new Gson().fromJson(json.get("hlaType").toString(), HLAType.class);
         HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
-        if(hlaTypeDAO.get(profile.getId()) == null) {
+        if (hlaTypeDAO.get(profile.getId()) == null) {
             hlaTypeDAO.add(profile.getId(),hlaType);
         } else {
             hlaTypeDAO.update(hlaType, profile.getId());
