@@ -3,24 +3,16 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 11, 2018 at 02:25 AM
+-- Generation Time: Sep 23, 2018 at 09:43 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Database: `seng302-2018-team200-test`
 --
-CREATE DATABASE IF NOT EXISTS `seng302-2018-team200-test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `seng302-2018-team200-test`;
 
 -- --------------------------------------------------------
 
@@ -101,6 +93,50 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hla_type`
+--
+
+DROP TABLE IF EXISTS `hla_type`;
+CREATE TABLE IF NOT EXISTS `hla_type` (
+  `groupX` text NOT NULL,
+  `groupY` text NOT NULL,
+  `secondary` mediumtext NOT NULL,
+  `profileId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` int(11) NOT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Address` varchar(100) DEFAULT NULL,
+  `Latitude` double DEFAULT NULL,
+  `Longitude` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `locale`
+--
+
+DROP TABLE IF EXISTS `locale`;
+CREATE TABLE IF NOT EXISTS `locale` (
+  `LocaleId` int(11) NOT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
+  `DateTimeFormat` varchar(50) DEFAULT NULL,
+  `NumberFormat` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `medical_interactions`
 --
 
@@ -152,18 +188,6 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Previous` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Table structure for table `hla_type`
---
-
-DROP TABLE IF EXISTS `hla_type`;
-CREATE TABLE IF NOT EXISTS `hla_type` (
-  `groupX` text NOT NULL,
-  `groupY` text NOT NULL,
-  `secondary` mediumtext NOT NULL,
-  `profileId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- --------------------------------------------------------
 
 --
@@ -208,7 +232,10 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
   `PreferredGender` varchar(30) DEFAULT NULL,
-  `ImageName` varchar(50) DEFAULT NULL
+  `ImageName` varchar(50) DEFAULT NULL,
+  `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
+  `BloodDonationPoints` int(11) DEFAULT NULL,
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -226,13 +253,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
-  `ImageName` varchar(50) DEFAULT NULL
+  `ImageName` varchar(50) DEFAULT NULL,
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 
 --
 -- Indexes for dumped tables
@@ -273,6 +300,25 @@ ALTER TABLE `history`
   ADD KEY `EntityId` (`EntityId`);
 
 --
+-- Indexes for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD PRIMARY KEY (`profileId`);
+
+--
+-- Indexes for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Id` (`Id`);
+
+--
+-- Indexes for table `medical_interactions`
+--
+ALTER TABLE `locale`
+  ADD PRIMARY KEY (`LocaleId`);
+
+--
 -- Indexes for table `medical_interactions`
 --
 ALTER TABLE `medical_interactions`
@@ -305,12 +351,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`);
 
 --
--- Indexes for table `hla_type`
---
-ALTER TABLE `hla_type`
-  ADD PRIMARY KEY (`profileId`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -339,6 +379,16 @@ ALTER TABLE `drugs`
 --
 ALTER TABLE `history`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `locale`
+--
+ALTER TABLE `locale`
+  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `medical_interactions`
 --
@@ -394,6 +444,20 @@ ALTER TABLE `history`
   ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
 
 --
+-- Constraints for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `locale`
+--
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
+--
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
@@ -407,20 +471,13 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
 
---
--- Constraints for table `hla_type`
---
-ALTER TABLE `hla_type`
-  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
 
 INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
   ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
   ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
+
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
@@ -624,3 +681,4 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
+

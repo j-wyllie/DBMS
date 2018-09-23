@@ -190,6 +190,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 
+        int bloodDonationPoints = profiles.getInt("BloodDonationPoints");
+
         LocalDateTime created = null;
         if (profiles.getTimestamp("Created") != null) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
@@ -198,11 +200,15 @@ public class MySqlProfileDAO implements ProfileDAO {
         if (profiles.getTimestamp("Created") != null) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
         }
+        LocalDateTime lastBloodDonation = null;
+        if (profiles.getTimestamp("LastBloodDonation") != null) {
+            lastBloodDonation = profiles.getTimestamp("LastBloodDonation").toLocalDateTime();
+        }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
                 dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,
                 bpSystolic, bpDiastolic, address, region, phone, email, country, city,
                 countryOfDeath, regionOfDeath, cityOfDeath, created, updated,
-                preferredName, preferredGender, imageName);
+                preferredName, preferredGender, imageName, lastBloodDonation, bloodDonationPoints);
 
         try {
             profile = setOrgans(profile);

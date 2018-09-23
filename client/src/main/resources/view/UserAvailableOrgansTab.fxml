@@ -49,9 +49,9 @@
            </TableView>
            <CheckComboBox fx:id="organsCombobox" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
            <CheckComboBox fx:id="regionsCombobox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1">
-              <GridPane.margin>
-                  <Insets left="10.0" />
-              </GridPane.margin>
+               <GridPane.margin>
+                   <Insets left="10.0" />
+               </GridPane.margin>
            </CheckComboBox>
            <TableView fx:id="potentialOrganMatchTable" prefHeight="512.0" prefWidth="205.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.rowSpan="2">
                <columns>
