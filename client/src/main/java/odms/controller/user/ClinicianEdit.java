@@ -26,11 +26,11 @@ public class ClinicianEdit extends CommonController {
     @FXML
     public void save() throws IOException {
         User currentUser = view.getUser();
-        History action = new History("Clinician", currentUser.getStaffID(),
+        History action = new History("Clinician", currentUser.getId(),
                 "updated", "previous " + currentUser.getAttributesSummary() +
                 " new " + currentUser.getAttributesSummary(), -1, LocalDateTime.now());
         currentUser.setName(view.getGivenNamesField());
-        currentUser.setStaffID(Integer.valueOf(view.getStaffIdField()));
+        currentUser.setId(Integer.valueOf(view.getStaffIdField()));
         currentUser.setWorkAddress(view.getAddressField());
         currentUser.setRegion(view.getRegionField());
 
@@ -38,11 +38,11 @@ public class ClinicianEdit extends CommonController {
             currentUser.setPictureName(
                     ImageDataIO.deleteAndSaveImage(
                             view.getChosenFile(),
-                            currentUser.getStaffID().toString()
+                            currentUser.getId().toString()
                     )
             );
         } else if (view.getRemovePhoto()) {
-            ImageDataIO.deleteImage(currentUser.getStaffID().toString());
+            ImageDataIO.deleteImage(currentUser.getId().toString());
             currentUser.setPictureName(null);
         }
 

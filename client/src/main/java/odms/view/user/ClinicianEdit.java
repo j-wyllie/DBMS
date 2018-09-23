@@ -139,8 +139,8 @@ public class ClinicianEdit extends CommonView {
                 givenNamesField.setText(currentUser.getName());
             }
 
-            if (currentUser.getStaffID() != null) {
-                staffIdField.setText(currentUser.getStaffID().toString());
+            if (currentUser.getId() != null) {
+                staffIdField.setText(currentUser.getId().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {

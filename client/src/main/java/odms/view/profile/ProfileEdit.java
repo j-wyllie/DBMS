@@ -34,7 +34,7 @@ import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
+import odms.controller.database.settings.SettingsDAO;
 import odms.view.CommonView;
 
 /**
@@ -464,14 +464,13 @@ public class ProfileEdit extends CommonView {
      */
     private void setUpLocationFields() {
         //Populating combo box values
-        CountryDAO database = DAOFactory.getCountryDAO();
+        SettingsDAO database = DAOFactory.getSettingsDAO();
 
-        List<String> validCountries = database.getAll(true);
+        List<String> validCountries = database.getAllCountries(true);
         comboCountry.getItems().addAll(validCountries);
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         // City and region should be displayed same regardless
-        CountryDAO countryDAO = DAOFactory.getCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }

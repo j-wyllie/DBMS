@@ -68,7 +68,7 @@ public class DAOFactory {
      * Gives the data access object class for the Countries enum.
      * @return dao for particular http type.
      */
-    public static SettingsDAO getCountryDAO() {
+    public static SettingsDAO getSettingsDAO() {
         return new HttpSettingsDAO();
     }
 

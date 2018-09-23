@@ -26,6 +26,6 @@ public class OrganOverride extends CommonController {
     public void confirm() throws SQLException {
         Integer isExpired = 1;
         DAOFactory.getOrganDao().setExpired(view.getCurrentProfile(), view.getCurrentOrgan(), isExpired,
-                view.getReasonText(), view.getCurrentUser().getStaffID());
+                view.getReasonText(), view.getCurrentUser().getId());
     }
 }

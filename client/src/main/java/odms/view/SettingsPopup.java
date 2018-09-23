@@ -29,13 +29,13 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.SettingsPopupController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
+import odms.controller.database.settings.SettingsDAO;
 import odms.data.DefaultLocale;
 
 public class SettingsPopup {
 
     private SettingsPopupController controller = new SettingsPopupController(this);
-    private CountryDAO server = DAOFactory.getCountryDAO();
+    private SettingsDAO server = DAOFactory.getSettingsDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList;
 
     @FXML
@@ -95,9 +95,9 @@ public class SettingsPopup {
      * that is ticked if the country is valid.
      */
     private void setupCountriesTable() {
-        List<String> allCountries = server.getAll();
+        List<String> allCountries = server.getAllCountries();
 
-        List<String> validCountries = server.getAll(true);
+        List<String> validCountries = server.getAllCountries(true);
         for (String country : allCountries) {
             CountriesEnum countryEnum = CountriesEnum.getEnumByString(country);
             if (countryEnum != null && validCountries.contains(country)) {
@@ -163,7 +163,7 @@ public class SettingsPopup {
                             .set(tableCell.getTableRow().getIndex(), countriesEnum);
                 }
 
-                server.update(countriesEnum,
+                server.updateCountry(countriesEnum,
                         countriesEnum.getValid());
             });
 

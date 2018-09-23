@@ -59,7 +59,7 @@ public class UsersList {
         );
         staffIdCol.setCellValueFactory(
                 user -> new SimpleStringProperty(
-                        (DefaultLocale.format(user.getValue().getStaffID()))
+                        (DefaultLocale.format(user.getValue().getId()))
                 )
         );
 

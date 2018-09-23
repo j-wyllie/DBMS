@@ -135,7 +135,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         } else if (attrName.equals(Attribute.ADDRESS.getText())) {
             profile.setAddress(value);
         } else if (attrName.equals(Attribute.COUNTRY.getText())) {
-            if (!DAOFactory.getCountryDAO().getAll(true).contains(value)) {
+            if (!DAOFactory.getSettingsDAO().getAllCountries(true).contains(value)) {
                 throw new IllegalArgumentException("Must be a valid country!");
             }
             profile.setCountry(value);

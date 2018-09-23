@@ -26,8 +26,8 @@ public class UserGeneral {
                         currentUser.getName() != null ? currentUser.getName() : ""));
         staffIdLabel.setText(
                 staffIdLabel.getText() + (
-                        currentUser.getStaffID() != null ?
-                                DefaultLocale.format(currentUser.getStaffID()) : ""));
+                        currentUser.getId() != null ?
+                                DefaultLocale.format(currentUser.getId()) : ""));
         addressLabel.setText(
                 addressLabel.getText() +
                         (currentUser.getWorkAddress() != null ? currentUser.getWorkAddress() : "")
