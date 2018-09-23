@@ -99,6 +99,32 @@ CREATE TABLE IF NOT EXISTS `history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `hla_type`
+--
+
+CREATE TABLE IF NOT EXISTS `hla_type` (
+  `groupX` text NOT NULL,
+  `groupY` text NOT NULL,
+  `secondary` mediumtext NOT NULL,
+  `profileId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` int(11) NOT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Address` varchar(100) DEFAULT NULL,
+  `Latitude` double DEFAULT NULL,
+  `Longitude` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `medical_interactions`
@@ -196,7 +222,9 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
   `PreferredGender` varchar(30) DEFAULT NULL,
-  `ImageName` varchar(50) DEFAULT NULL
+  `ImageName` varchar(50) DEFAULT NULL,
+  `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
+  `BloodDonationPoints` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -214,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
@@ -374,6 +403,16 @@ ALTER TABLE `history`
   ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
 
 --
+-- Indexes for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Id` (`Id`);
+
+ALTER TABLE `hospitals`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
@@ -391,9 +430,57 @@ ALTER TABLE `procedures`
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+
+--
+-- Table structure for table `locale`
+--
+
+DROP TABLE IF EXISTS `locale`;
+CREATE TABLE IF NOT EXISTS `locale` (
+  `LocaleId` int(11) NOT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
+  `DateTimeFormat` varchar(50) DEFAULT NULL,
+  `NumberFormat` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `locale`
+--
+ALTER TABLE `locale`
+  ADD PRIMARY KEY (`LocaleId`),
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `UserId` (`UserId`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `locale`
+--
+ALTER TABLE `locale`
+  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `locale`
+--
+
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`),
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
 INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
   ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
   ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
+
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

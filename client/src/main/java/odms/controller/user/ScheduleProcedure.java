@@ -125,7 +125,7 @@ public class ScheduleProcedure extends CommonController {
         Profile receiver = view.getReceiver();
         OrganEnum organ = view.getSelectedOrgan();
 
-        return donor.getFullName() + " is donating their " +
+        return donor.getFullName() + " is donating their " + '\n' +
             organ.getName() + " to " + receiver.getFullName() + ".";
     }
 
