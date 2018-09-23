@@ -105,9 +105,6 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
 
             ResultSet set = stmt.executeQuery();
             return set.next();
-
-        } catch (SQLException e) {
-            throw new SQLException();
         } finally {
             conn.close();
             stmt.close();
@@ -130,8 +127,6 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
             stmt.setInt(1,  token);
             stmt.setInt(2,  id);
             stmt.execute();
-        } catch (SQLException e) {
-            throw new SQLException();
         } finally {
             conn.close();
             stmt.close();
@@ -153,8 +148,6 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
             stmt.setNull(1, Types.INTEGER);
             stmt.setInt(2,  id);
             stmt.execute();
-        } catch (SQLException e) {
-            throw new SQLException();
         } finally {
             conn.close();
             stmt.close();

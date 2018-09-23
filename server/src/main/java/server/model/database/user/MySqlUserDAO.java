@@ -161,7 +161,7 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
-        user.setCountry(country != null ? CountriesEnum.valueOf(country) : null);
+        user.setCountry(country != null && !country.equals("") ? CountriesEnum.valueOf(country) : null);
         user.setDefault(defaultBool);
         return user;
     }
@@ -179,11 +179,7 @@ public class MySqlUserDAO implements UserDAO {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
-            if (user.getPassword() != null) {
-                stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
-            } else {
-                stmt.setString(2, "");
-            }
+            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
@@ -207,16 +203,13 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public boolean isUniqueUsername(String username) {
         String query = "SELECT Username FROM users WHERE Username = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet result = stmt.executeQuery()) {
                 return !result.next();
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
         return false;
@@ -230,9 +223,7 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setInt(1, user.getId());
 
@@ -251,9 +242,8 @@ public class MySqlUserDAO implements UserDAO {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, Country = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
@@ -261,7 +251,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getCountry().getName());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().getName() : null);
             stmt.setString(8, user.getLastUpdated().toString());
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());

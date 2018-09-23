@@ -47,8 +47,8 @@ public class Middleware {
      */
     public static boolean isAuthenticated(Request req) throws SQLException {
         UserType userType = UserType.valueOf(req.headers("userType"));
-        int id = Integer.valueOf(req.headers("id"));
-        int token = Integer.valueOf(req.headers("token"));
+        int id = Integer.parseInt(req.headers(KeyEnum.ID.toString()));
+        int token = Integer.parseInt(req.headers("token"));
 
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             return database.isProfileAuthenticated(id, token);

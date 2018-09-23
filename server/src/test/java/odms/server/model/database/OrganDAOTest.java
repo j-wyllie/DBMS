@@ -37,6 +37,7 @@ public class OrganDAOTest extends CommonTestUtils {
         User testUser;
         testUser = new User(UserType.CLINICIAN, "Clinician", "Auckland");
         testUser.setUsername("Bob");
+        testUser.setPassword("test");
         testUser.setDefault(false);
         testUser.setWorkAddress(null);
         testUser.setPictureName(null);

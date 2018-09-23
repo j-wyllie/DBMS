@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import server.model.database.DatabaseConnection;
+import server.model.enums.KeyEnum;
 
 @Slf4j
 public class MySqlSettingsDAO implements SettingsDAO {
@@ -24,8 +25,9 @@ public class MySqlSettingsDAO implements SettingsDAO {
             Statement stmt = connection.createStatement();
             ResultSet result = stmt.executeQuery(query)) {
             while (result.next()) {
-                CountriesEnum country = CountriesEnum.getEnumByString(result.getString("Name"));
-                if (country != null) {
+                String countryName = result.getString(KeyEnum.NAME.toString());
+                if (!countryName.equals("")) {
+                    CountriesEnum country = CountriesEnum.valueOf(countryName);
                     countries.add(country.getName());
                 }
             }

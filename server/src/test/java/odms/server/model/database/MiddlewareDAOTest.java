@@ -60,16 +60,19 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
+        userA.setPassword("test");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
+        userB.setPassword("test");
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
 
         userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
         userC.setUsername("joshw");
+        userC.setPassword("test");
         userDAO.add(userC);
         userC = userDAO.get(userC.getUsername());
     }

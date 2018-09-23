@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.enums.UserType;
@@ -20,7 +21,6 @@ import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 import spark.Request;
-
 
 public class MiddlewareTest extends CommonTestUtils {
 
@@ -66,16 +66,19 @@ public class MiddlewareTest extends CommonTestUtils {
 
         userA = new User(UserType.ADMIN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
+        userA.setPassword("test");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
+        userB.setPassword("test");
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
 
         userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
         userC.setUsername("joshw");
+        userC.setPassword("test");
         userDAO.add(userC);
         userC = userDAO.get(userC.getUsername());
 

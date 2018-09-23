@@ -38,7 +38,7 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
     private User userA;
 
     // General variables.
-    private int invalidId = 0;
+    private int invalidId = -1;
 
     // Locale variables.
     private String localeA = "en-US";
@@ -55,6 +55,7 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
 
         userA = new User(UserType.ADMIN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
+        userA.setPassword("test");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
     }
@@ -92,70 +93,70 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
     }
 
     @Test (expected = SQLIntegrityConstraintViolationException.class)
-    public void setProfileDateTimeFormatInvalidId() throws SQLException {
+    public void testSetProfileDateTimeFormatInvalidId() throws SQLException {
         settingsDAO.setDateTimeFormat(invalidId, UserType.PROFILE, localeA);
         assertNull(settingsDAO.getDateTimeFormat(invalidId, UserType.PROFILE));
     }
 
     @Test (expected = SQLIntegrityConstraintViolationException.class)
-    public void setUserDateTimeFormatInvalidId() throws SQLException {
+    public void testSetUserDateTimeFormatInvalidId() throws SQLException {
         settingsDAO.setDateTimeFormat(invalidId, UserType.ADMIN, localeA);
         assertNull(settingsDAO.getDateTimeFormat(invalidId, UserType.ADMIN));
     }
 
     @Test (expected = SQLIntegrityConstraintViolationException.class)
-    public void setProfileNumberFormatInvalidId() throws SQLException {
+    public void testSetProfileNumberFormatInvalidId() throws SQLException {
         settingsDAO.setNumberFormat(invalidId, UserType.PROFILE, localeA);
         assertNull(settingsDAO.getNumberFormat(invalidId, UserType.PROFILE));
     }
 
     @Test (expected = SQLIntegrityConstraintViolationException.class)
-    public void setUserNumberFormatInvalidId() throws SQLException {
+    public void testSetUserNumberFormatInvalidId() throws SQLException {
         settingsDAO.setNumberFormat(invalidId, UserType.ADMIN, localeA);
         assertNull(settingsDAO.getNumberFormat(invalidId, UserType.ADMIN));
     }
 
     @Test
-    public void getSetProfileDateTimeFormatValid() throws SQLException {
+    public void testGetSetProfileDateTimeFormatValid() throws SQLException {
         settingsDAO.setDateTimeFormat(profileA.getId(), UserType.PROFILE, localeA);
         assertEquals(localeA, settingsDAO.getDateTimeFormat(profileA.getId(), UserType.PROFILE));
     }
 
     @Test
-    public void getSetProfileDateTimeFormatInvalid() {
+    public void testGetSetProfileDateTimeFormatInvalid() {
         assertNull(settingsDAO.getDateTimeFormat(profileA.getId(), UserType.PROFILE));
     }
 
     @Test
-    public void getSetUserDateTimeFormatValid() throws SQLException {
+    public void testGetSetUserDateTimeFormatValid() throws SQLException {
         settingsDAO.setDateTimeFormat(userA.getId(), UserType.ADMIN, localeA);
         assertEquals(localeA, settingsDAO.getDateTimeFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
-    public void getSetUserDateTimeFormatInvalid() {
+    public void testGetSetUserDateTimeFormatInvalid() {
         assertNull(settingsDAO.getDateTimeFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
-    public void getSetProfileNumberFormatValid() throws SQLException {
+    public void testGetSetProfileNumberFormatValid() throws SQLException {
         settingsDAO.setNumberFormat(profileA.getId(), UserType.PROFILE, localeA);
         assertEquals(localeA, settingsDAO.getNumberFormat(profileA.getId(), UserType.PROFILE));
     }
 
     @Test
-    public void getSetProfileNumberFormatInvalid() {
+    public void testGetSetProfileNumberFormatInvalid() {
         assertNull(settingsDAO.getNumberFormat(profileA.getId(), UserType.PROFILE));
     }
 
     @Test
-    public void getSetUserNumberFormatValid() throws SQLException {
+    public void testGetSetUserNumberFormatValid() throws SQLException {
         settingsDAO.setNumberFormat(userA.getId(), UserType.ADMIN, localeA);
         assertEquals(localeA, settingsDAO.getNumberFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
-    public void getSetUserNumberFormatInvalid() {
+    public void testGetSetUserNumberFormatInvalid() {
         assertNull(settingsDAO.getNumberFormat(userA.getId(), UserType.ADMIN));
     }
 

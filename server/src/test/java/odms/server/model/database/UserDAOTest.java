@@ -22,10 +22,9 @@ public class UserDAOTest extends CommonTestUtils {
 
     @BeforeClass
     public static void addUser() throws SQLException, UserNotFoundException {
-        testUser0 = mySqlUserDAO.get("username");
+        testUser0 = mySqlUserDAO.get("Username");
         testUser1 = mySqlUserDAO.get("Pleb");
     }
-
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
@@ -54,16 +53,16 @@ public class UserDAOTest extends CommonTestUtils {
         testUser0.setName("Nanny");
         mySqlUserDAO.update(testUser0);
 
-        assertEquals("Nanny", mySqlUserDAO.get("username").getName());
+        assertEquals("Nanny", mySqlUserDAO.get("Username").getName());
     }
 
     @Test
-    public void testIsUniqueUsernameTrue() throws SQLException {
+    public void testIsUniqueUsernameTrue() {
         assertTrue(mySqlUserDAO.isUniqueUsername("ree"));
     }
 
     @Test
-    public void testIsUniqueUsernameFalse() throws SQLException {
+    public void testIsUniqueUsernameFalse() {
         assertFalse(mySqlUserDAO.isUniqueUsername("Username"));
     }
 
