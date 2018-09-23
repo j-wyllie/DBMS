@@ -41,18 +41,14 @@ public class HospitalMap {
 
         if (location.getId() < 0) {
 
+            // TODO potentially being removed, might not bother with custom markers, just too much of a hassle and clashes with the other markers too much
             String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_MarkerA.png").toString(), "png");
             markerImage = markerImage.replace("(", "");
             markerImage = markerImage.replace(")", "");
             markerOptions.icon(markerImage);
 
-
         } else {
             markerOptions.label(location.getId().toString());
-//            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/red_MarkerA.png").toString(), "png");
-//            markerImage = markerImage.replace("(", "");
-//            markerImage = markerImage.replace(")", "");
-//            markerOptions.icon(markerImage);
         }
 
         return new Marker(markerOptions);

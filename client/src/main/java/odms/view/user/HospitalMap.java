@@ -7,7 +7,6 @@ import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -127,10 +126,13 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         directionsPane = mapView.getDirec();
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
 
+
         // Creates a hospital object for a custom location added by the user, is cleared using the clear button
         map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent e) -> {
 
-            Hospital location = new Hospital("Custom marker " +
+            String customLocationName = "Custom marker";
+
+            Hospital location = new Hospital(customLocationName +
                     " (" + Double.valueOf(decimalFormat.format(e.getLatLong().getLatitude())) + ", " +
                     Double.valueOf(decimalFormat.format(e.getLatLong().getLongitude())) + ")",
                     e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
@@ -141,7 +143,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             }
             customLocation = location;
             for (Marker marker : markers) {
-                if (marker.getTitle().startsWith("Custom marker")) {
+                if (marker.getTitle().startsWith(customLocationName)) {
                     map.removeMarker(marker);
                 }
             }
@@ -162,9 +164,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             findClosestHospitalBtn.setDisable(true);
 
             travelInfo.clear();
-
         });
-
 
         populateHospitals();
         setMarkersTable();
@@ -197,12 +197,11 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                 )
         );
 
-
-
         markersTable.getColumns().clear();
         markersTable.getColumns().add(nameColumn);
         markersTable.getColumns().add(idColumn);
 
+        // Location clicked on in list
         markersTable.setOnMousePressed(event -> {
                     if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                             markersTable.getSelectionModel().getSelectedItem() != null) {
@@ -213,14 +212,11 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                         // Center on selected marker
                         map.setCenter(new LatLong(selectedLocation.getLatitude(), selectedLocation.getLongitude()));
                         map.setZoom(10);
-
                     }
                 });
 
-
         markersTable.getItems().clear();
         markersTable.setItems(FXCollections.observableArrayList(hospitalList));
-
     }
 
     /**
@@ -252,7 +248,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
             travelInfo.setText("Closest hospital to " + hospitalSelected1.getName() + ": " + closest.getName() + ", " + closest.getAddress() +
                     ".\n Approximately " + decimalFormat.format(distance) + "km away.");
-
         }
     }
 
@@ -495,8 +490,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             if (hospitalSelected1 == null) {
                 hospitalSelected1 = location;
 
+                // TODO potentially being removed, might not bother with custom markers, just too much of a hassle and clashes with the other markers too much
                 // marker.setOptions(controller.highlightMarker(false, location, "A"));
-
 
                 findClosestHospitalBtn.setDisable(false);
 
@@ -510,6 +505,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             } else {
                 hospitalSelected2 = location;
 
+                // TODO see above
                 // marker.setOptions(controller.highlightMarker(false, location, "B"));
 
                 createRouteBetweenLocations(
@@ -521,8 +517,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         map.addMarker(marker);
     }
-
-
 
     /**
      * Populates the map object with all hospitals in database, removes all existing hospitals
