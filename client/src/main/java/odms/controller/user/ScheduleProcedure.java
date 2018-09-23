@@ -73,9 +73,14 @@ public class ScheduleProcedure extends CommonController {
 
         Procedure procedure = new Procedure(
                 generateSummary(), dateTime, generateDescription(), organ, hospital);
-        procedureDAO.add(donor, procedure);
-        procedureDAO.add(receiver, procedure);
-        updateOrgans();
+
+        if (procedureDAO.add(donor, procedure) &&
+                procedureDAO.add(receiver, procedure)) {
+            updateOrgans();
+        }
+
+        donor.addProcedure(procedure);
+        receiver.addProcedure(procedure);
         sendEmails();
     }
 

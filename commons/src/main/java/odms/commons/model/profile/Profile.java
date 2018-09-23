@@ -1,23 +1,19 @@
 package odms.commons.model.profile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.medications.Drug;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The profile model class.
@@ -1268,5 +1264,19 @@ public class Profile implements Comparable<Profile> {
 
     public int getBloodDonationPoints() {
         return bloodDonationPoints;
+    }
+
+    public void addProcedure(Procedure procedure) {
+        if (procedure.getDateTime() != null) {
+            // This case only occurs when adding a matched organ donation
+            pendingProcedures.add(procedure);
+        } else {
+            if (LocalDate.now().isBefore(procedure.getDate())) {
+                previousProcedures.add(procedure);
+            } else {
+                pendingProcedures.add(procedure);
+            }
+        }
+        procedures.add(procedure);
     }
 }
