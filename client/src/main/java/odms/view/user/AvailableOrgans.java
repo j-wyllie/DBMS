@@ -22,6 +22,7 @@ import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -238,6 +239,7 @@ public class AvailableOrgans extends CommonView {
                 updateMatchesTable();
             }
         });
+        availableOrgansTable.setItems(listOfAvailableOrgans);
     }
 
     /**
@@ -247,10 +249,16 @@ public class AvailableOrgans extends CommonView {
      */
     public void setAvailableOrgansList() throws SQLException {
         List<Entry<Profile, OrganEnum>> organsAvailable = controller.getAllOrgansAvailable();
-        availableOrgansTable.getItems().removeAll(listOfAvailableOrgans);
-        listOfAvailableOrgans = FXCollections
-                .observableArrayList(organsAvailable);
-        availableOrgansTable.setItems(listOfAvailableOrgans);
+        for (Entry<Profile, OrganEnum> organ : organsAvailable) {
+            if (!listOfAvailableOrgans.contains(organ)) {
+                listOfAvailableOrgans.add(organ);
+            }
+        }
+        List<Entry<Profile, OrganEnum>> o = new ArrayList<>(listOfAvailableOrgans);
+        o.removeAll(organsAvailable);
+        for (Entry<Profile, OrganEnum> organ : o) {
+            listOfAvailableOrgans.remove(organ);
+        }
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
@@ -322,10 +330,10 @@ public class AvailableOrgans extends CommonView {
     public void initialize(User currentUser, ClinicianProfile p) {
         this.currentUser = currentUser;
         controller.setView(this);
+        listOfAvailableOrgans = FXCollections.observableArrayList();
         populateOrgansTable();
         populateMatchesTable();
         parentView = p;
-        listOfAvailableOrgans = FXCollections.observableArrayList();
 
         // Potential matches table
         bloodTypeComboboxMatchesTable.getCheckModel().getCheckedItems()
