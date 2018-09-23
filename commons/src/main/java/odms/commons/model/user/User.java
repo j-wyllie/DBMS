@@ -13,6 +13,7 @@ public class User {
     private Integer staffID;
     private String workAddress;
     private String region;
+    private String country;
     private LocalDateTime lastUpdated;
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
@@ -22,8 +23,7 @@ public class User {
     private String pictureName;
 
     /**
-     * user constructor
-     *
+     * User constructor.
      * @param userType  type of user
      * @param attrArray array containing users attributes
      */
@@ -34,8 +34,7 @@ public class User {
     }
 
     /**
-     * user constructor.
-     *
+     * User constructor.
      * @param userType type of user
      * @param name     user name
      * @param region   user region
@@ -50,7 +49,7 @@ public class User {
     }
 
     /**
-     *
+     * User constructor.
      * @param userType type of user
      * @param name name of user
      * @param region users region
@@ -66,8 +65,7 @@ public class User {
     }
 
     /**
-     * Creates an administrator account
-     *
+     * Creates an administrator account.
      * @param userType the user type to be set
      * @param name     the users name.
      */
@@ -80,7 +78,7 @@ public class User {
     }
 
     /**
-     * user constructor.
+     * User constructor.
      * @param userType type of user.
      * @param name user name.
      * @param region user region.
@@ -104,8 +102,7 @@ public class User {
 
     /**
      * Logs which property was updated and the time it was updated Also changes the last updated
-     * property
-     *
+     * property.
      * @param property the property that was updated
      */
     private void generateUpdateInfo(String property) {
@@ -118,7 +115,6 @@ public class User {
 
     /**
      * Sets the attributes that are passed into the constructor.
-     *
      * @param attributes the attributes given in the constructor.
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
@@ -130,8 +126,7 @@ public class User {
     }
 
     /**
-     * sets a users specific given attribute.
-     *
+     * Sets a users specific given attribute.
      * @param parts a string containing the users new attribute to be set.
      * @throws IllegalArgumentException
      */
@@ -165,8 +160,7 @@ public class User {
     }
 
     /**
-     * gets a attribute summary of the user
-     *
+     * Gets a attribute summary of the user.
      * @return attribute summary of the user
      */
     public String getAttributesSummary() {
@@ -177,6 +171,8 @@ public class User {
         summary = summary + "," + ("region=" + region);
         return summary;
     }
+
+    // Getters and Setters only.
 
     public String getName() {
         return this.name;
@@ -222,32 +218,16 @@ public class User {
         generateUpdateInfo(this.username);
     }
 
-    public List<String> getUpdateActions() {
-        return updateActions;
-    }
-
     public UserType getUserType() {
         return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
     public LocalDateTime getTimeOfCreation() {
         return timeOfCreation;
-    }
-
-    public void setTimeOfCreation(LocalDateTime timeOfCreation) {
-        this.timeOfCreation = timeOfCreation;
     }
 
     public String getPassword() {
@@ -272,5 +252,13 @@ public class User {
 
     public void setPictureName(String pictureName) {
         this.pictureName = pictureName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

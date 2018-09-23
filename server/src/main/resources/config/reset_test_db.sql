@@ -216,6 +216,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',

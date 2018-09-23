@@ -142,6 +142,7 @@ public class MySqlUserDAO implements UserDAO {
         UserType userType = UserType.valueOf(rs.getString("UserType"));
         String address = rs.getString("Address");
         String region = rs.getString("Region");
+        String country = rs.getString("Country");
         Boolean defaultBool = rs.getBoolean("IsDefault");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
@@ -157,20 +158,20 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
+        user.setCountry(country);
         user.setDefault(defaultBool);
         return user;
     }
 
     /**
      * Adds a new user to the database.
-     *
      * @param user to add.
      */
     @Override
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
-                " Region, Created, LastUpdated, IsDefault, ImageName) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                " Region, Country, Created, LastUpdated, IsDefault, ImageName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try (Connection conn = instance.getConnection();
@@ -185,10 +186,11 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, LocalDateTime.now().toString());
+            stmt.setString(7, user.getCountry());
             stmt.setString(8, LocalDateTime.now().toString());
-            stmt.setBoolean(9, user.getDefault());
-            stmt.setString(10, user.getPictureName());
+            stmt.setString(9, LocalDateTime.now().toString());
+            stmt.setBoolean(10, user.getDefault());
+            stmt.setString(11, user.getPictureName());
             stmt.execute();
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new SQLException();
@@ -226,7 +228,7 @@ public class MySqlUserDAO implements UserDAO {
      * @param user to remove.
      */
     @Override
-    public void remove(User user) throws SQLException {
+    public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -241,14 +243,13 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     /**
-     * Updates a users information in the database.
-     *
+     * Updates a users information in the database.     *
      * @param user to updateCountries.
      */
     @Override
-    public void update(User user) throws SQLException {
+    public void update(User user) {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
+                + "Address = ?, Region = ?, Country = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -260,11 +261,12 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getLastUpdated().toString());
-            stmt.setBoolean(8, user.getDefault());
-            stmt.setString(9, user.getPictureName());
+            stmt.setString(7, user.getCountry());
+            stmt.setString(8, user.getLastUpdated().toString());
+            stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
-            stmt.setInt(10, user.getStaffID());
+            stmt.setString(11, user.getPictureName());
+            stmt.setInt(12, user.getStaffID());
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

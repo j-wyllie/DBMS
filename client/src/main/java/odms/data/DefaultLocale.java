@@ -2,7 +2,8 @@ package odms.data;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.TimeZone;
+import odms.Session;
+import org.apache.commons.lang3.LocaleUtils;
 
 /**
  * Defines the locale settings for the application instance.
@@ -20,7 +21,7 @@ public final class DefaultLocale {
     }
 
     private static Locale getDefaultLocale() {
-        return new Locale("en", "US");
+        return LocaleUtils.toLocale(Session.getDefaultLocation());
     }
 
     public static Locale getDatetimeLocale() {
