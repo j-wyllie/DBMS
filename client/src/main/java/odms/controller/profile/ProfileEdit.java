@@ -488,7 +488,7 @@ public class ProfileEdit extends CommonController {
             Integer ydr = view.getHLAYDRField();
             HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
             currentProfile.setHlaType(hlaType);
-           // HLATypeDAO hlaTypeDAO = DAOFactory.getH();
+            // HLATypeDAO hlaTypeDAO = DAOFactory.getH();
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("All HLA Antigen values must be entered");
         }
