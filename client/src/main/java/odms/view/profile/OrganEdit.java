@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.profile.Profile;
+import odms.controller.AlertController;
 
 /**
  * Control Organ view tab pane.
@@ -245,18 +246,22 @@ public class OrganEdit extends OrganCommon {
      * @param event the JavaFX event.
      */
     private void switchOrgans(Event event) {
-        if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
-            String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
-            observableListOrgansAvailable.remove(item);
-            observableListOrgansSelected.add(item);
-        } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
-            String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
-            giveReasonForRemoval(event, item);
-        }
-        refreshListViews();
+        if (currentProfile.getBloodType() != null) {
+            if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
+                String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
+                observableListOrgansAvailable.remove(item);
+                observableListOrgansSelected.add(item);
+            } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
+                String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
+                giveReasonForRemoval(event, item);
+            }
+            refreshListViews();
 
-        viewOrgansAvailable.getSelectionModel().clearSelection();
-        viewOrgansSelected.getSelectionModel().clearSelection();
+            viewOrgansAvailable.getSelectionModel().clearSelection();
+            viewOrgansSelected.getSelectionModel().clearSelection();
+        } else {
+            AlertController.invalidEntry("Must set a blood type before allocating an organ.");
+        }
     }
 
     /**

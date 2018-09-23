@@ -546,10 +546,11 @@ public class AvailableOrgans {
         StringBuilder organs = new StringBuilder("");
         int count = 1;
         for (OrganEnum o : organsAvailable) {
+            String name = o.getName().replace('-', '+');
             if (count == organsAvailable.size()) {
-                organs.append(o.getName());
+                organs.append(name);
             } else {
-                organs.append(o.getName());
+                organs.append(name);
                 organs.append(",");
             }
             count++;

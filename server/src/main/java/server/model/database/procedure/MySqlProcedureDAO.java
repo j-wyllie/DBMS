@@ -2,6 +2,7 @@ package server.model.database.procedure;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -80,8 +81,9 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(3, procedure.getLongDescription());
 
             if (procedure.getDateTime() != null) {
+                // Date time is only used in scheduling a procedure so it must be pending
                 stmt.setTimestamp(4, Timestamp.valueOf(procedure.getDateTime()));
-                stmt.setInt(5, 0);
+                stmt.setInt(5, 1);
             } else {
                 stmt.setDate(4, Date.valueOf(procedure.getDate()));
                 if (LocalDate.now().isBefore(procedure.getDate())) {
