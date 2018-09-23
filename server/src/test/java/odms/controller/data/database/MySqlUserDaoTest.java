@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class MySqlUserDaoTest extends MySqlCommonTests {
+
     private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
 
     private static User testUser0;
@@ -32,16 +33,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals(testUser0.getUsername(), mySqlUserDAO.get("Username").getUsername());
     }
 
-    @Test (expected = UserNotFoundException.class)
+    @Test(expected = UserNotFoundException.class)
     public void testGetInvalidUser() throws SQLException, UserNotFoundException {
         assertEquals(testUser0.getUsername(), mySqlUserDAO.get("Yeet").getUsername());
     }
 
     @Test
     public void testGetAll() throws SQLException {
-        for (User user : mySqlUserDAO.getAll()) {
-            System.out.println(user.getUsername());
-        };
         assertEquals(2, mySqlUserDAO.getAll().size());
     }
 
