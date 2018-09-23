@@ -201,8 +201,7 @@ public class ProfileController {
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
                         && !database.isUniqueUsername(newProfile.getUsername())) {
                     database.add(newProfile);
-                }
-                else {
+                } else {
                     res.status(400);
                     return ResponseMsgEnum.BAD_REQUEST.toString();
                 }

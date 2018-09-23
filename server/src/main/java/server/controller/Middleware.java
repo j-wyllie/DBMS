@@ -2,6 +2,8 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.Random;
+
+import server.model.enums.KeyEnum;
 import spark.Request;
 import odms.commons.model.enums.UserType;
 import org.sonar.api.server.authentication.UnauthorizedException;
@@ -45,9 +47,9 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAuthenticated(Request req) throws SQLException {
-        UserType userType = UserType.valueOf(req.headers("userType"));
-        int id = Integer.valueOf(req.headers("id"));
-        int token = Integer.valueOf(req.headers("token"));
+        UserType userType = UserType.valueOf(req.headers(KeyEnum.USERTYPE.toString()));
+        int id = Integer.valueOf(req.headers(KeyEnum.ID.toString()));
+        int token = Integer.valueOf(req.headers(KeyEnum.AUTH.toString()));
 
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             return database.isProfileAuthenticated(id, token);
@@ -66,8 +68,9 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAdminAuthenticated(Request req) throws SQLException {
-        int id = Integer.valueOf(req.headers("id"));
-        int token = Integer.valueOf(req.headers("token"));
+        System.out.println(req.headers());
+        int id = Integer.valueOf(req.headers(KeyEnum.ID.toString()));
+        int token = Integer.valueOf(req.headers(KeyEnum.AUTH.toString()));
 
         return database.isUserAuthenticated(id, token);
     }

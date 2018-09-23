@@ -11,14 +11,7 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 
 import lombok.extern.slf4j.Slf4j;
-import server.controller.ConditionController;
-import server.controller.CountriesController;
-import server.controller.DrugController;
-import server.controller.Middleware;
-import server.controller.OrganController;
-import server.controller.ProcedureController;
-import server.controller.ProfileController;
-import server.controller.UserController;
+import server.controller.*;
 
 /**
  * Main entry point for server application.
@@ -57,16 +50,23 @@ public class Server {
      * Initialises the server endpoints.
      */
     private static void initRoutes() {
-        // user api routes.
         path("/api/v1", () -> {
-            path("/users", () -> {
-                path("/login", () -> post("", UserController::checkCredentials));
 
-                before("/*", (request, response) -> {
-                    if(!(Middleware.isAdminAuthenticated(request))) {
-                        halt(401, "Unauthorized");
-                    }
-                });
+            // Initial interactions.
+            post("/setup", CommonController::setup);
+            post("/login", CommonController::checkCredentials);
+            post("/logout", CommonController::logout);
+
+
+            // user api routes.
+            before("/users*", (request, response) -> {
+                System.out.println("hit1");
+                if(!(Middleware.isAdminAuthenticated(request))) {
+                    halt(401, "Unauthorized");
+                }
+            });
+            path("/users", () -> {
+
                 get("/all", UserController::getAll);
                 get("", UserController::get);
                 post("", UserController::create);
@@ -82,11 +82,10 @@ public class Server {
             path("/profiles", () -> {
 
                 // No authentication required.
-                post("/login", ProfileController::checkCredentials);
                 post("", ProfileController::create);
 
                 // Profile authentication required.
-                before("/*", (request, response) -> {
+                before("/profiles*", (request, response) -> {
                     if(!(Middleware.isAuthenticated(request))) {
                         halt(401, "Unauthorized");
                     }
@@ -118,7 +117,8 @@ public class Server {
                 });
 
                 // Admin or clinician authentication required.
-                before((request, response) -> {
+                before("/profiles*", (request, response) -> {
+                    System.out.println("hit2");
                     if (!(Middleware.isAdminAuthenticated(request))) {
                         halt(401, "Unauthorized");
                     }
@@ -167,7 +167,8 @@ public class Server {
                 get("/count", ProfileController::count);
             });
 
-            before("/*", (request, response) -> {
+            before("/conditions*", (request, response) -> {
+                System.out.println("hit3");
                 if (!(Middleware.isAdminAuthenticated(request))) {
                         halt(401, "Unauthorized");
                 }
@@ -180,6 +181,13 @@ public class Server {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
                 });
+            });
+
+            before("/procedures*", (request, response) -> {
+                System.out.println("hit3");
+                if (!(Middleware.isAdminAuthenticated(request))) {
+                    halt(401, "Unauthorized");
+                }
             });
 
             // procedure api endpoints.
@@ -198,12 +206,26 @@ public class Server {
                 });
             });
 
+            before("/drugs*", (request, response) -> {
+                System.out.println("hit3");
+                if (!(Middleware.isAdminAuthenticated(request))) {
+                    halt(401, "Unauthorized");
+                }
+            });
+
             // drugs api endpoints.
             path("/drugs", () -> {
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
                 });
+            });
+
+            before("/countries*", (request, response) -> {
+                System.out.println("hit3");
+                if (!(Middleware.isAdminAuthenticated(request))) {
+                    halt(401, "Unauthorized");
+                }
             });
 
             // countries api endpoints.

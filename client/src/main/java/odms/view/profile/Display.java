@@ -14,6 +14,8 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.data.ImageDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.common.CommonDAO;
 import odms.view.CommonView;
 import odms.view.user.TransplantWaitingList;
 
@@ -89,6 +91,8 @@ public class Display extends CommonView {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        CommonDAO server = DAOFactory.getCommonDao();
+        server.logout();
         currentProfile = null;
         changeScene(event, "/view/Login.fxml", "Login");
     }

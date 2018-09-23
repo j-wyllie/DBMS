@@ -15,10 +15,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
@@ -49,7 +52,6 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
-     *
      * @param event the login button clicked event.
      */
     @FXML
@@ -60,8 +62,11 @@ public class LoginView extends CommonController {
             try {
                 if (CommonView.isValidNHI(usernameField.getText())) {
                     tryLoginProfile(event, username);
-                } else if (checkUser()) {
+                } else if (isValidUser()) {
+                    Session.setCurrentUser(new User(null, (String) null), UserType.ADMIN);
                     currentUser = loadUser(username);
+                    //System.out.println(currentUser.getUsername());
+                    Session.setCurrentUser(currentUser, currentUser.getUserType());
                     loadUserView(currentUser);
                 } else {
                     AlertController.invalidUsernameOrPassword();
@@ -89,7 +94,9 @@ public class LoginView extends CommonController {
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
-        } else if (checkProfile()) {
+        } else if (isValidProfile()) {
+            Session.setCurrentUser(new Profile(null), UserType.PROFILE);
+            Session.setCurrentUser(currentProfile, UserType.PROFILE);
             loadProfileView(currentProfile);
         } else {
             AlertController.invalidUsernameOrPassword();
@@ -111,7 +118,7 @@ public class LoginView extends CommonController {
      *
      * @return boolean if valid credentials.
      */
-    private boolean checkProfile() {
+    private boolean isValidProfile() {
         ProfileDAO database = DAOFactory.getProfileDao();
         return database.checkCredentials(usernameField.getText(), passwordField.getText());
     }
@@ -121,7 +128,7 @@ public class LoginView extends CommonController {
      *
      * @return Boolean based on if the credentials are correct. True if valid.
      */
-    private Boolean checkUser() {
+    private Boolean isValidUser() {
         UserDAO database = DAOFactory.getUserDao();
         return database.checkCredentials(usernameField.getText(), passwordField.getText());
     }
@@ -143,6 +150,7 @@ public class LoginView extends CommonController {
      * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {
+        GuiMain.startCheckOrganThread();
         try {
             if (profile != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -193,7 +201,7 @@ public class LoginView extends CommonController {
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
-
+        GuiMain.startCheckOrganThread();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(

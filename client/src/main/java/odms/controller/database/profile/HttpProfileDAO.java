@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
@@ -54,7 +56,7 @@ public class HttpProfileDAO implements ProfileDAO {
         Response response = null;
 
         String body = gson.toJson(profile);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             response = request.post();
         } catch (IOException e) {
@@ -83,7 +85,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public void remove(Profile profile) {
         String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
@@ -96,7 +98,7 @@ public class HttpProfileDAO implements ProfileDAO {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();
         String body = gson.toJson(profile);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             request.patch();
         } catch (IOException e) {
@@ -126,7 +128,7 @@ public class HttpProfileDAO implements ProfileDAO {
         JsonParser parser = new JsonParser();
         String url = "http://localhost:6969/api/v1/profiles/count";
         Map<String, Object> queryParams = new HashMap<>();
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         Response response = null;
         int count = 0;
 
@@ -179,7 +181,7 @@ public class HttpProfileDAO implements ProfileDAO {
     private Profile getSingleRequest(String url, Map<String, Object> queryParams) {
         Gson parser = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -195,7 +197,7 @@ public class HttpProfileDAO implements ProfileDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -217,7 +219,7 @@ public class HttpProfileDAO implements ProfileDAO {
         Gson gson = new Gson();
 
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -244,7 +246,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("nhi", nhi);
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -258,12 +260,14 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public Boolean checkCredentials(String username, String password) {
-        String url = "http://localhost:6969/api/v1/profiles/login";
+        Gson gson = new Gson();
+        String url = "http://localhost:6969/api/v1/login";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
         queryParams.put("password", password);
+        queryParams.put("UserType", UserType.PROFILE);
 
-        Request request = new Request(url, 0, queryParams, "{}");
+        Request request = new Request(url, queryParams, "{}");
         Response response = null;
         try {
             response = request.post();
@@ -272,6 +276,7 @@ public class HttpProfileDAO implements ProfileDAO {
         }
         if (response != null) {
             if (response.getStatus() == 200) {
+                Session.setToken(gson.fromJson(response.getBody(), Integer.class));
                 return true;
             }
             if (response.getStatus() == 400) {
@@ -288,7 +293,7 @@ public class HttpProfileDAO implements ProfileDAO {
         queryParams.put("nhi", nhi);
         queryParams.put("password", password);
 
-        Request request = new Request(url, 0, queryParams, "{}");
+        Request request = new Request(url, queryParams, "{}");
         Response response = null;
         try {
             response = request.post();

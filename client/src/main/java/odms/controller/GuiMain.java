@@ -25,13 +25,11 @@ import java.util.Map;
 @Slf4j
 public class GuiMain extends Application {
 
-    private static final String ADMIN = "admin";
     private static final String APP_NAME = "ODMS";
     private static final String DOMAIN = "localhost";
-    private static final String CLINICIAN = "0";
     private static final Integer PORT = 6969;
 
-    private odms.controller.user.AvailableOrgans controller =
+    private static odms.controller.user.AvailableOrgans controller =
             new odms.controller.user.AvailableOrgans();
 
     /**
@@ -51,25 +49,30 @@ public class GuiMain extends Application {
 
             checkDefaultProfiles();
 
-            // Thread that runs in the background to check if organs have expired since last launch
-            Thread checkOrgan = new Thread(() -> {
-                try {
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey());
-                    }
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-            });
-            checkOrgan.setDaemon(true);
-            checkOrgan.start();
         } else {
             AlertController.guiPopup("Connection to the server could not be established.\n\n" +
                     "Human Farm servers may be experiencing\ntechnical difficulties. " +
                     "Please check your internet\nconnection and try again.");
         }
+    }
+
+    /**
+     * Thread that runs in the background to check if organs have expired since last launch.
+     */
+    public static void startCheckOrganThread() {
+        Thread checkOrgan = new Thread(() -> {
+            try {
+                List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
+                        .getAllOrgansAvailable();
+                for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
+                    controller.checkOrganExpired(m.getValue(), m.getKey());
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
+        checkOrgan.setDaemon(true);
+        checkOrgan.start();
     }
 
     /**
@@ -89,50 +92,7 @@ public class GuiMain extends Application {
      * creates them if they don't.
      */
     private void checkDefaultProfiles() {
-        try {
-            DAOFactory.getUserDao().get(ADMIN);
-        } catch (UserNotFoundException e) {
-            createDefaultAdmin();
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-        try {
-            DAOFactory.getUserDao().get(CLINICIAN);
-        } catch (UserNotFoundException e) {
-            createDefaultClinician();
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
 
-    /**
-     * Creates a default admin profile in the database.
-     */
-    private static void createDefaultAdmin() {
-        try {
-            User admin = new User(UserType.ADMIN, ADMIN);
-            admin.setUsername(ADMIN);
-            admin.setPassword(ADMIN);
-            admin.setDefault(true);
-            DAOFactory.getUserDao().add(admin);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Creates a default clinician profile in the database.
-     */
-    private static void createDefaultClinician() {
-        try {
-            User clinician = new User(UserType.CLINICIAN, "Doc");
-            clinician.setUsername(CLINICIAN);
-            clinician.setPassword("password");
-            clinician.setDefault(true);
-            DAOFactory.getUserDao().add(clinician);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
     }
 
 
