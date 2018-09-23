@@ -373,7 +373,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
             map.addUIEventHandler(marker, UIEventType.click,
                     jsObject -> {
                         if (mapMarker.equals(DONOR_MARKER)) {
-                            System.out.println(profile.getFullName());
                             currentDonor = profile;
                             populateReceivers(profile);
                             showAllReceivers();
