@@ -24,7 +24,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets all users from the database.
-     *
      * @return ArrayList of all users in the database
      */
     @Override
@@ -51,7 +50,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets a single user from the database by id.
-     *
      * @param userId of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
@@ -77,7 +75,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets a single user from the database by userID.
-     *
      * @param username of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
@@ -101,9 +98,15 @@ public class MySqlUserDAO implements UserDAO {
         return user;
     }
 
+    /**
+     * Checks a user credentials when they log in for validity.
+     * @param username username credential.
+     * @param password password credential.
+     * @return true if the credentials are correct, false otherwise.
+     * @throws UserNotFoundException error.
+     */
     @Override
-    public Boolean checkCredentials(String username, String password)
-            throws SQLException, UserNotFoundException {
+    public Boolean checkCredentials(String username, String password) throws UserNotFoundException {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
@@ -129,7 +132,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Parses a single row of the user table and converts it to a user object.
-     *
      * @param rs the result set.
      * @return parsed user.
      * @throws SQLException error.
@@ -199,7 +201,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Checks if a username already exists in the database.
-     *
      * @param username to check.
      * @return true if the username does not already exist.
      */
@@ -224,7 +225,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Removes a user from the database.
-     *
      * @param user to remove.
      */
     @Override
@@ -234,7 +234,7 @@ public class MySqlUserDAO implements UserDAO {
 
         try (Connection conn = instance.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1, user.getStaffID());
+            stmt.setInt(1, user.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -243,7 +243,7 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     /**
-     * Updates a users information in the database.     *
+     * Updates a users information in the database.
      * @param user to updateCountries.
      */
     @Override
@@ -266,7 +266,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
             stmt.setString(11, user.getPictureName());
-            stmt.setInt(12, user.getStaffID());
+            stmt.setInt(12, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

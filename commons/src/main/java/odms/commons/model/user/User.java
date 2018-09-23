@@ -183,11 +183,11 @@ public class User {
         generateUpdateInfo(name);
     }
 
-    public Integer getStaffID() {
+    public Integer getId() {
         return this.staffID;
     }
 
-    public void setStaffID(Integer staffID) {
+    public void setId(Integer staffID) {
         this.staffID = staffID;
     }
 

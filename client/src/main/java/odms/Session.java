@@ -1,13 +1,16 @@
 package odms;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Locale;
+import java.util.Map.Entry;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 
 public class Session {
 
-    private static User currentUser;
-    private static Profile currentProfile;
+    private static Object currentUser;
+    private static Object currentProfile;
     private static int token;
 
     /**
@@ -17,20 +20,33 @@ public class Session {
         throw new UnsupportedOperationException();
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
+
+    public static Entry<Object, UserType> getCurrentUser() {
+        if (currentUser != null) {
+            User user = (User) currentUser;
+            if (user.getUserType() == UserType.ADMIN) {
+                return new SimpleEntry<>(user, UserType.ADMIN);
+            }
+            else {
+                return new SimpleEntry<>(user, UserType.CLINICIAN);
+            }
+        } else if (currentProfile != null) {
+            return new SimpleEntry<>(currentProfile, UserType.PROFILE);
+        }
+        return null;
     }
 
-    public static void setCurrentUser(User currentUser) {
-        Session.currentUser = currentUser;
-    }
-
-    public static Profile getCurrentProfile() {
-        return currentProfile;
-    }
-
-    public static void setCurrentProfile(Profile currentProfile) {
-        Session.currentProfile = currentProfile;
+    /**
+     * Sets the user currently running the session based on the user type.
+     * @param currentUser using the session.
+     * @param userType of the user.
+     */
+    public static void setCurrentUser(Object currentUser, UserType userType) {
+        if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
+            Session.currentUser = currentUser;
+        } else {
+            Session.currentProfile = currentUser;
+        }
     }
 
     public static int getToken() {
@@ -43,14 +59,16 @@ public class Session {
 
     /**
      * Generates the default location of the current session.
-     * @return the country of location.
+     * @return the settings of location.
      */
     public static String getDefaultLocation() {
         String country;
-        if (Session.currentUser == null) {
-            country = Session.currentUser.getCountry();
+        if (currentUser != null) {
+            User user = (User) currentUser;
+            country = user.getCountry();
         } else {
-            country = Session.currentProfile.getCountry();
+            Profile profile = (Profile) currentProfile;
+            country = profile.getCountry();
         }
         if (country == null) {
             country = Locale.getDefault().getDisplayCountry();
