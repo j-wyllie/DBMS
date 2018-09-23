@@ -27,7 +27,6 @@ import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
 import server.model.database.condition.ConditionDAO;
-import server.model.database.hlatype.HLADAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;

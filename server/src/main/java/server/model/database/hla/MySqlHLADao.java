@@ -1,4 +1,4 @@
-package server.model.database.hlatype;
+package server.model.database.hla;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
