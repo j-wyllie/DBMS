@@ -16,6 +16,7 @@ public class Hospital {
 
     /**
      * Constructor for hospital objects.
+     *
      * @param name Name of hte hospital
      * @param lat latitude of hte hospital
      * @param lon longitude of hte hospital
@@ -35,6 +36,7 @@ public class Hospital {
 
     /**
      * Constructor for hospital objects.
+     *
      * @param name Name of hte hospital
      * @param lat latitude of hte hospital
      * @param lon longitude of hte hospital
@@ -49,6 +51,7 @@ public class Hospital {
 
     /**
      * Constructor for hospital objects.
+     *
      * @param name Name of hte hospital
      * @param lat latitude of hte hospital
      * @param lon longitude of hte hospital

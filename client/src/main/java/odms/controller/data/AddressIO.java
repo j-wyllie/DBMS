@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -20,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 public final class AddressIO {
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/";
-    private static String key;
+    private static final String RESULTS = "results";
+    private static final String ADDRESS_COMPONENTS = "address_components";
+
 
     /**
      * Error to show that you can make an instance of AddressIO.
@@ -58,17 +61,16 @@ public final class AddressIO {
     /**
      * Checks that a region is within a country.
      *
-     * @param address Address to check.
-     * @param region  Region to check.
+     * @param region Region to check.
      * @param country Country to check against.
      * @return True if the region is within the country.
      */
-    public static boolean checkValidRegion(String address, String region, String country) {
+    public static boolean checkValidRegion(String region, String country) {
         try {
             if (region != null && country != null) {
                 JsonObject jsonString = getGeocodeLocation(region, country.replace(" ", "+"));
-                return jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(0).getAsJsonObject().toString().contains(region);
+                return jsonString.getAsJsonArray(RESULTS).get(0).getAsJsonObject().getAsJsonArray(
+                        ADDRESS_COMPONENTS).get(0).getAsJsonObject().toString().contains(region);
             } else {
                 return false;
             }
@@ -81,7 +83,7 @@ public final class AddressIO {
      * Checks that the address is valid in that region within a country.
      *
      * @param address Address to check.
-     * @param city    City to check.
+     * @param city City to check.
      * @param country Country to check against.
      * @return True if the address is in the region.
      */
@@ -89,13 +91,16 @@ public final class AddressIO {
         try {
             if (address != null) {
                 String[] components = address.split(",");
-                JsonObject jsonString = getGeocodeLocation(address.replace(",", "+"), country.replace(" ", "+"));
-                return (jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(0).getAsJsonObject().toString()
-                        .contains("locality") && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(0).getAsJsonObject().toString()
-                        .contains(city) && jsonString.getAsJsonArray("results").get(0).getAsJsonObject().getAsJsonArray(
-                        "address_components").get(1).getAsJsonObject().toString()
+                JsonObject jsonString = getGeocodeLocation(address.replace(",", "+"),
+                        country.replace(" ", "+"));
+                return (jsonString.getAsJsonArray(RESULTS).get(0).getAsJsonObject().getAsJsonArray(
+                        ADDRESS_COMPONENTS).get(0).getAsJsonObject().toString()
+                        .contains("locality") && jsonString.getAsJsonArray(RESULTS).get(0)
+                        .getAsJsonObject().getAsJsonArray(
+                                ADDRESS_COMPONENTS).get(0).getAsJsonObject().toString()
+                        .contains(city) && jsonString.getAsJsonArray(RESULTS).get(0)
+                        .getAsJsonObject().getAsJsonArray(
+                                ADDRESS_COMPONENTS).get(1).getAsJsonObject().toString()
                         .contains(components[1]));
             } else {
                 return false;
@@ -115,7 +120,7 @@ public final class AddressIO {
      */
     private static JsonObject getGeocodeLocation(String address, String country)
             throws IOException {
-        key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
+        String key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
         String query = API_URL +
                 "geocode/json?address=" +
@@ -126,22 +131,22 @@ public final class AddressIO {
         request.connect();
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-        JsonObject rootobj = root.getAsJsonObject();
-        return rootobj;
+        return root.getAsJsonObject();
     }
 
-    public static ArrayList<Double> getLongLatRegion(String region, String country) {
+    public static List<Double> getLongLatRegion(String region, String country) {
         ArrayList<Double> longLat = new ArrayList<>();
         try {
             JsonObject jsonString = getGeocodeLocation(region, country);
 
-            if (jsonString.getAsJsonArray("results").get(0).getAsJsonObject()
-                    .getAsJsonArray("address_components").get(0).getAsJsonObject().toString().contains(region)) {
-                JsonObject longLatJson = jsonString.get("results").getAsJsonArray().get(0).getAsJsonObject().get("geometry")
+            if (jsonString.getAsJsonArray(RESULTS).get(0).getAsJsonObject()
+                    .getAsJsonArray(ADDRESS_COMPONENTS).get(0).getAsJsonObject().toString()
+                    .contains(region)) {
+                JsonObject longLatJson = jsonString.get(RESULTS).getAsJsonArray().get(0)
+                        .getAsJsonObject().get("geometry")
                         .getAsJsonObject().get("location").getAsJsonObject();
                 longLat.add(longLatJson.get("lat").getAsDouble());
                 longLat.add(longLatJson.get("lng").getAsDouble());
-                System.out.println(longLat);
                 return longLat;
             }
 
@@ -150,7 +155,7 @@ public final class AddressIO {
             log.error(e.getMessage(), e);
         }
 
-        return null;
+        return longLat;
     }
 }
 

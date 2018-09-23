@@ -77,7 +77,6 @@ public class UserController {
 
         res.type(DataTypeEnum.JSON.toString());
         res.status(200);
-        System.out.println(responseBody);
         return responseBody;
     }
 

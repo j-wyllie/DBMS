@@ -21,7 +21,9 @@ import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.HttpUserDAO;
 import odms.controller.database.user.UserDAO;
 
-
+/**
+ * Factory method to get new HTTPDAO's.
+ */
 public class DAOFactory {
 
     /**

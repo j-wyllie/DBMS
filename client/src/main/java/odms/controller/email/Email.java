@@ -1,21 +1,21 @@
 package odms.controller.email;
 
+import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 
 
 /**
  * Class to send an email.
- *
  */
 @Slf4j
 public final class Email {
+
     private static final String FROM = "HumanFarm@uclive.ac.nz";
     private static final String HOST = "localhost";
     private static final String SERVER = "mail.smtp.host";
@@ -26,7 +26,8 @@ public final class Email {
     /**
      * Private constructor to prevent it being called.
      */
-    private Email() { }
+    private Email() {
+    }
 
     /**
      * Sends an email.
@@ -54,7 +55,6 @@ public final class Email {
 
     /**
      * Sets up the message.
-     *
      */
     private static void setupMessage() {
         properties.setProperty(SERVER, HOST);

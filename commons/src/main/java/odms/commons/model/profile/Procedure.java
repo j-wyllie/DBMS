@@ -40,6 +40,7 @@ public class Procedure {
 
     /**
      * Instantiates the procedure object.
+     *
      * @param summary summary of the procedure
      * @param date the date of the procedure
      */
@@ -88,7 +89,7 @@ public class Procedure {
      * @param hospital The location of the procedure.
      */
     public Procedure(String summary, LocalDateTime dateTime, String longDescription,
-                     OrganEnum organ, Hospital hospital) {
+            OrganEnum organ, Hospital hospital) {
         this.summary = summary;
         this.dateTime = dateTime;
         this.longDescription = longDescription;
@@ -119,7 +120,7 @@ public class Procedure {
      * Updates the affects organ text.
      */
     public void update() {
-        if (organsAffected.size() == 0) {
+        if (organsAffected.isEmpty()) {
             this.affectsOrgansText = "";
         } else {
             this.affectsOrgansText = AFFECTED_ORGAN_TEXT;

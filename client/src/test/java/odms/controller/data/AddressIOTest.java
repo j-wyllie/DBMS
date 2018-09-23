@@ -32,27 +32,29 @@ public class AddressIOTest {
 
     @Test
     public void checkInvalidRegion() {
-        assertFalse(AddressIO.checkValidRegion(VALID_CITY, "Victoria", VALID_COUNTRY));
+        assertFalse(AddressIO.checkValidRegion("Victoria", VALID_COUNTRY));
     }
 
     @Test
     public void checkValidRegion() {
-        assertTrue(AddressIO.checkValidRegion(VALID_CITY, VALID_REGION, VALID_COUNTRY));
+        assertTrue(AddressIO.checkValidRegion(VALID_REGION, VALID_COUNTRY));
     }
 
     @Test
     public void checkNullRegion() {
-        assertFalse(AddressIO.checkValidRegion(VALID_CITY, null, VALID_COUNTRY));
+        assertFalse(AddressIO.checkValidRegion(null, VALID_COUNTRY));
     }
 
     @Test
     public void checkInvalidCity() {
-        assertFalse(AddressIO.checkValidCity("Canberra", "Australian Capital Territory", VALID_COUNTRY));
+        assertFalse(AddressIO
+                .checkValidCity("Canberra", "Australian Capital Territory", VALID_COUNTRY));
     }
 
     @Test
     public void checkValidCity() {
-        assertTrue(AddressIO.checkValidCity("Auckland,Auckland,New Zealand", "Auckland", "New Zealand"));
+        assertTrue(AddressIO
+                .checkValidCity("Auckland,Auckland,New Zealand", "Auckland", "New Zealand"));
     }
 
     @Test

@@ -6,10 +6,12 @@
 <?import javafx.scene.layout.*?>
 
 <?import odms.controller.DateTimePicker?>
-<AnchorPane prefHeight="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="odms.view.user.ScheduleProcedure">
-    <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0"
-              AnchorPane.topAnchor="-1.0">
+<AnchorPane prefHeight="400.0" xmlns="http://javafx.com/javafx/8"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="odms.view.user.ScheduleProcedure">
+    <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
+        AnchorPane.rightAnchor="-1.0"
+        AnchorPane.topAnchor="-1.0">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
         </columnConstraints>
@@ -38,7 +40,8 @@
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </Label>
-            <Label fx:id="donorNameLabel" text="Donor Name" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <Label fx:id="donorNameLabel" text="Donor Name" GridPane.halignment="LEFT"
+                GridPane.rowIndex="1">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
@@ -49,20 +52,20 @@
                 </GridPane.margin>
             </Label>
             <Label fx:id="receiverNameLabel" text="Receiver Name" GridPane.columnIndex="2"
-                   GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                GridPane.halignment="LEFT" GridPane.rowIndex="1">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </Label>
             <CheckBox fx:id="donorEmailCheck" mnemonicParsing="false" text="Notify by email"
-                      GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </CheckBox>
             <CheckBox fx:id="receiverEmailCheck" mnemonicParsing="false" text="Notify by email"
-                      GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT"
-                      GridPane.rowIndex="2">
+                GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT"
+                GridPane.rowIndex="2">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
@@ -73,8 +76,9 @@
                 </GridPane.margin>
             </Label>
             <ChoiceBox fx:id="organDropdown" maxWidth="1.7976931348623157E308" prefWidth="250.0"
-                       GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT"
-                       GridPane.rowIndex="3">
+                GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                GridPane.halignment="RIGHT"
+                GridPane.rowIndex="3">
                 <GridPane.margin>
                     <Insets right="10.0"/>
                 </GridPane.margin>
@@ -85,8 +89,8 @@
                 </GridPane.margin>
             </Label>
             <DateTimePicker fx:id="dateOfProcedurePicker" maxWidth="1.7976931348623157E308"
-                            promptText="Date of procedure" GridPane.columnIndex="1"
-                            GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                promptText="Date of procedure" GridPane.columnIndex="1"
+                GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                 <GridPane.margin>
                     <Insets right="10.0"/>
                 </GridPane.margin>
@@ -96,29 +100,34 @@
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </Label>
-            <ChoiceBox fx:id="locationDropdown" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
-                       GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+            <ChoiceBox fx:id="locationDropdown" maxWidth="1.7976931348623157E308"
+                GridPane.columnIndex="1"
+                GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                 <GridPane.margin>
                     <Insets right="10.0"/>
                 </GridPane.margin>
             </ChoiceBox>
             <Button mnemonicParsing="false" onAction="#scheduleProcedure" text="Schedule"
-                    GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT"
-                    GridPane.rowIndex="6">
+                GridPane.columnIndex="3" GridPane.columnSpan="2147483647"
+                GridPane.halignment="RIGHT"
+                GridPane.rowIndex="6">
                 <GridPane.margin>
                     <Insets right="10.0"/>
                 </GridPane.margin>
             </Button>
-            <Label fx:id="errorLabel" maxWidth="1.7976931348623157E308" text="Error Message" textFill="#f70202"
-                   visible="false" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
+            <Label fx:id="errorLabel" maxWidth="1.7976931348623157E308" text="Error Message"
+                textFill="#f70202"
+                visible="false" GridPane.columnIndex="0" GridPane.columnSpan="3"
+                GridPane.rowIndex="6">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
             </Label>
         </GridPane>
         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-               stylesheets="@../styles/Common.css" text="Schedule Procedure" GridPane.columnSpan="2147483647"
-               GridPane.halignment="CENTER">
+            stylesheets="@../styles/Common.css" text="Schedule Procedure"
+            GridPane.columnSpan="2147483647"
+            GridPane.halignment="CENTER">
             <styleClass>
                 <String fx:value="banner"/>
                 <String fx:value="banner-default"/>

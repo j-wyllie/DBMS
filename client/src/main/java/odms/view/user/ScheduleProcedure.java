@@ -1,5 +1,7 @@
 package odms.view.user;
 
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,9 +16,6 @@ import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
 import odms.controller.DateTimePicker;
 import odms.view.CommonView;
-
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 /**
  * The view for scheduling an organ donation.
@@ -121,9 +120,7 @@ public class ScheduleProcedure extends CommonView {
             errorLabel.setVisible(true);
             log.error(e.getMessage());
         }
-
     }
-
 
     public Profile getDonor() {
         return donor;

@@ -13,14 +13,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.profile.ExpiredOrgan;
-import server.model.database.DatabaseConnection;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
+import server.model.database.DatabaseConnection;
 
+/**
+ * Organ DAO that sends queries to the database.
+ */
 @Slf4j
 public class MySqlOrganDAO implements OrganDAO {
+
+    private static final String INSERT_QUERY = "INSERT INTO organs (ProfileId, Organ, Donated, " +
+            "toDonate, Required, Received, DateRegistered) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * Gets all organs that a profile has donated in the past.
@@ -29,7 +35,8 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonations(int profile) {
-        return getOrgans( new Profile(profile), "select * from organs where ProfileId = ? and Donated = ?");
+        return getOrgans(new Profile(profile),
+                "select * from organs where ProfileId = ? and Donated = ?");
 
     }
 
@@ -40,43 +47,43 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getDonating(int profile) {
-        return getOrgans(new Profile(profile), "select * from organs where ProfileId = ? and ToDonate = ?");
+        return getOrgans(new Profile(profile),
+                "select * from organs where ProfileId = ? and ToDonate = ?");
     }
 
     /**
-     * Runs the given query with the first parameter set to the profile and the second set to true
+     * Runs the given query with the first parameter set to the profile and the second set to true.
+     *
      * @param profile to get organs for.
      * @param query to execute.
      * @return the list of the returned organs
      */
     private Set<OrganEnum> getOrgans(Profile profile, String query) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         Set<OrganEnum> allOrgans = new HashSet<>();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setBoolean(2, true);
-            ResultSet allOrganRows = stmt.executeQuery();
+            try (ResultSet allOrganRows = stmt.executeQuery()) {
 
-            while (allOrganRows.next()) {
-                String organName = allOrganRows.getString("Organ");
-                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
-                try {
+                while (allOrganRows.next()) {
+                    String organName = allOrganRows.getString("Organ");
+                    OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
                     String str = allOrganRows.getString("DateRegistered");
-                    DateTimeFormatter formatter = DateTimeFormatter
-                            .ofPattern("yyyy-MM-dd HH:mm:ss");
-                    organ.setDate(LocalDateTime.parse(str, formatter), profile);
-                } catch (DateTimeParseException e) {
-                    organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered"))
-                            .atStartOfDay(), profile);
+                    try {
+                        DateTimeFormatter formatter = DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm:ss");
+                        organ.setDate(LocalDateTime.parse(str, formatter), profile);
+
+                    } catch (DateTimeParseException e) {
+                        organ.setDate(LocalDate.parse(allOrganRows.getString("DateRegistered"))
+                                .atStartOfDay(), profile);
+                    }
+                    allOrgans.add(organ);
                 }
-                allOrgans.add(organ);
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -101,7 +108,8 @@ public class MySqlOrganDAO implements OrganDAO {
      */
     @Override
     public Set<OrganEnum> getReceived(int profile) {
-        return getOrgans(new Profile(profile), "select * from organs where ProfileId = ? and Received = ?");
+        return getOrgans(new Profile(profile),
+                "select * from organs where ProfileId = ? and Received = ?");
     }
 
     /**
@@ -113,15 +121,10 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
         profile.addOrganDonated(organ);
-        String query =
-                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, true);
@@ -131,8 +134,6 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -148,15 +149,10 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addDonating(Profile profile, OrganEnum organ) throws OrganConflictException {
         profile.addOrganDonating(organ);
-        String query =
-                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, false);
@@ -166,8 +162,6 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             throw new OrganConflictException();
         }
@@ -182,15 +176,10 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
         profile.addOrganRequired(organ);
-        String query =
-                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, false);
@@ -200,8 +189,6 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -216,15 +203,10 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
         profile.addOrganReceived(organ);
-        String query =
-                "INSERT INTO organs (ProfileId, Organ, Donated, toDonate, Required, Received, DateRegistered) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, false);
@@ -234,8 +216,6 @@ public class MySqlOrganDAO implements OrganDAO {
             stmt.setString(7, LocalDateTime.now().toString());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -301,21 +281,15 @@ public class MySqlOrganDAO implements OrganDAO {
      * @param query to execute the removal.
      */
     private void removeOrgan(Profile profile, OrganEnum organ, String query) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)
+        ) {
             stmt.setInt(1, profile.getId());
             stmt.setString(2, organ.getNamePlain());
             stmt.setBoolean(3, true);
 
-            System.out.println(stmt);
-
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -335,22 +309,19 @@ public class MySqlOrganDAO implements OrganDAO {
             Integer userId) throws SQLException {
         String query =
                 "UPDATE organs SET Expired = ?, UserId = ?, Note = ?, ExpiryDate = CURRENT_TIMESTAMP "
-                        +
-                        "WHERE ProfileId = ? AND Organ = ? AND ToDonate = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+                        + "WHERE ProfileId = ? AND Organ = ? AND ToDonate = ?;";
 
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setInt(1, expired);
-        stmt.setInt(2, userId);
-        stmt.setString(3, note);
-        stmt.setInt(4, profile.getId());
-        stmt.setString(5, organ);
-        stmt.setInt(6, 1);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, expired);
+            stmt.setInt(2, userId);
+            stmt.setString(3, note);
+            stmt.setInt(4, profile.getId());
+            stmt.setString(5, organ);
+            stmt.setInt(6, 1);
 
-        stmt.executeUpdate();
-        conn.close();
-        stmt.close();
+            stmt.executeUpdate();
+        }
     }
 
     /**
@@ -362,44 +333,41 @@ public class MySqlOrganDAO implements OrganDAO {
     @Override
     public void revertExpired(Integer profile, String organ) throws SQLException {
         String query = "UPDATE organs SET Expired = 0 , UserId = NULL , Note = NULL WHERE ProfileId = ? AND Organ = ? ;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setInt(1, profile);
-        stmt.setString(2, organ);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, profile);
+            stmt.setString(2, organ);
 
-        stmt.executeUpdate();
-        conn.close();
-        stmt.close();
+            stmt.executeUpdate();
+        }
     }
 
     @Override
-    public List<ExpiredOrgan> getExpired(Profile profile) throws SQLException {
+    public List<ExpiredOrgan> getExpired(Profile profile) {
         String query = "SELECT * FROM organs JOIN users ON organs.UserId = users.UserId WHERE Expired = ? AND ProfileId = ? ;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         List<ExpiredOrgan> allOrgans = new ArrayList<>();
 
-        try {
-            Connection conn = instance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setInt(1, 1);
             stmt.setInt(2, profile.getId());
 
-            ResultSet allOrganRows = stmt.executeQuery();
+            try (ResultSet allOrganRows = stmt.executeQuery()) {
 
-            while (allOrganRows.next()) {
-                String organName = allOrganRows.getString("Organ");
-                OrganEnum organEnum = OrganEnum.valueOf(organName.toUpperCase().replace(" ", "_"));
-                String note = allOrganRows.getString("Note");
-                String clinicianName = allOrganRows.getString("Name");
-                LocalDateTime date = allOrganRows.getTimestamp("ExpiryDate").toLocalDateTime();
-                ExpiredOrgan organ = new ExpiredOrgan(organEnum, note, clinicianName, date);
+                while (allOrganRows.next()) {
+                    String organName = allOrganRows.getString("Organ");
+                    OrganEnum organEnum = OrganEnum
+                            .valueOf(organName.toUpperCase().replace(" ", "_"));
+                    String note = allOrganRows.getString("Note");
+                    String clinicianName = allOrganRows.getString("Name");
+                    LocalDateTime date = allOrganRows.getTimestamp("ExpiryDate").toLocalDateTime();
+                    ExpiredOrgan organ = new ExpiredOrgan(organEnum, note, clinicianName, date);
 
-                allOrgans.add(organ);
+                    allOrgans.add(organ);
+                }
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

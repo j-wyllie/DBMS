@@ -45,13 +45,9 @@ public class MySqlHospitalDAOTest extends MySqlCommonTests {
 
     @Test
     public void add() throws SQLException {
-        try {
-            hospitalDAO.add(testHospital3);
-            Hospital hospital = hospitalDAO.get(testHospital3.getName());
-            assertEquals(testHospital3.getName(), hospital.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        hospitalDAO.add(testHospital3);
+        Hospital hospital = hospitalDAO.get(testHospital3.getName());
+        assertEquals(testHospital3.getName(), hospital.getName());
         hospitalDAO.remove(testHospital3.getName());
     }
 

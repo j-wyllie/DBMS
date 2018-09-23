@@ -32,9 +32,12 @@ import odms.controller.AlertController;
  */
 @Slf4j
 public class OrganEdit extends OrganCommon {
-    protected ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
+
+    protected ObservableList<String> observableListOrgansSelected = FXCollections
+            .observableArrayList();
     private Profile currentProfile;
-    private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(this);
+    private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(
+            this);
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -114,7 +117,7 @@ public class OrganEdit extends OrganCommon {
      * Support function to populate an observable list with organs from an organ set.
      *
      * @param destinationList list to populate
-     * @param organs          source list of organs to populate from
+     * @param organs source list of organs to populate from
      */
     protected void populateOrganList(ObservableList<String> destinationList,
             Set<OrganEnum> organs) {
@@ -181,9 +184,9 @@ public class OrganEdit extends OrganCommon {
     }
 
     /**
-     * Click Handler to handle Click actions on the ListViews.
-     * - A single click will clear the selection from the opposing ListView.
-     * - A double click will move the organ from the ListView to the opposing ListView.
+     * Click Handler to handle Click actions on the ListViews. - A single click will clear the
+     * selection from the opposing ListView. - A double click will move the organ from the ListView
+     * to the opposing ListView.
      *
      * @param event the MouseEvent
      * @param model the SelectionModel to operate against

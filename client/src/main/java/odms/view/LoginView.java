@@ -212,7 +212,6 @@ public class LoginView extends CommonController {
             stage.show();
             closeCurrentStage();
         } catch (IOException e) {
-            e.printStackTrace();
             invalidUsername();
         }
     }

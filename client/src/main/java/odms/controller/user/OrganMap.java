@@ -1,5 +1,9 @@
 package odms.controller.user;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -14,11 +18,6 @@ import odms.controller.data.AddressIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import org.controlsfx.control.PopOver;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Organ map controller.

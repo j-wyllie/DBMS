@@ -1,5 +1,12 @@
 package odms.controller.user;
 
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
@@ -11,14 +18,6 @@ import odms.controller.database.locations.HospitalDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
 import odms.controller.email.Email;
-
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The controller for the scheduling a donation.
@@ -38,8 +37,8 @@ public class ScheduleProcedure extends CommonController {
     }
 
     /**
-     * Gets the organs that can be donated between two users.
-     * NOTE: This function assumes that the two profiles are compatible.
+     * Gets the organs that can be donated between two users. NOTE: This function assumes that the
+     * two profiles are compatible.
      *
      * @return A list of organs
      */
@@ -126,13 +125,12 @@ public class ScheduleProcedure extends CommonController {
         OrganEnum organ = view.getSelectedOrgan();
 
         return donor.getFullName() + " is donating their " + '\n' +
-            organ.getName() + " to " + receiver.getFullName() + "\n" +
-            "Hospital: " + view.getSelectedHospital().getName();
+                organ.getName() + " to " + receiver.getFullName() + "\n Hospital: " +
+                view.getSelectedHospital().getName();
     }
 
     /**
      * Generates and sends an email to the people in the match.
-     *
      */
     private void sendEmails() {
         String subject = "Organ Donation Match";
