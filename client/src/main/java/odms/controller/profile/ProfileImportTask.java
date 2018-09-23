@@ -30,19 +30,20 @@ public class ProfileImportTask extends Task<Void> {
 
     private static final int VALID_DOD_LENGTH = 3;
     private static final String DATE_SPLITTER = "/";
+
+    private BooleanProperty finished = new SimpleBooleanProperty();
+    private BooleanProperty reverted = new SimpleBooleanProperty();
+
     private File file;
     private ProfileDAO server = DAOFactory.getProfileDao();
     private List<Profile> successfulProfiles = new ArrayList<>();
-
-    private int progressCount = 0;
-    private int successCount = 0;
-    private int failedCount = 0;
+    private int progressCount;
+    private int successCount;
+    private int failedCount;
     private Integer csvLength;
-    private boolean rollback = false;
-    private boolean cancelled = false;
+    private boolean rollback;
+    private boolean cancelled;
 
-    public BooleanProperty finished = new SimpleBooleanProperty();
-    public BooleanProperty reverted = new SimpleBooleanProperty();
 
     /**
      * Gives a CSV file to the profile import task.
@@ -102,24 +103,8 @@ public class ProfileImportTask extends Task<Void> {
                         Thread.currentThread().interrupt();
                     } else {
 
-                        Profile profile = csvToProfileConverter(csvRecord);
-                        if (profile != null) {
-                            try {
-                                server.add(profile);
-                                successCount++;
-                                successfulProfiles.add(profile);
-                            } catch (SQLException | NHIConflictException e) {
-                                failedCount++;
-                            }
-                        } else {
-                            failedCount++;
-                        }
-
-                        progressCount++;
-                        this.updateProgress(progressCount, csvLength);
-                        this.updateMessage(
-                                String.format("%d,%d,%d", successCount, failedCount,
-                                        progressCount));
+                        addProfile(csvRecord);
+                        updateProgressBar(csvLength);
                     }
                 }
                 finished.setValue(true);
@@ -129,13 +114,34 @@ public class ProfileImportTask extends Task<Void> {
     }
 
     /**
+     * Tries to add a profile to the database. Updates the failed count, success count and progress
+     * count.
+     *
+     * @param csvRecord The current csv record.
+     */
+    private void addProfile(CSVRecord csvRecord) {
+        Profile profile = csvToProfileConverter(csvRecord);
+        if (profile != null) {
+            try {
+                server.add(profile);
+                successCount++;
+                successfulProfiles.add(profile);
+            } catch (SQLException | NHIConflictException e) {
+                failedCount++;
+            }
+        } else {
+            failedCount++;
+        }
+        progressCount++;
+    }
+
+    /**
      * Converts a record in the csv to a profile object.
      *
      * @param csvRecord the record to be converted.
      * @return the profile object.
      */
     private Profile csvToProfileConverter(CSVRecord csvRecord) {
-
         String nhi = csvRecord.get("nhi");
         if (isValidNHI(nhi)) {
             try {
@@ -146,43 +152,10 @@ public class ProfileImportTask extends Task<Void> {
                         Integer.valueOf(dobString[1])
                 );
 
-                Profile profile = new Profile(csvRecord.get("first_names"),
-                        csvRecord.get("last_names"), dob, nhi);
-
-                String dateOfDeath = csvRecord.get("date_of_death");
-                if (!dateOfDeath.isEmpty()) {
-                    String[] dodString = dateOfDeath.split(DATE_SPLITTER);
-
-                    // If the dod is invalid then don't upload
-                    if (dodString.length != VALID_DOD_LENGTH) {
-                        return null;
-                    }
-
-                    LocalDateTime dod = LocalDateTime.of(
-                            Integer.valueOf(dodString[2]),
-                            Integer.valueOf(dodString[0]),
-                            Integer.valueOf(dodString[1]), 0, 0
-                    );
-
-                    profile.setDateOfDeath(dod);
+                Profile profile = createProfile(csvRecord, nhi, dob);
+                if (profile == null) {
+                    return null;
                 }
-
-                profile.setGender(csvRecord.get("birth_gender"));
-                profile.setPreferredGender(csvRecord.get("gender"));
-                profile.setBloodType(csvRecord.get("blood_type"));
-                profile.setHeight(Double.valueOf(csvRecord.get("height")));
-                profile.setWeight(Double.valueOf(csvRecord.get("weight")));
-                profile.setStreetNumber(csvRecord.get("street_number"));
-                profile.setStreetName(csvRecord.get("street_name"));
-                profile.setNeighbourhood(csvRecord.get("neighborhood"));
-                profile.setCity(csvRecord.get("city"));
-                profile.setRegion(csvRecord.get("region"));
-                profile.setZipCode(csvRecord.get("zip_code"));
-                profile.setCountry(csvRecord.get("country"));
-                profile.setBirthCountry(csvRecord.get("birth_country"));
-                profile.setPhone(csvRecord.get("home_number"));
-                profile.setMobilePhone(csvRecord.get("mobile_number"));
-                profile.setEmail(csvRecord.get("email"));
 
                 return profile;
             } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
@@ -191,6 +164,54 @@ public class ProfileImportTask extends Task<Void> {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Sets all of the profile attributes from the CSV.
+     *
+     * @param csvRecord Current CSV record.
+     * @param nhi Profiles NHI.
+     * @param dob Profiles Date of Birth.
+     * @return The created profile.
+     */
+    private Profile createProfile(CSVRecord csvRecord, String nhi, LocalDate dob) {
+        Profile profile = new Profile(csvRecord.get("first_names"),
+                csvRecord.get("last_names"), dob, nhi);
+
+        String dateOfDeath = csvRecord.get("date_of_death");
+        if (!dateOfDeath.isEmpty()) {
+            String[] dodString = dateOfDeath.split(DATE_SPLITTER);
+
+            // If the dod is invalid then don't upload
+            if (dodString.length != VALID_DOD_LENGTH) {
+                return null;
+            }
+
+            LocalDateTime dod = LocalDateTime.of(
+                    Integer.valueOf(dodString[2]),
+                    Integer.valueOf(dodString[0]),
+                    Integer.valueOf(dodString[1]), 0, 0
+            );
+            profile.setDateOfDeath(dod);
+        }
+
+        profile.setGender(csvRecord.get("birth_gender"));
+        profile.setPreferredGender(csvRecord.get("gender"));
+        profile.setBloodType(csvRecord.get("blood_type"));
+        profile.setHeight(Double.valueOf(csvRecord.get("height")));
+        profile.setWeight(Double.valueOf(csvRecord.get("weight")));
+        profile.setStreetNumber(csvRecord.get("street_number"));
+        profile.setStreetName(csvRecord.get("street_name"));
+        profile.setNeighbourhood(csvRecord.get("neighborhood"));
+        profile.setCity(csvRecord.get("city"));
+        profile.setRegion(csvRecord.get("region"));
+        profile.setZipCode(csvRecord.get("zip_code"));
+        profile.setCountry(csvRecord.get("country"));
+        profile.setBirthCountry(csvRecord.get("birth_country"));
+        profile.setPhone(csvRecord.get("home_number"));
+        profile.setMobilePhone(csvRecord.get("mobile_number"));
+        profile.setEmail(csvRecord.get("email"));
+        return profile;
     }
 
     /**
@@ -227,21 +248,19 @@ public class ProfileImportTask extends Task<Void> {
             successCount--;
             progressCount--;
 
-            this.updateProgress(progressCount, csvLength);
-            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
+            updateProgressBar(csvLength);
         }
+
         while (failedCount != 0) {
+            long now = System.currentTimeMillis();
+            long waitTime = System.currentTimeMillis() + 1;
             progressCount--;
             failedCount--;
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                log.error(e.getMessage(), e);
+            while (now < waitTime) {
+                now = System.currentTimeMillis();
             }
 
-            this.updateProgress(progressCount, csvLength);
-            this.updateMessage(String.format("%d,%d,%d", successCount, failedCount, progressCount));
+            updateProgressBar(csvLength);
         }
         reverted.setValue(true);
         Thread.currentThread().interrupt();
@@ -249,6 +268,26 @@ public class ProfileImportTask extends Task<Void> {
 
     public void setCancelled() {
         cancelled = true;
+    }
+
+    /**
+     * Updates the progress bar.
+     *
+     * @param csvLength CSV Length.
+     */
+    private void updateProgressBar(Integer csvLength) {
+        this.updateProgress(progressCount, csvLength);
+        this.updateMessage(
+                String.format("%d,%d,%d", successCount, failedCount,
+                        progressCount));
+    }
+
+    public BooleanProperty getFinished() {
+        return finished;
+    }
+
+    public BooleanProperty getReverted() {
+        return reverted;
     }
 }
 

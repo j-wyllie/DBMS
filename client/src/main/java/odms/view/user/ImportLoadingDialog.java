@@ -18,13 +18,13 @@ import odms.controller.AlertController;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 
+/**
+ * Import loading dialog class containing methods to handle the data import.
+ */
 @Slf4j
 public class ImportLoadingDialog extends CommonView {
 
     private ProfileImportTask profileImportTask;
-
-    private odms.controller.user.ImportLoadingDialog controller = new odms.controller.user.ImportLoadingDialog(
-            this);
 
     @FXML
     private ProgressBar progressBarImport;
@@ -78,6 +78,8 @@ public class ImportLoadingDialog extends CommonView {
      * Creates the profile import task, adds handlers for the buttons and calls update progress.
      *
      * @param file the file being imported
+     * @param parentStage the parent stage.
+     * @param user the current user.
      */
     @FXML
     public void initialize(File file, Stage parentStage, User user) {
@@ -87,29 +89,25 @@ public class ImportLoadingDialog extends CommonView {
             profileImportTask = new ProfileImportTask(file);
 
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> {
-                        buttonImportConfirm.setDisable(false);
-                    });
+                    event -> buttonImportConfirm.setDisable(false));
 
-            profileImportTask.finished.addListener((observable, oldValue, newValue) -> {
+            profileImportTask.getFinished().addListener((observable, oldValue, newValue) -> {
                 // Only if completed
                 if (newValue) {
                     buttonImportConfirm.setDisable(false);
                 }
             });
 
-            profileImportTask.reverted.addListener((observable, oldValue, newValue) -> {
-                // Only if completed
+            profileImportTask.getReverted().addListener((observable, oldValue, newValue) -> {
+                // Only if reverted
                 if (newValue) {
                     importTask.interrupt();
                     Platform.runLater(
-                            () -> ((Stage) progressBarImport.getScene().getWindow()).close());
+                            ((Stage) progressBarImport.getScene().getWindow())::close);
                 }
             });
 
-            buttonImportConfirm.setOnAction(event -> {
-                closeWindows(parentStage);
-            });
+            buttonImportConfirm.setOnAction(event -> closeWindows(parentStage));
 
             buttonImportCancel.setOnAction(event -> {
                 profileImportTask.rollback();
@@ -124,6 +122,9 @@ public class ImportLoadingDialog extends CommonView {
 
     }
 
+    /**
+     * Sets up the table with success, failure and total count columns.
+     */
     private void setupTable() {
         TableColumn<ImportResult, String> tcLabels = new TableColumn<>("labels");
         TableColumn<ImportResult, String> tcValues = new TableColumn<>("values");
@@ -144,6 +145,11 @@ public class ImportLoadingDialog extends CommonView {
         this.hideTableHeader(tableStatus);
     }
 
+    /**
+     * Sets the items in the status table.
+     *
+     * @param results String array of results.
+     */
     private void updateTable(String[] results) {
         for (Integer i = 0; i < results.length; i++) {
             tableStatus.getItems().get(i).setValue(results[i]);
@@ -151,7 +157,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Closes all of the open windows and re-opens an admin page
+     * Closes all of the open windows and re-opens an admin page.
      *
      * @param stage the current stage
      */
@@ -178,18 +184,27 @@ public class ImportLoadingDialog extends CommonView {
         this.currentStage.setOnCloseRequest(Event::consume);
     }
 
+    /**
+     * Class for the import results, contains getters and setters for the result values.
+     */
     public class ImportResult {
 
         private SimpleStringProperty result;
         private SimpleStringProperty value;
 
+        /**
+         * Constructor to set the result and value.
+         *
+         * @param result Current result to set.
+         * @param value Current value to set.
+         */
         ImportResult(String result, String value) {
             this.result = new SimpleStringProperty(result);
             this.value = new SimpleStringProperty(value);
         }
 
         /**
-         * Required by javafx
+         * Required by javafx.
          *
          * @return result property
          */
@@ -198,7 +213,7 @@ public class ImportLoadingDialog extends CommonView {
         }
 
         /**
-         * Required by javafx
+         * Required by javafx.
          *
          * @return value property
          */
