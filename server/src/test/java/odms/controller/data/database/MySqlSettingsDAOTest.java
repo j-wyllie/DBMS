@@ -128,13 +128,13 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
 
     @Test
     public void getSetUserDateTimeFormatValid() throws SQLException {
-        settingsDAO.setDateTimeFormat(userA.getStaffID(), UserType.ADMIN, localeA);
-        assertEquals(localeA, settingsDAO.getDateTimeFormat(userA.getStaffID(), UserType.ADMIN));
+        settingsDAO.setDateTimeFormat(userA.getId(), UserType.ADMIN, localeA);
+        assertEquals(localeA, settingsDAO.getDateTimeFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
     public void getSetUserDateTimeFormatInvalid() {
-        assertNull(settingsDAO.getDateTimeFormat(userA.getStaffID(), UserType.ADMIN));
+        assertNull(settingsDAO.getDateTimeFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
@@ -150,20 +150,20 @@ public class MySqlSettingsDAOTest extends CommonTestUtils {
 
     @Test
     public void getSetUserNumberFormatValid() throws SQLException {
-        settingsDAO.setNumberFormat(userA.getStaffID(), UserType.ADMIN, localeA);
-        assertEquals(localeA, settingsDAO.getNumberFormat(userA.getStaffID(), UserType.ADMIN));
+        settingsDAO.setNumberFormat(userA.getId(), UserType.ADMIN, localeA);
+        assertEquals(localeA, settingsDAO.getNumberFormat(userA.getId(), UserType.ADMIN));
     }
 
     @Test
     public void getSetUserNumberFormatInvalid() {
-        assertNull(settingsDAO.getNumberFormat(userA.getStaffID(), UserType.ADMIN));
+        assertNull(settingsDAO.getNumberFormat(userA.getId(), UserType.ADMIN));
     }
 
     @After
     public void tearDown() throws SQLException {
         // Locale teardown.
         settingsDAO.deleteLocale(profileA.getId(), UserType.PROFILE);
-        settingsDAO.deleteLocale(userA.getStaffID(), UserType.ADMIN);
+        settingsDAO.deleteLocale(userA.getId(), UserType.ADMIN);
 
         // Profile teardown.
         profileDAO.remove(profileA);

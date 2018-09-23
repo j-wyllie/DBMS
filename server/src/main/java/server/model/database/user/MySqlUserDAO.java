@@ -265,8 +265,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(8, user.getLastUpdated().toString());
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
-            stmt.setString(11, user.getPictureName());
-            stmt.setInt(12, user.getId());
+            stmt.setInt(11, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

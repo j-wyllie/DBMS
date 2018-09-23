@@ -84,11 +84,11 @@ public class MiddlewareTest extends CommonTestUtils {
         when(requestA.headers("userType")).thenReturn(String.valueOf(UserType.PROFILE));
 
         requestB = mock(Request.class);
-        when(requestB.headers("id")).thenReturn(userA.getStaffID().toString());
+        when(requestB.headers("id")).thenReturn(userA.getId().toString());
         when(requestB.headers("userType")).thenReturn(String.valueOf(UserType.ADMIN));
 
         requestC = mock(Request.class);
-        when(requestC.headers("id")).thenReturn(userB.getStaffID().toString());
+        when(requestC.headers("id")).thenReturn(userB.getId().toString());
         when(requestC.headers("userType")).thenReturn(String.valueOf(UserType.CLINICIAN));
     }
 
@@ -112,7 +112,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testAdminAuthenticateValid() throws SQLException {
-        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        int token = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers("token")).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestB));
@@ -130,7 +130,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testClinicianAuthenticateValid() throws SQLException {
-        int token = Middleware.authenticate(userB.getStaffID(), UserType.CLINICIAN);
+        int token = Middleware.authenticate(userB.getId(), UserType.CLINICIAN);
         // Add token to mocked request.
         when(requestC.headers("token")).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestC));
@@ -166,7 +166,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testIsAdminAuthenticatedValid() throws SQLException {
-        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        int token = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers("token")).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestB));
@@ -208,12 +208,12 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testLogoutAdminValid() throws SQLException {
-        int token = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        int token = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers("token")).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAuthenticated(requestB));
 
-        Middleware.logout(userA.getStaffID(), UserType.ADMIN, token);
+        Middleware.logout(userA.getId(), UserType.ADMIN, token);
         assertFalse(Middleware.isAuthenticated(requestB));
     }
 

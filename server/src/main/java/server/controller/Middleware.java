@@ -2,6 +2,7 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.Random;
+import server.model.enums.KeyEnum;
 import spark.Request;
 import odms.commons.model.enums.UserType;
 import org.sonar.api.server.authentication.UnauthorizedException;
@@ -66,8 +67,8 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAdminAuthenticated(Request req) throws SQLException {
-        int id = Integer.valueOf(req.headers("id"));
-        int token = Integer.valueOf(req.headers("token"));
+        int id = Integer.parseInt(req.headers(KeyEnum.ID.toString()));
+        int token = Integer.parseInt(req.headers("token"));
 
         return database.isUserAuthenticated(id, token);
     }

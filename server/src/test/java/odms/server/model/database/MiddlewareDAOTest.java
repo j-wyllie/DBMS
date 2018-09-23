@@ -82,8 +82,8 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
     @Test
     public void testSetUserTokenValid() throws SQLException {
-        middleware.setUserToken(userA.getStaffID(), validToken);
-        assertTrue(middleware.isUserAuthenticated(userA.getStaffID(), validToken));
+        middleware.setUserToken(userA.getId(), validToken);
+        assertTrue(middleware.isUserAuthenticated(userA.getId(), validToken));
     }
 
     @Test
@@ -106,8 +106,8 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
     @Test
     public void testIsUserAuthenticatedValid() throws SQLException {
-        middleware.setUserToken(userB.getStaffID(), validToken);
-        assertTrue(middleware.isUserAuthenticated(userB.getStaffID(), validToken));
+        middleware.setUserToken(userB.getId(), validToken);
+        assertTrue(middleware.isUserAuthenticated(userB.getId(), validToken));
     }
 
     @Test
@@ -118,8 +118,8 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
     @Test
     public void testIsUserAuthenticatedInvalid() throws SQLException {
-        middleware.setUserToken(userB.getStaffID(), validToken);
-        assertFalse(middleware.isUserAuthenticated(userB.getStaffID(), invalidToken));
+        middleware.setUserToken(userB.getId(), validToken);
+        assertFalse(middleware.isUserAuthenticated(userB.getId(), invalidToken));
     }
 
     @Test
@@ -132,10 +132,10 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
     @Test
     public void testDeleteUserTokenValid() throws SQLException {
-        middleware.setUserToken(userC.getStaffID(), validToken);
-        assertTrue(middleware.isUserAuthenticated(userC.getStaffID(), validToken));
-        middleware.deleteUserToken(userC.getStaffID());
-        assertFalse(middleware.isUserAuthenticated(userC.getStaffID(), validToken));
+        middleware.setUserToken(userC.getId(), validToken);
+        assertTrue(middleware.isUserAuthenticated(userC.getId(), validToken));
+        middleware.deleteUserToken(userC.getId());
+        assertFalse(middleware.isUserAuthenticated(userC.getId(), validToken));
     }
 
     @Test
