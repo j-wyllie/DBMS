@@ -382,7 +382,7 @@ public class Profile implements Comparable<Profile> {
                         Integer.valueOf(dates[0]), 0, 0
                 );
                 setDateOfDeath(date);
-                setCountryOfDeath(getCountry().getName());
+                setCountryOfDeath(getCountry() != null ? getCountry().getName() : null);
                 setCityOfDeath(getCity());
                 setRegionOfDeath(getRegion());
             }
