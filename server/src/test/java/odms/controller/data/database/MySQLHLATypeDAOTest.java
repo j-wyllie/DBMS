@@ -49,6 +49,7 @@ public class MySQLHLATypeDAOTest {
 
     @Test
     public void testAddHLAType() {
+        hlaTypeDao.add(testProfile2.getId(), hlaType2);
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getGroupX(), hlaType2.getGroupX());
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getGroupY(), hlaType2.getGroupY());
         assertEquals(hlaTypeDao.get(testProfile2.getId()).getSecondaryAntigens(), hlaType2.getSecondaryAntigens());
