@@ -9,15 +9,31 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
 import odms.commons.model.medications.Drug;
-import org.apache.commons.validator.routines.EmailValidator;
 
+/**
+ * The profile model class.
+ */
 public class Profile implements Comparable<Profile> {
+    private static final String PROFILE_STRING = "profile ";
+    private static final int HEIGHT_TO_METERS = 100;
+    private static final String QUOTE = "\"";
+    private static final String COMMA = ",";
+    private static final String HYPHEN = "-";
+    private static final String NULL_STRING = "null";
+    private static final String SPACE = " ";
+    private static final String DOD_STRING = "dod=";
+    private static final String ZERO_STRING = "0";
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private List<String> regionsNZ = Arrays
             .asList("Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay",
@@ -69,12 +85,12 @@ public class Profile implements Comparable<Profile> {
     private List<Procedure> pendingProcedures = new ArrayList<>();
     private List<Procedure> previousProcedures = new ArrayList<>();
 
-    private HashSet<OrganEnum> organsDonating = new HashSet<>();
-    private HashSet<OrganEnum> organsDonated = new HashSet<>();
-    private HashSet<OrganEnum> organsRequired = new HashSet<>();
-    private HashSet<OrganEnum> organsReceived = new HashSet<>();
-    private HashSet<OrganEnum> organsExpired = new HashSet<>();
-    private HashSet<Organ> organTimeStamps = new HashSet<>();
+    private Set<OrganEnum> organsDonating = new HashSet<>();
+    private Set<OrganEnum> organsDonated = new HashSet<>();
+    private Set<OrganEnum> organsRequired = new HashSet<>();
+    private Set<OrganEnum> organsReceived = new HashSet<>();
+    private Set<OrganEnum> organsExpired = new HashSet<>();
+    private Set<Organ> organTimeStamps = new HashSet<>();
 
     private List<Condition> conditions = new ArrayList<>();
 
@@ -85,30 +101,33 @@ public class Profile implements Comparable<Profile> {
 
     private LocalDateTime timeOfCreation;
     private LocalDateTime lastUpdated;
+    private LocalDateTime lastBloodDonation;
+
+    private int bloodDonationPoints = 0;
 
     private List<Drug> currentMedications = new ArrayList<>();
     private List<Drug> historyOfMedication = new ArrayList<>();
     private List<String> medicationTimestamps = new ArrayList<>();
 
     /**
-     * Instantiates the profile class with data from the CLI
+     * Instantiates the profile class with data from the CLI.
      *
      * @param attributes the list of attributes in attribute="value" form
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    public Profile(List<String> attributes) throws IllegalArgumentException {
+    public Profile(List<String> attributes) {
         setExtraAttributes(attributes);
         procedures = new ArrayList<>();
 
-        if (getGivenNames() == null || getLastNames() == null || getDateOfBirth() == null
-                || getNhi() == null) {
+        if (getGivenNames() == null || getLastNames() == null ||
+                getDateOfBirth() == null || getNhi() == null) {
             throw new IllegalArgumentException();
         }
         timeOfCreation = LocalDateTime.now();
     }
 
     /**
-     * Instantiates the basic Profile class with a raw input of values
+     * Instantiates the basic Profile class with a raw input of values.
      *
      * @param givenNames Profile's given names as String
      * @param lastNames Profile's last names as String
@@ -119,10 +138,10 @@ public class Profile implements Comparable<Profile> {
 
         // Build an ArrayList so I can reuse the
         ArrayList<String> attr = new ArrayList<>();
-        attr.add("given-names=\"" + givenNames + "\"");
-        attr.add("last-names=\"" + lastNames + "\"");
-        attr.add("nhi=\"" + nhi + "\"");
-        attr.add("dob=\"" + dob + "\"");
+        attr.add("given-names=\"" + givenNames + QUOTE);
+        attr.add("last-names=\"" + lastNames + QUOTE);
+        attr.add("nhi=\"" + nhi + QUOTE);
+        attr.add("dob=\"" + dob + QUOTE);
         this.setReceiver(false);
         setExtraAttributes(attr);
 
@@ -135,6 +154,13 @@ public class Profile implements Comparable<Profile> {
         timeOfCreation = LocalDateTime.now();
     }
 
+    /**
+     * Instantiates a basic profile object.
+     * @param givenNames the given name
+     * @param lastNames the last name
+     * @param dob the date of birth
+     * @param nhi their nhi
+     */
     public Profile(String givenNames, String lastNames, LocalDate dob, String nhi) {
         this(
                 null, // id
@@ -167,18 +193,53 @@ public class Profile implements Comparable<Profile> {
                 null, // updated
                 null, // preferredName
                 null, // preferredGender
-                null // imageName
+                null, // imageName
+                LocalDateTime.now().minusYears(100), // LastBloodDonation
+                0 //bloodDonationPoints
         );
     }
 
-
+    /**
+     * Instantiates the profile object with every field.
+     * @param id the id
+     * @param nhi the nhi
+     * @param username their username
+     * @param isDonor true if they are a donor
+     * @param isReceiver true if they are a receiver
+     * @param givenNames their given name
+     * @param lastNames their last name
+     * @param dob their date of birth
+     * @param dod their date of death if applicable
+     * @param gender their gender
+     * @param height height in meters
+     * @param weight weight in kgs
+     * @param bloodType blood type
+     * @param isSmoker true if they are a smoker
+     * @param alcoholConsumption rate of alcohol consumption
+     * @param bpSystolic systolic blood pressure
+     * @param bpDiastolic diastolic blood pressure
+     * @param address physical address
+     * @param region region
+     * @param phone phone number
+     * @param email their email
+     * @param country country they are living in
+     * @param city city they are living in
+     * @param countryOfDeath country of death
+     * @param regionOfDeath region of death
+     * @param cityOfDeath city of death
+     * @param created date created
+     * @param updated time last updated
+     * @param preferredName preferred name
+     * @param preferredGender preferred gender
+     * @param imageName name of their profile image
+     */
     public Profile(Integer id, String nhi, String username, Boolean isDonor, Boolean isReceiver,
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker,
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String region, String phone, String email, String country, String city,
             String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName) {
+            LocalDateTime updated, String preferredName, String preferredGender, String imageName, LocalDateTime lastBloodDonation, int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -210,12 +271,17 @@ public class Profile implements Comparable<Profile> {
         this.preferredName = preferredName;
         this.preferredGender = preferredGender;
         this.pictureName = imageName;
+        this.bloodDonationPoints = bloodDonationPoints;
+        this.lastBloodDonation = lastBloodDonation;
     }
 
+    /**
+     * Instantiates a profile with only the id for deleting from the db.
+     * @param profileId the id
+     */
     public Profile(int profileId) {
         this.id = profileId;
     }
-
 
     /**
      * Compares the profile object to another profile object. Result is determined by
@@ -229,13 +295,32 @@ public class Profile implements Comparable<Profile> {
         return getFullName().toLowerCase().compareTo(other.getFullName().toLowerCase());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Profile)) {
+            return false;
+        }
+        Profile profile = (Profile) o;
+        return profile.getNhi() == this.getNhi();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + getFullName().hashCode();
+        return result;
+    }
+
     /**
-     * Sets the attributes that are passed into the constructor
+     * Sets the attributes that are passed into the constructor.
      *
      * @param attributes the attributes given in the constructor
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
      */
-    private void setExtraAttributes(List<String> attributes) throws IllegalArgumentException {
+    private void setExtraAttributes(List<String> attributes) {
         for (String val : attributes) {
             String[] parts = val.split("=");
             if (parts.length == 1) {
@@ -248,17 +333,21 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Calls the relevant method to set the attribute
+     * Calls the relevant method to set the attribute.
      *
      * @param parts a list with an attribute and value
      * @throws IllegalArgumentException thrown when an attribute that isn't valid is given
      */
-    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
+    private void setGivenAttribute(String[] parts) {
         String attrName = parts[0];
         String value = null;
 
-        if (!parts[1].equals(null)) {
-            value = parts[1].replace("\"", "");
+        if (null != parts[1]) {
+            value = parts[1].replace(QUOTE, "");
+        }
+
+        if (value == null) {
+            throw new IllegalArgumentException("No values given.");
         }
 
         if (attrName.equals(Attribute.GIVENNAMES.getText())) {
@@ -266,7 +355,7 @@ public class Profile implements Comparable<Profile> {
         } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
             setLastNames(value);
         } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
-            String[] dates = value.split("-");
+            String[] dates = value.split(HYPHEN);
             LocalDate date = LocalDate.of(
                     Integer.valueOf(dates[2]),
                     Integer.valueOf(dates[1]),
@@ -279,10 +368,10 @@ public class Profile implements Comparable<Profile> {
             }
             setDateOfBirth(date);
         } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if (value.equals("null")) {
+            if (NULL_STRING.equals(value)) {
                 setDateOfDeath(null);
             } else {
-                String[] dates = value.split("-");
+                String[] dates = value.split(HYPHEN);
                 LocalDateTime date = LocalDateTime.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
@@ -297,8 +386,8 @@ public class Profile implements Comparable<Profile> {
             setGender(value.toLowerCase());
         } else if (attrName.equals(Attribute.HEIGHT.getText())) {
             try {
-                if (value.equals("null")) {
-                    value = "0";
+                if (NULL_STRING.equals(value)) {
+                    value = ZERO_STRING;
                 }
                 setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
@@ -306,15 +395,15 @@ public class Profile implements Comparable<Profile> {
             }
         } else if (attrName.equals(Attribute.WEIGHT.getText())) {
             try {
-                if (value.equals("null")) {
-                    value = "0";
+                if (NULL_STRING.equals(value)) {
+                    value = ZERO_STRING;
                 }
                 setWeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid weight entered");
             }
         } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if (value.equals("null") || value.equals("")) {
+            if (NULL_STRING.equals(value) || "".equals(value)) {
                 value = null;
             }
             setBloodType(value);
@@ -340,25 +429,25 @@ public class Profile implements Comparable<Profile> {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid NHI number entered");
             }
-        } else if (attrName.equals("isSmoker")) {
+        } else if ("isSmoker".equals(attrName)) {
             setIsSmoker(Boolean.valueOf(value));
-        } else if (attrName.equals("alcoholConsumption")) {
+        } else if ("alcoholConsumption".equals(attrName)) {
             setAlcoholConsumption(value);
-        } else if (attrName.equals("bloodPressureSystolic")) {
-            if (value.equals("null")) {
+        } else if ("bloodPressureSystolic".equals(attrName)) {
+            if (NULL_STRING.equals(value)) {
                 setBloodPressureSystolic(null);
             } else {
                 setBloodPressureSystolic(Integer.valueOf(value));
             }
-        } else if (attrName.equals("bloodPressureDiastolic")) {
-            if (value.equals("null")) {
+        } else if ("bloodPressureDiastolic".equals(attrName)) {
+            if (NULL_STRING.equals(value)) {
                 setBloodPressureDiastolic(null);
             } else {
                 setBloodPressureDiastolic(Integer.valueOf(value));
             }
-        } else if (attrName.equals("phone")) {
+        } else if ("phone".equals(attrName)) {
             setPhone(value);
-        } else if (attrName.equals("email")) {
+        } else if ("email".equals(attrName)) {
             setEmail(value);
         } else {
             throw new IllegalArgumentException();
@@ -366,7 +455,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Gets all of the profiles procedures
+     * Gets all of the profiles procedures.
      *
      * @return all procedures
      */
@@ -375,7 +464,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Gets all the pending procedures
+     * Gets all the pending procedures.
      *
      * @return pending procedures
      */
@@ -396,31 +485,32 @@ public class Profile implements Comparable<Profile> {
     }
 
     public String getAttributesSummary() {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String summary = "";
         summary = summary + ("nhi=" + nhi);
-        summary = summary + "," + ("given-names=" + givenNames);
-        summary = summary + "," + ("last-names=" + lastNames);
-        summary = summary + "," + ("dob=" + dateOfBirth
-                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        summary = summary + COMMA + ("given-names=" + givenNames);
+        summary = summary + COMMA + ("last-names=" + lastNames);
+        summary = summary + COMMA + ("dob=" + dateOfBirth
+                .format(format));
         if (dateOfDeath == null) {
-            summary = summary + "," + ("dod=" + null);
+            summary = summary + COMMA + (DOD_STRING + null);
         } else {
-            summary = summary + "," + ("dod=" + dateOfDeath
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            summary = summary + COMMA + (DOD_STRING + dateOfDeath
+                    .format(format));
         }
-        summary = summary + "," + ("gender=" + gender);
-        summary = summary + "," + ("height=" + height);
-        summary = summary + "," + ("weight=" + weight);
-        summary = summary + "," + ("blood-type=" + bloodType);
-        summary = summary + "," + ("address=" + address);
-        summary = summary + "," + ("region=" + region);
-        summary = summary + "," + ("country=" + country);
-        summary = summary + "," + ("isSmoker=" + isSmoker);
-        summary = summary + "," + ("alcoholConsumption=" + alcoholConsumption);
-        summary = summary + "," + ("bloodPressureSystolic=" + bloodPressureSystolic);
-        summary = summary + "," + ("bloodPressureDiastolic=" + bloodPressureDiastolic);
-        summary = summary + "," + ("phone=" + phone);
-        summary = summary + "," + ("email=" + email);
+        summary = summary + COMMA + ("gender=" + gender);
+        summary = summary + COMMA + ("height=" + height);
+        summary = summary + COMMA + ("weight=" + weight);
+        summary = summary + COMMA + ("blood-type=" + bloodType);
+        summary = summary + COMMA + ("address=" + address);
+        summary = summary + COMMA + ("region=" + region);
+        summary = summary + COMMA + ("country=" + country);
+        summary = summary + COMMA + ("isSmoker=" + isSmoker);
+        summary = summary + COMMA + ("alcoholConsumption=" + alcoholConsumption);
+        summary = summary + COMMA + ("bloodPressureSystolic=" + bloodPressureSystolic);
+        summary = summary + COMMA + ("bloodPressureDiastolic=" + bloodPressureDiastolic);
+        summary = summary + COMMA + ("phone=" + phone);
+        summary = summary + COMMA + ("email=" + email);
         return summary;
     }
 
@@ -428,6 +518,7 @@ public class Profile implements Comparable<Profile> {
      * Add an organ to the organs donate list.
      *
      * @param organ the organ the profile wishes to donate
+     * @throws OrganConflictException thrown if organ is already donating.
      */
     public void addOrganDonating(OrganEnum organ) throws OrganConflictException {
         if (this.organsDonating.contains(organ)) {
@@ -441,14 +532,14 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Add a set of organs to the list of organs that the profile wants to donate
+     * Add a set of organs to the list of organs that the profile wants to donate.
      *
      * @param organs the set of organs to donate
      * @throws IllegalArgumentException if a bad argument is used
      * @throws OrganConflictException if there is a conflicting organ
      */
     public void addOrgansDonating(Set<OrganEnum> organs)
-            throws IllegalArgumentException, OrganConflictException {
+            throws OrganConflictException {
         generateUpdateInfo("organsDonating");
 
         for (OrganEnum organ : organs) {
@@ -459,7 +550,7 @@ public class Profile implements Comparable<Profile> {
             }
             this.addOrganDonating(organ);
 
-            History action = new History("profile ", this.getId(), "set", organ.getNamePlain(),
+            History action = new History(PROFILE_STRING, this.getId(), "set", organ.getNamePlain(),
                     -1, LocalDateTime.now());
             CurrentHistory.updateHistory(action);
         }
@@ -520,7 +611,7 @@ public class Profile implements Comparable<Profile> {
 
         for (OrganEnum organ : organs) {
             addOrganReceived(organ);
-            History action = new History("profile ",
+            History action = new History(PROFILE_STRING,
                     this.getId(),
                     "received", organ.getNamePlain(), -1, LocalDateTime.now());
             CurrentHistory.updateHistory(action);
@@ -546,7 +637,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Add a set of organsDonating to the list of organsDonating that the profile has donated
+     * Add a set of organsDonating to the list of organsDonating that the profile has donated.
      *
      * @param organs a set of organsDonating that the profile has donated
      */
@@ -556,7 +647,7 @@ public class Profile implements Comparable<Profile> {
         for (OrganEnum organ : organs) {
             this.organsDonated.add(organ);
             History action = new History(
-                    "profile ",
+                    PROFILE_STRING,
                     this.getId(),
                     "donated",
                     organ.getNamePlain(),
@@ -567,24 +658,40 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
+    /**
+     * Removes an organ from the received organs.
+     * @param organ the organ to remove
+     */
     public void removeOrganReceived(OrganEnum organ) {
         if (this.organsReceived.contains(organ)) {
             this.organsReceived.remove(organ);
         }
     }
 
+    /**
+     * Removes an organ from the required organs.
+     * @param organ the organ to be removed
+     */
     public void removeOrganRequired(OrganEnum organ) {
         if (this.organsRequired.contains(organ)) {
             this.organsRequired.remove(organ);
         }
     }
 
+    /**
+     * Removes an organ from the donated organs.
+     * @param organ the organ to be removed
+     */
     public void removeOrganDonated(OrganEnum organ) {
         if (this.organsDonated.contains(organ)) {
             this.organsDonated.remove(organ);
         }
     }
 
+    /**
+     * Removes an organ from the donating organs.
+     * @param organ the organ to be removed
+     */
     public void removeOrganDonating(OrganEnum organ) {
         if (this.organsDonating.contains(organ)) {
             this.organsDonating.remove(organ);
@@ -595,6 +702,10 @@ public class Profile implements Comparable<Profile> {
         this.receiver = receiver;
     }
 
+    /**
+     * Returns true if profile is a receiver.
+     * @return boolean
+     */
     public boolean isReceiver() {
         return receiver;
     }
@@ -619,8 +730,8 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Logs which property was updated and the time it was updated Also changes the last updated
-     * property
+     * Logs which property was updated and the time it was updated.
+     * Also changes the last updated property.
      *
      * @param property the property that was updated
      */
@@ -661,7 +772,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Gets all the current conditions of the user
+     * Gets all the current conditions of the user.
      *
      * @return the conditions of the user
      */
@@ -670,7 +781,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Gets all the cured conditions of the user
+     * Gets all the cured conditions of the user.
      *
      * @return the cured conditions of the user
      */
@@ -686,7 +797,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Gets all the current conditions of the user
+     * Gets all the current conditions of the user.
      *
      * @return the current conditions of the user
      */
@@ -701,22 +812,22 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Checks if a profile is donating a certain selection of organs
+     * Checks if a profile is donating a certain selection of organs.
      *
      * @param organs organs to be checked
      * @return true if they are
      */
-    public boolean isDonatingCertainOrgans(HashSet<OrganEnum> organs) {
+    public boolean isDonatingCertainOrgans(Set<OrganEnum> organs) {
         return organsDonating.containsAll(organs);
     }
 
     /**
-     * Checks if a profile is receiving a certain selection of organs
+     * Checks if a profile is receiving a certain selection of organs.
      *
      * @param organs organs to be checked
      * @return true if they are
      */
-    public boolean isReceivingCertainOrgans(HashSet<OrganEnum> organs) {
+    public boolean isReceivingCertainOrgans(Set<OrganEnum> organs) {
         return organsRequired.containsAll(organs);
     }
 
@@ -729,15 +840,16 @@ public class Profile implements Comparable<Profile> {
     }
 
     public String getFullName() {
-        return givenNames + " " + lastNames;
+        return givenNames + SPACE + lastNames;
     }
 
     /**
      * This method is used to populate a column in the search table, intelliJ thinks it is un-used.
+     * @return the full preferred name
      */
     public String getFullPreferredName() {
-        if (preferredName == null || preferredName.equals("")) {
-            return givenNames + " " + lastNames;
+        if (preferredName == null || "".equals(preferredName)) {
+            return givenNames + SPACE + lastNames;
         } else {
             return givenNames + " \"" + preferredName + "\" " + lastNames;
         }
@@ -784,9 +896,9 @@ public class Profile implements Comparable<Profile> {
         return gender;
     }
 
-    public void setGender(String gender) throws IllegalArgumentException {
+    public void setGender(String gender) {
         String newGender = gender.toLowerCase().trim();
-        if (newGender.equals("male") || newGender.equals("female")) {
+        if ("male".equals(newGender) || "female".equals(newGender)) {
             generateUpdateInfo("gender");
             this.gender = newGender;
         } else {
@@ -816,7 +928,7 @@ public class Profile implements Comparable<Profile> {
         return bloodType;
     }
 
-    public void setBloodType(String bloodType) throws IllegalArgumentException {
+    public void setBloodType(String bloodType) {
         if (bloodType != null && BloodTypeEnum.toArrayList().contains(bloodType)) {
             generateUpdateInfo("blood-type");
             this.bloodType = bloodType;
@@ -936,17 +1048,22 @@ public class Profile implements Comparable<Profile> {
         return email;
     }
 
-    public void setEmail(String email) throws IllegalArgumentException {
-        EmailValidator validator = EmailValidator.getInstance();
-        if (validator.isValid(email)) {
+    public void setEmail(String email) {
+        if (validate(email)) {
             this.email = email;
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    public void setAllConditions(List<Condition> conditions) {
-        this.conditions = conditions;
+    /**
+     * Validates an email address string.
+     * @param emailStr the string to be validated
+     * @return true if valid
+     */
+    private static boolean validate(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        return matcher.find();
     }
 
     public void setPreferredGender(String preferredGender) {
@@ -1083,12 +1200,12 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Calculates and returns the profiles bmi
+     * Calculates and returns the profiles bmi.
      *
      * @return BMI
      */
     public Double getBmi() {
-        return weight / Math.pow(height / 100, 2);
+        return weight / Math.pow(height / HEIGHT_TO_METERS, 2);
     }
 
     public void setLastUpdated() {
@@ -1096,16 +1213,22 @@ public class Profile implements Comparable<Profile> {
         lastUpdated = currentTime;
     }
 
+    /**
+     * Updates the donor status.
+     */
     public void updatedDonorStatus() {
-        if (organsDonating.size() > 0) {
+        if (!organsDonating.isEmpty()) {
             this.setDonor(true);
         } else {
             this.setDonor(false);
         }
     }
 
+    /**
+     * Updates the receiver status.
+     */
     public void updatedReceiverStatus() {
-        if (organsRequired.size() > 0) {
+        if (!organsRequired.isEmpty()) {
             this.setReceiver(true);
         } else {
             this.setReceiver(false);
@@ -1121,13 +1244,29 @@ public class Profile implements Comparable<Profile> {
         return null;
     }
 
-    public HashSet<Organ> getOrganTimeStamps() {
+    public Set<Organ> getOrganTimeStamps() {
         return organTimeStamps;
     }
 
     public void setOrganDate(String organDate, LocalDateTime date) {
         organTimeStamps
-                .add(new Organ(OrganEnum.valueOf(organDate.toUpperCase().replace("-", "_")), date));
+                .add(new Organ(OrganEnum.valueOf(organDate.toUpperCase()
+                        .replace(HYPHEN, "_")), date));
     }
 
+    public void setLastBloodDonation(LocalDateTime date) {
+        lastBloodDonation = date;
+    }
+
+    public LocalDateTime getLastBloodDonation(){
+        return lastBloodDonation;
+    }
+
+    public void addBloodDonationPoints(int points) {
+        bloodDonationPoints += points;
+    }
+
+    public int getBloodDonationPoints() {
+        return bloodDonationPoints;
+    }
 }

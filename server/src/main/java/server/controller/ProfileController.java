@@ -14,6 +14,9 @@ import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
@@ -22,6 +25,14 @@ import spark.Response;
  */
 @Slf4j
 public class ProfileController {
+    private static final String KEY_SEARCH = "searchString";
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private ProfileController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets all profiles stored.
@@ -37,7 +48,7 @@ public class ProfileController {
             res.status(500);
             return e.getMessage();
         }
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return profiles;
@@ -53,8 +64,8 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            if (req.queryMap().hasKey("searchString")) {
-                String searchString = req.queryParams("searchString");
+            if (req.queryMap().hasKey(KEY_SEARCH)) {
+                String searchString = req.queryParams(KEY_SEARCH);
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
             } else if (req.queryMap().hasKey("organs")) {
@@ -70,12 +81,12 @@ public class ProfileController {
             }
         } catch (NumberFormatException e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (Exception e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return profiles;
@@ -104,7 +115,7 @@ public class ProfileController {
             res.status(500);
             return e.getMessage();
         }
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return profiles;
@@ -122,10 +133,10 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
 
-        if (req.queryMap().hasKey("searchString")) {
-            String searchString = req.queryParams("searchString");
-            int ageSearchInt = Integer.valueOf(req.queryParams("ageSearchInt"));
-            int ageRangeSearchInt = Integer.valueOf(req.queryParams("ageRangeSearchInt"));
+        if (req.queryMap().hasKey(KEY_SEARCH)) {
+            String searchString = req.queryParams(KEY_SEARCH);
+            int ageSearchInt = Integer.parseInt(req.queryParams("ageSearchInt"));
+            int ageRangeSearchInt = Integer.parseInt(req.queryParams("ageRangeSearchInt"));
             String region = req.queryParams("region");
             String gender = req.queryParams("gender");
             String type = req.queryParams("type");
@@ -153,11 +164,11 @@ public class ProfileController {
      */
     public static String get(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        Profile profile = null;
+        Profile profile;
 
         try {
-            if (req.queryMap().hasKey("id")) {
-                profile = database.get(Integer.valueOf(req.queryParams("id")));
+            if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
+                profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
             }
             else {
                 profile = database.get(req.queryParams("username"));
@@ -171,7 +182,7 @@ public class ProfileController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(profile);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -186,16 +197,16 @@ public class ProfileController {
     public static String create(Request req, Response res) {
         Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
-        Profile newProfile = null;
+        Profile newProfile;
 
         try {
             newProfile = gson.fromJson(req.body(), Profile.class);
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
-        if ((newProfile != null)) {
+        if (newProfile != null) {
             try {
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
                         && !database.isUniqueUsername(newProfile.getUsername())) {
@@ -203,11 +214,11 @@ public class ProfileController {
                 }
                 else {
                     res.status(400);
-                    return "Bad Request";
+                    return ResponseMsgEnum.BAD_REQUEST.toString();
                 }
             } catch (SQLException e) {
                 res.status(500);
-                return "Internal Server Error";
+                return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
             }
         }
 
@@ -222,23 +233,22 @@ public class ProfileController {
      * @return the response body.
      */
     public static String edit(Request req, Response res) {
-        Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
         Profile profile;
 
         try {
-            profile = gson.fromJson(req.body(), Profile.class);
-            profile.setId(Integer.valueOf(req.params("id")));
+            profile = new Gson().fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params(KeyEnum.ID.toString())));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.update(profile);
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -252,25 +262,22 @@ public class ProfileController {
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         ProfileDAO database = DAOFactory.getProfileDao();
-        Profile profile = null;
+        Profile profile;
 
         try {
-            profile = gson.fromJson(req.body(), Profile.class);
-            profile.setId(Integer.valueOf(req.params("id")));
+            profile = new Gson().fromJson(req.body(), Profile.class);
+            profile.setId(Integer.valueOf(req.params(KeyEnum.ID.toString())));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
-        if (profile != null) {
-            try {
-                database.remove(profile);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.remove(profile);
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -285,19 +292,19 @@ public class ProfileController {
      */
     public static String count(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        int count = 0;
+        int count;
 
         try {
             count = database.size();
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         Gson gson = new Gson();
         String responseBody = gson.toJson(count);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -318,7 +325,7 @@ public class ProfileController {
             }
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -329,10 +336,10 @@ public class ProfileController {
     /**
      * Checks the credentials of a profile logging in,
      * @param request request containg password and username.
-     * @param response response from the server.
+     * @param res response from the server.
      * @return String displaying success of validation.
      */
-    public static String checkCredentials(Request request, Response response) {
+    public static String checkCredentials(Request request, Response res) {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
 
@@ -340,18 +347,18 @@ public class ProfileController {
             valid = profileDAO.checkCredentials(request.queryParams("username"),
                     request.queryParams("password"));
         } catch (SQLException e) {
-            response.status(500);
+            res.status(500);
             return e.getMessage();
         } catch (UserNotFoundException e) {
-            response.status(404);
+            res.status(404);
             return "Profile not found.";
         }
 
         if (valid) {
-            response.type("application/json");
-            response.status(200);
+            res.type(DataTypeEnum.JSON.toString());
+            res.status(200);
         } else {
-            response.status(404);
+            res.status(404);
         }
 
         return "User validated.";

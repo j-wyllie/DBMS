@@ -2,14 +2,22 @@ package server.controller;
 
 import java.util.List;
 import odms.commons.model.medications.Drug;
-import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.medication.MedicationDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
 public class DrugController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private DrugController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets all drugs for a profile in persistent storage.
@@ -28,7 +36,7 @@ public class DrugController {
             current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -41,7 +49,7 @@ public class DrugController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(drugs);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -66,7 +74,7 @@ public class DrugController {
             current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
             database.add(newDrug, profileId, current);
@@ -96,7 +104,7 @@ public class DrugController {
             current = Boolean.valueOf(req.queryParams("current"));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -117,7 +125,6 @@ public class DrugController {
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         MedicationDAO database = DAOFactory.getMedicationDao();
         Drug newDrug;
 
@@ -125,7 +132,7 @@ public class DrugController {
             newDrug = new Drug(Integer.valueOf(req.params("id")), null);
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {

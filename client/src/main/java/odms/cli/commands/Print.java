@@ -140,7 +140,7 @@ public final class Print extends CommandUtils {
      * @param profileList results from searching.
      */
     public static void printProfileSearchResults(List<Profile> profileList) {
-        if (profileList.size() > 0) {
+        if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 printProfileAttributes(profile);
                 System.out.println();
@@ -157,7 +157,7 @@ public final class Print extends CommandUtils {
      * @param userlist results from searching.
      */
     public static void printUserSearchResults(List<User> userlist) {
-        if (userlist.size() > 0) {
+        if (!userlist.isEmpty()) {
             for (User user : userlist) {
                 printUserAttributesAttributes(user);
                 System.out.println();

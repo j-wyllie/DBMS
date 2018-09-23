@@ -17,13 +17,9 @@ public class App {
                 Application.launch(GuiMain.class);
 
             } else {
-                switch (args[0].toLowerCase()) {
-                    case "-cmd":
-                        CommandLine commandLine = new CommandLine();
-                        commandLine.initialiseConsole();
-                        break;
-                    default:
-                        // noop
+                if ("-cmd".equalsIgnoreCase(args[0])) {
+                    CommandLine commandLine = new CommandLine();
+                    commandLine.initialiseConsole();
                 }
             }
         } catch (Exception e) {

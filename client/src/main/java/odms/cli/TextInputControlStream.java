@@ -29,10 +29,8 @@ class TextInputControlStream {
         this.out = new TextInputControlOutputStream(textInputControl);
 
         textInputControl.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case ENTER:
-                    getIn().enterKeyPressed();
-                    break;
+            if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                getIn().enterKeyPressed();
             }
 
             if (textInputControl.getCaretPosition() <= getIn().getLastLineBreakIndex()) {
@@ -59,15 +57,15 @@ class TextInputControlStream {
         return this.out;
     }
 
-    void startProgramInput() {
+    private void startProgramInput() {
         // do nothing
     }
 
-    void endProgramInput() {
+    private void endProgramInput() {
         getIn().moveLineStartToEnd();
     }
 
-    Charset getCharset() {
+    private Charset getCharset() {
         return this.charset;
     }
 
@@ -162,11 +160,6 @@ class TextInputControlStream {
             }
         }
 
-        @Override
-        public void close() throws IOException {
-            super.close();
-        }
-
         void clear() throws IOException {
             this.inputTextTarget.flush();
             this.lastLineBreakIndex = 0;
@@ -224,11 +217,12 @@ class TextInputControlStream {
                 final ByteBuffer byteBuffer = ByteBuffer.wrap(this.buf.toByteArray());
                 final CharBuffer charBuffer = this.decoder.decode(byteBuffer);
                 try {
+                    String charSet = "[?2004";
                     String input = charBuffer.toString();
                     // removes escape chars from the output.
-                    if (input.length() > 0 && input.contains("[?2004")) {
-                        input = input.substring(0, input.indexOf("[?2004"))
-                                + input.substring(input.indexOf("[?2004") + 7, input.length());
+                    if (input.length() > 0 && input.contains(charSet)) {
+                        input = input.substring(0, input.indexOf(charSet))
+                                + input.substring(input.indexOf(charSet) + 7, input.length());
                     }
                     this.textInputControl.appendText(input);
                     this.textInputControl.positionCaret(this.textInputControl.getLength());
@@ -247,7 +241,7 @@ class TextInputControlStream {
             flush();
         }
 
-        void clear() throws IOException {
+        void clear() {
             this.buf = null;
         }
 

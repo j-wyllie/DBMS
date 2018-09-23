@@ -25,15 +25,6 @@ import server.controller.UserController;
 public class Server {
     private static Integer port = 6969;
 
-    private static UserController userController;
-    private static ProfileController profileController;
-    private static ProcedureController procedureController;
-    private static OrganController organController;
-    private static DrugController drugController;
-    private static CountriesController countriesController;
-    private static ConditionController conditionController;
-
-
     /**
      * Server class should not be instantiated.
      */
@@ -54,8 +45,8 @@ public class Server {
             log.error("Server init failed");
             log.error(e.getMessage(), e);
         });
+
         initRoutes();
-        initControllers();
     }
 
     private static void initRoutes() {
@@ -174,14 +165,4 @@ public class Server {
             });
         });
     }
-
-    private static void initControllers() {
-        userController = new UserController();
-        profileController = new ProfileController();
-        organController = new OrganController();
-        drugController = new DrugController();
-        countriesController = new CountriesController();
-        conditionController = new ConditionController();
-    }
-
 }
