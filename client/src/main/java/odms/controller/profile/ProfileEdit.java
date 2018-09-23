@@ -472,20 +472,24 @@ public class ProfileEdit extends CommonController {
     }
 
     public void saveHLAtype() {
-        Integer xa = view.getHLAXAField();
-        Integer xb = view.getHLAXBField();
-        Integer xc = view.getHLAXCField();
-        Integer xdp = view.getHLAXDPField();
-        Integer xdq = view.getHLAXDQField();
-        Integer xdr = view.getHLAXDRField();
-        Integer ya = view.getHLAYAField();
-        Integer yb = view.getHLAYBField();
-        Integer yc = view.getHLAYCField();
-        Integer ydp = view.getHLAYDPField();
-        Integer ydq = view.getHLAYDQField();
-        Integer ydr = view.getHLAYDRField();
-        HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
-        currentProfile.setHlaType(hlaType);
+        try {
+            Integer xa = view.getHLAXAField();
+            Integer xb = view.getHLAXBField();
+            Integer xc = view.getHLAXCField();
+            Integer xdp = view.getHLAXDPField();
+            Integer xdq = view.getHLAXDQField();
+            Integer xdr = view.getHLAXDRField();
+            Integer ya = view.getHLAYAField();
+            Integer yb = view.getHLAYBField();
+            Integer yc = view.getHLAYCField();
+            Integer ydp = view.getHLAYDPField();
+            Integer ydq = view.getHLAYDQField();
+            Integer ydr = view.getHLAYDRField();
+            HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
+            currentProfile.setHlaType(hlaType);
+        } catch (Exception e) {
+
+        }
     }
 
     /**

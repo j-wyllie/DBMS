@@ -27,6 +27,7 @@ import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
 import server.model.database.condition.ConditionDAO;
+import server.model.database.hlatype.HLATypeDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
@@ -54,6 +55,10 @@ public class MySqlProfileDAO implements ProfileDAO {
 
             while (allProfiles.next()) {
                 Profile newProfile = parseProfile(allProfiles);
+                HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
+                if(hlaTypeDAO.get(newProfile.getId()) != null) {
+                    newProfile.setHlaType(hlaTypeDAO.get(newProfile.getId()));
+                }
                 result.add(newProfile);
             }
 
@@ -713,6 +718,10 @@ public class MySqlProfileDAO implements ProfileDAO {
             } else {
                 while (allProfiles.next()) {
                     Profile newProfile = parseProfile(allProfiles);
+                    HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
+                    if(hlaTypeDAO.get(newProfile.getId()) != null) {
+                        newProfile.setHlaType(hlaTypeDAO.get(newProfile.getId()));
+                    }
                     result.add(newProfile);
                 }
             }

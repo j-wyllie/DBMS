@@ -7,10 +7,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
+import server.model.database.hlatype.HLATypeDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.DataTypeEnum;
 import server.model.enums.KeyEnum;
@@ -160,9 +162,23 @@ public class ProfileController {
         try {
             if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
                 profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
+                HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
+                if(hlaTypeDAO.get(profile.getId()) != null) {
+                    System.out.println("a");
+                    profile.setHlaType(hlaTypeDAO.get(profile.getId()));
+                } else {
+                    System.out.println(profile.getId());
+                }
             }
             else {
                 profile = database.get(req.queryParams("username"));
+                HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
+                if(hlaTypeDAO.get(profile.getId()) != null) {
+                    System.out.println("a");
+                    profile.setHlaType(hlaTypeDAO.get(profile.getId()));
+                } else {
+                    System.out.println(profile.getId());
+                }
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -234,7 +250,13 @@ public class ProfileController {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-
+        HLAType hlaType = new HLAType(req.body().toString().substring(req.body().toString().indexOf("\"hlaType\":")+10,req.body().toString().indexOf(",\"city\":")));
+        HLATypeDAO hlaTypeDAO = DAOFactory.getHLATypeDAO();
+        if(hlaTypeDAO.get(profile.getId()) == null) {
+            hlaTypeDAO.add(profile.getId(),hlaType);
+        } else {
+            hlaTypeDAO.update(hlaType, profile.getId());
+        }
         try {
             database.update(profile);
         } catch (SQLException e) {

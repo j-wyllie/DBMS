@@ -44,6 +44,13 @@ public class HLAType {
         groupY.put("DR", null);
     }
 
+    /***
+     * Initialises an HLA type from a string.
+     */
+    public HLAType(String s) {
+        parseString(s);
+    }
+
     /**
      *  Initialises the key-value pairs of the HLA type
      * @param xa  Group X gene A  Allele
@@ -92,6 +99,34 @@ public class HLAType {
     }
     public Map getSecondaryAntigens() {
         return secondaryAntigens;
+    }
+
+    public void parseString(String s ) {
+        setGroupX(parseMap(s.substring(s.indexOf("\"groupX\":")+9, s.indexOf(",\"groupY\":"))));
+        setGroupY(parseMap(s.substring(s.indexOf("\"groupY\":")+9, s.indexOf(",\"secondaryAntigens\":"))));
+        setSecondaryAntigens(parseMap(s.substring(s.indexOf("Antigens\":")+10, s.length()-1)));
+    }
+
+    /**
+     * Parses a string from the database and returns it as a Map<String, Integer>
+     * @param string String to be parsed.
+     * @return the parsed map
+     */
+    private Map<String, Integer> parseMap(String string) {
+        Map<String, Integer> map = new HashMap<>();
+        if(!string.equals("{}")) {
+            string = string.replace("\"","");
+            string = string.replace("{", "");
+            string = string.replace("}", "");
+            string = string.replace(" ", "");
+            string = string.replace(":","=");
+            String[] strings = string.split(",");
+            for (int i = 0; i < strings.length; i++) {
+                String[] values = strings[i].split("=");
+                map.put(values[0], Integer.parseInt(values[1]));
+            }
+        }
+        return map;
     }
 }
 
