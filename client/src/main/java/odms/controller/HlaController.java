@@ -22,19 +22,19 @@ public class HlaController {
 
         // try matching same groups
         Integer numMatchingSame = 0;
-        if (xa == xb) {
+        if (xa.equals(xb)) {
             numMatchingSame++;
         }
-        if (ya == yb) {
+        if (ya.equals(yb)) {
             numMatchingSame++;
         }
 
         // try matching cross groups
         Integer numMatchingCross = 0;
-        if (xa == ya) {
+        if (xa.equals(ya)) {
             numMatchingCross++;
         }
-        if (ya == xb) {
+        if (ya.equals(xb)) {
             numMatchingCross++;
         }
 
@@ -50,20 +50,18 @@ public class HlaController {
      */
     public static Integer matchScore(HLAType hlaA, HLAType hlaB) {
         final float MATCH_MULTIPLIER = 100f / 12f;
-        float score = 0;
+        float score;
         int numMatchingAnitgens = 0;
 
-        for (String gene : HLAType.getPrimaryGeneList()) {
-            numMatchingAnitgens += calcMatch(gene, hlaA, hlaB);
+        try {
+            for (String gene : HLAType.getPrimaryGeneList()) {
+                numMatchingAnitgens += calcMatch(gene, hlaA, hlaB);
+            }
+        } catch (NullPointerException exception) {
+            numMatchingAnitgens = 0;
         }
 
         score = numMatchingAnitgens * MATCH_MULTIPLIER;
         return (int) score;
-    }
-
-    public static void main (String[] args) {
-        HLAType donor = new HLAType(41, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40);
-        HLAType receiver = new HLAType(40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40);
-        System.out.println("match score " + matchScore(donor, receiver));
     }
 }

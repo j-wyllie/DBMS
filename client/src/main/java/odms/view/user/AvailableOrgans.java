@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.HlaController;
 import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
@@ -56,6 +58,7 @@ public class AvailableOrgans extends CommonView {
     private TableView availableOrgansTable;
 
     private OrganEnum selectedOrgan;
+    private Profile donorProfile;
 
     private ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile, OrganEnum>> listOfFilteredAvailableOrgans;
@@ -63,6 +66,7 @@ public class AvailableOrgans extends CommonView {
     private ClinicianProfile parentView;
     private odms.controller.user.AvailableOrgans controller =
             new odms.controller.user.AvailableOrgans();
+    private HlaController hlaController = new HlaController();
 
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
@@ -123,10 +127,20 @@ public class AvailableOrgans extends CommonView {
                 cdf -> new SimpleStringProperty(
                         cdf.getValue().getCountry() + ", " + cdf.getValue().getRegion()));
 
+        TableColumn<Profile, String> hlaMatchColumn = new TableColumn<>(
+                "HLA Match"
+        );
+        hlaMatchColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(
+                         String.valueOf(hlaController.matchScore(cdf.getValue().getHlaType(), donorProfile.getHlaType())) + "%"
+                )
+        );
+
         potentialOrganMatchTable.getColumns().add(waitTimeColumn);
         potentialOrganMatchTable.getColumns().add(ageColumn);
         potentialOrganMatchTable.getColumns().add(nhiColumn);
         potentialOrganMatchTable.getColumns().add(locationColumn);
+        potentialOrganMatchTable.getColumns().add(hlaMatchColumn);
 
         setPotentialOrganMatchesList();
 
@@ -262,7 +276,7 @@ public class AvailableOrgans extends CommonView {
     private void setPotentialOrganMatchesList() {
         try {
             OrganEnum organToMatch = selectedOrgan;
-            Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
+            donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
                     .getSelectionModel().getSelectedItem()).getKey();
 
             potentialOrganMatches = odms.controller.user.AvailableOrgans
