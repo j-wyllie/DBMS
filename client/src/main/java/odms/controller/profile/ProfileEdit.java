@@ -1,6 +1,7 @@
 package odms.controller.profile;
 
 import javafx.fxml.FXML;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
@@ -474,7 +475,7 @@ public class ProfileEdit extends CommonController {
      */
     private void saveCountry() {
         if (view.getComboCountry().getValue() != null) {
-            currentProfile.setCountry(view.getComboCountry().getValue().toString());
+            currentProfile.setCountry(CountriesEnum.getEnumByString(view.getComboCountry().getValue().toString()));
         }
     }
 
@@ -501,7 +502,7 @@ public class ProfileEdit extends CommonController {
     public void populateDeathFields() {
         if (currentProfile.getCountryOfDeath() == null) {
             if (currentProfile.getCountry() != null) {
-                view.setComboCountryOfDeath(currentProfile.getCountry());
+                view.setComboCountryOfDeath(currentProfile.getCountry().getName());
             }
         } else {
             view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());

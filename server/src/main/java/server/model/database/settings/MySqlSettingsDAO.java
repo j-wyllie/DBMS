@@ -24,7 +24,10 @@ public class MySqlSettingsDAO implements SettingsDAO {
             Statement stmt = connection.createStatement();
             ResultSet result = stmt.executeQuery(query)) {
             while (result.next()) {
-                countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
+                CountriesEnum country = CountriesEnum.getEnumByString(result.getString("Name"));
+                if (country != null) {
+                    countries.add(country.getName());
+                }
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -46,7 +49,9 @@ public class MySqlSettingsDAO implements SettingsDAO {
             stmt.setBoolean(1, valid);
             try (ResultSet result = stmt.executeQuery()) {
                 while (result.next()) {
-                    countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
+                    countries.add(
+                            CountriesEnum.valueOf(result.getString("Name")).getName()
+                    );
                 }
             }
         } catch (SQLException e) {

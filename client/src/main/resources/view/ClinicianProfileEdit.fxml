@@ -125,7 +125,7 @@
                                                                   <Insets right="10.0" />
                                                               </GridPane.margin>
                                                           </TextField>
-                                                          <TextField fx:id="staffIdField" layoutX="10.0" layoutY="24.0" onKeyTyped="#editTrueKey" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                          <TextField fx:id="idField" layoutX="10.0" layoutY="24.0" onKeyTyped="#editTrueKey" prefHeight="40.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                                               <GridPane.margin>
                                                                   <Insets right="10.0" />
                                                               </GridPane.margin>

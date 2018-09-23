@@ -7,7 +7,7 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 
-public class Session {
+public final class Session {
 
     private static Object currentUser;
     private static Object currentProfile;
@@ -16,7 +16,7 @@ public class Session {
     /**
      * Constructor - cannot instantiate a static class.
      */
-    public Session () {
+    private Session () {
         throw new UnsupportedOperationException();
     }
 
@@ -63,15 +63,16 @@ public class Session {
      */
     public static String getDefaultLocation() {
         String country;
-        if (currentUser != null) {
-            User user = (User) currentUser;
-            country = user.getCountry();
-        } else {
-            Profile profile = (Profile) currentProfile;
-            country = profile.getCountry();
-        }
-        if (country == null) {
-            country = Locale.getDefault().getDisplayCountry();
+        try {
+            if (currentUser != null) {
+                User user = (User) currentUser;
+                country = user.getCountry().toString();
+            } else {
+                Profile profile = (Profile) currentProfile;
+                country = profile.getCountry().toString();
+            }
+        } catch (NullPointerException e) {
+            country = Locale.getDefault().toString();
         }
         return country;
     }

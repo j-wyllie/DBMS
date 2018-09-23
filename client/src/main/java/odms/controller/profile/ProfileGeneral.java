@@ -77,8 +77,8 @@ public class ProfileGeneral {
 
             if (currentProfile.getCountryOfDeath() == null ) {
                 if (currentProfile.getCountry() != null) {
-                    currentProfile.setCountryOfDeath(currentProfile.getCountry());
-                    view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    currentProfile.setCountryOfDeath(currentProfile.getCountry().getName());
+                    view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
                 } else {
                     view.getCountryLabel().setText("country of Death : ");
                 }
@@ -111,7 +111,7 @@ public class ProfileGeneral {
                 view.getRegionLabel().setText("Region : " + currentProfile.getRegion());
             }
             if (currentProfile.getCountry() != null) {
-                view.getCountryLabel().setText("country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                view.getCountryLabel().setText("country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
             }
             if (currentProfile.getCity() != null) {
                 view.getCityLabel().setText("City : " + currentProfile.getCity());

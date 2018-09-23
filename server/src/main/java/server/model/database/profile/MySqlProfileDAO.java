@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -156,7 +157,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
-        String country = profiles.getString("Country");
+        String countryStr = profiles.getString("Country");
+        CountriesEnum country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
@@ -200,10 +202,10 @@ public class MySqlProfileDAO implements ProfileDAO {
                 preferredName, preferredGender, imageName, lastBloodDonation, bloodDonationPoints);
 
         try {
-            profile = setOrgans(profile);
-            profile = setMedications(profile);
-            profile = setProcedures(profile);
-            profile = setConditions(profile);
+            setOrgans(profile);
+            setMedications(profile);
+            setProcedures(profile);
+            setConditions(profile);
         } catch (OrganConflictException e) {
             log.error(e.getMessage(), e);
         }
@@ -216,7 +218,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         profile.addOrgansDonating(database.getDonating(profile.getId()));
         profile.addOrgansDonated(database.getDonations(profile.getId()));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
+        profile.addOrgansRequired(database.getRequired(profile));
         profile.addOrgansReceived(database.getReceived(profile.getId()));
 
         return profile;
@@ -325,12 +327,12 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setNull(23, Types.VARCHAR);
         }
         if (profile.getCountry() != null) {
-            stmt.setString(24, profile.getCountry());
+            stmt.setString(24, profile.getCountry().toString());
         } else {
             stmt.setNull(24, Types.VARCHAR);
         }
         if (profile.getBirthCountry() != null) {
-            stmt.setString(25, profile.getBirthCountry());
+            stmt.setString(25, profile.getBirthCountry().toString());
         } else {
             stmt.setNull(25, Types.VARCHAR);
         }
@@ -536,22 +538,22 @@ public class MySqlProfileDAO implements ProfileDAO {
     private void removeMedications(Profile profile) {
         MedicationDAO database = DAOFactory.getMedicationDao();
 
-        profile.getCurrentMedications().forEach(medication -> database.remove(medication));
-        profile.getHistoryOfMedication().forEach(medication -> database.remove(medication));
+        profile.getCurrentMedications().forEach(database::remove);
+        profile.getHistoryOfMedication().forEach(database::remove);
     }
 
     private void removeProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.getPendingProcedures().forEach(procedure -> database.remove(procedure));
-        profile.getPreviousProcedures().forEach(procedure -> database.remove(procedure));
+        profile.getPendingProcedures().forEach(database::remove);
+        profile.getPreviousProcedures().forEach(database::remove);
     }
 
     private void removeConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
 
-        profile.getCurrentConditions().forEach(condition -> database.remove(condition));
-        profile.getCuredConditions().forEach(condition -> database.remove(condition));
+        profile.getCurrentConditions().forEach(database::remove);
+        profile.getCuredConditions().forEach(database::remove);
     }
 
     /**
@@ -562,18 +564,17 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public void update(Profile profile) throws SQLException {
         String query = "update profiles set NHI = ?, Username = ?, IsDonor = ?, IsReceiver = ?, "
-                + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, Weight = ?,"
-                + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
-                + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
-                + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
-                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ?, City = ?, BloodDonationPoints = ?, LastBloodDonation = ? where ProfileId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = DatabaseConnection.getConnection();
+                + "GivenNames = ?, LastNames = ?, Dob = ?, Dod = ?, Gender = ?, Height = ?, "
+                + "Weight = ?, BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, "
+                + "BloodPressureDiastolic = ?, BloodPressureSystolic = ?, Address = ?, "
+                + "Region = ?, Phone = ?, Email = ?,  Country = ?, BirthCountry = ?, "
+                + "CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, StreetNo = ?, "
+                + "StreetName = ?, Neighbourhood = ?, Created = ?, LastUpdated = ?, City = ?, "
+                + "BloodDonationPoints = ?, LastBloodDonation = ? "
+                + "where ProfileId = ?;";
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, profile.getNhi());
             stmt.setString(2, profile.getNhi());
             stmt.setBoolean(3, profile.getDonor());
@@ -598,8 +599,8 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(18, profile.getRegion());
             stmt.setString(19, profile.getPhone());
             stmt.setString(20, profile.getEmail());
-            stmt.setString(21, profile.getCountry());
-            stmt.setString(22, profile.getBirthCountry());
+            stmt.setString(21, profile.getCountry() != null ? profile.getCountry().toString() : null);
+            stmt.setString(22, profile.getBirthCountry().toString());
             stmt.setString(23, profile.getCountryOfDeath());
             stmt.setString(24, profile.getRegionOfDeath());
             stmt.setString(25, profile.getCityOfDeath());
@@ -616,9 +617,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        } finally {
-            conn.close();
-            stmt.close();
         }
     }
 
@@ -678,7 +676,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         query += ";";
 
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
 
         Connection conn = DatabaseConnection.getConnection();

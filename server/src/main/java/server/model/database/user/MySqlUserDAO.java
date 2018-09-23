@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -145,7 +146,7 @@ public class MySqlUserDAO implements UserDAO {
         String address = rs.getString("Address");
         String region = rs.getString("Region");
         String country = rs.getString("Country");
-        Boolean defaultBool = rs.getBoolean("IsDefault");
+        boolean defaultBool = rs.getBoolean("IsDefault");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
         String imageName = rs.getString("ImageName");
@@ -160,7 +161,7 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
-        user.setCountry(country);
+        user.setCountry(country != null ? CountriesEnum.valueOf(country) : null);
         user.setDefault(defaultBool);
         return user;
     }
@@ -174,10 +175,9 @@ public class MySqlUserDAO implements UserDAO {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
                 " Region, Country, Created, LastUpdated, IsDefault, ImageName) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = instance.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             if (user.getPassword() != null) {
                 stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
@@ -188,13 +188,13 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getCountry());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().toString() : null);
             stmt.setString(8, LocalDateTime.now().toString());
             stmt.setString(9, LocalDateTime.now().toString());
             stmt.setBoolean(10, user.getDefault());
             stmt.setString(11, user.getPictureName());
             stmt.execute();
-        } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new SQLException();
         }
     }
@@ -261,7 +261,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getCountry());
+            stmt.setString(7, user.getCountry().getName());
             stmt.setString(8, user.getLastUpdated().toString());
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());

@@ -66,9 +66,10 @@ public class LoginView extends CommonController {
                 } else {
                     AlertController.invalidUsernameOrPassword();
                 }
-            } catch (UserNotFoundException | SQLException | IllegalArgumentException u) {
-                AlertController.invalidUsernameOrPassword();
+            } catch (UserNotFoundException | SQLException | IllegalArgumentException e) {
+                log.error(e.getMessage(), e);
 
+                AlertController.invalidUsernameOrPassword();
             }
         }
     }
@@ -193,7 +194,6 @@ public class LoginView extends CommonController {
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(

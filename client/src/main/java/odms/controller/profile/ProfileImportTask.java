@@ -14,6 +14,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
@@ -206,8 +207,8 @@ public class ProfileImportTask extends Task<Void> {
         profile.setCity(csvRecord.get("city"));
         profile.setRegion(csvRecord.get("region"));
         profile.setZipCode(csvRecord.get("zip_code"));
-        profile.setCountry(csvRecord.get("country"));
-        profile.setBirthCountry(csvRecord.get("birth_country"));
+        profile.setCountry(CountriesEnum.getEnumByString(csvRecord.get("country")));
+        profile.setBirthCountry(CountriesEnum.getEnumByString(csvRecord.get("birth_country")));
         profile.setPhone(csvRecord.get("home_number"));
         profile.setMobilePhone(csvRecord.get("mobile_number"));
         profile.setEmail(csvRecord.get("email"));

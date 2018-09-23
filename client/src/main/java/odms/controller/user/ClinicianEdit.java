@@ -30,7 +30,7 @@ public class ClinicianEdit extends CommonController {
                 "updated", "previous " + currentUser.getAttributesSummary() +
                 " new " + currentUser.getAttributesSummary(), -1, LocalDateTime.now());
         currentUser.setName(view.getGivenNamesField());
-        currentUser.setId(Integer.valueOf(view.getStaffIdField()));
+        currentUser.setId(Integer.valueOf(view.getIdField()));
         currentUser.setWorkAddress(view.getAddressField());
         currentUser.setRegion(view.getRegionField());
 

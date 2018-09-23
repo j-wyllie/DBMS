@@ -40,7 +40,7 @@ public class ClinicianEdit extends CommonView {
     private Label pictureLabel;
 
     @FXML
-    private TextField staffIdField;
+    private TextField idField;
 
     @FXML
     private TextField regionField;
@@ -140,7 +140,7 @@ public class ClinicianEdit extends CommonView {
             }
 
             if (currentUser.getId() != null) {
-                staffIdField.setText(currentUser.getId().toString());
+                idField.setText(currentUser.getId().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {
@@ -176,8 +176,8 @@ public class ClinicianEdit extends CommonView {
         return givenNamesField.getText();
     }
 
-    public String getStaffIdField() {
-        return staffIdField.getText();
+    public String getIdField() {
+        return idField.getText();
     }
 
     public String getAddressField() {

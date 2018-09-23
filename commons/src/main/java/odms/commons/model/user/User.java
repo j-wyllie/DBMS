@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 
 public class User {
@@ -13,7 +14,7 @@ public class User {
     private Integer staffID;
     private String workAddress;
     private String region;
-    private String country;
+    private CountriesEnum country;
     private LocalDateTime lastUpdated;
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
@@ -254,11 +255,11 @@ public class User {
         this.pictureName = pictureName;
     }
 
-    public String getCountry() {
+    public CountriesEnum getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(CountriesEnum country) {
         this.country = country;
     }
 }

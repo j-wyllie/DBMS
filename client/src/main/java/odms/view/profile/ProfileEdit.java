@@ -476,7 +476,7 @@ public class ProfileEdit extends CommonView {
         }
         if (currentProfile.getCountry() != null) {
             comboCountry.setValue(
-                    CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
         } else if (validCountries.contains(MAINCOUNTRY)) {
             comboCountry.setValue(CountriesEnum.getValidNameFromString(MAINCOUNTRY));
         }

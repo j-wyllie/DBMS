@@ -82,7 +82,7 @@ public class SettingsController {
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
-            countryDAO.updateCountries(CountriesEnum.valueOf(name), valid);
+            countryDAO.updateCountries(CountriesEnum.getEnumByString(name), valid);
             res.status(200);
             return "Country Updated";
         }
