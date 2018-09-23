@@ -12,10 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class MySqlHLATypeDao implements HLATypeDAO {
+public class MySqlHLATypeDao implements HLATypeDAO{
     /**
      * Get the HLA type for the profile.
-     *
      * @param profile to get the HLA type for.
      */
     @Override
@@ -42,7 +41,6 @@ public class MySqlHLATypeDao implements HLATypeDAO {
 
     /**
      * Parses a single row of the hla_type table and returns a hlatype object
-     *
      * @param rs rows returned by the database.
      * @return the parsed condition object
      * @throws SQLException error.
@@ -62,13 +60,12 @@ public class MySqlHLATypeDao implements HLATypeDAO {
 
     /**
      * Parses a string from the database and returns it as a Map<String, Integer>
-     *
      * @param string String to be parsed.
      * @return the parsed map
      */
     private Map<String, Integer> parseMap(String string) {
         Map<String, Integer> map = new HashMap<>();
-        if (!string.equals("{}")) {
+        if(!string.equals("{}")) {
             string = string.replace("{", "");
             string = string.replace("}", "");
             string = string.replace(" ", "");
@@ -83,7 +80,6 @@ public class MySqlHLATypeDao implements HLATypeDAO {
 
     /**
      * Add a new hlatype to a profile.
-     *
      * @param profile to add the hla to.
      * @param hla to add.
      */
@@ -112,7 +108,6 @@ public class MySqlHLATypeDao implements HLATypeDAO {
 
     /**
      * Remove a hlaType from a profile.
-     *
      * @param profile of hlatype to remove
      */
     @Override
@@ -135,7 +130,6 @@ public class MySqlHLATypeDao implements HLATypeDAO {
 
     /**
      * Update a hlaType for the profile.
-     *
      * @param hlaType to update.
      * @param profile of hlatype
      */

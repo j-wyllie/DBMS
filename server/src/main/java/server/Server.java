@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;
-import server.controller.HLATypeController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
 import server.controller.ProfileController;
@@ -153,14 +152,6 @@ public class Server {
             path("/countries", () -> {
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
-            });
-
-            // HLA type api endpoints.
-            path("/hla", () -> {
-                get("", HLATypeController::get);
-                post("", HLATypeController::add);
-                patch("", HLATypeController::update);
-                delete("", HLATypeController::remove);
             });
         });
     }

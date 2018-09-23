@@ -1,14 +1,11 @@
 package odms.controller.database;
 
-import odms.commons.model.profile.HLAType;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.common.HttpCommonDAO;
 import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.condition.HttpConditionDAO;
 import odms.controller.database.country.CountryDAO;
 import odms.controller.database.country.HttpCountryDAO;
-import odms.controller.database.hlaType.HLATypeDAO;
-import odms.controller.database.hlaType.HttpHLATypeDAO;
 import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.medication.HttpMedicationDAO;
@@ -80,7 +77,5 @@ public class DAOFactory {
      * @return dao for the data IO type.
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
-
-    public static HLATypeDAO getHLATypeDAO() { return new HttpHLATypeDAO(); }
 
 }
