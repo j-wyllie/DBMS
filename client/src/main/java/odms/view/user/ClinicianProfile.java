@@ -206,6 +206,22 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
+     * Initializes the map and organ expiry lists.
+     */
+    public void handleTabOrganMapClicked() {
+        setTransplantWaitingListNull();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserMapTab.fxml"));
+        try {
+            organMapTab.setContent(loader.load());
+            OrganMap organMapTabView = loader.getController();
+            organMapTabView.initialize(currentUser, this);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+
+    /**
      * Sets up the social feed tab when it's clicked. Adds a listener to start and top the timer.
      */
     @FXML
