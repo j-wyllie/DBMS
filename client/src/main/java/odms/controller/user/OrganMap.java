@@ -145,4 +145,14 @@ public class OrganMap extends CommonController {
     public List<Double> getProfileLatLong(Profile profile) {
         return AddressIO.getLongLatRegion(profile.getRegion(), profile.getCountry());
     }
+
+    /**
+     * Gets a profiles lat long for the region and country.
+     *
+     * @param profile Profile being displayed.
+     * @return A list containing the lat and long.
+     */
+    public List<Double> getProfileDeathLatLong(Profile profile) {
+        return AddressIO.getLongLatRegion(profile.getRegionOfDeath(), profile.getCountry());
+    }
 }

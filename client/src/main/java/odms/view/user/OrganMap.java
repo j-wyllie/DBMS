@@ -46,7 +46,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
     private static final String RECEIVER_MARKER = "/icons/receiverMarker.png";
     private static final String DONOR_MARKER = "/icons/deadDonorMarker.png";
-    private static final String BOTH_MARKER = "/icons/red_marker.png";
+    private static final String BOTH_MARKER = "/icons/bothMarkers.png";
     private static final Integer ZOOM_LEVEL = 5;
     private static final String FULL_PREFERRED_NAME = "fullPreferredName";
     private static final Double LAT = -41.0;
@@ -235,7 +235,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profile profile to add.
      */
     private void addDonorMarker(Profile profile) {
-        List<Double> latLng = controller.getProfileLatLong(profile);
+        List<Double> latLng = controller.getProfileDeathLatLong(profile);
         LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
         MarkerOptions markerOptions = new MarkerOptions();
         clearDonorMarkers();
@@ -315,7 +315,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     public void showAllDonors() {
         clearDonorMarkers();
         clearReceiverMarkers();
-        showAllOnMap(donorsList, DONOR_MARKER);
+        showAllOnMap(donorsList, DONOR_MARKER, false);
     }
 
     /**
@@ -324,7 +324,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     public void showAllReceivers() {
         clearDonorMarkers();
         clearReceiverMarkers();
-        showAllOnMap(receiversList, RECEIVER_MARKER);
+        showAllOnMap(receiversList, RECEIVER_MARKER, true);
     }
 
     /**
@@ -352,14 +352,19 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profileList Profiles to display.
      * @param mapMarker   image to use as marker.
      */
-    private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker) {
+    private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker, Boolean alive) {
         for (Profile profile : profileList) {
-            List<Double> latLng = controller.getProfileLatLong(profile);
+            List<Double> latLng;
+            if(alive){
+                latLng = controller.getProfileLatLong(profile);
+            }else{
+                latLng = controller.getProfileDeathLatLong(profile);
+            }
             LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
             MarkerOptions markerOptions = new MarkerOptions();
             formatMarkerImage(mapMarker, donorLocation, markerOptions);
             Marker marker = new Marker(markerOptions);
-            if(mapMarker == DONOR_MARKER) {
+            if(mapMarker.equals(DONOR_MARKER)) {
                 currentDonorMarkers.add(marker);
             } else{
                 currentReceiverMarkers.add(marker);
