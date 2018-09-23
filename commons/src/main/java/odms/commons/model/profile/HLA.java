@@ -10,6 +10,14 @@ public class HLA {
     private Boolean groupX;
     private Boolean groupY;
 
+    /**
+     * HLA Model.
+     *
+     * @param alphaValue the alpha value.
+     * @param numericValue the numeric value.
+     * @param groupX if associated with group X.
+     * @param groupY if associated with group Y.
+     */
     public HLA(
             String alphaValue,
             Integer numericValue,

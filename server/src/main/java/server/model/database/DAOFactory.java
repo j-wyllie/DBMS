@@ -6,8 +6,8 @@ import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
 import server.model.database.country.CountryDAO;
 import server.model.database.country.MySqlCountryDAO;
-import server.model.database.hlatype.HLATypeDAO;
-import server.model.database.hlatype.MySqlHLATypeDao;
+import server.model.database.hlatype.HLADAO;
+import server.model.database.hlatype.MySqlHLADao;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.organ.MySqlOrganDAO;
@@ -74,11 +74,11 @@ public class DAOFactory {
     }
 
     /**
-     * Gives the data access object class for the HLA type object.
+     * Gives the data access object class for the HLA object.
      * @return dao for particular database type.
      */
-    public static HLATypeDAO getHLATypeDAO() {
-        return new MySqlHLATypeDao();
+    public static HLADAO getHLADAO() {
+        return new MySqlHLADao();
     }
 
 }
