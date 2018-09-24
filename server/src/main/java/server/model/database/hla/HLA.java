@@ -1,4 +1,4 @@
-package odms.commons.model.profile;
+package server.model.database.hla;
 
 /**
  * Model for storing HLA's.

@@ -133,7 +133,7 @@ public class AvailableOrgans extends CommonView {
         );
         hlaMatchColumn.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
-                         String.valueOf(hlaController.matchScore(cdf.getValue().getHlaType(), donorProfile.getHlaType())) + "%"
+                         //String.valueOf(hlaController.matchScore(cdf.getValue().getHlaType(), donorProfile.getHlaType())) + "%"
                 )
         );
 

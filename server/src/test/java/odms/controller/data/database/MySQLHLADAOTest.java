@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import odms.commons.model.profile.HLA;
+import server.model.database.hla.HLA;
 import odms.commons.model.profile.Profile;
 import org.junit.After;
 import org.junit.Before;

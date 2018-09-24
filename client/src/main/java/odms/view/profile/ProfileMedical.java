@@ -106,7 +106,9 @@ public class ProfileMedical extends CommonView {
         }
 
         // HLA text setters
-        HLAType hlaType = currentProfile.getHlaType();
+
+        //HLATODO: get hlaType
+        HLAType hlaType = new HLAType();
 
         if (hlaType.getGroupX().get("A") != null) {
             hlaXALabel.setText("A" +String.valueOf(hlaType.getGroupX().get("A")));

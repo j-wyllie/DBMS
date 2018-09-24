@@ -188,11 +188,8 @@ public class HttpProfileDAO implements ProfileDAO {
             log.error(e.getMessage(), e);
         }
         if (response != null && response.getStatus() == 200) {
-            HLAType hlaType = new HLAType(response.getBody().toString().substring(response.getBody().toString().indexOf("\"hlaType\":")+10,response.getBody().toString().indexOf(",\"city\":")));
-            System.out.println(response.getBody().toString().substring(response.getBody().toString().indexOf("\"hlaType\":")+10,response.getBody().toString().indexOf(",\"city\":")));
-            Profile p = parser.fromJson(response.getBody(), Profile.class);
-            p.setHlaType(hlaType);
-            return p;
+            Profile profile = parser.fromJson(response.getBody(), Profile.class);
+            return profile;
         }
         return null;
     }

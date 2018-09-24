@@ -7,17 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HLAType {
-    // validation regex
-    private static final String REGEX_GENE_CLASS_I = "[A-C]";
-    private static final String REGEX_GENE_CLASS_II = "(DP|DQ|DR)";
-    private static final String REGEX_ALLELE = "[0-9]{1,3}";
-    private static final String REGEX_CLASS_I = "(" + REGEX_GENE_CLASS_I + REGEX_ALLELE + ")";
-    private static final String REGEX_CLASS_II = "(" + REGEX_GENE_CLASS_II + REGEX_ALLELE + ")";
-    private static final String REGEX_VALID_ALL = "((" + REGEX_GENE_CLASS_I +
-            "|" + REGEX_GENE_CLASS_II +
-            ")" + REGEX_ALLELE + ")";
 
+/**
+ * The full HLA type of a patient
+ */
+public class HLAType {
     private static List<String> primaryGeneList = Arrays.asList("A", "B", "C", "DP", "DQ", "DR");
     private Map<String, Integer> groupX = new HashMap<>();
     private Map<String, Integer> groupY = new HashMap<>();
@@ -42,13 +36,6 @@ public class HLAType {
         groupY.put("DP", null);
         groupY.put("DQ", null);
         groupY.put("DR", null);
-    }
-
-    /***
-     * Initialises an HLA type from a string.
-     */
-    public HLAType(String s) {
-        parseString(s);
     }
 
     /**
@@ -86,47 +73,13 @@ public class HLAType {
     }
 
     public static List<String> getPrimaryGeneList() { return primaryGeneList; }
-
     public Map<String, Integer> getGroupX() { return groupX; }
     public Map<String, Integer> getGroupY() { return groupY; }
+    public Map getSecondaryAntigens() { return secondaryAntigens; }
 
-    public void setGroupX(Map<String, Integer> map) {groupX = map;}
-    public void setGroupY(Map<String, Integer> map) {groupY = map;}
-    public void setSecondaryAntigens(Map<String, Integer> map) {secondaryAntigens = map;}
-
-    public void addSecondaryAntigen(String gene, Integer allele) {
-        secondaryAntigens.put(gene, allele);
-    }
-    public Map getSecondaryAntigens() {
-        return secondaryAntigens;
-    }
-
-    public void parseString(String s ) {
-        setGroupX(parseMap(s.substring(s.indexOf("\"groupX\":")+9, s.indexOf(",\"groupY\":"))));
-        setGroupY(parseMap(s.substring(s.indexOf("\"groupY\":")+9, s.indexOf(",\"secondaryAntigens\":"))));
-        setSecondaryAntigens(parseMap(s.substring(s.indexOf("Antigens\":")+10, s.length()-1)));
-    }
-
-    /**
-     * Parses a string from the database and returns it as a Map<String, Integer>
-     * @param string String to be parsed.
-     * @return the parsed map
-     */
-    private Map<String, Integer> parseMap(String string) {
-        Map<String, Integer> map = new HashMap<>();
-        if(!string.equals("{}")) {
-            string = string.replace("\"","");
-            string = string.replace("{", "");
-            string = string.replace("}", "");
-            string = string.replace(" ", "");
-            string = string.replace(":","=");
-            String[] strings = string.split(",");
-            for (int i = 0; i < strings.length; i++) {
-                String[] values = strings[i].split("=");
-                map.put(values[0], Integer.parseInt(values[1]));
-            }
-        }
-        return map;
-    }
+    public void setGroupX(Map<String, Integer> map) { groupX = map; }
+    public void setGroupY(Map<String, Integer> map) { groupY = map; }
+    public void setSecondaryAntigens(Map<String, Integer> map) { secondaryAntigens = map; }
+    public void addSecondaryAntigen(String gene, Integer allele) { secondaryAntigens.put(gene, allele); }
 }
 

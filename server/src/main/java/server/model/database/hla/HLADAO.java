@@ -1,7 +1,6 @@
 package server.model.database.hla;
 
 import java.util.List;
-import odms.commons.model.profile.HLA;
 
 /**
  * HLA Data Access Object interface.
