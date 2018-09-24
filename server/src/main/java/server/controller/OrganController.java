@@ -1,10 +1,5 @@
 package server.controller;
 
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
@@ -20,6 +15,11 @@ import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
+
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class OrganController {
@@ -225,8 +225,7 @@ public class OrganController {
                 String note = req.queryParams("note");
                 int userId = Integer.parseInt(req.queryParams("userId"));
                 database.setExpired(new Profile(profileId), organ, 1, note, userId);
-            }
-            else {
+            } else {
                 database.revertExpired(profileId, organ);
             }
         } catch (SQLException e) {
