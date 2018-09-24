@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `drugs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Drug` varchar(50) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL
+  `Current` BOOLEAN DEFAULT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
