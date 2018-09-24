@@ -35,7 +35,6 @@ public class AvailableOrgans {
     private static final int EXPIRED_ORGANS_DELAY = 15000;
 
     private List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
-    private List<ExpiredOrgan> expiredList = new ArrayList<>();
     private Timer timer;
     private odms.view.user.AvailableOrgans view;
 
@@ -163,37 +162,15 @@ public class AvailableOrgans {
      *
      * @param organ Organ to check.
      * @param profile Current profile.
+     * @return Boolean true if organ is expired
      */
-    public void checkOrganExpired(OrganEnum organ, Profile profile) {
+    public Boolean checkOrganExpired(OrganEnum organ, Profile profile) {
         if (LocalDateTime.now()
                 .isAfter(getExpiryTime(organ, profile))) {
             setOrganExpired(organ, profile);
-        }
-    }
-
-    /**
-     * Removes for organs in the expired organ list.
-     *
-     * @param organ Organ to remove.
-     * @param profile Current profile.
-     * @param m Expired organs list.
-     */
-    private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
-            Map.Entry<Profile, OrganEnum> m) {
-        if (LocalDateTime.now()
-                .isAfter(getExpiryTime(organ, profile))) {
-            view.removeItem(m);
-            setOrganExpired(organ, profile);
-        }
-        try {
-            expiredList = DAOFactory.getOrganDao().getExpired(profile);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-        for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())) {
-                view.removeItem(m);
-            }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -739,14 +716,27 @@ public class AvailableOrgans {
      * @throws SQLException error in sql.
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
+        donaters.clear();
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonators = database.getDead();
         for (Profile profile : allDonators) {
+            checkForManuallyExpiredOrgans(profile);
+        }
+        return donaters;
+    }
 
-            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
-                final List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
+    /**
+     * Check to make sure no manually expired organs are in the list of available organs.
+     * @param profile profile organs are being checked for
+     * @throws SQLException database error
+     */
+    private void checkForManuallyExpiredOrgans(Profile profile) throws SQLException {
+        List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
+        Set<OrganEnum> organsDonating = new HashSet<>(profile.getOrgansDonating());
 
+        for (OrganEnum organ : organsDonating) {
+            if (!checkOrganExpired(organ, profile)) {
                 if (expired.isEmpty()) {
                     Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
                             organ);
@@ -758,7 +748,6 @@ public class AvailableOrgans {
                 }
             }
         }
-        return donaters;
     }
 
     /**
@@ -771,7 +760,7 @@ public class AvailableOrgans {
     private void addExpiredOrganToPair(Profile profile, OrganEnum organ,
             List<ExpiredOrgan> expired) {
         for (ExpiredOrgan expiredOrgan : expired) {
-            if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
+            if (!expiredOrgan.getOrganName().equals(organ.getNamePlain())) {
                 Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
                         organ);
                 if (!donaters.contains(pair)) {
@@ -797,11 +786,10 @@ public class AvailableOrgans {
 
         timer.schedule(new TimerTask() {
             public void run() {
-                List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(
-                        view.getListOfAvailableOrgans());
-
-                for (Map.Entry<Profile, OrganEnum> m : toRemove) {
-                    checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                try {
+                    view.setAvailableOrgansList();
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
         }, 0, EXPIRED_ORGANS_DELAY);

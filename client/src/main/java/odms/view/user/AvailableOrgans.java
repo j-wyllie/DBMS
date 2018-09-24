@@ -25,6 +25,7 @@ import org.controlsfx.control.CheckComboBox;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -222,12 +223,6 @@ public class AvailableOrgans extends CommonView {
         availableOrgansTable.getColumns().add(nhiCol);
         availableOrgansTable.getColumns().add(expiryProgressBarCol);
         availableOrgansTable.getItems().clear();
-
-        try {
-            setAvailableOrgansList();
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
         // Sorting on wait time, need to add in distance from location of organ as a 'weighting'
         Comparator<Map.Entry<Profile, OrganEnum>> comparator = (o1, o2) -> {
             if (getTimeRemaining(o1.getValue(), o1.getKey()) < getTimeRemaining(o2.getValue(),
@@ -256,6 +251,7 @@ public class AvailableOrgans extends CommonView {
                 updateMatchesTable();
             }
         });
+        availableOrgansTable.setItems(listOfAvailableOrgans);
     }
 
     /**
@@ -263,10 +259,10 @@ public class AvailableOrgans extends CommonView {
      *
      * @throws SQLException exception thrown when accessing DB to get all available organs.
      */
-    private void setAvailableOrgansList() throws SQLException {
-        listOfAvailableOrgans = FXCollections
-                .observableArrayList(controller.getAllOrgansAvailable());
-        availableOrgansTable.setItems(listOfAvailableOrgans);
+    public void setAvailableOrgansList() throws SQLException {
+        List<Entry<Profile, OrganEnum>> organsAvailable = controller.getAllOrgansAvailable();
+        listOfAvailableOrgans.clear();
+        listOfAvailableOrgans.addAll(organsAvailable);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
@@ -337,6 +333,7 @@ public class AvailableOrgans extends CommonView {
     public void initialize(User currentUser, ClinicianProfile p) {
         this.currentUser = currentUser;
         controller.setView(this);
+        listOfAvailableOrgans = FXCollections.observableArrayList();
         populateOrgansTable();
         populateMatchesTable();
         parentView = p;
