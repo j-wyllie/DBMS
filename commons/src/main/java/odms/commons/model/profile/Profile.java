@@ -1240,14 +1240,12 @@ public class Profile implements Comparable<Profile> {
         return null;
     }
 
-    public Set<Organ> getOrganTimeStamps() {
-        return organTimeStamps;
-    }
-
     public void setOrganDate(String organDate, LocalDateTime date) {
-        organTimeStamps
-                .add(new Organ(OrganEnum.valueOf(organDate.toUpperCase()
-                        .replace(HYPHEN, "_")), date));
+        organTimeStamps.add(
+                new Organ(OrganEnum.valueOf(
+                        organDate.toUpperCase().replace(HYPHEN, "_")),
+                        date)
+        );
     }
 
     public void setLastBloodDonation(LocalDateTime date) {

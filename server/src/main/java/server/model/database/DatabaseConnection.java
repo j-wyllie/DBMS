@@ -61,7 +61,7 @@ public final class DatabaseConnection {
             source.setJdbcUrl(host + '/' + database);
             source.setUser(username);
             source.setPassword(password);
-            source.setMinPoolSize(20);
+            source.setMinPoolSize(3);
             source.setAcquireIncrement(5);
             source.setMaxPoolSize(50);
 
@@ -99,7 +99,7 @@ public final class DatabaseConnection {
         source.setJdbcUrl(host + '/' + database);
         source.setUser(username);
         source.setPassword(password);
-        source.setMinPoolSize(5);
+        source.setMinPoolSize(3);
         source.setAcquireIncrement(5);
         source.setMaxPoolSize(50);
         source.setMaxIdleTime(3000);

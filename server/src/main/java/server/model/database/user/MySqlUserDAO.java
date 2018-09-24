@@ -171,9 +171,8 @@ public class MySqlUserDAO implements UserDAO {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
                 " Region, Created, LastUpdated, IsDefault, ImageName) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, user.getUsername());
             if (user.getPassword() != null) {
@@ -204,9 +203,8 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public boolean isUniqueUsername(String username) {
         String query = "SELECT Username FROM users WHERE Username = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet result = stmt.executeQuery()) {
@@ -228,9 +226,8 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public void remove(User user) throws SQLException {
         String query = "DELETE FROM users WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try (Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setInt(1, user.getStaffID());
 

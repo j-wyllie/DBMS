@@ -17,22 +17,15 @@ public class MySqlCommonDAO implements CommonDAO {
      */
     @Override
     public void queryDatabase(String query) {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
 
         if (isReadOnlyQuery(query)) {
-            try {
-                Connection connection = connectionInstance.getConnection();
-
-                Statement stmt = connection.createStatement();
+            try (Connection conn = DatabaseConnection.getConnection();
+                    PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet result = stmt.executeQuery(query);
 
                 outputResult(result);
-                connection.close();
-                stmt.close();
-
             } catch (SQLException e) {
                 System.out.println("Please enter a valid read-only query.");
-
             }
         }
     }

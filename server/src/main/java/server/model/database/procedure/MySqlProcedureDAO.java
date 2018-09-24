@@ -29,7 +29,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 "Previous FROM procedures WHERE ProfileId = ? AND Pending = ?;";
         List<Procedure> result = new ArrayList<>();
 
-        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, profile);
             stmt.setBoolean(2, pending);
 
@@ -134,7 +135,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 "UPDATE procedures SET Summary = ?, Description = ?, ProcedureDate = ?, " +
                         "Pending = ? WHERE Id = ?;";
 
-        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, procedure.getSummary());
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
@@ -158,7 +160,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         String query = "SELECT * FROM affected_organs WHERE ProcedureId = ?;";
         List<OrganEnum> organs = new ArrayList<>();
 
-        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, procedureId);
 
             try (ResultSet allOrgans = stmt.executeQuery()) {
@@ -210,7 +213,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      * @param organ the effected organ.
      */
     private void queryEffectedOrgan(String query, Procedure procedure, OrganEnum organ) {
-        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, procedure.getId());
             stmt.setString(2, organ.getName());
 

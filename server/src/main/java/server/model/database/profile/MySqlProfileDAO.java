@@ -213,10 +213,10 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setOrgans(Profile profile) throws OrganConflictException {
         OrganDAO database = DAOFactory.getOrganDao();
 
-        profile.addOrgansDonating(database.getDonating(profile.getId()));
-        profile.addOrgansDonated(database.getDonations(profile.getId()));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
-        profile.addOrgansReceived(database.getReceived(profile.getId()));
+        profile.addOrgansDonating(database.getDonating(profile));
+        profile.addOrgansDonated(database.getDonations(profile));
+        profile.addOrgansRequired(database.getRequired(profile));
+        profile.addOrgansReceived(database.getReceived(profile));
 
         return profile;
     }
@@ -498,14 +498,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         Connection conn = instance.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
         try {
-
             stmt.setInt(1, profile.getId());
-
-            removeOrgans(profile);
-            removeMedications(profile);
-            removeProcedures(profile);
-            removeConditions(profile);
-
             stmt.executeUpdate();
 
         } catch (SQLException e) {
