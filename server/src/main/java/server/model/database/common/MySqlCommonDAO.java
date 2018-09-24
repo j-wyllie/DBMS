@@ -32,7 +32,7 @@ public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Returns true if the query supplied is a valid read-only query.
-     * @param query
+     * @param query the SQL query.
      * @return whether the query is a valid read-only query or not.
      */
     private boolean isReadOnlyQuery(String query) {
@@ -48,8 +48,8 @@ public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Formats the output of the result set supplied.
-     * @param result
-     * @throws SQLException
+     * @param result the execution result.
+     * @throws SQLException if a SQL error occurs.
      */
     private void outputResult(ResultSet result) throws SQLException {
         ResultSetMetaData data = result.getMetaData();

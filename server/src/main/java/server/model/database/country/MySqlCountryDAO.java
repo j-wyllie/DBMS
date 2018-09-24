@@ -73,14 +73,12 @@ public class MySqlCountryDAO implements CountryDAO {
 
     /**
      * Method to be called to repopulate the countries table.
-     * @throws SQLException throws sql exception
      */
     public void populateCountriesTable() {
         String query = "TRUNCATE TABLE countries";
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement truncStmt = connection.prepareStatement(query)) {
             truncStmt.executeUpdate();
-            truncStmt.close();
 
             for (CountriesEnum country: CountriesEnum.values()) {
                 query = "insert into countries (Name) VALUES (?)";
