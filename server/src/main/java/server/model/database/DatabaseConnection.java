@@ -139,32 +139,30 @@ public final class DatabaseConnection {
      * Resets the current in use database to the standard set of tables.
      */
     public void reset() {
-        executeQuery(RESET_SQL);
+        executeQuery();
     }
 
     /**
      * Resets the test database to the standard set of tables.
      */
     public void resetTestDb() {
-        executeQuery(RESET_TEST_SQL);
+        executeQuery();
     }
 
     /**
      * Resamples the current in use database with the default data.
      */
     public void resample() {
-        executeQuery(RESAMPLE_SQL);
+        executeQuery();
     }
 
     /**
      * Executes the sql statements in the file at the location passed in.
      *
-     * @param filePath the location of the file.
      */
-    private void executeQuery(String filePath) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+    private void executeQuery() {
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = getConnection();
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {
