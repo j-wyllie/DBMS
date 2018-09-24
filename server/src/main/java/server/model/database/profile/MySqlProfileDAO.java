@@ -559,8 +559,9 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
                 + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
                 + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
-                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ?, City = ?, BloodDonationPoints = ?, LastBloodDonation = ? where ProfileId = ?;";
+                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, Created = ?, LastUpdated = ?, City = ?, "
+                + "BloodDonationPoints = ?, LastBloodDonation = ?, PreferredName = ?, PreferredGender = ? "
+                + "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = DatabaseConnection.getConnection();
 
@@ -602,9 +603,11 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
             stmt.setString(31, profile.getCity());
-            stmt.setInt(34, profile.getId());
             stmt.setInt(32, profile.getBloodDonationPoints());
             stmt.setTimestamp(33, Timestamp.valueOf(profile.getLastBloodDonation()));
+            stmt.setString(34, profile.getPreferredName());
+            stmt.setString(35, profile.getPreferredGender());
+            stmt.setInt(36, profile.getId());
             stmt.executeUpdate();
 
         } catch (Exception e) {
