@@ -1,5 +1,10 @@
 package server.model.database.procedure;
 
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import server.model.database.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -7,13 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Procedure;
-import server.model.database.DatabaseConnection;
 
 @Slf4j
 public class MySqlProcedureDAO implements ProcedureDAO {
@@ -74,8 +76,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public void add(int profile, Procedure procedure) {
         String query =
-                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending) "
-                        + "values (?, ?, ?, ?, ?);";
+                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending, Hospital) "
+                        + "values (?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn
@@ -95,6 +97,16 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 } else {
                     stmt.setInt(5, 0);
                 }
+            }
+
+            if (procedure.getHospital() != null) {
+                if (procedure.getHospital().getId() != null) {
+                    stmt.setInt(6, procedure.getHospital().getId());
+                } else {
+                    stmt.setNull(6, Types.INTEGER);
+                }
+            } else {
+                stmt.setNull(6, Types.INTEGER);
             }
 
             stmt.executeUpdate();
