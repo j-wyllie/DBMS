@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -175,6 +176,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Initializes the list views.
      */
     private void initListViews() {
+        donorListView.setPlaceholder(new Label("No current donors"));
+        receiverListView.setPlaceholder(new Label("No matched receivers"));
         if (!searchDonorsText.getText().equals("")) {
             donorsList = controller.getDeadDonorsFiltered(searchDonorsText.getText());
         } else {
