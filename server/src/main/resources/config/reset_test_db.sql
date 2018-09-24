@@ -98,10 +98,12 @@ CREATE TABLE IF NOT EXISTS `history` (
 
 DROP TABLE IF EXISTS `hla_type`;
 CREATE TABLE IF NOT EXISTS `hla_type` (
-  `groupX` text NOT NULL,
-  `groupY` text NOT NULL,
-  `secondary` mediumtext NOT NULL,
-  `profileId` int(11) NOT NULL
+  `ProfileId` int(11) NOT NULL,
+  `AlphaValue` varchar(20),
+  `NumericValue` int(11) NOT NULL,
+  `GroupX` BOOLEAN NOT NULL,
+  `GroupY` BOOLEAN NOT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -235,7 +237,8 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ImageName` varchar(50) DEFAULT NULL,
   `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
   `BloodDonationPoints` int(11) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL
+  `Token` int(11) DEFAULT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -258,7 +261,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
   `ImageName` varchar(50) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL
+  `Token` int(11) DEFAULT NULL,
+  INDEX (UserId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -298,12 +302,6 @@ ALTER TABLE `drugs`
 ALTER TABLE `history`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `EntityId` (`EntityId`);
-
---
--- Indexes for table `hla_type`
---
-ALTER TABLE `hla_type`
-  ADD PRIMARY KEY (`profileId`);
 
 --
 -- Indexes for table `hospitals`
@@ -422,54 +420,54 @@ ALTER TABLE `users`
 -- Constraints for table `affected_organs`
 --
 ALTER TABLE `affected_organs`
-  ADD CONSTRAINT `affected_organs_ibfk_1` FOREIGN KEY (`ProcedureId`) REFERENCES `procedures` (`Id`);
+  ADD CONSTRAINT `affected_organs_ibfk_1` FOREIGN KEY (`ProcedureId`) REFERENCES `procedures` (`Id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `conditions`
 --
 ALTER TABLE `conditions`
-  ADD CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `drugs`
 --
 ALTER TABLE `drugs`
-  ADD CONSTRAINT `drugs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `drugs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `history`
 --
 ALTER TABLE `history`
-  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`),
-  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `hla_type`
 --
 ALTER TABLE `hla_type`
-  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `locale`
 --
 ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
-  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `organs`
-  ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `procedures`
 --
 ALTER TABLE `procedures`
-  ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 
 DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
