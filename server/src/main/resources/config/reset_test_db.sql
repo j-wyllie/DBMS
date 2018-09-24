@@ -173,8 +173,9 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Summary` varchar(100) DEFAULT NULL,
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
-  `Pending` tinyint(1) DEFAULT NULL,
-  `Previous` tinyint(1) DEFAULT NULL
+  `Pending` BOOLEAN DEFAULT NULL,
+  `Previous` BOOLEAN DEFAULT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
