@@ -86,8 +86,16 @@ public class ScheduleProcedure extends CommonView {
     private void setLocationDropdown() {
         try {
             hospitals.addAll(controller.getHospitals());
-            locationDropdown.setItems(hospitals);
-            locationDropdown.setValue(hospitals.get(0));
+            if (!hospitals.isEmpty()) {
+                locationDropdown.setItems(hospitals);
+                locationDropdown.setValue(hospitals.get(0));
+            } else {
+                Hospital hospital = new Hospital("Unspecified", 0.0, 0.0, "");
+                hospitals.add(hospital);
+                locationDropdown.setItems(hospitals);
+                locationDropdown.setValue(hospitals.get(0));
+            }
+
             locationDropdown.setConverter(new StringConverter<Hospital>() {
                 @Override
                 public String toString(Hospital object) {

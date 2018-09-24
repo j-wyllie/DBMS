@@ -146,6 +146,15 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 stage.initOwner(mapView.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.show();
+
+                stage.setOnHiding(e -> {
+                    clearReceiverMarkers();
+                    clearDonorMarkers();
+                    receiverListView.getItems().clear();
+                    donorsList = controller.getDeadDonors();
+                    donorListView.setItems(donorsList);
+
+                });
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
