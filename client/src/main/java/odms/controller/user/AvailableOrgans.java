@@ -1,5 +1,19 @@
 package odms.controller.user;
 
+import static java.lang.Math.abs;
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -11,14 +25,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
-
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static java.lang.Math.abs;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Controller for the available organs tab.
@@ -175,6 +182,34 @@ public class AvailableOrgans {
     }
 
     /**
+     * Removes for organs in the expired organ list.
+     *
+     * @param organ Organ to remove.
+     * @param profile Current profile.
+     * @param m Expired organs list.
+     */
+    private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
+            Map.Entry<Profile, OrganEnum> m) {
+
+        if (LocalDateTime.now()
+                .isAfter(getExpiryTime(organ, profile))) {
+            view.removeItem(m);
+            setOrganExpired(organ, profile);
+        }
+        List<ExpiredOrgan> expiredList = new ArrayList<>();
+        try {
+            expiredList = DAOFactory.getOrganDao().getExpired(profile);
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+        for (ExpiredOrgan currentOrgan : expiredList) {
+            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
+                view.removeItem(m);
+            }
+        }
+    }
+
+    /**
      * Gets the expiry time for an organ.
      *
      * @param organ Expired organ.
@@ -284,7 +319,7 @@ public class AvailableOrgans {
     }
 
     /**
-     * Calculates how long a Organ has til expiry, returns in formatted string
+     * Calculates how long a Organ has til expiry, returns in formatted string.
      *
      * @param organ Given organ
      * @param profile Given profile the organ belongs to
@@ -486,6 +521,57 @@ public class AvailableOrgans {
                 potentialOrganMatchesUnfiltered);
 
         return potentialOrganMatches;
+    }
+
+    /**
+     * Returns list of donors who meet the are able to receive the organ.
+     *
+     * @param organsAvailable the organs up for donation
+     * @param donorProfile the donor profile
+     * @return the list of profiles that match this organ donation
+     */
+    public static ObservableList<Profile> getSuitableRecipients(Set<OrganEnum> organsAvailable,
+            Profile donorProfile) {
+        ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
+                .observableArrayList();
+
+        String organBloodType = donorProfile.getBloodType();
+
+        Integer minAge;
+        Integer maxAge;
+
+        if (donorProfile.getAge() >= 12) {
+            minAge = donorProfile.getAge() - 15;
+
+            if (minAge < 12) {
+                minAge = 12;
+            }
+            maxAge = donorProfile.getAge() + 15;
+        } else {
+            minAge = 0;
+            maxAge = 12;
+        }
+
+        List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
+        String bloodTypes = StringUtils.join(compatibleBloodTypes, ',');
+
+        StringBuilder organs = new StringBuilder("");
+        int count = 1;
+        for (OrganEnum o : organsAvailable) {
+            String name = o.getName().replace('-', '+');
+            if (count == organsAvailable.size()) {
+                organs.append(name);
+            } else {
+                organs.append(name);
+                organs.append(",");
+            }
+            count++;
+        }
+
+        potentialOrganMatchesUnfiltered.addAll(DAOFactory.getProfileDao()
+                .getOrganReceivers(organs.toString(), bloodTypes, minAge, maxAge));
+
+        return potentialOrganMatchesUnfiltered;
     }
 
     /**
