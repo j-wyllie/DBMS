@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.locations.Hospital;
 import server.model.database.DatabaseConnection;
 
 /**
  * Implements all of the HospitalDAO methods.
  */
+@Slf4j
 public class MySqlHospitalDAO implements HospitalDAO {
 
     /**
@@ -24,22 +26,21 @@ public class MySqlHospitalDAO implements HospitalDAO {
     @Override
     public List<Hospital> getAll() throws SQLException {
         String query = "SELECT * FROM hospitals";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Hospital> result = new ArrayList<>();
-        Connection conn = connectionInstance.getConnection();
-        try (Statement stmt = conn.createStatement()) {
 
-            ResultSet allHospitals = stmt.executeQuery(query);
 
-            while (allHospitals.next()) {
-                Hospital newHospital = parseHospital(allHospitals);
-                result.add(newHospital);
+        try (Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement()) {
+
+            try (ResultSet allHospitals = stmt.executeQuery(query)) {
+                while (allHospitals.next()) {
+                    Hospital newHospital = parseHospital(allHospitals);
+                    result.add(newHospital);
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException(e);
-        } finally {
-            conn.close();
+            log.error(e.getMessage(), e);
+            throw e;
         }
         return result;
     }
@@ -53,22 +54,22 @@ public class MySqlHospitalDAO implements HospitalDAO {
      */
     @Override
     public Hospital get(String name) throws SQLException {
-        String query = "SELECT * FROM hospitals WHERE Name = ?";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = connectionInstance.getConnection();
         Hospital result = null;
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, name);
-            ResultSet allHospitals = stmt.executeQuery();
+        String query = "SELECT * FROM hospitals WHERE Name = ?";
 
-            while (allHospitals.next()) {
-                result = parseHospital(allHospitals);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, name);
+
+            try (ResultSet allHospitals = stmt.executeQuery()) {
+                while (allHospitals.next()) {
+                    result = parseHospital(allHospitals);
+                }
             }
+
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException(e);
-        } finally {
-            conn.close();
+            log.error(e.getMessage(), e);
+            throw e;
         }
         return result;
     }
@@ -97,9 +98,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
     @Override
     public void add(Hospital hospital) throws SQLException {
         String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude) VALUES (?,?,?,?)";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = connectionInstance.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, hospital.getName());
             stmt.setString(2, hospital.getAddress());
@@ -108,10 +109,8 @@ public class MySqlHospitalDAO implements HospitalDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException(e);
-        } finally {
-            conn.close();
+            log.error(e.getMessage(), e);
+            throw e;
         }
     }
 
@@ -133,9 +132,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
     public void edit(Hospital hospital) throws SQLException {
         String query = "UPDATE hospitals SET Name = ?, Address = ?, Latitude = ?, Longitude = ?" +
                 "WHERE Id = ?";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = connectionInstance.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, hospital.getName());
             stmt.setString(2, hospital.getAddress());
@@ -145,10 +144,8 @@ public class MySqlHospitalDAO implements HospitalDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException(e);
-        } finally {
-            conn.close();
+            log.error(e.getMessage(), e);
+            throw e;
         }
     }
 
@@ -161,17 +158,15 @@ public class MySqlHospitalDAO implements HospitalDAO {
     @Override
     public void remove(String name) throws SQLException {
         String query = "DELETE FROM hospitals WHERE Name = ?";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = connectionInstance.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, name);
+
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             throw new SQLException(e);
-        } finally {
-            conn.close();
         }
     }
 }
