@@ -27,7 +27,7 @@ import odms.controller.WebViewCell;
  * Social Feed tab containing the twitter tab.
  */
 @Slf4j
-public class SocialFeedTab {
+public class SocialFeedTab extends CommonView {
 
     private static final int REFRESH_PERIOD = 10000;
 
@@ -161,42 +161,23 @@ public class SocialFeedTab {
     }
 
     /**
-     * Tries to connect to the twitter api.
-     *
-     * @return True if the connection can be established.
-     */
-    private static boolean netIsAvailable() {
-        try {
-            final URL url = new URL("https://google.com/");
-            final URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(1000);
-            conn.connect();
-            conn.getInputStream().close();
-            return true;
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
-            return false;
-        }
-        return false;
-    }
-
-    /**
      * Starts the timers for fetching expired organs and counting down the expiry date.
      */
     public void startTimer() {
         timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-            private boolean refreshTweetTable() {
-                populateTweetTable();
-                return true;
-            }
+        if (netIsAvailable()) {
+            timer.scheduleAtFixedRate(new TimerTask() {
+                private boolean refreshTweetTable() {
+                    populateTweetTable();
+                    return true;
+                }
 
-            @Override
-            public void run() {
-                Platform.runLater(this::refreshTweetTable);
-            }
-        }, 0, REFRESH_PERIOD);
+                @Override
+                public void run() {
+                    Platform.runLater(this::refreshTweetTable);
+                }
+            }, 0, REFRESH_PERIOD);
+        }
     }
 
     /**
@@ -211,6 +192,7 @@ public class SocialFeedTab {
      * initializes the tab by calling populateTweetTable().
      */
     public void initialise() {
+        hideTableHeader(tweetTable);
         populateTweetTable();
         startTimer();
     }
