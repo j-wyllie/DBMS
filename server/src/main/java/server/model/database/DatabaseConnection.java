@@ -123,7 +123,7 @@ public final class DatabaseConnection {
      * @throws SQLException error.
      */
     public static Connection getConnection() throws SQLException {
-        return connectionSource.getConnection();
+        return getInstance().connectionSource.getConnection();
     }
 
     /**
