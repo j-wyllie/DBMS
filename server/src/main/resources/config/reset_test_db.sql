@@ -140,21 +140,6 @@ CREATE TABLE IF NOT EXISTS `locale` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `medical_interactions`
---
-
-DROP TABLE IF EXISTS `medical_interactions`;
-CREATE TABLE IF NOT EXISTS `medical_interactions` (
-  `Id` int(11) NOT NULL,
-  `DrugA` varchar(50) DEFAULT NULL,
-  `DrugB` varchar(50) DEFAULT NULL,
-  `Symptom` varchar(50) DEFAULT NULL,
-  `Duration` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `organs`
 --
 
@@ -163,15 +148,16 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Organ` varchar(30) DEFAULT NULL,
-  `Donated` tinyint(1) DEFAULT NULL,
-  `ToDonate` tinyint(1) DEFAULT NULL,
-  `Required` tinyint(1) DEFAULT NULL,
-  `Received` tinyint(1) DEFAULT NULL,
-  `Expired` tinyint(1) DEFAULT NULL,
+  `Donated` BOOLEAN DEFAULT NULL,
+  `ToDonate` BOOLEAN DEFAULT NULL,
+  `Required` BOOLEAN DEFAULT NULL,
+  `Received` BOOLEAN DEFAULT NULL,
+  `Expired` BOOLEAN DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
-  `DateRegistered` date NOT NULL
+  `DateRegistered` date NOT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -312,16 +298,10 @@ ALTER TABLE `hospitals`
   ADD UNIQUE KEY `Id` (`Id`);
 
 --
--- Indexes for table `medical_interactions`
+-- Indexes for table `locale`
 --
 ALTER TABLE `locale`
   ADD PRIMARY KEY (`LocaleId`);
-
---
--- Indexes for table `medical_interactions`
---
-ALTER TABLE `medical_interactions`
-  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `organs`
@@ -388,11 +368,6 @@ ALTER TABLE `hospitals`
 --
 ALTER TABLE `locale`
   MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `medical_interactions`
---
-ALTER TABLE `medical_interactions`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `organs`
 --
