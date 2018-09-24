@@ -17,20 +17,15 @@ public class MySqlCountryDAO implements CountryDAO {
     @Override
     public List<String> getAll() {
         List<String> countries = new ArrayList<>();
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        String query = "select * from countries;";
-        try {
-            Connection connection = connectionInstance.getConnection();
+        String query = "SELECT * FROM countries;";
 
-            Statement stmt = connection.createStatement();
-            ResultSet result = stmt.executeQuery(query);
+        try (Connection connection = DatabaseConnection.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet result = stmt.executeQuery(query)) {
 
             while (result.next()) {
                 countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
             }
-
-            stmt.close();
-            connection.close();
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -41,20 +36,17 @@ public class MySqlCountryDAO implements CountryDAO {
     @Override
     public List<String> getAll(boolean valid) {
         List<String> countries = new ArrayList<>();
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        String query = "select * from countries where Valid = ?;";
-        try {
-            Connection connection = connectionInstance.getConnection();
+        String query = "SELECT * FROM countries where Valid = ?;";
 
-            PreparedStatement stmt = connection.prepareStatement(query);
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setBoolean(1, valid);
-            ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
-            }
 
-            stmt.close();
-            connection.close();
+            try (ResultSet result = stmt.executeQuery()) {
+                while (result.next()) {
+                    countries.add(CountriesEnum.valueOf(result.getString("Name")).getName());
+                }
+            }
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -64,19 +56,14 @@ public class MySqlCountryDAO implements CountryDAO {
 
     @Override
     public void update(CountriesEnum country, boolean valid) {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "update countries set Valid = ? where Name = ?;";
-        try {
-            Connection connection = connectionInstance.getConnection();
 
-            PreparedStatement stmt = connection.prepareStatement(query);
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
+
             stmt.setBoolean(1, valid);
             stmt.setString(2, country.toString());
-
             stmt.executeUpdate();
-
-            stmt.close();
-            connection.close();
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -88,35 +75,22 @@ public class MySqlCountryDAO implements CountryDAO {
      * Method to be called to repopulate the countries table.
      * @throws SQLException throws sql exception
      */
-    public void populateCountriesTable() throws SQLException {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection connection = connectionInstance.getConnection();
-        PreparedStatement stmt = null;
-
+    public void populateCountriesTable() {
         String query = "TRUNCATE TABLE countries";
-        try {
-            stmt = connection.prepareStatement(query);
-            stmt.executeUpdate();
-            stmt.close();
-            connection.close();
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement truncStmt = connection.prepareStatement(query)) {
+            truncStmt.executeUpdate();
+            truncStmt.close();
+
             for (CountriesEnum country: CountriesEnum.values()) {
-                connection = connectionInstance.getConnection();
-
                 query = "insert into countries (Name) VALUES (?)";
-
-                stmt = connection.prepareStatement(query);
-
-                stmt.setString(1, country.toString());
-
-                stmt.executeUpdate();
-
-                stmt.close();
-                connection.close();
+                try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                    stmt.setString(1, country.toString());
+                    stmt.executeUpdate();
+                }
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
-
-
     }
 }

@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `Id` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
-  `Valid` tinyint(1) DEFAULT '1'
+  `Valid` BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
