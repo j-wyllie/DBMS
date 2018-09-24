@@ -12,17 +12,16 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.PasswordUtilities;
@@ -559,8 +558,9 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "BloodType = ?, IsSmoker = ?, AlcoholConsumption = ?, BloodPressureDiastolic = ?, "
                 + "BloodPressureSystolic = ?, Address = ?, Region = ?, Phone = ?, Email = ?, "
                 + "Country = ?, BirthCountry = ?, CountryOfDeath = ?, RegionOfDeath = ?, CityOfDeath = ?, "
-                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, "
-                + "Created = ?, LastUpdated = ?, City = ?, BloodDonationPoints = ?, LastBloodDonation = ? where ProfileId = ?;";
+                + "StreetNo = ?, StreetName = ?, Neighbourhood = ?, Created = ?, LastUpdated = ?, City = ?, "
+                + "BloodDonationPoints = ?, LastBloodDonation = ?, PreferredName = ?, PreferredGender = ? "
+                + "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = DatabaseConnection.getConnection();
 
@@ -602,9 +602,11 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setTimestamp(29, Timestamp.valueOf(profile.getTimeOfCreation()));
             stmt.setTimestamp(30, Timestamp.valueOf(profile.getLastUpdated()));
             stmt.setString(31, profile.getCity());
-            stmt.setInt(34, profile.getId());
             stmt.setInt(32, profile.getBloodDonationPoints());
             stmt.setTimestamp(33, Timestamp.valueOf(profile.getLastBloodDonation()));
+            stmt.setString(34, profile.getPreferredName());
+            stmt.setString(35, profile.getPreferredGender());
+            stmt.setInt(36, profile.getId());
             stmt.executeUpdate();
 
         } catch (Exception e) {
@@ -671,7 +673,6 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         query += ";";
 
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
 
         Connection conn = DatabaseConnection.getConnection();
@@ -752,14 +753,13 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public Integer size() throws SQLException {
         String query = "select count(*) from profiles;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = DatabaseConnection.getConnection();
         Statement stmt = conn.createStatement();
         try {
 
             ResultSet result = stmt.executeQuery(query);
 
-            while (result.next()) {
+            if (result.next()) {
                 return result.getInt(1);
             }
             conn.close();
@@ -774,7 +774,8 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> getAllReceiving() {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId where Required = 1;";
+        String query = "select * from organs left join profiles on organs.ProfileId = " +
+                "profiles.ProfileId where Required = 1;";
         return getReceivers(query);
     }
 
@@ -782,15 +783,15 @@ public class MySqlProfileDAO implements ProfileDAO {
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
         String query =
                 "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
-                        + "where GivenNames like '%" + searchString + "%' or LastNames like '%"
-                        + searchString
-                        + "%' or Region like '%" + searchString + "%' or Organ like '%"
-                        + searchString + "%';";
+                        +
+                        "where GivenNames like '%" + searchString + "%' or LastNames like '%" +
+                        searchString + "%' or Region like '%" + searchString + "%' or Organ like '%"
+                        +
+                        searchString + "%';";
         return getReceivers(query);
     }
 
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
         try {
@@ -820,8 +821,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query =
                 "SELECT DISTINCT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE "
                         +
-                        "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+                        "Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
         List<Profile> result = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
         Statement stmt = conn.createStatement();
@@ -845,42 +845,113 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     /**
+     * Gets all profiles from the database where the person is dead and matches the given search
+     * string.
+     */
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+
+        String query =
+                "SELECT * FROM profiles JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
+                        "CONCAT(GivenNames, LastNames) LIKE ? AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
+        List<Profile> result = new ArrayList<>();
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+
+        stmt.setString(1, "%" + searchString + "%");
+
+        ArrayList<Integer> existingIds = new ArrayList<>();
+        try {
+            ResultSet allProfiles = stmt.executeQuery();
+            while (allProfiles.next()) {
+                Profile newProfile = parseProfile(allProfiles);
+                if (!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            conn.close();
+            stmt.close();
+        }
+        return result;
+    }
+
+    /**
      * Get list of receivers that could be recipients of a selected organ.
      *
-     * @param organ type of organ that is being donated
-     * @param bloodType blood type recipient needs to have
+     * @param organs type of organ that is being donated
+     * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType,
+    public List<Profile> getOrganReceivers(String organs, String bloodTypes,
             Integer lowerAgeRange, Integer upperAgeRange) {
-        organ = organ.replace("-", " ");
-        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
+        List<String> blood = Arrays.asList(bloodTypes.split("\\s*,\\s*"));
+        StringBuilder bloodQuery = new StringBuilder("");
+        for (int i = 0; i < blood.size(); i++) {
+            if (i != blood.size() - 1) {
+                bloodQuery.append("?,");
+            } else {
+                bloodQuery.append("?");
+            }
+        }
+
+        List<String> orgs = Arrays.asList(organs.split("\\s*,\\s*"));
+        StringBuilder organQuery = new StringBuilder("");
+        for (int i = 0; i < orgs.size(); i++) {
+            if (i != orgs.size() - 1) {
+                organQuery.append("?,");
+            } else {
+                organQuery.append("?");
+            }
+        }
+
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType in (" + bloodQuery.toString()
+                + ") AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
-                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
-                + "o.Required) = ?;";
+                + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ in (" +
+                organQuery.toString() + ") AND o.Required GROUP BY o.ProfileId) in (" + organQuery
+                .toString() + ")";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-        try {
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, bloodType);
-            stmt.setInt(2, lowerAgeRange);
-            stmt.setInt(3, upperAgeRange);
-            stmt.setString(4, organ);
-            stmt.setString(5, organ);
-            ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                Profile profile = parseProfile(result);
-                receivers.add(profile);
+            int count = 1;
+            for (String type : blood) {
+                stmt.setString(count, type);
+                count++;
             }
-            conn.close();
-            stmt.close();
+            stmt.setInt(count, lowerAgeRange);
+            count++;
+            stmt.setInt(count, upperAgeRange);
+            count++;
+
+            for (String type : orgs) {
+                stmt.setString(count, type);
+                count++;
+            }
+
+            for (String type : orgs) {
+                stmt.setString(count, type.replace('-', ' '));
+                count++;
+            }
+
+            try (ResultSet result = stmt.executeQuery()) {
+                while (result.next()) {
+                    Profile profile = parseProfile(result);
+                    OrganDAO organDAO = DAOFactory.getOrganDao();
+                    profile.addOrgansRequired(organDAO.getRequired(profile));
+                    receivers.add(profile);
+                }
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

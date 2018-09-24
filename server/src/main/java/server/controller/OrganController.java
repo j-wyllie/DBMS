@@ -1,10 +1,5 @@
 package server.controller;
 
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
@@ -20,6 +15,11 @@ import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
+
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class OrganController {
@@ -177,7 +177,6 @@ public class OrganController {
      */
     private static void removeOrgan(Profile profile, String organ, Request req) {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
-        organEnum.setDate(LocalDateTime.parse(req.queryParams("date")), profile);
         OrganDAO database = DAOFactory.getOrganDao();
 
         if (req.queryMap().hasKey(DONATED)) {

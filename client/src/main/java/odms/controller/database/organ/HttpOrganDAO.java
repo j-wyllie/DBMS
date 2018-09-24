@@ -117,7 +117,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donated", true);
         delete(url, organInfo);
     }
@@ -127,7 +126,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donating", true);
         delete(url, organInfo);
     }
@@ -137,7 +135,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("required", true);
         delete(url, organInfo);
     }
@@ -147,14 +144,13 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("received", true);
         delete(url, organInfo);
     }
 
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note,
-            Integer userId) throws SQLException {
+            Integer userId) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ.replace(" ", "+"));

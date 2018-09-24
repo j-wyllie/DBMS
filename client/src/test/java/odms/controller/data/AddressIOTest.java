@@ -1,9 +1,12 @@
 package odms.controller.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class AddressIOTest {
 
@@ -29,27 +32,29 @@ public class AddressIOTest {
 
     @Test
     public void checkInvalidRegion() {
-        assertFalse(AddressIO.checkValidRegion(VALID_CITY, "Victoria", VALID_COUNTRY));
+        assertFalse(AddressIO.checkValidRegion("Victoria", VALID_COUNTRY));
     }
 
     @Test
     public void checkValidRegion() {
-        assertTrue(AddressIO.checkValidRegion(VALID_CITY, VALID_REGION, VALID_COUNTRY));
+        assertTrue(AddressIO.checkValidRegion(VALID_REGION, VALID_COUNTRY));
     }
 
     @Test
     public void checkNullRegion() {
-        assertFalse(AddressIO.checkValidRegion(VALID_CITY, null, VALID_COUNTRY));
+        assertFalse(AddressIO.checkValidRegion(null, VALID_COUNTRY));
     }
 
     @Test
     public void checkInvalidCity() {
-        assertFalse(AddressIO.checkValidCity("Canberra", "Australian Capital Territory", VALID_COUNTRY));
+        assertFalse(AddressIO
+                .checkValidCity("Canberra", "Australian Capital Territory", VALID_COUNTRY));
     }
 
     @Test
     public void checkValidCity() {
-        assertTrue(AddressIO.checkValidCity("Auckland,Auckland,New Zealand", "Auckland", "New Zealand"));
+        assertTrue(AddressIO
+                .checkValidCity("Auckland,Auckland,New Zealand", "Auckland", "New Zealand"));
     }
 
     @Test
@@ -57,4 +62,17 @@ public class AddressIOTest {
         assertFalse(AddressIO.checkValidCity(null, "Australian Capital Territory", "Australia"));
 
     }
+
+    @Test
+    public void checkLatLongRegion() {
+        ArrayList<Double> wellingtonCheck = new ArrayList<>();
+        ArrayList<Double> aucklandCheck = new ArrayList<>();
+        wellingtonCheck.add(-41.2864603);
+        wellingtonCheck.add(174.776236);
+        assertEquals(AddressIO.getLongLatRegion("Wellington", "New Zealand"), wellingtonCheck);
+        aucklandCheck.add(-36.8484597);
+        aucklandCheck.add(174.7633315);
+        assertEquals(AddressIO.getLongLatRegion("Auckland", "New Zealand"), aucklandCheck);
+    }
+
 }

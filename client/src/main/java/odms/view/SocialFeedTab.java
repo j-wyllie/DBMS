@@ -5,9 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -17,17 +15,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import lombok.extern.slf4j.Slf4j;
-import odms.controller.AlertController;
 import odms.controller.WebViewCell;
 
 /**
  * Social Feed tab containing the twitter tab.
  */
 @Slf4j
-public class SocialFeedTab {
+public class SocialFeedTab extends CommonView {
 
     private static final int REFRESH_PERIOD = 10000;
 
@@ -54,9 +52,13 @@ public class SocialFeedTab {
                 tweetTable.getColumns().add(tweetCol);
 
                 tweetListSize = tweetList.size();
+                if (tweetListSize == 0) {
+                    tweetTable.setPlaceholder(new Label("No tweets to display."));
+                }
             }
         } else {
-            AlertController.guiPopup("Error establishing internet connection.");
+            tweetTable.setPlaceholder(
+                    new Label("Can't fetch tweets. Please check internet connection."));
         }
     }
 
@@ -161,47 +163,27 @@ public class SocialFeedTab {
     }
 
     /**
-     * Tries to connect to the twitter api.
-     *
-     * @return True if the connection can be established.
-     */
-    private static boolean netIsAvailable() {
-        try {
-            final URL url = new URL("https://google.com/");
-            final URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(1000);
-            conn.connect();
-            conn.getInputStream().close();
-            return true;
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
-            return false;
-        }
-        return false;
-    }
-
-    /**
      * Starts the timers for fetching expired organs and counting down the expiry date.
      */
     public void startTimer() {
         timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-            private boolean refreshTweetTable() {
-                populateTweetTable();
-                return true;
-            }
+        if (netIsAvailable()) {
+            timer.scheduleAtFixedRate(new TimerTask() {
+                private boolean refreshTweetTable() {
+                    populateTweetTable();
+                    return true;
+                }
 
-            @Override
-            public void run() {
-                Platform.runLater(this::refreshTweetTable);
-            }
-        }, 0, REFRESH_PERIOD);
+                @Override
+                public void run() {
+                    Platform.runLater(this::refreshTweetTable);
+                }
+            }, 0, REFRESH_PERIOD);
+        }
     }
 
     /**
-     * Cancels the auto refresh timer for the twitter feed.
-     * Called when the tab gets clicked off.
+     * Cancels the auto refresh timer for the twitter feed. Called when the tab gets clicked off.
      */
     public void pauseTimer() {
         timer.cancel();
@@ -211,6 +193,7 @@ public class SocialFeedTab {
      * initializes the tab by calling populateTweetTable().
      */
     public void initialise() {
+        hideTableHeader(tweetTable);
         populateTweetTable();
         startTimer();
     }
