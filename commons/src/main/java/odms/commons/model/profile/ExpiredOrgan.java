@@ -20,7 +20,8 @@ public class ExpiredOrgan {
      * @param clinicianName name of clinician that expired organ
      * @param expiryDate date organ was manually expired
      */
-    public ExpiredOrgan(OrganEnum organ, String note, String clinicianName, LocalDateTime expiryDate) {
+    public ExpiredOrgan(OrganEnum organ, String note, String clinicianName,
+                        LocalDateTime expiryDate) {
         this.organ = organ;
         this.note = note;
         this.clinicianName = clinicianName;
