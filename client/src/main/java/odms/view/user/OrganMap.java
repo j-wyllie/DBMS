@@ -10,6 +10,12 @@ import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,17 +33,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import netscape.javascript.JSObject;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.view.CommonView;
 import org.controlsfx.control.PopOver;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * Tab containing the organ map.
@@ -78,6 +78,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TableColumn<Object, Object> receiverColumn;
     @FXML
     private TextField searchDonorsText;
+    @FXML
+    private Label noInternetLabel;
 
     private ClinicianProfile parentView;
     private PopOver popOver;
@@ -86,31 +88,35 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private Profile currentDonor;
     private Button openProfileBtn = new Button("View Profile");
     private Button matchBtn = new Button("Match");
+    private Boolean hasConnection;
 
     /**
      * Sets the current user and parent view.
      *
      * @param currentUser the current user.
-     * @param parentView  the parent view.
+     * @param parentView the parent view.
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.currentUser = currentUser;
         this.parentView = parentView;
         controller.setView(this);
+        hasConnection = netIsAvailable();
+        if (!hasConnection) {
+            mapView.setVisible(false);
+            noInternetLabel.setVisible(true);
+        }
         initListViews();
     }
 
     /**
      * Initializes the map view by adding a listener.
      *
-     * @param location  location.
+     * @param location location.
      * @param resources resource bundle.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         mapView.addMapInializedListener(this);
-
         mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (popOver != null) {
                 popOver.hide();
@@ -125,7 +131,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
 
         openProfileBtn.setOnAction(event ->
                 createNewDonorWindow(currentReceiver, parentView, currentUser));
-
         matchBtn.setOnAction(event -> {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/UserScheduleProcedure.fxml"));
@@ -153,23 +158,28 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      */
     @Override
     public void mapInitialized() {
+        if (hasConnection) {
 
-        //Set the initial properties of the map.
-        MapOptions mapOptions = new MapOptions();
+            //Set the initial properties of the map.
+            MapOptions mapOptions = new MapOptions();
 
-        mapOptions.center(new LatLong(LAT, LONG)
-        )
-                .mapType(MapTypeIdEnum.ROADMAP)
-                .overviewMapControl(false)
-                .panControl(false)
-                .rotateControl(false)
-                .scaleControl(false)
-                .streetViewControl(false)
-                .zoomControl(false)
-                .zoom(ZOOM_LEVEL);
+            mapOptions.center(new LatLong(LAT, LONG)
+            )
+                    .mapType(MapTypeIdEnum.ROADMAP)
+                    .overviewMapControl(false)
+                    .panControl(false)
+                    .rotateControl(false)
+                    .scaleControl(false)
+                    .streetViewControl(false)
+                    .zoomControl(false)
+                    .zoom(ZOOM_LEVEL);
 
-        map = mapView.createMap(mapOptions);
-        showAllDonors();
+            map = mapView.createMap(mapOptions);
+            showAllDonors();
+        } else {
+            mapView.setVisible(false);
+            noInternetLabel.setVisible(true);
+        }
     }
 
     /**
@@ -238,37 +248,40 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profile profile to add.
      */
     private void addDonorMarker(Profile profile) {
-        List<Double> latLng = controller.getProfileDeathLatLong(profile);
-        LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
-        MarkerOptions markerOptions = new MarkerOptions();
-        clearDonorMarkers();
-        clearReceiverMarkers();
-        sameBoolean = false;
+        if (hasConnection) {
+            List<Double> latLng = controller.getProfileDeathLatLong(profile);
+            LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
+            MarkerOptions markerOptions = new MarkerOptions();
+            clearDonorMarkers();
+            clearReceiverMarkers();
+            sameBoolean = false;
 
-        for(List<Double> position : receiverPositionList) {
-            if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
-                sameBoolean = true;
-                break;
+            for (List<Double> position : receiverPositionList) {
+                if (position.get(0).equals(latLng.get(0)) && position.get(1)
+                        .equals(latLng.get(1))) {
+                    sameBoolean = true;
+                    break;
+                }
             }
+            if (sameBoolean) {
+                formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
+            } else {
+                formatMarkerImage(DONOR_MARKER, donorLocation, markerOptions);
+            }
+
+            Marker marker = new Marker(markerOptions);
+
+            map.addMarker(marker);
+
+            map.addUIEventHandler(marker, UIEventType.click,
+                    jsObject -> {
+                        populateReceivers(profile);
+                        showAllReceivers();
+                    });
+
+            currentDonorMarkers.add(marker);
+            donorPositionList.add(latLng);
         }
-        if(sameBoolean){
-            formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
-        } else {
-            formatMarkerImage(DONOR_MARKER, donorLocation, markerOptions);
-        }
-
-        Marker marker = new Marker(markerOptions);
-
-        map.addMarker(marker);
-
-        map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> {
-                    populateReceivers(profile);
-                    showAllReceivers();
-                });
-
-        currentDonorMarkers.add(marker);
-        donorPositionList.add(latLng);
 
     }
 
@@ -278,56 +291,63 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * @param profile The profile to be added to the map.
      */
     private void addReceiverMarker(Profile profile) {
-        List<Double> latLng = controller.getProfileLatLong(profile);
-        LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
-        MarkerOptions markerOptions = new MarkerOptions();
-        sameBoolean = false;
-        for(List<Double> position : donorPositionList) {
-            if (position.get(0).equals(latLng.get(0)) && position.get(1).equals(latLng.get(1))) {
-                sameBoolean = true;
-                break;
+        if (hasConnection) {
+            List<Double> latLng = controller.getProfileLatLong(profile);
+            LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
+            MarkerOptions markerOptions = new MarkerOptions();
+            sameBoolean = false;
+            for (List<Double> position : donorPositionList) {
+                if (position.get(0).equals(latLng.get(0)) && position.get(1)
+                        .equals(latLng.get(1))) {
+                    sameBoolean = true;
+                    break;
+                }
             }
+            if (sameBoolean) {
+                formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
+                map.removeMarkers(currentDonorMarkers);
+            } else {
+                formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
+            }
+
+            Marker marker = new Marker(markerOptions);
+
+            if (currentDonorMarkers.size() != 1) {
+                clearDonorMarkers();
+            }
+
+            map.addMarker(marker);
+            map.addUIEventHandler(marker, UIEventType.click,
+                    jsObject -> {
+                        hasClickedMarker = true;
+                        currentReceiver = profile;
+                    });
+
+            currentReceiverMarkers.add(marker);
+            receiverPositionList.add(latLng);
         }
-        if(sameBoolean){
-            formatMarkerImage(BOTH_MARKER, donorLocation, markerOptions);
-            map.removeMarkers(currentDonorMarkers);
-        } else {
-            formatMarkerImage(RECEIVER_MARKER, donorLocation, markerOptions);
-        }
-
-        Marker marker = new Marker(markerOptions);
-
-        if (currentDonorMarkers.size() != 1) {
-            clearDonorMarkers();
-        }
-
-        map.addMarker(marker);
-        map.addUIEventHandler(marker, UIEventType.click,
-                jsObject -> {
-                    hasClickedMarker = true;
-                    currentReceiver = profile;
-                });
-
-        currentReceiverMarkers.add(marker);
-        receiverPositionList.add(latLng);
     }
 
     /**
      * Shows all the donors on the map.
      */
     public void showAllDonors() {
-        clearDonorMarkers();
-        clearReceiverMarkers();
-        showAllOnMap(donorsList, DONOR_MARKER, false);
+        if (hasConnection) {
+            clearDonorMarkers();
+            clearReceiverMarkers();
+            showAllOnMap(donorsList, DONOR_MARKER, false);
+        }
     }
 
     /**
      * Adds a marker on the map for each receiver.
      */
     public void showAllReceivers() {
-        clearDonorMarkers();
-        clearReceiverMarkers();
-        showAllOnMap(receiversList, RECEIVER_MARKER, true);
+        if (hasConnection) {
+            clearDonorMarkers();
+            clearReceiverMarkers();
+            showAllOnMap(receiversList, RECEIVER_MARKER, true);
+        }
     }
 
     /**
@@ -353,60 +373,70 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
      * Displays a list of profiles on the map.
      *
      * @param profileList Profiles to display.
-     * @param mapMarker   image to use as marker.
+     * @param mapMarker image to use as marker.
+     * @param alive true if alive.
      */
-    private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker, Boolean alive) {
-        for (Profile profile : profileList) {
-            List<Double> latLng;
-            if(alive){
-                latLng = controller.getProfileLatLong(profile);
-            }else{
-                latLng = controller.getProfileDeathLatLong(profile);
-            }
-            LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
-            MarkerOptions markerOptions = new MarkerOptions();
-            formatMarkerImage(mapMarker, donorLocation, markerOptions);
-            Marker marker = new Marker(markerOptions);
-            if(mapMarker.equals(DONOR_MARKER)) {
-                currentDonorMarkers.add(marker);
-            } else{
-                currentReceiverMarkers.add(marker);
-            }
+    private void showAllOnMap(ObservableList<Profile> profileList, String mapMarker,
+            Boolean alive) {
+        if (hasConnection) {
+            for (Profile profile : profileList) {
+                List<Double> latLng;
+                if (alive) {
+                    latLng = controller.getProfileLatLong(profile);
+                } else {
+                    latLng = controller.getProfileDeathLatLong(profile);
+                }
+                LatLong donorLocation = new LatLong(latLng.get(0), latLng.get(1));
+                MarkerOptions markerOptions = new MarkerOptions();
+                formatMarkerImage(mapMarker, donorLocation, markerOptions);
+                Marker marker = new Marker(markerOptions);
+                if (mapMarker.equals(DONOR_MARKER)) {
+                    currentDonorMarkers.add(marker);
+                } else {
+                    currentReceiverMarkers.add(marker);
+                }
 
-            map.addUIEventHandler(marker, UIEventType.click,
-                    jsObject -> {
-                        if (mapMarker.equals(DONOR_MARKER)) {
-                            currentDonor = profile;
-                            populateReceivers(profile);
-                            showAllReceivers();
-                            clearDonorMarkers();
-                        } else {
-                            currentReceiver = profile;
-                            hasClickedMarker = true;
-                        }
-                    });
-            map.addMarker(marker);
+                addMapUIEventHandler(mapMarker, profile, marker);
+                map.addMarker(marker);
+            }
         }
+    }
+
+    /**
+     * Adds map ui event handler to each profile.
+     * @param mapMarker Marker to add to map.
+     * @param profile Profile to add listener to.
+     * @param marker Marker to add.
+     */
+    private void addMapUIEventHandler(String mapMarker, Profile profile, Marker marker) {
+        map.addUIEventHandler(marker, UIEventType.click,
+                (JSObject jsObject) -> {
+                    if (mapMarker.equals(DONOR_MARKER)) {
+                        currentDonor = profile;
+                        populateReceivers(profile);
+                        showAllReceivers();
+                        clearDonorMarkers();
+                    } else {
+                        currentReceiver = profile;
+                        hasClickedMarker = true;
+                    }
+                });
     }
 
     /**
      * Formats the marker image.
      *
-     * @param mapMarker     The current map marker.
+     * @param mapMarker The current map marker.
      * @param donorLocation Donors location as a LatLong.
      * @param markerOptions The markers options.
      */
     private void formatMarkerImage(String mapMarker, LatLong donorLocation,
-                                   MarkerOptions markerOptions) {
+            MarkerOptions markerOptions) {
         String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
                 .getResource(mapMarker).toString(), "png");
         markerImage = markerImage.replace("(", "");
         markerImage = markerImage.replace(")", "");
         markerOptions.position(donorLocation).icon(markerImage);
-    }
-
-    public double getMatchesListViewWidth() {
-        return donorListView.getWidth();
     }
 
     public Button getOpenProfileBtn() {

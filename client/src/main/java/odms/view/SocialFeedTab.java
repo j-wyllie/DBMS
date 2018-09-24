@@ -5,9 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -17,10 +15,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import lombok.extern.slf4j.Slf4j;
-import odms.controller.AlertController;
 import odms.controller.WebViewCell;
 
 /**
@@ -54,9 +52,13 @@ public class SocialFeedTab extends CommonView {
                 tweetTable.getColumns().add(tweetCol);
 
                 tweetListSize = tweetList.size();
+                if (tweetListSize == 0) {
+                    tweetTable.setPlaceholder(new Label("No tweets to display."));
+                }
             }
         } else {
-            AlertController.guiPopup("Error establishing internet connection.");
+            tweetTable.setPlaceholder(
+                    new Label("Can't fetch tweets. Please check internet connection."));
         }
     }
 
@@ -181,8 +183,7 @@ public class SocialFeedTab extends CommonView {
     }
 
     /**
-     * Cancels the auto refresh timer for the twitter feed.
-     * Called when the tab gets clicked off.
+     * Cancels the auto refresh timer for the twitter feed. Called when the tab gets clicked off.
      */
     public void pauseTimer() {
         timer.cancel();

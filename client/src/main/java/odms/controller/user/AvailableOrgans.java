@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -202,7 +203,7 @@ public class AvailableOrgans {
             log.error(e.getMessage(), e);
         }
         for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())) {
+            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
                 view.removeItem(m);
             }
         }

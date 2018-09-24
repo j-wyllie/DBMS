@@ -209,14 +209,16 @@ public class ClinicianProfile extends CommonView {
      * Initializes the map and organ expiry lists.
      */
     public void handleTabOrganMapClicked() {
-        setTransplantWaitingListNull();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserMapTab.fxml"));
-        try {
-            organMapTab.setContent(loader.load());
-            OrganMap organMapTabView = loader.getController();
-            organMapTabView.initialize(currentUser, this);
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        if (organMapTab.isSelected()) {
+            setTransplantWaitingListNull();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserMapTab.fxml"));
+            try {
+                organMapTab.setContent(loader.load());
+                OrganMap organMapTabView = loader.getController();
+                organMapTabView.initialize(currentUser, this);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 
