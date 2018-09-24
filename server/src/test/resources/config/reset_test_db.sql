@@ -42,8 +42,7 @@ CREATE TABLE IF NOT EXISTS `conditions` (
   `Chronic` BOOLEAN DEFAULT NULL,
   `Current` BOOLEAN DEFAULT NULL,
   `Past` BOOLEAN DEFAULT NULL,
-  `CuredDate` datetime DEFAULT NULL,
-  INDEX (ProfileId)
+  `CuredDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -70,8 +69,7 @@ CREATE TABLE IF NOT EXISTS `drugs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Drug` varchar(50) DEFAULT NULL,
-  `Current` BOOLEAN DEFAULT NULL,
-  INDEX (ProfileId)
+  `Current` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -103,8 +101,7 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
   `AlphaValue` varchar(20),
   `NumericValue` int(11) NOT NULL,
   `GroupX` BOOLEAN NOT NULL,
-  `GroupY` BOOLEAN NOT NULL,
-  INDEX (ProfileId)
+  `GroupY` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -156,8 +153,7 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `UserId` int(11) DEFAULT NULL,
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
-  `DateRegistered` date NOT NULL,
-  INDEX (ProfileId)
+  `DateRegistered` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -174,8 +170,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL,
-  INDEX (ProfileId)
+  `Previous` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -292,6 +287,12 @@ ALTER TABLE `history`
   ADD KEY `EntityId` (`EntityId`);
 
 --
+-- Indexes for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD KEY `ProfileId` (`ProfileId`);
+
+--
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
@@ -322,13 +323,15 @@ ALTER TABLE `procedures`
 -- Indexes for table `profiles`
 --
 ALTER TABLE `profiles`
-  ADD PRIMARY KEY (`ProfileId`);
+  ADD PRIMARY KEY (`ProfileId`),
+  ADD KEY (`ProfileId`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserId`);
+  ADD PRIMARY KEY (`UserId`),
+  ADD KEY (`UserId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
