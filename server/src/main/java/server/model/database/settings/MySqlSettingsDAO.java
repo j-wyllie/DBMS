@@ -15,15 +15,16 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Get all available country options and their setting.
+     *
      * @return the list of countries.
      */
     @Override
     public List<String> getAllCountries() {
         List<String> countries = new ArrayList<>();
-        String query = "select * from countries;";
+        String query = "SELECT * FROM countries;";
         try (Connection connection = DatabaseConnection.getConnection();
-            Statement stmt = connection.createStatement();
-            ResultSet result = stmt.executeQuery(query)) {
+                Statement stmt = connection.createStatement();
+                ResultSet result = stmt.executeQuery(query)) {
             while (result.next()) {
                 String countryName = result.getString(KeyEnum.NAME.toString());
                 if (!countryName.equals("")) {
@@ -39,13 +40,14 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Gets all invalid or valid countries.
+     *
      * @param valid true if valid countries are required.
      * @return the list of countries.
      */
     @Override
     public List<String> getAllCountries(boolean valid) {
         List<String> countries = new ArrayList<>();
-        String query = "select * from countries where Valid = ?;";
+        String query = "SELECT * FROM countries WHERE Valid = ?;";
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setBoolean(1, valid);
@@ -64,14 +66,15 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Updates the setting for a specific country.
+     *
      * @param country to update.
      * @param valid state to update the country to.
      */
     @Override
     public void updateCountries(CountriesEnum country, boolean valid) {
-        String query = "update countries set Valid = ? where Name = ?;";
+        String query = "UPDATE countries SET Valid = ? WHERE Name = ?;";
         try (Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setBoolean(1, valid);
             stmt.setString(2, country.toString());
 
@@ -92,8 +95,8 @@ public class MySqlSettingsDAO implements SettingsDAO {
                 PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.executeUpdate();
 
-            for (CountriesEnum country: CountriesEnum.values()) {
-                query = "insert into countries (Name) VALUES (?)";
+            for (CountriesEnum country : CountriesEnum.values()) {
+                query = "INSERT INTO countries (Name) VALUES (?)";
 
                 try (PreparedStatement countryStmt = connection.prepareStatement(query)) {
 
@@ -109,6 +112,7 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Gets the locale setting for a user for date time formatting.
+     *
      * @param id of the user.
      * @param userType type of user.
      * @return the locale setting.
@@ -117,15 +121,16 @@ public class MySqlSettingsDAO implements SettingsDAO {
     public String getDateTimeFormat(int id, UserType userType) {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
-            query = "select DateTimeFormat from locale where ProfileId = ?;";
+            query = "SELECT DateTimeFormat FROM locale WHERE ProfileId = ?;";
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
-            query = "select DateTimeFormat from locale where UserId = ?;";
+            query = "SELECT DateTimeFormat FROM locale WHERE UserId = ?;";
         }
         return getLocale(query, id);
     }
 
     /**
      * Gets the locale setting for a user for number formatting.
+     *
      * @param id of the user.
      * @param userType type of user.
      * @return the locale setting.
@@ -134,25 +139,27 @@ public class MySqlSettingsDAO implements SettingsDAO {
     public String getNumberFormat(int id, UserType userType) {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
-            query = "select NumberFormat from locale where ProfileId = ?;";
+            query = "SELECT NumberFormat FROM locale WHERE ProfileId = ?;";
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
-            query = "select NumberFormat from locale where UserId = ?;";
+            query = "SELECT NumberFormat FROM locale WHERE UserId = ?;";
         }
         return getLocale(query, id);
     }
 
     /**
      * Executes a query to get the locale setting for a specific user.
+     *
      * @param query to execute.
      * @param id of the user.
      * @return the locale returned by the query.
      */
     private String getLocale(String query, int id) {
-        return executeSelectById(query, id);
+        return executeSELECTById(query, id);
     }
 
     /**
      * Set the DateTimeFormat.
+     *
      * @param id the user or profile ID.
      * @param userType user or profile.
      * @param locale the locale settings.
@@ -162,13 +169,13 @@ public class MySqlSettingsDAO implements SettingsDAO {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
             if (hasCustomLocale(id, userType)) {
-                query = "update locale set DateTimeFormat = ? where ProfileId = ?;";
+                query = "update locale set DateTimeFormat = ? WHERE ProfileId = ?;";
             } else {
                 query = "insert into locale (DateTimeFormat, ProfileId) values (?, ?);";
             }
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
             if (hasCustomLocale(id, userType)) {
-                query = "update locale set DateTimeFormat = ? where UserId = ?;";
+                query = "update locale set DateTimeFormat = ? WHERE UserId = ?;";
             } else {
                 query = "insert into locale (DateTimeFormat, UserId) values (?, ?);";
             }
@@ -178,6 +185,7 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Set the NumberFormat.
+     *
      * @param id the user or profile ID.
      * @param userType user or profile.
      * @param locale the locale settings.
@@ -187,13 +195,13 @@ public class MySqlSettingsDAO implements SettingsDAO {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
             if (hasCustomLocale(id, userType)) {
-                query = "update locale set NumberFormat = ? where ProfileId = ?;";
+                query = "update locale set NumberFormat = ? WHERE ProfileId = ?;";
             } else {
                 query = "insert into locale (NumberFormat, ProfileId) values (?, ?);";
             }
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
             if (hasCustomLocale(id, userType)) {
-                query = "update locale set NumberFormat = ? where UserId = ?;";
+                query = "update locale set NumberFormat = ? WHERE UserId = ?;";
             } else {
                 query = "insert into locale (NumberFormat, UserId) values (?, ?);";
             }
@@ -203,6 +211,7 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Deletes the locale settings for a user.
+     *
      * @param id the user or profile ID.
      * @param userType user or profile.
      */
@@ -210,15 +219,16 @@ public class MySqlSettingsDAO implements SettingsDAO {
     public void deleteLocale(int id, UserType userType) {
         String query = null;
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
-            query = "delete from locale where ProfileId = ?;";
+            query = "delete FROM locale WHERE ProfileId = ?;";
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
-            query = "delete from locale where UserId = ?;";
+            query = "delete FROM locale WHERE UserId = ?;";
         }
         executeDeleteById(query, id);
     }
 
     /**
      * Check if locale settings exist for ID.
+     *
      * @param id the user or profile ID.
      * @param userType user or profile.
      * @return boolean if exists.
@@ -228,11 +238,11 @@ public class MySqlSettingsDAO implements SettingsDAO {
         String query = null;
 
         if (userType.equals(UserType.PROFILE) || userType.equals(UserType.DONOR)) {
-            query = "select * from locale where ProfileId = ?;";
+            query = "SELECT * FROM locale WHERE ProfileId = ?;";
         } else if (userType.equals(UserType.ADMIN) || userType.equals(UserType.CLINICIAN)) {
-            query = "select * from locale where UserId = ?;";
+            query = "SELECT * FROM locale WHERE UserId = ?;";
         }
-        if (executeSelectById(query, id) != null) {
+        if (executeSELECTById(query, id) != null) {
             result = true;
         }
 
@@ -240,23 +250,22 @@ public class MySqlSettingsDAO implements SettingsDAO {
     }
 
     /**
-     * Executes a select query filtering rows by a user id.
+     * Executes a SELECT query filtering rows by a user id.
+     *
      * @param query to execute.
      * @param id to filter rows by.
      * @return the first column's value.
      */
-    private String executeSelectById(String query, int id) {
+    private String executeSELECTById(String query, int id) {
         String result = null;
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setInt(1, id);
-
-                ResultSet set = stmt.executeQuery();
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet set = stmt.executeQuery()) {
                 if (set.next()) {
                     result = set.getString(1);
                 }
-                set.close();
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -266,15 +275,15 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Executes a delete query filtering rows by a user id.
+     *
      * @param query to execute.
      * @param id to filter rows by.
      */
     private void executeDeleteById(String query, int id) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setInt(1, id);
-                stmt.execute();
-            }
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            stmt.execute();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -282,19 +291,17 @@ public class MySqlSettingsDAO implements SettingsDAO {
 
     /**
      * Executes update or insert query on the locale table.
+     *
      * @param query the SQL query.
      * @param id the user or profile ID.
      * @param locale the locale settings.
      */
     private void setFormat(String query, int id, String locale) throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
             stmt.setString(1, locale);
             stmt.setInt(2, id);
 
             stmt.executeUpdate();
         }
-        connection.close();
     }
 }
