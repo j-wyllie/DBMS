@@ -76,7 +76,7 @@
                         <Insets bottom="2.0" right="5.0" />
                     </GridPane.margin>
                 </Label>
-                <Label fx:id="receivingLabel" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Receiving" GridPane.columnIndex="1">
+                <Label fx:id="receivingLabel" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="Required" GridPane.columnIndex="1">
                     <GridPane.margin>
                         <Insets bottom="5.0" />
                     </GridPane.margin>

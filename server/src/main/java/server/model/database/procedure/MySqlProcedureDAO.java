@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,30 +20,29 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Get all procedures for the profile.
-     *  @param profile to get the conditions for.
+     *
+     * @param profile to get the conditions for.
      * @param pending procedures or false for past procedures.
      */
     @Override
     public List<Procedure> getAll(int profile, Boolean pending) {
-        String query = "select Id, ProfileId, Summary, Description, ProcedureDate, Pending, Previous"
-                + " from procedures where ProfileId = ? and Pending = ?;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        String query =
+                "select Id, ProfileId, Summary, Description, ProcedureDate, Pending, Previous"
+                        + " from procedures where ProfileId = ? and Pending = ?;";
         List<Procedure> result = new ArrayList<>();
 
-        try {
-            Connection conn = connectionInstance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, profile);
             stmt.setBoolean(2, pending);
 
-            ResultSet allProcedures = stmt.executeQuery();
+            try (ResultSet allProcedures = stmt.executeQuery()) {
 
-            while (allProcedures.next()) {
-                Procedure procedure = parseProcedure(allProcedures);
-                result.add(procedure);
+                while (allProcedures.next()) {
+                    Procedure procedure = parseProcedure(allProcedures);
+                    result.add(procedure);
+                }
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -67,42 +67,46 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Add a new procedure to a profile.
-     *  @param profile to add the procedure to.
+     *
+     * @param profile to add the procedure to.
      * @param procedure to add.
      */
     @Override
     public void add(int profile, Procedure procedure) {
-        String query = "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending) "
-                + "values (?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+        String query =
+                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending) "
+                        + "values (?, ?, ?, ?, ?);";
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn
+                        .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, profile);
             stmt.setString(2, procedure.getSummary());
             stmt.setString(3, procedure.getLongDescription());
-            stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            if (LocalDate.now().isBefore(procedure.getDate())) {
+            if (procedure.getDateTime() != null) {
+                // Date time is only used in scheduling a procedure so it must be pending
+                stmt.setTimestamp(4, Timestamp.valueOf(procedure.getDateTime()));
                 stmt.setInt(5, 1);
             } else {
-                stmt.setInt(5, 0);
+                stmt.setDate(4, Date.valueOf(procedure.getDate()));
+                if (LocalDate.now().isBefore(procedure.getDate())) {
+                    stmt.setInt(5, 1);
+                } else {
+                    stmt.setInt(5, 0);
+                }
             }
 
-            //todo: return and update procedure id.
             stmt.executeUpdate();
-            ResultSet keys = stmt.getGeneratedKeys();
-            while (keys.next()) {
-                procedure.setId(keys.getInt(1));
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                while (keys.next()) {
+                    procedure.setId(keys.getInt(1));
+                }
             }
             for (OrganEnum organ : procedure.getOrgansAffected()) {
                 addAffectedOrgan(procedure, organ);
             }
 
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -117,23 +121,16 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     public void remove(Procedure procedure) {
         String idQuery = "delete from procedures where Id = ?;";
         String procedureIdQuery = "delete from affected_organs where ProcedureId = ?";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(procedureIdQuery);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(procedureIdQuery)) {
             stmt.setInt(1, procedure.getId());
-
             stmt.executeUpdate();
-            stmt.close();
 
-            PreparedStatement stmt2 = conn.prepareStatement(idQuery);
-            stmt2.setInt(1, procedure.getId());
-
-            stmt2.executeUpdate();
-            stmt2.close();
-            conn.close();
+            try (PreparedStatement stmt2 = conn.prepareStatement(idQuery)) {
+                stmt2.setInt(1, procedure.getId());
+                stmt2.executeUpdate();
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -141,27 +138,22 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Remove an affected organ from a procedure for a profile.
+     *
      * @param procedure to remove the organ from.
      * @param organ to remove.
      */
     @Override
     public void removeAffectedOrgan(Procedure procedure, OrganEnum organ) {
         String query = "delete from affected_organs where ProcedureId = ? and Organ = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, procedure.getId());
             stmt.setString(2, organ.getName());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -173,14 +165,12 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public void update(Procedure procedure, boolean pending) {
-        String query = "update procedures set Summary = ?, Description = ?, ProcedureDate = ?, Pending = ? "
-                + "where Id = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+        String query =
+                "update procedures set Summary = ?, Description = ?, ProcedureDate = ?, Pending = ? "
+                        + "where Id = ?;";
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, procedure.getSummary());
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
@@ -188,8 +178,6 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(5, procedure.getId());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -205,24 +193,20 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public List<OrganEnum> getAffectedOrgans(int procedureId) {
         String query = "select * from affected_organs where ProcedureId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         List<OrganEnum> organs = new ArrayList<>();
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, procedureId);
 
-            ResultSet allOrgans = stmt.executeQuery();
+            try (ResultSet allOrgans = stmt.executeQuery()) {
 
-            while (allOrgans.next()) {
-                String organName = allOrgans.getString("Organ");
-                OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace("-", "_"));
-                organs.add(organ);
+                while (allOrgans.next()) {
+                    String organName = allOrgans.getString("Organ");
+                    OrganEnum organ = OrganEnum.valueOf(organName.toUpperCase().replace("-", "_"));
+                    organs.add(organ);
+                }
             }
-            conn.close();
-            stmt.close();
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -232,27 +216,23 @@ public class MySqlProcedureDAO implements ProcedureDAO {
 
     /**
      * Add an affected organ to a procedure for a profile.
+     *
      * @param procedure to add the organ to.
      * @param organ to add.
      */
     @Override
     public void addAffectedOrgan(Procedure procedure, OrganEnum organ) {
         String query = "insert into affected_organs (ProcedureId, Organ) values (?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, procedure.getId());
             stmt.setString(2, organ.getName());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }

@@ -157,12 +157,12 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType, Integer lowerAgeRange,
-            Integer upperAgeRange) {
+    public List<Profile> getOrganReceivers(String organs, String bloodTypes,
+           Integer lowerAgeRange, Integer upperAgeRange) {
         String url = "http://localhost:6969/api/v1/profiles/receivers";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
-        queryParams.put("bloodType", bloodType.replace("+", "%2B"));
+        queryParams.put("organs", organs);
+        queryParams.put("bloodTypes", bloodTypes.replace("+", "%2B"));
         queryParams.put("lowerAgeRange", lowerAgeRange);
         queryParams.put("upperAgeRange", upperAgeRange);
 
@@ -173,6 +173,14 @@ public class HttpProfileDAO implements ProfileDAO {
     public List<Profile> getDead() throws SQLException {
         String url = "http://localhost:6969/api/v1/profiles/dead";
         Map<String, Object> queryParams = new HashMap<>();
+        return getArrayRequest(url, queryParams);
+    }
+
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+        String url = "http://localhost:6969/api/v1/profiles/dead";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("searchString", searchString);
         return getArrayRequest(url, queryParams);
     }
 
