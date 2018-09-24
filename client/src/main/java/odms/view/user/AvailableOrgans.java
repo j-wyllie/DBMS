@@ -249,16 +249,8 @@ public class AvailableOrgans extends CommonView {
      */
     public void setAvailableOrgansList() throws SQLException {
         List<Entry<Profile, OrganEnum>> organsAvailable = controller.getAllOrgansAvailable();
-        for (Entry<Profile, OrganEnum> organ : organsAvailable) {
-            if (!listOfAvailableOrgans.contains(organ)) {
-                listOfAvailableOrgans.add(organ);
-            }
-        }
-        List<Entry<Profile, OrganEnum>> o = new ArrayList<>(listOfAvailableOrgans);
-        o.removeAll(organsAvailable);
-        for (Entry<Profile, OrganEnum> organ : o) {
-            listOfAvailableOrgans.remove(organ);
-        }
+        listOfAvailableOrgans.clear();
+        listOfAvailableOrgans.addAll(organsAvailable);
         listOfFilteredAvailableOrgans = listOfAvailableOrgans;
     }
 
