@@ -39,10 +39,11 @@ CREATE TABLE IF NOT EXISTS `conditions` (
   `ProfileId` int(11) NOT NULL,
   `Description` varchar(100) DEFAULT NULL,
   `DiagnosisDate` datetime DEFAULT NULL,
-  `Chronic` tinyint(1) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL,
-  `CuredDate` datetime DEFAULT NULL
+  `Chronic` BOOLEAN DEFAULT NULL,
+  `Current` BOOLEAN DEFAULT NULL,
+  `Past` BOOLEAN DEFAULT NULL,
+  `CuredDate` datetime DEFAULT NULL,
+  INDEX (ProfileId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
