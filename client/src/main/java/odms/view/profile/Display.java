@@ -70,6 +70,7 @@ public class Display extends CommonView {
     private User currentUser;
     private TransplantWaitingList transplantWaitingListView;
     private SocialFeedTab socialFeed;
+    private boolean socialFeedInitialised = false;
 
     // Displays in IntelliJ as unused but is a false positive
     // The FXML includes operate this way and allow access to the instantiated controller.
@@ -91,7 +92,10 @@ public class Display extends CommonView {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         currentProfile = null;
-        socialFeed.pauseTimer();
+        if(socialFeedInitialised) {
+            socialFeed.pauseTimer();
+            socialFeedInitialised = false;
+        }
         changeScene(event, "/view/Login.fxml", "Login");
     }
 
@@ -186,6 +190,7 @@ public class Display extends CommonView {
                 tabSocialFeed.setContent(loader.load());
                 socialFeed = loader.getController();
                 socialFeed.initialise();
+                socialFeedInitialised = true;
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
