@@ -4,8 +4,24 @@ import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.service.directions.*;
+
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+
+import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
+import com.lynden.gmapsfx.service.directions.DirectionsRequest;
+import com.lynden.gmapsfx.service.directions.DirectionsService;
+import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
+import com.lynden.gmapsfx.service.directions.TravelModes;
+import com.lynden.gmapsfx.service.directions.DirectionsResult;
+import com.lynden.gmapsfx.service.directions.DirectionsLeg;
+import com.lynden.gmapsfx.service.directions.DirectionStatus;
+
 import com.lynden.gmapsfx.shapes.Polyline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,9 +32,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
 import odms.commons.model.enums.UserType;
@@ -44,9 +67,10 @@ import static odms.controller.user.AvailableOrgans.msToStandard;
 public class HospitalMap extends CommonView implements Initializable,
         MapComponentInitializedListener, DirectionsServiceCallback {
 
-    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
+    private odms.controller.user.HospitalMap controller =
+            new odms.controller.user.HospitalMap(this);
 
-    private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap(this);
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
@@ -133,11 +157,13 @@ public class HospitalMap extends CommonView implements Initializable,
      */
     @Override
     public void mapInitialized() {
+        LatLong centreNZLatLng = new LatLong(-41, 172.6362);
+
         if (hasConnection) {
             //Set the initial properties of the map.
             MapOptions mapOptions = new MapOptions();
 
-            mapOptions.center(new LatLong(-41, 172.6362))
+            mapOptions.center(new LatLong(centreNZLatLng.getLatitude(), centreNZLatLng.getLongitude()))
                     .mapType(MapTypeIdEnum.ROADMAP)
                     .overviewMapControl(false)
                     .panControl(false)
@@ -270,7 +296,7 @@ public class HospitalMap extends CommonView implements Initializable,
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            if (location.getId().equals(hospitalSelected1.getId())) {
+            if (!location.getId().equals(hospitalSelected1.getId())) {
                 temp = controller.calcDistanceHaversine(location.getLatitude(),
                         location.getLongitude(), hospitalSelected1.getLatitude(),
                         hospitalSelected1.getLongitude());
@@ -355,6 +381,7 @@ public class HospitalMap extends CommonView implements Initializable,
             String originName, Double destinationLat, Double destinationLong,
             String destinationName) {
         final double HELICOPTER_SPEED_KMH = 262;
+        final int SECONDS_IN_HOUR = 3600;
 
         if (hospitalSelected1.getId().equals(hospitalSelected2.getId())) {
             clearRoutesAndSelection();
@@ -379,7 +406,7 @@ public class HospitalMap extends CommonView implements Initializable,
 
             Double distance = controller.calcDistanceHaversine(originLat, originLong,
                     destinationLat, destinationLong); // km
-            Double duration = distance / HELICOPTER_SPEED_KMH * 3600; // seconds
+            Double duration = distance / HELICOPTER_SPEED_KMH * SECONDS_IN_HOUR;
             showTravelDetails(originName, destinationName, decimalFormat.format(distance) +
                     "km", decimalFormat.format(duration));
 
@@ -439,13 +466,15 @@ public class HospitalMap extends CommonView implements Initializable,
      */
     private void showTravelDetails(String originName, String destinationName, String distance,
             String duration) {
+
         String travelMethodGiven = String.valueOf(
                 travelMethod.getSelectionModel().getSelectedItem());
+        final int MLS_IN_SECOND = 1000;
 
         try {
-            double durationNumber = Double.parseDouble(duration) * 1000;
+            double durationNumber = Double.parseDouble(duration) * MLS_IN_SECOND;
             duration = msToStandard((long) durationNumber);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             log.error("Failed to parse travel duration, must not be applicable");
             log.error(e.getMessage(), e);
         }
