@@ -3,12 +3,15 @@ package odms.controller.data.database;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import server.model.database.DAOFactory;
 import server.model.database.user.MySqlUserDAO;
 
 import java.sql.SQLException;
 import java.util.List;
+import server.model.database.user.UserDAO;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -16,13 +19,13 @@ import static org.junit.Assert.assertFalse;
 
 public class MySqlUserDaoTest extends MySqlCommonTests {
 
-    private static MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
+    private static UserDAO mySqlUserDAO = DAOFactory.getUserDao();
 
     private static User testUser0;
     private static User testUser1;
 
-    @BeforeClass
-    public static void setup() throws SQLException, UserNotFoundException {
+    @Before
+    public void setup() throws UserNotFoundException, SQLException {
         testUser0 = mySqlUserDAO.get("username");
         testUser1 = mySqlUserDAO.get("Pleb");
     }

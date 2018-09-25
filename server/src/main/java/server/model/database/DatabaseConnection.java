@@ -158,11 +158,9 @@ public final class DatabaseConnection {
 
     /**
      * Executes the sql statements in the file at the location passed in.
-     *
      */
     private void executeQuery() {
-        try {
-            Connection conn = getConnection();
+        try (Connection conn = getConnection()) {
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {
@@ -172,6 +170,7 @@ public final class DatabaseConnection {
 
     /**
      * Parses an SQL file into a statement. Used for reset and resample files.
+     *
      * @param conn Connection instance.
      * @param filepath Path of sql file.
      * @return Statement to be executed by statement.executeBatch() call.
@@ -204,6 +203,7 @@ public final class DatabaseConnection {
      * Helper to hold the instance of the singleton database connection class.
      */
     private static class DatabaseConnectionHelper {
+
         private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 }

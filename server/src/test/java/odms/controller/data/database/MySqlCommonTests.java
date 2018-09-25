@@ -16,5 +16,6 @@ public abstract class MySqlCommonTests {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         instance.resetTestDb();
         DatabaseConnection.setTestDb();
+
     }
 }
