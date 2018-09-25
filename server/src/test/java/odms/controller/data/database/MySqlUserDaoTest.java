@@ -9,7 +9,9 @@ import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
 
@@ -22,6 +24,9 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     private long testTime;
 
     private String testName;
+
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(10);
 
     @Before
     public void setup() {
@@ -72,17 +77,17 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals(testUser0.getUsername(), userDAO.get("Username").getUsername());
     }
 
-//    @Test(expected = UserNotFoundException.class)
-//    public void testGetInvalidUser() throws SQLException, UserNotFoundException {
-//        testName = "testGetInvalidUser";
-//        assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
-//    }
-//
-//    @Test
-//    public void testGetAll() throws SQLException {
-//        testName = "testGetAll";
-//        assertEquals(2, userDAO.getAll().size());
-//    }
+    @Test(expected = UserNotFoundException.class)
+    public void testGetInvalidUser() throws SQLException, UserNotFoundException {
+        testName = "testGetInvalidUser";
+        assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
+    }
+
+    @Test
+    public void testGetAll() throws SQLException {
+        testName = "testGetAll";
+        assertEquals(2, userDAO.getAll().size());
+    }
 
     @Test (expected = UserNotFoundException.class)
     public void testRemove() throws SQLException, UserNotFoundException {

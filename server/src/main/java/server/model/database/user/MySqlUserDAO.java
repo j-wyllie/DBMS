@@ -22,6 +22,7 @@ import server.model.database.PasswordUtilities;
  */
 @Slf4j
 public class MySqlUserDAO implements UserDAO {
+
     private static final String NOT_FOUND = "Not found";
 
     /**
@@ -35,7 +36,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT * FROM users;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                Statement stmt = conn.createStatement()){
+                Statement stmt = conn.createStatement()) {
 
             try (ResultSet allUserRows = stmt.executeQuery(query)) {
                 while (allUserRows.next()) {
@@ -101,7 +102,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -163,7 +164,7 @@ public class MySqlUserDAO implements UserDAO {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
@@ -188,19 +189,18 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public boolean isUniqueUsername(String username) {
-        String query = "SELECT Username FROM users WHERE Username = ?;";
+        String query = "SELECT count(Username) as total FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            try (ResultSet result = stmt.executeQuery()) {
-                return !result.next();
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.getInt("total") == 0;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            return false;
         }
-        return false;
     }
 
 
@@ -214,7 +214,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "DELETE FROM users WHERE UserId = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, user.getStaffID());
 
             stmt.executeUpdate();
