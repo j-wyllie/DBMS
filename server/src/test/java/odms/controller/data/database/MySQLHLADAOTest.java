@@ -121,19 +121,20 @@ public class MySQLHLADAOTest {
 
     @Test
     public void testEdit() {
-        //TODO: Edit to call
         HLA hlaX = new HLA("CC", 5, true, false);
         HLA hlaX_2 = new HLA("CC", 5, true, false);
         HLA hlaY = new HLA("DQ", 40, false, true);
         HLA hlaN = new HLA("GG", 99, false, false);
-
+        //Edit consists of removing current HLA and adding a new one.
         hlaDao.add(testProfile2.getId(), hlaX);
-        hlaDao.add(testProfile2.getId(), hlaY);
+        hlaDao.remove(testProfile2.getId(), hlaX);
+        hlaDao.add(testProfile2.getId(), hlaX_2);
+        HLA dataCheck = hlaDao.getGroupX(testProfile2.getId()).get(0);
 
-       // hlaDao.edit(testProfile2.getId(), hlaX_2);
-
-
-        //assertEquals(hlaX_2,hlaDao.get(testProfile2.getId()));
+        assertEquals(hlaX_2.getNumericValue(),dataCheck.getNumericValue());
+        assertEquals(hlaX_2.getAlphaValue(),dataCheck.getAlphaValue());
+        assertEquals(hlaX_2.getGroupX(),dataCheck.getGroupX());
+        assertEquals(hlaX_2.getGroupY(),dataCheck.getGroupY());
     }
 
     /**
