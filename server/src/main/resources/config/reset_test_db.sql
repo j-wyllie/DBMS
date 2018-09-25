@@ -318,8 +318,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
-  ADD KEY `Hospitals` (`Hospital`);
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `Hospital` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -451,7 +451,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `procedures`
-  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`) ON DELETE SET NULL;
 
 
 DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
