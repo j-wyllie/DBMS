@@ -22,6 +22,7 @@
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="214.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="214.0" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="189.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="976.0" minWidth="10.0" prefWidth="189.0" />
          <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
@@ -31,7 +32,7 @@
          <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
         </rowConstraints>
         <children>
-            <TableView fx:id="markersTable" prefHeight="482.0" prefWidth="176.0" GridPane.columnIndex="6" GridPane.columnSpan="1" />
+            <TableView fx:id="markersTable" prefHeight="482.0" prefWidth="176.0" GridPane.columnIndex="6" GridPane.columnSpan="2" />
             <Button fx:id="addHospitalButton" onAction="#handleAddHospital" prefHeight="46.0" prefWidth="130.0" text="Add Hospital" GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.rowSpan="1">
             <GridPane.margin>
                <Insets left="20.0" right="20.0" />
@@ -62,6 +63,11 @@
          </Button>
          <Label fx:id="noInternetLabel" alignment="CENTER" text="Internet connection is required to view the map" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="3" />
          <GoogleMapView fx:id="mapView" prefHeight="600.0" prefWidth="962.0" GridPane.columnSpan="6" />
+         <Button fx:id="deleteHospitalButton" onAction="#handleDeleteHospital" prefHeight="46.0" prefWidth="130.0" text="Delete Hospital" GridPane.columnIndex="7" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </GridPane.margin>
+         </Button>
         </children>
     </GridPane>
 </AnchorPane>
