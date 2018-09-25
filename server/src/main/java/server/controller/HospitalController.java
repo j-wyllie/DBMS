@@ -13,8 +13,18 @@ import spark.Response;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller for hospital endpoints.
+ */
 @Slf4j
 public class HospitalController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private HospitalController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all the hospitals in the database.

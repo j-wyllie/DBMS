@@ -1,18 +1,20 @@
 package odms.view.user;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * View class for the create hospital scene.
@@ -37,7 +39,8 @@ public class HospitalCreate {
     @FXML
     private ListView<RadioButton> programList;
 
-    private odms.controller.user.HospitalCreate controller = new odms.controller.user.HospitalCreate();
+    private odms.controller.user.HospitalCreate controller =
+            new odms.controller.user.HospitalCreate();
     private boolean isEdit;
     private Integer hospitalId;
 

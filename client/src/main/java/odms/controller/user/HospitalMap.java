@@ -1,18 +1,25 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MVCArray;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Controller class for the hospital map view.
+ */
 public class HospitalMap {
 
     private odms.view.user.HospitalMap view;
@@ -90,12 +97,14 @@ public class HospitalMap {
     }
 
     /**
-     * Creates a marker options object so a marker can change its appearance according to the provided parameters
+     * Creates a marker options object so a marker can change its appearance according to
+     * the provided parameters.
      *
      * @param highlighted if the marker is already highlighted or not
      * @param location the location object the marker is for
      * @param selected the ID of the selected marker, can be A - Z
-     * @return A marker options object that allows a marker to change its appearance to a specified look
+     * @return A marker options object that allows a marker to change its appearance to a
+     * specified look
      */
     public MarkerOptions highlightMarker(Boolean highlighted, Hospital location, String selected) {
 
@@ -105,7 +114,10 @@ public class HospitalMap {
 
         if (!highlighted) {
 
-            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_Marker"+ selected + ".png").toString(), "png");
+            String markerImage = MarkerImageFactory.createMarkerImage(
+                    this.getClass().getResource(
+                            "/GoogleMapsMarkers/blue_Marker" + selected + ".png")
+                            .toString(), "png");
             markerImage = markerImage.replace("(", "");
             markerImage = markerImage.replace(")", "");
             markerOptions.icon(markerImage);
@@ -114,7 +126,6 @@ public class HospitalMap {
         return markerOptions;
 
     }
-
 
     /**
      * Calculates the distance between two lat long coordinates, using the Haversine method.
@@ -131,9 +142,9 @@ public class HospitalMap {
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
 
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = EARTH_RADIUS * c * 1000; // convert to meters
@@ -153,18 +164,24 @@ public class HospitalMap {
      * @param destinationLong longitude the route ends at
      * @return A Polyline object that can be added to a map to represent a line
      */
-    public Polyline createHelicopterRoute(Double originLat, Double originLong, Double destinationLat, Double destinationLong) {
+    public Polyline createHelicopterRoute(Double originLat, Double originLong,
+            Double destinationLat, Double destinationLong) {
 
         LatLong originLatLong = new LatLong(originLat, originLong);
         LatLong destinationLatLong = new LatLong(destinationLat, destinationLong);
         LatLong[] coordinatesList = new LatLong[]{originLatLong, destinationLatLong};
 
         MVCArray pointsOnMap = new MVCArray(coordinatesList);
-        PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap).strokeColor("blue").strokeWeight(2);
+        PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap)
+                .strokeColor("blue").strokeWeight(2);
 
         return new Polyline(polyOpts);
     }
 
+    /**
+     * Gets all hospitals from the database.
+     * @return list of hospitals
+     */
     public List<Hospital> getHospitals() {
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         try {

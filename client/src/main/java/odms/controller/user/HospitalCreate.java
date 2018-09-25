@@ -79,7 +79,8 @@ public class HospitalCreate {
      */
     private List<Double> getGeoLocation(String address) throws IOException {
         List<Double> locationList = new ArrayList<>();
-        String query = API_URL + "geocode/json?address=" + address.replace(" ", "+") + "&key=" + KEY;
+        String query = API_URL + "geocode/json?address=" +
+                address.replace(" ", "+") + "&key=" + KEY;
         URL url = new URL(query);
         URLConnection request;
 
@@ -94,7 +95,8 @@ public class HospitalCreate {
             JsonParser jp = new JsonParser();
             JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
             JsonArray results = root.getAsJsonObject().getAsJsonArray("results");
-            JsonObject location = results.get(0).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+            JsonObject location = results.get(0).getAsJsonObject().get("geometry")
+                    .getAsJsonObject().get("location").getAsJsonObject();
             locationList.add(Double.parseDouble(location.get("lat").getAsString()));
             locationList.add(Double.parseDouble(location.get("lng").getAsString()));
         } catch (Exception e) {
