@@ -1,5 +1,7 @@
 package odms.controller.database.locations;
 
+import odms.commons.model.locations.Hospital;
+import odms.commons.model.profile.Profile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,6 +69,33 @@ public class HttpHospitalDAO implements HospitalDAO {
         String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("name", name);
+        Gson parser = new Gson();
+        Response response = null;
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        if (response.getStatus() == 200) {
+            return parser.fromJson(response.getBody(), Hospital.class);
+        } else if (response.getStatus() == 500) {
+            throw new SQLException(response.getBody());
+        }
+        return null;
+    }
+
+    /**
+     * Get a hospital from the database by it's id.
+     * @param id the id of the hospital to retrieve
+     * @return the hospital object
+     * @throws SQLException thrown when there is a server error.
+     */
+    @Override
+    public Hospital get(int id) throws SQLException {
+        String url = String.format(URL, PORTNUMBER);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("id", id);
         Gson parser = new Gson();
         Response response = null;
         Request request = new Request(url, 0, queryParams);

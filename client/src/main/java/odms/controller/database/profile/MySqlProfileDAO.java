@@ -104,7 +104,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                 ResultSet.CONCUR_READ_ONLY);
 
         stmt.setString(1, "%" + searchString + "%");
-        stmt.setString(2, "%" + searchString + "%");
 
         ArrayList<Integer> existingIds = new ArrayList<>();
         try {

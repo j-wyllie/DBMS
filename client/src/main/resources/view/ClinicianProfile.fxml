@@ -36,7 +36,7 @@
                <Tab fx:id="socialFeedTab" onSelectionChanged="#handleSocialFeedTabClicked" text="Social Feed"/>
                <Tab fx:id="organMapTab" onSelectionChanged="#handleTabOrganMapClicked" text="Organ Map" />
                <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
-            <Tab fx:id="listUsersTab" onSelectionChanged="#handleViewUsersTabClicked" text="View Users" />
+               <Tab fx:id="listUsersTab" onSelectionChanged="#handleViewUsersTabClicked" text="View Users" />
                <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
                <Tab fx:id="hospitalMapTab" onSelectionChanged="#handleTabHospitalMapClicked" text="Hospital Map" />
         </TabPane>

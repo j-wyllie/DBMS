@@ -1,9 +1,15 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MVCArray;
+
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
@@ -12,12 +18,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller class for the hospital map view.
+ */
 public class HospitalMap {
 
-    private odms.view.user.HospitalMap view;
+    private final odms.view.user.HospitalMap view;
 
-    public void setView(odms.view.user.HospitalMap v) {
-        view = v;
+    /**
+     * Contructor for HospitalMap controller, takes view instance as a parameter.
+     * @param view view instance of HospitalMap view
+     */
+    public HospitalMap(odms.view.user.HospitalMap view) {
+        this.view = view;
     }
 
     /**
@@ -38,15 +51,8 @@ public class HospitalMap {
         markerOptions.title(location.getName());
         markerOptions.label(String.valueOf(location.getId()));
 
-
         if (location.getId() < 0) {
-
-            // TODO potentially being removed, might not bother with custom markers, just too much of a hassle and clashes with the other markers too much
-            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_MarkerA.png").toString(), "png");
-            markerImage = markerImage.replace("(", "");
-            markerImage = markerImage.replace(")", "");
-            markerOptions.icon(markerImage);
-
+            markerOptions.label("X");
         } else {
             markerOptions.label(location.getId().toString());
         }
@@ -55,7 +61,7 @@ public class HospitalMap {
     }
 
     /**
-     * Creates Location info window containing a locations details
+     * Creates Location info window containing a locations details.
      *
      * @param location The location to create a info window for
      * @return A info window object for the given hospital containing locations details
@@ -64,46 +70,37 @@ public class HospitalMap {
 
         // Hospital tooltip generated and added
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+        String locationInfo = location.getName() + ". \n";
 
-        String locationInfo = location.getName() + " \n";
-        if (location.getAddress() != null) {
-            locationInfo += "Address: " + location.getAddress() + " \n";
-        }
-        if (location.getPrograms() != null) {
-            locationInfo += "Services offered: " + location.getPrograms();
+        if (location.getId() < 0) {
+            locationInfo += "Location: (" +
+                    Double.valueOf(view.getDecimalFormat().format(location.getLatitude())) + ", " +
+                    Double.valueOf(view.getDecimalFormat().format(location.getLongitude())) + ")";
+        } else {
+
+            if (location.getAddress() != null) {
+                locationInfo += "Address: " + location.getAddress() + ". \n";
+            }
+
+            List<String> organPrograms = new ArrayList<>();
+            int i = 0;
+            for (OrganEnum organ : OrganEnum.values()) {
+                if (location.getPrograms().get(i)) {
+                    organPrograms.add(organ.getNamePlain());
+                }
+                i++;
+            }
+
+            if (location.getPrograms() != null) {
+                locationInfo += "Services offered: " + organPrograms + ".";
+            }
+
         }
 
         infoWindowOptions.content(locationInfo);
 
         return new InfoWindow(infoWindowOptions);
     }
-
-    /**
-     * Creates a marker options object so a marker can change its appearance according to the provided parameters
-     *
-     * @param highlighted if the marker is already highlighted or not
-     * @param location the location object the marker is for
-     * @param selected the ID of the selected marker, can be A - Z
-     * @return A marker options object that allows a marker to change its appearance to a specified look
-     */
-    public MarkerOptions highlightMarker(Boolean highlighted, Hospital location, String selected) {
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLong(location.getLatitude(), location.getLongitude()));
-        markerOptions.label(String.valueOf(location.getId()));
-
-        if (!highlighted) {
-
-            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_Marker"+ selected + ".png").toString(), "png");
-            markerImage = markerImage.replace("(", "");
-            markerImage = markerImage.replace(")", "");
-            markerOptions.icon(markerImage);
-        }
-
-        return markerOptions;
-
-    }
-
 
     /**
      * Calculates the distance between two lat long coordinates, using the Haversine method.
@@ -116,20 +113,21 @@ public class HospitalMap {
      */
     public double calcDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
         final int EARTH_RADIUS = 6371; // Radius of the earth
+        final int ONE_KM = 1000;
 
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
 
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = EARTH_RADIUS * c * 1000; // convert to meters
+        double distance = EARTH_RADIUS * c * ONE_KM; // convert to meters
 
         distance = Math.pow(distance, 2);
 
-        return Math.sqrt(distance) / 1000;
+        return Math.sqrt(distance) / ONE_KM;
     }
 
     /**
@@ -142,18 +140,24 @@ public class HospitalMap {
      * @param destinationLong longitude the route ends at
      * @return A Polyline object that can be added to a map to represent a line
      */
-    public Polyline createHelicopterRoute(Double originLat, Double originLong, Double destinationLat, Double destinationLong) {
+    public Polyline createHelicopterRoute(Double originLat, Double originLong,
+            Double destinationLat, Double destinationLong) {
 
         LatLong originLatLong = new LatLong(originLat, originLong);
         LatLong destinationLatLong = new LatLong(destinationLat, destinationLong);
         LatLong[] coordinatesList = new LatLong[]{originLatLong, destinationLatLong};
 
         MVCArray pointsOnMap = new MVCArray(coordinatesList);
-        PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap).strokeColor("blue").strokeWeight(2);
+        PolylineOptions polyOpts = new PolylineOptions().path(pointsOnMap)
+                .strokeColor("blue").strokeWeight(2);
 
         return new Polyline(polyOpts);
     }
 
+    /**
+     * Gets all hospitals from the database.
+     * @return list of hospitals
+     */
     public List<Hospital> getHospitals() {
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         try {
@@ -161,5 +165,20 @@ public class HospitalMap {
         } catch (SQLException e) {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Deletes a hospital from the database.
+     * @param hospital hospital to delete
+     * @return bool, true if hospital was deleted
+     */
+    public Boolean deleteHospital(Hospital hospital) {
+        HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+        try {
+            hospitalDAO.remove(hospital.getName());
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 }

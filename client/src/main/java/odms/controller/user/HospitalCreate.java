@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.scene.control.RadioButton;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
@@ -29,12 +30,20 @@ public class HospitalCreate {
      * Makes a request to add a new hospital to the database.
      * @param name name of hospital
      * @param address address of hospital
+     * @param organPrograms list of radio button objects that represent what organ transplant
+     * programs a hospital provides
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void addHospital(String name, String address) throws IOException, SQLException {
+    public void addHospital(String name, String address, List<RadioButton> organPrograms)
+            throws IOException, SQLException {
+        List<Boolean> organProgramBools = new ArrayList<>();
+        for (RadioButton organProgram : organPrograms) {
+            organProgramBools.add(organProgram.isSelected());
+        }
         List<Double> latlong = getGeoLocation(address);
-        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address,
+                organProgramBools);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         hospitalDAO.add(newHospital);
     }
@@ -44,12 +53,20 @@ public class HospitalCreate {
      * @param name name of hospital
      * @param address address of hospital
      * @param hospitalId the id of the hospital that has been edited
+     * @param organPrograms list of radio button objects that represent what organ transplant
+     * programs a hospital provides
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void editHospital(String name, String address, Integer hospitalId) throws SQLException, IOException {
+    public void editHospital(String name, String address, List<RadioButton> organPrograms,
+            Integer hospitalId) throws SQLException, IOException {
+        List<Boolean> organProgramBools = new ArrayList<>();
+        for (RadioButton organProgram : organPrograms) {
+            organProgramBools.add(organProgram.isSelected());
+        }
         List<Double> latlong = getGeoLocation(address);
-        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address, null, hospitalId);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address,
+                organProgramBools, hospitalId);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         hospitalDAO.edit(newHospital);
     }
@@ -62,7 +79,8 @@ public class HospitalCreate {
      */
     private List<Double> getGeoLocation(String address) throws IOException {
         List<Double> locationList = new ArrayList<>();
-        String query = API_URL + "geocode/json?address=" + address.replace(" ", "+") + "&key=" + KEY;
+        String query = API_URL + "geocode/json?address=" +
+                address.replace(" ", "+") + "&key=" + KEY;
         URL url = new URL(query);
         URLConnection request;
 
@@ -77,7 +95,8 @@ public class HospitalCreate {
             JsonParser jp = new JsonParser();
             JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
             JsonArray results = root.getAsJsonObject().getAsJsonArray("results");
-            JsonObject location = results.get(0).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+            JsonObject location = results.get(0).getAsJsonObject().get("geometry")
+                    .getAsJsonObject().get("location").getAsJsonObject();
             locationList.add(Double.parseDouble(location.get("lat").getAsString()));
             locationList.add(Double.parseDouble(location.get("lng").getAsString()));
         } catch (Exception e) {

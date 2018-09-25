@@ -28,6 +28,14 @@ public interface HospitalDAO {
     Hospital get(String name) throws SQLException;
 
     /**
+     * Get a hospital from the database by it's id.
+     * @param id the id of the hospital to retrieve
+     * @return the hospital object
+     * @throws SQLException thrown when there is a server error.
+     */
+    Hospital get(int id) throws SQLException;
+
+    /**
      * Add a hospital to the database.
      *
      * @param hospital hospital object to add

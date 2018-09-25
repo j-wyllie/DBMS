@@ -4,11 +4,26 @@ import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.service.directions.*;
+
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+
+import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
+import com.lynden.gmapsfx.service.directions.DirectionsRequest;
+import com.lynden.gmapsfx.service.directions.DirectionsService;
+import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
+import com.lynden.gmapsfx.service.directions.TravelModes;
+import com.lynden.gmapsfx.service.directions.DirectionsResult;
+import com.lynden.gmapsfx.service.directions.DirectionsLeg;
+import com.lynden.gmapsfx.service.directions.DirectionStatus;
+
 import com.lynden.gmapsfx.shapes.Polyline;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,14 +32,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.locations.Hospital;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
+import odms.view.CommonView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,47 +60,65 @@ import java.util.ResourceBundle;
 
 import static odms.controller.user.AvailableOrgans.msToStandard;
 
+/**
+ * View class for the hospital map tab.
+ */
 @Slf4j
-public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
+public class HospitalMap extends CommonView implements Initializable,
+        MapComponentInitializedListener, DirectionsServiceCallback {
 
-    private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap();
+    private odms.controller.user.HospitalMap controller =
+            new odms.controller.user.HospitalMap(this);
+
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
     private DirectionsRenderer directionsRenderer;
 
     private List<Hospital> hospitalList;
-
-    protected StringProperty origin = new SimpleStringProperty();
-    protected StringProperty destination = new SimpleStringProperty();
-
     private Hospital customLocation;
-
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
-
-    private DecimalFormat decimalFormat = new DecimalFormat("####0.00");
     private Polyline helicopterRoute;
 
     private GoogleMap map;
     private List<Marker> markers;
 
+    private Boolean hasConnection;
+
     @FXML
     private GoogleMapView mapView;
 
     @FXML
-    private TableView markersTable;
+    private TableView<Hospital> markersTable;
 
     @FXML
     private TextArea travelInfo;
 
     @FXML
-    private ComboBox travelMethod;
+    private ComboBox<String> travelMethod;
 
     @FXML
     private Button findClosestHospitalBtn;
 
+    @FXML
+    private Label noInternetLabel;
 
+    @FXML
+    private Button addHospitalButton;
+
+    @FXML
+    private Button editHospitalButton;
+
+    @FXML
+    private Button deleteHospitalButton;
+
+    /**
+     * Init method for the map.
+     * @param location location
+     * @param resources resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -85,93 +128,114 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         if (hospitalSelected1 != null && hospitalSelected2 != null) {
             createRouteBetweenLocations(
-                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                    hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName());
+                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                    hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                    hospitalSelected2.getLongitude(), hospitalSelected2.getName());
         }
 
-        ObservableList<String> travelMethods = FXCollections.observableArrayList("Car", "Helicopter");
+        ObservableList<String> travelMethods =
+                FXCollections.observableArrayList("Car", "Helicopter");
         travelMethod.setItems(travelMethods);
         travelMethod.setValue("Car");
     }
 
-    public void initialize() {
-
+    /**
+     * Checks if connection to Google Maps is possible, if not shows a label to user.
+     * @param currentUser the current logged in user
+     */
+    public void initialize(User currentUser) {
+        hasConnection = netIsAvailable();
+        if (!hasConnection) {
+            mapView.setVisible(false);
+            noInternetLabel.setVisible(true);
+        }
+        if (!currentUser.getUserType().equals(UserType.ADMIN)) {
+            addHospitalButton.setDisable(true);
+            editHospitalButton.setDisable(true);
+            deleteHospitalButton.setDisable(true);
+        }
     }
-
 
     /**
      * Initializes the map.
      */
     @Override
     public void mapInitialized() {
+        LatLong centreNZLatLng = new LatLong(-41, 172.6362);
 
-        //Set the initial properties of the map.
-        MapOptions mapOptions = new MapOptions();
+        if (hasConnection) {
+            //Set the initial properties of the map.
+            MapOptions mapOptions = new MapOptions();
 
-        mapOptions.center(new LatLong(-41, 172.6362))
-                .mapType(MapTypeIdEnum.ROADMAP)
-                .overviewMapControl(false)
-                .panControl(false)
-                .rotateControl(false)
-                .scaleControl(false)
-                .streetViewControl(false)
-                .zoomControl(false)
-                .zoom(5);
+            mapOptions.center(new LatLong(centreNZLatLng.getLatitude(), centreNZLatLng.getLongitude()))
+                    .mapType(MapTypeIdEnum.ROADMAP)
+                    .overviewMapControl(false)
+                    .panControl(false)
+                    .rotateControl(false)
+                    .scaleControl(false)
+                    .streetViewControl(false)
+                    .zoomControl(false)
+                    .zoom(5);
 
-        travelInfo.setWrapText(true);
+            travelInfo.setWrapText(true);
 
+        // Creating the actual map object using specified options
         map = mapView.createMap(mapOptions, false);
 
+        // Creates objects needed for directions/routing
         directionsService = new DirectionsService();
         directionsPane = mapView.getDirec();
         directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
 
+            // Creates a hospital object for a custom location added by the user,
+            // is cleared using the clear button
+            map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent e) -> {
 
-        // Creates a hospital object for a custom location added by the user, is cleared using the clear button
-        map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent e) -> {
-
-            String customLocationName = "Custom marker";
-
-            Hospital location = new Hospital(customLocationName +
-                    " (" + Double.valueOf(decimalFormat.format(e.getLatLong().getLatitude())) + ", " +
-                    Double.valueOf(decimalFormat.format(e.getLatLong().getLongitude())) + ")",
-                    e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
-
-            // Ensures there is only ever one custom marker
-            if (customLocation != null) {
-                hospitalList.remove(customLocation);
-            }
-            customLocation = location;
-            for (Marker marker : markers) {
-                if (marker.getTitle().startsWith(customLocationName)) {
-                    map.removeMarker(marker);
+                // Covers edge case of creating a marker with a route still being active/displayed
+                directionsRenderer.clearDirections();
+                directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
+                if (helicopterRoute != null) {
+                    map.removeMapShape(helicopterRoute);
                 }
-            }
 
-            addHospitalMarker(location);
-            travelInfo.setText("Created: " + location.getName());
-            hospitalList.add(location);
+                String customLocationName = "Custom marker";
+
+                Hospital location = new Hospital(customLocationName,
+                        e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
+
+                // Ensures there is only ever one custom marker
+                if (customLocation != null) {
+                    hospitalList.remove(customLocation);
+                }
+                customLocation = location;
+                for (Marker marker : markers) {
+                    if (marker.getTitle().startsWith(customLocationName)) {
+                        map.removeMarker(marker);
+                    }
+                }
+
+                addHospitalMarker(location);
+                travelInfo.setText("Created: " + location.getName());
+                hospitalList.add(location);
+                setMarkersTable();
+            });
+
+            // Clears selected
+            map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent e) -> {
+
+                hospitalSelected1 = null;
+                hospitalSelected2 = null;
+
+                findClosestHospitalBtn.setDisable(true);
+
+                travelInfo.clear();
+            });
+
+            populateHospitals();
             setMarkersTable();
-        });
-
-
-        // Clears selected
-        map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent e) -> {
-
-            hospitalSelected1 = null;
-            hospitalSelected2 = null;
-
             findClosestHospitalBtn.setDisable(true);
-
-            travelInfo.clear();
-        });
-
-        populateHospitals();
-        setMarkersTable();
-        findClosestHospitalBtn.setDisable(true);
-
+        }
     }
-
 
     /**
      * Populates the markers table with the current locations available to the map.
@@ -192,9 +256,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                 "ID"
         );
         idColumn.setCellValueFactory(
-                cdf -> new SimpleStringProperty(
-                        String.valueOf(cdf.getValue().getId())
-                )
+                cdf ->
+                        new SimpleStringProperty(
+                                String.valueOf(cdf.getValue().getId())
+                        )
         );
 
         markersTable.getColumns().clear();
@@ -207,10 +272,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
                             markersTable.getSelectionModel().getSelectedItem() != null) {
 
                         Hospital selectedLocation;
-                        selectedLocation = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+                        selectedLocation = (Hospital)
+                                markersTable.getSelectionModel().getSelectedItem();
 
                         // Center on selected marker
-                        map.setCenter(new LatLong(selectedLocation.getLatitude(), selectedLocation.getLongitude()));
+                        map.setCenter(new LatLong(selectedLocation.getLatitude(),
+                                selectedLocation.getLongitude()));
                         map.setZoom(10);
                     }
                 });
@@ -220,7 +287,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Shows the closest hospital to the user.
+     * Shows the closest hospital to a clicked marker.
      */
     @FXML
     private void handleShowClosestHospital() {
@@ -233,8 +300,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            if (location.getId() != hospitalSelected1.getId()) {
-                temp = controller.calcDistanceHaversine(location.getLatitude(), location.getLongitude(), hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude());
+            if (!location.getId().equals(hospitalSelected1.getId())) {
+                temp = controller.calcDistanceHaversine(location.getLatitude(),
+                        location.getLongitude(), hospitalSelected1.getLatitude(),
+                        hospitalSelected1.getLongitude());
                 if (temp < distance) {
                     distance = temp;
                     closest = location;
@@ -244,37 +313,38 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         if (closest != null) {
             map.setCenter(new LatLong(closest.getLatitude(), closest.getLongitude()));
-            map.setZoom(8);
+            map.setZoom(9);
 
-            travelInfo.setText("Closest hospital to " + hospitalSelected1.getName() + ": " + closest.getName() + ", " + closest.getAddress() +
+            travelInfo.setText("Closest hospital to " + hospitalSelected1.getName() + ": " +
+                    closest.getName() + ", " + closest.getAddress() +
                     ".\n Approximately " + decimalFormat.format(distance) + "km away.");
         }
     }
 
     /**
      * Create popup with help text about hospital tab.
-     * @param event button click event
      */
     @FXML
-    private void handleShowHelp(ActionEvent event) {
+    private void handleShowHelp() {
 
         String helpText = "Welcome! \n" +
                 "To route between two hospitals, click on each and a route will appear, " +
-                "to change the travel method use the dropdown menu. \n" +
+                "to toggle the travel method use the dropdown menu. \n" +
                 "To add a custom marker, double click on the map where you want the marker, " +
                 "this marker can be used just like a hospital. \n" +
                 "To add a hospital to the map, click 'Add Hospital," +
-                "and fill out the required info'";
+                "and fill out the required info. \n" +
+                "To find the nearest hospital to a location, click its corresponding marker, " +
+                "then click the 'Find nearest hospital' button. \n" +
+                "Use the 'Clear' button to remove all routes and custom markers.";
         AlertController.guiPopupInfo(helpText);
     }
 
     /**
      * Clears all routes from map, also 'deselects' any hospitals, accessed via button.
-     *
-     * @param event Event of clear button being clicked
      */
     @FXML
-    private void handleClearRoutesButtonClicked(ActionEvent event) {
+    private void handleClearRoutesButtonClicked() {
         clearRoutesAndSelection();
     }
 
@@ -311,10 +381,13 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      * @param destinationLong longitude the route ends at
      * @param destinationName name of the location the route ends at
      */
-    private void createRouteBetweenLocations(Double originLat, Double originLong, String originName, Double destinationLat, Double destinationLong, String destinationName) {
+    private void createRouteBetweenLocations(Double originLat, Double originLong,
+            String originName, Double destinationLat, Double destinationLong,
+            String destinationName) {
         final double HELICOPTER_SPEED_KMH = 262;
+        final int SECONDS_IN_HOUR = 3600;
 
-        if (hospitalSelected1.getId() == hospitalSelected2.getId()) {
+        if (hospitalSelected1.getId().equals(hospitalSelected2.getId())) {
             clearRoutesAndSelection();
             return;
         }
@@ -329,33 +402,39 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             String originLatLong = originLat + "," + originLong;
             String destinationLatLong = destinationLat + "," + destinationLong;
 
-            DirectionsRequest directionsRequest = new DirectionsRequest(originLatLong, destinationLatLong, TravelModes.DRIVING);
+            DirectionsRequest directionsRequest = new DirectionsRequest(originLatLong,
+                    destinationLatLong, TravelModes.DRIVING);
             directionsService.getRoute(directionsRequest, this, directionsRenderer);
 
         } else {
 
-            Double distance = controller.calcDistanceHaversine(originLat, originLong, destinationLat, destinationLong); // km
-            Double duration = distance / HELICOPTER_SPEED_KMH * 3600; // seconds
-            showTravelDetails(originName, destinationName, decimalFormat.format(distance) + "km", decimalFormat.format(duration));
+            Double distance = controller.calcDistanceHaversine(originLat, originLong,
+                    destinationLat, destinationLong); // km
+            Double duration = distance / HELICOPTER_SPEED_KMH * SECONDS_IN_HOUR;
+            showTravelDetails(originName, destinationName, decimalFormat.format(distance) +
+                    "km", decimalFormat.format(duration));
 
-            if(helicopterRoute != null) {
+            if (helicopterRoute != null) {
                 map.removeMapShape(helicopterRoute);
             }
 
-            helicopterRoute = controller.createHelicopterRoute(originLat, originLong, destinationLat, destinationLong);
+            helicopterRoute = controller.createHelicopterRoute(originLat, originLong,
+                    destinationLat, destinationLong);
             map.addMapShape(helicopterRoute);
         }
     }
 
 
     /**
-     * Called when a directions result returns, displays results of the request if the request was successful.
+     * Called when a directions result returns, displays results of the request if the
+     * request was successful.
      *
      * @param directionsResult The returned direction result
      * @param directionStatus  Status of request
      */
     @Override
-    public void directionsReceived(DirectionsResult directionsResult, DirectionStatus directionStatus) {
+    public void directionsReceived(DirectionsResult directionsResult, DirectionStatus
+            directionStatus) {
 
         DirectionsLeg ourRoute = directionsResult.getRoutes().get(0).getLegs().get(0);
 
@@ -389,19 +468,24 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      * @param distance The distance between the hospitals on the given route in km
      * @param duration The time between the two hospitals on the given route in seconds
      */
-    private void showTravelDetails(String originName, String destinationName, String distance, String duration) {
-        String travelMethodGiven = String.valueOf(travelMethod.getSelectionModel().getSelectedItem());
+    private void showTravelDetails(String originName, String destinationName, String distance,
+            String duration) {
+
+        String travelMethodGiven = String.valueOf(
+                travelMethod.getSelectionModel().getSelectedItem());
+        final int MLS_IN_SECOND = 1000;
 
         try {
-            double durationNumber = Double.parseDouble(duration) * 1000;
+            double durationNumber = Double.parseDouble(duration) * MLS_IN_SECOND;
             duration = msToStandard((long) durationNumber);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             log.error("Failed to parse travel duration, must not be applicable");
             log.error(e.getMessage(), e);
         }
 
-        String travel = travelMethodGiven + " journey between " + originName + ", and " + destinationName + ".\n" +
-                "Distance: " + distance + "\n Travel Time: " + duration;
+        String travel = travelMethodGiven + " journey between " + originName + ", and " +
+                destinationName + ".\n" + "Distance: " + distance +
+                "\n Approximate Travel Time: " + duration;
 
         travelInfo.setText(travel);
     }
@@ -427,10 +511,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding(ob -> populateHospitals());
+            stage.setResizable(false);
+            stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
-            log.error("Failed to populate hospitals");
             log.error(e.getMessage(), e);
         }
     }
@@ -446,7 +530,10 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         fxmlLoader.setLocation(getClass().getResource("/view/HospitalCreate.fxml"));
 
         try {
-            Hospital hospital = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+            Hospital hospital = markersTable.getSelectionModel().getSelectedItem();
+            if (hospital == null) {
+                return;
+            }
 
             Scene scene = new Scene(fxmlLoader.load());
             HospitalCreate hospitalCreate = fxmlLoader.getController();
@@ -458,16 +545,34 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding(ob -> populateHospitals());
+            stage.setResizable(false);
+            stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
-            log.error("Failed to populate hospitals");
             log.error(e.getMessage(), e);
         }
     }
 
     /**
-     * Adds a given location to the map object, as a marker with a tooltip containing location details.
+     * Event handler, when delete hospital button is clicked a popup is created.
+     */
+    @FXML
+    public void handleDeleteHospital() {
+        Hospital hospital = markersTable.getSelectionModel().getSelectedItem();
+        if (hospital == null) {
+            return;
+        }
+        boolean confirmation = AlertController.generalConfirmation(
+                "Are you sure you want to delete this hospital?");
+        if (confirmation && !controller.deleteHospital(hospital)) {
+            AlertController.guiPopup("Error deleting Hospital");
+        }
+        mapInitialized();
+    }
+
+    /**
+     * Adds a given location to the map object, as a marker with a tooltip containing
+     * location details.
      *
      * @param location location to be to added to the map
      */
@@ -476,7 +581,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         Marker marker = controller.createLocationMarker(location);
         InfoWindow infoWindow = controller.createLocationInfoWindow(location);
         markers.add(marker);
-
 
         // For displaying info window
         map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) ->
@@ -490,27 +594,23 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             if (hospitalSelected1 == null) {
                 hospitalSelected1 = location;
 
-                // TODO potentially being removed, might not bother with custom markers, just too much of a hassle and clashes with the other markers too much
-                // marker.setOptions(controller.highlightMarker(false, location, "A"));
-
                 findClosestHospitalBtn.setDisable(false);
 
                 if (hospitalSelected2 != null) {
                     createRouteBetweenLocations(
-                            hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                            hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
+                            hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                            hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                            hospitalSelected2.getLongitude(), hospitalSelected2.getName()
                     );
                 }
 
             } else {
                 hospitalSelected2 = location;
 
-                // TODO see above
-                // marker.setOptions(controller.highlightMarker(false, location, "B"));
-
                 createRouteBetweenLocations(
-                        hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                        hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
+                        hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                        hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                        hospitalSelected2.getLongitude(), hospitalSelected2.getName()
                 );
             }
         });
@@ -524,7 +624,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
      */
     private void populateHospitals() {
 
-        for(Marker marker : markers) {
+        for (Marker marker : markers) {
             map.removeMarker(marker);
         }
         hospitalList.clear();
@@ -538,7 +638,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     /**
-     * Creates directions between two markers.
+     * Changes the travel method used for routing between two markers/locations. Options are by Car
+     * or Helicopter.
      */
     @FXML
     private void handleTravelMethodToggled() {
@@ -551,9 +652,14 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
 
             createRouteBetweenLocations(
-                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                    hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
+                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                    hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                    hospitalSelected2.getLongitude(), hospitalSelected2.getName()
             );
         }
+    }
+
+    public DecimalFormat getDecimalFormat() {
+        return decimalFormat;
     }
 }

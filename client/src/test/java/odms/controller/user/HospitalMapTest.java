@@ -1,22 +1,22 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.shapes.Polyline;
 import odms.commons.model.locations.Hospital;
 import odms.view.user.HospitalMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HospitalMapTest {
 
     public HospitalMap view;
     public odms.controller.user.HospitalMap controller;
-    public Hospital hospital1;
-    public Hospital hospital2;
-    public Hospital hospital3;
+    private Hospital hospital1;
+    private Hospital hospital2;
+    private Hospital hospital3;
 
 
     @Before
@@ -25,8 +25,7 @@ public class HospitalMapTest {
         hospital2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 14);
         hospital3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 16);
         view = new HospitalMap();
-        controller = new odms.controller.user.HospitalMap();
-        controller.setView(view);
+        controller = new odms.controller.user.HospitalMap(view);
     }
 
     @Test
@@ -36,13 +35,11 @@ public class HospitalMapTest {
     }
 
     @Ignore
+    @Test
     public void testCreateHelicopterRoute() {
         Polyline route = controller.createHelicopterRoute(hospital1.getLatitude(), hospital1.getLongitude(), hospital2.getLatitude(), hospital2.getLongitude());
         assertEquals(2, route.getPath().getLength());
         assertEquals("(-40.57, 175.26999999999998)", String.valueOf(route.getPath().getArray().getSlot(0)));
         assertEquals("(-39.07, 174.04999999999995)", String.valueOf(route.getPath().getArray().getSlot(0)));
-
     }
-
-
 }
