@@ -67,12 +67,10 @@ import static odms.controller.user.AvailableOrgans.msToStandard;
 public class HospitalMap extends CommonView implements Initializable,
         MapComponentInitializedListener, DirectionsServiceCallback {
 
-    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
-
-    private LatLong centreNZLatLng = new LatLong(-41, 172.6362);
-
     private odms.controller.user.HospitalMap controller =
             new odms.controller.user.HospitalMap(this);
+
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
@@ -159,6 +157,8 @@ public class HospitalMap extends CommonView implements Initializable,
      */
     @Override
     public void mapInitialized() {
+        LatLong centreNZLatLng = new LatLong(-41, 172.6362);
+
         if (hasConnection) {
             //Set the initial properties of the map.
             MapOptions mapOptions = new MapOptions();
