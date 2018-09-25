@@ -30,7 +30,7 @@ public class OrganEditTest {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         currentProfile.setId(99999);
-        controller = new odms.controller.profile.OrganEdit(view);
+        controller = new odms.controller.profile.OrganEdit();
         testOrganStrings.add("heart");
     }
 

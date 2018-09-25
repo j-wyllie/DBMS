@@ -37,7 +37,7 @@ public class OrganEdit extends OrganCommon {
             .observableArrayList();
     private Profile currentProfile;
     private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(
-            this);
+            );
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -216,13 +216,13 @@ public class OrganEdit extends OrganCommon {
     public void onBtnSaveClicked() {
         switch (getWindowType()) {
             case DONATED:
-                controller.caseDonated(getCurrentProfile());
+                controller.caseDonated(getCurrentProfile(), getOrgansAdded());
                 break;
             case DONATING:
-                controller.caseDonating(getCurrentProfile());
+                controller.caseDonating(getCurrentProfile(), getOrgansAdded());
                 break;
             case REQUIRED:
-                controller.caseRequired(getCurrentProfile());
+                controller.caseRequired(getCurrentProfile(), getOrgansAdded());
                 break;
             default:
                 // noop

@@ -33,9 +33,7 @@ public class ProcedureAdd {
      * @param p profile object of current profile
      * @throws IllegalArgumentException thrown if procedure date is before profiles dob
      */
-    public void add(Profile p) throws IllegalArgumentException {
-        Procedure procedure = parseProcedure();
-        List<String> organs = new ArrayList<>(view.getAffectedOrgansListView());
+    public void add(Profile p, List<String> organs, Procedure procedure) throws IllegalArgumentException {
         List<OrganEnum> organEnums = new ArrayList<>();
         organs.forEach(string -> {
             OrganEnum organ = OrganEnum.valueOf(string.toUpperCase().replace(" ",  "_"));
@@ -49,15 +47,9 @@ public class ProcedureAdd {
      * Parses the procedure to create a Procedure object.
      * @return Procedure object
      */
-    private Procedure parseProcedure() {
-        String summary = view.getSummaryField();
-        LocalDate dateOfProcedure = view.getDateOfProcedureDatePicker();
-        String longDescription = view.getDescriptionField();
-
+    public Procedure parseProcedure(String summary, LocalDate dateOfProcedure, String longDescription, LocalDate dob) {
         Procedure procedure;
-
         // validate procedure
-        LocalDate dob = view.getSearchedDonor().getDateOfBirth();
         if (dob.isAfter(dateOfProcedure)) {
             throw new IllegalArgumentException();
         }

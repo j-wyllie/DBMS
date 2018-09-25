@@ -20,11 +20,6 @@ import odms.commons.model.enums.OrganEnum;
  */
 @Slf4j
 public class OrganEdit extends CommonController {
-    private odms.view.profile.OrganEdit view;
-
-    public OrganEdit(odms.view.profile.OrganEdit view) {
-        this.view = view;
-    }
 
     /**
      * Support function to detect organs removed from the selected list view.
@@ -45,13 +40,13 @@ public class OrganEdit extends CommonController {
     }
 
     // todo rename to something meaningful
-    public void caseDonated(Profile p) {
+    public void caseDonated(Profile p, Set<OrganEnum> organsAdded) {
         Set<OrganEnum> organsRemoved;
         organsRemoved = findOrgansRemoved(
                 p.getOrgansDonated(),
-                view.getOrgansAdded()
+                organsAdded
         );
-        addOrgansDonated(view.getOrgansAdded(),p);
+        addOrgansDonated(organsAdded,p);
         removeOrgansDonated(organsRemoved, p);
     }
 
@@ -110,17 +105,17 @@ public class OrganEdit extends CommonController {
         }
     }
 
-    public void caseDonating(Profile p) {
+    public void caseDonating(Profile p, Set<OrganEnum> organsAdded) {
         try {
             Set<OrganEnum> organsRemoved;
             p.setDonor(true);
 
             organsRemoved = findOrgansRemoved(
                     p.getOrgansDonating(),
-                    view.getOrgansAdded()
+                    organsAdded
             );
 
-            addOrgansDonating(view.getOrgansAdded(), p);
+            addOrgansDonating(organsAdded, p);
             removeOrgansDonating(organsRemoved, p);
         } catch (OrganConflictException e) {
             AlertController.invalidOrgan(e.getOrgan());
@@ -197,15 +192,15 @@ public class OrganEdit extends CommonController {
     }
 
     // TODO what does this even mean??
-    public void caseRequired(Profile p) {
+    public void caseRequired(Profile p, Set<OrganEnum> organsAdded) {
         Set<OrganEnum> organsRemoved;
         p.setReceiver(true);
 
         organsRemoved = findOrgansRemoved(
                 p.getOrgansRequired(),
-                view.getOrgansAdded()
+                organsAdded
         );
-        addOrgansRequired(view.getOrgansAdded(), p);
+        addOrgansRequired(organsAdded, p);
         removeOrgansRequired(organsRemoved, p);
         p.updatedReceiverStatus();
     }

@@ -45,7 +45,7 @@ public class OrganDisplay extends CommonView {
 
     private Profile currentProfile;
     private odms.controller.profile.OrganDisplay controller =
-            new odms.controller.profile.OrganDisplay(this);
+            new odms.controller.profile.OrganDisplay();
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 

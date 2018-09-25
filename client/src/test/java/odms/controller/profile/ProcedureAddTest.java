@@ -10,7 +10,8 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-@Ignore
+import java.util.List;
+
 public class ProcedureAddTest {
     public odms.view.profile.ProcedureAdd view;
     public odms.controller.profile.ProcedureAdd controller;
@@ -28,11 +29,19 @@ public class ProcedureAddTest {
         controller = new odms.controller.profile.ProcedureAdd(view);
     }
 
+    @Ignore
     @Test
     public void testAddValidProcedure() {
         Procedure testProcedure = new Procedure("ABC", LocalDate.now());
-        controller.addProcedure(testProcedure, currentProfile);
+        List<String> organs = new ArrayList<>();
+        controller.add(currentProfile,organs,testProcedure);
         assertEquals(currentProfile.getAllProcedures().get(0), testProcedure);
+    }
+
+    @Test
+    public void testParseProcedure() {
+        Procedure procedure = controller.parseProcedure("abc", LocalDate.now(), "", LocalDate.now());
+        assertEquals(procedure.getSummary(),"abc");
     }
 
 }
