@@ -279,13 +279,6 @@ CREATE TABLE IF NOT EXISTS `hospitals` (
 --
 
 --
--- Indexes for table `hospitals`
---
-ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `Name` (`Name`);
-
---
 -- Indexes for table `affected_organs`
 --
 ALTER TABLE `affected_organs`
@@ -374,11 +367,6 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for dumped tables
 --
 
---
--- AUTO_INCREMENT for table `hospitals`
---
-ALTER TABLE `hospitals`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --
