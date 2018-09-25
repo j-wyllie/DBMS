@@ -182,7 +182,8 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(10, user.getPictureName());
             stmt.execute();
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new SQLException();
+            log.error(e.getMessage(), e);
+            throw new SQLException(e);
         }
     }
 
@@ -225,7 +226,7 @@ public class MySqlUserDAO implements UserDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new UserNotFoundException("User not found", user.getStaffID());
+            throw new UserNotFoundException(NOT_FOUND, user.getStaffID());
         }
     }
 
