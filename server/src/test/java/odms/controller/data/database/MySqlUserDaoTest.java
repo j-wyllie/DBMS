@@ -45,7 +45,8 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     }
 
     @After
-    public void tearDown() throws UserNotFoundException {
+    public void tearDown() throws InterruptedException, UserNotFoundException {
+        Thread.sleep(100);
         userDAO.remove(testUser0);
         userDAO.remove(testUser1);
     }
