@@ -30,6 +30,8 @@ public class HospitalCreate {
      * Makes a request to add a new hospital to the database.
      * @param name name of hospital
      * @param address address of hospital
+     * @param organPrograms list of radio button objects that represent what organ transplant
+     * programs a hospital provides
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
@@ -40,7 +42,8 @@ public class HospitalCreate {
             organProgramBools.add(organProgram.isSelected());
         }
         List<Double> latlong = getGeoLocation(address);
-        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address,
+                organProgramBools);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         hospitalDAO.add(newHospital);
     }
@@ -50,6 +53,8 @@ public class HospitalCreate {
      * @param name name of hospital
      * @param address address of hospital
      * @param hospitalId the id of the hospital that has been edited
+     * @param organPrograms list of radio button objects that represent what organ transplant
+     * programs a hospital provides
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
@@ -60,7 +65,8 @@ public class HospitalCreate {
             organProgramBools.add(organProgram.isSelected());
         }
         List<Double> latlong = getGeoLocation(address);
-        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address, null, hospitalId);
+        Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address,
+                organProgramBools, hospitalId);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
         hospitalDAO.edit(newHospital);
     }

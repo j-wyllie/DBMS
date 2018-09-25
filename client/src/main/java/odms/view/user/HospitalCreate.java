@@ -109,6 +109,13 @@ public class HospitalCreate {
         initListView();
         nameField.setText(hospital.getName());
         addressField.setText(hospital.getAddress());
+
+        int i = 0;
+        for (RadioButton radioButton : programList.getItems()) {
+            radioButton.setSelected(hospital.getPrograms().get(i));
+            i++;
+        }
+
     }
 
     /**

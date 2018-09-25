@@ -40,6 +40,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -50,9 +51,10 @@ import netscape.javascript.JSObject;
 import odms.commons.model.locations.Hospital;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
+import odms.view.CommonView;
 
 @Slf4j
-public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
+public class HospitalMap extends CommonView implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
 
     private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap();
 
@@ -76,6 +78,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     private GoogleMap map;
     private List<Marker> markers;
 
+    private Boolean hasConnection;
+
     @FXML
     private GoogleMapView mapView;
 
@@ -91,6 +95,8 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     @FXML
     private Button findClosestHospitalBtn;
 
+    @FXML
+    private Label noInternetLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,9 +117,12 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
     }
 
     public void initialize() {
-
+        hasConnection = netIsAvailable();
+        if (!hasConnection) {
+            mapView.setVisible(false);
+            noInternetLabel.setVisible(true);
+        }
     }
-
 
     /**
      * Initializes the map.
@@ -170,7 +179,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             setMarkersTable();
         });
 
-
         // Clears selected
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent e) -> {
 
@@ -185,9 +193,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         populateHospitals();
         setMarkersTable();
         findClosestHospitalBtn.setDisable(true);
-
     }
-
 
     /**
      * Populates the markers table with the current locations available to the map.

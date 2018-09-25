@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import server.model.database.DatabaseConnection;
 
@@ -27,7 +28,6 @@ public class MySqlHospitalDAO implements HospitalDAO {
     public List<Hospital> getAll() throws SQLException {
         String query = "SELECT * FROM hospitals";
         List<Hospital> result = new ArrayList<>();
-
 
         try (Connection conn = DatabaseConnection.getConnection();
                 Statement stmt = conn.createStatement()) {
@@ -66,7 +66,6 @@ public class MySqlHospitalDAO implements HospitalDAO {
                     result = parseHospital(allHospitals);
                 }
             }
-
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -93,7 +92,6 @@ public class MySqlHospitalDAO implements HospitalDAO {
                     result = parseHospital(allHospitals);
                 }
             }
-
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -113,7 +111,13 @@ public class MySqlHospitalDAO implements HospitalDAO {
         String address = resultSet.getString("Address");
         Double longitude = resultSet.getDouble("Longitude");
         Double latitude = resultSet.getDouble("Latitude");
-        return new Hospital(name, latitude, longitude, address, null, id);
+
+        List<Boolean> organPrograms = new ArrayList<>();
+        for (OrganEnum organ : OrganEnum.values()) {
+            organPrograms.add(resultSet.getBoolean(organ.getName()));
+        }
+
+        return new Hospital(name, latitude, longitude, address, organPrograms, id);
     }
 
     /**
@@ -124,7 +128,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
      */
     @Override
     public void add(Hospital hospital) throws SQLException {
-        String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude) VALUES (?,?,?,?)";
+        String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude, Bone," +
+                "`Bone-marrow`, `Connective-tissue`, Cornea, Heart, Intestine, Kidney, Liver, " +
+                "Lung, `Middle-ear`, Pancreas, Skin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -134,6 +140,12 @@ public class MySqlHospitalDAO implements HospitalDAO {
             setDouble(3, stmt, hospital.getLatitude());
             setDouble(4, stmt, hospital.getLongitude());
 
+            int i = 5;
+            for (Boolean organBool : hospital.getPrograms()) {
+                 stmt.setBoolean(i, organBool);
+                 i++;
+            }
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -141,8 +153,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
         }
     }
 
-    private void setDouble(int index, PreparedStatement preparedStatement, Double val) throws SQLException {
-        if (val == null ) {
+    private void setDouble(int index, PreparedStatement preparedStatement, Double val)
+            throws SQLException {
+        if (val == null) {
             preparedStatement.setNull(index, java.sql.Types.NULL);
         } else {
             preparedStatement.setDouble(index, val);
@@ -157,8 +170,10 @@ public class MySqlHospitalDAO implements HospitalDAO {
      */
     @Override
     public void edit(Hospital hospital) throws SQLException {
-        String query = "UPDATE hospitals SET Name = ?, Address = ?, Latitude = ?, Longitude = ?" +
-                "WHERE Id = ?";
+        String query = "UPDATE hospitals SET Name = ?, Address = ?, Latitude = ?, Longitude = ?," +
+                "Bone = ?, `Bone-marrow` = ?, `Connective-tissue` = ?, Cornea = ?, Heart = ?, " +
+                "Intestine = ?, Kidney = ?, Liver = ?, Lung = ?, `Middle-ear` = ?, Pancreas = ?," +
+                "Skin = ? WHERE Id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -167,7 +182,14 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.setString(2, hospital.getAddress());
             stmt.setDouble(3, hospital.getLatitude());
             stmt.setDouble(4, hospital.getLongitude());
-            stmt.setInt(5, hospital.getId());
+
+            int i = 5;
+            for (Boolean organBool : hospital.getPrograms()) {
+                stmt.setBoolean(i, organBool);
+                i++;
+            }
+
+            stmt.setInt(i, hospital.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {

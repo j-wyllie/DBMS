@@ -39,6 +39,22 @@ public class Hospital {
      * @param lat latitude of hte hospital
      * @param lon longitude of hte hospital
      * @param address address of the hospital
+     * @param programs list of transplant programs that the hospital provides
+     */
+    public Hospital(String name, Double lat, Double lon, String address, List<Boolean> programs) {
+        this.name = name;
+        this.latitude = lat;
+        this.longitude = lon;
+        this.address = address;
+        this.programs = programs;
+    }
+
+    /**
+     * Constructor for hospital objects.
+     * @param name Name of hte hospital
+     * @param lat latitude of hte hospital
+     * @param lon longitude of hte hospital
+     * @param address address of the hospital
      */
     public Hospital(String name, Double lat, Double lon, String address) {
         this.name = name;

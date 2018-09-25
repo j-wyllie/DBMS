@@ -4,6 +4,7 @@ import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
@@ -55,7 +56,7 @@ public class HospitalMap {
     }
 
     /**
-     * Creates Location info window containing a locations details
+     * Creates Location info window containing a locations details.
      *
      * @param location The location to create a info window for
      * @return A info window object for the given hospital containing locations details
@@ -67,10 +68,20 @@ public class HospitalMap {
 
         String locationInfo = location.getName() + " \n";
         if (location.getAddress() != null) {
-            locationInfo += "Address: " + location.getAddress() + " \n";
+            locationInfo += "Address: " + location.getAddress() + ", \n";
         }
+
+        List<String> organPrograms = new ArrayList<>();
+        int i = 0;
+        for (OrganEnum organ : OrganEnum.values()) {
+            if (location.getPrograms().get(i)) {
+                organPrograms.add(organ.getNamePlain());
+            }
+            i++;
+        }
+
         if (location.getPrograms() != null) {
-            locationInfo += "Services offered: " + location.getPrograms();
+            locationInfo += "Services offered: " + organPrograms;
         }
 
         infoWindowOptions.content(locationInfo);
