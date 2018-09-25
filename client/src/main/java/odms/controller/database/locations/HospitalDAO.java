@@ -12,6 +12,7 @@ public interface HospitalDAO {
 
     /**
      * Get all hospitals in database.
+     *
      * @return list of hospitals
      * @throws SQLException thrown when there is a server error.
      */
@@ -19,6 +20,7 @@ public interface HospitalDAO {
 
     /**
      * Get a hospital from database.
+     *
      * @param name the name of the hospital to retrieve
      * @return hospital object
      * @throws SQLException thrown when there is a server error.
@@ -27,6 +29,7 @@ public interface HospitalDAO {
 
     /**
      * Add a hospital to the database.
+     *
      * @param hospital hospital object to add
      * @throws SQLException thrown when there is a server error.
      */
@@ -34,6 +37,7 @@ public interface HospitalDAO {
 
     /**
      * Edit a hospitals details.
+     *
      * @param hospital edited hospital object
      * @throws SQLException thrown when there is a server error.
      */
@@ -41,6 +45,7 @@ public interface HospitalDAO {
 
     /**
      * Remove a hospital from the database.
+     *
      * @param name the name of the hospital to remove
      * @throws SQLException thrown when there is a server error.
      */
