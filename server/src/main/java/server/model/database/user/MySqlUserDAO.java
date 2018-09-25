@@ -195,18 +195,19 @@ public class MySqlUserDAO implements UserDAO {
      */
     @Override
     public boolean isUniqueUsername(String username) {
-        String query = "SELECT Username FROM users WHERE Username = ?;";
+        String query = "SELECT count(Username) AS total FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            try (ResultSet result = stmt.executeQuery()) {
-                return !result.next();
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return rs.getInt("total") == 0;
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            return false;
         }
-        return false;
     }
 
 
