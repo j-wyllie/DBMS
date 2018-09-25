@@ -19,6 +19,10 @@ public class GoogleDistanceMatrix {
 
     public double getDuration(Double originLat, Double originLong, Double destinationLat, Double destinationLong) throws IOException {
 
+        if (destinationLat == originLat && destinationLong == originLong) {
+            throw new IOException("Origin and destination are the same");
+        }
+
         String apiKey = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
         URL url = new URL(BASE_URL + "origins=" + originLat + "," + originLong + "&destinations=" +

@@ -1,13 +1,14 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.shapes.Polyline;
 import odms.commons.model.locations.Hospital;
 import odms.view.user.HospitalMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class HospitalMapTest {

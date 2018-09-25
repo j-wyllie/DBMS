@@ -46,15 +46,8 @@ public class HospitalMap {
         markerOptions.title(location.getName());
         markerOptions.label(String.valueOf(location.getId()));
 
-
         if (location.getId() < 0) {
-
-            // TODO potentially being removed, might not bother with custom markers, just too much of a hassle and clashes with the other markers too much
-            String markerImage = MarkerImageFactory.createMarkerImage(this.getClass().getResource("/GoogleMapsMarkers/blue_MarkerA.png").toString(), "png");
-            markerImage = markerImage.replace("(", "");
-            markerImage = markerImage.replace(")", "");
-            markerOptions.icon(markerImage);
-
+            markerOptions.label("X");
         } else {
             markerOptions.label(location.getId().toString());
         }
@@ -72,24 +65,32 @@ public class HospitalMap {
 
         // Hospital tooltip generated and added
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+        String locationInfo = location.getName() + ". \n";
 
-        String locationInfo = location.getName() + " \n";
-        if (location.getAddress() != null) {
-            locationInfo += "Address: " + location.getAddress() + ", \n";
-        }
+        if (location.getId() < 0) {
+            locationInfo += "Location: (" + Double.valueOf(odms.view.user.HospitalMap.decimalFormat.format(location.getLatitude())) + ", " +
+                    Double.valueOf(odms.view.user.HospitalMap.decimalFormat.format(location.getLongitude())) + ")";
+        } else {
 
-        List<String> organPrograms = new ArrayList<>();
-        int i = 0;
-        for (OrganEnum organ : OrganEnum.values()) {
-            if (location.getPrograms().get(i)) {
-                organPrograms.add(organ.getNamePlain());
+            if (location.getAddress() != null) {
+                locationInfo += "Address: " + location.getAddress() + ". \n";
             }
-            i++;
+
+            List<String> organPrograms = new ArrayList<>();
+            int i = 0;
+            for (OrganEnum organ : OrganEnum.values()) {
+                if (location.getPrograms().get(i)) {
+                    organPrograms.add(organ.getNamePlain());
+                }
+                i++;
+            }
+
+            if (location.getPrograms() != null) {
+                locationInfo += "Services offered: " + organPrograms + ".";
+            }
+
         }
 
-        if (location.getPrograms() != null) {
-            locationInfo += "Services offered: " + organPrograms;
-        }
 
         infoWindowOptions.content(locationInfo);
 
