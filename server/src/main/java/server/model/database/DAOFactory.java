@@ -8,6 +8,8 @@ import server.model.database.country.CountryDAO;
 import server.model.database.country.MySqlCountryDAO;
 import server.model.database.hla.HLADAO;
 import server.model.database.hla.MySqlHLADao;
+import server.model.database.locations.HospitalDAO;
+import server.model.database.locations.MySqlHospitalDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.organ.MySqlOrganDAO;
@@ -71,6 +73,14 @@ public class DAOFactory {
      */
     public static CountryDAO getCountryDAO() {
         return new MySqlCountryDAO();
+    }
+
+    /**
+     * Gives the data access object class for the Hospital object.
+     * @return dao for particular database type.
+     */
+    public static HospitalDAO getHospitalDAO() {
+        return new MySqlHospitalDAO();
     }
 
     /**

@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS `conditions` (
   `ProfileId` int(11) NOT NULL,
   `Description` varchar(100) DEFAULT NULL,
   `DiagnosisDate` datetime DEFAULT NULL,
-  `Chronic` tinyint(1) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL,
+  `Chronic` BOOLEAN DEFAULT NULL,
+  `Current` BOOLEAN DEFAULT NULL,
+  `Past` BOOLEAN DEFAULT NULL,
   `CuredDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `Id` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
-  `Valid` tinyint(1) DEFAULT '1'
+  `Valid` BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -69,8 +69,7 @@ CREATE TABLE IF NOT EXISTS `drugs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Drug` varchar(50) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL
+  `Current` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -102,8 +101,7 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
   `AlphaValue` varchar(20),
   `NumericValue` int(11) NOT NULL,
   `GroupX` BOOLEAN NOT NULL,
-  `GroupY` BOOLEAN NOT NULL,
-  INDEX (ProfileId)
+  `GroupY` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -139,21 +137,6 @@ CREATE TABLE IF NOT EXISTS `locale` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `medical_interactions`
---
-
-DROP TABLE IF EXISTS `medical_interactions`;
-CREATE TABLE IF NOT EXISTS `medical_interactions` (
-  `Id` int(11) NOT NULL,
-  `DrugA` varchar(50) DEFAULT NULL,
-  `DrugB` varchar(50) DEFAULT NULL,
-  `Symptom` varchar(50) DEFAULT NULL,
-  `Duration` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `organs`
 --
 
@@ -162,11 +145,11 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Organ` varchar(30) DEFAULT NULL,
-  `Donated` tinyint(1) DEFAULT NULL,
-  `ToDonate` tinyint(1) DEFAULT NULL,
-  `Required` tinyint(1) DEFAULT NULL,
-  `Received` tinyint(1) DEFAULT NULL,
-  `Expired` tinyint(1) DEFAULT NULL,
+  `Donated` BOOLEAN DEFAULT NULL,
+  `ToDonate` BOOLEAN DEFAULT NULL,
+  `Required` BOOLEAN DEFAULT NULL,
+  `Received` BOOLEAN DEFAULT NULL,
+  `Expired` BOOLEAN DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
@@ -186,8 +169,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Summary` varchar(100) DEFAULT NULL,
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
-  `Pending` tinyint(1) DEFAULT NULL,
-  `Previous` tinyint(1) DEFAULT NULL
+  `Pending` BOOLEAN DEFAULT NULL,
+  `Previous` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -304,6 +287,12 @@ ALTER TABLE `history`
   ADD KEY `EntityId` (`EntityId`);
 
 --
+-- Indexes for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD KEY `ProfileId` (`ProfileId`);
+
+--
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
@@ -311,16 +300,10 @@ ALTER TABLE `hospitals`
   ADD UNIQUE KEY `Id` (`Id`);
 
 --
--- Indexes for table `medical_interactions`
+-- Indexes for table `locale`
 --
 ALTER TABLE `locale`
   ADD PRIMARY KEY (`LocaleId`);
-
---
--- Indexes for table `medical_interactions`
---
-ALTER TABLE `medical_interactions`
-  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `organs`
@@ -340,13 +323,15 @@ ALTER TABLE `procedures`
 -- Indexes for table `profiles`
 --
 ALTER TABLE `profiles`
-  ADD PRIMARY KEY (`ProfileId`);
+  ADD PRIMARY KEY (`ProfileId`),
+  ADD KEY (`ProfileId`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserId`);
+  ADD PRIMARY KEY (`UserId`),
+  ADD KEY (`UserId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -387,11 +372,6 @@ ALTER TABLE `hospitals`
 --
 ALTER TABLE `locale`
   MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `medical_interactions`
---
-ALTER TABLE `medical_interactions`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `organs`
 --

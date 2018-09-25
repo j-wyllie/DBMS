@@ -66,12 +66,12 @@ public class ProfileController {
                 String searchString = req.queryParams(KEY_SEARCH);
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
-            } else if (req.queryMap().hasKey("organ")) {
-                String organ = req.queryParams("organ");
-                String bloodType = req.queryParams("bloodType");
+            } else if (req.queryMap().hasKey("organs")) {
+                String organs = req.queryParams("organs");
+                String bloodTypes = req.queryParams("bloodTypes");
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
                 Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
-                List<Profile> result = database.getOrganReceivers(organ, bloodType,
+                List<Profile> result = database.getOrganReceivers(organs, bloodTypes,
                         lowerAgeRange, upperAgeRange);
                 profiles = gson.toJson(result);
             } else {
@@ -91,7 +91,7 @@ public class ProfileController {
     }
 
     /**
-     * Gets all profiles stored.
+     * Gets all dead profiles stored, possibly with search criteria.
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -101,7 +101,14 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            profiles = gson.toJson(database.getDead());
+            if (req.queryMap().hasKey("searchString")) {
+                String searchString = req.queryParams("searchString");
+                List<Profile> result = database.getDeadFiltered(searchString);
+                profiles = gson.toJson(result);
+            } else {
+                profiles = gson.toJson(database.getDead());
+            }
+
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -336,9 +343,6 @@ public class ProfileController {
         try {
             valid = profileDAO.checkCredentials(request.queryParams("username"),
                     request.queryParams("password"));
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
         } catch (UserNotFoundException e) {
             res.status(404);
             return "Profile not found.";
@@ -366,7 +370,7 @@ public class ProfileController {
         try {
             valid = profileDAO.savePassword(request.queryParams("nhi"),
                     request.queryParams("password"));
-        } catch (SQLException | UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             response.status(500);
             return e.getMessage();
         }

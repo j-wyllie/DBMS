@@ -21,8 +21,9 @@ public interface ProcedureDAO {
      * Add a new procedure to a profile.
      * @param profile to add the procedure to.
      * @param procedure to add.
+     * @return returns true if successful
      */
-    void add(Profile profile, Procedure procedure);
+    boolean add(Profile profile, Procedure procedure);
 
     /**
      * Remove a procedure from a profile.

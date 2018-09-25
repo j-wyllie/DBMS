@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;
+import server.controller.HospitalController;
 import server.controller.HLAController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
@@ -153,6 +154,15 @@ public class Server {
             path("/countries", () -> {
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
+            });
+
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
+                post("", HospitalController::create);
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
             });
 
             // hla api endpoints
