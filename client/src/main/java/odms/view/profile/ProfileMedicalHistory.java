@@ -32,7 +32,7 @@ import odms.view.CommonView;
 public class ProfileMedicalHistory extends CommonView {
 
     private Profile currentProfile;
-    private ConditionGeneral controller = new ConditionGeneral(this);
+    private ConditionGeneral controller = new ConditionGeneral();
     private Boolean isOpenedByClinician;
 
     private ObservableList<Condition> curConditionsObservableList;
@@ -322,7 +322,7 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        controller.delete(currentProfile);
+        controller.delete(currentProfile, getSelectedConditions());
         refreshConditionTable();
     }
 
