@@ -15,22 +15,21 @@ import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
 
 public class MySqlUserDaoTest extends MySqlCommonTests {
+    private UserDAO userDAO = DAOFactory.getUserDao();
 
-    private static UserDAO userDAO = DAOFactory.getUserDao();
-
-    private static User testUser0;
-    private static User testUser1;
+    private User testUser0;
+    private User testUser1;
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
-        testUser0 = new User(
+        User testUserTim = new User(
                 UserType.ADMIN,
                 "Tim Hamblin",
                 "Yeetus",
                 "Username",
                 "test"
         );
-        testUser1 = new User(
+        User testUserBrooke = new User(
                 UserType.ADMIN,
                 "Brooke rasdasdk",
                 "Yeetskeet",
@@ -38,15 +37,14 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
                 "test"
         );
 
-        userDAO.add(testUser0);
-        testUser0 = userDAO.get(testUser0.getUsername());
-        userDAO.add(testUser1);
-        testUser1 = userDAO.get(testUser1.getUsername());
+        userDAO.add(testUserTim);
+        testUser0 = userDAO.get(testUserTim.getUsername());
+        userDAO.add(testUserBrooke);
+        testUser1 = userDAO.get(testUserBrooke.getUsername());
     }
 
     @After
-    public void tearDown() throws InterruptedException, UserNotFoundException {
-        Thread.sleep(100);
+    public void tearDown() throws UserNotFoundException {
         userDAO.remove(testUser0);
         userDAO.remove(testUser1);
     }
