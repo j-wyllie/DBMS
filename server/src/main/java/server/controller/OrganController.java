@@ -129,13 +129,13 @@ public class OrganController {
         OrganDAO database = DAOFactory.getOrganDao();
 
         if (req.queryMap().hasKey(DONATED)) {
-            return database.getDonations(profile.getId());
+            return database.getDonations(profile);
         }
         if (req.queryMap().hasKey(DONATING)) {
-            return database.getDonating(profile.getId());
+            return database.getDonating(profile);
         }
         if (req.queryMap().hasKey(RECEIVED)) {
-            return database.getReceived(profile.getId());
+            return database.getReceived(profile);
         }
         if (req.queryMap().hasKey(REQUIRED)) {
             return database.getRequired(profile);
@@ -218,7 +218,7 @@ public class OrganController {
     public static String setExpired(Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
         int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
-        String organ = req.queryParams("organ").toLowerCase().replace("_", " ");
+        OrganEnum organ = OrganEnum.valueOf(req.queryParams("organ"));
 
         try {
             if (Integer.valueOf(req.queryParams("expired")) == 1) {
