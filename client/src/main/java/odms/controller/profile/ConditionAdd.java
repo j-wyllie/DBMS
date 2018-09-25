@@ -1,6 +1,7 @@
 package odms.controller.profile;
 
 import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.condition.ConditionDAO;
@@ -12,25 +13,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ConditionAdd extends CommonController {
-    private odms.view.profile.ConditionAdd view;
 
-    public ConditionAdd(odms.view.profile.ConditionAdd v) {
-        view = v;
-    }
-
-    public void add() {
-
-        Condition condition = parseCondition();
+    public void add(Profile profile, Condition condition) {
         ConditionDAO server = DAOFactory.getConditionDao();
-        server.add(view.getCurrentProfile(), condition);
+        server.add(profile, condition);
 
-        view.getCurrentProfile().getAllConditions().add(condition);
+        profile.getAllConditions().add(condition);
         LocalDateTime currentTime = LocalDateTime.now();
-        History action = new History("profile", view.getCurrentProfile().getId(),
+        History action = new History("profile", profile.getId(),
                 "added condition",
                 "(" + condition.getName() + "," + condition.getDateOfDiagnosisString() +
                         "," + condition.getChronic() + ")",
-                  getCurrentConditions().indexOf(condition), currentTime);
+                  getCurrentConditions(profile).indexOf(condition), currentTime);
         CurrentHistory.updateHistory(action);
     }
 
@@ -39,9 +33,9 @@ public class ConditionAdd extends CommonController {
      *
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions() {
+    public ArrayList<Condition> getCurrentConditions(Profile profile) {
         ArrayList<Condition> currentConditions = new ArrayList<>();
-        for (Condition condition : view.getCurrentProfile().getAllConditions()) {
+        for (Condition condition : profile.getAllConditions()) {
             if (!condition.getCured()) {
                 currentConditions.add(condition);
             }
@@ -49,17 +43,12 @@ public class ConditionAdd extends CommonController {
         return currentConditions;
     }
 
-    public Condition parseCondition() {
+    public Condition parseCondition(String name, LocalDate dateDiagnosed, Boolean isChronic, Boolean isCured, Profile profile, LocalDate dateCured) {
+        LocalDate dob = profile.getDateOfBirth();
         Condition condition;
 
-        String name = view.getNameFieldText();
-        LocalDate dateDiagnosed = view.getDateDiagnosed();
-        Boolean isChronic = view.getIsChronic();
-        LocalDate dob = view.getCurrentProfile().getDateOfBirth();
-
         // create condition
-        if (view.getIsCured()) {
-            LocalDate dateCured = view.getDateCured();
+        if (isCured) {
             condition = new Condition(name, dateDiagnosed, dateCured, isChronic);
         } else {
             condition = new Condition(name, dateDiagnosed, isChronic);

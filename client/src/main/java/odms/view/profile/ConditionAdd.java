@@ -9,6 +9,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.view.CommonView;
 
@@ -16,7 +17,7 @@ import odms.view.CommonView;
 public class ConditionAdd extends CommonView {
     private static Profile searchedDonor;
     private static ProfileMedicalHistory parent;
-    private odms.controller.profile.ConditionAdd controller = new odms.controller.profile.ConditionAdd(this);
+    private odms.controller.profile.ConditionAdd controller = new odms.controller.profile.ConditionAdd();
 
     @FXML
     private javafx.scene.control.TextField nameField;
@@ -42,7 +43,8 @@ public class ConditionAdd extends CommonView {
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         try {
-            controller.add();
+            Condition condition = controller.parseCondition(getNameFieldText(), getDateDiagnosed(), getIsChronic(), getIsCured(),searchedDonor,getDateCured());
+            controller.add(searchedDonor, condition);
             parent.refreshConditionTable();
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
