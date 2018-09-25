@@ -21,7 +21,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     private User testUser1;
 
     @Before
-    public void setup() throws SQLException, UserNotFoundException {
+    public void setup() {
         User testUserTim = new User(
                 UserType.ADMIN,
                 "Tim Hamblin",
@@ -37,16 +37,24 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
                 "test"
         );
 
-        userDAO.add(testUserTim);
-        testUser0 = userDAO.get(testUserTim.getUsername());
-        userDAO.add(testUserBrooke);
-        testUser1 = userDAO.get(testUserBrooke.getUsername());
+        try {
+            userDAO.add(testUserTim);
+            testUser0 = userDAO.get(testUserTim.getUsername());
+            userDAO.add(testUserBrooke);
+            testUser1 = userDAO.get(testUserBrooke.getUsername());
+        } catch (SQLException | UserNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
-    public void tearDown() throws UserNotFoundException {
-        userDAO.remove(testUser0);
-        userDAO.remove(testUser1);
+    public void tearDown() {
+        try {
+            userDAO.remove(testUser0);
+            userDAO.remove(testUser1);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
