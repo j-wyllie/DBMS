@@ -119,6 +119,23 @@ public class MySQLHLADAOTest {
 
     }
 
+    @Test
+    public void testEdit() {
+        //TODO: Edit to call
+        HLA hlaX = new HLA("CC", 5, true, false);
+        HLA hlaX_2 = new HLA("CC", 5, true, false);
+        HLA hlaY = new HLA("DQ", 40, false, true);
+        HLA hlaN = new HLA("GG", 99, false, false);
+
+        hlaDao.add(testProfile2.getId(), hlaX);
+        hlaDao.add(testProfile2.getId(), hlaY);
+
+       // hlaDao.edit(testProfile2.getId(), hlaX_2);
+
+
+        //assertEquals(hlaX_2,hlaDao.get(testProfile2.getId()));
+    }
+
     /**
      * Support function to deeply assert the returned HLA objects assert equally.
      *

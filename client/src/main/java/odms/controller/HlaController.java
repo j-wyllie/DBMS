@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.HLAType;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.hla.HLADAO;
 
 @Slf4j
 public class HlaController {
@@ -63,5 +65,13 @@ public class HlaController {
 
         score = numMatchingAnitgens * MATCH_MULTIPLIER;
         return (int) score;
+    }
+
+    public static Integer matchScore(Integer profileIdA, Integer profileIdB) {
+        HLADAO hladao = DAOFactory.getHlaDAO();
+        HLAType hlaA = hladao.get(profileIdA);
+        HLAType hlaB = hladao.get(profileIdB);
+
+        return matchScore(hlaA, hlaB);
     }
 }

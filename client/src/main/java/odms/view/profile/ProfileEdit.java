@@ -169,6 +169,12 @@ public class ProfileEdit extends CommonView {
     private TextField hlaYDRField;
 
     @FXML
+    private TextField secondaryHlaField;
+
+    @FXML
+    private Button addHlaBtn;
+
+    @FXML
     private Button removePhotoBtn;
 
     private Profile currentProfile;
@@ -570,74 +576,74 @@ public class ProfileEdit extends CommonView {
 
         // hla listeners
         hlaXAField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXAField.setText(newValue.replaceAll(notAnyDigit, ""));
+         if (!newValue.matches("A" + anyDigit)) {
+                hlaXAField.setText("A" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaXBField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXBField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("B" + anyDigit)) {
+                hlaXBField.setText("B" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaXCField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXCField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("C" + anyDigit)) {
+                hlaXCField.setText("C" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaXDPField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXDPField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DP" + anyDigit)) {
+                hlaXDPField.setText("DP" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaXDQField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXDQField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DQ" + anyDigit)) {
+                hlaXDQField.setText("DQ" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaXDRField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaXDRField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DR" + anyDigit)) {
+                hlaXDRField.setText("DR" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYAField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYAField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("A" + anyDigit)) {
+                hlaYAField.setText("A" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYBField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYBField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("B" + anyDigit)) {
+                hlaYBField.setText("B" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYCField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYCField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("C" + anyDigit)) {
+                hlaYCField.setText("C" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYDPField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYDPField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DP" + anyDigit)) {
+                hlaYDPField.setText("DP" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYDQField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYDQField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DQ" + anyDigit)) {
+                hlaYDQField.setText("DQ" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
         hlaYDRField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                hlaYDRField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches("DR" + anyDigit)) {
+                hlaYDRField.setText("DR" + newValue.replaceAll(notAnyDigit, ""));
             }
         });
 
