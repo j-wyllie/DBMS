@@ -136,6 +136,27 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
                 "Bone", "O-", 12, 42).get(0).getFullName());
     }
 
+
+    @Test
+    public void testGetDead() throws SQLException, OrganConflictException{
+        List<Profile> profileList;
+
+        testProfile2.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+        testProfile3.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+        mySqlProfileDAO.add(testProfile2);
+        mySqlProfileDAO.add(testProfile3);
+
+        profileList = mySqlProfileDAO.getAll();
+        OrganDAO organDAO = DAOFactory.getOrganDao();
+        organDAO.addDonating(profileList.get(0), OrganEnum.KIDNEY);
+
+        assertEquals(1, mySqlProfileDAO.getDead().size());
+
+        organDAO.addDonating(profileList.get(1), OrganEnum.KIDNEY);
+
+        assertEquals(2, mySqlProfileDAO.getDead().size());
+
+    }
     @Test
     public void testGetDeadFiltered() throws SQLException, OrganConflictException{
         testProfile2.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
