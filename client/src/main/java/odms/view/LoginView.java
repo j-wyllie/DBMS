@@ -63,7 +63,6 @@ public class LoginView extends CommonController {
                 if (CommonView.isValidNHI(usernameField.getText())) {
                     tryLoginProfile(event, username);
                 } else if (isValidUser()) {
-                    Session.setCurrentUser(new User(null, (String) null), UserType.ADMIN);
                     currentUser = loadUser(username);
                     //System.out.println(currentUser.getUsername());
                     Session.setCurrentUser(currentUser, currentUser.getUserType());
@@ -95,7 +94,6 @@ public class LoginView extends CommonController {
                 log.error(e.getMessage(), e);
             }
         } else if (isValidProfile()) {
-            Session.setCurrentUser(new Profile(null), UserType.PROFILE);
             Session.setCurrentUser(currentProfile, UserType.PROFILE);
             loadProfileView(currentProfile);
         } else {
@@ -125,7 +123,6 @@ public class LoginView extends CommonController {
 
     /**
      * Checks the users credentials with the database.
-     *
      * @return Boolean based on if the credentials are correct. True if valid.
      */
     private Boolean isValidUser() {
@@ -135,7 +132,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load a profile from the database.
-     *
      * @param username the username to load
      * @return a profile object
      * @throws SQLException if a SQL error occurs
@@ -146,7 +142,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load the profile view.
-     *
      * @param profile the profile object whose data will be displayed
      */
     private void loadProfileView(Profile profile) {

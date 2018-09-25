@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import odms.Session;
 import odms.commons.model.enums.OrganEnum;
@@ -17,10 +19,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 import odms.data.NHIConflictException;
-import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonArray;
-import org.sonar.api.internal.google.gson.JsonElement;
-import org.sonar.api.internal.google.gson.JsonParser;
+
 
 @Slf4j
 public class HttpProfileDAO implements ProfileDAO {
@@ -260,7 +259,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public Boolean checkCredentials(String username, String password) {
-        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
         String url = "http://localhost:6969/api/v1/login";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
@@ -276,7 +275,13 @@ public class HttpProfileDAO implements ProfileDAO {
         }
         if (response != null) {
             if (response.getStatus() == 200) {
-                Session.setToken(gson.fromJson(response.getBody(), Integer.class));
+                JsonObject body = parser.parse(response.getBody()).getAsJsonObject();
+
+                Profile profile = new Profile(null);
+                profile.setId(body.get("id").getAsInt());
+                Session.setCurrentUser(profile, UserType.PROFILE);
+
+                Session.setToken(body.get("Token").getAsInt());
                 return true;
             }
             if (response.getStatus() == 400) {

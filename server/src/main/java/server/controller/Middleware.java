@@ -3,6 +3,8 @@ package server.controller;
 import static spark.Spark.halt;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import server.model.enums.KeyEnum;
@@ -33,14 +35,17 @@ public class Middleware {
      * @return a generated token for future requests.
      * @throws SQLException error.
      */
-    public static int authenticate(int id, UserType userType) throws SQLException {
+    public static Map<String, Integer> authenticate(int id, UserType userType) throws SQLException {
         int token = generateToken();
         if (userType == UserType.PROFILE || userType == UserType.DONOR) {
             database.setProfileToken(id, token);
         } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
             database.setUserToken(id, token);
         }
-        return token;
+        Map<String, Integer> response = new HashMap<>();
+        response.put("id", id);
+        response.put("Token", token);
+        return response;
     }
 
     /**

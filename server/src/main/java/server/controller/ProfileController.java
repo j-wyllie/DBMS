@@ -3,6 +3,7 @@ package server.controller;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -348,10 +349,10 @@ public class ProfileController {
         if (valid) {
             try {
                 Profile profile = database.get(username);
-                long token = Middleware.authenticate(profile.getId(), UserType.PROFILE);
+                Map<String, Integer> body = Middleware.authenticate(profile.getId(), UserType.PROFILE);
                 response.type(DataTypeEnum.JSON.toString());
                 response.status(200);
-                return gson.toJson(token);
+                return gson.toJson(body);
             } catch (SQLException e) {
                 response.status(500);
                 return e.getMessage();

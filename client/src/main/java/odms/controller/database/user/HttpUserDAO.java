@@ -1,9 +1,6 @@
 package odms.controller.database.user;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import odms.Session;
 import odms.commons.model.enums.UserType;
@@ -114,6 +111,7 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public Boolean checkCredentials(String username, String password) {
+        JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
@@ -126,8 +124,13 @@ public class HttpUserDAO implements UserDAO {
             response = request.post();
 
             if (response.getStatus() == 200) {
-                System.out.println(response.getBody());
-                Session.setToken(gson.fromJson(response.getBody(), Integer.class));
+                JsonObject body = parser.parse(response.getBody()).getAsJsonObject();
+
+                User user = new User(null, (String) null);
+                user.setStaffID(body.get("id").getAsInt());
+                Session.setCurrentUser(user, UserType.ADMIN);
+
+                Session.setToken(body.get("Token").getAsInt());
                 return true;
             }
 
@@ -151,6 +154,8 @@ public class HttpUserDAO implements UserDAO {
         Request request = new Request(url, queryParams);
         try {
             response = request.get();
+
+            System.out.println(response.getBody());
 
             if (response.getStatus() == 200) {
                 return parser.fromJson(response.getBody(), User.class);
