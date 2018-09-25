@@ -18,17 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class DatabaseConnection {
 
+    private static final String DEFAULT_CONFIG = "/config/db.config";
+    private static final String TEST_CONFIG = "/config/db_test.config";
+    private static final String RESET_TEST_SQL = "/config/reset_test_db.sql";
+
+    private static String config = null;
     private static DataSource connectionSource;
     private static ComboPooledDataSource source;
-
-    private String DEFAULT_CONFIG = "/config/db.config";
-    private static String TEST_CONFIG = "/config/db_test.config";
-    private static String CONFIG = null;
-
-    private String RESET_SQL = "/config/reset.sql";
-    private String RESAMPLE_SQL = "/config/resample.sql";
-
-    private String RESET_TEST_SQL = "/config/reset_test_db.sql";
 
     /**
      * Constructor to create the singleton database connection class.
@@ -37,13 +33,13 @@ public final class DatabaseConnection {
         try {
             source = new ComboPooledDataSource();
 
-            if (CONFIG == null) {
-                CONFIG = DEFAULT_CONFIG;
+            if (config == null) {
+                config = DEFAULT_CONFIG;
             }
 
             // load in config file
             Properties prop = new Properties();
-            prop.load(ClassLoader.class.getResourceAsStream(CONFIG));
+            prop.load(ClassLoader.class.getResourceAsStream(config));
 
             // set config string
             String host = prop.getProperty("host");
@@ -72,7 +68,7 @@ public final class DatabaseConnection {
     }
 
     public static void setTestDb() {
-        CONFIG = TEST_CONFIG;
+        config = TEST_CONFIG;
         source = new ComboPooledDataSource();
 
         // load in config file
@@ -132,7 +128,7 @@ public final class DatabaseConnection {
      * @param path to the file.
      */
     public static void setConfig(String path) {
-        CONFIG = path;
+        config = path;
     }
 
     /**
@@ -161,7 +157,7 @@ public final class DatabaseConnection {
      */
     private void executeQuery() {
         try (Connection conn = getConnection()) {
-            parseSql(conn, RESET_TEST_SQL).executeBatch();
+            parseSqlAndExecute(conn);
 
         } catch (SQLException | IOException e) {
             log.error(e.getMessage(), e);
@@ -169,16 +165,15 @@ public final class DatabaseConnection {
     }
 
     /**
-     * Parses an SQL file into a statement. Used for reset and resample files.
+     * Parses an SQL file into a statement and execute. Used for reset and resample files.
      *
      * @param conn Connection instance.
-     * @param filepath Path of sql file.
-     * @return Statement to be executed by statement.executeBatch() call.
      * @throws IOException If stream can't be added to.
      * @throws SQLException If statement cannot be created.
      */
-    private Statement parseSql(Connection conn, String filepath) throws IOException, SQLException {
-        try (InputStream inputStream = getClass().getResourceAsStream(filepath);
+    private void parseSqlAndExecute(Connection conn) throws IOException, SQLException {
+
+        try (InputStream inputStream = getClass().getResourceAsStream(RESET_TEST_SQL);
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
                 Statement statement = conn.createStatement()) {
             String line;
@@ -193,9 +188,7 @@ public final class DatabaseConnection {
                     sb = new StringBuilder();
                 }
             }
-
-            br.close();
-            return statement;
+            statement.executeBatch();
         }
     }
 
@@ -203,7 +196,6 @@ public final class DatabaseConnection {
      * Helper to hold the instance of the singleton database connection class.
      */
     private static class DatabaseConnectionHelper {
-
         private static final DatabaseConnection INSTANCE = new DatabaseConnection();
     }
 }

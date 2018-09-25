@@ -449,14 +449,6 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
-
-DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
-
-INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
-  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
-  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
-
-
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
   (2, 'AF', 1),
