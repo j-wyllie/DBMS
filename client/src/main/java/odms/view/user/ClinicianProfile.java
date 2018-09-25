@@ -152,7 +152,7 @@ public class ClinicianProfile extends CommonView {
         try {
             hospitalMapTab.setContent(loader.load());
             HospitalMap hospitalMapTabView = loader.getController();
-            hospitalMapTabView.initialize();
+            hospitalMapTabView.initialize(currentUser);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }

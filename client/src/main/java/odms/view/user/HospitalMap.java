@@ -21,7 +21,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.locations.Hospital;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
 import odms.view.CommonView;
@@ -81,6 +83,17 @@ public class HospitalMap extends CommonView implements Initializable,
     @FXML
     private Label noInternetLabel;
 
+    @FXML
+    private Button addHospitalButton;
+
+    @FXML
+    private Button editHospitalButton;
+
+    /**
+     * Init method for the map.
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -101,12 +114,17 @@ public class HospitalMap extends CommonView implements Initializable,
 
     /**
      * Checks if connection to Google Maps is possible, if not shows a label to user.
+     * @param currentUser the current logged in user
      */
-    public void initialize() {
+    public void initialize(User currentUser) {
         hasConnection = netIsAvailable();
         if (!hasConnection) {
             mapView.setVisible(false);
             noInternetLabel.setVisible(true);
+        }
+        if (!currentUser.getUserType().equals(UserType.ADMIN)) {
+            addHospitalButton.setDisable(true);
+            editHospitalButton.setDisable(true);
         }
     }
 
@@ -228,7 +246,6 @@ public class HospitalMap extends CommonView implements Initializable,
 //                    }
 //                }
 //        );
-
 
         markersTable.getColumns().clear();
         markersTable.getColumns().add(nameColumn);
