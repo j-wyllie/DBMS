@@ -46,6 +46,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         testUser.setDefault(false);
         testUser.setWorkAddress(null);
         testUser.setPictureName(null);
+        testUser.setPassword("test");
         userDAO.add(testUser);
         testUser = userDAO.get(testUser.getUsername());
     }
@@ -88,11 +89,6 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
 
     @After
     public void tearDown() throws SQLException {
-//        organDAO.removeDonating(testProfile1, organ0);
-//        organDAO.removeDonation(testProfile1, organ1);
-//        organDAO.removeReceived(testProfile1, organ2);
-//        organDAO.removeRequired(testProfile1, organ3);
-
         profileDAO.remove(testProfile1);
         profileDAO.remove(testProfile0);
     }

@@ -15,7 +15,5 @@ public abstract class MySqlCommonTests {
     public static void resetDb() {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         instance.resetTestDb();
-        DatabaseConnection.setTestDb();
-
     }
 }

@@ -220,8 +220,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ImageName` varchar(50) DEFAULT NULL,
   `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
   `BloodDonationPoints` int(11) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (ProfileId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -244,8 +243,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
   `ImageName` varchar(50) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (UserId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -331,11 +329,8 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
+  ADD KEY (`UserId`),
+  ADD KEY (`Username`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`

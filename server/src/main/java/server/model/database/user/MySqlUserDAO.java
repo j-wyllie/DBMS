@@ -170,11 +170,7 @@ public class MySqlUserDAO implements UserDAO {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, user.getUsername());
-            if (user.getPassword() != null) {
-                stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
-            } else {
-                stmt.setString(2, "");
-            }
+            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
@@ -254,7 +250,6 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(7, user.getLastUpdated().toString());
             stmt.setBoolean(8, user.getDefault());
             stmt.setString(9, user.getPictureName());
-            stmt.setString(10, user.getPictureName());
             stmt.setInt(10, user.getStaffID());
             stmt.executeUpdate();
         } catch (SQLException e) {
