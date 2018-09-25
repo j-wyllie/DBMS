@@ -69,5 +69,10 @@ public class HttpHLADAO implements HLADAO {
 
         HLAType hlaType = new HLAType(0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144);
         httpHLADAO.add(69, hlaType);
+
+        HLAType returnedHLA = httpHLADAO.get(69);
+        for (Integer value : returnedHLA.getGroupX().values()) {
+            System.out.println(value);
+        }
     }
 }
