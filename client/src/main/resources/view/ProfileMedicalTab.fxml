@@ -186,7 +186,7 @@
                         <Font size="22.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="scondaryHLAListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="8" GridPane.rowSpan="6" />
+                  <ListView fx:id="secondaryHlaListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="8" GridPane.rowSpan="6" />
                    </children>
                </GridPane>
            </children>

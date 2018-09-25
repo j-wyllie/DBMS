@@ -681,11 +681,11 @@
                                                       <Insets left="5.0" right="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
+                                                <ListView fx:id="secondaryHlaListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
                                                    <GridPane.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" />
                                                    </GridPane.margin></ListView>
-                                                <TextField fx:id="secondaryHlaField" prefHeight="26.0" prefWidth="92.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                                <TextField fx:id="secondaryHlaField" onKeyPressed="#handleSecondaryHlaFieldKeyPressed" promptText="e.g. W435" prefHeight="26.0" prefWidth="92.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" right="65.0" />
                                                    </GridPane.margin></TextField>
@@ -700,7 +700,7 @@
                                                       <Insets />
                                                    </opaqueInsets>
                                                 </Label>
-                                                <Button fx:id="addHlaBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Add" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                                                <Button fx:id="addHlaBtn" mnemonicParsing="false" onMouseClicked="#handleAddHlaButtonClicked" prefHeight="25.0" prefWidth="60.0" text="Add" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>

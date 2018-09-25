@@ -16,6 +16,9 @@ public class HLAType {
     private Map<String, Integer> groupX = new HashMap<>();
     private Map<String, Integer> groupY = new HashMap<>();
     private Map<String, Integer> secondaryAntigens = new HashMap<>();
+    public final static String GENE = "[a-z,A-Z]+";
+    public final static String ALELLE = "[0-9]+";
+    public final static String SECONDARY_TYPE = GENE + ALELLE;
 
     /**
      * Initialises the keys of the HLA type

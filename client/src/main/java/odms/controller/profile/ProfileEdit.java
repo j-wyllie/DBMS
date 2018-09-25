@@ -1,5 +1,11 @@
 package odms.controller.profile;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
@@ -8,6 +14,7 @@ import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.HlaController;
 import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
@@ -471,6 +478,7 @@ public class ProfileEdit extends CommonController {
 
     public void saveHLAtype() {
         try {
+            // add primary HLA values
             Integer xa = view.getHLAXAField();
             Integer xb = view.getHLAXBField();
             Integer xc = view.getHLAXCField();
@@ -484,10 +492,19 @@ public class ProfileEdit extends CommonController {
             Integer ydq = view.getHLAYDQField();
             Integer ydr = view.getHLAYDRField();
             HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
+
+            // add secondary HLA values (move to hla controller)
+            for (Object secondaryHlaObject : view.getSecondaryHlaListView().getItems().toArray()) {
+                String secondaryHla = String.valueOf(secondaryHlaObject);
+                String gene = secondaryHla.replaceAll(HLAType.ALELLE, "");
+                String allele = secondaryHla.replaceAll(HLAType.GENE, "");
+                hlaType.addSecondaryAntigen(gene, Integer.valueOf(allele));
+            }
+
             HttpHLADAO httpHLADAO = new HttpHLADAO();
             httpHLADAO.edit(currentProfile.getId(), hlaType);
         } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("All HLA Antigen values must be entered");
+            throw new IllegalArgumentException("All Primary HLA Antigen values must be entered");
         }
     }
 
@@ -560,6 +577,18 @@ public class ProfileEdit extends CommonController {
                 view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
             }
         }
+    }
+
+    public void handelSecondaryHlaEntered() {
+        String newHla = view.getSecondaryHlaField().toUpperCase();
+        if (newHla.isEmpty() || !newHla.matches(HLAType.SECONDARY_TYPE)) {
+            return;
+        }
+        view.clearSecondaryHlaField();
+
+        ObservableList<String> secondaryHlas = view.getSecondaryHlaListView().getItems();
+        secondaryHlas.add(0, newHla);
+        view.getSecondaryHlaListView().setItems(secondaryHlas);
     }
 
     public void setCurrentProfile(Profile donor) {

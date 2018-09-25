@@ -103,22 +103,21 @@ public class HttpHLADAO implements HLADAO {
     public static void main(String args[]) {
         HttpHLADAO httpHLADAO = new HttpHLADAO();
 
-        httpHLADAO.delete(69);
-        httpHLADAO.delete(68);
-
-        HLAType hlaType = new HLAType(0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144);
-        HLAType hlaType2 = new HLAType(1, 2, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144);
-        httpHLADAO.add(69, hlaType);
-        httpHLADAO.add(68, hlaType);
-
-        HLAType returnedHLA = httpHLADAO.get(69);
-        for (Integer value : returnedHLA.getGroupX().values()) {
-            System.out.println(value);
-        }
-        httpHLADAO.delete(69);
-        httpHLADAO.edit(68, hlaType2);
-
-
+//        httpHLADAO.delete(2282);
+//        httpHLADAO.delete(68);
+//
+//        HLAType hlaType = new HLAType(0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144);
+//        HLAType hlaType2 = new HLAType(1, 2, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144);
+//        httpHLADAO.add(69, hlaType);
+//        httpHLADAO.add(68, hlaType);
+//
+//        HLAType returnedHLA = httpHLADAO.get(69);
+//        for (Integer value : returnedHLA.getGroupX().values()) {
+//            System.out.println(value);
+//        }
+//        httpHLADAO.delete(69);
+//        httpHLADAO.edit(68, hlaType2);
+//
 
     }
 }

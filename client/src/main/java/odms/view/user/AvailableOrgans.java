@@ -2,20 +2,22 @@ package odms.view.user;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.HlaController;
@@ -131,9 +133,11 @@ public class AvailableOrgans extends CommonView {
         TableColumn<Profile, String> hlaMatchColumn = new TableColumn<>(
                 "HLA Match"
         );
+
         hlaMatchColumn.setCellValueFactory(
+
                 cdf -> new SimpleStringProperty(
-                         String.valueOf(hlaController.matchScore(cdf.getValue().getId(), donorProfile.getId())) + "%"
+                         hlaController.getMatchString(cdf.getValue().getId(), donorProfile.getId())
                 )
         );
 

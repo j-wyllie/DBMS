@@ -1,8 +1,12 @@
 package odms.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.saxon.ma.arrays.ArrayFunctionSet.ArrayRemove;
 import odms.commons.model.profile.HLAType;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.hla.HLADAO;
@@ -60,18 +64,62 @@ public class HlaController {
                 numMatchingAnitgens += calcMatch(gene, hlaA, hlaB);
             }
         } catch (NullPointerException exception) {
-            numMatchingAnitgens = 0;
+            return null;
         }
 
         score = numMatchingAnitgens * MATCH_MULTIPLIER;
         return (int) score;
     }
 
-    public static Integer matchScore(Integer profileIdA, Integer profileIdB) {
+
+    /**
+     * Get the secondary HLAs as a list of strings
+     *
+     * @param profileID the profile ID of the HLAs
+     * @return List of secondary HLAs
+     */
+    public List<String> getSecondaryHLAs(Integer profileID) {
+        HLADAO hladao = DAOFactory.getHlaDAO();
+        Map<String, Integer> secondaryAntigensMap = hladao.get(profileID).getSecondaryAntigens();
+        List<String> secondaryAntigensList = new ArrayList<>();
+        for (String gene : secondaryAntigensMap.keySet()) {
+            String allele = String.valueOf(secondaryAntigensMap.get(gene));
+            secondaryAntigensList.add(0, gene + allele);
+        }
+        return secondaryAntigensList;
+    }
+
+    /**
+     * Returns the match score as a string, or message if n/a
+     *
+     * @param profileIdA the profile ID of the first HLA to compare
+     * @param profileIdB the profile ID of the second HLA to compare
+     * @return the string representing the HLAs match fit
+     */
+    public String getMatchString(Integer profileIdA, Integer profileIdB) {
+        Integer score = matchScore(profileIdA, profileIdB);
+        String text;
+        if (score.equals(null)) {
+            text = "No HLA";
+        } else {
+            text = String.valueOf(score) + "%";
+        }
+        return text;
+    }
+
+    /**
+     * Returns with a score of match fit as a percentage.
+     *
+     * @param profileIdA the profile ID of the first HLA to compare
+     * @param profileIdB the profile ID of the second HLA to compare
+     * @return match fit as a percentage
+     */
+    private static Integer matchScore(Integer profileIdA, Integer profileIdB) {
         HLADAO hladao = DAOFactory.getHlaDAO();
         HLAType hlaA = hladao.get(profileIdA);
         HLAType hlaB = hladao.get(profileIdB);
 
         return matchScore(hlaA, hlaB);
     }
+
 }
