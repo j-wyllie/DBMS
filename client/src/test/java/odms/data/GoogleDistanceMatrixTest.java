@@ -1,6 +1,7 @@
 package odms.data;
 
 import odms.commons.model.locations.Hospital;
+import odms.view.user.HospitalMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,8 @@ public class GoogleDistanceMatrixTest {
     public Hospital hospitalChristchurch;
     public Hospital hospitalTaranaki;
 
+    public GoogleDistanceMatrix distanceMatrix;
+
 
     @Before
     public void setup() {
@@ -23,6 +26,8 @@ public class GoogleDistanceMatrixTest {
         hospitalDunedin = new Hospital("Dunedin hospital", -45.869212, 170.508920, null, 97);
         hospitalChristchurch = new Hospital("Christchurch hospital", -43.533806, 172.625894, null, 98);
         hospitalTaranaki = new Hospital("Taranaki hospital", -39.072759, 174.056320, null, 99);
+
+        distanceMatrix = new GoogleDistanceMatrix();
 
     }
 
@@ -33,16 +38,18 @@ public class GoogleDistanceMatrixTest {
         double duration;
 
         try {
-            duration = new GoogleDistanceMatrix().getDuration(
-                    hospitalChristchurch.getLatitude(), hospitalDunedin.getLongitude(),
-                    hospitalChristchurch.getLatitude(), hospitalChristchurch.getLongitude()
+            duration = distanceMatrix.getDuration(
+                    hospitalChristchurch.getLatitude(), hospitalChristchurch.getLongitude(),
+                    hospitalDunedin.getLatitude(), hospitalDunedin.getLongitude()
             );
         } catch (IOException e) {
             // Fail
             duration = -1.0;
         }
 
-        assertTrue(duration >= 196.0 && duration <= 197.0);
+        System.out.println(duration);
+
+        assertTrue(duration >= 16000.0 && duration <= 17000.0);
 
     }
 
@@ -50,7 +57,7 @@ public class GoogleDistanceMatrixTest {
     public void testCalculateDurationFail() {
 
         try {
-            new GoogleDistanceMatrix().getDuration(
+            distanceMatrix.getDuration(
                     hospitalTaranaki.getLatitude(), hospitalTaranaki.getLongitude(),
                     hospitalTaranaki.getLatitude(), hospitalTaranaki.getLongitude()
             );
