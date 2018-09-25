@@ -30,7 +30,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @return ArrayList of all users in the database
      */
-    @Override
     public List<User> getAll() {
         ArrayList<User> allUsers = new ArrayList<>();
         String query = "SELECT * FROM users;";
@@ -97,7 +96,6 @@ public class MySqlUserDAO implements UserDAO {
         }
     }
 
-    @Override
     public Boolean checkCredentials(String username, String password) throws UserNotFoundException {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
 
@@ -157,7 +155,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @param user to add.
      */
-    @Override
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
                 " Region, Created, LastUpdated, IsDefault, ImageName) " +
@@ -165,25 +162,15 @@ public class MySqlUserDAO implements UserDAO {
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
-            System.out.println("Adding: " + 1);
             stmt.setString(1, user.getUsername());
-            System.out.println("Adding: " + 2);
             stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
-            System.out.println("Adding: " + 3);
             stmt.setString(3, user.getName());
-            System.out.println("Adding: " + 4);
             stmt.setString(4, user.getUserType().toString());
-            System.out.println("Adding: " + 5);
             stmt.setString(5, user.getWorkAddress());
-            System.out.println("Adding: " + 6);
             stmt.setString(6, user.getRegion());
-            System.out.println("Adding: " + 7);
             stmt.setString(7, LocalDateTime.now().toString());
-            System.out.println("Adding: " + 8);
             stmt.setString(8, LocalDateTime.now().toString());
-            System.out.println("Adding: " + 9);
             stmt.setBoolean(9, user.getDefault());
-            System.out.println("Adding: " + 10);
             stmt.setString(10, user.getPictureName());
             stmt.execute();
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
@@ -197,29 +184,26 @@ public class MySqlUserDAO implements UserDAO {
      * @param username to check.
      * @return true if the username does not already exist.
      */
-    @Override
     public boolean isUniqueUsername(String username) {
-        String query = "SELECT count(Username) as total FROM users WHERE Username = ?;";
+        String query = "SELECT Username FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.getInt("total") == 0;
+            try (ResultSet result = stmt.executeQuery()) {
+                return !result.next();
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-            return false;
         }
+        return false;
     }
-
 
     /**
      * Removes a user from the database.
      *
      * @param user to remove.
      */
-    @Override
     public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
 
@@ -238,7 +222,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @param user to update.
      */
-    @Override
     public void update(User user) {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "

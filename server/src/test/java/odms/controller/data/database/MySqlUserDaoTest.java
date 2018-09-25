@@ -10,22 +10,30 @@ import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.user.UserDAO;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class MySqlUserDaoTest extends MySqlCommonTests {
     private UserDAO userDAO = DAOFactory.getUserDao();
 
     private User testUser0;
     private User testUser1;
 
-    private long testTime;
-
-    private String testName;
-
     @Before
     public void setup() {
-        long start = System.currentTimeMillis();
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         User testUserTim = new User(
                 UserType.ADMIN,
                 "Tim Hamblin",
@@ -49,44 +57,35 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         } catch (SQLException | UserNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println("Setup took: " + (System.currentTimeMillis() - start));
-        testTime = System.currentTimeMillis();
     }
 
     @After
     public void tearDown() {
-        System.out.println(testName + " took: " + (System.currentTimeMillis() - testTime));
-        long start = System.currentTimeMillis();
         try {
             userDAO.remove(testUser0);
             userDAO.remove(testUser1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Teardown took: " + (System.currentTimeMillis() - start));
     }
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
-        testName = "testGetUser";
         assertEquals(testUser0.getUsername(), userDAO.get("Username").getUsername());
     }
 
     @Test(expected = UserNotFoundException.class)
     public void testGetInvalidUser() throws SQLException, UserNotFoundException {
-        testName = "testGetInvalidUser";
         assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
     }
 
     @Test
     public void testGetAll() throws SQLException {
-        testName = "testGetAll";
         assertEquals(2, userDAO.getAll().size());
     }
 
     @Test (expected = UserNotFoundException.class)
     public void testRemove() throws SQLException, UserNotFoundException {
-        testName = "testRemove";
         User testUser = new User(
                 UserType.ADMIN,
                 "Russian Hacker",
@@ -103,7 +102,6 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testUpdate() throws SQLException, UserNotFoundException {
-        testName = "testUpdate";
         testUser0.setName("Nanny");
         userDAO.update(testUser0);
 
@@ -112,13 +110,11 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testIsUniqueUsernameTrue() throws SQLException {
-        testName = "testIsUniqueUsernameTrue";
         assertFalse(!userDAO.isUniqueUsername("ree"));
     }
 
     @Test
     public void testIsUniqueUsernameFalse() throws SQLException {
-        testName = "testIsUniqueUsernameFalse";
         assertFalse(userDAO.isUniqueUsername("Username"));
     }
 }

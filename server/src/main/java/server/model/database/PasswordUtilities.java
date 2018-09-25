@@ -25,7 +25,7 @@ public final class PasswordUtilities {
      * Private constructor that isn't called for checkstyle rules.
      */
     private PasswordUtilities() {
-        //not called
+        throw new UnsupportedOperationException();
     }
 
     /**
