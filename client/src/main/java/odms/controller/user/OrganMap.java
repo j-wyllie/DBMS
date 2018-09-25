@@ -34,12 +34,11 @@ public class OrganMap extends CommonController {
     }
 
     /**
-     * Gets all of the dead donors.
+     * Gets all of the dead donors from database.
      *
      * @return Observable list of dead donors.
      */
     public ObservableList<Profile> getDeadDonors() {
-        ArrayList<Profile> deadDonors = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
         List<Profile> allDonors = null;
         try {
@@ -48,15 +47,7 @@ public class OrganMap extends CommonController {
             log.error(e.getMessage());
         }
 
-        if (allDonors != null) {
-            for (Profile profile : allDonors) {
-                // If the profile has organs to donate
-                if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
-                    deadDonors.add(profile);
-                }
-            }
-        }
-        return FXCollections.observableArrayList(deadDonors);
+       return sortDeadDonorListForExpired(allDonors);
     }
 
     /**
@@ -66,7 +57,6 @@ public class OrganMap extends CommonController {
      * @return Observable list of dead donors.
      */
     public ObservableList<Profile> getDeadDonorsFiltered(String searchString) {
-        ArrayList<Profile> deadDonors = new ArrayList<>();
         ProfileDAO database = DAOFactory.getProfileDao();
         List<Profile> allDonors = null;
         try {
@@ -75,12 +65,24 @@ public class OrganMap extends CommonController {
             log.error(e.getMessage());
         }
 
-        if (allDonors != null) {
-            for (Profile profile : allDonors) {
-                // If the profile has organs to donate
-                if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
-                    deadDonors.add(profile);
-                }
+        return sortDeadDonorListForExpired(allDonors);
+    }
+
+    /**
+     * Filters out the donors who have expired organs and returns  donors that have non-expired organs.
+     *
+     * @return Observable list of dead donors.
+     */
+
+    public ObservableList<Profile> sortDeadDonorListForExpired(List<Profile> allDonors){
+        ArrayList<Profile> deadDonors = new ArrayList<>();
+        if(allDonors == null){
+            return FXCollections.observableArrayList(deadDonors);
+        }
+        for (Profile profile : allDonors) {
+            // If the profile has organs to donate
+            if (!profile.getOrgansDonatingNotExpired().isEmpty()) {
+                deadDonors.add(profile);
             }
         }
         return FXCollections.observableArrayList(deadDonors);
