@@ -1,8 +1,8 @@
 package odms.controller.data.database;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import odms.commons.model.enums.UserType;
@@ -111,15 +111,15 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals("Nanny", userDAO.get("username").getName());
     }
 
-//    @Test
-//    public void testIsUniqueUsernameTrue() throws SQLException {
-//        testName = "testIsUniqueUsernameTrue";
-//        assertTrue(userDAO.isUniqueUsername("ree"));
-//    }
-//
-//    @Test
-//    public void testIsUniqueUsernameFalse() throws SQLException {
-//        testName = "testIsUniqueUsernameFalse";
-//        assertFalse(userDAO.isUniqueUsername("Username"));
-//    }
+    @Test
+    public void testIsUniqueUsernameTrue() throws SQLException {
+        testName = "testIsUniqueUsernameTrue";
+        assertTrue(userDAO.isUniqueUsername("ree"));
+    }
+
+    @Test
+    public void testIsUniqueUsernameFalse() throws SQLException {
+        testName = "testIsUniqueUsernameFalse";
+        assertFalse(userDAO.isUniqueUsername("Username"));
+    }
 }
