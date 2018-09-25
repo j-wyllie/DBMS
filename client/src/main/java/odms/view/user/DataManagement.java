@@ -11,7 +11,7 @@ import odms.commons.model.user.User;
 
 public class DataManagement {
 
-    public User currentUser;
+    private User currentUser;
 
     private odms.controller.user.DataManagement controller = new odms.controller.user.DataManagement(this);
 
@@ -21,9 +21,8 @@ public class DataManagement {
     /**
      * Opens a file chooser and imports the selected files.
      * Lets the user choose from JSON and CSV files.
-     * @param actionEvent
      */
-    public void handleImportExistingDataClicked(ActionEvent actionEvent) throws IOException {
+    public void handleImportExistingDataClicked() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
@@ -39,5 +38,13 @@ public class DataManagement {
 
     public void initialize(User user) {
         currentUser = user;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }

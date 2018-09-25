@@ -20,7 +20,6 @@ public enum Attribute {
     REGION("region"),
     WEIGHT("weight");
 
-
     private String text;
 
     public String getText() {
