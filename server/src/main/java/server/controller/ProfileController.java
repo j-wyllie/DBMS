@@ -319,7 +319,6 @@ public class ProfileController {
         }
 
         res.status(200);
-        System.out.println(hasPassword.toString());
         return hasPassword.toString();
     }
 

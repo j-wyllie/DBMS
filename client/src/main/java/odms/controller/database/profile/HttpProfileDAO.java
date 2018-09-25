@@ -279,8 +279,8 @@ public class HttpProfileDAO implements ProfileDAO {
 
                 Profile profile = new Profile(username);
                 profile.setId(body.get("id").getAsInt());
+
                 Session.setCurrentUser(profile, UserType.PROFILE);
-                System.out.println(profile.getId());
                 Session.setToken(body.get("Token").getAsInt());
                 return true;
             }

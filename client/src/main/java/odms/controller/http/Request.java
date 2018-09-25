@@ -201,7 +201,6 @@ public class Request {
                 Profile profile = (Profile) Session.getCurrentUser().getKey();
                 id = profile.getId();
             }
-            System.out.println(String.valueOf(Session.getToken()));
             con.setRequestProperty("id", String.valueOf(id));
             con.setRequestProperty("UserType", userType.toString());
             con.setRequestProperty("Authorization", String.valueOf(Session.getToken()));

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
+import org.sonar.api.server.authentication.UnauthorizedException;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.middleware.MiddlewareDAO;
@@ -111,8 +112,6 @@ public class CommonController {
         int id;
         UserType userType;
         int token;
-        MiddlewareDAO database = DAOFactory.getMiddlewareDAO();
-
         try {
             id = Integer.valueOf(request.headers(KeyEnum.ID.toString()));
             userType = UserType.valueOf(request.headers(KeyEnum.USERTYPE.toString()));
@@ -124,16 +123,17 @@ public class CommonController {
         }
 
         try {
-            if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
-                database.deleteUserToken(id);
-            } else if (userType == UserType.PROFILE) {
-                database.deleteProfileToken(id);
-            }
+            Middleware.logout(id, userType, token);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             response.status(500);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (UnauthorizedException u) {
+            log.error(u.getMessage(), u);
+            response.status(401);
+            return u.getMessage();
         }
+
         response.status(200);
         return "User successfully logged out";
     }
