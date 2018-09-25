@@ -1,12 +1,33 @@
 package odms.view.user;
 
+import static odms.controller.user.AvailableOrgans.msToStandard;
+
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
-import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.service.directions.*;
+import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.service.directions.DirectionStatus;
+import com.lynden.gmapsfx.service.directions.DirectionsLeg;
+import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
+import com.lynden.gmapsfx.service.directions.DirectionsRequest;
+import com.lynden.gmapsfx.service.directions.DirectionsResult;
+import com.lynden.gmapsfx.service.directions.DirectionsService;
+import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
+import com.lynden.gmapsfx.service.directions.TravelModes;
 import com.lynden.gmapsfx.shapes.Polyline;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -17,7 +38,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +50,6 @@ import netscape.javascript.JSObject;
 import odms.commons.model.locations.Hospital;
 import odms.controller.AlertController;
 import odms.data.GoogleDistanceMatrix;
-
-import java.io.IOException;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import static odms.controller.user.AvailableOrgans.msToStandard;
 
 @Slf4j
 public class HospitalMap implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
@@ -427,7 +443,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding(ob -> populateHospitals());
+            stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
             log.error("Failed to populate hospitals");
@@ -447,6 +463,9 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
 
         try {
             Hospital hospital = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+            if (hospital == null) {
+                return;
+            }
 
             Scene scene = new Scene(fxmlLoader.load());
             HospitalCreate hospitalCreate = fxmlLoader.getController();
@@ -458,7 +477,7 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
-            stage.setOnHiding(ob -> populateHospitals());
+            stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
             log.error("Failed to populate hospitals");
@@ -476,7 +495,6 @@ public class HospitalMap implements Initializable, MapComponentInitializedListen
         Marker marker = controller.createLocationMarker(location);
         InfoWindow infoWindow = controller.createLocationInfoWindow(location);
         markers.add(marker);
-
 
         // For displaying info window
         map.addUIEventHandler(marker, UIEventType.rightclick, (JSObject obj) ->
