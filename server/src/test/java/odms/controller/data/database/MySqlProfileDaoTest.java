@@ -7,10 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -19,8 +17,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.organ.MySqlOrganDAO;
+import server.model.database.organ.OrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
 public class MySqlProfileDaoTest extends MySqlCommonTests {
@@ -34,6 +34,9 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     );
     private Profile testProfile0 = new Profile("Joshua", "Wyllie", LocalDate.of(1997, 7, 18), "ABC1234");
     private Profile testProfile1 = new Profile("Jack", "Hay", LocalDate.of(1998, 2, 27), "CBA43211");
+    private Profile testProfile2 = new Profile("Lewis", "White", LocalDate.of(1998, 1, 27), "LWH3434");
+    private Profile testProfile3 = new Profile("Lewis", "Whitely", LocalDate.of(1998, 2, 27), "LWH3435");
+
 
     /**
      * Sets the Database to the test database and Initialises the DBO
@@ -131,6 +134,49 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
         mySqlOrganDAO.addRequired(newProfile, OrganEnum.BONE);
         assertEquals(testProfileLong0.getFullName(), mySqlProfileDAO.getOrganReceivers(
                 "Bone", "O-", 12, 42).get(0).getFullName());
+    }
+
+
+    @Test
+    public void testGetDead() throws SQLException, OrganConflictException{
+        List<Profile> profileList;
+
+        testProfile2.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+        testProfile3.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+        mySqlProfileDAO.add(testProfile2);
+        mySqlProfileDAO.add(testProfile3);
+
+        profileList = mySqlProfileDAO.getAll();
+        OrganDAO organDAO = DAOFactory.getOrganDao();
+        organDAO.addDonating(profileList.get(0), OrganEnum.KIDNEY);
+
+        assertEquals(1, mySqlProfileDAO.getDead().size());
+
+        organDAO.addDonating(profileList.get(1), OrganEnum.KIDNEY);
+
+        assertEquals(2, mySqlProfileDAO.getDead().size());
+
+    }
+    @Test
+    public void testGetDeadFiltered() throws SQLException, OrganConflictException{
+        testProfile2.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+        testProfile3.setDateOfDeath(LocalDateTime.of(2017,1,1,1,1));
+
+
+        mySqlProfileDAO.add(testProfile2);
+        mySqlProfileDAO.add(testProfile3);
+
+        List<Profile> profileList = mySqlProfileDAO.getAll();
+
+        OrganDAO organDAO = DAOFactory.getOrganDao();
+        organDAO.addDonating(profileList.get(0), OrganEnum.KIDNEY);
+        organDAO.addDonating(profileList.get(1), OrganEnum.BONE);
+
+        assertEquals(0, mySqlProfileDAO.getDeadFiltered("Smith").size());
+        assertEquals(1, mySqlProfileDAO.getDeadFiltered("Whitely").size());
+        assertEquals(2, mySqlProfileDAO.getDeadFiltered("White").size());
+        assertEquals("White", mySqlProfileDAO.getDeadFiltered("White").get(0).getLastNames());
+        assertEquals("Whitely", mySqlProfileDAO.getDeadFiltered("White").get(1).getLastNames());
     }
 
     @Ignore
