@@ -183,20 +183,22 @@ public class ProcedureDetailed extends CommonView {
         saveButton.setVisible(false);
         summaryEntry.setDisable(true);
         summaryEntry.setVisible(false);
-
-        procedureSummaryLabel.setText(currentProcedure.getSummary());
-        procedureDateLabel.setText(currentProcedure.getDate().toString());
-        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
-
-        populateAffectedOrgansLabel();
-
-        parent.refreshProcedureTable();
+        hospitalChoiceBox.setVisible(false);
+        hospitalChoiceBox.setDisable(true);
 
         procedureDateLabel.setVisible(false);
         procedureDescriptionLabel.setVisible(false);
         procedureOrgansLabel.setVisible(false);
         hospitalLabel.setVisible(false);
-        saveButton.setVisible(false);
+
+
+        procedureSummaryLabel.setText(currentProcedure.getSummary());
+        procedureDateLabel.setText(currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
+        populateAffectedOrgansLabel();
+        hospitalLabel.setText(currentProcedure.getHospital().getName());
+
+        parent.refreshProcedureTable();
     }
 
     public Profile getProfile() {

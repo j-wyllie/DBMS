@@ -3,15 +3,11 @@ package server.model.database.procedure;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
+import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
+import server.model.database.locations.HospitalDAO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +24,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public List<Procedure> getAll(int profile, Boolean pending) {
         String query = "SELECT Id, ProfileId, Summary, Description, ProcedureDate, Pending, " +
-                "Previous FROM procedures WHERE ProfileId = ? AND Pending = ?;";
+                "Previous, Hospital FROM procedures WHERE ProfileId = ? AND Pending = ?;";
         List<Procedure> result = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -68,12 +64,18 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(1, profile);
             stmt.setString(2, procedure.getSummary());
             stmt.setString(3, procedure.getLongDescription());
-            stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            if (LocalDate.now().isBefore(procedure.getDate())) {
-                stmt.setBoolean(5, true);
+            if (procedure.getDateTime() != null) {
+                // Date time is only used in scheduling a procedure so it must be pending
+                stmt.setTimestamp(4, Timestamp.valueOf(procedure.getDateTime()));
+                stmt.setInt(5, 1);
             } else {
-                stmt.setBoolean(5, false);
+                stmt.setDate(4, Date.valueOf(procedure.getDate()));
+                if (LocalDate.now().isBefore(procedure.getDate())) {
+                    stmt.setInt(5, 1);
+                } else {
+                    stmt.setInt(5, 0);
+                }
             }
 
             if (procedure.getHospital() != null) {
@@ -215,6 +217,11 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         LocalDate procedureDate = procedures.getDate("ProcedureDate").toLocalDate();
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
+        Integer hostpitalId = procedures.getInt("Hospital");
+        if (hostpitalId != null) {
+            HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+
+        }
         return new Procedure(id, summary, procedureDate, description, affectedOrgans);
     }
 
