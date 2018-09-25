@@ -1,5 +1,7 @@
 package server.controller;
 
+import static spark.Spark.halt;
+
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -9,6 +11,7 @@ import odms.commons.model.enums.UserType;
 import org.sonar.api.server.authentication.UnauthorizedException;
 import server.model.database.DAOFactory;
 import server.model.database.middleware.MiddlewareDAO;
+import spark.Response;
 
 public class Middleware {
 
@@ -46,33 +49,58 @@ public class Middleware {
      * @return true if the request is authenticated, false otherwise.
      * @throws SQLException internal error.
      */
-    public static boolean isAuthenticated(Request req) throws SQLException {
-        UserType userType = UserType.valueOf(req.headers(KeyEnum.USERTYPE.toString()));
-        int id = Integer.valueOf(req.headers(KeyEnum.ID.toString()));
-        int token = Integer.valueOf(req.headers(KeyEnum.AUTH.toString()));
-
-        if (userType == UserType.PROFILE || userType == UserType.DONOR) {
-            return database.isProfileAuthenticated(id, token);
-        } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
-            return database.isUserAuthenticated(id, token);
-        } else {
+    public static boolean isAuthenticated(Request req, Response res) throws SQLException {
+        UserType userType;
+        int id;
+        int token;
+        try {
+            userType = UserType.valueOf(req.headers(KeyEnum.USERTYPE.toString()));
+            id = Integer.valueOf(req.headers(KeyEnum.ID.toString()));
+            token = Integer.valueOf(req.headers(KeyEnum.AUTH.toString()));
+        } catch (Exception e) {
+            halt(401, "Unauthorized");
             return false;
         }
+
+        if (userType == UserType.PROFILE || userType == UserType.DONOR) {
+            if (database.isProfileAuthenticated(id, token)) {
+                return true;
+            }
+        } else if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
+            if (database.isUserAuthenticated(id, token)) {
+                return true;
+            }
+        } else {
+            halt(401, "Unauthorized");
+            return false;
+        }
+        halt(401, "Unauthorized");
+        return false;
     }
 
     /**
      * Checks if a request has the correct authentication appropriate for
      * an admin or clinician.
-     * @param req the request.
+     * @param request the request.
      * @return true if the request is authenticated, false otherwise.
      * @throws SQLException internal error.
      */
-    public static boolean isAdminAuthenticated(Request req) throws SQLException {
-        System.out.println(req.headers());
-        int id = Integer.valueOf(req.headers(KeyEnum.ID.toString()));
-        int token = Integer.valueOf(req.headers(KeyEnum.AUTH.toString()));
-
-        return database.isUserAuthenticated(id, token);
+    public static boolean isAdminAuthenticated(Request request, Response response) throws SQLException {
+        System.out.println(request.headers());
+        int id;
+        int token;
+        try {
+            id = Integer.valueOf(request.headers(KeyEnum.ID.toString()));
+            token = Integer.valueOf(request.headers(KeyEnum.AUTH.toString()));
+        } catch (NumberFormatException e) {
+            halt(401, "Unauthorized");
+            return false;
+        }
+        if (database.isUserAuthenticated(id, token)) {
+            return true;
+        }
+        halt(401, "Unauthorized");
+        return false;
     }
 
     /**

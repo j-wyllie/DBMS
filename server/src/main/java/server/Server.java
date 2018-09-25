@@ -57,16 +57,10 @@ public class Server {
             post("/login", CommonController::checkCredentials);
             post("/logout", CommonController::logout);
 
-
-            // user api routes.
-            before("/users*", (request, response) -> {
-                System.out.println("hit1");
-                if(!(Middleware.isAdminAuthenticated(request))) {
-                    halt(401, "Unauthorized");
-                }
-            });
             path("/users", () -> {
-
+                // user api routes.
+                before("/*", Middleware::isAdminAuthenticated);
+                before("", Middleware::isAdminAuthenticated);
                 get("/all", UserController::getAll);
                 get("", UserController::get);
                 post("", UserController::create);
@@ -85,11 +79,8 @@ public class Server {
                 post("", ProfileController::create);
 
                 // Profile authentication required.
-                before("/profiles*", (request, response) -> {
-                    if(!(Middleware.isAuthenticated(request))) {
-                        halt(401, "Unauthorized");
-                    }
-                });
+                before("", Middleware::isAuthenticated);
+                before("/*", Middleware::isAuthenticated);
 
                 get("", ProfileController::get);
                 get("/password", ProfileController::hasPassword);
@@ -117,12 +108,6 @@ public class Server {
                 });
 
                 // Admin or clinician authentication required.
-                before("/profiles*", (request, response) -> {
-                    System.out.println("hit2");
-                    if (!(Middleware.isAdminAuthenticated(request))) {
-                        halt(401, "Unauthorized");
-                    }
-                });
                 get("/all", ProfileController::getAll);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
@@ -167,15 +152,9 @@ public class Server {
                 get("/count", ProfileController::count);
             });
 
-            before("/conditions*", (request, response) -> {
-                System.out.println("hit3");
-                if (!(Middleware.isAdminAuthenticated(request))) {
-                        halt(401, "Unauthorized");
-                }
-            });
-
             // condition api endpoints.
             path("/conditions", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
 
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
@@ -183,15 +162,9 @@ public class Server {
                 });
             });
 
-            before("/procedures*", (request, response) -> {
-                System.out.println("hit3");
-                if (!(Middleware.isAdminAuthenticated(request))) {
-                    halt(401, "Unauthorized");
-                }
-            });
-
             // procedure api endpoints.
             path("/procedures", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
 
                 // id refers to procedure id
                 path("/:id", () -> {
@@ -206,30 +179,20 @@ public class Server {
                 });
             });
 
-            before("/drugs*", (request, response) -> {
-                System.out.println("hit3");
-                if (!(Middleware.isAdminAuthenticated(request))) {
-                    halt(401, "Unauthorized");
-                }
-            });
-
             // drugs api endpoints.
             path("/drugs", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
+
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
                 });
             });
 
-            before("/countries*", (request, response) -> {
-                System.out.println("hit3");
-                if (!(Middleware.isAdminAuthenticated(request))) {
-                    halt(401, "Unauthorized");
-                }
-            });
-
             // countries api endpoints.
             path("/countries", () -> {
+                before("", Middleware::isAdminAuthenticated);
+
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
             });

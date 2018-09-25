@@ -110,11 +110,13 @@ public class CommonController {
     public static Object logout(Request request, Response response) {
         int id;
         UserType userType;
+        int token;
         MiddlewareDAO database = DAOFactory.getMiddlewareDAO();
 
         try {
-            id = Integer.valueOf(request.queryParams(KeyEnum.ID.toString()));
-            userType = UserType.valueOf(request.queryParams(KeyEnum.USERTYPE.toString()));
+            id = Integer.valueOf(request.headers(KeyEnum.ID.toString()));
+            userType = UserType.valueOf(request.headers(KeyEnum.USERTYPE.toString()));
+            token = Integer.valueOf(request.headers(KeyEnum.AUTH.toString()));
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             response.status(400);
