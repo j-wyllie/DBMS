@@ -22,6 +22,8 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     private long testTime;
 
+    private String testName;
+
     @Before
     public void setup() {
         long start = System.currentTimeMillis();
@@ -54,7 +56,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @After
     public void tearDown() {
-        System.out.println("Test took: " + (System.currentTimeMillis() - testTime));
+        System.out.println(testName + " took: " + (System.currentTimeMillis() - testTime));
         long start = System.currentTimeMillis();
         try {
             userDAO.remove(testUser0);
@@ -67,21 +69,25 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
+        testName = "testGetUser";
         assertEquals(testUser0.getUsername(), userDAO.get("Username").getUsername());
     }
 
     @Test(expected = UserNotFoundException.class)
     public void testGetInvalidUser() throws SQLException, UserNotFoundException {
+        testName = "testGetInvalidUser";
         assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
     }
 
     @Test
     public void testGetAll() throws SQLException {
+        testName = "testGetAll";
         assertEquals(2, userDAO.getAll().size());
     }
 
     @Test (expected = UserNotFoundException.class)
     public void testRemove() throws SQLException, UserNotFoundException {
+        testName = "testRemove";
         User testUser = new User(
                 UserType.ADMIN,
                 "Russian Hacker",
@@ -98,6 +104,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testUpdate() throws SQLException, UserNotFoundException {
+        testName = "testUpdate";
         testUser0.setName("Nanny");
         userDAO.update(testUser0);
 
@@ -106,11 +113,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
 
     @Test
     public void testIsUniqueUsernameTrue() throws SQLException {
+        testName = "testIsUniqueUsernameTrue";
         assertTrue(userDAO.isUniqueUsername("ree"));
     }
 
     @Test
     public void testIsUniqueUsernameFalse() throws SQLException {
+        testName = "testIsUniqueUsernameFalse";
         assertFalse(userDAO.isUniqueUsername("Username"));
     }
 }
