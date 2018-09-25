@@ -30,7 +30,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @return ArrayList of all users in the database
      */
-    @Override
     public List<User> getAll() {
         ArrayList<User> allUsers = new ArrayList<>();
         String query = "SELECT * FROM users;";
@@ -162,7 +161,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @param user to add.
      */
-    @Override
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
                 " Region, Created, LastUpdated, IsDefault, ImageName) " +
@@ -189,12 +187,10 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Checks if a username already exists in the database.
-     *
      * @param username to check.
-     * @return true if the username does not already exist.
+     * @return true is the username exists.
      */
-    @Override
-    public boolean isUniqueUsername(String username) {
+    public boolean userExists(String username) {
         String query = "SELECT count(Username) AS total FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -202,7 +198,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 rs.next();
-                return rs.getInt("total") == 0;
+                return rs.getInt("total") > 0;
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -210,14 +206,12 @@ public class MySqlUserDAO implements UserDAO {
         }
     }
 
-
     /**
      * Removes a user from the database.
      *
      * @param user to remove.
      * @throws UserNotFoundException error.
      */
-    @Override
     public void remove(User user) throws UserNotFoundException {
         String query = "DELETE FROM users WHERE UserId = ?;";
 

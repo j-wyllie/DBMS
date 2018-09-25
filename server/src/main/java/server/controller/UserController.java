@@ -93,12 +93,9 @@ public class UserController {
 
         try {
             newUser = new Gson().fromJson(req.body(), User.class);
-            if (!(database.isUniqueUsername(newUser.getUsername()))) {
+            if (database.userExists(newUser.getUsername())) {
                 throw new IllegalArgumentException("Username must be unique.");
             }
-        } catch (SQLException e) {
-            res.status(400);
-            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (IllegalArgumentException e) {
             res.status(403);
             return ResponseMsgEnum.FORBIDDEN.toString();
@@ -136,7 +133,7 @@ public class UserController {
         }
 
         try {
-            if (database.isUniqueUsername(user.getUsername())) {
+            if (!database.userExists(user.getUsername())) {
                 database.update(user);
             } else {
                 res.status(403);
