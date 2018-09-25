@@ -329,8 +329,7 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`),
-  ADD KEY (`Username`);
+  ADD KEY (`UserId`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
