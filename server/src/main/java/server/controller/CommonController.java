@@ -107,7 +107,7 @@ public class CommonController {
      * @param response to the client.
      * @return from the server.
      */
-    public static Object logout(Request request, Response response) {
+    public static String logout(Request request, Response response) {
         int id;
         UserType userType;
         int token;

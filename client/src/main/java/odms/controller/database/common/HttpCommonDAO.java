@@ -51,7 +51,7 @@ public class HttpCommonDAO implements CommonDAO {
         Response response = null;
         String url = "http://localhost:6969/api/v1/logout";
 
-        Request request = new Request(url, new HashMap<>());
+        Request request = new Request(url, new HashMap<>(), "{}");
         try {
             response = request.post();
         } catch (IOException e) {
