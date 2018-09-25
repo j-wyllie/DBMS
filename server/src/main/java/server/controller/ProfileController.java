@@ -1,13 +1,11 @@
 package server.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.UserNotFoundException;
@@ -346,9 +344,6 @@ public class ProfileController {
         try {
             valid = profileDAO.checkCredentials(request.queryParams("username"),
                     request.queryParams("password"));
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
         } catch (UserNotFoundException e) {
             res.status(404);
             return "Profile not found.";
@@ -376,7 +371,7 @@ public class ProfileController {
         try {
             valid = profileDAO.savePassword(request.queryParams("nhi"),
                     request.queryParams("password"));
-        } catch (SQLException | UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             response.status(500);
             return e.getMessage();
         }

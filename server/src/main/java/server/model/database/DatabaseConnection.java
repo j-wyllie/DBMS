@@ -61,7 +61,7 @@ public final class DatabaseConnection {
             source.setJdbcUrl(host + '/' + database);
             source.setUser(username);
             source.setPassword(password);
-            source.setMinPoolSize(20);
+            source.setMinPoolSize(3);
             source.setAcquireIncrement(5);
             source.setMaxPoolSize(50);
 
@@ -99,7 +99,7 @@ public final class DatabaseConnection {
         source.setJdbcUrl(host + '/' + database);
         source.setUser(username);
         source.setPassword(password);
-        source.setMinPoolSize(5);
+        source.setMinPoolSize(3);
         source.setAcquireIncrement(5);
         source.setMaxPoolSize(50);
         source.setMaxIdleTime(3000);
@@ -123,7 +123,7 @@ public final class DatabaseConnection {
      * @throws SQLException error.
      */
     public static Connection getConnection() throws SQLException {
-        return connectionSource.getConnection();
+        return getInstance().connectionSource.getConnection();
     }
 
     /**
@@ -139,32 +139,30 @@ public final class DatabaseConnection {
      * Resets the current in use database to the standard set of tables.
      */
     public void reset() {
-        executeQuery(RESET_SQL);
+        executeQuery();
     }
 
     /**
      * Resets the test database to the standard set of tables.
      */
     public void resetTestDb() {
-        executeQuery(RESET_TEST_SQL);
+        executeQuery();
     }
 
     /**
      * Resamples the current in use database with the default data.
      */
     public void resample() {
-        executeQuery(RESAMPLE_SQL);
+        executeQuery();
     }
 
     /**
      * Executes the sql statements in the file at the location passed in.
      *
-     * @param filePath the location of the file.
      */
-    private void executeQuery(String filePath) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+    private void executeQuery() {
         try {
-            Connection conn = instance.getConnection();
+            Connection conn = getConnection();
             parseSql(conn, RESET_TEST_SQL).executeBatch();
 
         } catch (SQLException | IOException e) {
