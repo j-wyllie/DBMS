@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.scene.control.RadioButton;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
@@ -32,7 +33,12 @@ public class HospitalCreate {
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void addHospital(String name, String address) throws IOException, SQLException {
+    public void addHospital(String name, String address, List<RadioButton> organPrograms)
+            throws IOException, SQLException {
+        List<Boolean> organProgramBools = new ArrayList<>();
+        for (RadioButton organProgram : organPrograms) {
+            organProgramBools.add(organProgram.isSelected());
+        }
         List<Double> latlong = getGeoLocation(address);
         Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
@@ -47,7 +53,12 @@ public class HospitalCreate {
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void editHospital(String name, String address, Integer hospitalId) throws SQLException, IOException {
+    public void editHospital(String name, String address, List<RadioButton> organPrograms,
+            Integer hospitalId) throws SQLException, IOException {
+        List<Boolean> organProgramBools = new ArrayList<>();
+        for (RadioButton organProgram : organPrograms) {
+            organProgramBools.add(organProgram.isSelected());
+        }
         List<Double> latlong = getGeoLocation(address);
         Hospital newHospital = new Hospital(name, latlong.get(0), latlong.get(1), address, null, hospitalId);
         HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();

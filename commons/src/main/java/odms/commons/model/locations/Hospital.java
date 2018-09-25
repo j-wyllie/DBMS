@@ -11,7 +11,7 @@ public class Hospital {
     private Double latitude;
     private Double longitude;
     private String address;
-    private List programs;
+    private List<Boolean> programs;
     private Integer id;
 
     /**
@@ -23,7 +23,7 @@ public class Hospital {
      * @param programs list of transplant programs that the hospital provides
      * @param id the unique id for the hospital
      */
-    public Hospital(String name, Double lat, Double lon, String address, List programs,
+    public Hospital(String name, Double lat, Double lon, String address, List<Boolean> programs,
             Integer id) {
         this.name = name;
         this.latitude = lat;
@@ -79,7 +79,7 @@ public class Hospital {
         return longitude;
     }
 
-    public List getPrograms() {
+    public List<Boolean> getPrograms() {
         return programs;
     }
 
@@ -103,7 +103,7 @@ public class Hospital {
         this.longitude = longitude;
     }
 
-    public void setPrograms(List programs) {
+    public void setPrograms(List<Boolean> programs) {
         this.programs = programs;
     }
 }
