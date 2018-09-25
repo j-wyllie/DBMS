@@ -50,11 +50,21 @@ public class HospitalController {
     public static String get(Request req, Response res) {
         HospitalDAO database = DAOFactory.getHospitalDAO();
         Hospital hospital;
-        try {
-            hospital = database.get(req.queryParams("name"));
-        } catch (SQLException e) {
-            res.status(500);
-            return "Database Error";
+
+        if (req.queryMap().hasKey("name")) {
+            try {
+                hospital = database.get(req.queryParams("name"));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
+        } else {
+            try {
+                hospital = database.get(Integer.valueOf(req.queryParams("id")));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
         }
 
         Gson gson = new Gson();

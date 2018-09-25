@@ -77,6 +77,33 @@ public class HttpHospitalDAO implements HospitalDAO {
     }
 
     /**
+     * Get a hospital from the database by it's id.
+     * @param id the id of the hospital to retrieve
+     * @return the hospital object
+     * @throws SQLException thrown when there is a server error.
+     */
+    @Override
+    public Hospital get(int id) throws SQLException {
+        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("id", id);
+        Gson parser = new Gson();
+        Response response = null;
+        Request request = new Request(url, 0, queryParams);
+        try {
+            response = request.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.getStatus() == 200) {
+            return parser.fromJson(response.getBody(), Hospital.class);
+        } else if (response.getStatus() == 500) {
+            throw new SQLException(response.getBody());
+        }
+        return null;
+    }
+
+    /**
      * Add a hospital to the database.
      *
      * @param hospital hospital object to add
