@@ -49,6 +49,25 @@ public class OrganMapTest{
         assertEquals(deadDonors.size(), 2);
     }
 
+    @Test
+    public void getDeadDonorsTest2() {
+        OrganMap controller = new OrganMap();
+        List<Profile> allDonors = new ArrayList<>();
+        allDonors.add(profile1);
+        allDonors.add(profile3);
+        ObservableList<Profile> deadDonors = controller.sortDeadDonorListForExpired(allDonors);
+        assertEquals(deadDonors.size(), 1);
+    }
+
+    @Test
+    public void getDeadDonorsTest3() {
+        OrganMap controller = new OrganMap();
+        List<Profile> allDonors = new ArrayList<>();
+        allDonors.add(profile3);
+        ObservableList<Profile> deadDonors = controller.sortDeadDonorListForExpired(allDonors);
+        assertEquals(deadDonors.size(), 0);
+    }
+
 
 
 }
