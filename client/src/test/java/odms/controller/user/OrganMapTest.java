@@ -39,7 +39,7 @@ public class OrganMapTest{
     }
 
     @Test
-    public void getDeadDonorsTest() {
+    public void getDeadDonorsTestTwo() {
         OrganMap controller = new OrganMap();
         List<Profile> allDonors = new ArrayList<>();
         allDonors.add(profile1);
@@ -50,7 +50,7 @@ public class OrganMapTest{
     }
 
     @Test
-    public void getDeadDonorsTest2() {
+    public void getDeadDonorsTestOne() {
         OrganMap controller = new OrganMap();
         List<Profile> allDonors = new ArrayList<>();
         allDonors.add(profile1);
@@ -60,7 +60,7 @@ public class OrganMapTest{
     }
 
     @Test
-    public void getDeadDonorsTest3() {
+    public void getDeadDonorsTestZero() {
         OrganMap controller = new OrganMap();
         List<Profile> allDonors = new ArrayList<>();
         allDonors.add(profile3);

@@ -163,6 +163,7 @@ public class MySqlOrganDAO implements OrganDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
+            System.out.println(e);
             throw new OrganConflictException();
         }
     }
