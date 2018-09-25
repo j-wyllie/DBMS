@@ -111,15 +111,15 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals("Nanny", userDAO.get("username").getName());
     }
 
-    @Test
-    public void testIsUniqueUsernameTrue() throws SQLException {
-        testName = "testIsUniqueUsernameTrue";
-        assertTrue(userDAO.isUniqueUsername("ree"));
-    }
-
-    @Test
-    public void testIsUniqueUsernameFalse() throws SQLException {
-        testName = "testIsUniqueUsernameFalse";
-        assertFalse(userDAO.isUniqueUsername("Username"));
-    }
+//    @Test
+//    public void testIsUniqueUsernameTrue() throws SQLException {
+//        testName = "testIsUniqueUsernameTrue";
+//        assertTrue(userDAO.isUniqueUsername("ree"));
+//    }
+//
+//    @Test
+//    public void testIsUniqueUsernameFalse() throws SQLException {
+//        testName = "testIsUniqueUsernameFalse";
+//        assertFalse(userDAO.isUniqueUsername("Username"));
+//    }
 }
