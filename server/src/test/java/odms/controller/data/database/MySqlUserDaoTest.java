@@ -20,8 +20,11 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     private User testUser0;
     private User testUser1;
 
+    private long testTime;
+
     @Before
     public void setup() {
+        long start = System.currentTimeMillis();
         User testUserTim = new User(
                 UserType.ADMIN,
                 "Tim Hamblin",
@@ -45,16 +48,21 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         } catch (SQLException | UserNotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println("Setup took: " + (System.currentTimeMillis() - start));
+        testTime = System.currentTimeMillis();
     }
 
     @After
     public void tearDown() {
+        System.out.println("Test took: " + (System.currentTimeMillis() - testTime));
+        long start = System.currentTimeMillis();
         try {
             userDAO.remove(testUser0);
             userDAO.remove(testUser1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println("Teardown took: " + (System.currentTimeMillis() - start));
     }
 
     @Test
