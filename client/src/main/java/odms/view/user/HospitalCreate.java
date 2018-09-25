@@ -49,11 +49,11 @@ public class HospitalCreate {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         String address;
         String name;
+        List<RadioButton> organPrograms = programList.getItems();
 
         try {
             address = addressField.getText();
             name = nameField.getText();
-            List<RadioButton> organPrograms = programList.getItems();
         } catch (Exception e) {
             warningLabel.setVisible(true);
             warningServerLabel.setVisible(false);
