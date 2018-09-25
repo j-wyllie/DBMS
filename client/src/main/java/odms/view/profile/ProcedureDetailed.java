@@ -1,12 +1,18 @@
 package odms.view.profile;
 
+import java.sql.SQLException;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.locations.HospitalDAO;
 import odms.controller.profile.ProcedureEdit;
 import odms.commons.model.enums.OrganEnum;
 import odms.view.CommonView;
@@ -18,7 +24,10 @@ import java.util.ArrayList;
 /**
  * View for the procedure details scene.
  */
+@Slf4j
 public class ProcedureDetailed extends CommonView {
+    private ObservableList<Hospital> hospitals = FXCollections.observableArrayList();
+
     @FXML
     private Label procedureSummaryLabel;
     @FXML
@@ -39,6 +48,10 @@ public class ProcedureDetailed extends CommonView {
     private Button editButton;
     @FXML
     private Label warningLabel;
+    @FXML
+    private Label hospitalLabel;
+    @FXML
+    private ChoiceBox<Hospital> hospitalChoiceBox;
 
     @FXML
     private ListView<String> affectedOrgansListView;
@@ -47,8 +60,6 @@ public class ProcedureDetailed extends CommonView {
     private ProcedureEdit controller = new ProcedureEdit(this);
     private Profile profile;
     private ProceduresDisplay parent;
-
-    public ProcedureDetailed() {}
 
     /**
      * Init variables and populate text fields.
@@ -64,11 +75,23 @@ public class ProcedureDetailed extends CommonView {
         warningLabel.setVisible(false);
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());
-        procedureDateLabel.setText("Date " + " " + currentProcedure.getDate().toString());
-        procedureDescriptionLabel
-                .setText("Description: " + " " + currentProcedure.getLongDescription());
-        procedureOrgansLabel.setText(
-                "Donations Affected: " + " " + currentProcedure.getOrgansAffected().toString());
+        procedureDateLabel.setText(currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
+
+        populateAffectedOrgansLabel();
+
+        procedureOrgansLabel.setWrapText(true);
+        procedureDescriptionLabel.setWrapText(true);
+        hospitalLabel.setWrapText(true);
+
+        if (currentProcedure.getHospital() == null) {
+            Hospital hospital = new Hospital("Unspecified", 0.0, 0.0, "", -1);
+            currentProcedure.setHospital(hospital);
+        }
+        hospitalLabel.setText(currentProcedure.getHospital().getName());
+
+        hospitalChoiceBox.setDisable(true);
+        hospitalChoiceBox.setVisible(false);
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
         descEntry.setDisable(true);
@@ -85,7 +108,7 @@ public class ProcedureDetailed extends CommonView {
             ObservableList<String> organsDonated = FXCollections
                     .observableArrayList();
             List<String> organs = new ArrayList<>();
-            profile.getOrgansDonated().forEach(organEnum -> {
+            currentProcedure.getOrgansAffected().forEach(organEnum -> {
                 organs.add(organEnum.getNamePlain());
             });
             organsDonated.addAll(organs);
@@ -93,6 +116,24 @@ public class ProcedureDetailed extends CommonView {
             editButton.setVisible(true);
         } else {
             editButton.setVisible(false);
+        }
+    }
+
+    /**
+     * Populates the affected organs label.
+     */
+    private void populateAffectedOrgansLabel() {
+        procedureOrgansLabel.setText("");
+        if (!currentProcedure.getOrgansAffected().isEmpty()) {
+            StringBuilder affectedOrgans = new StringBuilder();
+
+            for (OrganEnum organ : currentProcedure.getOrgansAffected()) {
+                affectedOrgans.append(organ.getNamePlain());
+                affectedOrgans.append(", ");
+            }
+
+            affectedOrgans.setLength(affectedOrgans.length() - 2);
+            procedureOrgansLabel.setText(affectedOrgans.toString());
         }
     }
 
@@ -114,17 +155,23 @@ public class ProcedureDetailed extends CommonView {
         descEntry.setText(currentProcedure.getLongDescription());
         dateOfProcedureDatePicker.setValue(currentProcedure.getDate());
         summaryEntry.setText(currentProcedure.getSummary());
-        procedureSummaryLabel.setText("");
-        procedureDateLabel.setText("Date:");
-        procedureDescriptionLabel.setText("Description:");
-        procedureOrgansLabel.setText("Donations Affected:");
+
+        procedureSummaryLabel.setVisible(false);
+        procedureDateLabel.setVisible(false);
+        procedureDescriptionLabel.setVisible(false);
+        procedureOrgansLabel.setVisible(false);
+        hospitalLabel.setVisible(false);
+
+        hospitalChoiceBox.setVisible(true);
+        hospitalChoiceBox.setDisable(false);
+        setHospitalDropdown();
+        editButton.setVisible(false);
     }
 
     /**
      * Button handler for save button.
      */
     public void handleSaveButtonClicked() {
-        //todo change save data?
         controller.save();
         affectedOrgansListView.setDisable(true);
         affectedOrgansListView.setVisible(false);
@@ -136,16 +183,20 @@ public class ProcedureDetailed extends CommonView {
         saveButton.setVisible(false);
         summaryEntry.setDisable(true);
         summaryEntry.setVisible(false);
-        procedureSummaryLabel
-                .setText(procedureSummaryLabel.getText() + " " + currentProcedure.getSummary());
-        procedureDateLabel.setText(
-                procedureDateLabel.getText() + " " + currentProcedure.getDate().toString());
-        procedureDescriptionLabel.setText(
-                procedureDescriptionLabel.getText() + " " + currentProcedure.getLongDescription());
-        procedureOrgansLabel.setText(
-                procedureOrgansLabel.getText() + " " + currentProcedure.getOrgansAffected()
-                        .toString());
+
+        procedureSummaryLabel.setText(currentProcedure.getSummary());
+        procedureDateLabel.setText(currentProcedure.getDate().toString());
+        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
+
+        populateAffectedOrgansLabel();
+
         parent.refreshProcedureTable();
+
+        procedureDateLabel.setVisible(false);
+        procedureDescriptionLabel.setVisible(false);
+        procedureOrgansLabel.setVisible(false);
+        hospitalLabel.setVisible(false);
+        saveButton.setVisible(false);
     }
 
     public Profile getProfile() {
@@ -170,6 +221,41 @@ public class ProcedureDetailed extends CommonView {
 
     public ArrayList getAffectedOrgansListView() {
         return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
+    }
+
+    /**
+     * Populates the hospital dropdown with hospitals from the database.
+     */
+    private void setHospitalDropdown() {
+        HospitalDAO database = DAOFactory.getHospitalDAO();
+
+        Hospital hospital = new Hospital("Unspecified", 0.0, 0.0, "", -1);
+        hospitals.add(hospital);
+
+        try {
+            hospitals.addAll(database.getAll());
+            hospitalChoiceBox.setItems(hospitals);
+
+            hospitalChoiceBox.setConverter(new StringConverter<Hospital>() {
+                @Override
+                public String toString(Hospital object) {
+                    return object.getName();
+                }
+
+                @Override
+                public Hospital fromString(String string) {
+                    return null;
+                }
+            });
+
+            for (Hospital h : hospitals) {
+                if (h.getId().equals(currentProcedure.getHospital().getId())) {
+                    hospitalChoiceBox.setValue(hospitals.get(hospitals.size() - 1));
+                }
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
     }
 
 }

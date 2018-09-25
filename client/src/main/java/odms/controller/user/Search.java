@@ -1,21 +1,25 @@
 package odms.controller.user;
 
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.profile.ProfileDAO;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
-import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.commons.model.enums.OrganEnum;
-import odms.controller.database.profile.ProfileDAO;
+
 
 /**
  * Search class handles searching for profiles and sorting the results.
  */
+@Slf4j
 public class Search {
 
     private final odms.view.user.Search view;
@@ -72,7 +76,7 @@ public class Search {
         profileSearchResults.clear();
 
         try {
-             profileSearchResults.addAll(DAOFactory.getProfileDao().search(
+            profileSearchResults.addAll(DAOFactory.getProfileDao().search(
                     searchString,
                     ageSearchInt,
                     ageRangeSearchInt,
@@ -81,8 +85,8 @@ public class Search {
                     selectedType,
                     new HashSet<>(selectedOrgans)
             ));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
         }
 
         return sortSearchResults(searchString);
