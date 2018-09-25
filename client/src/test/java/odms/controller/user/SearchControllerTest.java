@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SearchControllerTest {
-    Search view = new Search();
-    odms.controller.user.Search controller = new odms.controller.user.Search(view);
+    odms.controller.user.Search controller = new odms.controller.user.Search();
     Profile testProfile;
     SimpleStringProperty expected = new SimpleStringProperty();
+
     @Before
     public void setUp() {
         ArrayList<String> profileAttr = new ArrayList<>();
@@ -29,7 +29,7 @@ public class SearchControllerTest {
         try {
             testProfile = new Profile(profileAttr);
         } catch (IllegalArgumentException e) {
-            // pass
+            // noop
         }
     }
 

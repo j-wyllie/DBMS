@@ -86,10 +86,9 @@ public class MySqlProfileDaoTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testupdate() throws SQLException {
+    public void testUpdate() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
         testProfile0 = mySqlProfileDAO.get("ABC1234");
-        //todo way to set time of death
         testProfile0.setDateOfDeath(LocalDateTime.now());
         testProfile0.setLastBloodDonation(LocalDateTime.now());
         mySqlProfileDAO.update(testProfile0);
