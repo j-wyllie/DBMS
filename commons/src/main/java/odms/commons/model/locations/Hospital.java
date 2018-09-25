@@ -1,5 +1,8 @@
 package odms.commons.model.locations;
 
+import odms.commons.model.enums.OrganEnum;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +64,10 @@ public class Hospital {
         this.latitude = lat;
         this.longitude = lon;
         this.address = address;
+        programs = new ArrayList<>();
+        for (int i = 0; i < OrganEnum.values().length; i++) {
+            programs.add(false);
+        }
     }
 
     /**
@@ -77,6 +84,10 @@ public class Hospital {
         this.longitude = lon;
         this.address = address;
         this.id = id;
+        programs = new ArrayList<>();
+        for (int i = 0; i < OrganEnum.values().length; i++) {
+            programs.add(false);
+        }
     }
 
     public String getName() {
