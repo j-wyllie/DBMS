@@ -42,16 +42,15 @@ public interface UserDAO {
     /**
      * Checks if a username already exists in the database.
      * @param username to check.
-     * @return true is the username exists.
+     * @return true is the username does not already exist.
      */
-    boolean userExists(String username);
+    boolean isUniqueUsername(String username) throws SQLException;
 
     /**
      * Removes a user from the database.
      * @param user to remove.
-     * @throws UserNotFoundException error.
      */
-    void remove(User user) throws UserNotFoundException;
+    void remove(User user) throws SQLException;
 
     /**
      * Updates a users information in the database.

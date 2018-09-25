@@ -60,7 +60,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         try {
             userDAO.remove(testUser0);
             userDAO.remove(testUser1);
-        } catch (UserNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("Teardown took: " + (System.currentTimeMillis() - start));
@@ -111,14 +111,14 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testIsUniqueUsernameTrue() {
+    public void testIsUniqueUsernameTrue() throws SQLException {
         testName = "testIsUniqueUsernameTrue";
-        assertFalse(userDAO.userExists("ree"));
+        assertFalse(!userDAO.isUniqueUsername("ree"));
     }
 
     @Test
-    public void testIsUniqueUsernameFalse() {
+    public void testIsUniqueUsernameFalse() throws SQLException {
         testName = "testIsUniqueUsernameFalse";
-        assertFalse(!userDAO.userExists("Username"));
+        assertFalse(userDAO.isUniqueUsername("Username"));
     }
 }

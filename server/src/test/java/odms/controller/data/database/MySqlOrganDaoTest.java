@@ -83,7 +83,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     }
 
     @AfterClass
-    public static void tearDownClass() throws UserNotFoundException {
+    public static void tearDownClass() throws SQLException {
         userDAO.remove(testUser);
     }
 
