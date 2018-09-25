@@ -50,7 +50,9 @@ public class Condition {
         }
 
         this.isChronic = isChronic;
-        if (isChronic) {this.chronicText = "CHRONIC";}
+        if (isChronic) {
+            this.chronicText = "CHRONIC";
+        }
     }
 
     /**
@@ -80,7 +82,9 @@ public class Condition {
         this.isCured = cured;
         this.dateCured = curedDate;
 
-        if (isChronic) {this.chronicText = "CHRONIC";}
+        if (isChronic) {
+            this.chronicText = "CHRONIC";
+        }
     }
 
     public Condition(int id) {

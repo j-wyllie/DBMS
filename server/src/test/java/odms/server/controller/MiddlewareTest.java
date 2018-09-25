@@ -37,7 +37,8 @@ public class MiddlewareTest extends CommonTestUtils {
     private Profile profileA;
     private Profile profileB;
     private Profile profileC;
-    private LocalDate genericDate = LocalDate.of(1998, 3, 3);
+    private LocalDate genericDate =
+            LocalDate.of(1998, 3, 3);
 
     // User variables.
     private User userA;

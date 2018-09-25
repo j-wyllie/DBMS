@@ -35,7 +35,8 @@ public class CommonControllerTest extends CommonTestUtils {
 
     // Profile variables.
     private Profile profileA;
-    private LocalDate genericDate = LocalDate.of(1998, 3, 3);
+    private LocalDate genericDate =
+            LocalDate.of(1998, 3, 3);
 
     // User variables.
     private User userA;
@@ -54,9 +55,6 @@ public class CommonControllerTest extends CommonTestUtils {
     private Response responseC;
     private Response responseD;
     private Response responseE;
-
-    // General variables.
-    private int invalidId = -1;
 
     @Before
     public void setup() throws UserNotFoundException, SQLException {

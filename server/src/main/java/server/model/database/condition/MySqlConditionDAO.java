@@ -38,8 +38,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             }
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
 
@@ -90,16 +89,14 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setBoolean(6, condition.getCured());
             if (condition.getDateCured() == null) {
                 stmt.setNull(7, Types.DATE);
-            }
-            else {
+            } else {
                 stmt.setDate(7, Date.valueOf(condition.getDateCured()));
             }
 
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -122,8 +119,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -149,8 +145,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setBoolean(5, condition.getCured());
             if (condition.getDateCured() == null) {
                 stmt.setNull(6, Types.DATE);
-            }
-            else {
+            } else {
                 stmt.setDate(6, Date.valueOf(condition.getDateCured()));
             }
             stmt.setInt(7, condition.getId());
@@ -158,8 +153,7 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.executeUpdate();
             conn.close();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
