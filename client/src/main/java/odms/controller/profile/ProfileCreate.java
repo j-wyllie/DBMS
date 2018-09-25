@@ -16,52 +16,16 @@ import java.time.LocalDate;
 
 public class ProfileCreate extends CommonController {
 
-    private CreateAccount view;
-
-    public ProfileCreate(CreateAccount view) {
-        this.view = view;
-    }
-
-    private boolean checkDetailsEntered() {
-        if (view.getGivenNamesFieldValue().isEmpty()) {
-            invalidEntry("Please enter Given Name(s)");
-            return false;
-        }
-
-        if (view.getsurnamesFieldValue().isEmpty()) {
-            invalidEntry("Please enter Surname(s)");
-            return false;
-        }
-
-        if (view.getdobDatePickerValue() == null) {
-            invalidEntry("Please enter a Date of Birth");
-            return false;
-        }
-        if (view.getNhiField().isEmpty()) {
-            invalidEntry("Please enter an IRD number");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     /**
      * Scene change to profile profile view if all required fields are filled in.
      */
-    public Profile createAccount() {
-        //todo rework this method potentially
-        if (checkDetailsEntered()) {
+    public Profile createAccount(String givenNames, String surnames, LocalDate dob, String nhi, int nhiLength) {
             try {
-                String givenNames = view.getGivenNamesFieldValue();
-                String surnames = view.getsurnamesFieldValue();
-                LocalDate dob = view.getdobDatePickerValue();
-                String nhi = view.getNhiField();
-
                 Profile newProfile = new Profile(givenNames, surnames, dob, nhi);
                 DAOFactory.getProfileDao().add(newProfile);
                 return newProfile;
             } catch (NumberFormatException e) {
-                if (view.getNhiField().length() > 9) {
+                if (nhiLength > 9) {
                     invalidEntry(
                             "Entered IRD number is too long.\nPlease enter up to 9 digits");
                 } else {
@@ -77,7 +41,6 @@ public class ProfileCreate extends CommonController {
             } catch (NHIConflictException e) {
                 invalidEntry("NHI number is already used by another account");
             }
-        }
         return null;
     }
 

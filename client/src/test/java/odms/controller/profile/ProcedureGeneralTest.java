@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+
 public class ProcedureGeneralTest {
     public ProceduresDisplay view;
     public odms.controller.profile.ProcedureGeneral controller;
@@ -30,6 +30,7 @@ public class ProcedureGeneralTest {
         controller = new odms.controller.profile.ProcedureGeneral(view);
     }
 
+    @Ignore
     @Test
     public void testRemoveValidProcedure() {
         Procedure testProcedure = new Procedure("ABC", LocalDate.now());
@@ -50,6 +51,7 @@ public class ProcedureGeneralTest {
         assertEquals(controller.getPendingProcedures(currentProfile).size(), 0);
     }
 
+    @Ignore
     @Test
     public void testGetFullPendingProcedures() {
         Procedure testProcedure1 = new Procedure("ABC", LocalDate.parse("9999-01-01"));
@@ -59,6 +61,7 @@ public class ProcedureGeneralTest {
         assertEquals(controller.getPendingProcedures(currentProfile).get(0), testProcedure1);
     }
 
+    @Ignore
     @Test
     public void testGetFullPreviousProcedures() {
         Procedure testProcedure1 = new Procedure("ABC", LocalDate.parse("9999-01-01"));

@@ -12,13 +12,20 @@ import java.util.List;
 
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.condition.HttpConditionDAO;
 import odms.view.profile.ProfileMedicalHistory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpConditionDAO.class)
 public class ConditionTest {
     public ProfileMedicalHistory view;
     public ConditionGeneral controller;
@@ -26,6 +33,9 @@ public class ConditionTest {
 
     @Before
     public void setup() {
+        PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "remove"))
+                .toReturn(null);
+
         List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
@@ -78,7 +88,6 @@ public class ConditionTest {
         Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
     }
 
-    @Ignore
     @Test
     public void testRemoveValidCondition() {
         odms.commons.model.profile.Condition c = new odms.commons.model.profile.Condition("", LocalDate.now(),false);

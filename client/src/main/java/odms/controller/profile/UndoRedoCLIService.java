@@ -11,71 +11,6 @@ import java.util.Set;
 
 public class UndoRedoCLIService {
 
-    public static void removeOrganDonated(OrganEnum organ, Profile p) {
-        if (p.getOrgansDonated().contains(organ)) {
-            p.getOrgansDonated().remove(organ);
-        }
-
-        p.getOrgansDonating().add(organ);
-    }
-
-    public static void removeOrganReceived(OrganEnum organ, Profile p) {
-        if (p.getOrgansReceived().contains(organ)) {
-            p.getOrgansReceived().remove(organ);
-        }
-
-        p.getOrgansRequired().add(organ);
-    }
-
-    public static void addCondition(Condition condition, Profile p) {
-        p.getAllConditions().add(condition);
-    }
-
-    /**
-     * Gets all the current conditions of the user
-     *
-     * @return the current conditions of the user
-     */
-    public static ArrayList<Condition> getCurrentConditions(Profile p) {
-        ArrayList<Condition> currentConditions = new ArrayList<>();
-        for (Condition condition : p.getAllConditions()) {
-            if (!condition.getCured()) {
-                currentConditions.add(condition);
-            }
-        }
-        return currentConditions;
-    }
-
-    public static void removeCondition(Condition condition, Profile p) {
-       p.getAllConditions().remove(condition);
-    }
-
-    public static void moveDrugToCurrent(Drug drug, Profile profile) {
-        if (profile.getHistoryOfMedication().contains(drug)) {
-            profile.getHistoryOfMedication().remove(drug);
-            profile.getCurrentMedications().add(drug);
-        }
-    }
-
-    public static void moveDrugToHistory(Drug drug, Profile profile) {
-        if (profile.getCurrentMedications().contains(drug)) {
-            profile.getCurrentMedications().remove(drug);
-            profile.getHistoryOfMedication().add(drug);
-        }
-    }
-
-    public static void deleteDrug(Drug drug, Profile profile) {
-        if (profile.getCurrentMedications().contains(drug)) {
-            profile.getCurrentMedications().remove(drug);
-        } else if (profile.getHistoryOfMedication().contains(drug)) {
-            profile.getHistoryOfMedication().remove(drug);
-        }
-    }
-
-    public static void addDrug(Drug d, Profile profile) {
-        profile.getCurrentMedications().add(d);
-    }
-
     public static void removeOrgansDonating(Set<OrganEnum> organs, Profile p) {
         for (OrganEnum organ : organs) {
             p.getOrgansDonating().remove(organ);
@@ -89,32 +24,6 @@ public class UndoRedoCLIService {
     }
 
     /**
-     * Sets the attributes that are passed into the constructor
-     *
-     * @param attributes the attributes given in the constructor
-     * @throws IllegalArgumentException when a required attribute is not included or spelt wrong
-     */
-    public static void setExtraAttributes(ArrayList<String> attributes, Profile profile)
-            throws IllegalArgumentException {
-        ProfileGeneralControllerTODOContainsOldProfileMethods.setExtraAttributes(attributes, profile);
-    }
-
-
-
-    /**
-     * Add an organ to the list of donated organsDonating. If the organ exists in the donating list,
-     * remove it from the donating list.
-     *
-     * @param organ the organ to be added
-     */
-    public static void addOrganDonated(OrganEnum organ, Profile p) {
-        if (p.getOrgansDonating().contains(organ)) {
-            p.getOrgansDonating().remove(organ);
-        }
-        p.getOrgansDonated().add(organ);
-    }
-
-    /**
      * Add an organ to the set of received organs. If the organ exists in the receiving set, remove
      * it.
      *
@@ -125,17 +34,6 @@ public class UndoRedoCLIService {
             p.getOrgansRequired().remove(organ);
         }
         p.getOrgansReceived().add(organ);
-    }
-
-    /**
-     * Add a set of organs to the set of received organs.
-     *
-     * @param organs set to be added
-     */
-    public static void addOrgansReceived(Set<OrganEnum> organs, Profile p) {
-        for (OrganEnum organ : organs) {
-            addOrganReceived(organ,p);
-        }
     }
 
     /**
