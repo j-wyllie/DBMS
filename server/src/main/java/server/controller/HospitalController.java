@@ -28,7 +28,7 @@ public class HospitalController {
             hospitals = hospitalDAO.getAll();
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         Gson gson = new Gson();
@@ -50,11 +50,21 @@ public class HospitalController {
     public static String get(Request req, Response res) {
         HospitalDAO database = DAOFactory.getHospitalDAO();
         Hospital hospital;
-        try {
-            hospital = database.get(req.queryParams("name"));
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
+
+        if (req.queryMap().hasKey("name")) {
+            try {
+                hospital = database.get(req.queryParams("name"));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
+        } else {
+            try {
+                hospital = database.get(Integer.valueOf(req.queryParams("id")));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
         }
 
         Gson gson = new Gson();
@@ -84,7 +94,7 @@ public class HospitalController {
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            id = Integer.valueOf(req.queryParams("id"));
+            id = body.get("id").getAsInt();
             name = body.get("name").getAsString();
             address = body.get("address").getAsString();
             lat = body.get("latitude").getAsDouble();
@@ -102,7 +112,7 @@ public class HospitalController {
             return "Hospital Updated";
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
     }
 
@@ -128,7 +138,7 @@ public class HospitalController {
             database.remove(name);
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         res.status(200);
@@ -159,7 +169,7 @@ public class HospitalController {
                 database.add(newHospital);
             } catch (SQLException e) {
                 res.status(500);
-                return e.getMessage();
+                return "Database Error";
             }
         }
         res.status(201);

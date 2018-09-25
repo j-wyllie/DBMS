@@ -2,6 +2,8 @@ package odms.view.profile;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -230,7 +232,6 @@ public class ProcedureDetailed extends CommonView {
      */
     private void setHospitalDropdown() {
         HospitalDAO database = DAOFactory.getHospitalDAO();
-
         Hospital hospital = new Hospital("Unspecified", 0.0, 0.0, "", -1);
         hospitals.add(hospital);
 
@@ -252,7 +253,7 @@ public class ProcedureDetailed extends CommonView {
 
             for (Hospital h : hospitals) {
                 if (h.getId().equals(currentProcedure.getHospital().getId())) {
-                    hospitalChoiceBox.setValue(hospitals.get(hospitals.size() - 1));
+                    hospitalChoiceBox.setValue(h);
                 }
             }
         } catch (SQLException e) {

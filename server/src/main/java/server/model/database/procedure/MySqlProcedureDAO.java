@@ -217,12 +217,14 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         LocalDate procedureDate = procedures.getDate("ProcedureDate").toLocalDate();
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
-        Integer hostpitalId = procedures.getInt("Hospital");
-        if (hostpitalId != null) {
-            HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+        Integer hospitalId = procedures.getInt("Hospital");
+        Procedure procedure = new Procedure(id, summary, procedureDate, description, affectedOrgans);
 
+        if (hospitalId != null) {
+            HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+            procedure.setHospital(hospitalDAO.get(hospitalId));
         }
-        return new Procedure(id, summary, procedureDate, description, affectedOrgans);
+        return procedure;
     }
 
     /**
