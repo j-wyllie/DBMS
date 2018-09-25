@@ -72,17 +72,17 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals(testUser0.getUsername(), userDAO.get("Username").getUsername());
     }
 
-    @Test(expected = UserNotFoundException.class)
-    public void testGetInvalidUser() throws SQLException, UserNotFoundException {
-        testName = "testGetInvalidUser";
-        assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
-    }
-
-    @Test
-    public void testGetAll() throws SQLException {
-        testName = "testGetAll";
-        assertEquals(2, userDAO.getAll().size());
-    }
+//    @Test(expected = UserNotFoundException.class)
+//    public void testGetInvalidUser() throws SQLException, UserNotFoundException {
+//        testName = "testGetInvalidUser";
+//        assertEquals(testUser0.getUsername(), userDAO.get("Yeet").getUsername());
+//    }
+//
+//    @Test
+//    public void testGetAll() throws SQLException {
+//        testName = "testGetAll";
+//        assertEquals(2, userDAO.getAll().size());
+//    }
 
     @Test (expected = UserNotFoundException.class)
     public void testRemove() throws SQLException, UserNotFoundException {
