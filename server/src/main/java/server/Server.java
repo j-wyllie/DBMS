@@ -56,6 +56,8 @@ public class Server {
             post("/setup", CommonController::setup);
             post("/login", CommonController::checkCredentials);
             post("/logout", CommonController::logout);
+            get("/setup/password", ProfileController::hasPassword);
+            post("/setup/password", ProfileController::savePassword);
 
             path("/users", () -> {
                 // user api routes.
@@ -80,11 +82,9 @@ public class Server {
 
                 // Profile authentication required.
                 before("", Middleware::isAuthenticated);
-                before("/*", Middleware::isAuthenticated);
+                before("/:id", Middleware::isAuthenticated);
 
                 get("", ProfileController::get);
-                get("/password", ProfileController::hasPassword);
-                post("/password", ProfileController::savePassword);
 
                 path("/:id", () -> {
                     patch("", ProfileController::edit);

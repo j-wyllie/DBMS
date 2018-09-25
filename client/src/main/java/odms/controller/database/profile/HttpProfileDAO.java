@@ -241,7 +241,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public Boolean hasPassword(String nhi) {
         Response response = null;
-        String url = "http://localhost:6969/api/v1/profiles/password";
+        String url = "http://localhost:6969/api/v1/setup/password";
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("nhi", nhi);
@@ -277,10 +277,10 @@ public class HttpProfileDAO implements ProfileDAO {
             if (response.getStatus() == 200) {
                 JsonObject body = parser.parse(response.getBody()).getAsJsonObject();
 
-                Profile profile = new Profile(null);
+                Profile profile = new Profile(username);
                 profile.setId(body.get("id").getAsInt());
                 Session.setCurrentUser(profile, UserType.PROFILE);
-
+                System.out.println(profile.getId());
                 Session.setToken(body.get("Token").getAsInt());
                 return true;
             }
@@ -292,10 +292,10 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public Boolean savePassword(String nhi, String password) {
-        String url = "http://localhost:6969/api/v1/profiles/password";
+    public Boolean savePassword(String username, String password) {
+        String url = "http://localhost:6969/api/v1/setup/password";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("nhi", nhi);
+        queryParams.put("username", username);
         queryParams.put("password", password);
 
         Request request = new Request(url, queryParams, "{}");

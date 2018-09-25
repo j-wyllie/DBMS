@@ -921,9 +921,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public Boolean savePassword(String nhi, String password)
+    public Boolean savePassword(String username, String password)
             throws SQLException, UserNotFoundException {
-        String query = "UPDATE profiles SET Password = ? WHERE NHI = ?;";
+        String query = "UPDATE profiles SET Password = ? WHERE Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Connection conn = instance.getConnection();
 
@@ -931,11 +931,11 @@ public class MySqlProfileDAO implements ProfileDAO {
         try {
 
             stmt.setString(1, PasswordUtilities.getSaltedHash(password));
-            stmt.setString(2, nhi);
+            stmt.setString(2, username);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new UserNotFoundException("Not found", nhi);
+            throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.error(e.getMessage(), e);
         } finally {

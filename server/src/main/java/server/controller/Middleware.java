@@ -55,6 +55,8 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAuthenticated(Request req, Response res) throws SQLException {
+        System.out.println(req.headers() + " not admin");
+
         UserType userType;
         int id;
         int token;

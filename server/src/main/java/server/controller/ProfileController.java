@@ -319,7 +319,7 @@ public class ProfileController {
         }
 
         res.status(200);
-
+        System.out.println(hasPassword.toString());
         return hasPassword.toString();
     }
 
@@ -373,7 +373,7 @@ public class ProfileController {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
         try {
-            valid = profileDAO.savePassword(request.queryParams("nhi"),
+            valid = profileDAO.savePassword(request.queryParams("username"),
                     request.queryParams("password"));
         } catch (SQLException | UserNotFoundException e) {
             response.status(500);
@@ -381,9 +381,10 @@ public class ProfileController {
         }
         if (valid) {
             response.status(200);
+            return "Password Set";
         } else {
             response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-        return "Password Set";
     }
 }
