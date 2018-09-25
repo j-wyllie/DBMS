@@ -75,6 +75,33 @@ public class MySqlHospitalDAO implements HospitalDAO {
     }
 
     /**
+     * Get a hospital from the database by id.
+     *
+     * @param id the id of the database
+     * @return the hospital object
+     * @throws SQLException thrown when there is a server error.
+     */
+    public Hospital get(int id) throws SQLException {
+        Hospital result = null;
+        String query = "SELECT * FROM hospitals WHERE Id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet allHospitals = stmt.executeQuery()) {
+                while (allHospitals.next()) {
+                    result = parseHospital(allHospitals);
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
+        return result;
+    }
+
+    /**
      * Creates a hospital object from a result set.
      * @param resultSet query results, contains hospital data
      * @return hospital object

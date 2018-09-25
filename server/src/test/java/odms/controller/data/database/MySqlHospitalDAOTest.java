@@ -44,6 +44,13 @@ public class MySqlHospitalDAOTest extends MySqlCommonTests {
     }
 
     @Test
+    public void getById() throws SQLException {
+        Hospital expected = hospitalDAO.get(testHospital1.getName());
+        Hospital result = hospitalDAO.get(expected.getId());
+        assertEquals(expected.getName(), result.getName());
+    }
+
+    @Test
     public void add() throws SQLException {
         try {
             hospitalDAO.add(testHospital3);
