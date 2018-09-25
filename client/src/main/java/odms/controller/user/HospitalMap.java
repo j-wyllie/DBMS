@@ -1,31 +1,30 @@
 package odms.controller.user;
 
-import com.lynden.gmapsfx.javascript.object.InfoWindow;
-import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MVCArray;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for the hospital map view.
  */
 public class HospitalMap {
 
-    private odms.view.user.HospitalMap view;
+    private final odms.view.user.HospitalMap view;
 
-    public void setView(odms.view.user.HospitalMap v) {
-        view = v;
+    /**
+     * Contructor for HospitalMap controller, takes view instance as a parameter.
+     * @param view view instance of HospitalMap view
+     */
+    public HospitalMap(odms.view.user.HospitalMap view) {
+        this.view = view;
     }
 
     /**
@@ -68,8 +67,9 @@ public class HospitalMap {
         String locationInfo = location.getName() + ". \n";
 
         if (location.getId() < 0) {
-            locationInfo += "Location: (" + Double.valueOf(odms.view.user.HospitalMap.decimalFormat.format(location.getLatitude())) + ", " +
-                    Double.valueOf(odms.view.user.HospitalMap.decimalFormat.format(location.getLongitude())) + ")";
+            locationInfo += "Location: (" +
+                    Double.valueOf(view.getDecimalFormat().format(location.getLatitude())) + ", " +
+                    Double.valueOf(view.getDecimalFormat().format(location.getLongitude())) + ")";
         } else {
 
             if (location.getAddress() != null) {
@@ -91,41 +91,9 @@ public class HospitalMap {
 
         }
 
-
         infoWindowOptions.content(locationInfo);
 
         return new InfoWindow(infoWindowOptions);
-    }
-
-    /**
-     * Creates a marker options object so a marker can change its appearance according to
-     * the provided parameters.
-     *
-     * @param highlighted if the marker is already highlighted or not
-     * @param location the location object the marker is for
-     * @param selected the ID of the selected marker, can be A - Z
-     * @return A marker options object that allows a marker to change its appearance to a
-     * specified look
-     */
-    public MarkerOptions highlightMarker(Boolean highlighted, Hospital location, String selected) {
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLong(location.getLatitude(), location.getLongitude()));
-        markerOptions.label(String.valueOf(location.getId()));
-
-        if (!highlighted) {
-
-            String markerImage = MarkerImageFactory.createMarkerImage(
-                    this.getClass().getResource(
-                            "/GoogleMapsMarkers/blue_Marker" + selected + ".png")
-                            .toString(), "png");
-            markerImage = markerImage.replace("(", "");
-            markerImage = markerImage.replace(")", "");
-            markerOptions.icon(markerImage);
-        }
-
-        return markerOptions;
-
     }
 
     /**

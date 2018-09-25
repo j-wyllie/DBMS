@@ -44,20 +44,18 @@ import static odms.controller.user.AvailableOrgans.msToStandard;
 public class HospitalMap extends CommonView implements Initializable,
         MapComponentInitializedListener, DirectionsServiceCallback {
 
-    private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap();
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
+
+    private odms.controller.user.HospitalMap controller = new odms.controller.user.HospitalMap(this);
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
     private DirectionsRenderer directionsRenderer;
 
     private List<Hospital> hospitalList;
-
     private Hospital customLocation;
-
     private Hospital hospitalSelected1;
     private Hospital hospitalSelected2;
-
-    public static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
     private Polyline helicopterRoute;
 
     private GoogleMap map;
@@ -69,13 +67,13 @@ public class HospitalMap extends CommonView implements Initializable,
     private GoogleMapView mapView;
 
     @FXML
-    private TableView markersTable;
+    private TableView<Hospital> markersTable;
 
     @FXML
     private TextArea travelInfo;
 
     @FXML
-    private ComboBox travelMethod;
+    private ComboBox<String> travelMethod;
 
     @FXML
     private Button findClosestHospitalBtn;
@@ -91,8 +89,8 @@ public class HospitalMap extends CommonView implements Initializable,
 
     /**
      * Init method for the map.
-     * @param location
-     * @param resources
+     * @param location location
+     * @param resources resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -103,11 +101,13 @@ public class HospitalMap extends CommonView implements Initializable,
 
         if (hospitalSelected1 != null && hospitalSelected2 != null) {
             createRouteBetweenLocations(
-                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                    hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName());
+                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                    hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                    hospitalSelected2.getLongitude(), hospitalSelected2.getName());
         }
 
-        ObservableList<String> travelMethods = FXCollections.observableArrayList("Car", "Helicopter");
+        ObservableList<String> travelMethods =
+                FXCollections.observableArrayList("Car", "Helicopter");
         travelMethod.setItems(travelMethods);
         travelMethod.setValue("Car");
     }
@@ -170,8 +170,8 @@ public class HospitalMap extends CommonView implements Initializable,
 
                 String customLocationName = "Custom marker";
 
-                Hospital location = new Hospital(
-                    customLocationName,  e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
+                Hospital location = new Hospital(customLocationName,
+                        e.getLatLong().getLatitude(), e.getLatLong().getLongitude(), null, -1);
 
                 // Ensures there is only ever one custom marker
                 if (customLocation != null) {
@@ -232,21 +232,6 @@ public class HospitalMap extends CommonView implements Initializable,
                         )
         );
 
-        //Attempt to get the custom marker ID on the table view displaying nicely
-//        idColumn.setCellValueFactory(
-//                new Callback<TableColumn.CellDataFeatures<Hospital, String>, ObservableValue<String>>() {
-//
-//                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Hospital, String> h) {
-//
-//                        if (h.getValue().getId() < 0) {
-//                            return "X";
-//                        } else {
-//                            return String.valueOf(h.getValue().getId());
-//                        }
-//                    }
-//                }
-//        );
-
         markersTable.getColumns().clear();
         markersTable.getColumns().add(nameColumn);
         markersTable.getColumns().add(idColumn);
@@ -257,10 +242,12 @@ public class HospitalMap extends CommonView implements Initializable,
                             markersTable.getSelectionModel().getSelectedItem() != null) {
 
                         Hospital selectedLocation;
-                        selectedLocation = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+                        selectedLocation = (Hospital)
+                                markersTable.getSelectionModel().getSelectedItem();
 
                         // Center on selected marker
-                        map.setCenter(new LatLong(selectedLocation.getLatitude(), selectedLocation.getLongitude()));
+                        map.setCenter(new LatLong(selectedLocation.getLatitude(),
+                                selectedLocation.getLongitude()));
                         map.setZoom(10);
                     }
                 });
@@ -283,7 +270,7 @@ public class HospitalMap extends CommonView implements Initializable,
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            if (location.getId() != hospitalSelected1.getId()) {
+            if (location.getId().equals(hospitalSelected1.getId())) {
                 temp = controller.calcDistanceHaversine(location.getLatitude(),
                         location.getLongitude(), hospitalSelected1.getLatitude(),
                         hospitalSelected1.getLongitude());
@@ -306,10 +293,9 @@ public class HospitalMap extends CommonView implements Initializable,
 
     /**
      * Create popup with help text about hospital tab.
-     * @param event button click event
      */
     @FXML
-    private void handleShowHelp(ActionEvent event) {
+    private void handleShowHelp() {
 
         String helpText = "Welcome! \n" +
                 "To route between two hospitals, click on each and a route will appear, " +
@@ -326,11 +312,9 @@ public class HospitalMap extends CommonView implements Initializable,
 
     /**
      * Clears all routes from map, also 'deselects' any hospitals, accessed via button.
-     *
-     * @param event Event of clear button being clicked
      */
     @FXML
-    private void handleClearRoutesButtonClicked(ActionEvent event) {
+    private void handleClearRoutesButtonClicked() {
         clearRoutesAndSelection();
     }
 
@@ -466,8 +450,9 @@ public class HospitalMap extends CommonView implements Initializable,
             log.error(e.getMessage(), e);
         }
 
-        String travel = travelMethodGiven + " journey between " + originName + ", and " + destinationName + ".\n" +
-                "Distance: " + distance + "\n Approximate Travel Time: " + duration;
+        String travel = travelMethodGiven + " journey between " + originName + ", and " +
+                destinationName + ".\n" + "Distance: " + distance +
+                "\n Approximate Travel Time: " + duration;
 
         travelInfo.setText(travel);
     }
@@ -512,7 +497,7 @@ public class HospitalMap extends CommonView implements Initializable,
         fxmlLoader.setLocation(getClass().getResource("/view/HospitalCreate.fxml"));
 
         try {
-            Hospital hospital = (Hospital) markersTable.getSelectionModel().getSelectedItem();
+            Hospital hospital = markersTable.getSelectionModel().getSelectedItem();
             if (hospital == null) {
                 return;
             }
@@ -536,7 +521,8 @@ public class HospitalMap extends CommonView implements Initializable,
     }
 
     /**
-     * Adds a given location to the map object, as a marker with a tooltip containing location details.
+     * Adds a given location to the map object, as a marker with a tooltip containing
+     * location details.
      *
      * @param location location to be to added to the map
      */
@@ -562,8 +548,9 @@ public class HospitalMap extends CommonView implements Initializable,
 
                 if (hospitalSelected2 != null) {
                     createRouteBetweenLocations(
-                            hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                            hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
+                            hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                            hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                            hospitalSelected2.getLongitude(), hospitalSelected2.getName()
                     );
                 }
 
@@ -571,8 +558,9 @@ public class HospitalMap extends CommonView implements Initializable,
                 hospitalSelected2 = location;
 
                 createRouteBetweenLocations(
-                        hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(), hospitalSelected1.getName(),
-                        hospitalSelected2.getLatitude(), hospitalSelected2.getLongitude(), hospitalSelected2.getName()
+                        hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                        hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                        hospitalSelected2.getLongitude(), hospitalSelected2.getName()
                 );
             }
         });
@@ -586,7 +574,7 @@ public class HospitalMap extends CommonView implements Initializable,
      */
     private void populateHospitals() {
 
-        for(Marker marker : markers) {
+        for (Marker marker : markers) {
             map.removeMarker(marker);
         }
         hospitalList.clear();
@@ -600,7 +588,8 @@ public class HospitalMap extends CommonView implements Initializable,
     }
 
     /**
-     * Changes the travel method used for routing between two markers/locations. Options are by Car or Helicopter.
+     * Changes the travel method used for routing between two markers/locations. Options are by Car
+     * or Helicopter.
      */
     @FXML
     private void handleTravelMethodToggled() {
@@ -618,5 +607,9 @@ public class HospitalMap extends CommonView implements Initializable,
                     hospitalSelected2.getLongitude(), hospitalSelected2.getName()
             );
         }
+    }
+
+    public DecimalFormat getDecimalFormat() {
+        return decimalFormat;
     }
 }
