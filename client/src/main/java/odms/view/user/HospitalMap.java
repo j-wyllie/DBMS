@@ -296,7 +296,7 @@ public class HospitalMap extends CommonView implements Initializable,
         Double distance = Double.POSITIVE_INFINITY;
         Double temp;
         for (Hospital location : hospitalList) {
-            if (location.getId().equals(hospitalSelected1.getId())) {
+            if (!location.getId().equals(hospitalSelected1.getId())) {
                 temp = controller.calcDistanceHaversine(location.getLatitude(),
                         location.getLongitude(), hospitalSelected1.getLatitude(),
                         hospitalSelected1.getLongitude());
