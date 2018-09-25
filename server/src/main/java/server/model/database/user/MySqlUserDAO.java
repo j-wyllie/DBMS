@@ -165,15 +165,25 @@ public class MySqlUserDAO implements UserDAO {
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
+            System.out.println("Adding: " + 1);
             stmt.setString(1, user.getUsername());
+            System.out.println("Adding: " + 2);
             stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
+            System.out.println("Adding: " + 3);
             stmt.setString(3, user.getName());
+            System.out.println("Adding: " + 4);
             stmt.setString(4, user.getUserType().toString());
+            System.out.println("Adding: " + 5);
             stmt.setString(5, user.getWorkAddress());
+            System.out.println("Adding: " + 6);
             stmt.setString(6, user.getRegion());
+            System.out.println("Adding: " + 7);
             stmt.setString(7, LocalDateTime.now().toString());
+            System.out.println("Adding: " + 8);
             stmt.setString(8, LocalDateTime.now().toString());
+            System.out.println("Adding: " + 9);
             stmt.setBoolean(9, user.getDefault());
+            System.out.println("Adding: " + 10);
             stmt.setString(10, user.getPictureName());
             stmt.execute();
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {

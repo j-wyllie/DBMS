@@ -9,9 +9,7 @@ import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Timeout;
 import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
 
@@ -24,9 +22,6 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     private long testTime;
 
     private String testName;
-
-    @Rule
-    public Timeout globalTimeout = Timeout.seconds(10);
 
     @Before
     public void setup() {
