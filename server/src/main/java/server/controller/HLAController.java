@@ -139,6 +139,16 @@ public class HLAController {
         HLADAO database = DAOFactory.getHLADAO();
         Integer profileID = Integer.valueOf(req.params("id"));
 
-        return "";
+        try {
+            database.removeAll(profileID);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.status(500);
+            return e.getMessage();
+        }
+
+
+        res.status(201);
+        return "HLAs deleted";
     }
 }

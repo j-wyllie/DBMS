@@ -46,4 +46,11 @@ public interface HLADAO {
      * @param hla to add.
      */
     void remove(Integer profileId, HLA hla);
+
+    /**
+     * Remove all HLAs from a profile.
+     *
+     * @param profileID of HLA to remove.
+     */
+    void removeAll(Integer profileID);
 }

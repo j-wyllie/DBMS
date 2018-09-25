@@ -75,7 +75,7 @@ public class MySqlHLADao implements HLADAO {
     }
 
     /**
-     * Remove a hlaType from a profile.
+     * Remove a HLA from a profile.
      *
      * @param profileId of HLA to remove.
      */
@@ -86,6 +86,35 @@ public class MySqlHLADao implements HLADAO {
                 "AND GroupX = ? AND GroupY = ?;";
 
         executeAddRemoveQuery(query, profileId, hla);
+    }
+
+    /**
+     * Remove all HLAs from a profile.
+     *
+     * @param profileId of HLA to remove.
+     */
+    @Override
+    public void removeAll(Integer profileId) {
+        String query = "DELETE FROM hla_type " +
+                "WHERE ProfileId = ?";
+
+        executeRemoveAllQuery(query, profileId);
+    }
+
+    /**
+     * Support method to execute queries where all HLA's are removed.
+     *
+     * @param query the SQL query.
+     * @param profileId the profile ID to operate against.
+     */
+    private void executeRemoveAllQuery(String query, Integer profileId) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, profileId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**

@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.hla.HLADAO;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -106,9 +108,8 @@ public class ProfileMedical extends CommonView {
         }
 
         // HLA text setters
-
-        //HLATODO: get hlaType
-        HLAType hlaType = new HLAType();
+        HLADAO hladao = DAOFactory.getHlaDAO();
+        HLAType hlaType = hladao.get(currentProfile.getId());
 
         if (hlaType.getGroupX().get("A") != null) {
             hlaXALabel.setText("A" +String.valueOf(hlaType.getGroupX().get("A")));
