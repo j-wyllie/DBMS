@@ -144,6 +144,33 @@ CREATE TABLE IF NOT EXISTS `organs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `Bone-marrow` BOOLEAN DEFAULT FALSE,
+  `Connective-tissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `Middle-ear` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `procedures`
 --
 
@@ -234,34 +261,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   INDEX (UserId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` INT(11),
-  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
-  `Address` VARCHAR(100) DEFAULT NULL,
-  `Latitude` DOUBLE DEFAULT NULL,
-  `Longitude` DOUBLE DEFAULT NULL,
-  `Bone` BOOLEAN DEFAULT FALSE,
-  `Bone-marrow` BOOLEAN DEFAULT FALSE,
-  `Connective-tissue` BOOLEAN DEFAULT FALSE,
-  `Cornea` BOOLEAN DEFAULT FALSE,
-  `Heart` BOOLEAN DEFAULT FALSE,
-  `Intestine` BOOLEAN DEFAULT FALSE,
-  `Kidney` BOOLEAN DEFAULT FALSE,
-  `Liver` BOOLEAN DEFAULT FALSE,
-  `Lung` BOOLEAN DEFAULT FALSE,
-  `Middle-ear` BOOLEAN DEFAULT FALSE,
-  `Pancreas` BOOLEAN DEFAULT FALSE,
-  `Skin` BOOLEAN DEFAULT FALSE,
-  INDEX (Name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --
 -- Indexes for dumped tables
 --
@@ -310,10 +309,7 @@ ALTER TABLE `hla_type`
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `Name` (`Name`),
-  ADD KEY `Id` (`Id`),
-  ADD UNIQUE KEY `Id` (`Id`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `locale`
