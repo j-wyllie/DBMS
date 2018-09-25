@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <AnchorPane prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProcedureDetailed">
     <children>
         <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
@@ -147,11 +145,6 @@
                         <Font size="22.0" />
                      </font>
                   </Label>
-                  <Label fx:id="procedureOrgansLabel" text="Organs Affected:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
                   <Label fx:id="procedureDescriptionLabel" alignment="TOP_LEFT" text="Description:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
                      <font>
                         <Font size="22.0" />
@@ -162,6 +155,11 @@
                         <Font size="22.0" />
                      </font>
                   </Label>
+                  <Button fx:id="editOrgansAffectedButton" mnemonicParsing="false" onAction="#handleEditOrgansAffected" prefHeight="35.0" text="HELP ME OBI-WAN" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="20.0" right="20.0" />
+                     </GridPane.margin>
+                  </Button>
                     </children>
                 </GridPane>
             </children>

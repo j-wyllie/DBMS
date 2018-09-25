@@ -7,11 +7,21 @@ import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
 import server.model.database.locations.HospitalDAO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object for procedures.
+ */
 @Slf4j
 public class MySqlProcedureDAO implements ProcedureDAO {
 
@@ -54,8 +64,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public void add(int profile, Procedure procedure) {
         String query =
-                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, Pending, Hospital) "
-                        + "values (?, ?, ?, ?, ?, ?);";
+                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, " +
+                        "Pending, Hospital) values (?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(
@@ -164,6 +174,17 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(6, procedure.getId());
 
             stmt.executeUpdate();
+
+            /* The user could have completely changed the organs for the procedure so
+            we need to remove them all and add the current organs. */
+            List<OrganEnum> currentOrgans = getAffectedOrgans(procedure.getId());
+            for (OrganEnum organ : currentOrgans) {
+                removeAffectedOrgan(procedure, organ);
+            }
+
+            for (OrganEnum organ : procedure.getOrgansAffected()) {
+                addAffectedOrgan(procedure, organ);
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -223,7 +244,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
         Integer hospitalId = procedures.getInt("Hospital");
-        Procedure procedure = new Procedure(id, summary, procedureDate, description, affectedOrgans);
+        Procedure procedure = new Procedure(
+            id, summary, procedureDate, description, affectedOrgans);
 
         if (hospitalId != null) {
             HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
