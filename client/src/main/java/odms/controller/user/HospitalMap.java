@@ -166,4 +166,19 @@ public class HospitalMap {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Deletes a hospital from the database.
+     * @param hospital hospital to delete
+     * @return bool, true if hospital was deleted
+     */
+    public Boolean deleteHospital(Hospital hospital) {
+        HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+        try {
+            hospitalDAO.remove(hospital.getName());
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
 }

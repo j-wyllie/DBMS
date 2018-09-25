@@ -111,6 +111,9 @@ public class HospitalMap extends CommonView implements Initializable,
     @FXML
     private Button editHospitalButton;
 
+    @FXML
+    private Button deleteHospitalButton;
+
     /**
      * Init method for the map.
      * @param location location
@@ -149,6 +152,7 @@ public class HospitalMap extends CommonView implements Initializable,
         if (!currentUser.getUserType().equals(UserType.ADMIN)) {
             addHospitalButton.setDisable(true);
             editHospitalButton.setDisable(true);
+            deleteHospitalButton.setDisable(true);
         }
     }
 
@@ -507,10 +511,10 @@ public class HospitalMap extends CommonView implements Initializable,
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
+            stage.setResizable(false);
             stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
-            log.error("Failed to populate hospitals");
             log.error(e.getMessage(), e);
         }
     }
@@ -541,12 +545,29 @@ public class HospitalMap extends CommonView implements Initializable,
             stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.centerOnScreen();
+            stage.setResizable(false);
             stage.setOnHiding(ob -> mapInitialized());
             stage.show();
         } catch (IOException e) {
-            log.error("Failed to populate hospitals");
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Event handler, when delete hospital button is clicked a popup is created.
+     */
+    @FXML
+    public void handleDeleteHospital() {
+        Hospital hospital = markersTable.getSelectionModel().getSelectedItem();
+        if (hospital == null) {
+            return;
+        }
+        boolean confirmation = AlertController.generalConfirmation(
+                "Are you sure you want to delete this hospital?");
+        if (confirmation && !controller.deleteHospital(hospital)) {
+            AlertController.guiPopup("Error deleting Hospital");
+        }
+        mapInitialized();
     }
 
     /**
