@@ -22,6 +22,7 @@ import server.model.database.PasswordUtilities;
  */
 @Slf4j
 public class MySqlUserDAO implements UserDAO {
+
     private static final String NOT_FOUND = "Not found";
 
     /**
@@ -35,7 +36,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT * FROM users;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                Statement stmt = conn.createStatement()){
+                Statement stmt = conn.createStatement()) {
 
             try (ResultSet allUserRows = stmt.executeQuery(query)) {
                 while (allUserRows.next()) {
@@ -104,7 +105,7 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             String hashedPassword;
 
@@ -168,7 +169,7 @@ public class MySqlUserDAO implements UserDAO {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
@@ -201,8 +202,7 @@ public class MySqlUserDAO implements UserDAO {
             try (ResultSet result = stmt.executeQuery()) {
                 return !result.next();
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
         return false;
@@ -213,18 +213,19 @@ public class MySqlUserDAO implements UserDAO {
      * Removes a user from the database.
      *
      * @param user to remove.
+     * @throws UserNotFoundException error.
      */
     @Override
-    public void remove(User user) {
+    public void remove(User user) throws UserNotFoundException {
         String query = "DELETE FROM users WHERE UserId = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, user.getStaffID());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(e.getMessage(), e);
+            throw new UserNotFoundException("User not found", user.getStaffID());
         }
     }
 

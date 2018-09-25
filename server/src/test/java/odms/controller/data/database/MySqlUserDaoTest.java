@@ -25,13 +25,7 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     private static User testUser1;
 
     @Before
-    public void setup() throws UserNotFoundException, SQLException {
-        //        DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
-//
-//        INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
-//                ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
-//                ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
-
+    public void setup() throws SQLException, UserNotFoundException {
         testUser0 = new User(
                 UserType.ADMIN,
                 "Tim Hamblin",
@@ -54,14 +48,13 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     }
 
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() throws UserNotFoundException {
         userDAO.remove(testUser0);
         userDAO.remove(testUser1);
     }
 
     @Test
     public void testGetUser() throws UserNotFoundException, SQLException {
-
         assertEquals(testUser0.getUsername(), userDAO.get("Username").getUsername());
     }
 
@@ -75,10 +68,20 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
         assertEquals(2, userDAO.getAll().size());
     }
 
-    @Test
-    public void testRemove() throws SQLException {
-        userDAO.remove(testUser1);
-        assertEquals(1, userDAO.getAll().size());
+    @Test (expected = UserNotFoundException.class)
+    public void testRemove() throws SQLException, UserNotFoundException {
+        User testUser = new User(
+                UserType.ADMIN,
+                "Russian Hacker",
+                "Kazakhstan",
+                "llirik",
+                "test"
+        );
+        userDAO.add(testUser);
+        testUser = userDAO.get(testUser.getUsername());
+        userDAO.remove(testUser);
+
+        userDAO.get(testUser.getUsername());
     }
 
     @Test
@@ -97,13 +100,5 @@ public class MySqlUserDaoTest extends MySqlCommonTests {
     @Test
     public void testIsUniqueUsernameFalse() throws SQLException {
         assertFalse(userDAO.isUniqueUsername("Username"));
-    }
-
-    @AfterClass
-    public static void cleanup() throws SQLException {
-        List<User> users = userDAO.getAll();
-        for (User user : users) {
-            userDAO.remove(user);
-        }
     }
 }

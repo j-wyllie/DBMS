@@ -173,9 +173,9 @@ public class UserController {
 
         try {
             database.remove(user);
-        } catch (SQLException e) {
-            res.status(500);
-            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (UserNotFoundException e) {
+            res.status(404);
+            return "user not found";
         }
 
         res.status(200);

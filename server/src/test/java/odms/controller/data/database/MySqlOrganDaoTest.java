@@ -83,7 +83,7 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
     }
 
     @AfterClass
-    public static void tearDownClass() throws SQLException {
+    public static void tearDownClass() throws UserNotFoundException {
         userDAO.remove(testUser);
     }
 
@@ -168,18 +168,18 @@ public class MySqlOrganDaoTest extends MySqlCommonTests {
         assertFalse(organDAO.getRequired(testProfile1).contains(organ3));
     }
 
-//    @Test
-//    public void testSetAndGetExpired() throws  SQLException, UserNotFoundException {
-//        assertTrue(organDAO.getExpired(testProfile1).isEmpty());
-//        organDAO.setExpired(testProfile1, organ0, 1, "test_expired", userDAO.get("Bob").getStaffID());
-//        assertFalse(organDAO.getExpired(testProfile1).isEmpty());
-//    }
-//
-//    @Test
-//    public void testRevertExpired() throws  SQLException, UserNotFoundException{
-//        organDAO.setExpired(testProfile1, organ0, 1, "test_expired", userDAO.get("Bob").getStaffID());
-//        assertFalse(organDAO.getExpired(testProfile1).isEmpty());
-//        organDAO.revertExpired(testProfile1.getId(), organ0);
-//        assertTrue(organDAO.getExpired(testProfile1).isEmpty());
-//    }
+    @Test
+    public void testSetAndGetExpired() throws  SQLException, UserNotFoundException {
+        assertTrue(organDAO.getExpired(testProfile1).isEmpty());
+        organDAO.setExpired(testProfile1, organ0, 1, "test_expired", userDAO.get("Bob").getStaffID());
+        assertFalse(organDAO.getExpired(testProfile1).isEmpty());
+    }
+
+    @Test
+    public void testRevertExpired() throws  SQLException, UserNotFoundException{
+        organDAO.setExpired(testProfile1, organ0, 1, "test_expired", userDAO.get("Bob").getStaffID());
+        assertFalse(organDAO.getExpired(testProfile1).isEmpty());
+        organDAO.revertExpired(testProfile1.getId(), organ0);
+        assertTrue(organDAO.getExpired(testProfile1).isEmpty());
+    }
 }

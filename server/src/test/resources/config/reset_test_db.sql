@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0',
+  `IsDefault` BOOLEAN DEFAULT FALSE,
   `ImageName` varchar(50) DEFAULT NULL,
   `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

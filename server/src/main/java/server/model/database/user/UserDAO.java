@@ -49,8 +49,9 @@ public interface UserDAO {
     /**
      * Removes a user from the database.
      * @param user to remove.
+     * @throws UserNotFoundException error.
      */
-    void remove(User user) throws SQLException;
+    void remove(User user) throws UserNotFoundException;
 
     /**
      * Updates a users information in the database.
