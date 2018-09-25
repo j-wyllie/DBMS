@@ -39,6 +39,7 @@ public class ProcedureEdit {
     public void save() throws IllegalArgumentException {
         Profile profile = view.getProfile();
         Procedure procedure = view.getCurrentProcedure();
+
         List<OrganEnum> oldAffectedOrgans = procedure.getOrgansAffected();
         List<OrganEnum> newAffectedOrgans = view.getAffectedOrgansListView();
         History action = new History("profile ", profile.getId(), "EDITED",
@@ -50,6 +51,7 @@ public class ProcedureEdit {
                         + "," +
                         procedure.getLongDescription() + ")" + " OLDORGANS"
                         + procedure.getOrgansAffected();
+
         procedure.setLongDescription(view.getDescEntry());
         procedure.setSummary(view.getSummaryEntry());
 
@@ -63,6 +65,8 @@ public class ProcedureEdit {
         }
 
         procedure.setOrgansAffected(view.getAffectedOrgansListView());
+        procedure.setHospital(view.getSelectedHospital());
+
         String newValues =
                 " CURRENT(" + procedure.getSummary() + "," + procedure.getDate() + ","
                         +
@@ -72,7 +76,7 @@ public class ProcedureEdit {
         CurrentHistory.updateHistory(action);
 
         server.update(profile, procedure);
-        updateAffectedOrgans(newAffectedOrgans, oldAffectedOrgans);
+        //updateAffectedOrgans(newAffectedOrgans, oldAffectedOrgans);
     }
 
     /**

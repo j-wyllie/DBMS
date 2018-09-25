@@ -84,6 +84,7 @@ public class ProcedureDetailed extends CommonView {
 
         procedureOrgansLabel.setWrapText(true);
         procedureDescriptionLabel.setWrapText(true);
+        descEntry.setWrapText(true);
         hospitalLabel.setWrapText(true);
 
         if (currentProcedure.getHospital() == null) {
@@ -104,6 +105,8 @@ public class ProcedureDetailed extends CommonView {
         summaryEntry.setVisible(false);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
+
+        setHospitalDropdown();
 
         if (isOpenedByClinician) {
             affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -166,7 +169,6 @@ public class ProcedureDetailed extends CommonView {
 
         hospitalChoiceBox.setVisible(true);
         hospitalChoiceBox.setDisable(false);
-        setHospitalDropdown();
         editButton.setVisible(false);
     }
 
@@ -188,16 +190,19 @@ public class ProcedureDetailed extends CommonView {
         hospitalChoiceBox.setVisible(false);
         hospitalChoiceBox.setDisable(true);
 
-        procedureDateLabel.setVisible(false);
-        procedureDescriptionLabel.setVisible(false);
-        procedureOrgansLabel.setVisible(false);
-        hospitalLabel.setVisible(false);
+        procedureSummaryLabel.setVisible(true);
+        procedureDateLabel.setVisible(true);
+        procedureDescriptionLabel.setVisible(true);
+        procedureOrgansLabel.setVisible(true);
+        hospitalLabel.setVisible(true);
 
+        editButton.setVisible(true);
+        editButton.setDisable(false);
 
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText(currentProcedure.getDate().toString());
         procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
-        populateAffectedOrgansLabel();
+        //populateAffectedOrgansLabel();
         hospitalLabel.setText(currentProcedure.getHospital().getName());
 
         parent.refreshProcedureTable();
@@ -225,6 +230,10 @@ public class ProcedureDetailed extends CommonView {
 
     public ArrayList getAffectedOrgansListView() {
         return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
+    }
+
+    public Hospital getSelectedHospital() {
+        return hospitalChoiceBox.getValue();
     }
 
     /**

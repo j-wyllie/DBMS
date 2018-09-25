@@ -148,7 +148,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     public void update(Procedure procedure, boolean pending) {
         String query =
                 "UPDATE procedures SET Summary = ?, Description = ?, ProcedureDate = ?, " +
-                        "Pending = ? WHERE Id = ?;";
+                        "Pending = ?, Hospital = ? WHERE Id = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -156,7 +156,12 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
             stmt.setBoolean(4, pending);
-            stmt.setInt(5, procedure.getId());
+            if (procedure.getHospital().getId() == -1) {
+                stmt.setNull(5, Types.INTEGER);
+            } else {
+                stmt.setInt(5, procedure.getHospital().getId());
+            }
+            stmt.setInt(6, procedure.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
