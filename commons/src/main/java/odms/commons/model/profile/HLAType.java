@@ -77,6 +77,29 @@ public class HLAType {
         groupY.put("DR", ydr);
     }
 
+    /**
+     * Initialises the primary HLAs from a list of Integers
+     *
+     * @param hlas list of HLA alleles
+     */
+    public HLAType(List<Integer> hlas) {
+        // initialise group X
+        groupX.put("A", hlas.get(0));
+        groupX.put("B", hlas.get(1));
+        groupX.put("C", hlas.get(2));
+        groupX.put("DP", hlas.get(3));
+        groupX.put("DQ", hlas.get(4));
+        groupX.put("DR", hlas.get(5));
+
+        // initialise group Y
+        groupY.put("A", hlas.get(6));
+        groupY.put("B", hlas.get(7));
+        groupY.put("C", hlas.get(8));
+        groupY.put("DP", hlas.get(9));
+        groupY.put("DQ", hlas.get(10));
+        groupY.put("DR", hlas.get(11));
+    }
+
     public static List<String> getPrimaryGeneList() {
         return primaryGeneList;
     }
