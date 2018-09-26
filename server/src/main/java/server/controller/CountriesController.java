@@ -32,12 +32,12 @@ public class CountriesController {
      * @return The response body as a list of Json object of countries
      */
     public static String getAll(Request req, Response res) {
-        // This boolean is optional so it needs to be null
+        // This boolean is optional so it needs to be null.
         Boolean valid = null;
         List<String> countries;
 
         // This query is optional so only assign it if it exists
-        if (req.queryMap().hasKey(KeyEnum.VALID.toString())) {
+        if (req.queryParams(KeyEnum.VALID.toString()) != null) {
             valid = Boolean.valueOf(req.queryParams(KeyEnum.VALID.toString()));
         }
 
@@ -66,12 +66,12 @@ public class CountriesController {
     public static String edit(Request req, Response res) {
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
         JsonParser parser = new JsonParser();
-        String name;
+        CountriesEnum name;
         boolean valid;
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            name = body.get(KeyEnum.NAME.toString()).getAsString();
+            name = CountriesEnum.valueOf(body.get(KeyEnum.NAME.toString()).getAsString());
             valid = body.get(KeyEnum.VALID.toString()).getAsBoolean();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -79,13 +79,12 @@ public class CountriesController {
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
-            countryDAO.update(CountriesEnum.valueOf(name), valid);
+            countryDAO.update(name, valid);
             res.status(200);
             return "Country Updated";
-        }
-        catch (Exception e) {
-            res.status(400);
-            return ResponseMsgEnum.BAD_REQUEST.toString();
+        } catch (Exception e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
     }
 
