@@ -6,6 +6,7 @@ import odms.view.profile.MedicationsGeneral;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -25,7 +26,7 @@ public class MedicationsTest {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         currentProfile.setId(999);
-        controller = new Medications(view);
+        controller = new Medications();
         drug = new Drug("Drog");
     }
 
@@ -59,6 +60,19 @@ public class MedicationsTest {
     public void testMoveDrugToCurrent() {
         controller.moveDrugToCurrent(drug,currentProfile);
         assert(currentProfile.getCurrentMedications().contains(drug));
+    }
+
+    @Test
+    public void testViewActiveIngredients() throws IOException{
+        assertNotEquals(controller.viewActiveIngredients(drug), null);
+    }
+
+    @Test
+    public void testGetRawInteractions() throws IOException{
+        ArrayList<Drug> drugs = new ArrayList<>();
+        drugs.add(drug);
+        drugs.add(drug);
+        assertNotEquals(controller.getRawInteractions(currentProfile, drugs), null);
     }
 
 }

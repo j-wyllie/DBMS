@@ -36,9 +36,6 @@ public class ProfileMedical extends CommonView {
     private Label bloodDonationLabel;
 
     private Profile currentProfile;
-    // init controller corresponding to this view
-    private odms.controller.profile.ProfileMedical controller =
-            new odms.controller.profile.ProfileMedical(this);
     private Boolean isOpenedByClinician;
     private User currentUser;
 

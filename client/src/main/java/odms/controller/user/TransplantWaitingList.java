@@ -14,16 +14,6 @@ import odms.controller.database.DAOFactory;
  */
 public class TransplantWaitingList extends CommonController {
 
-    private final odms.view.user.TransplantWaitingList view;
-
-    /**
-     * Constructor for the TransplantWaitingList controller. Sets the view object.
-     * @param v TransplantWaitingList view object
-     */
-    public TransplantWaitingList(odms.view.user.TransplantWaitingList v) {
-        view = v;
-    }
-
     /**
      * Gets the list of organs needing to be received along with profile information.
      * @return list of organs and associated profiles

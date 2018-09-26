@@ -30,7 +30,7 @@ public class TransplantWaitingList extends CommonView {
     private User currentUser;
     private List<Entry<Profile, OrganEnum>> receiverList;
     private odms.controller.user.TransplantWaitingList controller = new
-            odms.controller.user.TransplantWaitingList(this);
+            odms.controller.user.TransplantWaitingList();
 
     @FXML
     private TableView<Entry<Profile, OrganEnum>> transplantTable;
