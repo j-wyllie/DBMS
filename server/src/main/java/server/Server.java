@@ -171,9 +171,7 @@ public class Server {
                 path("/:id", () -> {
                     get("", HLAController::get);
                     post("", HLAController::add);
-                    patch("", HLAController::edit);
                     delete("", HLAController::delete);
-
                 });
             });
         });
