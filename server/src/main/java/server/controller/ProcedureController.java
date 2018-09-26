@@ -25,7 +25,6 @@ public class ProcedureController {
 
     /**
      * Gets a list of all procedures.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -41,7 +40,7 @@ public class ProcedureController {
             pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            res.status(500);
+            res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
@@ -64,7 +63,6 @@ public class ProcedureController {
 
     /**
      * Adds a procedure to a profile in storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -98,7 +96,6 @@ public class ProcedureController {
 
     /**
      * Edits a procedure stored for a profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -132,7 +129,6 @@ public class ProcedureController {
 
     /**
      * Removes a procedure from a stored profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -165,7 +161,6 @@ public class ProcedureController {
 
     /**
      * Gets all organs affected by a procedure for a stored profile.
-     * 
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
