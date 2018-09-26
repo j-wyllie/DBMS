@@ -5,26 +5,35 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import lombok.extern.slf4j.Slf4j;
-import odms.controller.AlertController;
 import odms.controller.WebViewCell;
 
+/**
+ * Social Feed tab containing the twitter tab.
+ */
 @Slf4j
-public class SocialFeedTab {
+public class SocialFeedTab extends CommonView {
+
+    private static final int REFRESH_PERIOD = 10000;
 
     @FXML
     private TableView tweetTable;
+    private int tweetListSize;
+    private ObservableList<String> tweetList;
+    private Timer timer;
 
     /**
      * Populates the table with tweets and adds a column that constructs a WebViewCell factory.
@@ -32,16 +41,24 @@ public class SocialFeedTab {
     private void populateTweetTable() {
         if (netIsAvailable()) {
             getTweets();
-            tweetTable.getColumns().clear();
-            TableColumn<String, String> tweetCol = new TableColumn<>();
-            tweetCol.setCellValueFactory(
-                    cdf -> new SimpleStringProperty(cdf.getValue())
-            );
-            tweetCol.setCellFactory(WebViewCell.forTableColumn()
-            );
-            tweetTable.getColumns().add(tweetCol);
+            if (tweetList.size() != tweetListSize) {
+                tweetTable.getColumns().clear();
+                TableColumn<String, String> tweetCol = new TableColumn<>();
+                tweetCol.setCellValueFactory(
+                        cdf -> new SimpleStringProperty(cdf.getValue())
+                );
+                tweetCol.setCellFactory(WebViewCell.forTableColumn()
+                );
+                tweetTable.getColumns().add(tweetCol);
+
+                tweetListSize = tweetList.size();
+                if (tweetListSize == 0) {
+                    tweetTable.setPlaceholder(new Label("No tweets to display."));
+                }
+            }
         } else {
-            AlertController.guiPopup("Error establishing internet connection.");
+            tweetTable.setPlaceholder(
+                    new Label("Can't fetch tweets. Please check internet connection."));
         }
     }
 
@@ -59,7 +76,8 @@ public class SocialFeedTab {
     private void getTweets() {
         try {
             URL url = new URL(
-                    "https://api.twitter.com/1.1/search/tweets.json?q=%23humanfarm&result_type=recent");
+                    "https://api.twitter.com/1.1/search/tweets.json?q=%23humanfarm&" +
+                            "result_type=recent");
             URL url2 = new URL(
                     "https://api.twitter.com/oauth2/token");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -73,7 +91,7 @@ public class SocialFeedTab {
 
             List<String> ids = handleRequest(con);
 
-            ObservableList<String> tweetList = FXCollections.observableArrayList(ids);
+            tweetList = FXCollections.observableArrayList(ids);
             tweetTable.setItems(tweetList);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -145,29 +163,38 @@ public class SocialFeedTab {
     }
 
     /**
-     * Tries to connect to the twitter api.
-     *
-     * @return True if the connection can be established.
+     * Starts the timers for fetching expired organs and counting down the expiry date.
      */
-    private static boolean netIsAvailable() {
-        try {
-            final URL url = new URL("https://google.com/");
-            final URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(1000);
-            conn.connect();
-            conn.getInputStream().close();
-            return true;
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            return false;
+    public void startTimer() {
+        timer = new Timer(true);
+        if (netIsAvailable()) {
+            timer.scheduleAtFixedRate(new TimerTask() {
+                private boolean refreshTweetTable() {
+                    populateTweetTable();
+                    return true;
+                }
+
+                @Override
+                public void run() {
+                    Platform.runLater(this::refreshTweetTable);
+                }
+            }, 0, REFRESH_PERIOD);
         }
+    }
+
+    /**
+     * Cancels the auto refresh timer for the twitter feed. Called when the tab gets clicked off.
+     */
+    public void pauseTimer() {
+        timer.cancel();
     }
 
     /**
      * initializes the tab by calling populateTweetTable().
      */
     public void initialise() {
+        hideTableHeader(tweetTable);
         populateTweetTable();
+        startTimer();
     }
 }

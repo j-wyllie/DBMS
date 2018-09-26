@@ -12,11 +12,14 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import server.model.database.DAOFactory;
+import server.model.database.DatabaseConnection;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 
-public class ConditionDAOTest extends CommonTestUtils {
+public class MySqlConditionDaoTest extends CommonTestUtils {
 
     private Profile testProfile1;
     private Profile testProfile2;
@@ -48,6 +51,7 @@ public class ConditionDAOTest extends CommonTestUtils {
     public void tearDown() throws SQLException {
         List<Condition> allConditions = new ArrayList<>();
         allConditions.addAll(conditionDao.getAll(testProfile1.getId(), true));
+
         allConditions.addAll(conditionDao.getAll(testProfile2.getId(), true));
 
         if (!allConditions.isEmpty()) {

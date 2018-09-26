@@ -48,7 +48,7 @@ public class User extends CommandUtils {
                 throw new IllegalArgumentException("Please enter all fields.");
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(), e);
 
         } catch (Exception e) {
             System.out.println("Please enter a valid command.");
@@ -105,7 +105,7 @@ public class User extends CommandUtils {
             } catch (SQLException e) {
                 System.out.println("Could not update attributes.");
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         } else {
             System.out.println(searchNotFoundText);

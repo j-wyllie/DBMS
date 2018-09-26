@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import server.model.database.DatabaseConnection;
@@ -21,23 +22,19 @@ public class MySqlConditionDAO implements ConditionDAO {
      * @param chronic true if the conditions required are chronic.
      */
     @Override
-    public ArrayList<Condition> getAll(int profile, boolean chronic) {
-        String query = "select * from conditions where ProfileId = ?;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+    public List<Condition> getAll(int profile, boolean chronic) {
+        String query = "SELECT * FROM conditions WHERE ProfileId = ?;";
         ArrayList<Condition> allConditions = new ArrayList<>();
 
-        try {
-            Connection conn = connectionInstance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, profile);
-            ResultSet allConditionRows = stmt.executeQuery();
-
-            while (allConditionRows.next()) {
-                Condition condition = parseCondition(allConditionRows);
-                allConditions.add(condition);
+            try (ResultSet allConditionRows = stmt.executeQuery()) {
+                while (allConditionRows.next()) {
+                    Condition condition = parseCondition(allConditionRows);
+                    allConditions.add(condition);
+                }
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -58,12 +55,11 @@ public class MySqlConditionDAO implements ConditionDAO {
         boolean isChronic = rs.getBoolean("Chronic");
         boolean isCured = rs.getBoolean("Past");
         LocalDate dateCured = null;
-        if (!(rs.getDate("CuredDate") == null)) {
+        if (rs.getDate("CuredDate") != null) {
              dateCured = rs.getDate("CuredDate").toLocalDate();
         }
 
-        Condition condition = new Condition(id, name, dateOfDiagnosis, isChronic, isCured, dateCured);
-        return condition;
+        return new Condition(id, name, dateOfDiagnosis, isChronic, isCured, dateCured);
     }
 
     /**
@@ -73,14 +69,12 @@ public class MySqlConditionDAO implements ConditionDAO {
      */
     @Override
     public void add(int profile, Condition condition) {
-        String query = "insert into conditions (ProfileId, Description, DiagnosisDate, Chronic, "
-                + "Current, Past, CuredDate) values (?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+        String query = "INSERT INTO conditions (ProfileId, Description, DiagnosisDate, Chronic, "
+                + "Current, Past, CuredDate) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, profile);
             stmt.setString(2, condition.getName());
             stmt.setDate(3, Date.valueOf(condition.getDateOfDiagnosis()));
@@ -92,11 +86,9 @@ public class MySqlConditionDAO implements ConditionDAO {
             } else {
                 stmt.setDate(7, Date.valueOf(condition.getDateCured()));
             }
-
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -107,19 +99,14 @@ public class MySqlConditionDAO implements ConditionDAO {
      */
     @Override
     public void remove(Condition condition) {
-        String query = "delete from conditions where Id = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+        String query = "DELETE FROM conditions WHERE Id = ?;";
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-        try {
-            Connection conn = instance.getConnection();
-
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, condition.getId());
-
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -130,14 +117,12 @@ public class MySqlConditionDAO implements ConditionDAO {
      */
     @Override
     public void update(Condition condition) {
-        String query = "update conditions set Description = ?, DiagnosisDate = ?, Chronic = ?, "
-                + "Current = ?, Past = ?, CuredDate = ? where Id = ?";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
+        String query = "UPDATE conditions SET Description = ?, DiagnosisDate = ?, Chronic = ?, "
+                + "Current = ?, Past = ?, CuredDate = ? WHERE Id = ?";
 
-        try {
-            Connection conn = instance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, condition.getName());
             stmt.setDate(2, Date.valueOf(condition.getDateOfDiagnosis()));
             stmt.setBoolean(3, condition.getChronic());
@@ -151,9 +136,8 @@ public class MySqlConditionDAO implements ConditionDAO {
             stmt.setInt(7, condition.getId());
 
             stmt.executeUpdate();
-            conn.close();
-            stmt.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
     }

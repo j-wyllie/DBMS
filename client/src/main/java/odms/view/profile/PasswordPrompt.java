@@ -20,7 +20,7 @@ public class PasswordPrompt {
     private static String PW_NOT_MATCHING = "Passwords do not match.";
     private static String PW_TOO_SHORT = "Password is less than 5 characters.";
 
-    public Profile currentProfile;
+    private Profile currentProfile;
 
     @FXML
     public PasswordField passwordField;
@@ -80,5 +80,13 @@ public class PasswordPrompt {
 
         errorLabel.setText(PasswordPrompt.PW_BASE_ERROR + error);
         errorLabel.setVisible(true);
+    }
+
+    public Profile getCurrentProfile() {
+        return currentProfile;
+    }
+
+    public void setCurrentProfile(Profile currentProfile) {
+        this.currentProfile = currentProfile;
     }
 }

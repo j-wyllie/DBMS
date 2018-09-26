@@ -3,7 +3,6 @@ package server;
 import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
-import static spark.Spark.halt;
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.patch;
 import static spark.Spark.path;
@@ -195,6 +194,15 @@ public class Server {
 
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
+            });
+
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
+                post("", HospitalController::create);
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
             });
         });
     }

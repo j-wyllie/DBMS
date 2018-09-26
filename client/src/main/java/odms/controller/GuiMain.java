@@ -73,6 +73,11 @@ public class GuiMain extends Application {
         });
         checkOrgan.setDaemon(true);
         checkOrgan.start();
+        } else {
+            AlertController.guiPopup("Connection to the server could not be established.\n\n" +
+                    "Human Farm servers may be experiencing\ntechnical difficulties. " +
+                    "Please check your internet\nconnection and try again.");
+        }
     }
 
     /**

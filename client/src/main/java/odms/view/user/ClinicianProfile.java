@@ -3,11 +3,6 @@ package odms.view.user;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Timer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -58,6 +53,8 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab socialFeedTab;
     @FXML
+    private Tab organMapTab;
+    @FXML
     private ImageView profileImage;
     @FXML
     private GridPane bannerPane;
@@ -69,6 +66,7 @@ public class ClinicianProfile extends CommonView {
     private TransplantWaitingList transplantWaitingList;
 
     private AvailableOrgans availableOrgansTabView;
+    private SocialFeedTab socialFeed;
 
     /**
      * Scene change to log in view.
@@ -82,12 +80,18 @@ public class ClinicianProfile extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentUser = null;
+        if (socialFeed != null) {
+            socialFeed.pauseTimer();
+        }
+        if (availableOrgansTabView != null) {
+            availableOrgansTabView.pauseTimers();
+        }
         changeScene(event, "/view/Login.fxml", "Login");
     }
 
     /**
      * This set the transplantWaitingList to null, to prevent the transplant waiting list from being
-     * updated if the waiting list tab is not open
+     * updated if the waiting list tab is not open.
      */
     private void setTransplantWaitingListNull() {
         transplantWaitingList = null;
@@ -143,7 +147,7 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
-     * Initializes the controller for the general details Tab
+     * Initializes the controller for the general details Tab.
      */
     public void handleGeneralTabClicked() {
         if (generalTab.isSelected()) {
@@ -195,30 +199,58 @@ public class ClinicianProfile extends CommonView {
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
+        }
 
-            availableOrgansTab.setOnSelectionChanged(event -> {
-                if (!availableOrgansTab.isSelected()) {
-                    availableOrgansTabView.pauseTimers();
-                } else {
-                    availableOrgansTabView.startTimers();
-                }
-            });
+        availableOrgansTab.setOnSelectionChanged(event -> {
+            if (!availableOrgansTab.isSelected()) {
+                availableOrgansTabView.pauseTimers();
+            } else {
+                availableOrgansTabView.startTimers();
+            }
+        });
+    }
+
+    /**
+     * Initializes the map and organ expiry lists.
+     */
+    public void handleTabOrganMapClicked() {
+        if (organMapTab.isSelected()) {
+            setTransplantWaitingListNull();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserMapTab.fxml"));
+            try {
+                organMapTab.setContent(loader.load());
+                OrganMap organMapTabView = loader.getController();
+                organMapTabView.initialize(currentUser, this);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 
+
+    /**
+     * Sets up the social feed tab when it's clicked. Adds a listener to start and top the timer.
+     */
     @FXML
     private void handleSocialFeedTabClicked() {
         if (socialFeedTab.isSelected()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SocialFeedTab.fxml"));
             try {
                 socialFeedTab.setContent(loader.load());
-                SocialFeedTab socialFeed = loader.getController();
+                socialFeed = loader.getController();
                 socialFeed.initialise();
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
 
+        socialFeedTab.setOnSelectionChanged(event -> {
+            if (!socialFeedTab.isSelected()) {
+                socialFeed.pauseTimer();
+            } else {
+                socialFeed.startTimer();
+            }
+        });
     }
 
     /**

@@ -134,7 +134,6 @@ public class ProfileEdit extends CommonController {
         if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
             if (view.getComboRegionOfDeath() != null && AddressIO
                     .checkValidRegion(
-                            view.getComboRegionOfDeath() + " " + view.getComboCountryOfDeath(),
                             view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
                 return view.getComboRegionOfDeath();
             } else {
@@ -145,14 +144,12 @@ public class ProfileEdit extends CommonController {
             }
         } else {
             if (view.getRegionOfDeathField() != null && AddressIO
-                    .checkValidRegion(
-                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                    .checkValidRegion(view.getRegionOfDeathField(),
+                            view.getComboCountryOfDeath())) {
                 return view.getRegionOfDeathField();
             } else if (view.getRegionOfDeathField() != null && !AddressIO
-                    .checkValidRegion(
-                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                    .checkValidRegion(view.getRegionOfDeathField(),
+                            view.getComboCountryOfDeath())) {
                 throw new IllegalArgumentException(
                         "Invalid Region of Death"
                 );
