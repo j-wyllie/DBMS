@@ -115,16 +115,24 @@ public class HlaController {
      */
     private static Integer matchScore(Integer profileIdA, Integer profileIdB) {
 
-        ArrayList<HLAType> ints = getDatabaseHLA(profileIdA, profileIdB);
+        ArrayList<HLAType> hlas = getDatabaseHLA(profileIdA, profileIdB);
 
-        return matchCalcScore(ints.get(0), ints.get(1));
+        return matchCalcScore(hlas.get(0), hlas.get(1));
     }
 
+
+    /**
+     * Gets HLAType from database.
+     *
+     * @param profileIdA the profile ID of the first HLA
+     * @param profileIdB the profile ID of the second HLA
+     * @return arraylist of two HLATypes to be compared.
+     */
     private static ArrayList<HLAType> getDatabaseHLA(Integer profileIdA, Integer profileIdB){
-        ArrayList<HLAType> ints = new ArrayList<>();
+        ArrayList<HLAType> hlas = new ArrayList<>();
         HLADAO hladao = DAOFactory.getHlaDAO();
-        ints.add(hladao.get(profileIdA));
-        ints.add(hladao.get(profileIdB));
-        return ints;
+        hlas.add(hladao.get(profileIdA));
+        hlas.add(hladao.get(profileIdB));
+        return hlas;
     }
 }
