@@ -27,7 +27,8 @@ import server.model.database.user.UserDAO;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PasswordUtilities.class)
 @PowerMockIgnore("javax.management.*")
-public class MySqlUserDaoTest extends CommonTestUtils {
+
+public class MySqlUserDAOTest extends CommonTestUtils {
     private UserDAO userDAO = DAOFactory.getUserDao();
 
     private User testUser0;

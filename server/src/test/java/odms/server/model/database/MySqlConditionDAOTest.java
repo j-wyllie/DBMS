@@ -19,7 +19,7 @@ import server.model.database.DatabaseConnection;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 
-public class MySqlConditionDaoTest extends CommonTestUtils {
+public class MySqlConditionDAOTest extends CommonTestUtils {
 
     private Profile testProfile1;
     private Profile testProfile2;

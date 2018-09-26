@@ -18,7 +18,7 @@ import server.model.database.profile.ProfileDAO;
 /**
  * MySqlCommonDao Tests.
  */
-public class CommonDAOTest extends CommonTestUtils {
+public class MySqlCommonDAOTest extends CommonTestUtils {
     private CommonDAO commonDAO = DAOFactory.getCommonDao();
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();
 

@@ -16,7 +16,7 @@ import org.junit.Test;
 import server.model.database.procedure.MySqlProcedureDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class ProcedureDAOTest extends CommonTestUtils {
+public class MySqlProcedureDAOTest extends CommonTestUtils {
 
     private MySqlProcedureDAO mySqlProcedureDAO;
     private MySqlProfileDAO mySqlProfileDAO;

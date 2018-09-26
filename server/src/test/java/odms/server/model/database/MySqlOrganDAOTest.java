@@ -24,7 +24,7 @@ import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 
 @Slf4j
-public class MySqlOrganDaoTest extends CommonTestUtils {
+public class MySqlOrganDAOTest extends CommonTestUtils {
     private static ProfileDAO profileDAO = DAOFactory.getProfileDao();
     private static UserDAO userDAO = DAOFactory.getUserDao();
 

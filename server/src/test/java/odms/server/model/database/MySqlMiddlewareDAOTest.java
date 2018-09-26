@@ -17,7 +17,7 @@ import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 
-public class MiddlewareDAOTest extends CommonTestUtils {
+public class MySqlMiddlewareDAOTest extends CommonTestUtils {
 
     // Data access objects required.
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();

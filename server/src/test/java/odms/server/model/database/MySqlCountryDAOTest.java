@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.model.database.country.MySqlCountryDAO;
 
-public class CountryDAOTest extends CommonTestUtils {
+public class MySqlCountryDAOTest extends CommonTestUtils {
     private MySqlCountryDAO mySqlCountryDAO;
 
     @Before
