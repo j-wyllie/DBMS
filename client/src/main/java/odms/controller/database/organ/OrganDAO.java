@@ -121,8 +121,7 @@ public interface OrganDAO {
      * @param note Clinician's reason to update.
      * @param userId Clinician's user Id.
      */
-    void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId)
-            throws SQLException;
+    void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId);
 
     /**
      * Updates organ to be non-expired.
@@ -130,6 +129,6 @@ public interface OrganDAO {
      * @param profileId to revert organ expired.
      * @param organ to revert.
      */
-    void revertExpired(Integer profileId, String organ) throws SQLException;
+    void revertExpired(Integer profileId, String organ);
 }
 

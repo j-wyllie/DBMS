@@ -10,57 +10,63 @@ import odms.commons.model.profile.Profile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import server.model.database.common.MySqlCommonDAO;
-import server.model.database.profile.MySqlProfileDAO;
+import server.model.database.DAOFactory;
+import server.model.database.common.CommonDAO;
+import server.model.database.profile.ProfileDAO;
 
 /**
  * MySqlCommonDao Tests.
  */
 public class MySqlCommonDAOTest extends MySqlCommonTests {
-    private MySqlCommonDAO mySqlCommonDAO;
-    private MySqlProfileDAO mySqlProfileDAO;
-
-    private Profile testProfile0 = new Profile(
-            "Joshua",
-            "Wyllie",
-            LocalDate.of(1997, 7, 18),
-            "ABC1234"
-    );
+    private CommonDAO commonDAO = DAOFactory.getCommonDao();
+    private ProfileDAO profileDAO = DAOFactory.getProfileDao();
 
     private PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     private String expectedBadOutput = "Please enter a valid read-only query.";
-    private String expectedGoodOutput = String.format(
-            "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
-            + "| NHI                      | GivenNames                                             | Height                     | Weight                     | Gender                             | Lastnames                                              | Dod                     |%n"
-            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
-            + "| ABC1234                  | Joshua                                                 | 0.0                        | 0.0                        | null                               | Wyllie                                                 | null                    |%n"
-            + "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+"
-    );
+
+    private Profile testProfile0;
 
     @Before
-    public void setup() {
-        mySqlCommonDAO = new MySqlCommonDAO();
-        mySqlProfileDAO = new MySqlProfileDAO();
+    public void setup() throws SQLException {
+        testProfile0 = new Profile(
+                "Joshua",
+                "Wyllie",
+                LocalDate.of(1997, 7, 18),
+                "ABC1234"
+        );
+        profileDAO.add(testProfile0);
+        testProfile0 = profileDAO.get(testProfile0.getNhi());
         System.setOut(new PrintStream(outContent));
     }
 
     @After
-    public void restoreStream() {
+    public void restoreStream() throws SQLException {
         System.setOut(originalOut);
+        profileDAO.remove(testProfile0);
     }
 
     @Test
     public void testNotReadOnlyQuery() {
         String query = "DROP TABLE countries";
-        mySqlCommonDAO.queryDatabase(query);
+        commonDAO.queryDatabase(query);
         assertEquals(expectedBadOutput, outContent.toString().trim());
     }
 
     @Test
-    public void testReadOnlyQuery() throws SQLException {
-        mySqlProfileDAO.add(testProfile0);
+    public void testReadOnlyQuery() {
+        String expectedGoodOutput = String.format(
+                "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
+                        +
+                        "| NHI                      | GivenNames                                             | Height                     | Weight                     | Gender                             | Lastnames                                              | Dod                     |%n"
+                        +
+                        "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+%n"
+                        +
+                        "| ABC1234                  | Joshua                                                 | 0.0                        | 0.0                        | null                               | Wyllie                                                 | null                    |%n"
+                        +
+                        "+--------------------------+--------------------------------------------------------+----------------------------+----------------------------+------------------------------------+--------------------------------------------------------+-------------------------+"
+        );
         String query = "SELECT NHI, " +
                 "GivenNames, " +
                 "Height, " +
@@ -69,14 +75,14 @@ public class MySqlCommonDAOTest extends MySqlCommonTests {
                 "Lastnames, " +
                 "dod " +
                 "FROM profiles";
-        mySqlCommonDAO.queryDatabase(query);
+        commonDAO.queryDatabase(query);
         assertEquals(expectedGoodOutput, outContent.toString().trim());
     }
 
     @Test
     public void TestMalformedQuery() {
         String query = "SELECT * FROM tim_likes_cookies";
-        mySqlCommonDAO.queryDatabase(query);
+        commonDAO.queryDatabase(query);
         assertEquals(expectedBadOutput, outContent.toString().trim());
     }
 }

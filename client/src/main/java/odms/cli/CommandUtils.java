@@ -11,7 +11,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.profile.ProfileDAO;
-import odms.controller.profile.UndoRedoCLIService;
+import odms.controller.profile.OrganCLIService;
 
 @Slf4j
 public class CommandUtils {
@@ -81,10 +81,6 @@ public class CommandUtils {
                 return Commands.IMPORT;
             case "export":
                 return Commands.EXPORT;
-            case "undo":
-                return Commands.UNDO;
-            case "redo":
-                return Commands.REDO;
             case "create-profile":
                 if (rawInput.matches(CMD_REGEX_CREATE)) {
                     return Commands.PROFILECREATE;
@@ -119,7 +115,7 @@ public class CommandUtils {
                             return Commands.RECEIVERADD;
                         case "remove-organ":
                             return Commands.ORGANREMOVE;
-                        case "removereceive-organ":
+                        case "remove-receive-organ":
                             return Commands.RECEIVEREMOVE;
                         case "donate-organ":
                             return Commands.ORGANDONATE;
@@ -285,7 +281,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansDonating(organSet, profile);
+                    OrganCLIService.addOrgansDonating(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println(ERR_ORGAN_EXISTS);
                 } catch (Exception e) {
@@ -310,7 +306,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansRequired(organSet, profile);
+                    OrganCLIService.addOrgansRequired(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println(ERR_ORGAN_EXISTS);
                 } catch (Exception e) {
@@ -334,7 +330,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansDonated(
+                    OrganCLIService.addOrgansDonated(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                     profile.setDonor(true);
                 } catch (IllegalArgumentException e) {
@@ -355,7 +351,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.removeOrgansDonating(
+                    OrganCLIService.removeOrgansDonating(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
@@ -376,7 +372,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.removeOrgansRequired(
+                    OrganCLIService.removeOrgansRequired(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");

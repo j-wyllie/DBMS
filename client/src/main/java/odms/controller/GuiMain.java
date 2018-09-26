@@ -50,21 +50,6 @@ public class GuiMain extends Application {
             primaryStage.show();
 
             checkDefaultProfiles();
-
-            // Thread that runs in the background to check if organs have expired since last launch
-            Thread checkOrgan = new Thread(() -> {
-                try {
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for (Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey());
-                    }
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-            });
-            checkOrgan.setDaemon(true);
-            checkOrgan.start();
         } else {
             AlertController.guiPopup("Connection to the server could not be established.\n\n" +
                     "Human Farm servers may be experiencing\ntechnical difficulties. " +

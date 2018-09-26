@@ -1,5 +1,6 @@
 package server.model.database.user;
 
+import java.util.List;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 
@@ -14,7 +15,7 @@ public interface UserDAO {
     /**
      * Gets all users from the database.
      */
-    ArrayList<User> getAll() throws SQLException;
+    List<User> getAll() throws SQLException;
 
     /**
      * Gets a single user from the database by id.

@@ -48,15 +48,17 @@ public class HttpProcedureDAO implements ProcedureDAO {
     }
 
     @Override
-    public void add(Profile profile, Procedure procedure) {
+    public boolean add(Profile profile, Procedure procedure) {
         Gson gson = new Gson();
         String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         String body = gson.toJson(procedure);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
             request.post();
+            return true;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+            return false;
         }
     }
 
