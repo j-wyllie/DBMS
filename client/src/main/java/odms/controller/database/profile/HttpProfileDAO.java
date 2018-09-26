@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
@@ -107,6 +108,7 @@ public class HttpProfileDAO implements ProfileDAO {
         Gson gson = new Gson();
         String url = "http://localhost:6969/api/v1/profiles/" + profile.getId();
         String body = gson.toJson(profile);
+        System.out.println(body);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
             request.patch();
@@ -205,7 +207,8 @@ public class HttpProfileDAO implements ProfileDAO {
             log.error(e.getMessage(), e);
         }
         if (response != null && response.getStatus() == 200) {
-            return parser.fromJson(response.getBody(), Profile.class);
+            Profile profile = parser.fromJson(response.getBody(), Profile.class);
+            return profile;
         }
         return null;
     }

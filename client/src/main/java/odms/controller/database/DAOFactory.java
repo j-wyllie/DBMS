@@ -6,6 +6,8 @@ import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.condition.HttpConditionDAO;
 import odms.controller.database.settings.SettingsDAO;
 import odms.controller.database.settings.HttpSettingsDAO;
+import odms.controller.database.hla.HLADAO;
+import odms.controller.database.hla.HttpHLADAO;
 import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.locations.HospitalDAO;
@@ -89,4 +91,10 @@ public class DAOFactory {
     public static HospitalDAO getHospitalDAO() {
         return new HttpHospitalDAO();
     }
+
+    /**
+     * Gives the data access object class for the hla object.
+     * @return dao for particular http type.
+     */
+    public static HLADAO getHlaDAO() { return new HttpHLADAO(); }
 }

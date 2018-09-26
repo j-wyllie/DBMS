@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.DrugController;
 import server.controller.HospitalController;
+import server.controller.HLAController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
 import server.controller.ProfileController;
@@ -36,7 +37,7 @@ public class Server {
      *
      * @param args parameters for application
      */
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         log.info("Server is alive!");
         log.info("Listening on port: " + port);
 
@@ -167,6 +168,16 @@ public class Server {
                 post("", HospitalController::create);
                 patch("", HospitalController::edit);
                 delete("", HospitalController::delete);
+            });
+
+            // hla api endpoints
+            path("/hla", () -> {
+                // id references profile
+                path("/:id", () -> {
+                    get("", HLAController::get);
+                    post("", HLAController::add);
+                    delete("", HLAController::delete);
+                });
             });
         });
     }

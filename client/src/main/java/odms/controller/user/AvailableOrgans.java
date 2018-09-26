@@ -355,7 +355,6 @@ public class AvailableOrgans {
             char c = timeToExpiry.charAt(i);
 
             try {
-
                 if (Character.isDigit(c)) {
                     temp.append(c);
                 }
@@ -838,8 +837,6 @@ public class AvailableOrgans {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 view.getAvailableOrgansTable().refresh();
-                view.getPotentialOrganMatchTable().refresh();
-
             }
         }, 0, COUNTDOWN_PERIOD);
 
