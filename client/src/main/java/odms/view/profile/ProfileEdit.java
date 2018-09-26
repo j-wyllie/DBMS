@@ -218,6 +218,14 @@ public class ProfileEdit extends CommonView {
         }
     }
 
+    @FXML
+    private void handleSecondaryHlaListViewKeyPressed(KeyEvent code) {
+        if (code.getCode() == KeyCode.DELETE) {
+            List<String> HLAsToRemove = secondaryHlaListView.getSelectionModel().getSelectedItems();
+            controller.handelSecondaryHlaDeleted(HLAsToRemove);
+        }
+    }
+
     /**
      * Button handler to undo last action.
      *
