@@ -24,11 +24,11 @@ public class HLAController {
     }
 
     /**
-     * Gets a HLAType for a given profile
+     * Gets a HLAType for a given profile.
      *
-     * @param req
-     * @param res
-     * @return
+     * @param req the get request object with no body.
+     * @param res the response object with HLAType as body.
+     * @return the response body, a HLAType.
      */
     public static String get(Request req, Response res) {
         Gson gson = new Gson();
@@ -72,11 +72,11 @@ public class HLAController {
     }
 
     /**
-     * Adds a HLAType
+     * Adds a HLAType to the database.
      *
-     * @param req
-     * @param res
-     * @return
+     * @param req the request object with HLAType as body.
+     * @param res the empty response object.
+     * @return the response body.
      */
     public static String add(Request req, Response res) {
         Gson gson = new Gson();
@@ -114,26 +114,11 @@ public class HLAController {
     }
 
     /**
-     * Edits the given HLAType
+     * Deletes the given HLAType.
      *
-     * @param req
-     * @param res
-     * @return
-     */
-    public static String edit(Request req, Response res) {
-        Gson gson = new Gson();
-        HLADAO database = DAOFactory.getHLADAO();
-        Integer profileID = Integer.valueOf(req.params("id"));
-
-        return "";
-    }
-
-    /**
-     * Deletes the given HLAType
-     *
-     * @param req
-     * @param res
-     * @return
+     * @param req the empty request body.
+     * @param res the empty response.
+     * @return the response body.
      */
     public static String delete(Request req, Response res) {
         HLADAO database = DAOFactory.getHLADAO();
