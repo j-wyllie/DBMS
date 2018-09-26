@@ -52,6 +52,9 @@ public class ProfileEdit extends CommonView {
     private Label donorStatusLabel;
 
     @FXML
+    private Label receiverStatusLabel;
+
+    @FXML
     private TextField givenNamesField;
 
     @FXML
@@ -368,8 +371,20 @@ public class ProfileEdit extends CommonView {
 
         donorStatusLabel.setText("Donor Status: Unregistered");
 
-        if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+
+        if (!currentProfile.getOrgansDonated().isEmpty() || !currentProfile.getOrgansDonating()
+                .isEmpty()) {
             donorStatusLabel.setText("Donor Status: Registered");
+        }
+
+        if (currentProfile.getOrgansRequired().isEmpty()) {
+            currentProfile.setReceiver(false);
+        } else {
+            currentProfile.setReceiver(true);
+        }
+
+        if (!currentProfile.getOrgansReceived().isEmpty() || !currentProfile.getOrgansRequired().isEmpty()) {
+            receiverStatusLabel.setText("Receiver Status: Registered");
         }
         if (currentProfile.getGivenNames() != null) {
             givenNamesField.setText(currentProfile.getGivenNames());

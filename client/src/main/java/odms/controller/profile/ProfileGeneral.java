@@ -1,6 +1,5 @@
 package odms.controller.profile;
 
-import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -13,7 +12,6 @@ public class ProfileGeneral {
 
     @FXML
     private ImageView profileImage;
-
 
     public ProfileGeneral(odms.view.profile.ProfileGeneral v) {
         view = v;
@@ -78,12 +76,12 @@ public class ProfileGeneral {
             if (currentProfile.getCountryOfDeath() == null ) {
                 if (currentProfile.getCountry() != null) {
                     currentProfile.setCountryOfDeath(currentProfile.getCountry().getName());
-                    view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
+                    view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
                 } else {
-                    view.getCountryLabel().setText("country of Death : ");
+                    view.getCountryLabel().setText("Country of Death : ");
                 }
             } else {
-                view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
             }
 
             if (currentProfile.getCityOfDeath() == null) {
@@ -111,7 +109,7 @@ public class ProfileGeneral {
                 view.getRegionLabel().setText("Region : " + currentProfile.getRegion());
             }
             if (currentProfile.getCountry() != null) {
-                view.getCountryLabel().setText("country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
+                view.getCountryLabel().setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
             }
             if (currentProfile.getCity() != null) {
                 view.getCityLabel().setText("City : " + currentProfile.getCity());
