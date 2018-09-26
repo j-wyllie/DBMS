@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 
 DROP TABLE IF EXISTS `hospitals`;
 CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) DEFAULT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `Address` varchar(100) DEFAULT NULL,
   `Latitude` double DEFAULT NULL,
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
-  `ProfileId` int(11) NOT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,

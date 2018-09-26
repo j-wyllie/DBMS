@@ -1,6 +1,7 @@
 package odms.controller.data.database;
 
 import odms.commons.model.locations.Hospital;
+import odms.server.CommonTestUtils;
 import org.junit.*;
 import server.model.database.DAOFactory;
 import server.model.database.DatabaseConnection;
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MySqlHospitalDAOTest extends MySqlCommonTests {
+public class MySqlHospitalDAOTest extends CommonTestUtils {
 
     private Hospital testHospital1;
     private Hospital testHospital2;
