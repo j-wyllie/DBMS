@@ -51,7 +51,7 @@ public class HlaController {
      * @param hlaB second HLA to compare
      * @return match fit as a percentage
      */
-    public static Integer matchScore(HLAType hlaA, HLAType hlaB) {
+    private static Integer matchCalcScore(HLAType hlaA, HLAType hlaB) {
         final float MATCH_MULTIPLIER = 100f / 12f;
         float score;
         int numMatchingAnitgens = 0;
@@ -65,6 +65,8 @@ public class HlaController {
         }
 
         score = numMatchingAnitgens * MATCH_MULTIPLIER;
+        System.out.println(hlaA.getGroupX());
+        System.out.println(score);
         return (int) score;
     }
 
@@ -112,10 +114,17 @@ public class HlaController {
      * @return match fit as a percentage
      */
     private static Integer matchScore(Integer profileIdA, Integer profileIdB) {
-        HLADAO hladao = DAOFactory.getHlaDAO();
-        HLAType hlaA = hladao.get(profileIdA);
-        HLAType hlaB = hladao.get(profileIdB);
 
-        return matchScore(hlaA, hlaB);
+        ArrayList<HLAType> ints = getDatabaseHLA(profileIdA, profileIdB);
+
+        return matchCalcScore(ints.get(0), ints.get(1));
+    }
+
+    private static ArrayList<HLAType> getDatabaseHLA(Integer profileIdA, Integer profileIdB){
+        ArrayList<HLAType> ints = new ArrayList<>();
+        HLADAO hladao = DAOFactory.getHlaDAO();
+        ints.add(hladao.get(profileIdA));
+        ints.add(hladao.get(profileIdB));
+        return ints;
     }
 }

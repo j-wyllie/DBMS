@@ -2,10 +2,21 @@ package odms.controller.user;
 
 import odms.commons.model.profile.HLAType;
 import odms.controller.HlaController;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+
+import java.util.ArrayList;
 
 import static junit.framework.TestCase.assertEquals;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HlaController.class)
 public class HlaControllerTest {
     private HLAType same1 = new HLAType(1,2,3,4,5,6,7,8,9,10,11,12);
     private HLAType same2 = new HLAType(1,2,3,4,5,6,7,8,9,10,11,12);
@@ -19,16 +30,76 @@ public class HlaControllerTest {
     private HLAType zero1 = new HLAType(1,1,1,1,1,1,1,1,1,1,1,1);
     private HLAType zero2 = new HLAType(2,2,2,2,2,2,2,2,2,2,2,2);
 
+    private HLAType null1 = new HLAType(1,1,1,1,1,1,1,1,1,1,1,1);
+    private HLAType null2 = new HLAType(null,null,null,null,null,null,null,null,null,null,null,null);
 
+    private HlaController controller;
 
-    @Test
-    public void testMatchScore(){
-        assertEquals(new Integer(100), HlaController.matchScore(cross1, cross2));
-        assertEquals(new Integer(100), HlaController.matchScore(same1, same2));
-        assertEquals(new Integer(50), HlaController.matchScore(half1, half2));
-        assertEquals(new Integer(0), HlaController.matchScore(zero1, zero2));
+    @Before
+    public void setup() {
+         controller = new HlaController();
     }
 
 
+    @Test
+    public void testMatchScoreSame(){
+        ArrayList<HLAType> hlas = new ArrayList<>();
+        hlas.add(same1);
+        hlas.add(same2);
+        PowerMockito.stub(
+                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+        ).toReturn(hlas);
+
+        assertEquals("100%", controller.getMatchString(1, 2));
+
+    }
+
+    @Test
+    public void testMatchScoreCross(){
+        ArrayList<HLAType> hlas = new ArrayList<>();
+        hlas.add(cross1);
+        hlas.add(cross2);
+        PowerMockito.stub(
+                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+        ).toReturn(hlas);
+
+        assertEquals("100%", controller.getMatchString(3, 4));
+    }
+
+    @Test
+    public void testMatchScoreHalf(){
+        ArrayList<HLAType> hlas = new ArrayList<>();
+        hlas.add(half1);
+        hlas.add(half2);
+        PowerMockito.stub(
+                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+        ).toReturn(hlas);
+
+        assertEquals("50%", controller.getMatchString(5, 6));
+    }
+
+    @Test
+    public void testMatchScoreZero(){
+        ArrayList<HLAType> hlas = new ArrayList<>();
+        hlas.add(zero1);
+        hlas.add(zero2);
+        PowerMockito.stub(
+                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+        ).toReturn(hlas);
+
+        assertEquals("0%", controller.getMatchString(7, 8));
+    }
+
+    @Test
+    public void testMatchScoreNull(){
+        ArrayList<HLAType> hlas = new ArrayList<>();
+        hlas.add(null2); //null2 is the receiver
+        hlas.add(null1);
+        PowerMockito.stub(
+                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+        ).toReturn(hlas);
+
+        assertEquals("No HLA", controller.getMatchString(9, 10));
+    }
 
 }
