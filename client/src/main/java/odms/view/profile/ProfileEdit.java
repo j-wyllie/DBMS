@@ -731,8 +731,8 @@ public class ProfileEdit extends CommonView {
         isSmokerCheckBox.setSelected(b);
     }
 
-    public String getComboCountryOfDeath() {
-        return comboCountryOfDeath.getValue().toString();
+    public CountriesEnum getComboCountryOfDeath() {
+        return CountriesEnum.valueOf(comboCountryOfDeath.getValue().toString());
     }
 
     public String getRegionOfDeathField() {

@@ -35,7 +35,6 @@ public class SettingsPopupController {
                 builder.append(locale.getDisplayLanguage());
                 if (!locale.getDisplayCountry().equalsIgnoreCase("")) {
                     builder.append(String.format(", %s", locale.getDisplayCountry()));
-
                 }
                 if (!builder.toString().trim().equalsIgnoreCase("")) {
                     availableLanguages.put(builder.toString(), locale);

@@ -75,13 +75,13 @@ public class ProfileGeneral {
 
             if (currentProfile.getCountryOfDeath() == null ) {
                 if (currentProfile.getCountry() != null) {
-                    currentProfile.setCountryOfDeath(currentProfile.getCountry().getName());
+                    currentProfile.setCountryOfDeath(currentProfile.getCountry());
                     view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
                 } else {
                     view.getCountryLabel().setText("Country of Death : ");
                 }
             } else {
-                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath().getName()));
             }
 
             if (currentProfile.getCityOfDeath() == null) {

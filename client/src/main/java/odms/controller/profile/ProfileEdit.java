@@ -26,7 +26,7 @@ public class ProfileEdit extends CommonController {
     private Profile currentProfile;
     private odms.view.profile.ProfileEdit view;
     private Boolean isClinician;
-    private static final String MAINCOUNTRY = "New Zealand";
+    private static final CountriesEnum MAINCOUNTRY = CountriesEnum.NZ;
 
     /**
      * profile edit view connected to this controller.
@@ -135,7 +135,7 @@ public class ProfileEdit extends CommonController {
         if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
             if (view.getComboRegionOfDeath() != null && AddressIO
                     .checkValidRegion(
-                            view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
+                            view.getComboRegionOfDeath(), view.getComboCountryOfDeath().getName())) {
                 return view.getComboRegionOfDeath();
             } else {
                 throw new IllegalArgumentException(
@@ -146,11 +146,11 @@ public class ProfileEdit extends CommonController {
         } else {
             if (view.getRegionOfDeathField() != null && AddressIO
                     .checkValidRegion(view.getRegionOfDeathField(),
-                            view.getComboCountryOfDeath())) {
+                            view.getComboCountryOfDeath().getName())) {
                 return view.getRegionOfDeathField();
             } else if (view.getRegionOfDeathField() != null && !AddressIO
                     .checkValidRegion(view.getRegionOfDeathField(),
-                            view.getComboCountryOfDeath())) {
+                            view.getComboCountryOfDeath().getName())) {
                 throw new IllegalArgumentException(
                         "Invalid Region of Death"
                 );
@@ -188,7 +188,7 @@ public class ProfileEdit extends CommonController {
             if (view.getCityOfDeathField() != null && AddressIO
                     .checkValidCity(view.getCityOfDeathField()
                             + "," + view.getComboRegionOfDeath() + "," + view
-                            .getComboCountryOfDeath(), view.getCityOfDeathField(), MAINCOUNTRY)) {
+                            .getComboCountryOfDeath(), view.getCityOfDeathField(), MAINCOUNTRY.getName())) {
                 return view.getCityOfDeathField();
             } else {
                 throw new IllegalArgumentException(
@@ -199,7 +199,7 @@ public class ProfileEdit extends CommonController {
             if (AddressIO.checkValidCity(view.getCityOfDeathField()
                             + "," + view.getRegionOfDeathField() + "," + view.getComboCountryOfDeath(),
                     view.getCityOfDeathField(),
-                    view.getComboCountryOfDeath())) {
+                    view.getComboCountryOfDeath().getName())) {
                 return view.getCityOfDeathField();
             } else {
                 throw new IllegalArgumentException(
@@ -224,7 +224,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveDateOfBirth() throws IllegalArgumentException {
+    void saveDateOfBirth() throws IllegalArgumentException {
         if (view.getdobDatePicker() == null) {
             throw new IllegalArgumentException(
                     "Date of Birth field cannot be blank"
@@ -242,7 +242,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IOException if there is a exception handling the file
      */
-    public void saveChosenImage() throws IOException {
+    void saveChosenImage() throws IOException {
         File chosenFile = view.getChosenFile();
         if (chosenFile != null) {
             currentProfile.setPictureName(
@@ -261,7 +261,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveGivenNames() throws IllegalArgumentException {
+    void saveGivenNames() throws IllegalArgumentException {
         if (view.getGivenNamesField().isEmpty()) {
             throw new IllegalArgumentException(
                     "Given Names field cannot be blank"
@@ -275,7 +275,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveNhi() throws IllegalArgumentException, SQLException {
+    void saveNhi() throws IllegalArgumentException, SQLException {
         if (!view.getNhiField().equals(currentProfile.getNhi())) {
             if (!view.getNhiField().matches("^[A-HJ-NP-Z]{3}\\d{4}$")) {
                 throw new IllegalArgumentException(
@@ -296,7 +296,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if the field is empty
      */
-    public void saveLastNames() throws IllegalArgumentException {
+    void saveLastNames() throws IllegalArgumentException {
         if (view.getLastNamesField().isEmpty()) {
             throw new IllegalArgumentException(
                     "Last Names field cannot be blank"
@@ -308,7 +308,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Address field to profile.
      */
-    public void saveAddress() throws IllegalArgumentException {
+    void saveAddress() throws IllegalArgumentException {
         if (!view.getAddressField().isEmpty() && AddressIO
                 .checkValidCountry(view.getAddressField(),
                         view.getComboCountry().getValue().toString())) {
@@ -328,7 +328,7 @@ public class ProfileEdit extends CommonController {
      *
      * @throws IllegalArgumentException if date is prior to birth date
      */
-    public void saveDateOfDeath() {
+    void saveDateOfDeath() {
         if (view.getDodDateTimePicker() != null) {
             currentProfile.setDateOfDeath(LocalDateTime.from(view.getDodDateTimePicker()));
             Set<OrganEnum> organsRequired = new HashSet<>();
@@ -343,7 +343,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Email field to profile.
      */
-    public void saveEmail() {
+    void saveEmail() {
         if (!view.getEmailField().isEmpty()) {
             currentProfile.setEmail(view.getEmailField());
         }
@@ -352,7 +352,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Gender field to profile.
      */
-    public void saveGender() {
+    void saveGender() {
         if (view.getComboGender() != null) {
             currentProfile.setGender(view.getComboGender().toString());
         }
@@ -361,7 +361,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Height field to profile.
      */
-    public void saveHeight() {
+    void saveHeight() {
         if (!view.getHeightField().isEmpty()) {
             currentProfile.setHeight(Double.valueOf(view.getHeightField()));
         } else {
@@ -372,7 +372,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Phone field to profile.
      */
-    public void savePhone() {
+    void savePhone() {
         if (!view.getPhoneField().isEmpty()) {
             currentProfile.setPhone(view.getPhoneField());
         }
@@ -381,7 +381,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Preferred Gender value to profile.
      */
-    public void savePreferredGender() {
+    void savePreferredGender() {
         // If there is no preferred gender just set it to the gender
         if (view.getComboGenderPref().equals("")) {
             if (view.getComboGender() != null) {
@@ -395,14 +395,14 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Preferred Name field to profile.
      */
-    public void savePreferredName() {
+    void savePreferredName() {
         currentProfile.setPreferredName(view.getPreferredNameField());
     }
 
     /**
      * Save Region field to profile.
      */
-    public void saveRegion() {
+    void saveRegion() {
         if (view.getComboRegion().isVisible()) {
             if (view.getComboRegion().getValue() != null) {
                 currentProfile.setRegion(view.getComboRegion().getValue());
@@ -417,7 +417,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Weight field to profile.
      */
-    public void saveWeight() {
+    void saveWeight() {
         if (!view.getWeightField().isEmpty()) {
             currentProfile.setWeight(Double.valueOf(view.getWeightField()));
         } else {
@@ -428,7 +428,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Alcohol Consumption field to profile.
      */
-    public void saveAlcoholConsumption() {
+    void saveAlcoholConsumption() {
         if (!view.getAlcoholConsumptionField().isEmpty()) {
             currentProfile.setAlcoholConsumption(view.getAlcoholConsumptionField());
         }
@@ -437,7 +437,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Blood Pressure field to profile. Must be in format of Systolic/Diastolic.
      */
-    public void saveBloodPressure() {
+    void saveBloodPressure() {
         if (!view.getBloodPressureField().isEmpty() && view.getBloodPressureField().contains("/")) {
             String systolic = view.getBloodPressureField().substring(
                     0, view.getBloodPressureField().indexOf('/')
@@ -454,7 +454,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Blood Type field to profile.
      */
-    public void saveBloodType() {
+    void saveBloodType() {
         if (!view.getBloodTypeField().isEmpty()) {
             currentProfile.setBloodType(view.getBloodTypeField());
         }
@@ -463,7 +463,7 @@ public class ProfileEdit extends CommonController {
     /**
      * Save Smoker Status to profile.
      */
-    public void saveIsSmoker() {
+    void saveIsSmoker() {
         currentProfile.setIsSmoker(view.getIsSmokerCheckBox());
     }
 
@@ -502,7 +502,7 @@ public class ProfileEdit extends CommonController {
                 view.setComboCountryOfDeath(currentProfile.getCountry().getName());
             }
         } else {
-            view.setComboCountryOfDeath(currentProfile.getCountryOfDeath());
+            view.setComboCountryOfDeath(currentProfile.getCountryOfDeath().getName());
         }
 
         // city

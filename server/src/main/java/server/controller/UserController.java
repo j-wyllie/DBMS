@@ -2,6 +2,7 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -10,8 +11,10 @@ import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
 import server.model.enums.DataTypeEnum;
 import server.model.enums.ResponseMsgEnum;
-import spark.*;
+import spark.Request;
+import spark.Response;
 
+@Slf4j
 public class UserController {
 
     /**

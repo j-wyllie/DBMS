@@ -104,7 +104,7 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                         Integer.valueOf(dates[0])
                 ) : null;
                 profile.setDateOfDeath(LocalDateTime.of(date, LocalTime.MIN));
-                profile.setCountryOfDeath(profile.getCountry().getName()); // TODO fix properly
+                profile.setCountryOfDeath(profile.getCountry());
                 profile.setCityOfDeath(profile.getCity());
                 profile.setRegionOfDeath(profile.getRegion());
             }

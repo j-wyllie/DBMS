@@ -56,7 +56,7 @@ public class Profile implements Comparable<Profile> {
 
     private String address;
 
-    private String countryOfDeath;
+    private CountriesEnum countryOfDeath;
     private String regionOfDeath;
     private String cityOfDeath;
 
@@ -234,9 +234,10 @@ public class Profile implements Comparable<Profile> {
             Double height, Double weight, String bloodType, Boolean isSmoker,
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String region, String phone, String email, CountriesEnum country, String city,
-            String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName,
-            LocalDateTime lastBloodDonation, int bloodDonationPoints) {
+            CountriesEnum countryOfDeath, String regionOfDeath, String cityOfDeath,
+            LocalDateTime created, LocalDateTime updated, String preferredName,
+            String preferredGender, String imageName, LocalDateTime lastBloodDonation,
+            int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -379,7 +380,7 @@ public class Profile implements Comparable<Profile> {
                         Integer.valueOf(dates[0]), 0, 0
                 );
                 setDateOfDeath(date);
-                setCountryOfDeath(getCountry() != null ? getCountry().getName() : null);
+                setCountryOfDeath(getCountry());
                 setCityOfDeath(getCity());
                 setRegionOfDeath(getRegion());
             }
@@ -1134,11 +1135,11 @@ public class Profile implements Comparable<Profile> {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getCountryOfDeath() {
+    public CountriesEnum getCountryOfDeath() {
         return countryOfDeath;
     }
 
-    public void setCountryOfDeath(String countryOfDeath) {
+    public void setCountryOfDeath(CountriesEnum countryOfDeath) {
         this.countryOfDeath = countryOfDeath;
     }
 

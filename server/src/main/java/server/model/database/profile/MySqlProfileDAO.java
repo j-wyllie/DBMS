@@ -256,7 +256,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(20, profile.getEmail());
             stmt.setString(21, profile.getCountry() != null ? profile.getCountry().toString() : null);
             stmt.setString(22, profile.getBirthCountry() != null ? profile.getBirthCountry().toString() : null);
-            stmt.setString(23, profile.getCountryOfDeath());
+            stmt.setString(23, profile.getCountryOfDeath() != null ? profile.getBirthCountry().toString() : null);
             stmt.setString(24, profile.getRegionOfDeath());
             stmt.setString(25, profile.getCityOfDeath());
             stmt.setString(26, profile.getStreetNumber());
@@ -750,7 +750,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         String imageName = profiles.getString("ImageName");
 
         String city = profiles.getString("City");
-        String countryOfDeath = profiles.getString("CountryOfDeath");
+        String countryOfDeathStr = profiles.getString("CountryOfDeath");
+        CountriesEnum countryOfDeath = countryOfDeathStr != null ? CountriesEnum.valueOf(countryOfDeathStr) : null;
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 

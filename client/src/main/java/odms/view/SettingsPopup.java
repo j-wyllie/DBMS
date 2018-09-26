@@ -209,7 +209,6 @@ public class SettingsPopup {
      * Initializes the default values displayed in the combo boxes.
      */
     private void initDefaultValues() {
-        // TODO merge?
         String defaultDisplay = DefaultLocale.getDatetimeLocale().getDisplayLanguage();
         if (!DefaultLocale.getDatetimeLocale().getDisplayCountry().equalsIgnoreCase("")) {
             defaultDisplay += ", " + DefaultLocale.getDatetimeLocale().getDisplayCountry();
